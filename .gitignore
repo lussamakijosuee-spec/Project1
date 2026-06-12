@@ -1,0 +1,16 @@
+# Sauvegardes de test (Crucial pour RPG Maker !)
+save/
+
+# Fichiers système invisibles Windows et Mac
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Fichiers de log et d'erreurs
+*.log
+npm-debug.log*
+
+# Fichiers de déploiement (dossiers où tu exporteras ton jeu fini)
+/export/
+/out/
+/dist/
