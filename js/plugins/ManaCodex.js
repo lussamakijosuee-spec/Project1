@@ -166,7 +166,22 @@
                 '\\C[8]Atones\\C[0] (aucune) .............. ≈ 12%',
                 '  0 bonus, mais 0 corruption, malus réduits.',
                 '\\C[17]Trines\\C[0] (3 faibles) ........... ≈ 0.9%',
-                '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%'
+                '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%',
+                '  1/1000 : Mana Pur, ignore le cycle. Ex : \\C[14]Dono\\C[0].'
+            ]
+        },
+        {
+            title: '⑮ Les Classes Corrompues',
+            lines: [
+                'Au-delà des affinités existe une aberration :',
+                'une âme dont les codes sources ont été RÉÉCRITS.',
+                '',
+                '\\C[18]La Classe Corrompue\\C[0] n\'appartient à aucune',
+                'branche du cycle. Elle ne se soigne pas, ne se',
+                'raisonne pas — elle dévore.',
+                '',
+                'Cas connu : \\C[18]Jada\\C[0], une classe à part entière,',
+                'née d\'une corruption irréversible de l\'âme.'
             ]
         },
         {
