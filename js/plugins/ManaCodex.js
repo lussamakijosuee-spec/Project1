@@ -1,0 +1,273 @@
+//=============================================================================
+// ManaCodex.js — v1.0
+// Codex du Système de Mana — consultable en jeu (RPG Maker MV)
+// by JOKO
+//=============================================================================
+
+/*:
+ * @plugindesc v1.0 ■ Codex du Système de Mana (lisible en jeu, multi-pages)
+ * Sources primordiales, branches, cycle, éléments, âme vs esprit, affinités.
+ * @author JOKO
+ *
+ * @param menuCommand
+ * @text Texte commande Menu
+ * @type string
+ * @default Codex du Mana
+ * @desc Libellé ajouté au menu principal (vide = ne pas ajouter).
+ *
+ * @param showInMenu
+ * @text Ajouter au Menu ?
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ *
+ * @help
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  CODEX DU MANA                                                       by JOKO
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  Un livre consultable en jeu qui explique tout le système de Mana.
+ *  Pages : Sources, Branches, Cycle, Mana Pur, Éléments, Âme/Esprit,
+ *  Objet Spirituel, Affinités.
+ *
+ *  OUVRIR :
+ *   • Plugin Command :  MANA codex
+ *   • Script (event) :  SceneManager.push(Scene_ManaCodex)
+ *   • Menu principal :  entrée ajoutée automatiquement (si activé)
+ *
+ *  NAVIGATION : ◄ ► (gauche/droite) pour tourner les pages, Échap pour fermer.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+(function () {
+    'use strict';
+
+    var P = PluginManager.parameters('ManaCodex');
+    var MENU_TEXT = String(P['menuCommand'] || 'Codex du Mana');
+    var SHOW_MENU = String(P['showInMenu'] || 'true') === 'true';
+
+    // \C[n] = couleur, \} = texte plus petit. Lignes courtes pour tenir à l'écran.
+    var PAGES = [
+        {
+            title: '① Les 3 Sources Primordiales',
+            lines: [
+                'Tout être est un triptyque. Chaque facette est un',
+                'puits de magie brut, presque impossible à puiser seul :',
+                '',
+                '\\C[2]• LE CORPS  →  Mana Sombre\\C[0]  (émotions/désirs enfouis)',
+                '\\C[2]• L\'ÂME    →  Mana Spirituelle\\C[0]  (essence immortelle)',
+                '\\C[2]• L\'ESPRIT →  Mana Originel\\C[0]  (mental & santé mentale)',
+                '',
+                'Puiser une source DIRECTEMENT est mortel : on a donc',
+                'créé des branches secondaires plus maniables.'
+            ]
+        },
+        {
+            title: '② Les 3 Branches Secondaires',
+            lines: [
+                '\\C[6]MANA NÉGATIF\\C[0] (issu du Corps) — Empire Vultric.',
+                '  Émotions → force physique. Coût : draine les PV.',
+                '',
+                '\\C[2]MANA SPIRITUELLE\\C[0] (issu de l\'Âme) — invocateurs, Lou.',
+                '  Manipulation des âmes. Coût : traumas, cauchemars.',
+                '',
+                '\\C[1]MANA POSITIF\\C[0] (issu de l\'Esprit) — Sorcières des Étoiles.',
+                '  Intelligence, soin, eau, cosmos. Faiblit si la',
+                '  santé mentale décline.'
+            ]
+        },
+        {
+            title: '③ Le Cycle des Avantages',
+            lines: [
+                'Pierre-feuille-ciseaux entre les 3 branches :',
+                '',
+                '\\C[6]NÉGATIF\\C[0]  ──bat──►  \\C[2]ÂME / SPIRITUELLE\\C[0]',
+                '\\C[2]SPIRITUELLE\\C[0] ──bat──►  \\C[1]POSITIF\\C[0]',
+                '\\C[1]POSITIF\\C[0]  ──bat──►  \\C[6]NÉGATIF\\C[0]',
+                '',
+                'Branche avantagée : \\C[24]×1.5 dégâts\\C[0].',
+                'Branche désavantagée : \\C[25]×0.5 dégâts\\C[0].'
+            ]
+        },
+        {
+            title: '④ Le Mana Pur (et Semi-Parfait)',
+            lines: [
+                '\\C[14]LE MANA PUR\\C[0] transcende le cycle : il ignore',
+                'tous les avantages et toutes les résistances.',
+                'C\'est l\'énergie des attaques magiques spéciales',
+                'des êtres transcendants (Élus).',
+                '',
+                '\\C[17]MANA SEMI-PARFAIT\\C[0] : 1 chance sur 1000 d\'avoir',
+                'une affinité avec TOUTES les sources à la fois…',
+                'mais son usage défie la réalité elle-même.'
+            ]
+        },
+        {
+            title: '⑤ Les 8 Éléments',
+            lines: [
+                'Couche tactique, à façonner depuis le mana :',
+                '',
+                '\\C[2]FEU\\C[0]►EAU  \\C[2]EAU\\C[0]►FOUDRE  \\C[2]FOUDRE\\C[0]►TERRE',
+                '\\C[2]TERRE\\C[0]►VENT  \\C[2]VENT\\C[0]►GLACE  \\C[2]GLACE\\C[0]►FEU',
+                '(chacun est faible contre celui qu\'il pointe)',
+                '',
+                '\\C[14]LUMIÈRE\\C[0] ⇄ \\C[8]OMBRE\\C[0] : s\'opposent mutuellement.',
+                'Le Mana Pur transcende toute affinité élémentaire.'
+            ]
+        },
+        {
+            title: '⑥ Âme vs Esprit',
+            lines: [
+                '\\C[2]L\'ÂME\\C[0] : essence immortelle. Jamais détruite —',
+                '  elle retourne aux codes sources. Corruption =',
+                '  perte de personnage PERMANENTE.',
+                '',
+                '\\C[1]L\'ESPRIT\\C[0] : dimension mentale. Peut être brisé',
+                '  ou guéri selon la Santé Mentale (SAN).',
+                '  Trauma = moins de Mana Originel disponible.'
+            ]
+        },
+        {
+            title: '⑦ L\'Objet Spirituel',
+            lines: [
+                'L\'arme/objet reçu au début du jeu.',
+                '',
+                'C\'est la manifestation physique de ton âme',
+                'en surface. Il évolue avec ton niveau et ton âme.',
+                '',
+                'L\'âme est une coquille :',
+                '  • Surface : ce qui est matérialisé (l\'Objet).',
+                '  • Profondeurs : capacités, nature et traits.'
+            ]
+        },
+        {
+            title: '⑧ Les Affinités',
+            lines: [
+                'L\'affinité dépend de la nature de ton âme et peut',
+                'CHANGER selon tes décisions au fil de la vie :',
+                '',
+                '• Une source : courant (bonus clair).',
+                '• Aucune source : rare (tout apprendre à la dure).',
+                '• Deux sources : peu courant (polyvalent).',
+                '• Toutes les sources : \\C[17]1/1000\\C[0] (Mana Semi-Parfait).',
+                '',
+                'Plus d\'affinité = plus fort dans sa branche, mais',
+                'plus de difficulté dans les autres.'
+            ]
+        }
+    ];
+
+    //=========================================================================
+    // WINDOW
+    //=========================================================================
+
+    function Window_ManaCodex() { this.initialize.apply(this, arguments); }
+    Window_ManaCodex.prototype = Object.create(Window_Base.prototype);
+    Window_ManaCodex.prototype.constructor = Window_ManaCodex;
+
+    Window_ManaCodex.prototype.initialize = function () {
+        Window_Base.prototype.initialize.call(this, 0, 0, Graphics.boxWidth, Graphics.boxHeight);
+        this._page = 0;
+        this.refresh();
+    };
+
+    Window_ManaCodex.prototype.setPage = function (i) {
+        var n = PAGES.length;
+        this._page = ((i % n) + n) % n; // wrap circulaire
+        SoundManager.playCursor();
+        this.refresh();
+    };
+
+    Window_ManaCodex.prototype.nextPage = function () { this.setPage(this._page + 1); };
+    Window_ManaCodex.prototype.prevPage = function () { this.setPage(this._page - 1); };
+
+    Window_ManaCodex.prototype.refresh = function () {
+        this.contents.clear();
+        var page = PAGES[this._page];
+        var w = this.contentsWidth();
+
+        // En-tête
+        this.changeTextColor(this.systemColor());
+        this.drawText('— CODEX DU MANA —', 0, 0, w, 'center');
+        this.resetTextColor();
+
+        this.drawText(page.title, 0, this.lineHeight() * 1.2, w, 'left');
+
+        // Séparateur
+        var sepY = Math.floor(this.lineHeight() * 2.4);
+        this.contents.fillRect(0, sepY, w, 2, this.systemColor());
+
+        // Corps
+        var y = this.lineHeight() * 2.8;
+        for (var i = 0; i < page.lines.length; i++) {
+            this.drawTextEx(page.lines[i], 8, y);
+            y += this.lineHeight();
+        }
+
+        // Pied de page
+        var footY = this.contentsHeight() - this.lineHeight();
+        this.changeTextColor(this.systemColor());
+        this.drawText('◄  Page ' + (this._page + 1) + ' / ' + PAGES.length +
+                      '  ►        (Échap : fermer)', 0, footY, w, 'center');
+        this.resetTextColor();
+    };
+
+    //=========================================================================
+    // SCENE
+    //=========================================================================
+
+    function Scene_ManaCodex() { this.initialize.apply(this, arguments); }
+    window.Scene_ManaCodex = Scene_ManaCodex;
+    Scene_ManaCodex.prototype = Object.create(Scene_MenuBase.prototype);
+    Scene_ManaCodex.prototype.constructor = Scene_ManaCodex;
+
+    Scene_ManaCodex.prototype.create = function () {
+        Scene_MenuBase.prototype.create.call(this);
+        this._codex = new Window_ManaCodex();
+        this.addWindow(this._codex);
+    };
+
+    Scene_ManaCodex.prototype.update = function () {
+        Scene_MenuBase.prototype.update.call(this);
+        if (Input.isRepeated('right') || Input.isRepeated('down') ||
+            Input.isTriggered('pagedown')) {
+            this._codex.nextPage();
+        } else if (Input.isRepeated('left') || Input.isRepeated('up') ||
+                   Input.isTriggered('pageup')) {
+            this._codex.prevPage();
+        } else if (Input.isTriggered('cancel') || TouchInput.isCancelled()) {
+            SoundManager.playCancel();
+            this.popScene();
+        }
+    };
+
+    //=========================================================================
+    // COMMANDE PLUGIN + MENU
+    //=========================================================================
+
+    var _GI_pluginCommand = Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand = function (command, args) {
+        _GI_pluginCommand.call(this, command, args);
+        if (String(command).toUpperCase() === 'MANA' &&
+            (args[0] || '').toLowerCase() === 'codex') {
+            SceneManager.push(Scene_ManaCodex);
+        }
+    };
+
+    if (SHOW_MENU && MENU_TEXT.length > 0) {
+        var _SM_createCommandWindow = Scene_Menu.prototype.createCommandWindow;
+        Scene_Menu.prototype.createCommandWindow = function () {
+            _SM_createCommandWindow.call(this);
+            this._commandWindow.setHandler('manaCodex', this.commandManaCodex.bind(this));
+        };
+        Scene_Menu.prototype.commandManaCodex = function () {
+            SceneManager.push(Scene_ManaCodex);
+        };
+        var _WMC_addOriginalCommands = Window_MenuCommand.prototype.addOriginalCommands;
+        Window_MenuCommand.prototype.addOriginalCommands = function () {
+            _WMC_addOriginalCommands.call(this);
+            this.addCommand(MENU_TEXT, 'manaCodex', true);
+        };
+    }
+
+})();
