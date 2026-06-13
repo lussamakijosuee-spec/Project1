@@ -64,6 +64,41 @@
         5: '#3498db'  // Maîtrise     — bleu
     };
 
+    // Affinités de Mana : mot-clé du notetag -> { libellé, couleur }
+    var MANA_INFO = {
+        negatif:     { label: 'Mana Négatif',     color: '#e67e22' },
+        positif:     { label: 'Mana Positif',     color: '#2ecc71' },
+        spirituelle: { label: 'Mana Spirituelle', color: '#9b59b6' },
+        ame:         { label: 'Mana Spirituelle', color: '#9b59b6' },
+        sombre:      { label: 'Mana Sombre',      color: '#8e44ad' },
+        pur:         { label: 'Mana Pur',         color: '#f1c40f' },
+        parfait:     { label: 'Mana Pur',         color: '#f1c40f' }
+    };
+
+    function manaKey(raw) {
+        return String(raw || '').toLowerCase().trim()
+            .replace('é', 'e').replace('â', 'a');
+    }
+
+    /** Affinité(s) d'un acteur depuis ses notetags <Mana> / <Mana2>. */
+    function affinityOfActor(actorId) {
+        var data = $dataActors[actorId];
+        if (!data || !data.meta) return null;
+        var keys = [];
+        if (data.meta.Mana)  keys.push(manaKey(data.meta.Mana));
+        if (data.meta.Mana2) keys.push(manaKey(data.meta.Mana2));
+        if (keys.length === 0) return null;
+        var infos = keys.map(function (k) { return MANA_INFO[k]; }).filter(Boolean);
+        if (infos.length === 0) return null;
+        if (infos.length === 1) return { label: infos[0].label, color: infos[0].color, dual: false };
+        // Dual : deux affinités → libellé combiné, couleur de la première
+        return {
+            label: infos[0].label + ' + ' + infos[1].label + '  (Dual)',
+            color: infos[0].color,
+            dual: true
+        };
+    }
+
     /** Garde-fou : le système de jauges est-il présent ? */
     function ameReady() {
         return typeof window.Ame !== 'undefined' && window.Ame;
@@ -138,11 +173,22 @@
         this.drawText(val + ' / 10', x + barW + 8, barY - 6, 82, 'right');
         this.resetTextColor();
 
-        // Bonus Lou : âmes damnées
+        // Ligne 3 : Affinité de Mana
+        var aff = affinityOfActor(actorId);
+        var line3Y = barY + lh;
+        if (aff) {
+            this.changeTextColor(this.systemColor());
+            this.drawText('Affinité :', x, line3Y, 110, 'left');
+            this.changeTextColor(aff.color);
+            this.drawText(aff.label, x + 110, line3Y, w - 110, 'left');
+            this.resetTextColor();
+        }
+
+        // Bonus Lou : âmes damnées (aligné à droite de la ligne d'affinité)
         if (actorId === 3) {
             var souls = $gameVariables.value(15);
             this.changeTextColor(this.systemColor());
-            this.drawText('Âmes damnées absorbées : ' + souls, x, barY + lh, w, 'left');
+            this.drawText('Âmes damnées : ' + souls, x, line3Y, w, 'right');
             this.resetTextColor();
         }
     };

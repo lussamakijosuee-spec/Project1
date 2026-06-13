@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <radialGradient id="bg2" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#16182c"/><stop offset="100%" stop-color="#06070f"/>
+    </radialGradient>
+    <marker id="a2" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ffd34d"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg2)"/>
+  <text x="600" y="70" fill="#ffd34d" font-size="40" font-weight="bold" text-anchor="middle">LA ROUE DES 8 ÉLÉMENTS</text>
+  <text x="600" y="105" fill="#9aa0c0" font-size="19" text-anchor="middle">chaque élément est FAIBLE contre celui que pointe la flèche</text>
+
+  <!-- cycle of 6: FEU->EAU->FOUDRE->TERRE->VENT->GLACE->FEU, ring radius 360 center 600,640 -->
+  <!-- positions (hexagon) -->
+  <!-- FEU top -->
+  <g>
+    <circle cx="600" cy="320" r="62" fill="#e8462f" stroke="#ff9678" stroke-width="3"/>
+    <text x="600" y="328" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">FEU</text>
+  </g>
+  <!-- EAU top-right -->
+  <g>
+    <circle cx="877" cy="480" r="62" fill="#2f86e8" stroke="#86c4ff" stroke-width="3"/>
+    <text x="877" y="488" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">EAU</text>
+  </g>
+  <!-- FOUDRE bottom-right -->
+  <g>
+    <circle cx="877" cy="800" r="62" fill="#e8c12f" stroke="#fff0a0" stroke-width="3"/>
+    <text x="877" y="808" fill="#3a2f00" font-size="17" font-weight="bold" text-anchor="middle">FOUDRE</text>
+  </g>
+  <!-- TERRE bottom -->
+  <g>
+    <circle cx="600" cy="960" r="62" fill="#9c6b3a" stroke="#d9a86e" stroke-width="3"/>
+    <text x="600" y="968" fill="#fff" font-size="19" font-weight="bold" text-anchor="middle">TERRE</text>
+  </g>
+  <!-- VENT bottom-left -->
+  <g>
+    <circle cx="323" cy="800" r="62" fill="#36b87a" stroke="#8ff0c2" stroke-width="3"/>
+    <text x="323" y="808" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">VENT</text>
+  </g>
+  <!-- GLACE top-left -->
+  <g>
+    <circle cx="323" cy="480" r="62" fill="#5fd0e8" stroke="#c7f4ff" stroke-width="3"/>
+    <text x="323" y="488" fill="#073542" font-size="19" font-weight="bold" text-anchor="middle">GLACE</text>
+  </g>
+
+  <!-- arrows along hexagon (weakness direction) -->
+  <path d="M655,345 C760,395 800,420 845,448" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+  <path d="M885,545 C905,615 905,665 885,735" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+  <path d="M845,832 C800,860 760,885 655,935" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+  <path d="M545,935 C440,885 400,860 355,832" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+  <path d="M315,735 C295,665 295,615 315,545" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+  <path d="M355,448 C400,420 440,395 545,345" fill="none" stroke="#ffd34d" stroke-width="4" marker-end="url(#a2)"/>
+
+  <!-- center: LUMIERE vs OMBRE -->
+  <circle cx="600" cy="640" r="58" fill="#f3f0d8" stroke="#ffffff" stroke-width="3"/>
+  <text x="600" y="636" fill="#7a6a00" font-size="16" font-weight="bold" text-anchor="middle">LUMIÈRE</text>
+  <text x="600" y="656" fill="#9a8a20" font-size="12" text-anchor="middle">⇅</text>
+  <text x="600" y="674" fill="#444" font-size="12" text-anchor="middle">OMBRE</text>
+  <circle cx="600" cy="640" r="58" fill="none" stroke="#7a3fb0" stroke-width="3" stroke-dasharray="6 8"/>
+  <text x="600" y="1130" fill="#9aa0c0" font-size="16" text-anchor="middle">LUMIÈRE et OMBRE s'opposent mutuellement (faibles l'une à l'autre).</text>
+</svg>
