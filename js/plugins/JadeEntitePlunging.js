@@ -261,6 +261,11 @@
         return VAR_BY_ACTOR[actorId] || 0;
     }
 
+    /** Les variables de jeu sont-elles disponibles ? (évite les crashs au titre/chargement) */
+    function varsReady() {
+        return typeof $gameVariables !== 'undefined' && !!$gameVariables;
+    }
+
     function clampGauge(v) {
         return Math.max(GAUGE_MIN, Math.min(GAUGE_MAX, Math.round(v)));
     }
@@ -302,12 +307,14 @@
 
         /** Lit la jauge d'un personnage (clé = prénom ou id). */
         jauge: function (key) {
+            if (!varsReady()) return 0;
             var v = gaugeVarOf(resolveActorId(key));
             return v ? $gameVariables.value(v) : 0;
         },
 
         /** Écrit la jauge (clampée). Applique les conséquences immédiates. */
         setJauge: function (key, value) {
+            if (!varsReady()) return;
             var id = resolveActorId(key);
             var v = gaugeVarOf(id);
             if (!v) return;
@@ -372,6 +379,7 @@
 
         /** Lou dévore n âme(s) : plus puissant (Var 15) mais santé mentale -n. */
         absorber: function (n) {
+            if (!varsReady()) return 0;
             n = Math.abs(Number(n) || 1);
             if (SOUL_VAR) {
                 $gameVariables.setValue(SOUL_VAR, $gameVariables.value(SOUL_VAR) + n);
