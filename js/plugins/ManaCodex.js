@@ -168,6 +168,75 @@
                 '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%',
                 '  1/1000 : maîtrise les 3… au prix de la réalité.'
             ]
+        },
+        {
+            title: '⑩ Les Grandes Factions',
+            lines: [
+                '\\C[1]Culte des Sorcières des Étoiles\\C[0] (Positif)',
+                '  Fondé par une joueuse. Soigner, prédire,',
+                '  protéger. Ce sont elles qui enseignent la magie.',
+                '',
+                '\\C[6]Empire Vultric\\C[0] (Négatif)',
+                '  Fondé par un joueur. A réhabilité le Mana Sombre.',
+                '  « La force se paie avec sa propre chair. »',
+                '',
+                '\\C[2]Les Voix de l\'Âme\\C[0] (Spirituelle) — nécro,',
+                '  invocateurs, Lou. N\'écoute jamais trop les morts.'
+            ]
+        },
+        {
+            title: '⑪ Les Codes Sources',
+            lines: [
+                'Ce monde est numérique. Donc :',
+                '',
+                '• Une âme n\'est jamais détruite — elle retourne',
+                '  dans les CODES SOURCES du jeu.',
+                '• Les \\C[1]joueurs\\C[0] non corrompus peuvent REVENIR',
+                '  via les sauvegardes (leur quasi-immortalité).',
+                '• Les PNJ et âmes corrompues n\'ont pas ce filet.',
+                '',
+                'Protéger son âme > protéger son corps :',
+                'le corps est un fichier ; l\'âme est la donnée.'
+            ]
+        },
+        {
+            title: '⑫ Corruption, Mort & Retour',
+            lines: [
+                'L\'âme se corrompt par : abus du Sombre/Négatif,',
+                'écoute excessive des âmes, SAN trop basse.',
+                '',
+                'À la mort du corps :',
+                '  1. l\'Objet Spirituel se brise,',
+                '  2. l\'âme reflue vers les codes sources,',
+                '  3. joueur sain → recharge une sauvegarde,',
+                '  4. \\C[18]corrompu → réécriture irréversible\\C[0].'
+            ]
+        },
+        {
+            title: '⑬ L\'Économie du Mana',
+            lines: [
+                '• Plus on s\'éloigne de son affinité, plus ça coûte.',
+                '• \\C[6]Négatif / Sombre\\C[0] : coûtent des PV, pas du PM.',
+                '• \\C[1]Positif\\C[0] : faiblit quand la SAN baisse.',
+                '• \\C[14]Mana Pur\\C[0] : le plus cher, mais ignore les défenses.',
+                '',
+                'Puiser au-delà de ses limites → états',
+                '\\C[17]Surcharge d\'Âme\\C[0] : un boost… puis l\'effondrement.'
+            ]
+        },
+        {
+            title: '⑭ L\'Objet Spirituel',
+            lines: [
+                'L\'arme de départ évolue avec ton niveau et ton âme.',
+                '',
+                '1. \\C[8]Éclat\\C[0] (Niv.1) : forme brute, à peine éveillée.',
+                '2. \\C[8]Forme\\C[0] (~15) : choisit sa nature (arme/objet).',
+                '3. \\C[8]Résonance\\C[0] (~35) : débloque un pouvoir unique.',
+                '4. \\C[14]Vérité\\C[0] (~60) : expression totale de l\'âme.',
+                '',
+                'Surface = ce qu\'on touche ; Profondeurs = traits',
+                'et pouvoirs secrets. Jamais deux identiques.'
+            ]
         }
     ];
 

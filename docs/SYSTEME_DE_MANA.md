@@ -266,4 +266,105 @@ L'affinité dépend de la **nature de l'âme**, mais cette nature **évolue avec
 
 ---
 
+## 12. LES 8 ÉLÉMENTS EN DÉTAIL
+
+> Les éléments ne sont que des **formes** données au mana. Chacun « penche » vers une des trois sources, ce qui explique qui les manie le mieux.
+
+- **🔴 FEU (8) — source : Corps.** L'élément de la fureur. Attaque directe et **brûlure continue** qui ronge tour après tour. Amplifié par le Mana Négatif (*Flammes Maudites*). Manié par les **Berserkers Arcaniques**. *« La colère qui prend forme. »*
+- **🔵 EAU (9) — source : Esprit.** Le flux apaisant. **Soin** et **ralentissement** de l'ennemi. Amplifié par le Mana Positif (*Vague Sacrée*). Cœur de l'art des **Mages des Étoiles**. *« L'intelligence qui s'écoule. »*
+- **🟢 VENT (10) — source : Esprit.** La liberté. **Vitesse, esquive, dégâts de zone**. Lié au Mana Originel — un esprit vif fend l'air. Favori des **Invocateurs** mobiles.
+- **🟤 TERRE (11) — source : Corps.** L'ancrage. **Défense et écrasement**. Lié à la résistance physique : un corps solide devient une muraille.
+- **🟡 FOUDRE (12) — source : Esprit.** La sanction. **Paralysie** et dégâts techniques. Sa puissance suit l'**INT** (Mana Positif). *Arc Créatif* avec le Mana Originel : le lanceur **dessine** son éclair.
+- **🧊 GLACE (13) — source : Esprit.** Le contrôle. **Gel, ralenti, armure**. Lié à la précision mentale — l'esprit froid ne tremble pas.
+- **⬜ LUMIÈRE (14) — source : Âme.** La rédemption. **Purification** et **guérison d'âme**. Seul élément qui répare la corruption. Amplifié par le Mana Pur (*Nova Sainte*). *« Ce qui ramène l'âme à sa source. »*
+- **🟣 OMBRE (15) — source : Corps.** L'abîme. **Silence, peur, corruption**. Amplifié par le Mana Sombre (*Puits d'Abîme*). Arme des **Ombremanciens** et des **Nécromanciens**. *« Les désirs qu'on n'ose pas nommer. »*
+
+**Règle d'or** : Lumière ⇄ Ombre s'annulent ; le reste suit la Roue (Feu→Eau→Foudre→Terre→Vent→Glace→Feu). Le **Mana Pur** ignore toute affinité élémentaire.
+
+---
+
+## 13. LES GRANDES FACTIONS
+
+**🟦 Le Culte des Sorcières des Étoiles** *(branche : Mana Positif)*
+Fondé par **une joueuse** à l'Ère où l'Esprit semblait inutilisable. Les Sorcières ont prouvé qu'en canalisant l'intelligence et la compassion, on pouvait **soigner, prédire et protéger**. Hiérarchie matriarcale, sanctuaires bâtis sous le ciel étoilé (d'où le nom), savoir transmis de maîtresse à élève. Aujourd'hui, elles **enseignent** la magie au plus grand nombre — sans elles, la magie serait restée mortelle.
+
+**🟪 L'Empire Vultric** *(branche : Mana Négatif)*
+Fondé par **un joueur** visionnaire. Là où tous voyaient le **Mana Sombre** comme purement maléfique, Vultric a démontré que c'était un **concept fondamental** : transformer ses émotions — même les plus noires — en **force physique extraordinaire**. L'Empire en a fait une discipline militaire. Leurs guerriers sont terrifiants… mais **se consument** de l'intérieur (le Négatif draine la vie). Doctrine : *« La force se paie avec sa propre chair. »*
+
+**🟥 Les Voix de l'Âme** *(branche : Mana Spirituelle)*
+Ni un empire ni un culte, mais une **constellation de cercles** : nécromanciens, invocateurs, médiums. Ils parlent aux âmes, en tirent puissance et savoir interdit. **Lou** en est un héritier sauvage. Leur règle tacite : ne **jamais** écouter une âme trop longtemps — les traumas des morts deviennent les tiens.
+
+**🌈 L'Ordre du Prisme** *(Mana Pur / Semi-Parfait)*
+Quasi-mythique. Rassemblerait les rares **Élus du Prisme**. Vénéré et craint, car la présence prolongée d'un Élu **déforme la réalité** autour de lui. Beaucoup doutent qu'il existe encore.
+
+---
+
+## 14. LA MÉTAPHYSIQUE DES CODES SOURCES
+
+Ce monde est **numérique**. Cela a des conséquences concrètes sur les règles de l'existence :
+- Une **âme** n'est jamais vraiment détruite : absorbée, scellée, brisée… elle **retourne dans les codes sources** du jeu.
+- Les **joueurs** (âmes non corrompues) peuvent **revenir** grâce aux **sauvegardes** — c'est leur privilège, et la vraie raison de leur quasi-immortalité.
+- Les **PNJ** et les **âmes corrompues** n'ont pas ce filet : une fois retournés au code, ils ne reviennent **jamais vraiment** identiques.
+- La **corruption** n'est donc pas une « mort » ordinaire : c'est une **réécriture** de l'âme dans les sources, irréversible.
+
+> C'est pourquoi protéger son âme > protéger son corps : le corps n'est qu'un fichier temporaire ; l'âme est la **donnée originelle**.
+
+---
+
+## 15. CORRUPTION, MORT & RÉSURRECTION
+
+**Comment l'âme se corrompt :**
+- Abus du **Mana Sombre/Négatif** (frôler sans cesse ses émotions noires).
+- Écouter trop d'**âmes** (Mana Spirituelle mal maîtrisé → traumas qui s'incrustent).
+- **Santé mentale (SAN)** au plus bas trop longtemps → fissures, puis réécriture.
+
+**À la mort du corps :**
+1. L'**Objet Spirituel** se brise (manifestation de surface détruite).
+2. L'âme se replie vers les **codes sources**.
+3. **Si joueur non corrompu** → peut **recharger une sauvegarde** et revenir intact.
+4. **Si corrompu** → réécriture : retour possible, mais **altéré** (perte de traits, de souvenirs, voire de personnage — *game over narratif*).
+
+**Lien avec tes systèmes** : c'est exactement ce que modélise **JadeEntitePlunging** (jauges 11–14, phases d'effondrement) et la fin **« Carnage »/« Dévoré »** du calcul de fin.
+
+---
+
+## 16. L'ÉCONOMIE DU MANA (règles de combat avancées)
+
+- **Coût** : chaque sort puise dans la source du lanceur. Plus on est **éloigné** de son affinité, plus le coût explose (cf. malus des Alignés).
+- **Surmenage / Surcharge d'Âme** : puiser au-delà de ses limites inflige les états **Surcharge d'Âme (1/2/MAX)** — d'abord un boost, puis l'effondrement.
+- **Mana Négatif & Sombre** : ne coûtent pas (ou peu) de PM… mais **des PV** (recul). C'est le marché du Corps : la vie contre la puissance.
+- **Mana Positif & la SAN** : sa puissance **décroît** avec une mauvaise santé mentale (un esprit brisé soigne mal).
+- **Mana Pur** : le plus coûteux et le plus rare ; en échange, il **ignore les défenses**.
+
+> ⚙️ **Déjà en jeu** via `ManaAffinity.js` (recul PV, Positif/SAN, Pur perce-résistances) et les états Surcharge d'Âme de ta base.
+
+---
+
+## 17. L'OBJET SPIRITUEL — ÉVOLUTION
+
+L'Objet Spirituel grandit avec le **niveau** et l'**âme** du porteur. On peut imaginer **quatre paliers** :
+1. **Éclat** (Niv. 1+) : forme brute, à peine éveillée. Reflète un trait dominant.
+2. **Forme** (Niv. ~15) : l'objet « choisit » sa nature définitive (arme/objet/armure) selon les **décisions** du joueur.
+3. **Résonance** (Niv. ~35) : les **profondeurs** de l'âme s'ouvrent — une capacité spéciale unique se débloque.
+4. **Vérité** (Niv. ~60) : l'objet devient l'expression totale de l'âme. Forme « finale », liée à la fin obtenue.
+
+**Surface vs Profondeurs** : la *surface* est ce qu'on touche (stats, apparence) ; les *profondeurs* portent les **traits, la nature et les pouvoirs secrets**. Deux héros avec la même arme n'ont **jamais** le même Objet Spirituel.
+
+---
+
+## 18. LEXIQUE EXPRESS
+
+| Terme | Définition |
+|---|---|
+| **Source primordiale** | Un des 3 puits bruts : Corps (Sombre), Âme, Esprit (Originel). |
+| **Branche secondaire** | Version domestiquée d'une source : Négatif, Spirituelle, Positif. |
+| **Affinité** | Penchant de l'âme vers une/plusieurs sources. Évolue avec les choix. |
+| **SAN** | Santé Mentale ; gouverne l'Esprit et le Mana Originel/Positif. |
+| **Objet Spirituel** | Manifestation physique de l'âme ; arme/objet de départ évolutif. |
+| **Codes sources** | Le « code » du monde où retournent les âmes. |
+| **Corruption** | Réécriture irréversible d'une âme dans les codes sources. |
+| **Mana Pur / Semi-Parfait** | Énergie transcendante ; 1/1000 la maîtrise, au prix de la réalité. |
+
+---
+
 > *« Au centre de tout se trouve l'Âme — unique, immortelle, et seul vrai reflet du joueur dans ce monde. Protège-la. Car si le corps peut guérir, une âme corrompue ne revient jamais vraiment. »*
