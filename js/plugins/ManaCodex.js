@@ -161,12 +161,12 @@
                 '\\C[1]Alignés\\C[0] (1 source) ........... ≈ 72%',
                 '  +20% dans sa branche, −20% ailleurs.',
                 '\\C[6]Duaux\\C[0] (2 sources) ............ ≈ 15%',
-                '  +10% sur deux branches. Ex : \\C[2]Lou\\C[0].',
+                '  Avantages partiels sur 2 branches. Ex : \\C[2]Lou\\C[0], \\C[1]Neyssa\\C[0].',
+                '  (Corps+Esprit → ×1.25 partiel, résistances croisées)',
                 '\\C[8]Atones\\C[0] (aucune) .............. ≈ 12%',
                 '  0 bonus, mais 0 corruption, malus réduits.',
                 '\\C[17]Trines\\C[0] (3 faibles) ........... ≈ 0.9%',
-                '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%',
-                '  1/1000 : maîtrise les 3… au prix de la réalité.'
+                '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%'
             ]
         },
         {

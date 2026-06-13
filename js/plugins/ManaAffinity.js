@@ -175,27 +175,56 @@
         return (eid > 0) ? eid : 0;
     }
 
-    /** Affinité d'un battler via notetag (acteur, classe, ou ennemi). */
-    function affinityOf(battler) {
-        if (!battler) return 0;
+    /** Collecte les metas (acteur+classe ou ennemi) d'un battler. */
+    function _metasOf(battler) {
         var metas = [];
+        if (!battler) return metas;
         if (battler.isEnemy && battler.isEnemy() && battler.enemy()) {
             metas.push(battler.enemy().meta);
         } else if (battler.isActor && battler.isActor()) {
             if (battler.actor()) metas.push(battler.actor().meta);
             if (battler.currentClass && battler.currentClass()) metas.push(battler.currentClass().meta);
         }
+        return metas;
+    }
+
+    /** Affinité primaire d'un battler via <Mana: ...>. */
+    function affinityOf(battler) {
+        var metas = _metasOf(battler);
         for (var i = 0; i < metas.length; i++) {
             if (metas[i] && metas[i].Mana) return branchFromString(metas[i].Mana);
         }
         return 0;
     }
 
-    function cycleFactor(atkBranch, defBranch) {
+    /** Affinité secondaire d'un battler via <Mana2: ...> (Duaux uniquement). */
+    function affinity2Of(battler) {
+        var metas = _metasOf(battler);
+        for (var i = 0; i < metas.length; i++) {
+            if (metas[i] && metas[i].Mana2) return branchFromString(metas[i].Mana2);
+        }
+        return 0;
+    }
+
+    function _cycleSingle(atkBranch, defBranch) {
         if (!atkBranch || !defBranch) return 1;
         if (BEATS[atkBranch] === defBranch) return ADV; // avantage
         if (BEATS[defBranch] === atkBranch) return DIS; // désavantage
         return 1;
+    }
+
+    /**
+     * Facteur de cycle global. Si le défenseur a deux affinités (Dual),
+     * on fait la moyenne des deux facteurs individuels :
+     *   faiblesse + résistance = ×1.0 (s'annulent)
+     *   faiblesse + neutre     = ×1.25 (partiellement vulnérable)
+     *   résistance + neutre    = ×0.75 (partiellement résistant)
+     */
+    function cycleFactor(atkBranch, defBranch, defBranch2) {
+        var f1 = _cycleSingle(atkBranch, defBranch);
+        if (!defBranch2) return f1;
+        var f2 = _cycleSingle(atkBranch, defBranch2);
+        return (f1 + f2) / 2;
     }
 
     /** Facteur de Mana Positif selon la santé mentale du lanceur (via Ame). */
@@ -233,10 +262,16 @@
 
         // Cycle d'avantages (uniquement entre les 3 branches secondaires)
         if (atk === EL_NEG || atk === EL_SPI || atk === EL_POS) {
-            var f = cycleFactor(atk, affinityOf(target));
+            var aff1 = affinityOf(target);
+            var aff2 = affinity2Of(target);
+            var f = cycleFactor(atk, aff1, aff2);
             if (f !== 1) {
                 value = Math.floor(value * f);
-                this._manaCycleFlag = (f > 1) ? 'sup' : 'inf';
+                var isDual = !!aff2;
+                if (f >= ADV)       this._manaCycleFlag = 'sup';
+                else if (f > 1)     this._manaCycleFlag = isDual ? 'dual_sup' : 'sup';
+                else if (f <= DIS)  this._manaCycleFlag = 'inf';
+                else                this._manaCycleFlag = isDual ? 'dual_inf' : 'inf';
             }
         }
 
@@ -256,8 +291,12 @@
         _GA_apply.call(this, target);
         if (this._manaCycleFlag === 'sup') {
             battleLog('Affinité de Mana : c\'est super efficace !');
+        } else if (this._manaCycleFlag === 'dual_sup') {
+            battleLog('Double Affinité : l\'impact est partiellement amplifié.');
         } else if (this._manaCycleFlag === 'inf') {
             battleLog('Affinité de Mana : le coup est atténué…');
+        } else if (this._manaCycleFlag === 'dual_inf') {
+            battleLog('Double Affinité : l\'impact est partiellement atténué.');
         }
         this._manaCycleFlag = null;
     };
