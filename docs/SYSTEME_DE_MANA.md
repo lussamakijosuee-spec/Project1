@@ -149,11 +149,60 @@ L'affinité dépend de la **nature de l'âme**. Elle détermine la **puissance**
 
 **Distribution des affinités dans la population :**
 | Cas | Fréquence | Description |
-|---|---|---|
-| **Une source** | Courant | La majorité : prédisposition claire à un puits. |
-| **Aucune source** | Rare | Doit tout apprendre « à la dure », aucun bonus naturel. |
-| **Deux sources** | Peu courant | Polyvalence, deux branches accessibles. |
-| **Toutes les sources** | **1 / 1000** | Accès au **Mana Semi-Parfait** — au risque de **défier la réalité**. |
+|---|---|---|---|
+| Cas | Nom de société | Fréquence | Description courte |
+| **Affinité Simple** (1 source) | *les Alignés* | **≈ 72 %** | Prédisposition claire à un puits. Le cas « normal ». |
+| **Affinité Double** (2 sources) | *les Duaux* | **≈ 15 %** | Polyvalents, deux branches accessibles. Souvent élites/leaders. |
+| **Aucune Affinité** (0 source) | *les Atones* | **≈ 12 %** | Aucun bonus naturel — tout apprendre à la dure. |
+| **Affinité Triple** (3 sources, faibles) | *les Trines* | **≈ 0,9 %** | Touchent les 3 puits, mais aucun n'est dominant. |
+| **Mana Semi-Parfait** (3 sources maîtrisées) | *les Élus du Prisme* | **≈ 0,1 % (1/1000)** | Apex absolu — sous-branche du Mana Pur. Défie la réalité. |
+
+> *(Les pourcentages se cumulent à 100 % de la population des joueurs.)*
+
+### 7.1 · Détail des cinq cas
+
+**🟦 LES ALIGNÉS — Affinité Simple (≈72 %)**
+La grande majorité. Une âme « penche » naturellement vers **un seul** puits (Corps, Âme ou Esprit).
+- **Avantages** : puissance et facilité d'apprentissage **élevées** dans la branche secondaire correspondante. Coûts en mana réduits, montée en compétence rapide.
+- **Inconvénients** : **difficulté marquée** dans les deux autres branches (coûts majorés, sorts instables, plafond de puissance bas).
+- **Gameplay** : +20 % de dégâts/efficacité dans sa branche, −20 % dans les autres.
+- **Exemples** : **Thylane** *(Corps → Négatif)*, **Neyssa** & **Tianna** *(Esprit → Positif)*.
+
+**🟪 LES DUAUX — Affinité Double (≈15 %)**
+Deux puits répondent à l'âme. Plus rare, souvent perçu comme un signe de destin.
+- **Avantages** : **deux branches** réellement utilisables → grande **adaptabilité tactique** (peut couvrir une faiblesse du cycle).
+- **Inconvénients** : maîtrise un peu **moins profonde** qu'un Aligné dans chaque branche (l'âme se partage). Risque de **conflit intérieur** si les deux sources s'opposent (ex. Corps + Esprit).
+- **Gameplay** : +10 % dans ses deux branches, neutre dans la troisième.
+- **Exemple** : **Lou** *(Âme + Esprit → Spirituelle + Originel)* — d'où sa capacité unique à manipuler les âmes **et** à copier/adapter, mais aussi ses **traumatismes intenses** (deux sources = deux portes ouvertes aux contrecoups).
+
+**⬛ LES ATONES — Aucune Affinité (≈12 %)**
+L'âme ne résonne avec aucun puits. Longtemps méprisés, parfois… les plus libres.
+- **Avantages** : **aucune corruption naturelle**, aucune dépendance ; ils choisissent **librement** la branche qu'ils travaillent, et progressent de façon **stable et prévisible**. Insensibles à certains pièges (la rage du Négatif les blesse moins).
+- **Inconvénients** : **aucun bonus** ; tout coûte plus cher et plus lentement au départ. Plafond plus bas sans entraînement acharné.
+- **Gameplay** : 0 % bonus partout, mais **réduction des malus** (recul PV du Négatif/Sombre divisé par 2, immunité partielle à la corruption).
+- **Lore** : beaucoup d'**artisans, marchands et stratèges** sont des Atones — ils compensent par l'intelligence et la technique, pas la magie.
+
+**🌗 LES TRINES — Affinité Triple faible (≈0,9 %)**
+Les trois puits frémissent, mais **aucun ne domine**. État instable, souvent transitoire.
+- **Avantages** : accès aux **trois branches** → couvre tout le cycle.
+- **Inconvénients** : **puissance diluée** (aucune source forte), grande **instabilité** — une mauvaise série de décisions peut faire basculer brutalement vers une seule source… ou vers la corruption.
+- **Gameplay** : −10 % partout, mais peut utiliser **toutes** les branches sans pénalité d'accès.
+- **Destin** : un Trine qui **stabilise** ses trois sources par une volonté extraordinaire peut « cristalliser » en **Élu du Prisme**.
+
+**🌈 LES ÉLUS DU PRISME — Mana Semi-Parfait (≈0,1 %, 1/1000)**
+L'apex. Sous-branche directe du **Mana Pur**. Affinité **totale et maîtrisée** avec les trois sources.
+- **Avantages** : ignore le cycle, lance du **Mana Semi-Parfait** (skill type 7), accès quasi-illimité aux trois branches **et** aux éléments.
+- **Le prix** : leur magie **défie la réalité** — chaque usage intense peut provoquer des **distorsions** (glitches du monde, retours de code, conséquences imprévisibles). Plus ils sont puissants, plus le monde **devient instable** autour d'eux.
+- **Lore** : un Élu du Prisme est à la fois **bénédiction et menace** pour la trame du jeu. Les civilisations les craignent autant qu'elles les vénèrent.
+
+### 7.2 · L'affinité n'est PAS figée
+L'affinité dépend de la **nature de l'âme**, mais cette nature **évolue avec les décisions** du personnage :
+- Frôler ses émotions noires sans cesse → glissement vers le **Corps (Négatif/Sombre)**.
+- Cultiver la sérénité, l'étude, l'altruisme → renforcement de l'**Esprit (Positif)**.
+- Côtoyer la mort, les âmes, le deuil → ouverture vers l'**Âme (Spirituelle)**.
+- Une **chute de santé mentale (SAN)** peut **fermer** temporairement l'accès à une source (l'esprit brisé produit moins de Mana Originel).
+
+> ⚙️ **Branchement jeu** : ce glissement est déjà piloté par tes jauges de **Santé Mentale de l'Âme** (vars 11–14). On peut faire **changer l'affinité `<Mana>` d'un héros automatiquement** quand sa jauge bascule de phase (ex. Thylane qui sombre → son affinité Négatif s'intensifie).
 
 ---
 
