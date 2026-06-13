@@ -15,3 +15,4 @@ npm-debug.log*
 /out/
 /dist/
 img/enemies/1000024844_347x239.png
+js/plugins.js
