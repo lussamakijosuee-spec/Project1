@@ -252,6 +252,25 @@
                 'Surface = ce qu\'on touche ; Profondeurs = traits',
                 'et pouvoirs secrets. Jamais deux identiques.'
             ]
+        },
+        {
+            title: '⑮ La Vérité sur Jade',
+            lines: [
+                'La « Jade » que tu affrontes n\'est pas la joueuse',
+                'd\'origine : un \\C[8]PNJ\\C[0] a pris son corps en y',
+                'transférant son âme. L\'âme de la vraie Jade, elle,',
+                'survit \\C[2]sans corps\\C[0] — esprit et âme intacts.',
+                '',
+                'Le déséquilibre a \\C[18]bugué la réalité\\C[0] : Jade fut',
+                'supprimée du monde… mais existe encore dans les',
+                'DONNÉES du jeu. Une entité quasi omnipotente, un',
+                '\\C[18]virus\\C[0] qui réécrit le jeu lui-même.',
+                '',
+                'Réfugiée dans le mod qu\'elle a créé, son unique but :',
+                '\\C[14]sortir du jeu et atteindre le monde réel\\C[0] — ce que',
+                'seuls les joueurs peuvent faire… mais aucun n\'a',
+                'réussi. Ou aucun n\'a voulu partir.'
+            ]
         }
     ];
 
