@@ -46,5 +46,6 @@ var $plugins =
 {"name":"FactionsAmes","status":true,"description":"v1.0 ■ Factions : rejoins une faction -> bonus + variable.","parameters":{"factionVar":"19"}},
 {"name":"SuccesTitres","status":true,"description":"v1.0 ■ Succes/Titres debloquables + ecran.","parameters":{"menuCommand":"Succes"}},
 {"name":"SanctuaireAmes","status":true,"description":"v1.0 ■ Sanctuaire : apprends des competences avec des ames.","parameters":{"soulVar":"15"}},
-{"name":"AlchimieAmes","status":true,"description":"v1.0 ■ Alchimie : combine des objets en de meilleurs.","parameters":{}}
+{"name":"AlchimieAmes","status":true,"description":"v1.0 ■ Alchimie : combine des objets en de meilleurs.","parameters":{}},
+{"name":"--------------------","status":false,"description":"------------------------------------------------------------","parameters":{}}
 ];
