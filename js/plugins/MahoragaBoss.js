@@ -396,3 +396,31 @@
     };
 
 })();
+
+//=============================================================================
+// ▼ AMÉLIORATION ADDITIVE : KEV = RADAHN (armure gravitationnelle + météores)
+//   Bloc autonome — ne modifie PAS la logique au-dessus. Cible <Radahn>.
+//=============================================================================
+(function () {
+    'use strict';
+    function isRadahn(b) {
+        return b && b.isEnemy && b.isEnemy() && b.enemy() && b.enemy().meta && b.enemy().meta.Radahn;
+    }
+    // Armure gravitationnelle : il encaisse mieux tant qu'il est au-dessus de 50% PV.
+    var _mdv = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (target, crit) {
+        var v = _mdv.call(this, target, crit);
+        if (v > 0 && isRadahn(target) && target.hpRate() > 0.5) v = Math.floor(v * 0.75);
+        return v;
+    };
+    // Phase météores : annonce quand il passe sous 30% PV.
+    var _ma = Game_Enemy.prototype.makeActions;
+    Game_Enemy.prototype.makeActions = function () {
+        if (isRadahn(this) && !this._radahnMeteor && this.hpRate() <= 0.30) {
+            this._radahnMeteor = true;
+            var sc = SceneManager._scene;
+            if (sc && sc._logWindow) sc._logWindow.push('addText', "\\C[2]Kev s'élève dans le ciel… une PLUIE DE MÉTÉORES s'annonce !\\C[0]");
+        }
+        _ma.call(this);
+    };
+})();
