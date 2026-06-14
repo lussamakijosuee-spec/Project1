@@ -50,5 +50,6 @@ var $plugins =
 {"name": "AlchimieAmes", "status": true, "description": "v1.0 ■ Alchimie : combine des objets en de meilleurs.", "parameters": {}},
 {"name": "--------------------", "status": false, "description": "------------------------------------------------------------", "parameters": {}},
 {"name": "DonoBoss", "status": true, "description": "v1.0 ■ Dono : boss duo, genie progressif (empathie->serieux->Mana Parfait).", "parameters": {"empathieState": "176", "serieuxState": "177", "eveilState": "178", "syncReduc": "0.70"}},
-{"name": "JadeRework", "status": true, "description": "v1.0 ■ Jade Primordiale : Dernier Souffle (renait en Chaos, aidee par la 2e Jade).", "parameters": {"chaosState": "180", "reviveRate": "65"}}
+{"name": "JadeRework", "status": true, "description": "v1.0 ■ Jade Primordiale : Dernier Souffle (renait en Chaos, aidee par la 2e Jade).", "parameters": {"chaosState": "180", "reviveRate": "65"}},
+{"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
