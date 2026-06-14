@@ -1,7 +1,7 @@
 [
 null,
 {"id":1,"expanded":true,"name":"Plaine de Départ","order":8,"parentId":0,"scrollX":982.8,"scrollY":537.6},
-{"id":2,"expanded":true,"name":"Zone Commune","order":10,"parentId":4,"scrollX":973.1999999999999,"scrollY":537.6},
+{"id":2,"expanded":true,"name":"Zone Commune","order":10,"parentId":4,"scrollX":982.8,"scrollY":537.6},
 {"id":3,"expanded":true,"name":"Monde 3","order":12,"parentId":2,"scrollX":3826.7999999999997,"scrollY":3072},
 {"id":4,"expanded":true,"name":"Salle Intérieure","order":9,"parentId":1,"scrollX":982.8,"scrollY":537.6},
 {"id":5,"expanded":true,"name":"Temple Flottant","order":11,"parentId":2,"scrollX":973.1999999999999,"scrollY":902.4},
@@ -28,9 +28,9 @@ null,
 {"id":26,"expanded":true,"name":"Château Démoniaque 2","order":28,"parentId":25,"scrollX":1378.8,"scrollY":1872},
 {"id":27,"expanded":false,"name":"Château Démoniaque 3","order":29,"parentId":26,"scrollX":973.1999999999999,"scrollY":1142.3999999999999},
 {"id":28,"expanded":true,"name":"◇ Vide 028","order":1,"parentId":0,"scrollX":5616,"scrollY":3072},
-{"id":29,"expanded":true,"name":"Maison 1","order":31,"parentId":23,"scrollX":973.1999999999999,"scrollY":662.4},
+{"id":29,"expanded":false,"name":"Maison 1","order":31,"parentId":23,"scrollX":973.1999999999999,"scrollY":662.4},
 {"id":30,"expanded":true,"name":"Donjon (test)","order":2,"parentId":28,"scrollX":982.8,"scrollY":537.6},
 {"id":31,"expanded":true,"name":"◇ Vide 031","order":3,"parentId":30,"scrollX":982.8,"scrollY":537.6},
 {"id":32,"expanded":true,"name":"◇ Vide 032","order":4,"parentId":31,"scrollX":973.1999999999999,"scrollY":537.6},
-{"id":33,"expanded":false,"name":"◇ Vide 033","order":7,"parentId":0,"scrollX":819,"scrollY":448}
+{"id":33,"expanded":false,"name":"◇ Vide 033","order":7,"parentId":0,"scrollX":982.8,"scrollY":537.6}
 ]
