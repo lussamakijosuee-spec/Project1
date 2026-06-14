@@ -906,3 +906,28 @@
     }
 
 })();
+
+//=============================================================================
+// ▼ AMÉLIORATION ADDITIVE : JADE = MALENIA (vol de vie)            by JOKO
+//   Bloc autonome — ne modifie PAS la logique au-dessus. Cible <Malenia>.
+//=============================================================================
+(function () {
+    'use strict';
+    function isMalenia(b) {
+        return b && b.isEnemy && b.isEnemy() && b.enemy() && b.enemy().meta && b.enemy().meta.Malenia;
+    }
+    // Vol de vie iconique : Malenia se soigne de 50% des dégâts qu'elle inflige.
+    var _exec = Game_Action.prototype.executeDamage;
+    Game_Action.prototype.executeDamage = function (target, value) {
+        _exec.call(this, target, value);
+        var s = this.subject();
+        if (value > 0 && isMalenia(s) && s.isAlive()) {
+            var heal = Math.floor(value * 0.5);
+            if (heal > 0) {
+                s.gainHp(heal);
+                var sc = SceneManager._scene;
+                if (sc && sc._logWindow) sc._logWindow.push('addText', s.name() + ' draine la vie ! (+' + heal + ' PV)');
+            }
+        }
+    };
+})();
