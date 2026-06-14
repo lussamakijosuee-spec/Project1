@@ -43,6 +43,7 @@
         if ($gameVariables) $gameVariables.setValue(FVAR, f);
         $gameParty.members().forEach(function (a) { a.refresh(); });
         if (f && $gameMessage) $gameMessage.add('\\C[14]Tu rejoins : ' + NAMES[f] + '.\\C[0]');
+        if (f && window.Succes) window.Succes.unlock(6);
     }
 
     var _pp = Game_Actor.prototype.paramPlus;

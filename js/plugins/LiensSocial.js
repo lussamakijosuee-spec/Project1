@@ -52,6 +52,7 @@
             var id = resolve(k); if (!id) return;
             store()[id] = Math.max(0, Math.min(MAX, Math.round(v)));
             var a = $gameActors.actor(id); if (a) a.refresh();
+            if (store()[id] >= MAX && window.Succes) window.Succes.unlock(10);
         },
         up: function (k, n) {
             var id = resolve(k); if (!id) return;

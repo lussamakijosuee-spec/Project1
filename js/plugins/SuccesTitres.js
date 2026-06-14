@@ -47,9 +47,47 @@
         if (!s[id]) {
             s[id] = true;
             var a = LIST.filter(function (x) { return x.id === id; })[0];
-            if (a && $gameMessage) $gameMessage.add('\\C[14]★ Succès débloqué : ' + a.nom + ' !\\C[0]');
+            if (a) {
+                var txt = '\\C[14]★ Succès débloqué : ' + a.nom + ' !\\C[0]';
+                if ($gameParty && $gameParty.inBattle()) {
+                    var sc = SceneManager._scene;
+                    if (sc && sc._logWindow) sc._logWindow.push('addText', txt);
+                } else if ($gameMessage) {
+                    $gameMessage.add(txt);
+                }
+            }
         }
     }
+    // API publique pour que les autres plugins débloquent des succès.
+    window.Succes = { unlock: unlock, has: function (id) { return !!store()[id]; } };
+
+    //--- Auto-déblocage (hooks autonomes) ---
+    var _victory = BattleManager.processVictory;
+    BattleManager.processVictory = function () { unlock(1); _victory.call(this); };      // Premier Sang
+
+    var _setVar = Game_Variables.prototype.setValue;
+    Game_Variables.prototype.setValue = function (varId, value) {
+        _setVar.call(this, varId, value);
+        if (varId === 15 && value > 0) unlock(2);                                        // Glaneur d'Âmes
+    };
+
+    var _die = Game_BattlerBase.prototype.die;
+    Game_BattlerBase.prototype.die = function () {
+        _die.call(this);
+        if (this.isEnemy && this.isEnemy() && this.enemy()) {
+            var m = this.enemy().meta;
+            if (m && (m.DonoBoss || m.Malenia || m.Radahn || m.Mahoraga)) unlock(8);     // Briseur de Légende
+        }
+    };
+
+    var _startBattle = BattleManager.startBattle;
+    BattleManager.startBattle = function () {
+        _startBattle.call(this);
+        var dual = $gameParty.battleMembers().some(function (a) {
+            return a.actor() && a.actor().meta && a.actor().meta.Mana2;                   // affinité duale
+        });
+        if (dual) unlock(4);                                                              // Double Nature
+    };
 
     function Window_Succes() { this.initialize.apply(this, arguments); }
     Window_Succes.prototype = Object.create(Window_Selectable.prototype);

@@ -46,6 +46,7 @@
         this._forgeBonus[pid] = (this._forgeBonus[pid] || 0) + (GAIN[pid] || 5);
         this._forgeLv[pid] = (this._forgeLv[pid] || 0) + 1;
         this.refresh();
+        if (window.Succes) window.Succes.unlock(7);
     };
 
     function souls() { return $gameVariables ? $gameVariables.value(SOUL) : 0; }
