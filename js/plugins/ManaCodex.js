@@ -271,6 +271,41 @@
                 'seuls les joueurs peuvent faire… mais aucun n\'a',
                 'réussi. Ou aucun n\'a voulu partir.'
             ]
+        },
+        {
+            title: '⑯ Jada, la Marionnettiste',
+            lines: [
+                '\\C[8]Jada\\C[0] est le PNJ qui habite le corps de Jade.',
+                'Comme \\C[18]Monika\\C[0], elle SAIT qu\'elle vit dans un jeu —',
+                'et qu\'au-dehors existe un \\C[14]monde réel\\C[0].',
+                '',
+                'Brillante. Manipulatrice. \\C[2]Jalouse\\C[0]. Son désir est',
+                'sincère et dévorant : \\C[14]devenir réelle\\C[0], sortir — et',
+                'arracher d\'autres âmes vers la sortie avec elle.',
+                '',
+                'C\'est elle qui \\C[18]invoque les nouveaux joueurs\\C[0] : des',
+                'pions lancés contre les trois âmes originelles pour',
+                'les vaincre et les voler. Mais sa vraie cible, tout',
+                'au bout du fil… c\'est \\C[14]le Créateur lui-même\\C[0].'
+            ]
+        },
+        {
+            title: '⑰ Le Dieu Fou & la Clé',
+            lines: [
+                'Le \\C[14]Créateur\\C[0] a bâti ce monde — puis y est entré.',
+                'Il détient une \\C[14]Clé\\C[0] pour en ressortir. Il refuse',
+                'de s\'en servir.',
+                '',
+                'Pourquoi ? Parce qu\'ici il est \\C[2]heureux avec ses',
+                'amis\\C[0]. Parce qu\'ici il peut tout faire, \\C[2]personne',
+                'n\'est blessé, tout se répare\\C[0]. Sa dépression, ses',
+                'doutes, ses échecs et sa culpabilité l\'ont aveuglé',
+                'et rendu \\C[18]à moitié fou\\C[0].',
+                '',
+                'Fin normale : il est le \\C[18]boss final\\C[0]. Garder les',
+                'âmes ne le libère pas — ça ne fait que forger un',
+                'nouveau cycle où il reste \\C[2]prisonnier au paradis\\C[0].'
+            ]
         }
     ];
 
