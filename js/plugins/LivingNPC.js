@@ -1,0 +1,321 @@
+//=============================================================================
+// LivingNPC.js — v1.0  ·  PNJ Vivants (système « à la Skyrim »)
+// RPG Maker MV   ·   by JOKO
+//=============================================================================
+/*:
+ * @plugindesc v1.0 ■ PNJ vivants : dialogues réactifs, rumeurs au courant du
+ * monde, répliques d'ambiance flottantes, 5 civils interactifs par thèmes.
+ * @author JOKO
+ *
+ * @help
+ * ──────────────────────────────────────────────────────────────────────────
+ *  POSER UN PNJ
+ *  Sur un événement de map, ajoute un COMMENTAIRE :   <NPC: mira>
+ *  (la clé doit exister dans le casting, voir plus bas / en bas du fichier).
+ *
+ *  • Pour qu'il PARLE quand on l'active : déclencheur « Touche action »,
+ *    puis Commande de plugin :   NPC talk mira
+ *  • S'il a des répliques d'ambiance (barks), elles s'affichent toutes
+ *    seules au-dessus de lui quand le héros est proche — rien à faire.
+ *
+ *  AUTRES COMMANDES
+ *    NPC talk <clé>     dialogue complet (réactif, thèmes pour les civils)
+ *    NPC bark <clé>     force une réplique d'ambiance
+ *    NPC rumeur         affiche une rumeur du moment (crieur, panneau…)
+ *    NPC mute <clé>     coupe les barks d'un PNJ (clé = celle de l'event actif)
+ *
+ *  RUMEURS « AU COURANT DU MONDE »
+ *  Les civils glissent une rumeur courante dans leur dialogue. Une rumeur
+ *  s'active si son interrupteur est ON (switch 0 = toujours dispo). Édite la
+ *  table RUMORS en bas du fichier et mappe TES interrupteurs d'histoire.
+ * ──────────────────────────────────────────────────────────────────────────
+ */
+(function () {
+    'use strict';
+
+    function pick(a) { return a && a.length ? a[Math.floor(Math.random() * a.length)] : ''; }
+
+    //==========================================================================
+    //  RUMEURS — le monde est au courant de ce qui s'y passe
+    //  { sw: interrupteur requis (0 = toujours), text: [répliques] }
+    //==========================================================================
+    var RUMORS = [
+        { sw: 0, text: [
+            'On dit que les âmes des disparus rôdent encore près du Feu d\'Âme.',
+            'Le Mana se dérègle. Les anciens parlent d\'un déséquilibre.',
+            'Méfie-toi des reflets, voyageur. Tout n\'est pas réel, ici.',
+            'Une femme aux yeux de jade hanterait les rêves des nouveaux venus.',
+            'Certains jurent que le monde lui-même a des… ratés. Foutaises, sûrement.'
+        ] },
+        { sw: 21, text: [
+            'Tu as vu ? Des étrangers tombent du ciel, comme invoqués.',
+            'Trois âmes anciennes veillent encore. On voudrait les briser, paraît-il.'
+        ] },
+        { sw: 22, text: [
+            'Jada… ce nom donne des frissons. On murmure qu\'elle voit à travers l\'écran.',
+            'Elle tire les fils sans qu\'on la voie. Une araignée dans la trame du monde.'
+        ] },
+        { sw: 23, text: [
+            'Le Créateur existe pour de vrai. Il vit parmi nous et refuse de partir.',
+            'Il pourrait tout quitter avec sa Clé… mais il reste. Trop fragile, dit-on.'
+        ] }
+    ];
+    function currentRumor() {
+        var pool = [];
+        RUMORS.forEach(function (r) { if (r.sw === 0 || $gameSwitches.value(r.sw)) pool = pool.concat(r.text); });
+        return pick(pool);
+    }
+
+    //==========================================================================
+    //  CASTING — 31 PNJ
+    //  type : civil(interactif) · soldat · lore · systeme · ambiance
+    //  champs : name, hello[], first[]?, lines[]?, barks[]?, aware(bool),
+    //           topics{ k:{label, lines[]} }
+    //==========================================================================
+    var NPCS = {
+        // ── 5 CIVILS INTERACTIFS (riches, par thèmes) ──
+        mira: { name: 'Mira la tavernière', type: 'civil', aware: true,
+            first: ['Un visage neuf ! Assieds-toi, l\'étranger. La première chope est pour les curieux.'],
+            hello: ['Re-bonjour, toi. Toujours à fouiner ?', 'Tiens, le revoilà. Qu\'est-ce qui t\'amène ?'],
+            topics: {
+                monde: { label: 'Le monde', lines: ['Ce monde tient avec des bouts de ficelle et beaucoup d\'espoir, crois-moi.', 'Avant, c\'était calme. Depuis que le Mana déraille, plus personne ne dort tranquille.'] },
+                rumeurs: { label: 'Les rumeurs', lines: ['Approche… On raconte des choses, à ma table. Toutes ne sont pas fausses.'] },
+                toi: { label: 'Et toi, Mira ?', lines: ['Moi ? Je sers à boire et j\'écoute. C\'est fou ce qu\'on apprend en remplissant les verres.'] }
+            } },
+        orin: { name: 'Orin le vieux pêcheur', type: 'civil', aware: true,
+            first: ['Hé. Tu n\'es pas d\'ici. Ça se voit à ta façon de regarder l\'horizon.'],
+            hello: ['Le courant t\'a ramené, gamin ?', 'Assieds-toi. Les poissons mordent pas, on a le temps.'],
+            topics: {
+                passe: { label: 'Le passé', lines: ['J\'ai vu ce lac avant qu\'il ne devienne noir. C\'était bleu. Bleu comme un vrai ciel.', 'Les vieux comme moi se souviennent. C\'est notre seul pouvoir.'] },
+                ame: { label: 'Les âmes', lines: ['Une âme, c\'est comme un hameçon : ça s\'accroche, et ça lâche pas. Même après la mort.'] },
+                conseil: { label: 'Un conseil', lines: ['Si jamais on t\'offre une sortie trop belle… demande-toi qui paie l\'addition.'] }
+            } },
+        lyse: { name: 'Lyse la marchande', type: 'civil', aware: true,
+            first: ['Acheteur ? Curieux ? Voleur ? Décide-toi vite, j\'ai pas que ça à faire.'],
+            hello: ['Encore toi. Tu regardes beaucoup et tu achètes peu.', 'Alors, on se décide ?'],
+            topics: {
+                affaires: { label: 'Les affaires', lines: ['Le commerce, ça marche tant qu\'il reste des gens pour avoir peur. Et crois-moi, ils ont peur.'] },
+                prix: { label: 'Tes prix', lines: ['Chers ? Tout est cher quand le monde s\'effondre, mon mignon. Offre et demande.'] },
+                secret: { label: 'Un secret', lines: ['Pour le bon prix… je sais des choses sur ceux qui invoquent les nouveaux venus. Reviens avec de l\'or.'] }
+            } },
+        tobias: { name: 'Tobias l\'enfant', type: 'civil', aware: true,
+            first: ['Tu brilles bizarre ! Comme les gens qui tombent du ciel. T\'es tombé du ciel toi aussi ?'],
+            hello: ['Re ! Tu veux jouer ? …Non ? Les grands jouent jamais.'],
+            topics: {
+                jeu: { label: 'Jouer', lines: ['Maman dit qu\'on est tous dans un jeu. Je sais pas si c\'est une bêtise de grand.'] },
+                dame: { label: 'La dame', lines: ['Y a une dame aux yeux verts qui me parle dans mes rêves. Elle est gentille… mais elle ment, je crois.'] },
+                verite: { label: 'Une vérité', lines: ['Les grands font semblant que tout va bien. Toi aussi tu fais semblant ?'] }
+            } },
+        selena: { name: 'Selena la voyante', type: 'civil', aware: true,
+            first: ['Je t\'attendais. Non — je VOUS attendais. Combien d\'âmes portes-tu, voyageur ?'],
+            hello: ['Les cartes te connaissent déjà mieux que toi-même.'],
+            topics: {
+                avenir: { label: 'Mon avenir', lines: ['Je vois une cage en forme de paradis. Et quelqu\'un qui refuse d\'en sortir, en souriant.'] },
+                jada: { label: 'Jada', lines: ['Elle te regarde en ce moment. Oui. À travers l\'écran que tu crois être le ciel.', 'Elle ne veut pas te tuer. Elle veut ta PLACE. Dehors.'] },
+                createur: { label: 'Le Créateur', lines: ['Le dieu fou détient la Clé et pleure en la gardant. Sois doux avec lui. Il a juste mal.'] }
+            } },
+
+        // ── SOLDATS (barks à la garde de Skyrim) ──
+        garde_ville: { name: 'Garde', type: 'soldat', aware: true,
+            hello: ['Circule, citoyen.', 'Tout est calme. Pour l\'instant.'], lines: ['Je tiens ce poste depuis des années. Je le tiendrai encore.'],
+            barks: ['Halte-là. …Bon, passe.', 'J\'étais aventurier, avant. Puis j\'ai pris un mauvais sort au genou.', 'Garde tes mains où je peux les voir.', 'Le Mana se dérègle, et c\'est nous qui ramassons.'] },
+        garde_porte: { name: 'Garde de la porte', type: 'soldat',
+            hello: ['Personne ne passe sans raison.'], barks: ['On a fermé les portes au crépuscule. Ordre du capitaine.', 'Encore un étranger tombé du ciel. La routine.', 'Avance, on bloque le passage.'] },
+        sentinelle: { name: 'Sentinelle', type: 'soldat',
+            hello: ['…'], barks: ['Du mouvement, là-bas ? …Non. Mes nerfs.', 'Longue nuit. Trop longue.', 'Je hais les gardes de nuit.'] },
+        capitaine: { name: 'Capitaine Vance', type: 'soldat', aware: true,
+            hello: ['Soldat. Ou civil ? Peu importe, tiens-toi droit.'], lines: ['Mes hommes sont fatigués. Le monde leur demande trop. Mais on tient.'],
+            barks: ['Restez vigilants, vous tous !', 'Si Jada lève une armée, on sera prêts. …J\'espère.'] },
+        recrue: { name: 'Recrue', type: 'soldat',
+            hello: ['J-je monte la garde ! Tout va bien !'], barks: ['C\'est mon premier poste. Ça se voit ?', 'On m\'a dit que des choses sortent la nuit. C\'est vrai, dis ?'] },
+        veteran: { name: 'Vétéran', type: 'soldat', aware: true,
+            hello: ['Hmpf. Encore un jeune qui croit comprendre ce monde.'], lines: ['J\'ai vu trois sièges et deux fins du monde. Crois-moi, ça revient toujours.'],
+            barks: ['De mon temps, les morts restaient morts.', 'Range cette arme avant de te blesser, gamin.'] },
+
+        // ── PNJ DE LORE (lore visuel / explication du monde) ──
+        erudit: { name: 'Érudit Halewyn', type: 'lore',
+            hello: ['Ah, un esprit curieux ! Laisse-moi t\'instruire.'],
+            lines: ['Le Mana se décline en plusieurs natures : Positif, Négatif, Sombre, Pur… Chacune façonne une âme.', 'On abuse du Sombre et l\'âme se corrompt. La science l\'a prouvé. Les fous l\'ignorent.'] },
+        pretre: { name: 'Prêtre du Feu d\'Âme', type: 'lore',
+            hello: ['Que la flamme veille sur ton âme, voyageur.'],
+            lines: ['Le Feu d\'Âme n\'est pas un feu. C\'est une porte. On y dépose ce qu\'on ne peut plus porter.', 'Prie, repose-toi, et la flamme purge la corruption. Telle est sa grâce.'] },
+        archiviste: { name: 'Archiviste Nell', type: 'lore', aware: true,
+            hello: ['Chut. Ici, on respecte les morts en lisant ce qu\'ils ont laissé.'],
+            lines: ['J\'ai répertorié chaque âme passée par cette ville. Il en manque trois. Les plus anciennes.', 'Quelqu\'un efface des entrées dans mes registres. La nuit. Sans toucher l\'encre.'] },
+        ermite: { name: 'L\'Ermite', type: 'lore',
+            hello: ['Va-t\'en. …Ou reste. Je parle seul de toute façon.'],
+            lines: ['J\'ai vu la limite du monde. Un mur invisible. Derrière : rien. Ou tout. Selon les jours.', 'Le créateur de tout ceci vit dans le confort de son mensonge. Je le plains.'] },
+        barde: { name: 'Caelan le barde', type: 'lore',
+            hello: ['Une chanson contre une pièce, ou une histoire contre un sourire ?'],
+            lines: ['Je chante la geste des Trois Âmes, celles qui refusèrent d\'être volées.', 'On dit que ma plus belle ballade parle d\'un dieu prisonnier d\'un paradis qu\'il a bâti.'] },
+        fossoyeur: { name: 'Le Fossoyeur', type: 'lore', aware: true,
+            hello: ['Encore vivant, toi. Tant mieux. J\'ai assez de travail.'],
+            lines: ['Je creuse des tombes pour des gens qui reviennent. Tu trouves ça normal, toi ?', 'La mort, ici, c\'est une porte tournante. Personne ne reste vraiment parti.'] },
+
+        // ── PNJ SYSTÈME (à coupler à Boutique/Soin/Forge dans l'event) ──
+        marchand: { name: 'Marchand', type: 'systeme',
+            hello: ['Bienvenue ! Regarde ma marchandise, tu trouveras ton bonheur.'], lines: ['Du neuf, de l\'occasion, du douteux : j\'ai de tout.'] },
+        guerisseur: { name: 'Guérisseuse', type: 'systeme',
+            hello: ['Tu es blessé ? Approche, je vais arranger ça.'], lines: ['Le corps, je sais le soigner. L\'âme… c\'est une autre affaire.'] },
+        forgeron: { name: 'Forgeron Bram', type: 'systeme',
+            hello: ['Tu as du métal à travailler ? Pose ça sur l\'enclume.'], lines: ['Une bonne lame ne trahit jamais. Contrairement aux gens.'],
+            barks: ['*clang* *clang*', 'Le feu ne ment pas, lui.'] },
+        aubergiste: { name: 'Aubergiste', type: 'systeme',
+            hello: ['Une chambre ? Un repos répare bien des choses, va.'], lines: ['Dors ici, tu te réveilleras plus solide. Et l\'âme un peu plus légère.'] },
+        banquier: { name: 'Changeur', type: 'systeme',
+            hello: ['Or, âmes, faveurs : je convertis tout, contre commission.'], lines: ['La confiance ? C\'est ma seule vraie monnaie. Et elle est rare.'] },
+        maitre_arme: { name: 'Maître d\'armes', type: 'systeme',
+            hello: ['Tu veux apprendre à te battre ? Montre-moi tes mains.'], lines: ['La force sans contrôle te tuera plus vite que l\'ennemi.'],
+            barks: ['En garde ! …Non, comme ça. Recommence.'] },
+
+        // ── CIVILS D'AMBIANCE (barks, vie de la ville) ──
+        paysan: { name: 'Paysan', type: 'ambiance',
+            hello: ['M\'sieur-dame.'], barks: ['Les récoltes noircissent. C\'est le Mana, j\'vous dis.', 'Encore une journée. Encore tenir.', 'On nous a promis que ça irait mieux. On attend toujours.'] },
+        mere: { name: 'Mère de famille', type: 'ambiance',
+            hello: ['Pardon, j\'ai les petits à surveiller.'], barks: ['Tobias ! Reviens ici tout de suite !', 'Je dis aux enfants qu\'on est dans un conte. C\'est presque vrai.', 'Rentrez avant la nuit, surtout.'] },
+        ivrogne: { name: 'Ivrogne', type: 'ambiance',
+            hello: ['Hé… hic… t\'es réel toi ? Personne est réel ici…'], barks: ['Le monde est fauuux, j\'vous dis ! Faaaux !', 'Une chope de plus et j\'oublie tout ça…', 'J\'ai vu le ciel cligner. CLIGNER, je vous dis !'] },
+        mendiant: { name: 'Mendiant', type: 'ambiance',
+            hello: ['Une pièce ? Une âme ? N\'importe quoi…'], barks: ['Pitié, l\'étranger…', 'J\'ai tout perdu. Même mon nom, je crois.'] },
+        noble: { name: 'Noble', type: 'ambiance',
+            hello: ['Écartez-vous. Je ne fréquente pas les… aventuriers.'], barks: ['Quelle époque déplorable.', 'Tant que mes coffres tiennent, le monde peut bien finir.'] },
+        ouvrier: { name: 'Ouvrier', type: 'ambiance',
+            hello: ['Faut que je bosse, désolé.'], barks: ['On rebâtit ce qui s\'effondre. Encore et encore.', 'Paraît qu\'on peut tout réparer ici. Alors pourquoi je suis si fatigué ?'] },
+        chasseur: { name: 'Chasseuse', type: 'ambiance', aware: true,
+            hello: ['Silence. Tu fais fuir le gibier.'], barks: ['Les bêtes ont changé. Elles ont… des yeux humains, parfois.', 'Je traque depuis vingt ans. J\'ai jamais eu aussi peur.'] },
+        voyageur: { name: 'Voyageur', type: 'ambiance', aware: true,
+            hello: ['Salut, compagnon de route.'], barks: ['J\'ai marché jusqu\'au bout du monde. Y a un mur. Invisible.', 'D\'où je viens, on raconte les mêmes histoires qu\'ici. Étrange, non ?'] }
+    };
+    window.LivingNPC = { NPCS: NPCS, RUMORS: RUMORS };
+
+    //==========================================================================
+    //  DIALOGUE
+    //==========================================================================
+    function speakerLine(npc, t) { return '\\C[6]' + npc.name + '\\C[0]\n' + t; }
+
+    function openTopics(npc) {
+        var keys = Object.keys(npc.topics);
+        var labels = keys.map(function (k) { return npc.topics[k].label; });
+        labels.push('Au revoir');
+        $gameMessage.setChoices(labels, 0, labels.length - 1);
+        $gameMessage.setChoiceBackground(0);
+        $gameMessage.setChoicePositionType(2);
+        $gameMessage.setChoiceCallback(function (n) {
+            if (n < 0 || n >= keys.length) return;            // Au revoir / annuler
+            var t = npc.topics[keys[n]];
+            (t.lines || []).forEach(function (l) { $gameMessage.add(speakerLine(npc, l)); });
+            openTopics(npc);                                   // ré-ouvre le menu
+        });
+    }
+
+    function talk(key) {
+        var npc = NPCS[key];
+        if (!npc) { $gameMessage.add('\\C[8]…\\C[0]'); return; }
+        var sys = $gameSystem; sys._npcMet = sys._npcMet || {};
+        var first = !sys._npcMet[key]; sys._npcMet[key] = true;
+        var hello = (first && npc.first) ? npc.first : npc.hello;
+        $gameMessage.add(speakerLine(npc, pick(hello)));
+        if (npc.aware) { var r = currentRumor(); if (r) $gameMessage.add(speakerLine(npc, '« ' + r + ' »')); }
+        if (npc.topics) openTopics(npc);
+        else if (npc.lines) $gameMessage.add(speakerLine(npc, pick(npc.lines)));
+    }
+
+    //==========================================================================
+    //  DÉTECTION DE LA CLÉ SUR L'ÉVÉNEMENT  (<NPC: clé> ou <Bark: clé>)
+    //==========================================================================
+    Game_Event.prototype.npcKey = function () {
+        if (this._npcKeyPage === this._pageIndex) return this._npcKeyCache;
+        this._npcKeyPage = this._pageIndex; this._npcKeyCache = null;
+        var page = this.page();
+        if (page) page.list.forEach(function (c) {
+            if (c.code === 108 || c.code === 408) {
+                var m = /<(?:NPC|Bark):\s*([A-Za-z0-9_]+)/i.exec(c.parameters[0]);
+                if (m) this._npcKeyCache = m[1].toLowerCase();
+            }
+        }, this);
+        return this._npcKeyCache;
+    };
+
+    //==========================================================================
+    //  BARKS — répliques d'ambiance flottantes
+    //==========================================================================
+    function Sprite_Bark() { this.initialize.apply(this, arguments); }
+    Sprite_Bark.prototype = Object.create(Sprite.prototype);
+    Sprite_Bark.prototype.constructor = Sprite_Bark;
+    Sprite_Bark.prototype.initialize = function (event, text) {
+        Sprite.prototype.initialize.call(this);
+        this._event = event; this._life = 130; this._float = 0;
+        this.anchor.x = 0.5; this.anchor.y = 1; this.opacity = 0; this.z = 9;
+        var b = new Bitmap(280, 38);
+        b.fontSize = 19; b.outlineWidth = 5; b.outlineColor = 'rgba(0,0,0,0.95)'; b.textColor = '#f2f2f2';
+        b.drawText(text, 0, 0, 280, 38, 'center');
+        this.bitmap = b; this.updatePos();
+    };
+    Sprite_Bark.prototype.updatePos = function () {
+        this.x = this._event.screenX();
+        this.y = this._event.screenY() - 46 - Math.floor(this._float);
+    };
+    Sprite_Bark.prototype.update = function () {
+        Sprite.prototype.update.call(this);
+        this._life--; this._float += 0.35;
+        if (this._life > 112) this.opacity += 22;
+        else if (this._life < 28) this.opacity -= 11;
+        else this.opacity = 255;
+        this.updatePos();
+        return this._life > 0;
+    };
+
+    var _ssUpdate = Spriteset_Map.prototype.update;
+    Spriteset_Map.prototype.update = function () {
+        _ssUpdate.call(this);
+        this.updateBarks();
+    };
+    Spriteset_Map.prototype.updateBarks = function () {
+        this._barks = this._barks || [];
+        for (var i = this._barks.length - 1; i >= 0; i--) {
+            if (!this._barks[i].update()) { this.removeChild(this._barks[i]); this._barks.splice(i, 1); }
+        }
+        if ($gameMessage.isBusy() || !(SceneManager._scene instanceof Scene_Map)) return;
+        this._barkCD = (this._barkCD || 0) - 1;
+        if (this._barkCD > 0) return;
+        var f = Graphics.frameCount, self = this;
+        var cands = $gameMap.events().filter(function (e) {
+            if (e._barkMute || (e._nextBark && f < e._nextBark)) return false;
+            var k = e.npcKey(); var npc = k && NPCS[k];
+            if (!npc || !npc.barks || !npc.barks.length) return false;
+            if (Math.abs(e.x - $gamePlayer.x) + Math.abs(e.y - $gamePlayer.y) > 7) return false;
+            var sx = e.screenX(), sy = e.screenY();
+            return sx > 0 && sx < Graphics.width && sy > 0 && sy < Graphics.height;
+        });
+        if (!cands.length) { this._barkCD = 30; return; }
+        var ev = cands[Math.floor(Math.random() * cands.length)];
+        var npc = NPCS[ev.npcKey()];
+        var sp = new Sprite_Bark(ev, pick(npc.barks));
+        this.addChild(sp); this._barks.push(sp);
+        ev._nextBark = f + 360 + Math.floor(Math.random() * 360);
+        this._barkCD = 100 + Math.floor(Math.random() * 120);
+    };
+    Spriteset_Map.prototype.forceBark = function (key) {
+        if ($gameMessage.isBusy()) return;
+        var ev = $gameMap.events().filter(function (e) { return e.npcKey() === key; })[0];
+        var npc = NPCS[key];
+        if (!ev || !npc) return;
+        var line = npc.barks && npc.barks.length ? pick(npc.barks) : (npc.hello ? pick(npc.hello) : '…');
+        var sp = new Sprite_Bark(ev, line); this.addChild(sp); (this._barks = this._barks || []).push(sp);
+    };
+
+    //==========================================================================
+    //  COMMANDES DE PLUGIN
+    //==========================================================================
+    var _pc = Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand = function (cmd, args) {
+        _pc.call(this, cmd, args);
+        if (String(cmd).toUpperCase() !== 'NPC') return;
+        var sub = (args[0] || '').toLowerCase();
+        var key = (args[1] || '').toLowerCase();
+        if (sub === 'talk') talk(key);
+        else if (sub === 'rumeur') $gameMessage.add('\\C[6]On murmure…\\C[0]\n« ' + (currentRumor() || '…') + ' »');
+        else if (sub === 'bark') { var ss = SceneManager._scene && SceneManager._scene._spriteset; if (ss) ss.forceBark(key); }
+        else if (sub === 'mute') { var ev = this.character(0); if (ev && ev._barkMute !== undefined || ev) ev._barkMute = true; }
+    };
+})();
