@@ -187,13 +187,13 @@
         {
             title: '⑩ Les Grandes Factions',
             lines: [
-                '\\C[1]Culte des Sorcières des Étoiles\\C[0] (Positif)',
-                '  Fondé par une joueuse. Soigner, prédire,',
+                '\\C[1]Sorcières des Étoiles\\C[0] (Positif) — fondées par',
+                '  \\C[14]JADE\\C[0], déesse primordiale. Soigner, prédire,',
                 '  protéger. Ce sont elles qui enseignent la magie.',
                 '',
-                '\\C[6]Empire Vultric\\C[0] (Négatif)',
-                '  Fondé par un joueur. A réhabilité le Mana Sombre.',
-                '  « La force se paie avec sa propre chair. »',
+                '\\C[6]Empire Vultric\\C[0] (Négatif) — fondé par \\C[6]KEV\\C[0].',
+                '  Mentalité de conquête (un peu « Thragg ») : seuls',
+                '  les forts méritent ; la force se paie de sa chair.',
                 '',
                 '\\C[2]Les Voix de l\'Âme\\C[0] (Spirituelle) — nécro,',
                 '  invocateurs, Lou. N\'écoute jamais trop les morts.'
