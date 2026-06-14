@@ -53,6 +53,7 @@
         $gameSystem._ngPlus = ($gameSystem._ngPlus || 0) + 1;
         $gameParty.members().forEach(function (a) { a.recoverAll(); });
         $gamePlayer.reserveTransfer(SMAP, SX, SY, 2, 0);
+        if (window.Succes) window.Succes.unlock(9);
     }
 
     //--- Renforcement des ennemis selon le cycle ---

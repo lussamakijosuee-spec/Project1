@@ -87,6 +87,7 @@
     function restAtFire() {
         $gameParty.members().forEach(function (a) { a.recoverAll(); });
         setCheckpoint();
+        if (window.Succes) window.Succes.unlock(3);
     }
 
     //=========================================================================

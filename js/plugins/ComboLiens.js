@@ -69,15 +69,13 @@
         return true;
     };
 
-    // Petit message si on tente un combo verrouillé hors-combat (script)
-    if (HINT) {
-        var _canUse = Game_BattlerBase.prototype.canUse;
-        Game_BattlerBase.prototype.canUse = function (item) {
-            var ok = _canUse.call(this, item);
-            if (!ok && item && comboData(item) && $gameParty.inBattle()) {
-                // silencieux : l'UI grise déjà la commande
-            }
-            return ok;
-        };
-    }
+    // Succès « Cœurs Unis » : débloqué quand un combo d'équipe est déclenché.
+    var _apply = Game_Action.prototype.apply;
+    Game_Action.prototype.apply = function (target) {
+        _apply.call(this, target);
+        if (!this._comboSuccesDone && comboData(this.item())) {
+            this._comboSuccesDone = true;
+            if (window.Succes) window.Succes.unlock(5);
+        }
+    };
 })();
