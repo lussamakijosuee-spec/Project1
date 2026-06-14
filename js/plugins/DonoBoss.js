@@ -124,13 +124,36 @@
         return value;
     };
 
-    // Quand l'Esprit meurt : Dono perd sa protection (message)
+    // L'Esprit renaît tant que Dono vit ; quand Dono meurt, l'Esprit s'éteint avec lui.
     var _die = Game_BattlerBase.prototype.die;
     Game_BattlerBase.prototype.die = function () {
         var wasEsprit = isEsprit(this);
         _die.call(this);
         if (wasEsprit) {
-            log('\\C[2]L\'Esprit Vengeur se dissipe… La paranoïa de Dono se fissure : il est vulnérable !\\C[0]');
+            log('\\C[2]L\'Esprit Vengeur se dissipe… Dono est vulnérable un instant.\\C[0]');
+        }
+        if (isDono(this) && $gameTroop) {
+            $gameTroop.members().forEach(function (m) {
+                if (isEsprit(m) && m.isAlive()) m.addState(m.deathStateId());
+            });
+            log('\\C[2]Dono tombe… son Esprit Vengeur s\'éteint avec lui.\\C[0]');
+        }
+    };
+
+    // À la fin de chaque tour : si Dono vit, son Esprit renaît (fenêtre de vulnérabilité).
+    var _endTurn = BattleManager.endTurn;
+    BattleManager.endTurn = function () {
+        _endTurn.call(this);
+        if (!$gameTroop) return;
+        var dono = $gameTroop.members().filter(isDono)[0];
+        if (dono && dono.isAlive()) {
+            $gameTroop.members().forEach(function (m) {
+                if (isEsprit(m) && m.isDead()) {
+                    m.clearStates();
+                    m.setHp(Math.floor(m.mhp * 0.5));
+                    log('\\C[14]L\'Esprit Vengeur renaît tant que Dono vit !\\C[0]');
+                }
+            });
         }
     };
 

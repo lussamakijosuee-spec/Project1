@@ -49,5 +49,6 @@ var $plugins =
 {"name": "SanctuaireAmes", "status": true, "description": "v1.0 ■ Sanctuaire : apprends des competences avec des ames.", "parameters": {"soulVar": "15"}},
 {"name": "AlchimieAmes", "status": true, "description": "v1.0 ■ Alchimie : combine des objets en de meilleurs.", "parameters": {}},
 {"name": "--------------------", "status": false, "description": "------------------------------------------------------------", "parameters": {}},
-{"name": "DonoBoss", "status": true, "description": "v1.0 ■ Dono : boss duo, genie progressif (empathie->serieux->Mana Parfait).", "parameters": {"empathieState": "176", "serieuxState": "177", "eveilState": "178", "syncReduc": "0.70"}}
+{"name": "DonoBoss", "status": true, "description": "v1.0 ■ Dono : boss duo, genie progressif (empathie->serieux->Mana Parfait).", "parameters": {"empathieState": "176", "serieuxState": "177", "eveilState": "178", "syncReduc": "0.70"}},
+{"name": "JadeRework", "status": true, "description": "v1.0 ■ Jade Primordiale : Dernier Souffle (renait en Chaos, aidee par la 2e Jade).", "parameters": {"chaosState": "180", "reviveRate": "65"}}
 ];
