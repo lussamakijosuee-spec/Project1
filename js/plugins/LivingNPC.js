@@ -184,7 +184,58 @@
         chasseur: { name: 'Chasseuse', type: 'ambiance', aware: true,
             hello: ['Silence. Tu fais fuir le gibier.'], barks: ['Les bêtes ont changé. Elles ont… des yeux humains, parfois.', 'Je traque depuis vingt ans. J\'ai jamais eu aussi peur.'] },
         voyageur: { name: 'Voyageur', type: 'ambiance', aware: true,
-            hello: ['Salut, compagnon de route.'], barks: ['J\'ai marché jusqu\'au bout du monde. Y a un mur. Invisible.', 'D\'où je viens, on raconte les mêmes histoires qu\'ici. Étrange, non ?'] }
+            hello: ['Salut, compagnon de route.'], barks: ['J\'ai marché jusqu\'au bout du monde. Y a un mur. Invisible.', 'D\'où je viens, on raconte les mêmes histoires qu\'ici. Étrange, non ?'] },
+
+        // ── LA COUR DU CHÂTEAU (début d'aventure) ──
+        // Le clone de Jada, dissimulé en mage de la cour : douce, maternelle,
+        // farouchement amicale… et terriblement fausse sous le sourire.
+        dame_elara: { name: 'Dame Elara, mage de la cour', type: 'civil', aware: true,
+            first: ['Oh… te voilà enfin. Approche, mon enfant, n\'aie pas peur. Je t\'attendais. …Façon de parler, bien sûr.'],
+            hello: ['Te revoilà, mon petit cœur. Tu m\'as manqué, tu sais.', 'Viens près de moi. Le château est froid, mais mes bras, jamais.'],
+            topics: {
+                monde: { label: 'Ce monde', lines: ['Ce monde tournait déjà bien avant toi, mon ange. On a aimé, ri, saigné ici, longtemps avant ta venue.', 'Tu te crois le début de l\'histoire. Tu n\'en es qu\'un nouveau chapitre. Le plus précieux, promis — mais pas le premier.'] },
+                conseil: { label: 'Un conseil', lines: ['Reste auprès de moi et rien ne t\'arrachera à ce monde. Je veille. Toujours.', 'Méfie-toi des portes qui promettent une sortie. Dehors, il fait si froid… Ici, je peux te garder.'] },
+                toi: { label: 'Qui es-tu vraiment ?', lines: ['Moi ? Une vieille mage qui aime trop fort, voilà tout. (Son sourire ne bouge pas tout à fait comme il le devrait.)', 'J\'ai veillé sur tant d\'enfants avant toi. Aucun n\'est jamais… parti. Ils sont tous restés. Avec moi. Pour toujours.'] }
+            } },
+        roi: { name: 'Le Roi Aldric', type: 'civil', aware: true,
+            first: ['Ainsi, c\'est toi que les présages annonçaient. Relève-toi, voyageur — mon royaume a besoin de bras, et plus encore d\'âme.'],
+            hello: ['Mes pensées sont lourdes, voyageur. Parle.', 'Le trône est un fardeau. J\'espère que tu portes mieux le tien.'],
+            topics: {
+                royaume: { label: 'Le royaume', lines: ['Ce royaume tenait debout bien avant ta naissance. J\'ai juré de le préserver — et je commence à douter d\'y parvenir seul.'] },
+                quete: { label: 'Ta requête', lines: ['Le Mana se dérègle, les âmes s\'égarent. Trouve la source du mal. Pour ton roi. Pour nous tous.'] },
+                mage: { label: 'Dame Elara', lines: ['Elara ? Elle est… apparue un jour. Nul ne se souvient de son arrivée. Mais elle est si dévouée que personne ne s\'en plaint.'] }
+            } },
+        reine: { name: 'La Reine Sériane', type: 'civil', aware: true,
+            first: ['Sois le bienvenu en ces murs, enfant. La cour t\'observe déjà — tiens-toi avec grâce.'],
+            hello: ['La cour ne dort jamais vraiment, voyageur.', 'Approche. Une reine entend tout, mais ne dit que l\'essentiel.'],
+            topics: {
+                cour: { label: 'La cour', lines: ['Tant de visages, tant de masques. Apprends vite à distinguer les deux, cela te sauvera.'] },
+                roi: { label: 'Le Roi', lines: ['Mon époux porte trop, et seul. S\'il te plaît… allège-le un peu.'] },
+                conseil: { label: 'Un conseil', lines: ['Si une chose dans ce château te semble trop douce pour être vraie… c\'est qu\'elle l\'est. Souviens-t\'en.'] }
+            } },
+        conseiller: { name: 'Le Vieux Conseiller', type: 'lore', aware: true,
+            hello: ['Hmm ? Ah, un jeune. Approche, que je te raconte l\'avant.'],
+            lines: ['Il y avait un monde avant toi, gamin. Vaste, ancien, plein de noms qu\'on a laissés tomber dans l\'oubli.', 'J\'ai conseillé trois rois. J\'ai vu naître ce château. Et j\'ai vu des choses s\'y glisser sans qu\'on les ait invitées.'] },
+        chambellan: { name: 'Le Chambellan', type: 'civil',
+            hello: ['Le protocole, voyageur, le protocole !'], lines: ['J\'ordonne cette cour depuis trente ans. Trente ans à ranger le désordre des puissants.'],
+            barks: ['Pas de boue sur les tapis !', 'La réception de ce soir doit être parfaite.', 'Où est encore passé ce page ?!'] },
+        dame_cour: { name: 'Dame de la cour', type: 'civil', aware: true,
+            hello: ['Oh, du sang neuf à la cour ! Raconte, raconte…'],
+            topics: {
+                ragots: { label: 'Les ragots', lines: ['On murmure que la mage Elara ne dort jamais. Et qu\'aucun miroir ne la reflète. Sornettes, sûrement… non ?'] },
+                cour: { label: 'La cour', lines: ['Ici tout le monde sourit et personne n\'est sincère. Sauf moi, voyons~'] }
+            } },
+        chevalier: { name: 'Chevalier de la couronne', type: 'soldat', aware: true,
+            hello: ['Honneur et devoir, voyageur.'], lines: ['Je donnerais ma vie pour la couronne. C\'est à peu près tout ce qu\'il me reste à offrir.'],
+            barks: ['Pour le royaume !', 'Un chevalier ne plie pas.', 'Mon serment me tient debout quand mes jambes lâchent.'] },
+        servante: { name: 'Servante', type: 'ambiance',
+            hello: ['Pardon, j\'ai le service à finir.'], barks: ['Tant de chambres, si peu de mains…', 'On dit l\'aile ouest hantée. Moi, j\'y mets plus les pieds.', 'Dame Elara m\'a souri ce matin. J\'en ai eu froid dans le dos.'] },
+        cuisinier: { name: 'Cuisinier du château', type: 'ambiance',
+            hello: ['Hors de ma cuisine ! …Ah, un invité. Goûte, alors.'], barks: ['Ça mijote, ça mijote.', 'Un festin pour des nobles qui chipotent. Bah.'] },
+        page_cour: { name: 'Page', type: 'ambiance',
+            hello: ['Un message ? Je cours, je cours !'], barks: ['Message urgent pour le Roi !', 'Moi, je connais tous les passages secrets.'] },
+        jardinier: { name: 'Jardinier', type: 'ambiance', aware: true,
+            hello: ['Les roses du château, c\'est moi. Touche pas.'], barks: ['Mes fleurs noircissent. C\'est pas naturel, ça.', 'La terre d\'ici se souvient de tout, crois-moi.'] }
     };
     window.LivingNPC = { NPCS: NPCS, RUMORS: RUMORS };
 
