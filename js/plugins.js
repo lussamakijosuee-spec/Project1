@@ -54,5 +54,6 @@ var $plugins =
 {"name": "CorruptionAme", "status": true, "description": "v1.0 ■ Corruption de l'Ame : abuser du Sombre/Negatif corrompt l'ame.", "parameters": {"elNegatif": "4", "elSombre": "5", "menuCommand": "Corruption"}},
 {"name": "RelicPassifs", "status": true, "description": "v1.0 ■ Passifs des reliques (<Relic: x>) : vol de vie, epines, etc.", "parameters": {"soulVar": "15"}},
 {"name": "BestiaireAmes", "status": true, "description": "v1.0 ■ Bestiaire : encyclopedie des ennemis rencontres.", "parameters": {"menuCommand": "Bestiaire"}},
+{"name": "LivingNPC", "status": true, "description": "v1.0 ■ PNJ vivants facon Skyrim : dialogues reactifs, rumeurs, barks.", "parameters": {}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
