@@ -40,5 +40,6 @@ var $plugins =
 {"name": "ForgeAmes", "status": true, "description": "v1.0 ■ Forge d'Ames : depense tes ames pour renforcer les stats.", "parameters": {"soulVar": "15", "baseCost": "5"}},
 {"name": "NewGamePlus", "status": true, "description": "v1.0 ■ New Game + : recommence en gardant tout, ennemis renforces.", "parameters": {"startMap": "1", "startX": "8", "startY": "6", "diffPerCycle": "0.50"}},
 {"name": "LiensSocial", "status": true, "description": "v1.0 ■ Les Liens (social links) : bonus permanents par palier.", "parameters": {"maxLevel": "10", "menuCommand": "Liens"}},
+{"name": "ComboLiens", "status": true, "description": "v1.0 ■ Combos d'equipe (duo/trio/escouade) debloques par les Liens.", "parameters": {"showHint": "true"}},
 {"name": "JourNuit", "status": true, "description": "v1.0 ■ Jour/Nuit : teinte + Mana Positif fort le jour, Sombre la nuit.", "parameters": {"elPositif": "3", "elSombre": "5", "bonus": "1.20", "malus": "0.80", "autoSteps": "0"}}
 ];
