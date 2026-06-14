@@ -240,35 +240,64 @@
     window.LivingNPC = { NPCS: NPCS, RUMORS: RUMORS };
 
     //==========================================================================
-    //  DIALOGUE
+    //  DIALOGUE — construit une liste de commandes -> setupChild :
+    //  vraies boîtes successives, pagination 4 lignes, retour à la ligne
+    //  automatique (~44 caractères) => plus aucun débordement à droite.
     //==========================================================================
-    function speakerLine(npc, t) { return '\\C[6]' + npc.name + '\\C[0]\n' + t; }
-
-    function openTopics(npc) {
+    var WRAP = 44;
+    function vlen(s) { return String(s).replace(/\\[A-Za-z]\[\d+\]/g, '').length; }
+    function wrapLines(text, max) {
+        max = max || WRAP;
+        var words = String(text).split(' '), lines = [], cur = '';
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            if (!cur) cur = w;
+            else if (vlen(cur + ' ' + w) <= max) cur += ' ' + w;
+            else { lines.push(cur); cur = w; }
+        }
+        if (cur) lines.push(cur);
+        return lines;
+    }
+    // Message paginé (nom en 1re ligne de la 1re boîte, puis 4 lignes max/boîte)
+    function pushText(list, name, body, indent) {
+        var wl = wrapLines(body), i = 0, first = true;
+        while (i < wl.length || first) {
+            list.push({ code: 101, indent: indent, parameters: ['', 0, 0, 2] });
+            var slots = 4;
+            if (first) { list.push({ code: 401, indent: indent, parameters: ['\\C[6]' + name + '\\C[0]'] }); slots = 3; first = false; }
+            for (var k = 0; k < slots && i < wl.length; k++, i++) {
+                list.push({ code: 401, indent: indent, parameters: [wl[i]] });
+            }
+            if (i >= wl.length) break;
+        }
+    }
+    function buildTopics(list, npc) {
         var keys = Object.keys(npc.topics);
         var labels = keys.map(function (k) { return npc.topics[k].label; });
         labels.push('Au revoir');
-        $gameMessage.setChoices(labels, 0, labels.length - 1);
-        $gameMessage.setChoiceBackground(0);
-        $gameMessage.setChoicePositionType(2);
-        $gameMessage.setChoiceCallback(function (n) {
-            if (n < 0 || n >= keys.length) return;            // Au revoir / annuler
-            var t = npc.topics[keys[n]];
-            (t.lines || []).forEach(function (l) { $gameMessage.add(speakerLine(npc, l)); });
-            openTopics(npc);                                   // ré-ouvre le menu
+        list.push({ code: 118, indent: 0, parameters: ['npcmenu'] });
+        list.push({ code: 102, indent: 0, parameters: [labels, labels.length - 1, 0, 2, 0] });
+        keys.forEach(function (k, i) {
+            list.push({ code: 402, indent: 0, parameters: [i, labels[i]] });
+            (npc.topics[k].lines || []).forEach(function (l) { pushText(list, npc.name, l, 1); });
+            list.push({ code: 119, indent: 1, parameters: ['npcmenu'] });   // reboucle le menu
         });
+        list.push({ code: 402, indent: 0, parameters: [keys.length, 'Au revoir'] });
+        list.push({ code: 404, indent: 0, parameters: [] });
     }
-
-    function talk(key) {
+    function talk(interp, key) {
         var npc = NPCS[key];
-        if (!npc) { $gameMessage.add('\\C[8]…\\C[0]'); return; }
+        if (!npc) return;
         var sys = $gameSystem; sys._npcMet = sys._npcMet || {};
         var first = !sys._npcMet[key]; sys._npcMet[key] = true;
         var hello = (first && npc.first) ? npc.first : npc.hello;
-        $gameMessage.add(speakerLine(npc, pick(hello)));
-        if (npc.aware) { var r = currentRumor(); if (r) $gameMessage.add(speakerLine(npc, '« ' + r + ' »')); }
-        if (npc.topics) openTopics(npc);
-        else if (npc.lines) $gameMessage.add(speakerLine(npc, pick(npc.lines)));
+        var list = [];
+        pushText(list, npc.name, pick(hello), 0);
+        if (npc.aware) { var r = currentRumor(); if (r) pushText(list, npc.name, '« ' + r + ' »', 0); }
+        if (npc.topics) buildTopics(list, npc);
+        else if (npc.lines) pushText(list, npc.name, pick(npc.lines), 0);
+        list.push({ code: 0, indent: 0, parameters: [] });
+        interp.setupChild(list, interp._eventId);
     }
 
     //==========================================================================
@@ -297,9 +326,9 @@
         Sprite.prototype.initialize.call(this);
         this._event = event; this._life = 130; this._float = 0;
         this.anchor.x = 0.5; this.anchor.y = 1; this.opacity = 0; this.z = 9;
-        var b = new Bitmap(280, 38);
-        b.fontSize = 19; b.outlineWidth = 5; b.outlineColor = 'rgba(0,0,0,0.95)'; b.textColor = '#f2f2f2';
-        b.drawText(text, 0, 0, 280, 38, 'center');
+        var b = new Bitmap(460, 38);
+        b.fontSize = 18; b.outlineWidth = 5; b.outlineColor = 'rgba(0,0,0,0.95)'; b.textColor = '#f2f2f2';
+        b.drawText(text, 0, 0, 460, 38, 'center');
         this.bitmap = b; this.updatePos();
     };
     Sprite_Bark.prototype.updatePos = function () {
@@ -364,8 +393,8 @@
         if (String(cmd).toUpperCase() !== 'NPC') return;
         var sub = (args[0] || '').toLowerCase();
         var key = (args[1] || '').toLowerCase();
-        if (sub === 'talk') talk(key);
-        else if (sub === 'rumeur') $gameMessage.add('\\C[6]On murmure…\\C[0]\n« ' + (currentRumor() || '…') + ' »');
+        if (sub === 'talk') talk(this, key);
+        else if (sub === 'rumeur') { $gameMessage.add('\\C[6]On murmure…\\C[0]'); wrapLines('« ' + (currentRumor() || '…') + ' »').forEach(function (l) { $gameMessage.add(l); }); }
         else if (sub === 'bark') { var ss = SceneManager._scene && SceneManager._scene._spriteset; if (ss) ss.forceBark(key); }
         else if (sub === 'mute') { var ev = this.character(0); if (ev && ev._barkMute !== undefined || ev) ev._barkMute = true; }
     };
