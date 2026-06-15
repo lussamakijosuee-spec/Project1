@@ -235,7 +235,93 @@
         page_cour: { name: 'Page', type: 'ambiance',
             hello: ['Un message ? Je cours, je cours !'], barks: ['Message urgent pour le Roi !', 'Moi, je connais tous les passages secrets.'] },
         jardinier: { name: 'Jardinier', type: 'ambiance', aware: true,
-            hello: ['Les roses du château, c\'est moi. Touche pas.'], barks: ['Mes fleurs noircissent. C\'est pas naturel, ça.', 'La terre d\'ici se souvient de tout, crois-moi.'] }
+            hello: ['Les roses du château, c\'est moi. Touche pas.'], barks: ['Mes fleurs noircissent. C\'est pas naturel, ça.', 'La terre d\'ici se souvient de tout, crois-moi.'] },
+
+        // ── LE RIVAL PATHÉTIQUE & SON DUO (boss duo rage-bait) ──
+        regis: { name: 'Régis le Magnifique', type: 'civil', aware: true,
+            first: ['Tiens, tiens. Encore un figurant qui se croit héros. MOI, je suis le véritable élu de ce monde. Incline-toi, tant que c\'est gratuit.'],
+            hello: ['Ah, encore toi. Tu me suis ? C\'est mignon. Pathétique, mais mignon.', 'Recule, manant. Mon aura pourrait te brûler les yeux.'],
+            topics: {
+                defi: { label: 'Te défier', lines: ['HA ! TOI ? Me défier ? (Il recule d\'un pas.) Quentin s\'occupera de toi. Moi je… supervise. De loin. Stratégiquement.'] },
+                talent: { label: 'Ton « talent »', lines: ['Je suis le plus fort, le plus beau, le plus intelligent. Si je perds, c\'est que j\'ai LAISSÉ gagner. Toujours.'] },
+                quentin: { label: 'Quentin', lines: ['Mon associé. Mon garde du corps. Mon ami, j\'imagine. Il parle peu — c\'est qu\'il m\'idolâtre, forcément.'] }
+            },
+            barks: ['Pfff, regarde-moi cette dégaine.', 'Personne ne m\'arrive à la cheville !', 'J\'ai raté EXPRÈS. Évidemment.'] },
+        quentin: { name: 'Quentin', type: 'civil', aware: true,
+            hello: ['…Salut.', 'Régis t\'a encore provoqué ? Désolé. Il est… comme ça.'],
+            topics: {
+                regis: { label: 'Régis', lines: ['Il est insupportable. Je sais. Mais il m\'a sorti d\'un mauvais pas, un jour. Alors je reste. C\'est tout.'] },
+                toi: { label: 'Et toi ?', lines: ['Moi je parle peu et je frappe fort. Si on se bat un jour, ne vise pas Régis. Vise-moi. Lui, il survit toujours, va savoir comment.'] }
+            },
+            barks: ['…', '(soupir)', 'Encore une de ses idées.'] },
+        // ── MUTA : escroc-bombardier au grand cœur, ex-Empire ──
+        muta: { name: 'Muta', type: 'civil', aware: true,
+            first: ['Hé, l\'ami ! Approche ! T\'as une tête de bonne affaire, toi. (Une explosion claque entre ses doigts.) T\'inquiète — c\'est juste mon charme.'],
+            hello: ['De retour ? J\'savais que mes prix imbattables te manqueraient~', 'Tiens, ma poire à arnaquer préférée !'],
+            topics: {
+                boutique: { label: 'Marchander', lines: ['Tout est à vendre, mon grand. Le double du prix, moitié de la qualité — c\'est ça, le vrai luxe !'] },
+                vol: { label: 'Mes affaires volées ?!', lines: ['Volées ? Quel vilain mot. Disons… empruntées avec passion. Tu les récupères contre un peu d\'or… ou un duel amical. À toi de voir, chef.'] },
+                refuge: { label: 'Ton refuge', lines: ['Sous le marché, y a une planque pour les gamins des rues et les faibles. L\'Empire les broyait ; moi je les cache. Faut bien que mes arnaques servent à quelque chose.'] },
+                empire: { label: 'L\'Empire', lines: ['Ancien soldat de l\'Empire, ouais. J\'ai déserté le jour où on m\'a demandé de brûler un village. Mes explosions, je les garde pour les coffres-forts, maintenant.'] }
+            },
+            barks: ['Affaaaires ! Bonnes affaaaires !', '*BOUM* …oups, la démo gratuite.', 'Promis, c\'est pas tombé du camion.'] },
+
+        // ── 7 ÂMES UNIQUES (personnalités fusionnées, vraiment vivantes) ──
+        yuki: { name: 'Yuki la boulangère', type: 'civil', aware: true,
+            first: ['Oh ! Bienvenue ! Tu as l\'air affamé… tiens, c\'est offert. Un ventre plein, c\'est déjà un peu de bonheur, non ?'],
+            hello: ['Re-bonjour~ Le pain sort du four !', 'Tu as bonne mine aujourd\'hui. Ça me rend heureuse.'],
+            topics: {
+                cuisine: { label: 'Ta cuisine', lines: ['Je nourris tout le quartier. Riches, pauvres, j\'m\'en fiche. Personne ne devrait avoir faim. Plus jamais.'] },
+                passe: { label: 'Ton passé', lines: ['(Son sourire vacille.) J\'ai connu la faim. La vraie. J\'ai perdu des gens à cause d\'elle. Alors maintenant… je cuisine. C\'est ma façon de me battre.'] }
+            },
+            barks: ['Le pain est prêt~', 'Mange, tu es tout maigre !', 'Un sourire et c\'est gratuit !'] },
+        kaze: { name: 'Kaze', type: 'civil', aware: true,
+            first: ['…Mh ? Tu veux quelque chose ? C\'est fatigant, les gens qui veulent des choses. …Bon. Vas-y. Vite.'],
+            hello: ['Encore debout, toi ? Moi j\'économise mes pas.', 'Laisse-moi deviner : tu as un problème. Tu as TOUJOURS un problème.'],
+            topics: {
+                enigme: { label: 'Une énigme', lines: ['Donne-moi trois indices et je te dis le coupable avant ma sieste. C\'est pas de la magie : les gens sont juste prévisibles.'] },
+                monde: { label: 'Le monde', lines: ['Tout ce bazar a une logique. Même les bugs. SURTOUT les bugs. Quelqu\'un tire les ficelles, et c\'est pas le Roi. Mais bon… trop d\'efforts d\'y penser.'] }
+            },
+            barks: ['…trop d\'efforts.', 'Réveille-moi pour les trucs importants.', 'Évident. Tout est évident.'] },
+        sora: { name: 'Sora', type: 'civil',
+            first: ['OUAAAH t\'es trop cool ! Tu te bats ? Moi aussi je me bats ! On devient amis ? On devient amis !'],
+            hello: ['HÉ ! C\'est mon nouvel ami !', 'Tu veux qu\'on s\'entraîne ?! Dis ouiii !'],
+            topics: {
+                reve: { label: 'Ton rêve', lines: ['Je vais devenir le plus fort du monde ! Comment ? J\'sais pas ! Mais j\'abandonnerai JAMAIS, et ça suffit, non ?!'] },
+                amitie: { label: 'L\'amitié', lines: ['Un ami c\'est un ami pour la vie ! Si on te touche, je débarque ! Compte sur moi à 200% !'] }
+            },
+            barks: ['J\'AI FAIM !', 'On y va, on y va !', 'C\'est qui le plus fort ? MOI !'] },
+        ren: { name: 'Ren', type: 'civil', aware: true,
+            hello: ['Hn.', 'Tu perds ton temps à me parler.'],
+            topics: {
+                force: { label: 'La force', lines: ['La force ne sert qu\'à protéger. Le reste, c\'est de la vanité. (Un silence.) …Ne le répète pas.'] },
+                passe: { label: 'Ton passé', lines: ['J\'ai tout perdu, une fois. Je ne compte pas revivre ça. Donc je m\'entraîne. Seul. C\'est plus sûr… pour les autres.'] }
+            },
+            barks: ['…', 'Hmph.', 'Ne me suis pas.'] },
+        lila: { name: 'Lila', type: 'civil',
+            first: ['Oooh~ une nouvelle tête ! (Elle tourne autour de toi.) Tu es… intéressant. J\'adore les choses intéressantes. Elles cassent si joliment.'],
+            hello: ['Te revoilà, mon petit jouet préféré~', 'Devine dans quelle main est le couteau. Allez, devine !'],
+            topics: {
+                jeu: { label: 'Jouer', lines: ['La vie est tellement plus drôle quand personne ne sait ce que tu vas faire. Même pas toi. SURTOUT pas toi~'] },
+                danger: { label: 'Es-tu dangereuse ?', lines: ['Moi ? (Rire.) Seulement pour les gens ennuyeux. Reste amusant et tu vivras très, très longtemps. Promis-juré… peut-être.'] }
+            },
+            barks: ['Hi hi hi~', 'Surprise !', 'Oups. J\'ai rien fait. Pour l\'instant.'] },
+        goro: { name: 'Goro', type: 'civil',
+            first: ['Oh ! Petite personne ! Attention, je ne t\'avais pas vu. Je m\'appelle Goro. Je protège. C\'est ce que je fais de mieux.'],
+            hello: ['Salutations, petit ami !', 'Tu es en sécurité près de moi. Toujours.'],
+            topics: {
+                honneur: { label: 'L\'honneur', lines: ['Un guerrier protège les faibles, tient parole, et ne frappe jamais le premier. C\'est simple. Le reste est compliqué pour rien.'] },
+                perdu: { label: 'Tout va bien ?', lines: ['Je… crois que je me suis encore perdu dans le château. Tu connais la sortie ? …Le nord, c\'est lequel déjà ?'] }
+            },
+            barks: ['Reste derrière moi.', 'Je protège !', '…où est la sortie, déjà ?'] },
+        mei: { name: 'Mei', type: 'civil', aware: true,
+            first: ['Tu es en retard ! …Sur quoi, je l\'ignore, mais sûrement quelque chose ! Tiens-toi droit, je te surveille !'],
+            hello: ['Tout est sous contrôle. TOUT. (Sa pile de dossiers tremble.)', 'J\'ai une liste. J\'ai toujours une liste.'],
+            topics: {
+                organisation: { label: 'L\'organisation', lines: ['Si je ne range pas ce château, qui le fera ?! Le Roi ?! Ha ! …pardon. Je gère. Je gère TOUT.'] },
+                secret: { label: 'Tu vas bien ?', lines: ['(Chuchote.) Entre nous… j\'ai dormi trois heures, j\'ai cinq plans de secours et une figurine de héros cachée dans mon tiroir. Répète-le et je nie tout.'] }
+            },
+            barks: ['Pas le temps, pas le temps !', 'Qui a déplacé mes dossiers ?!', 'Tout va BIEN. (ça ne va pas.)'] }
     };
     window.LivingNPC = { NPCS: NPCS, RUMORS: RUMORS };
 
