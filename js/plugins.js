@@ -44,7 +44,7 @@ var $plugins =
 {"name": "ComboLiens", "status": true, "description": "v1.0 ■ Combos d'equipe (duo/trio/escouade) debloques par les Liens.", "parameters": {"showHint": "true"}},
 {"name": "JourNuit", "status": true, "description": "v1.0 ■ Jour/Nuit : teinte + Mana Positif fort le jour, Sombre la nuit.", "parameters": {"elPositif": "3", "elSombre": "5", "bonus": "1.20", "malus": "0.80", "autoSteps": "0"}},
 {"name": "InvocationAmes", "status": true, "description": "v1.0 ■ Invocation : <Invocation: n> depense n ames.", "parameters": {"soulVar": "15"}},
-{"name": "FactionsAmes", "status": true, "description": "v1.0 ■ Factions : rejoins une faction -> bonus + variable.", "parameters": {"factionVar": "19"}},
+{"name": "FactionsAmes", "status": true, "description": "v2.0 ■ Factions jouables (Etoiles/Jada, Vultric, Culte, Affranchis) : bonus + route de fin.", "parameters": {"factionVar": "19", "endingVar": "0", "menuCommand": "Factions"}},
 {"name": "SuccesTitres", "status": true, "description": "v1.0 ■ Succes/Titres debloquables + ecran.", "parameters": {"menuCommand": "Succes"}},
 {"name": "SanctuaireAmes", "status": true, "description": "v1.0 ■ Sanctuaire : apprends des competences avec des ames.", "parameters": {"soulVar": "15"}},
 {"name": "AlchimieAmes", "status": true, "description": "v1.0 ■ Alchimie : combine des objets en de meilleurs.", "parameters": {}},
