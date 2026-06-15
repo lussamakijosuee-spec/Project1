@@ -306,6 +306,24 @@
                 'âmes ne le libère pas — ça ne fait que forger un',
                 'nouveau cycle où il reste \\C[2]prisonnier au paradis\\C[0].'
             ]
+        },
+        {
+            title: '⑱ Marginaux, Rivaux & Déserteurs',
+            lines: [
+                'Tout ce monde ne tourne pas autour des dieux.',
+                '',
+                '\\C[6]Régis le Magnifique\\C[0] se dit l\'élu du monde. Il a',
+                'beaucoup de PV et beaucoup de gueule — et presque',
+                'rien d\'autre. Sa vraie arme : te faire \\C[18]enrager\\C[0].',
+                'Son garde \\C[6]Quentin\\C[0], lui, frappe pour de vrai :',
+                'abats Régis, et Quentin entre en \\C[2]fureur\\C[0].',
+                '',
+                '\\C[6]Muta\\C[0], escroc-bombardier au grand cœur, ancien',
+                'soldat de l\'\\C[8]Empire\\C[0] déserteur. Sous son marché,',
+                'un \\C[14]refuge\\C[0] pour les faibles. Il « emprunte » tes',
+                'affaires tendance : récupère-les contre de l\'or… ou',
+                'un \\C[14]duel amical\\C[0].'
+            ]
         }
     ];
 

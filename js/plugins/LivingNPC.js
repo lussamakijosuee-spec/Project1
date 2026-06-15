@@ -235,40 +235,155 @@
         page_cour: { name: 'Page', type: 'ambiance',
             hello: ['Un message ? Je cours, je cours !'], barks: ['Message urgent pour le Roi !', 'Moi, je connais tous les passages secrets.'] },
         jardinier: { name: 'Jardinier', type: 'ambiance', aware: true,
-            hello: ['Les roses du château, c\'est moi. Touche pas.'], barks: ['Mes fleurs noircissent. C\'est pas naturel, ça.', 'La terre d\'ici se souvient de tout, crois-moi.'] }
+            hello: ['Les roses du château, c\'est moi. Touche pas.'], barks: ['Mes fleurs noircissent. C\'est pas naturel, ça.', 'La terre d\'ici se souvient de tout, crois-moi.'] },
+
+        // ── LE RIVAL PATHÉTIQUE & SON DUO (boss duo rage-bait) ──
+        regis: { name: 'Régis le Magnifique', type: 'civil', aware: true,
+            first: ['Tiens, tiens. Encore un figurant qui se croit héros. MOI, je suis le véritable élu de ce monde. Incline-toi, tant que c\'est gratuit.'],
+            hello: ['Ah, encore toi. Tu me suis ? C\'est mignon. Pathétique, mais mignon.', 'Recule, manant. Mon aura pourrait te brûler les yeux.'],
+            topics: {
+                defi: { label: 'Te défier', lines: ['HA ! TOI ? Me défier ? (Il recule d\'un pas.) Quentin s\'occupera de toi. Moi je… supervise. De loin. Stratégiquement.'] },
+                talent: { label: 'Ton « talent »', lines: ['Je suis le plus fort, le plus beau, le plus intelligent. Si je perds, c\'est que j\'ai LAISSÉ gagner. Toujours.'] },
+                quentin: { label: 'Quentin', lines: ['Mon associé. Mon garde du corps. Mon ami, j\'imagine. Il parle peu — c\'est qu\'il m\'idolâtre, forcément.'] }
+            },
+            barks: ['Pfff, regarde-moi cette dégaine.', 'Personne ne m\'arrive à la cheville !', 'J\'ai raté EXPRÈS. Évidemment.'] },
+        quentin: { name: 'Quentin', type: 'civil', aware: true,
+            hello: ['…Salut.', 'Régis t\'a encore provoqué ? Désolé. Il est… comme ça.'],
+            topics: {
+                regis: { label: 'Régis', lines: ['Il est insupportable. Je sais. Mais il m\'a sorti d\'un mauvais pas, un jour. Alors je reste. C\'est tout.'] },
+                toi: { label: 'Et toi ?', lines: ['Moi je parle peu et je frappe fort. Si on se bat un jour, ne vise pas Régis. Vise-moi. Lui, il survit toujours, va savoir comment.'] }
+            },
+            barks: ['…', '(soupir)', 'Encore une de ses idées.'] },
+        // ── MUTA : escroc-bombardier au grand cœur, ex-Empire ──
+        muta: { name: 'Muta', type: 'civil', aware: true,
+            first: ['Hé, l\'ami ! Approche ! T\'as une tête de bonne affaire, toi. (Une explosion claque entre ses doigts.) T\'inquiète — c\'est juste mon charme.'],
+            hello: ['De retour ? J\'savais que mes prix imbattables te manqueraient~', 'Tiens, ma poire à arnaquer préférée !'],
+            topics: {
+                boutique: { label: 'Marchander', lines: ['Tout est à vendre, mon grand. Le double du prix, moitié de la qualité — c\'est ça, le vrai luxe !'] },
+                vol: { label: 'Mes affaires volées ?!', lines: ['Volées ? Quel vilain mot. Disons… empruntées avec passion. Tu les récupères contre un peu d\'or… ou un duel amical. À toi de voir, chef.'] },
+                refuge: { label: 'Ton refuge', lines: ['Sous le marché, y a une planque pour les gamins des rues et les faibles. L\'Empire les broyait ; moi je les cache. Faut bien que mes arnaques servent à quelque chose.'] },
+                empire: { label: 'L\'Empire', lines: ['Ancien soldat de l\'Empire, ouais. J\'ai déserté le jour où on m\'a demandé de brûler un village. Mes explosions, je les garde pour les coffres-forts, maintenant.'] }
+            },
+            barks: ['Affaaaires ! Bonnes affaaaires !', '*BOUM* …oups, la démo gratuite.', 'Promis, c\'est pas tombé du camion.'] },
+
+        // ── 7 ÂMES UNIQUES (personnalités fusionnées, vraiment vivantes) ──
+        yuki: { name: 'Yuki la boulangère', type: 'civil', aware: true,
+            first: ['Oh ! Bienvenue ! Tu as l\'air affamé… tiens, c\'est offert. Un ventre plein, c\'est déjà un peu de bonheur, non ?'],
+            hello: ['Re-bonjour~ Le pain sort du four !', 'Tu as bonne mine aujourd\'hui. Ça me rend heureuse.'],
+            topics: {
+                cuisine: { label: 'Ta cuisine', lines: ['Je nourris tout le quartier. Riches, pauvres, j\'m\'en fiche. Personne ne devrait avoir faim. Plus jamais.'] },
+                passe: { label: 'Ton passé', lines: ['(Son sourire vacille.) J\'ai connu la faim. La vraie. J\'ai perdu des gens à cause d\'elle. Alors maintenant… je cuisine. C\'est ma façon de me battre.'] }
+            },
+            barks: ['Le pain est prêt~', 'Mange, tu es tout maigre !', 'Un sourire et c\'est gratuit !'] },
+        kaze: { name: 'Kaze', type: 'civil', aware: true,
+            first: ['…Mh ? Tu veux quelque chose ? C\'est fatigant, les gens qui veulent des choses. …Bon. Vas-y. Vite.'],
+            hello: ['Encore debout, toi ? Moi j\'économise mes pas.', 'Laisse-moi deviner : tu as un problème. Tu as TOUJOURS un problème.'],
+            topics: {
+                enigme: { label: 'Une énigme', lines: ['Donne-moi trois indices et je te dis le coupable avant ma sieste. C\'est pas de la magie : les gens sont juste prévisibles.'] },
+                monde: { label: 'Le monde', lines: ['Tout ce bazar a une logique. Même les bugs. SURTOUT les bugs. Quelqu\'un tire les ficelles, et c\'est pas le Roi. Mais bon… trop d\'efforts d\'y penser.'] }
+            },
+            barks: ['…trop d\'efforts.', 'Réveille-moi pour les trucs importants.', 'Évident. Tout est évident.'] },
+        sora: { name: 'Sora', type: 'civil',
+            first: ['OUAAAH t\'es trop cool ! Tu te bats ? Moi aussi je me bats ! On devient amis ? On devient amis !'],
+            hello: ['HÉ ! C\'est mon nouvel ami !', 'Tu veux qu\'on s\'entraîne ?! Dis ouiii !'],
+            topics: {
+                reve: { label: 'Ton rêve', lines: ['Je vais devenir le plus fort du monde ! Comment ? J\'sais pas ! Mais j\'abandonnerai JAMAIS, et ça suffit, non ?!'] },
+                amitie: { label: 'L\'amitié', lines: ['Un ami c\'est un ami pour la vie ! Si on te touche, je débarque ! Compte sur moi à 200% !'] }
+            },
+            barks: ['J\'AI FAIM !', 'On y va, on y va !', 'C\'est qui le plus fort ? MOI !'] },
+        ren: { name: 'Ren', type: 'civil', aware: true,
+            hello: ['Hn.', 'Tu perds ton temps à me parler.'],
+            topics: {
+                force: { label: 'La force', lines: ['La force ne sert qu\'à protéger. Le reste, c\'est de la vanité. (Un silence.) …Ne le répète pas.'] },
+                passe: { label: 'Ton passé', lines: ['J\'ai tout perdu, une fois. Je ne compte pas revivre ça. Donc je m\'entraîne. Seul. C\'est plus sûr… pour les autres.'] }
+            },
+            barks: ['…', 'Hmph.', 'Ne me suis pas.'] },
+        lila: { name: 'Lila', type: 'civil',
+            first: ['Oooh~ une nouvelle tête ! (Elle tourne autour de toi.) Tu es… intéressant. J\'adore les choses intéressantes. Elles cassent si joliment.'],
+            hello: ['Te revoilà, mon petit jouet préféré~', 'Devine dans quelle main est le couteau. Allez, devine !'],
+            topics: {
+                jeu: { label: 'Jouer', lines: ['La vie est tellement plus drôle quand personne ne sait ce que tu vas faire. Même pas toi. SURTOUT pas toi~'] },
+                danger: { label: 'Es-tu dangereuse ?', lines: ['Moi ? (Rire.) Seulement pour les gens ennuyeux. Reste amusant et tu vivras très, très longtemps. Promis-juré… peut-être.'] }
+            },
+            barks: ['Hi hi hi~', 'Surprise !', 'Oups. J\'ai rien fait. Pour l\'instant.'] },
+        goro: { name: 'Goro', type: 'civil',
+            first: ['Oh ! Petite personne ! Attention, je ne t\'avais pas vu. Je m\'appelle Goro. Je protège. C\'est ce que je fais de mieux.'],
+            hello: ['Salutations, petit ami !', 'Tu es en sécurité près de moi. Toujours.'],
+            topics: {
+                honneur: { label: 'L\'honneur', lines: ['Un guerrier protège les faibles, tient parole, et ne frappe jamais le premier. C\'est simple. Le reste est compliqué pour rien.'] },
+                perdu: { label: 'Tout va bien ?', lines: ['Je… crois que je me suis encore perdu dans le château. Tu connais la sortie ? …Le nord, c\'est lequel déjà ?'] }
+            },
+            barks: ['Reste derrière moi.', 'Je protège !', '…où est la sortie, déjà ?'] },
+        mei: { name: 'Mei', type: 'civil', aware: true,
+            first: ['Tu es en retard ! …Sur quoi, je l\'ignore, mais sûrement quelque chose ! Tiens-toi droit, je te surveille !'],
+            hello: ['Tout est sous contrôle. TOUT. (Sa pile de dossiers tremble.)', 'J\'ai une liste. J\'ai toujours une liste.'],
+            topics: {
+                organisation: { label: 'L\'organisation', lines: ['Si je ne range pas ce château, qui le fera ?! Le Roi ?! Ha ! …pardon. Je gère. Je gère TOUT.'] },
+                secret: { label: 'Tu vas bien ?', lines: ['(Chuchote.) Entre nous… j\'ai dormi trois heures, j\'ai cinq plans de secours et une figurine de héros cachée dans mon tiroir. Répète-le et je nie tout.'] }
+            },
+            barks: ['Pas le temps, pas le temps !', 'Qui a déplacé mes dossiers ?!', 'Tout va BIEN. (ça ne va pas.)'] }
     };
     window.LivingNPC = { NPCS: NPCS, RUMORS: RUMORS };
 
     //==========================================================================
-    //  DIALOGUE
+    //  DIALOGUE — construit une liste de commandes -> setupChild :
+    //  vraies boîtes successives, pagination 4 lignes, retour à la ligne
+    //  automatique (~44 caractères) => plus aucun débordement à droite.
     //==========================================================================
-    function speakerLine(npc, t) { return '\\C[6]' + npc.name + '\\C[0]\n' + t; }
-
-    function openTopics(npc) {
+    var WRAP = 44;
+    function vlen(s) { return String(s).replace(/\\[A-Za-z]\[\d+\]/g, '').length; }
+    function wrapLines(text, max) {
+        max = max || WRAP;
+        var words = String(text).split(' '), lines = [], cur = '';
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            if (!cur) cur = w;
+            else if (vlen(cur + ' ' + w) <= max) cur += ' ' + w;
+            else { lines.push(cur); cur = w; }
+        }
+        if (cur) lines.push(cur);
+        return lines;
+    }
+    // Message paginé (nom en 1re ligne de la 1re boîte, puis 4 lignes max/boîte)
+    function pushText(list, name, body, indent) {
+        var wl = wrapLines(body), i = 0, first = true;
+        while (i < wl.length || first) {
+            list.push({ code: 101, indent: indent, parameters: ['', 0, 0, 2] });
+            var slots = 4;
+            if (first) { list.push({ code: 401, indent: indent, parameters: ['\\C[6]' + name + '\\C[0]'] }); slots = 3; first = false; }
+            for (var k = 0; k < slots && i < wl.length; k++, i++) {
+                list.push({ code: 401, indent: indent, parameters: [wl[i]] });
+            }
+            if (i >= wl.length) break;
+        }
+    }
+    function buildTopics(list, npc) {
         var keys = Object.keys(npc.topics);
         var labels = keys.map(function (k) { return npc.topics[k].label; });
         labels.push('Au revoir');
-        $gameMessage.setChoices(labels, 0, labels.length - 1);
-        $gameMessage.setChoiceBackground(0);
-        $gameMessage.setChoicePositionType(2);
-        $gameMessage.setChoiceCallback(function (n) {
-            if (n < 0 || n >= keys.length) return;            // Au revoir / annuler
-            var t = npc.topics[keys[n]];
-            (t.lines || []).forEach(function (l) { $gameMessage.add(speakerLine(npc, l)); });
-            openTopics(npc);                                   // ré-ouvre le menu
+        list.push({ code: 118, indent: 0, parameters: ['npcmenu'] });
+        list.push({ code: 102, indent: 0, parameters: [labels, labels.length - 1, 0, 2, 0] });
+        keys.forEach(function (k, i) {
+            list.push({ code: 402, indent: 0, parameters: [i, labels[i]] });
+            (npc.topics[k].lines || []).forEach(function (l) { pushText(list, npc.name, l, 1); });
+            list.push({ code: 119, indent: 1, parameters: ['npcmenu'] });   // reboucle le menu
         });
+        list.push({ code: 402, indent: 0, parameters: [keys.length, 'Au revoir'] });
+        list.push({ code: 404, indent: 0, parameters: [] });
     }
-
-    function talk(key) {
+    function talk(interp, key) {
         var npc = NPCS[key];
-        if (!npc) { $gameMessage.add('\\C[8]…\\C[0]'); return; }
+        if (!npc) return;
         var sys = $gameSystem; sys._npcMet = sys._npcMet || {};
         var first = !sys._npcMet[key]; sys._npcMet[key] = true;
         var hello = (first && npc.first) ? npc.first : npc.hello;
-        $gameMessage.add(speakerLine(npc, pick(hello)));
-        if (npc.aware) { var r = currentRumor(); if (r) $gameMessage.add(speakerLine(npc, '« ' + r + ' »')); }
-        if (npc.topics) openTopics(npc);
-        else if (npc.lines) $gameMessage.add(speakerLine(npc, pick(npc.lines)));
+        var list = [];
+        pushText(list, npc.name, pick(hello), 0);
+        if (npc.aware) { var r = currentRumor(); if (r) pushText(list, npc.name, '« ' + r + ' »', 0); }
+        if (npc.topics) buildTopics(list, npc);
+        else if (npc.lines) pushText(list, npc.name, pick(npc.lines), 0);
+        list.push({ code: 0, indent: 0, parameters: [] });
+        interp.setupChild(list, interp._eventId);
     }
 
     //==========================================================================
@@ -297,9 +412,9 @@
         Sprite.prototype.initialize.call(this);
         this._event = event; this._life = 130; this._float = 0;
         this.anchor.x = 0.5; this.anchor.y = 1; this.opacity = 0; this.z = 9;
-        var b = new Bitmap(280, 38);
-        b.fontSize = 19; b.outlineWidth = 5; b.outlineColor = 'rgba(0,0,0,0.95)'; b.textColor = '#f2f2f2';
-        b.drawText(text, 0, 0, 280, 38, 'center');
+        var b = new Bitmap(460, 38);
+        b.fontSize = 18; b.outlineWidth = 5; b.outlineColor = 'rgba(0,0,0,0.95)'; b.textColor = '#f2f2f2';
+        b.drawText(text, 0, 0, 460, 38, 'center');
         this.bitmap = b; this.updatePos();
     };
     Sprite_Bark.prototype.updatePos = function () {
@@ -364,8 +479,8 @@
         if (String(cmd).toUpperCase() !== 'NPC') return;
         var sub = (args[0] || '').toLowerCase();
         var key = (args[1] || '').toLowerCase();
-        if (sub === 'talk') talk(key);
-        else if (sub === 'rumeur') $gameMessage.add('\\C[6]On murmure…\\C[0]\n« ' + (currentRumor() || '…') + ' »');
+        if (sub === 'talk') talk(this, key);
+        else if (sub === 'rumeur') { $gameMessage.add('\\C[6]On murmure…\\C[0]'); wrapLines('« ' + (currentRumor() || '…') + ' »').forEach(function (l) { $gameMessage.add(l); }); }
         else if (sub === 'bark') { var ss = SceneManager._scene && SceneManager._scene._spriteset; if (ss) ss.forceBark(key); }
         else if (sub === 'mute') { var ev = this.character(0); if (ev && ev._barkMute !== undefined || ev) ev._barkMute = true; }
     };
