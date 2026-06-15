@@ -41,10 +41,15 @@
 
 ## ⚜️ Les 4 Originels
 
-Les **quatre premiers joueurs** revenus dans le jeu. Ils ont vaincu le **Roi
-Démon** (boss final de base), **absorbé son âme** (partagée en quatre) et obtenu
-une puissance **quasi-divine** : ils sont des **dieux dans leur discipline** —
-nul n'est meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
+Le groupe fondateur : **Jade**, **Dono**, **Kev** (alias *Kiev*) et **Josu**
+(= le **Créateur** du jeu / le Dieu Fou). Les **quatre premiers joueurs**
+revenus dans le jeu. Ils ont vaincu le **Roi Démon** (boss final de base),
+**absorbé son âme** (partagée en quatre) et obtenu une puissance
+**quasi-divine** : ils sont des **dieux dans leur discipline** — nul n'est
+meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
+
+> ⚠️ **Josu = le Créateur.** L'auteur du jeu est lui-même l'un des 4 Originels :
+> il a conçu Battle World, y est entré, puis a vaincu le Roi Démon avec ses amis.
 
 > Contrepartie : ils n'ont **jamais su comment sortir**. Ils sont restés des
 > millénaires, jusqu'à se corrompre.
@@ -53,8 +58,8 @@ nul n'est meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
 
 ## 👑 Les Boss Primordiaux & leurs Dimensions
 
-### Le Créateur — le Dieu Fou *(dimension : Battle World)*
-- Concepteur du jeu, **entré dans sa propre création**.
+### Josu — le Créateur / le Dieu Fou *(dimension : Battle World)*
+- L'un des **4 Originels**. Concepteur du jeu, **entré dans sa propre création**.
 - À moitié **fou, brisé, dépressif**. A **caché la Clé** par amour du groupe :
   il ne voulait pas que ces moments s'arrêtent. Ce choix les a **condamnés**.
 - Possède le **Masque** (code source / Mana Pur).
@@ -68,8 +73,9 @@ nul n'est meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
 - Se voit comme un **monstre** qui protège ses amis — mais « au moins ils sont
   heureux ici, pas dans le monde réel où la culpabilité submerge ».
 
-### Kiev (Kev) — l'Empereur *(faction : l'Empire Vultric)*
-- Devenu un **monstre** : empereur d'un empire où **seule la violence règne**.
+### Kev (alias *Kiev*) — l'Empereur *(faction : l'Empire Vultric)*
+- L'un des **4 Originels**. Devenu un **monstre** : empereur d'un empire où
+  **seule la violence règne**.
 - **Arrogance maximale**, aveuglé par un monde **sans conséquence** où il peut
   tout faire. Son empire est bâti sur ses seuls **fantasmes et désirs**.
 - **Mana Sombre poussé au maximum** — d'abord par pur *tryhard* en début de jeu,
@@ -77,7 +83,8 @@ nul n'est meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
   **ne sont pas réels**.
 
 ### Dono — le Loyal *(dimension : son monde, + le Culte des Âmes)*
-- **Le moins corrompu** de tous les boss — par **loyauté**, pas par folie.
+- L'un des **4 Originels**. **Le moins corrompu** de tous les boss — par
+  **loyauté**, pas par folie.
 - Mais **le plus tragique** : contrairement aux autres, il **veut sortir**…
   sans savoir comment. Il s'est **résigné**, bloqué ici avec ses amis corrompus.
 - La seule personne qui compte vraiment pour lui, qu'il aime : **Louise**, une
@@ -87,8 +94,8 @@ nul n'est meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
   âmes, aux incantations et aux « romanciers ».
 
 ### Jade (la vraie) & Jada (la Marionnette) *(dimension : le Royaume des Étoiles)*
-- **Jade** est la **vraie joueuse**, dont l'âme a été **volée**. Elle survit
-  désormais dans les **données** du jeu.
+- **Jade** est la **vraie joueuse** (l'une des **4 Originels**), dont l'âme a
+  été **volée**. Elle survit désormais dans les **données** du jeu.
 - **Jada** est le **PNJ** qui occupe le corps de Jade. Elle possède **déjà
   l'âme de la vraie Jade**.
 - Jada a **compris** que le Créateur est l'auteur du jeu et qu'il pourrait la
