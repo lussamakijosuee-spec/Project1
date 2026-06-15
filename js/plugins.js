@@ -56,5 +56,6 @@ var $plugins =
 {"name": "BestiaireAmes", "status": true, "description": "v1.0 ■ Bestiaire : encyclopedie des ennemis rencontres.", "parameters": {"menuCommand": "Bestiaire"}},
 {"name": "LivingNPC", "status": true, "description": "v1.0 ■ PNJ vivants facon Skyrim : dialogues reactifs, rumeurs, barks.", "parameters": {}},
 {"name": "RageBaitDuo", "status": true, "description": "v1.0 ■ Duo Regis & Quentin : Regis provoque, sa chute enrage Quentin.", "parameters": {"regisId": "73", "quentinId": "74", "enrageStateId": "7", "tauntChance": "60"}},
+{"name": "QuestJournal", "status": true, "description": "v1.0 ■ Journal de quetes (principale & secondaires) + suivi + ecran.", "parameters": {"menuCommand": "Journal", "showTracker": "true"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
