@@ -56,6 +56,7 @@ var $plugins =
 {"name": "RelicPassifs", "status": true, "description": "v1.0 ■ Passifs des reliques (<Relic: x>) : vol de vie, epines, etc.", "parameters": {"soulVar": "15"}},
 {"name": "BestiaireAmes", "status": true, "description": "v1.0 ■ Bestiaire : encyclopedie des ennemis rencontres.", "parameters": {"menuCommand": "Bestiaire"}},
 {"name": "LivingNPC", "status": true, "description": "v1.0 ■ PNJ vivants facon Skyrim : dialogues reactifs, rumeurs, barks.", "parameters": {}},
+{"name": "NPCRoutines", "status": true, "description": "v1.0 ■ PNJ a routines : vaquent le jour, se reposent la nuit, fuient la corruption.", "parameters": {"fleeCorruption": "70"}},
 {"name": "RageBaitDuo", "status": true, "description": "v1.0 ■ Duo Regis & Quentin : Regis provoque, sa chute enrage Quentin.", "parameters": {"regisId": "73", "quentinId": "74", "enrageStateId": "7", "tauntChance": "60"}},
 {"name": "QuestJournal", "status": true, "description": "v1.0 ■ Journal de quetes (principale & secondaires) + suivi + ecran.", "parameters": {"menuCommand": "Journal", "showTracker": "true"}},
 {"name": "MainQuests", "status": true, "description": "v1.0 ■ Quete principale (6 chapitres) dans le Journal ; MAINQUEST <n>.", "parameters": {}},
