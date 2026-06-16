@@ -94,5 +94,6 @@ var $plugins =
 {"name": "MOG_TreasurePopup", "status": true, "description": "(v1.1) Apresenta o ícone e o nome do tesouro ganho.", "parameters": {"Duration": "15 ", "Fade Speed": "5", "X - Axis": "0", "Y - Axis": "-32", "Random Movement": "false", "X Speed": "0", "Y Speed": "1", "Font Size": "16 ", "Icon Scale": "0.60", "Treasure Space Y-Axis": "20", "Zoom Effect": "false", "Gold Popup": "true", "Gold Icon Index": "163"}},
 {"name": "CorruptionFX", "status": true, "description": "v1.0 ■ Corruption -> filtre ecran (gris/bruit) via MOG_PixiFilters.", "parameters": {"grisAt": "50", "bruitAt": "80"}},
 {"name": "SoulsDifficulty", "status": true, "description": "v1.0 ■ Difficulte souls (Histoire/Normal/Elden/Cauchemar).", "parameters": {"defaultTier": "elden", "menuCommand": "Difficulté"}},
+{"name": "ChaseEnemies", "status": true, "description": "v1.0 ■ Mobs autonomes : vue + poursuite + combat au contact.", "parameters": {"vision": "6", "giveUp": "9"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
