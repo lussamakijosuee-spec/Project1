@@ -56,6 +56,7 @@ var $plugins =
 {"name": "RelicPassifs", "status": true, "description": "v1.0 ■ Passifs des reliques (<Relic: x>) : vol de vie, epines, etc.", "parameters": {"soulVar": "15"}},
 {"name": "BestiaireAmes", "status": true, "description": "v1.0 ■ Bestiaire : encyclopedie des ennemis rencontres.", "parameters": {"menuCommand": "Bestiaire"}},
 {"name": "LivingNPC", "status": true, "description": "v1.0 ■ PNJ vivants facon Skyrim : dialogues reactifs, rumeurs, barks.", "parameters": {}},
+{"name": "NPCRoutines", "status": true, "description": "v1.0 ■ PNJ a routines : vaquent le jour, se reposent la nuit, fuient la corruption.", "parameters": {"fleeCorruption": "70"}},
 {"name": "RageBaitDuo", "status": true, "description": "v1.0 ■ Duo Regis & Quentin : Regis provoque, sa chute enrage Quentin.", "parameters": {"regisId": "73", "quentinId": "74", "enrageStateId": "7", "tauntChance": "60"}},
 {"name": "QuestJournal", "status": true, "description": "v1.0 ■ Journal de quetes (principale & secondaires) + suivi + ecran.", "parameters": {"menuCommand": "Journal", "showTracker": "true"}},
 {"name": "MainQuests", "status": true, "description": "v1.0 ■ Quete principale (6 chapitres) dans le Journal ; MAINQUEST <n>.", "parameters": {}},
@@ -92,5 +93,7 @@ var $plugins =
 {"name": "MOG_TreasureHud", "status": true, "description": "(v1.3) Apresenta uma Hud com os tesouros adquiridos no jogo.", "parameters": {"Hud X-Axis": "555", "Hud Y-Axis": "500", "Name X-Axis": "78", "Name Y-Axis": "24", "Icon X-Axis": "42", "Icon Y-Axis": "24  ", "Duration": "90", "Gold Icon Index": "163", "Font Size": "20"}},
 {"name": "MOG_TreasurePopup", "status": true, "description": "(v1.1) Apresenta o ícone e o nome do tesouro ganho.", "parameters": {"Duration": "15 ", "Fade Speed": "5", "X - Axis": "0", "Y - Axis": "-32", "Random Movement": "false", "X Speed": "0", "Y Speed": "1", "Font Size": "16 ", "Icon Scale": "0.60", "Treasure Space Y-Axis": "20", "Zoom Effect": "false", "Gold Popup": "true", "Gold Icon Index": "163"}},
 {"name": "CorruptionFX", "status": true, "description": "v1.0 ■ Corruption -> filtre ecran (gris/bruit) via MOG_PixiFilters.", "parameters": {"grisAt": "50", "bruitAt": "80"}},
+{"name": "SoulsDifficulty", "status": true, "description": "v1.0 ■ Difficulte souls (Histoire/Normal/Elden/Cauchemar).", "parameters": {"defaultTier": "elden", "menuCommand": "Difficulté"}},
+{"name": "ChaseEnemies", "status": true, "description": "v1.0 ■ Mobs autonomes : vue + poursuite + combat au contact.", "parameters": {"vision": "6", "giveUp": "9"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
