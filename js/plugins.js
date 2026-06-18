@@ -100,5 +100,6 @@ var $plugins =
 {"name": "SoulMessages", "status": true, "description": "v1.0 ■ Messages d'ames au sol (Souls + meta) decouverts en explorant.", "parameters": {"everyMin": "28", "everyMax": "60"}},
 {"name": "KevSignature", "status": true, "description": "v1.0 ■ Kev (Radahn) : ATK qui snowball + Sombre/Negatif le soigne + enrage.", "parameters": {"growth": "12", "elDark": "5", "elNeg": "4"}},
 {"name": "CorruptedUI", "status": true, "description": "v1.0 ■ UI corrompue : le texte des menus glitche a forte corruption (meta).", "parameters": {"seuil": "55", "intensiteMax": "14"}},
+{"name": "SoulHud", "status": true, "description": "v1.0 ■ HUD Ames & Corruption sur la carte (procedural, sans asset).", "parameters": {"soulVar": "15", "coin": "bl"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
