@@ -103,5 +103,6 @@ var $plugins =
 {"name": "SoulHud", "status": true, "description": "v1.0 ■ HUD Ames & Corruption sur la carte (procedural, sans asset).", "parameters": {"soulVar": "15", "coin": "bl"}},
 {"name": "ManaVisuals", "status": true, "description": "v1.0 ■ Visuel : competences colorees par affinite + aide + stats a barres.", "parameters": {}},
 {"name": "ReadableText", "status": true, "description": "v1.0 ■ Lisibilite : fenetre d'aide 3 lignes + retour a la ligne auto.", "parameters": {"lignes": "3"}},
+{"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
