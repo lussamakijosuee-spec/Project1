@@ -104,5 +104,6 @@ var $plugins =
 {"name": "ManaVisuals", "status": true, "description": "v1.0 ■ Visuel : competences colorees par affinite + aide + stats a barres.", "parameters": {}},
 {"name": "ReadableText", "status": true, "description": "v1.0 ■ Lisibilite : fenetre d'aide 3 lignes + retour a la ligne auto.", "parameters": {"lignes": "3"}},
 {"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
+{"name": "JosuMirror", "status": true, "description": "v1.0 ■ Josu : jauge de Joie (frappe=fort, ignore=expose). Miroir de Thylane.", "parameters": {"josuId": "76", "euphState": "186", "videState": "187"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
