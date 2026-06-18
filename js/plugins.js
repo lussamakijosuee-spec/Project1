@@ -98,5 +98,6 @@ var $plugins =
 {"name": "SoulsDifficulty", "status": true, "description": "v1.0 ■ Difficulte souls (Histoire/Normal/Elden/Cauchemar).", "parameters": {"defaultTier": "elden", "menuCommand": "Difficulté"}},
 {"name": "ChaseEnemies", "status": true, "description": "v1.0 ■ Mobs autonomes : vue + poursuite + combat au contact.", "parameters": {"vision": "6", "giveUp": "9"}},
 {"name": "SoulMessages", "status": true, "description": "v1.0 ■ Messages d'ames au sol (Souls + meta) decouverts en explorant.", "parameters": {"everyMin": "28", "everyMax": "60"}},
+{"name": "KevSignature", "status": true, "description": "v1.0 ■ Kev (Radahn) : ATK qui snowball + Sombre/Negatif le soigne + enrage.", "parameters": {"growth": "12", "elDark": "5", "elNeg": "4"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
