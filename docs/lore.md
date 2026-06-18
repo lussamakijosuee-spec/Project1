@@ -120,7 +120,7 @@ Si le héros fait les **bons choix** (reste équilibré) au fil du jeu, il devie
 |-------|-------------|---|------------|------------------|
 | **Thylane** | Colère maîtrisée | ⇄ | **Josu** | Joie / amusement destructeur |
 | **Lou** | Retenue | ⇄ | **Jade la Marionnette (Elara)** | Excès / liberté sans limite |
-| **Neyssa** | Concentration | ⇄ | **Dono** | Surconcentration (sur l'amour) |
+| **Neyssa** | Manque de concentration | ⇄ | **Dono** | Surconcentration (sur l'amour) |
 | **Tianna** | Manque de confiance | ⇄ | **Kev** | Arrogance / excès de confiance |
 
 ### Détail des miroirs
@@ -138,7 +138,7 @@ Si le héros fait les **bons choix** (reste équilibré) au fil du jeu, il devie
   trop de liberté, le droit de tout faire → on fait n'importe quoi (comme
   quelqu'un sous des parents stricts qui, libéré, sombre dans ses **désirs
   humains les plus profonds**). Une version inversée de soi.
-- **Neyssa (Concentration) ⇄ Dono (Surconcentration).** Dono est tellement
+- **Neyssa (Manque de concentration) ⇄ Dono (Surconcentration).** Dono est tellement
   **focus sur l'amour et le fait d'être aimé** qu'il a délaissé le plus
   important : **l'amour de soi**. Sa leçon : ne pas donner son cœur aux humains,
   car **ton cœur est le plus beau des trésors**.
