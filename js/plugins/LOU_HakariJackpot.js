@@ -109,7 +109,7 @@
                         interpreter.executeHakariGamble();
                     }, 500);
                 } else {
-                    AudioManager.playMe({ name: "Shock2", volume: 90, pitch: 100, pan: 0 });
+                    AudioManager.playSe({ name: "Buzzer2", volume: 90, pitch: 100, pan: 0 });
                     $gameMessage.add("Plus assez de vie pour parier...");
                 }
             } else {
