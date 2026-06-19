@@ -107,5 +107,6 @@ var $plugins =
 {"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
 {"name": "JosuMirror", "status": true, "description": "v1.0 ■ Josu : jauge de Joie (frappe=fort, ignore=expose). Miroir de Thylane.", "parameters": {"josuId": "76", "euphState": "186", "videState": "187"}},
 {"name": "Pensees", "status": true, "description": "v1.0 ■ Pensees : questions profondes (commande PENSEE). Le jeu qui fait reflechir.", "parameters": {}},
+{"name": "MirrorTaunts", "status": true, "description": "v1.0 ■ Les boss-miroirs confrontent leur heros a sa facette en combat.", "parameters": {"chance": "38"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];
