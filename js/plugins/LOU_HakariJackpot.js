@@ -78,8 +78,8 @@
         AudioManager.playMe({ name: "jackpot-hakari", volume: 90, pitch: 100, pan: 0 });
         AudioManager.playBgm({ name: jackpotBgmName, volume: 90, pitch: 100, pan: 0 });
 
-        // 2 min 11 sec = 131 secondes
-        $gameTimer.start(131 * 60); 
+        // 4 min 11 sec = 251 secondes — minuteur visible (Sprite_Timer affiché par défaut)
+        $gameTimer.start(251 * 60);
     };
 
     Game_Interpreter.prototype.triggerJackpotFail = function(actor) {
@@ -133,11 +133,21 @@
         _Game_Timer_update.call(this, sceneActive);
     };
 
-    // Vérification de la fin du Timer
+    // Vérification de la fin du Timer (en combat)
     var _Scene_Battle_update = Scene_Battle.prototype.update;
     Scene_Battle.prototype.update = function() {
         _Scene_Battle_update.call(this);
-        
+
+        if (isJackpotActive && $gameTimer.frames() === 0) {
+            endJackpot();
+        }
+    };
+
+    // Vérification de la fin du Timer (sur la carte aussi)
+    var _Scene_Map_update = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function() {
+        _Scene_Map_update.call(this);
+
         if (isJackpotActive && $gameTimer.frames() === 0) {
             endJackpot();
         }
@@ -159,10 +169,10 @@
         if (actor) {
             actor.removeState(jackpotStateId);
         }
-        if (savedBgm) {
-            AudioManager.replayBgm(savedBgm);
-            savedBgm = null;
-        }
+        // La musique du Jackpot DISPARAÎT en même temps que le minuteur.
+        AudioManager.fadeOutBgm(2);
+        AudioManager.fadeOutMe(2);
+        savedBgm = null;
         $gameScreen.startFlash([0, 0, 0, 170], 60);
     }
 
