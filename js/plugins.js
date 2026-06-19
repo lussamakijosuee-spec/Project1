@@ -55,6 +55,7 @@ var $plugins =
 {"name": "DonoBoss", "status": true, "description": "v1.0 ■ Dono : boss duo, genie progressif (empathie->serieux->Mana Parfait).", "parameters": {"empathieState": "176", "serieuxState": "177", "eveilState": "178", "syncReduc": "0.70"}},
 {"name": "DonoKamui", "status": true, "description": "v1.0 ■ Kamui des Deux Yeux : Dono intangible, se materialise par rythme, surcharge.", "parameters": {"kamuiState": "184", "overloadState": "185"}},
 {"name": "JadeRework", "status": true, "description": "v1.0 ■ Jade Primordiale : Dernier Souffle (renait en Chaos, aidee par la 2e Jade).", "parameters": {"chaosState": "180", "reviveRate": "65"}},
+{"name": "JadeGaster", "status": true, "description": "v1.0 ■ Gaster : boss secret glitche (Gaster Blasters, phase-out, Wingdings) + screamers fluides.", "parameters": {"GasterEnemyIds": "", "BlasterSkillId": "0", "BlasterDamagePct": "35", "PhaseOutChance": "28", "TauntChance": "50", "BlasterSe": "Laser2", "GlitchSe": "Darkness1"}},
 {"name": "CorruptionAme", "status": true, "description": "v1.0 ■ Corruption de l'Ame : abuser du Sombre/Negatif corrompt l'ame.", "parameters": {"elNegatif": "4", "elSombre": "5", "menuCommand": "Corruption"}},
 {"name": "RelicPassifs", "status": true, "description": "v1.0 ■ Passifs des reliques (<Relic: x>) : vol de vie, epines, etc.", "parameters": {"soulVar": "15"}},
 {"name": "BestiaireAmes", "status": true, "description": "v1.0 ■ Bestiaire : encyclopedie des ennemis rencontres.", "parameters": {"menuCommand": "Bestiaire"}},

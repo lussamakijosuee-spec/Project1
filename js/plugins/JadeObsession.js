@@ -234,6 +234,37 @@
 
     JadeScreamer._overlay   = null;
     JadeScreamer._hideTimer = null;
+    JadeScreamer._styleDone = false;
+
+    // Fade-in/out (ms) — assez court pour rester un jumpscare, assez doux pour ne plus « claquer »
+    JadeScreamer.FADE_IN  = 60;
+    JadeScreamer.FADE_OUT = 90;
+
+    // Injecte une seule fois le CSS qui rend les screamers fluides (fondu + glitch vivant)
+    JadeScreamer._ensureStyle = function() {
+        if (JadeScreamer._styleDone) return;
+        JadeScreamer._styleDone = true;
+        var style = document.createElement('style');
+        style.id = 'jade-screamer-style';
+        style.textContent =
+            '.jade-screamer-overlay{position:fixed;top:0;left:0;width:100%;height:100%;' +
+            'z-index:99999;pointer-events:none;image-rendering:pixelated;opacity:0;' +
+            'background-size:cover;background-position:center;background-repeat:no-repeat;' +
+            'will-change:transform,opacity,filter;' +
+            'transition:opacity ' + JadeScreamer.FADE_IN + 'ms linear;}' +
+            '.jade-screamer-overlay.jade-screamer-on{opacity:1;' +
+            'animation:jadeScreamerGlitch 200ms steps(2,end) infinite;}' +
+            '.jade-screamer-overlay.jade-screamer-off{opacity:0;animation:none;' +
+            'transition:opacity ' + JadeScreamer.FADE_OUT + 'ms linear;}' +
+            '@keyframes jadeScreamerGlitch{' +
+            '0%{transform:translate(0,0) scale(1.00);filter:none;}' +
+            '22%{transform:translate(-6px,3px) scale(1.05);filter:hue-rotate(18deg) contrast(1.25);}' +
+            '44%{transform:translate(5px,-4px) scale(1.02);filter:invert(0.06);}' +
+            '66%{transform:translate(-3px,-2px) scale(1.06);filter:hue-rotate(-24deg) saturate(1.5);}' +
+            '88%{transform:translate(4px,5px) scale(1.03);filter:contrast(1.35);}' +
+            '100%{transform:translate(0,0) scale(1.00);filter:none;}}';
+        document.head.appendChild(style);
+    };
 
     // Construit le chemin absolu (NW.js) ou relatif (navigateur)
     JadeScreamer._buildPath = function(imageName) {
@@ -247,51 +278,64 @@
         return 'img/pictures/' + imageName;
     };
 
-    // Affiche un screamer par index (0-3), pendant `duration` ms
+    // Retire instantanément TOUT overlay résiduel (remplacement propre, sans fondu)
+    JadeScreamer._purge = function() {
+        if (JadeScreamer._hideTimer) {
+            clearTimeout(JadeScreamer._hideTimer);
+            JadeScreamer._hideTimer = null;
+        }
+        var nodes = document.querySelectorAll('.jade-screamer-overlay');
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].parentNode) nodes[i].parentNode.removeChild(nodes[i]);
+        }
+        JadeScreamer._overlay = null;
+    };
+
+    // Affiche un screamer par index (0-3), pendant `duration` ms — apparition en fondu + glitch animé
     JadeScreamer.show = function(index, duration, onHidden) {
-        JadeScreamer.hide(); // nettoyer tout overlay précédent
+        JadeScreamer._ensureStyle();
+        JadeScreamer._purge(); // nettoyer tout overlay précédent (synchrone, sans fondu)
 
         var name = JadeScreamer._imageNames[index];
-        if (!name) return;
+        if (!name) { if (typeof onHidden === 'function') onHidden(); return; }
 
         var url = JadeScreamer._buildPath(name);
 
         var div = document.createElement('div');
-        div.id = 'jade-screamer-overlay';
-        div.style.position   = 'fixed';
-        div.style.top        = '0';
-        div.style.left       = '0';
-        div.style.width      = '100%';
-        div.style.height     = '100%';
-        div.style.zIndex     = '99999';
-        div.style.backgroundImage    = 'url("' + url + '")';
-        div.style.backgroundSize     = 'cover';
-        div.style.backgroundPosition = 'center';
-        div.style.backgroundRepeat   = 'no-repeat';
-        div.style.pointerEvents      = 'none';
-        div.style.imageRendering     = 'pixelated';
+        div.className = 'jade-screamer-overlay';
+        div.style.backgroundImage = 'url("' + url + '")';
 
         document.body.appendChild(div);
         JadeScreamer._overlay = div;
+
+        // Force un reflow puis bascule en « on » → le fondu d'apparition se déclenche en douceur
+        void div.offsetWidth;
+        div.classList.add('jade-screamer-on');
 
         JadeScreamer._hideTimer = setTimeout(function() {
             JadeScreamer.hide(onHidden);
         }, duration || 600);
     };
 
-    // Retire l'overlay du DOM
+    // Retire l'overlay du DOM en fondu (puis exécute le callback)
     JadeScreamer.hide = function(callback) {
         if (JadeScreamer._hideTimer) {
             clearTimeout(JadeScreamer._hideTimer);
             JadeScreamer._hideTimer = null;
         }
-        if (JadeScreamer._overlay) {
-            if (JadeScreamer._overlay.parentNode) {
-                JadeScreamer._overlay.parentNode.removeChild(JadeScreamer._overlay);
-            }
-            JadeScreamer._overlay = null;
+        var ov = JadeScreamer._overlay;
+        JadeScreamer._overlay = null; // libère la place pour un éventuel show() suivant
+
+        if (ov) {
+            ov.classList.remove('jade-screamer-on');
+            ov.classList.add('jade-screamer-off');
+            setTimeout(function() {
+                if (ov.parentNode) ov.parentNode.removeChild(ov);
+                if (typeof callback === 'function') callback();
+            }, JadeScreamer.FADE_OUT);
+        } else if (typeof callback === 'function') {
+            callback();
         }
-        if (typeof callback === 'function') callback();
     };
 
     // ---- Déclencheurs thématiques ----
