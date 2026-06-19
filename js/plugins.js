@@ -111,5 +111,6 @@ var $plugins =
 {"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
 {"name": "JosuMirror", "status": true, "description": "v1.0 ■ Josu : jauge de Joie (frappe=fort, ignore=expose). Miroir de Thylane.", "parameters": {"josuId": "76", "euphState": "186", "videState": "187"}},
 {"name": "Pensees", "status": true, "description": "v1.0 ■ Pensees : questions profondes (commande PENSEE). Le jeu qui fait reflechir.", "parameters": {}},
-{"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
+{"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}},
+{"name": "UltiCinematics", "status": true, "description": "v1.0 ■ Cinematiques animees : Jackpot a bobines, cut-in d'ultime, auras d'etat. Pilotable (notetags + commandes).", "parameters": {"UltiSkillIds": "", "DefaultUltiColor": "#b07cff", "UltiSe": "Saint5", "ShakeOnUlti": "true", "JackpotEnhance": "true"}}
 ];
