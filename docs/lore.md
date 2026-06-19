@@ -109,6 +109,48 @@ meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
 
 ---
 
+## 🔮 Les Miroirs — Héros & Boss (l'équilibre et l'excès)
+
+**Thème central du jeu :** chaque héros incarne un **état mental** ; son boss est
+ce **même trait poussé à l'excès destructeur**. Le boss est l'**ombre** du héros.
+Si le héros fait les **bons choix** (reste équilibré) au fil du jeu, il devient le
+**contre** naturel de son boss-miroir.
+
+| Héros | État (sain) | ⇄ | Boss-Ombre | Excès (corrompu) |
+|-------|-------------|---|------------|------------------|
+| **Thylane** | Colère maîtrisée | ⇄ | **Josu** | Joie / amusement destructeur |
+| **Lou** | Retenue | ⇄ | **Jade la Marionnette (Elara)** | Excès / liberté sans limite |
+| **Neyssa** | Manque de concentration | ⇄ | **Dono** | Surconcentration (sur l'amour) |
+| **Tianna** | Manque de confiance | ⇄ | **Kev** | Arrogance / excès de confiance |
+
+### Détail des miroirs
+- **Thylane (Colère) ⇄ Josu (Joie).** Thylane **s'énerve vite** : frappée, sa
+  colère peut devenir incontrôlée — elle pourrait **frapper Lou**. Josu est
+  l'inverse : **plus on le frappe, plus il est heureux** et content du combat —
+  ce qui le rend **plus agressif**. *(Mécanique de combat : rage de Thylane vs
+  Josu qui s'excite sous les coups.)*
+- **Josu en profondeur.** Bloqué dans son amusement, ce qui le rend **fou et
+  dangereux**. Il veut tant s'amuser qu'il **oublie les sentiments des autres**.
+  Excès, **faux bonheur pour fuir la réalité**, par **manque de confiance**,
+  facilité, ondes négatives de colère. Il **se déteste déjà** — sans se rendre
+  compte qu'il est **devenu ce qu'il déteste**.
+- **Lou (Retenue) ⇄ la Marionnette (Excès).** L'axe de l'**excès de liberté** :
+  trop de liberté, le droit de tout faire → on fait n'importe quoi (comme
+  quelqu'un sous des parents stricts qui, libéré, sombre dans ses **désirs
+  humains les plus profonds**). Une version inversée de soi.
+- **Neyssa (Manque de concentration) ⇄ Dono (Surconcentration).** Dono est tellement
+  **focus sur l'amour et le fait d'être aimé** qu'il a délaissé le plus
+  important : **l'amour de soi**. Sa leçon : ne pas donner son cœur aux humains,
+  car **ton cœur est le plus beau des trésors**.
+- **Tianna (Manque de confiance) ⇄ Kev (Arrogance).** Kev a **tellement confiance
+  en lui** et en ses capacités qu'il en est **aveuglé** : il ne sait plus se
+  **doser**, au point d'être **blessant et méchant**.
+
+> 🎯 Chaque boss a été **choisi pour contrer un héros précis** — surtout si ce
+> héros a fait les bons choix au fil du jeu (équilibre vs excès).
+
+---
+
 ## 🎣 Jada & l'Invocation des Joueurs
 Jada **attire de nouveaux joueurs** depuis la réalité : elle envoie des
 **messages / e-mails** à des gens du monde réel (amis des créateurs, amis des
