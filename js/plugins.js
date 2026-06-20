@@ -108,5 +108,13 @@ var $plugins =
 {"name":"Pensees","status":true,"description":"v1.0 ■ Pensees : questions profondes (commande PENSEE). Le jeu qui fait reflechir.","parameters":{}},
 {"name":"MirrorTaunts","status":true,"description":"v1.0 ■ Les boss-miroirs confrontent leur heros a sa facette en combat.","parameters":{"chance":"38"}},
 {"name":"AudioGuard","status":true,"description":"v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').","parameters":{}},
-{"name":"LOU_HakariJackpot","status":true,"description":"v1.1.0 Système de Jackpot \"Pari Mortel\" optimisé pour Lou (Compatible YEP_X_BattleSysCTB).","parameters":{"Actor ID":"3","Jackpot State ID":"11","Jackpot BGM":"jackpotsong"}}
+{"name":"LOU_HakariJackpot","status":true,"description":"v1.1.0 Système de Jackpot \"Pari Mortel\" optimisé pour Lou (Compatible YEP_X_BattleSysCTB).","parameters":{"Actor ID":"3","Jackpot State ID":"11","Jackpot BGM":"jackpotsong"}},
+{"name":"JadeGaster","status":true,"description":"v1.0 ■ Gaster : boss secret glitche (Gaster Blasters, phase-out, Wingdings) + screamers fluides.","parameters":{"GasterEnemyIds":"","BlasterSkillId":"0","BlasterDamagePct":"35","PhaseOutChance":"28","TauntChance":"50","BlasterSe":"Laser2","GlitchSe":"Darkness1"}},
+{"name":"JadeMemoire","status":true,"description":"v1.0 ■ Jade se souvient de tes parties (hors sauvegarde) : accueil NG+ et boss final renforce.","parameters":{"PerVictoryBonus":"8","BonusCap":"60","RunsVarId":"0"}},
+{"name":"JadeRegard","status":true,"description":"v1.0 ■ Le Regard de Jade : effets meta selon la jauge mentale (faux PV, glitch, fausse erreur).","parameters":{"GaugeVars":"11,12,13,14","DisableSwitchId":"0","MasterChance":"100","WhisperSe":"Darkness2"}},
+{"name":"JadeEchos","status":true,"description":"v1.0 ■ Echos du groupe : le groupe reagit en direct a l'etat mental de chacun en combat.","parameters":{"ActorVarPairs":"1=11,2=12,3=13,4=14","EchoChance":"40","CooldownTurns":"1"}},
+{"name":"ManaVisualEX","status":true,"description":"v1.0 ■ MAJ visuelle : stats animees + comptage, badge affinite + resistances, soulignement element, aide enrichie.","parameters":{"AnimSpeed":"0.07","ShowResist":"true"}},
+{"name":"VisualMaxEX","status":true,"description":"v1.0 ■ Popups de degats teintes par element + ecran de reference Elements & Cycle.","parameters":{"TintPopups":"true"}},
+{"name":"VisualMaxEX2","status":true,"description":"v1.0 ■ Jauges animees (combat+menu), picto element popups, menu Elements, apercu equip vert/rouge.","parameters":{"SlideSpeed":"0.2","ShowPicto":"true","MenuLabel":"Éléments","EquipPreview":"true"}},
+{"name":"UltiCinematics","status":true,"description":"v1.0 ■ Cinematiques animees : Jackpot a bobines, cut-in d'ultime, auras d'etat. Pilotable (notetags + commandes).","parameters":{"UltiSkillIds":"","DefaultUltiColor":"#b07cff","UltiSe":"Saint5","ShakeOnUlti":"true","JackpotEnhance":"true"}}
 ];
