@@ -264,6 +264,19 @@ var JadeMemoire = JadeMemoire || {};
         }
     };
 
+    // Enregistrement AUTOMATIQUE de la victoire sur un boss <JadeMemoire>
+    // (aucun event requis : le compteur monte tout seul, donc le boss se
+    //  renforce d'une partie a l'autre)
+    var _processVictory = BattleManager.processVictory;
+    BattleManager.processVictory = function () {
+        try {
+            if ($gameTroop && $gameTroop.members().some(hasMemTag)) {
+                JadeMemoire.recordDefeatJade();
+            }
+        } catch (e) {}
+        _processVictory.call(this);
+    };
+
     //------------------------------------------------------------------------
     // COMMANDES DE PLUGIN
     //------------------------------------------------------------------------
