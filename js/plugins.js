@@ -109,6 +109,7 @@ var $plugins =
 {"name": "ManaVisuals", "status": true, "description": "v1.0 ■ Visuel : competences colorees par affinite + aide + stats a barres.", "parameters": {}},
 {"name": "ManaVisualEX", "status": true, "description": "v1.0 ■ MAJ visuelle : stats animees + comptage, badge affinite + resistances, soulignement element, aide enrichie.", "parameters": {"AnimSpeed": "0.07", "ShowResist": "true"}},
 {"name": "VisualMaxEX", "status": true, "description": "v1.0 ■ Popups de degats teintes par element + ecran de reference Elements & Cycle.", "parameters": {"TintPopups": "true"}},
+{"name": "VisualMaxEX2", "status": true, "description": "v1.0 ■ Jauges animees (combat+menu), picto element popups, menu Elements, apercu equip vert/rouge.", "parameters": {"SlideSpeed": "0.2", "ShowPicto": "true", "MenuLabel": "Éléments", "EquipPreview": "true"}},
 {"name": "ReadableText", "status": true, "description": "v1.0 ■ Lisibilite : fenetre d'aide 3 lignes + retour a la ligne auto.", "parameters": {"lignes": "3"}},
 {"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
 {"name": "JosuMirror", "status": true, "description": "v1.0 ■ Josu : jauge de Joie (frappe=fort, ignore=expose). Miroir de Thylane.", "parameters": {"josuId": "76", "euphState": "186", "videState": "187"}},
