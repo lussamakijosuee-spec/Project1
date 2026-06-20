@@ -107,6 +107,7 @@ var $plugins =
 {"name": "CorruptedUI", "status": true, "description": "v1.0 ■ UI corrompue : le texte des menus glitche a forte corruption (meta).", "parameters": {"seuil": "55", "intensiteMax": "14"}},
 {"name": "SoulHud", "status": true, "description": "v1.0 ■ HUD Ames & Corruption sur la carte (procedural, sans asset).", "parameters": {"soulVar": "15", "coin": "bl"}},
 {"name": "ManaVisuals", "status": true, "description": "v1.0 ■ Visuel : competences colorees par affinite + aide + stats a barres.", "parameters": {}},
+{"name": "ManaVisualEX", "status": true, "description": "v1.0 ■ MAJ visuelle : stats animees + comptage, badge affinite + resistances, soulignement element, aide enrichie.", "parameters": {"AnimSpeed": "0.07", "ShowResist": "true"}},
 {"name": "ReadableText", "status": true, "description": "v1.0 ■ Lisibilite : fenetre d'aide 3 lignes + retour a la ligne auto.", "parameters": {"lignes": "3"}},
 {"name": "DialogueWrap", "status": true, "description": "v1.0 ■ Retour a la ligne auto de tous les dialogues (anti-debordement).", "parameters": {}},
 {"name": "JosuMirror", "status": true, "description": "v1.0 ■ Josu : jauge de Joie (frappe=fort, ignore=expose). Miroir de Thylane.", "parameters": {"josuId": "76", "euphState": "186", "videState": "187"}},
