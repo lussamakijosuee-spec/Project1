@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compendium des Paroles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0B1A; --bg2:#14102A; --surface:#1B1538; --surface2:#241C47;
+    --line:rgba(169,156,245,.16); --line2:rgba(169,156,245,.30);
+    --ink:#ECE6D8; --muted:#9A93B5; --faint:#6F6790;
+    --violet:#A99CF5; --violet-deep:#6E5FC9; --gold:#E0B23C;
+    --success:#5DCAA5; --danger:#E0726E;
+    --feu:#E0653C; --eau:#3E8FD8; --vent:#4FB8A8; --terre:#B07B3E;
+    --foudre:#E0B23C; --glace:#7FC6E8; --lumiere:#EFE0A2; --ombre:#9B6FD8;
+    --r:10px; --r-lg:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 700px at 50% -200px,#1d1640 0%,var(--bg) 60%) fixed;
+    color:var(--ink); font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+    min-height:100vh; padding:0 0 4rem;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 1.1rem}
+  header.top{text-align:center;padding:2.6rem 1rem 1.4rem}
+  .eyebrow{font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;color:var(--violet);font-weight:600}
+  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.8rem,5vw,2.7rem);letter-spacing:.02em;margin:.5rem 0 .35rem;
+     background:linear-gradient(180deg,#F4EFE0,#B9AEE6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header.top p{color:var(--muted);font-size:.95rem;max-width:46ch;margin:0 auto}
+  .tabs{display:flex;gap:.4rem;justify-content:center;margin:1.6rem 0 .4rem}
+  .tab{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.08em;color:var(--muted);background:transparent;
+    border:1px solid var(--line);padding:.55rem 1.2rem;border-radius:999px;cursor:pointer;transition:.18s}
+  .tab:hover{color:var(--ink);border-color:var(--line2)}
+  .tab.on{color:#1a1430;background:linear-gradient(180deg,#C9BEF7,#A99CF5);border-color:transparent;font-weight:600}
+  .panel{display:none;animation:fade .35s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{background:linear-gradient(180deg,var(--surface),var(--bg2));border:1px solid var(--line);
+    border-radius:var(--r-lg);padding:1.3rem 1.3rem 1.5rem;margin-top:1.1rem}
+  .label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:.6rem;display:block}
+
+  .seg{display:flex;flex-wrap:wrap;gap:.4rem}
+  .seg button{flex:1 1 auto;min-width:88px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);
+    border-radius:var(--r);padding:.5rem .55rem;font-size:.82rem;font-weight:500;cursor:pointer;transition:.16s;font-family:inherit}
+  .seg button small{display:block;font-size:.66rem;color:var(--faint);margin-top:1px}
+  .seg button:hover{border-color:var(--line2);color:var(--ink)}
+  .seg button.on{background:rgba(169,156,245,.16);border-color:var(--violet);color:var(--ink)}
+  .seg button.on small{color:var(--violet)}
+
+  .elems{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
+  @media(max-width:480px){.elems{grid-template-columns:repeat(2,1fr)}}
+  .el{position:relative;background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);
+    padding:.55rem .5rem .5rem;cursor:pointer;transition:.16s;text-align:left}
+  .el:hover{border-color:var(--line2)}
+  .el .dot{width:11px;height:11px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:.45rem;box-shadow:0 0 9px currentColor}
+  .el .nm{font-size:.86rem;font-weight:500}
+  .el .vl{display:block;font-size:.68rem;color:var(--faint);margin-top:2px;padding-left:1.05rem;font-family:'JetBrains Mono',monospace}
+  .el.on{border-color:var(--clr);background:color-mix(in srgb,var(--clr) 16%,var(--surface2))}
+  .el.on .nm{color:#fff}
+
+  .field{margin-top:1.15rem}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--surface2);outline:none;margin-top:.5rem}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+    background:var(--violet);border:3px solid var(--bg2);cursor:pointer;box-shadow:0 0 10px rgba(169,156,245,.6)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--violet);border:3px solid var(--bg2);cursor:pointer}
+  .rng-head{display:flex;justify-content:space-between;align-items:baseline}
+  .rng-head .v{font-family:'JetBrains Mono',monospace;color:var(--violet);font-size:.95rem}
+
+  .recite{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.4rem;min-height:46px}
+  .tok{font-family:'Cinzel',serif;font-size:.9rem;padding:.4rem .8rem;border-radius:8px;border:1px solid var(--tc,var(--violet));
+    color:var(--tc,var(--violet));background:color-mix(in srgb,var(--tc,var(--violet)) 12%,transparent);box-shadow:0 0 14px -4px var(--tc,var(--violet))}
+  .plus{color:var(--faint);font-size:1.1rem}
+
+  .out{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.2rem}
+  @media(max-width:480px){.out{grid-template-columns:1fr}}
+  .stat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem}
+  .stat .k{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .stat .n{font-size:1.55rem;font-weight:600;margin-top:.2rem;font-family:'JetBrains Mono',monospace;color:var(--ink)}
+  .stat.dim .n{opacity:.35}
+
+  .verdict{margin-top:1rem;border-radius:var(--r);padding:.85rem 1.05rem;font-size:.92rem;display:flex;gap:.6rem;align-items:flex-start}
+  .verdict.ok{background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.4);color:#bff0df}
+  .verdict.bad{background:rgba(224,114,110,.12);border:1px solid rgba(224,114,110,.4);color:#f3c9c7}
+  .verdict .ic{font-size:1.1rem;line-height:1.2}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .mini{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:.7rem .9rem}
+  .mini .k{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .mini .n{font-size:1.15rem;font-weight:600;margin-top:.15rem;font-family:'JetBrains Mono',monospace}
+  canvas{width:100%;height:170px;display:block;margin-top:.4rem}
+
+  h2.sec{font-family:'Cinzel',serif;font-weight:600;font-size:1.15rem;margin:1.8rem 0 .2rem;color:var(--violet);letter-spacing:.03em}
+  .sec-desc{color:var(--muted);font-size:.9rem;margin-bottom:.7rem}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:.3rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+  th{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td.code{font-family:'JetBrains Mono',monospace;color:var(--violet)}
+  .ftable td:first-child{font-family:'Cinzel',serif}
+  .form-row{display:flex;gap:.8rem;align-items:baseline;padding:.55rem 0;border-bottom:1px solid var(--line)}
+  .form-row .nm{font-family:'Cinzel',serif;color:var(--ink);min-width:130px}
+  .form-row .fr{font-family:'JetBrains Mono',monospace;font-size:.84rem;color:var(--violet)}
+  .form-row .ex{color:var(--muted);font-size:.82rem;margin-top:.2rem}
+  .note{background:var(--surface2);border-left:3px solid var(--violet);border-radius:0 var(--r) var(--r) 0;padding:.7rem .9rem;margin-top:.7rem;font-size:.88rem;color:var(--muted)}
+  .note b{color:var(--ink);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.1rem .35rem;border-radius:5px;font-size:.85em;color:var(--violet)}
+  footer{text-align:center;color:var(--faint);font-size:.78rem;margin-top:2.4rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="eyebrow">Système de magie · paroles</div>
+  <h1>Compendium des Paroles</h1>
+  <p>Composez une parole selon sa grammaire, lisez sa valeur et son code, puis mesurez sa tenue au combat selon la lucidité du lanceur.</p>
+  <div class="tabs">
+    <button class="tab on" data-tab="calc">Calculateur</button>
+    <button class="tab" data-tab="fiche">Grimoire</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ CALCULATEUR ============ -->
+  <section class="panel on" id="calc">
+
+    <div class="card">
+      <span class="label">Forme de la parole</span>
+      <div class="seg" id="forme">
+        <button data-f="simple" class="on">Simple<small>mot + élém + sort</small></button>
+        <button data-f="double">Double élément<small>élém + élém</small></button>
+        <button data-f="ampli">Amplifiée<small>mana × sort</small></button>
+        <button data-f="fusion">Fusion<small>sort × sort</small></button>
+        <button data-f="enregistre">Enregistrée<small>mana origine</small></button>
+        <button data-f="soin">Soin<small>soustraction</small></button>
+      </div>
+
+      <div class="field" id="wrap-mana">
+        <span class="label">Mot de passe · mana</span>
+        <div class="seg" id="mana">
+          <button data-m="3" class="on">Positif<small>3 · universel</small></button>
+          <button data-m="4">Négatif<small>4</small></button>
+          <button data-m="2">Spirituel<small>2</small></button>
+        </div>
+      </div>
+
+      <div class="field" id="wrap-effet" style="display:none">
+        <span class="label">Effet du soin</span>
+        <div class="seg" id="effet">
+          <button data-e="restaure" class="on">Restaure<small>soigne</small></button>
+          <button data-e="enleve">Enlève<small>dissipe / retire</small></button>
+        </div>
+      </div>
+
+      <div class="field" id="wrap-elem1">
+        <span class="label">Élément</span>
+        <div class="elems" id="elem1"></div>
+      </div>
+
+      <div class="field" id="wrap-elem2" style="display:none">
+        <span class="label">Second élément</span>
+        <div class="elems" id="elem2"></div>
+      </div>
+
+      <div class="field" id="wrap-sort1">
+        <div class="rng-head"><span class="label" style="margin:0">N° du sort</span><span class="v" id="o-s1">5</span></div>
+        <input type="range" id="sort1" min="1" max="50" value="5">
+      </div>
+
+      <div class="field" id="wrap-sort2" style="display:none">
+        <div class="rng-head"><span class="label" style="margin:0">Second sort</span><span class="v" id="o-s2">7</span></div>
+        <input type="range" id="sort2" min="1" max="50" value="7">
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="label">Récitation</span>
+      <div class="recite" id="recite"></div>
+      <div class="out">
+        <div class="stat"><div class="k">Valeur · V</div><div class="n" id="o-val">—</div></div>
+        <div class="stat" id="stat-code"><div class="k">Code décodable</div><div class="n" id="o-code">—</div></div>
+      </div>
+      <div class="verdict ok" id="verdict"><span class="ic">✦</span><span id="verdict-txt"></span></div>
+    </div>
+
+    <h2 class="sec">Analyse de combat</h2>
+    <p class="sec-desc">La difficulté ne dépend pas de tes réflexes, mais de l'état du lanceur. La santé mentale gouverne la concentration disponible — et donc la longueur de parole qu'on peut tenir avant de rater ou de subir un backlash.</p>
+
+    <div class="card">
+      <div class="field" style="margin-top:0">
+        <div class="rng-head"><span class="label" style="margin:0">Santé mentale · lucidité</span><span class="v" id="o-sm">75</span></div>
+        <input type="range" id="sm" min="0" max="100" value="75" step="5">
+      </div>
+      <div class="field">
+        <div class="rng-head"><span class="label" style="margin:0">Concentration de base · talent</span><span class="v" id="o-cb">320</span></div>
+        <input type="range" id="cb" min="50" max="600" value="320" step="10">
+      </div>
+      <div class="field">
+        <div class="rng-head"><span class="label" style="margin:0">Fenêtre de combat (s)</span><span class="v" id="o-tf">5.0</span></div>
+        <input type="range" id="tf" min="1" max="10" value="5" step="0.5">
+      </div>
+
+      <canvas id="curve" width="800" height="340" aria-label="Courbe d'efficacité réelle selon la longueur de formule"></canvas>
+
+      <div class="grid2" style="margin-top:.9rem">
+        <div class="mini"><div class="k">Puissance</div><div class="n" id="m-p">—</div></div>
+        <div class="mini"><div class="k">Portée</div><div class="n" id="m-r">—</div></div>
+        <div class="mini"><div class="k">Précision</div><div class="n" id="m-pr">—</div></div>
+        <div class="mini"><div class="k">Réussite combat</div><div class="n" id="m-re">—</div></div>
+        <div class="mini"><div class="k">Risque backlash</div><div class="n" id="m-bl">—</div></div>
+        <div class="mini"><div class="k">Coût en santé mentale</div><div class="n" id="m-sm">—</div></div>
+      </div>
+      <div class="verdict ok" id="cverdict" style="margin-top:.9rem"><span class="ic">✦</span><span id="cverdict-txt"></span></div>
+    </div>
+  </section>
+
+  <!-- ============ FICHE / GRIMOIRE ============ -->
+  <section class="panel" id="fiche">
+
+    <h2 class="sec">Les huit éléments</h2>
+    <p class="sec-desc">Chaque élément est codé par un nombre. Ce nombre s'insère dans la parole entre le mot de passe et le nom du sort.</p>
+    <div class="card" style="padding-top:.6rem;padding-bottom:.6rem">
+      <table id="el-table"><thead><tr><th>Élément</th><th>Code</th><th>Domaine</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <h2 class="sec">Le mot de passe · types de mana</h2>
+    <p class="sec-desc">On l'utilise comme un mot de passe : on énonce d'abord le type de mana, puis le nom du sort. La base est toujours le mana positif.</p>
+    <div class="card" style="padding-top:.6rem;padding-bottom:.6rem">
+      <table class="ftable"><thead><tr><th>Mana</th><th>Code</th><th>Rôle</th></tr></thead><tbody>
+        <tr><td>Positif</td><td class="code">3</td><td>Le nombre universel, la base, toujours utilisé.</td></tr>
+        <tr><td>Négatif</td><td class="code">4</td><td>Paroles offensives, de corruption ou de malédiction.</td></tr>
+        <tr><td>Spirituel</td><td class="code">2</td><td>Paroles de l'âme, de soin, de protection.</td></tr>
+      </tbody></table>
+      <div class="note">On peut <b>combiner</b> les types pour des paroles hybrides — par exemple <code>Positif + Négatif</code> pour un sort à double nature.</div>
+    </div>
+
+    <h2 class="sec">Les formes de parole</h2>
+    <p class="sec-desc"><code>V</code> = la parole est valide, le sort part. Tout se construit à partir de trois jetons : le mot de passe, l'élément, le nom du sort.</p>
+    <div class="card">
+      <div class="form-row"><div><div class="nm">Simple</div><div class="ex">Le cas de base.</div></div><div style="margin-left:auto;text-align:right"><div class="fr">mot + élément + sort = V</div></div></div>
+      <div class="form-row"><div><div class="nm">Double élément</div><div class="ex">Fusion de deux affinités. Les codes d'élément se concatènent : Feu (8) + Glace (13) → <code>813</code>.</div></div></div>
+      <div class="form-row"><div><div class="nm">Amplifiée</div><div class="ex">Le mana multiplie la puissance du sort.</div></div><div style="margin-left:auto;text-align:right"><div class="fr">mot + (mana × sort) = V</div></div></div>
+      <div class="form-row"><div><div class="nm">Fusion</div><div class="ex">Deux sorts existants fusionnés en un plus puissant.</div></div><div style="margin-left:auto;text-align:right"><div class="fr">sort × sort = V</div></div></div>
+      <div class="form-row"><div><div class="nm">Enregistrée</div><div class="ex">Mana origine : le sort est déjà gravé, on le lance sans réciter le mot de passe ni l'élément.</div></div><div style="margin-left:auto;text-align:right"><div class="fr">sort = V</div></div></div>
+      <div class="note"><b>Mana origine.</b> Le mana qui remonte de l'intérieur permet de lancer des paroles plus complexes avec moins d'énergie. Pour un lanceur accompli, certaines paroles sont enregistrées : nul besoin de dire le mot de passe ni l'élément, c'est déjà inscrit.</div>
+    </div>
+
+    <h2 class="sec">Les sorts de soin et de support</h2>
+    <p class="sec-desc">Pour le soin et autres effets, la parole se construit en soustraction. Le signe inverse le sens : on retire au lieu d'ajouter.</p>
+    <div class="card">
+      <div class="form-row"><div><div class="nm">Soin · support</div><div class="ex">Le résultat <b>enlève</b> (dissipe un effet, draine) ou <b>restaure</b> (soigne, rend des forces).</div></div><div style="margin-left:auto;text-align:right"><div class="fr">mot − élément + sort = V</div></div></div>
+    </div>
+
+    <h2 class="sec">Combat : puissance contre lucidité</h2>
+    <p class="sec-desc">Plus une parole est longue et complexe, plus elle frappe fort, loin et juste — mais plus elle exige de concentration et de temps. C'est l'arbitrage central.</p>
+    <div class="card">
+      <div class="note" style="border-color:var(--gold)"><b>La santé mentale gouverne tout.</b> La concentration disponible vaut <code>talent × (santé mentale / 100)</code>. À lucidité brisée, la longueur de parole tenable s'effondre, et au-delà, c'est le backlash. Le mana origine contourne la récitation : il échappe au coût de concentration et de temps.</div>
+      <table class="ftable" style="margin-top:.9rem"><thead><tr><th>Grandeur</th><th>Loi</th></tr></thead><tbody>
+        <tr><td>Puissance</td><td class="code">10 · L^1.6</td></tr>
+        <tr><td>Portée</td><td class="code">5 + 4 · L^1.2</td></tr>
+        <tr><td>Précision</td><td class="code">100 · (1 − e^(−L/3))</td></tr>
+        <tr><td>Concentration requise</td><td class="code">8 · L^1.8</td></tr>
+        <tr><td>Temps d'incantation</td><td class="code">0.8 · L</td></tr>
+        <tr><td>Coût en santé mentale</td><td class="code">0.8 · L^1.4</td></tr>
+        <tr><td>Réussite</td><td class="code">précision × min(1, conc/req) × min(1, temps/inc)</td></tr>
+      </tbody></table>
+      <div class="sec-desc" style="margin-top:.7rem"><code>L</code> = longueur de formule (le nombre de jetons enchaînés).</div>
+    </div>
+
+    <footer>Compendium des Paroles · système de magie original</footer>
+  </section>
+</main>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s);};
+  var ELEMS=[
+    {k:'feu',nom:'Feu',val:8,clr:'#E0653C',dom:'Flamme, chaleur, combustion'},
+    {k:'eau',nom:'Eau',val:9,clr:'#3E8FD8',dom:'Flux, marée, guérison liquide'},
+    {k:'vent',nom:'Vent',val:10,clr:'#4FB8A8',dom:'Souffle, vitesse, dispersion'},
+    {k:'terre',nom:'Terre',val:11,clr:'#B07B3E',dom:'Roche, racine, défense'},
+    {k:'foudre',nom:'Foudre',val:12,clr:'#E0B23C',dom:'Éclair, choc, surcharge'},
+    {k:'glace',nom:'Glace',val:13,clr:'#7FC6E8',dom:'Gel, immobilisation'},
+    {k:'lumiere',nom:'Lumière',val:14,clr:'#EFE0A2',dom:'Éclat, révélation, pureté'},
+    {k:'ombre',nom:'Ombre',val:15,clr:'#9B6FD8',dom:'Ténèbre, corruption, secret'}
+  ];
+  var manaNom={2:'Spirituel',3:'Positif',4:'Négatif'};
+
+  var st={forme:'simple',mana:3,e1:8,e2:13,s1:5,s2:7,effet:'restaure',
+          sm:75,cb:320,tf:5};
+
+  function buildElems(host,sel){
+    host.innerHTML='';
+    ELEMS.forEach(function(e){
+      var b=document.createElement('div');
+      b.className='el'+(e.val===sel?' on':'');
+      b.style.setProperty('--clr',e.clr);
+      b.dataset.v=e.val;
+      b.innerHTML='<span class="nm"><span class="dot" style="color:'+e.clr+'"></span>'+e.nom+'</span><span class="vl">code '+e.val+'</span>';
+      host.appendChild(b);
+    });
+  }
+  buildElems($('#elem1'),st.e1);
+  buildElems($('#elem2'),st.e2);
+
+  (function(){
+    var tb=$('#el-table tbody');
+    ELEMS.forEach(function(e){
+      tb.innerHTML+='<tr><td><span class="dot" style="color:'+e.clr+';margin-right:.5rem"></span>'+e.nom+'</td><td class="code">'+e.val+'</td><td style="color:var(--muted)">'+e.dom+'</td></tr>';
+    });
+  })();
+
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('on');});
+      t.classList.add('on'); $('#'+t.dataset.tab).classList.add('on');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  function segBind(id,key,attr,cast){
+    document.querySelectorAll('#'+id+' button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('#'+id+' button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); st[key]=cast(b.dataset[attr]); applyForme(); render();
+      });
+    });
+  }
+  segBind('forme','forme','f',String);
+  segBind('mana','mana','m',Number);
+  segBind('effet','effet','e',String);
+
+  function elemBind(host,key){
+    host.addEventListener('click',function(ev){
+      var el=ev.target.closest('.el'); if(!el)return;
+      host.querySelectorAll('.el').forEach(function(x){x.classList.remove('on');});
+      el.classList.add('on'); st[key]=Number(el.dataset.v); render();
+    });
+  }
+  elemBind($('#elem1'),'e1');
+  elemBind($('#elem2'),'e2');
+
+  function rngBind(id,key,out,dec){
+    $(id).addEventListener('input',function(){
+      st[key]=parseFloat(this.value);
+      $(out).textContent=dec?st[key].toFixed(1):st[key];
+      render();
+    });
+  }
+  rngBind('#sort1','s1','#o-s1',false);
+  rngBind('#sort2','s2','#o-s2',false);
+  rngBind('#sm','sm','#o-sm',false);
+  rngBind('#cb','cb','#o-cb',false);
+  rngBind('#tf','tf','#o-tf',true);
+
+  function applyForme(){
+    var f=st.forme;
+    $('#wrap-mana').style.display = (f==='enregistre')?'none':'';
+    $('#wrap-elem1').style.display = (f==='fusion'||f==='enregistre')?'none':'';
+    $('#wrap-elem2').style.display = (f==='double')?'':'none';
+    $('#wrap-sort2').style.display = (f==='fusion')?'':'none';
+    $('#wrap-effet').style.display = (f==='soin')?'':'none';
+  }
+
+  var Lof={simple:3,double:4,ampli:4,fusion:5,enregistre:1,soin:3};
+  function tok(txt,clr){return '<span class="tok" style="--tc:'+clr+'">'+txt+'</span>';}
+  function plus(s){return '<span class="plus">'+s+'</span>';}
+  function elClr(v){var e=ELEMS.find(function(x){return x.val===v;});return e?e.clr:'#A99CF5';}
+  function elNom(v){var e=ELEMS.find(function(x){return x.val===v;});return e?e.nom:'?';}
+
+  function compose(){
+    var M=st.mana,E1=st.e1,E2=st.e2,S1=st.s1,S2=st.s2,f=st.forme;
+    var V,code='—',recite='',ok=true,msg='';
+    var V_purple='#A99CF5';
+    if(f==='simple'){
+      V=M+E1+S1; code=(M*10000+E1*100+S1).toString();
+      recite=tok(manaNom[M],V_purple)+plus('+')+tok(elNom(E1),elClr(E1))+plus('+')+tok('sort '+S1,'#E0B23C');
+      msg='Parole '+manaNom[M].toLowerCase()+' de '+elNom(E1)+'. Code lisible : '+code+'.';
+    } else if(f==='double'){
+      V=M+E1+E2+S1; code=(M*1000000+E1*10000+E2*100+S1).toString();
+      recite=tok(manaNom[M],V_purple)+plus('+')+tok(elNom(E1),elClr(E1))+plus('+')+tok(elNom(E2),elClr(E2))+plus('+')+tok('sort '+S1,'#E0B23C');
+      msg='Double élément '+elNom(E1)+' + '+elNom(E2)+'. Combo concaténé : '+E1+''+E2+'.';
+    } else if(f==='ampli'){
+      V=M+E1+(M*S1);
+      recite=tok(manaNom[M],V_purple)+plus('+')+tok(elNom(E1),elClr(E1))+plus('×')+tok('sort '+S1,'#E0B23C');
+      msg='Parole amplifiée : le mana ('+M+') multiplie le sort. Pas de code lisible, c\'est la valeur qui compte.';
+    } else if(f==='fusion'){
+      V=M+(S1*S2);
+      recite=tok('sort '+S1,'#E0B23C')+plus('×')+tok('sort '+S2,'#5DCAA5');
+      msg='Fusion de deux sorts ('+S1+' × '+S2+'). Une parole avancée, longue à tenir.';
+    } else if(f==='enregistre'){
+      V=S1; code=S1.toString();
+      recite=tok('sort '+S1,'#A99CF5');
+      msg='Mana origine : sort enregistré, lancé sans réciter le mot de passe ni l\'élément.';
+    } else {
+      V=M-E1+S1;
+      var verbe=(st.effet==='restaure')?'restaure':'enlève';
+      recite=tok(manaNom[M],V_purple)+plus('−')+tok(elNom(E1),elClr(E1))+plus('+')+tok('sort '+S1,'#E0B23C');
+      msg='Sort de soin en soustraction — le résultat '+verbe+'.';
+    }
+    return {V:V,code:code,recite:recite,ok:ok,msg:msg};
+  }
+
+  function combat(L){
+    var P=10*Math.pow(L,1.6), R=5+4*Math.pow(L,1.2), Pr=100*(1-Math.exp(-L/3));
+    var Kreq=8*Math.pow(L,1.8), Tinc=0.8*L, coutSM=0.8*Math.pow(L,1.4);
+    var Kd=st.cb*Math.max(.15,st.sm/100);
+    var reuss=(Pr/100)*Math.min(1,Kd/Kreq)*Math.min(1,st.tf/Tinc);
+    var ratio=Kd/Kreq, bl=ratio<1?Math.round((1-ratio)*100):0;
+    return {P:P,R:R,Pr:Pr,reuss:reuss,bl:bl,coutSM:coutSM,Kd:Kd,Kreq:Kreq,Tinc:Tinc};
+  }
+
+  function drawCurve(L){
+    var c=$('#curve'),ctx=c.getContext('2d');
+    var W=c.width,H=c.height,pad=34;
+    ctx.clearRect(0,0,W,H);
+    var xs=[],ys=[],maxY=0;
+    for(var l=1;l<=10;l++){var cb=combat(l);var e=cb.P*cb.reuss;xs.push(l);ys.push(e);if(e>maxY)maxY=e;}
+    if(maxY<=0)maxY=1;
+    function X(l){return pad+(l-1)/9*(W-pad*1.4);}
+    function Y(v){return H-pad-(v/maxY)*(H-pad*1.7);}
+    ctx.strokeStyle='rgba(169,156,245,.14)';ctx.lineWidth=1;
+    for(var g=0;g<=4;g++){var yy=pad*.6+g/4*(H-pad*1.7);ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(W-pad*.4,yy);ctx.stroke();}
+    ctx.beginPath();ctx.strokeStyle='#A99CF5';ctx.lineWidth=3;ctx.lineJoin='round';
+    xs.forEach(function(l,i){var px=X(l),py=Y(ys[i]);i?ctx.lineTo(px,py):ctx.moveTo(px,py);});
+    ctx.stroke();
+    ctx.fillStyle='rgba(169,156,245,.10)';ctx.lineTo(X(10),H-pad);ctx.lineTo(X(1),H-pad);ctx.closePath();ctx.fill();
+    var idx=L-1;
+    if(idx>=0&&idx<10){
+      var mx=X(L),my=Y(ys[idx]);
+      ctx.strokeStyle='rgba(224,178,60,.5)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(mx,H-pad);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#E0B23C';ctx.beginPath();ctx.arc(mx,my,6,0,7);ctx.fill();
+      ctx.fillStyle='#ECE6D8';ctx.font='600 13px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText('cette parole · L='+L,mx,H-pad+22);
+    }
+    ctx.fillStyle='#6F6790';ctx.font='11px Inter';ctx.textAlign='left';
+    ctx.fillText('efficacité réelle en combat', pad, pad*.5);
+  }
+
+  function render(){
+    var r=compose();
+    $('#recite').innerHTML=r.recite;
+    $('#o-val').textContent=Math.round(r.V);
+    $('#o-code').textContent=r.code;
+    $('#stat-code').classList.toggle('dim', r.code==='—');
+    var v=$('#verdict'); v.className='verdict ok';
+    $('#verdict-txt').textContent=r.msg;
+
+    var L=Lof[st.forme];
+    var cb=combat(L);
+    $('#m-p').textContent=Math.round(cb.P);
+    $('#m-r').textContent=Math.round(cb.R)+' m';
+    $('#m-pr').textContent=Math.round(cb.Pr)+' %';
+    $('#m-re').textContent=Math.round(cb.reuss*100)+' %';
+    $('#m-bl').textContent=cb.bl+' %';
+    $('#m-sm').textContent='−'+Math.round(cb.coutSM);
+
+    var safe=0;
+    for(var l=1;l<=10;l++){var c2=combat(l);if(c2.P*0+ (c2.reuss)>=0.7)safe=l;}
+    var cv=$('#cverdict'),ct=$('#cverdict-txt');
+    if(st.forme==='enregistre'){
+      cv.className='verdict ok';
+      ct.textContent='Sort enregistré (mana origine) : la récitation est contournée, donc presque insensible à la pression de combat. La forme la plus sûre quand la lucidité est basse.';
+    } else if(cb.reuss>=0.7){
+      cv.className='verdict ok';
+      ct.textContent='Parole maîtrisée à '+st.sm+' % de lucidité — réussite '+Math.round(cb.reuss*100)+' %. Le lanceur la tient dans cette fenêtre de combat.';
+    } else {
+      cv.className='verdict bad';
+      ct.textContent='Tendue : à '+st.sm+' % de lucidité, cette forme tombe à '+Math.round(cb.reuss*100)+' % de réussite ('+cb.bl+' % de risque de backlash). Restaure la santé mentale ou choisis une forme plus courte.';
+    }
+    cv.querySelector('.ic').textContent = (cv.classList.contains('bad'))?'⚠':'✦';
+
+    drawCurve(L);
+  }
+
+  applyForme();
+  render();
+  window.addEventListener('resize',function(){drawCurve(Lof[st.forme]);});
+})();
+</script>
+</body>
+</html>
