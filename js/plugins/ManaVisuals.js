@@ -21,7 +21,9 @@
     var COLORS = {
         1: '#bdbdbd', 2: '#cdb8ff', 3: '#ffd95a', 4: '#6fa8ff', 5: '#b061e0',
         6: '#f2f2f2', 7: '#5fd6c0', 8: '#ff6b4a', 9: '#4ec3ff', 10: '#7be07b',
-        11: '#c79a5b', 12: '#ffe14a', 13: '#aef0ff', 14: '#fff3a0', 15: '#8a7fb0', 16: '#e0a0ff'
+        11: '#c79a5b', 12: '#ffe14a', 13: '#aef0ff', 14: '#fff3a0', 15: '#8a7fb0', 16: '#e0a0ff',
+        // éléments dérivés (somme de deux éléments)
+        17: '#c9d6df', 19: '#ff8a3c', 20: '#6fcf6f', 22: '#bfeaff', 23: '#9fb6c4', 29: '#b07cff'
     };
     function elemOf(skill) {
         if (!skill || !skill.damage) return 0;

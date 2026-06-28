@@ -248,8 +248,10 @@ reviennent** (sauvegardes). La **corruption** = réécriture irréversible.
 - [x] `CorruptionAme` : paliers → **Calme / Frémissement / Fièvre / la Mue**
       (états 181-183 renommés, écran + messages mis à jour).
 - [x] **Errant** : jauge `Errance` formalisée (plugin dédié, auto-suffisant).
-- [ ] Éléments dérivés (16+) : à ajouter dans `System.json` quand on créera les
-      sorts correspondants.
+- [x] **Éléments dérivés créés** dans `System.json` (17 Vapeur, 19 Lave,
+      20 Plante, 22 Givre, 23 Métal, 29 Crépuscule) + couleurs `ManaVisuals` +
+      6 sorts signatures (Skills 801-806, `<Parole: 4>`). Slots 18/21/24-28
+      réservés pour d'autres sommes.
 - [ ] (Option) brancher le gain d'`Errance` sur les skills de Consommation précis
       (balise `<Consume>`) plutôt que tout art de l'Âme.
 
