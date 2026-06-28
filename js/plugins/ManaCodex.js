@@ -77,16 +77,16 @@
             ]
         },
         {
-            title: '③ Le Cycle des Avantages',
+            title: '③ Les 3 Arts',
             lines: [
-                'Pierre-feuille-ciseaux entre les 3 branches :',
+                'Chaque source se manie par un art, un geste, un prix :',
                 '',
-                '\\C[6]NÉGATIF\\C[0]  ──bat──►  \\C[2]ÂME / SPIRITUELLE\\C[0]',
-                '\\C[2]SPIRITUELLE\\C[0] ──bat──►  \\C[1]POSITIF\\C[0]',
-                '\\C[1]POSITIF\\C[0]  ──bat──►  \\C[6]NÉGATIF\\C[0]',
-                '',
-                'Branche avantagée : \\C[24]×1.5 dégâts\\C[0].',
-                'Branche désavantagée : \\C[25]×0.5 dégâts\\C[0].'
+                '\\C[1]LA PAROLE\\C[0] (Esprit) — on récite : mot + élément',
+                '  + sort. Précise, lente. Prix : la \\C[1]lucidité\\C[0].',
+                '\\C[6]LE SOUFFLE\\C[0] (Corps) — art martial instantané,',
+                '  aucun mot. Prix : l\'\\C[6]humanité\\C[0] (recul PV).',
+                '\\C[2]LE SYMBOLE\\C[0] (Âme) — on crée depuis l\'âme :',
+                '  on matérialise. Prix : l\'\\C[2]essence\\C[0].'
             ]
         },
         {
@@ -97,9 +97,9 @@
                 'C\'est l\'énergie des attaques magiques spéciales',
                 'des êtres transcendants (Élus).',
                 '',
-                '\\C[17]MANA SEMI-PARFAIT\\C[0] : 1 chance sur 1000 d\'avoir',
-                'une affinité avec TOUTES les sources à la fois…',
-                'mais son usage défie la réalité elle-même.'
+                '\\C[17]MANA SEMI-PARFAIT\\C[0] : l\'équilibre des TROIS',
+                'sources à la fois. Rare — non par chance, mais',
+                'parce qu\'il faut le TENIR sans basculer (Surpassement).'
             ]
         },
         {
@@ -112,7 +112,9 @@
                 '(chacun est faible contre celui qu\'il pointe)',
                 '',
                 '\\C[14]LUMIÈRE\\C[0] ⇄ \\C[8]OMBRE\\C[0] : s\'opposent mutuellement.',
-                'Le Mana Pur transcende toute affinité élémentaire.'
+                '',
+                '\\C[17]CRÉER\\C[0] : Élément + Élément = nouvel élément',
+                '(on additionne). Terre(11)+Eau(9) = \\C[17]20 Plante\\C[0].'
             ]
         },
         {
@@ -141,33 +143,32 @@
             ]
         },
         {
-            title: '⑧ Les Affinités',
+            title: '⑧ Les 3 Voies & l\'équilibre',
             lines: [
-                'L\'affinité dépend de la nature de ton âme et peut',
-                'CHANGER selon tes décisions au fil de la vie :',
+                'Tu n\'as pas une « case » : tu as TROIS voies à',
+                'entraîner — \\C[1]Esprit\\C[0], \\C[6]Corps\\C[0], \\C[2]Âme\\C[0].',
                 '',
-                '• Une source : courant (bonus clair).',
-                '• Aucune source : rare (tout apprendre à la dure).',
-                '• Deux sources : peu courant (polyvalent).',
-                '• Toutes les sources : \\C[17]1/1000\\C[0] (Mana Semi-Parfait).',
+                'Pencher vers une voie donne de la puissance…',
+                'et un peu de sa \\C[8]Chute\\C[0] (page suivante).',
                 '',
-                'Plus d\'affinité = plus fort dans sa branche, mais',
-                'plus de difficulté dans les autres.'
+                'Le secret : monter les \\C[17]trois\\C[0], pas une seule.',
+                'L\'équilibre tenu = le \\C[17]Mana Semi-Parfait\\C[0].',
+                'Ton entraînement EST ton affinité — et il évolue.'
             ]
         },
         {
-            title: '⑨ Distribution dans la population',
+            title: '⑨ Les 3 Chutes',
             lines: [
-                '\\C[1]Alignés\\C[0] (1 source) ........... ≈ 72%',
-                '  +20% dans sa branche, −20% ailleurs.',
-                '\\C[6]Duaux\\C[0] (2 sources) ............ ≈ 15%',
-                '  Avantages partiels sur 2 branches. Ex : \\C[2]Lou\\C[0], \\C[1]Neyssa\\C[0].',
-                '  (Corps+Esprit → ×1.25 partiel, résistances croisées)',
-                '\\C[8]Atones\\C[0] (aucune) .............. ≈ 12%',
-                '  0 bonus, mais 0 corruption, malus réduits.',
-                '\\C[17]Trines\\C[0] (3 faibles) ........... ≈ 0.9%',
-                '\\C[14]Élus du Prisme\\C[0] (Semi-Parfait) . ≈ 0.1%',
-                '  1/1000 : Mana Pur, ignore le cycle. Ex : \\C[14]Dono\\C[0].'
+                'Trop pencher vers une voie brise l\'équilibre :',
+                '',
+                '\\C[6]LA BÊTE\\C[0] (trop de Corps) — le sang de bête',
+                '  réveille l\'Ombrefauve. Tu gagnes la force,',
+                '  tu perds la conscience.  (Corruption)',
+                '\\C[2]L\'ERRANT\\C[0] (trop d\'Âme) — dévorer des âmes te',
+                '  grandit, mais tu perds ton corps : tu deviens',
+                '  une âme errante, hors du monde.',
+                '\\C[1]LE DÉMENT\\C[0] (trop d\'Esprit) — tu vois trop,',
+                '  jusqu\'au Mur. La lucidité totale est la folie.'
             ]
         },
         {
@@ -177,7 +178,7 @@
                 'une âme dont les codes sources ont été RÉÉCRITS.',
                 '',
                 '\\C[18]La Classe Corrompue\\C[0] n\'appartient à aucune',
-                'branche du cycle. Elle ne se soigne pas, ne se',
+                'des trois voies. Elle ne se soigne pas, ne se',
                 'raisonne pas — elle dévore.',
                 '',
                 'Cas connu : \\C[18]Jada\\C[0], une classe à part entière,',
