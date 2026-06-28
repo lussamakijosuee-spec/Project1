@@ -24,9 +24,10 @@
  *
  * @help
  *  Chaque usage offensif de Mana Négatif/Sombre augmente la corruption du
- *  lanceur. Paliers : 40 = Âme Ternie, 70 = Âme Souillée, 100 = Âme Corrompue
- *  (malus sévères + vulnérabilité au Sombre). Ces états s'appliquent en début
- *  de combat selon le niveau de corruption.
+ *  lanceur — c'est le SANG DE BÊTE qui s'éveille (la Chute du Corps).
+ *  Paliers : 0 = Calme · 40 = Frémissement · 70 = Fièvre · 100 = la Mue
+ *  (la Bête : malus sévères + vulnérabilité au Sombre). Ces états s'appliquent
+ *  en début de combat selon le niveau de corruption.
  *
  *  RÉDUIRE : commande  CORRUPTION purge <héros> <n>   (ex. au Feu d'Âme)
  *  La relique « Amulette Purifiante » (<Relic: antirot>) réduit le gain.
@@ -55,7 +56,7 @@
             if (before < 100 && s[actorId] >= 100) {
                 var a = $gameActors.actor(actorId);
                 var log = SceneManager._scene && SceneManager._scene._logWindow;
-                if (log) log.push('addText', '\\C[18]' + (a ? a.name() : '') + ' : l\'âme atteint la CORRUPTION TOTALE…\\C[0]');
+                if (log) log.push('addText', '\\C[18]' + (a ? a.name() : '') + ' entre dans la MUE — la Bête prend tout…\\C[0]');
             }
         },
         purge: function (k, n) { var id = resolve(k); var s = store(); s[id] = Math.max(0, (s[id] || 0) - Math.abs(n || 30)); },
@@ -106,8 +107,9 @@
             var a = $gameActors.actor(i); if (!a) continue;
             var y = top + (i - 1) * rowH, lv = Corruption.niveau(i);
             var col = lv >= 100 ? '#8e44ad' : lv >= 70 ? '#c0392b' : lv >= 40 ? '#e67e22' : '#2ecc71';
+            var stage = lv >= 100 ? 'la Mue' : lv >= 70 ? 'Fièvre' : lv >= 40 ? 'Frémissement' : 'Calme';
             this.changeTextColor(this.normalColor()); this.drawText(a.name(), 0, y, 220);
-            this.changeTextColor(col); this.drawText(lv + ' / 100', 0, y, this.contentsWidth(), 'right');
+            this.changeTextColor(col); this.drawText(stage + ' · ' + lv + ' / 100', 0, y, this.contentsWidth(), 'right');
             var bw = this.contentsWidth() - 20, gy = y + this.lineHeight() + 6;
             this.contents.fillRect(0, gy, bw, 16, 'rgba(0,0,0,0.5)');
             this.contents.fillRect(1, gy + 1, Math.floor((bw - 2) * lv / 100), 14, col);

@@ -118,5 +118,6 @@ var $plugins =
 {"name": "VisualMaxEX", "status": true, "description": "v1.0 ■ Popups de degats teintes par element + ecran de reference Elements & Cycle.", "parameters": {"TintPopups": "true"}},
 {"name": "VisualMaxEX2", "status": true, "description": "v1.0 ■ Jauges animees (combat+menu), picto element popups, menu Elements, apercu equip vert/rouge.", "parameters": {"SlideSpeed": "0.2", "ShowPicto": "true", "MenuLabel": "Éléments", "EquipPreview": "true"}},
 {"name": "UltiCinematics", "status": true, "description": "v1.0 ■ Cinematiques animees : Jackpot a bobines, cut-in d'ultime, auras d'etat. Pilotable (notetags + commandes).", "parameters": {"UltiSkillIds": "", "DefaultUltiColor": "#b07cff", "UltiSe": "Saint5", "ShakeOnUlti": "true", "JackpotEnhance": "true"}},
+{"name": "Errance", "status": true, "description": "v1.0 ■ La Chute de l'Ame : consommer des ames fait enfler l'Errance (puissance + fragilite).", "parameters": {"elAme": "2", "sktAme": "9", "gainKill": "5", "gainUse": "1", "menuCommand": "Errance"}},
 {"name": "AudioGuard", "status": true, "description": "v1.0 ■ Ignore les sons au nom vide (anti 'Failed to load: audio/se/.ogg').", "parameters": {}}
 ];

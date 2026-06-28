@@ -108,7 +108,7 @@ Chute existe déjà comme mécanique** — il s'agit de les unifier sous ce nom 
 | Chute | Source | On gagne | On perd | Plugin / mécanique |
 |-------|--------|----------|---------|--------------------|
 | **La Bête** | Corps (sang de bête / Ombrefauves) | puissance brute | la conscience | `CorruptionAme` (jauge 0-100), `CorruptionFX`, `CorruptedUI` |
-| **L'Errant** | Âme (Consommation) | pouvoir sans fin | le corps, le monde | absorption d'âmes (`AmeSouls` var 15, `LouCopySystem`) → devient une **âme errante** |
+| **L'Errant** | Âme (Consommation) | pouvoir sans fin (+ATK/+MAT) | le corps (fragilité +dégâts subis) | **jauge `Errance`** (0-100 : Ancré→Décharné→Gonflé→l'Errant), nourrie par `AmeSouls`/`LouCopySystem` |
 | **Le Dément** | Esprit (lucidité au Mur) | voir toute vérité | la raison | Santé Mentale extrême (`JadeEntitePlunging`) |
 
 > 🔗 **Lien lore :** les **âmes errantes** que régit la **Reine Oubliée / Déesse
@@ -232,26 +232,26 @@ reviennent** (sauvegardes). La **corruption** = réécriture irréversible.
 | Le Souffle (Corps) | `ManaAffinity` (recul PV), skill types `sang`/`ombre` |
 | Le Symbole (Âme) | `ObjetSpirituel`, `InvocationAmes`, `LouCopySystem`, `AmeStatusScene` |
 | Lucidité / Dément | `JadeEntitePlunging`, `Neyssa_Concentration`, `CorruptedUI` |
-| Bête (Corps) | `CorruptionAme`, `CorruptionFX` |
-| Errant (Âme) | `AmeSouls`, `Bloodstain`, `LouCopySystem` |
+| Bête (Corps) | `CorruptionAme` (Calme/Frémissement/Fièvre/Mue), `CorruptionFX` |
+| Errant (Âme) | `Errance` (jauge dédiée), `AmeSouls`, `Bloodstain`, `LouCopySystem` |
 | Équilibre / Semi-Parfait | `Surpassement` |
 | Feu d'Âme / mort | `AmeSouls`, `ForgeAmes`, `SanctuaireAmes` |
 | Factions / Royaumes | `FactionsAmes` |
 
 ---
 
-## 13. CHANTIER DE COHÉRENCE (ce qu'il reste à recadrer)
+## 13. CHANTIER DE COHÉRENCE
 
-- [ ] `ManaCodex` : **pages refaites** pour enseigner les 3 Arts / 3 Chutes /
-      équilibre (au lieu du cycle + 5 paliers). *(fait — voir plugin)*
-- [ ] `ManaAffinity` : **décider** du sort du cycle ×1.5/×0.5 (garder en option
-      « opposition Lumière/Ombre » seulement, ou retirer). Le **recul PV** reste
-      (= prix du Corps).
-- [ ] `CorruptionAme` : renommer paliers → Calme/Frémissement/Fièvre/Mue (option).
-- [ ] **Errant** : formaliser une jauge « Consommation d'âmes » (aujourd'hui
-      diffuse entre `AmeSouls` et `LouCopySystem`).
+- [x] `ManaCodex` : pages refaites → 3 Arts / 3 Voies / 3 Chutes / équilibre.
+- [x] `ManaAffinity` : **cycle ×1.5/×0.5 retiré**. Conservés : recul PV (prix du
+      Corps), couplage Positif/Santé Mentale, Mana Pur perce-résistances.
+- [x] `CorruptionAme` : paliers → **Calme / Frémissement / Fièvre / la Mue**
+      (états 181-183 renommés, écran + messages mis à jour).
+- [x] **Errant** : jauge `Errance` formalisée (plugin dédié, auto-suffisant).
 - [ ] Éléments dérivés (16+) : à ajouter dans `System.json` quand on créera les
       sorts correspondants.
+- [ ] (Option) brancher le gain d'`Errance` sur les skills de Consommation précis
+      (balise `<Consume>`) plutôt que tout art de l'Âme.
 
 ---
 
