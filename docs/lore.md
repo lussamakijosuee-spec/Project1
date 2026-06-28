@@ -133,32 +133,34 @@ en chiffres : c'est la **Parole runique minimale**.
 > Les **mots de passe** (familles de mana) : **Spirituel = 2**, **Positif = 3**
 > (base), **Négatif = 4**.
 
-> ⚠️ **REWORK proposé (carnet) — décision à prendre.** Ton carnet dessine un
-> **système élémentaire étendu** où l'on *crée* de nouveaux éléments en
-> additionnant les anciens (Vapeur, Brasier, Lave, Plasma, Givre, Métal, Gravité,
-> Temps, Abysse…). Mais sa numérotation **entre en conflit** avec le canon
-> actuel : dans le carnet, **15 = Tonnerre** et **Ombre = 24**, alors qu'en jeu
-> **15 = Ombre**. On ne peut pas avoir les deux. Table étendue du carnet *(à
-> valider)* :
->
-> | Élément | Code | Élément | Code |
-> |--------|------|---------|------|
-> | Feu | 8 | Lave | 19 |
-> | Eau | 9 | Plasma | 20 |
-> | Vent | 10 | Givre | 21 |
-> | Terre | 11 | Double | 22 |
-> | Foudre | 12 | Métal | 23 |
-> | Glace | 13 | Ombre / Abysse | 24 |
-> | Lumière | 14 | Gravité | 26 |
-> | Tonnerre | 15 | Temps | 29 |
-> | Brume | 16 | | |
-> | Vapeur | 17 | | |
-> | Brasier | 18 | | |
->
-> 👉 **À trancher :** (a) garder le canon 8 éléments et ajouter les nouveaux
-> **au-dessus de 15** (Ombre reste 15) ; ou (b) renuméroter complètement façon
-> carnet — ce qui oblige à **réétiqueter `System.json` + les 443 compétences +
-> `ManaVisuals`**. *(Recommandé : option (a), bien moins risquée.)*
+### 🌱 Le système élémentaire étendu *(rework — décision validée)*
+Le carnet introduit des **éléments dérivés** : on en *crée* de nouveaux en
+**additionnant** deux éléments (cf. forme n°7). **Décision (JOKO) :** on **garde
+le canon 8 éléments tel quel** (Feu 8 … **Ombre 15**, intouchés dans `System.json`,
+les 443 compétences et `ManaVisuals`) et les **nouveaux éléments prennent des
+codes ≥ 16**. Seul **Tonnerre** (que le carnet plaçait en 15) est **déplacé** pour
+ne pas écraser Ombre.
+
+| Élément dérivé | Code | Naît de *(piste — à affiner)* |
+|----------------|------|-------------------------------|
+| Brume | 16 | Eau + Vent |
+| Vapeur | 17 | Feu + Eau |
+| Brasier | 18 | Feu + Feu (intensifié) |
+| Lave | 19 | Feu + Terre |
+| Plasma | 20 | Feu + Foudre |
+| Givre | 21 | Glace + Vent |
+| Double | 22 | *(emplacement réservé)* |
+| Métal | 23 | Terre + Foudre |
+| Abysse | 24 | Ombre + Eau |
+| Tonnerre | 25 | Foudre + Vent · *déplacé de 15 → 25* |
+| Gravité | 26 | Terre + Ombre |
+| Temps | 29 | *(élément rare / scénaristique)* |
+
+> ✅ **Impact zéro sur l'existant** : les ids 1-15 ne bougent pas. Quand tu
+> voudras réellement implémenter ces éléments, il suffira d'**ajouter** les
+> entrées 16+ dans `System.json` et une couleur par élément dans `ManaVisuals`.
+> *(Les « naît de » sont mes propositions d'après ta forme n°7 — corrige-les à ta
+> guise ; ex. du carnet : Terre 11 + Eau 9 → Plante.)*
 
 ### 🧬 Les Formes d'une Parole
 1. **Simple** — `mot + élément + sort`. La forme de base, fiable.
