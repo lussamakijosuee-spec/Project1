@@ -28,11 +28,16 @@
 
 ## 🜂 Le Mana — rappel & profondeur d'accès
 
-> 📚 **La bible canonique du mana est `docs/SYSTEME_DE_MANA.md`.** On n'y touche
-> pas ici : la Trinité des sources, les 3 branches, le cycle Pokémon, les 8
-> éléments, les affinités (Alignés/Duaux/Atones/Trines/Élus du Prisme), l'Objet
-> Spirituel et le Mana Pur y sont déjà posés. Cette section **ne fait que
-> rappeler** le strict nécessaire et **ajoute** ce que le carnet apporte de neuf.
+> 📚 **Deux bibles de référence pour le mana :**
+> - `docs/codex-trois-sources.html` — le **master** narratif (mythe, sources,
+>   arts, chutes, Autorités, géopolitique). Voir « Le Codex des Trois Sources »
+>   plus bas.
+> - `docs/SYSTEME_DE_MANA.md` — la version **technique** (mapping `System.json`,
+>   cycle Pokémon, affinités Alignés/Duaux/Atones/Trines/Élus du Prisme, réglages
+>   DB). Toujours valide pour l'implémentation.
+>
+> Cette section ne fait que **rappeler** le strict nécessaire ; le détail vit dans
+> ces deux docs.
 
 Rappel canon (voir `SYSTEME_DE_MANA.md` §1-2) :
 
@@ -133,34 +138,28 @@ en chiffres : c'est la **Parole runique minimale**.
 > Les **mots de passe** (familles de mana) : **Spirituel = 2**, **Positif = 3**
 > (base), **Négatif = 4**.
 
-### 🌱 Le système élémentaire étendu *(rework — décision validée)*
-Le carnet introduit des **éléments dérivés** : on en *crée* de nouveaux en
-**additionnant** deux éléments (cf. forme n°7). **Décision (JOKO) :** on **garde
-le canon 8 éléments tel quel** (Feu 8 … **Ombre 15**, intouchés dans `System.json`,
-les 443 compétences et `ManaVisuals`) et les **nouveaux éléments prennent des
-codes ≥ 16**. Seul **Tonnerre** (que le carnet plaçait en 15) est **déplacé** pour
-ne pas écraser Ombre.
+### 🌱 Créer des éléments — la règle de la somme *(canon : `regles-simples.html`)*
+On **fabrique** de nouveaux éléments en **additionnant les codes** de deux
+éléments de base. Le total **est** le code du nouvel élément — donc il tombe
+**naturellement ≥ 16**, et le canon 8 éléments (Feu 8 … **Ombre 15**) reste
+**intouché** dans `System.json`, les 443 compétences et `ManaVisuals`.
 
-| Élément dérivé | Code | Naît de *(piste — à affiner)* |
-|----------------|------|-------------------------------|
-| Brume | 16 | Eau + Vent |
-| Vapeur | 17 | Feu + Eau |
-| Brasier | 18 | Feu + Feu (intensifié) |
-| Lave | 19 | Feu + Terre |
-| Plasma | 20 | Feu + Foudre |
-| Givre | 21 | Glace + Vent |
-| Double | 22 | *(emplacement réservé)* |
-| Métal | 23 | Terre + Foudre |
-| Abysse | 24 | Ombre + Eau |
-| Tonnerre | 25 | Foudre + Vent · *déplacé de 15 → 25* |
-| Gravité | 26 | Terre + Ombre |
-| Temps | 29 | *(élément rare / scénaristique)* |
+> **Élément + Élément = nouvel élément (on additionne les deux numéros).**
 
-> ✅ **Impact zéro sur l'existant** : les ids 1-15 ne bougent pas. Quand tu
-> voudras réellement implémenter ces éléments, il suffira d'**ajouter** les
-> entrées 16+ dans `System.json` et une couleur par élément dans `ManaVisuals`.
-> *(Les « naît de » sont mes propositions d'après ta forme n°7 — corrige-les à ta
-> guise ; ex. du carnet : Terre 11 + Eau 9 → Plante.)*
+| Mélange | Total | Nouvel élément |
+|--------|-------|----------------|
+| Terre (11) + Eau (9) | **20** | Plante |
+| Feu (8) + Eau (9) | **17** | Vapeur |
+| Feu (8) + Terre (11) | **19** | Lave |
+| Terre (11) + Foudre (12) | **23** | Métal |
+| Eau (9) + Glace (13) | **22** | Givre |
+| Lumière (14) + Ombre (15) | **29** | Crépuscule |
+
+> ✅ **Impact zéro sur l'existant** : les ids 1-15 ne bougent pas. Pour
+> implémenter, il suffira d'**ajouter** les entrées issues des sommes dans
+> `System.json` + une couleur par élément dans `ManaVisuals`. *(Noms à garder ou
+> renommer librement ; un même élément doublé — ex. Feu + Feu — donne une version
+> intensifiée.)*
 
 ### 🧬 Les Formes d'une Parole
 1. **Simple** — `mot + élément + sort`. La forme de base, fiable.
@@ -224,6 +223,96 @@ créateur : on l'appelle la **Marque de l'Âme**, ou **ADN de l'Âme**.
 > 💔 **Résonance thématique.** Un familier d'âme, c'est un morceau de soi rendu
 > visible. **Donovan** a matérialisé le sien et l'a nommé **« Envy »** —
 > *l'envie*. On crée, sans toujours le vouloir, à l'image de ce qui nous **ronge**.
+
+---
+
+## 🌑 Le Codex des Trois Sources — le monde vu de l'intérieur
+
+> 📜 **Bible diégétique : `docs/codex-trois-sources.html`.** C'est le grand
+> document de **mythe, science et géopolitique** — ce que les habitants *croient*
+> savoir de leur monde. Player-facing : `regles-simples.html` (le jeu en 5 règles)
+> et `fiche-mana-ame.html` (la voie de l'Âme).
+
+### Deux couches de vérité
+- **Couche diégétique (le Codex)** — la cosmogonie telle que la vivent les
+  personnages : le **Fond**, les **trois sources**, les **Royaumes**, les
+  **Autorités**. C'est *vrai pour eux*.
+- **Couche méta (cette bible)** — la vérité du dessus : **Battle World est un
+  jeu**, les Originels sont des **joueurs**, etc. Le Codex et la méta ne se
+  contredisent pas : **le Codex est la version que le monde se raconte de sa
+  propre nature numérique.** Sa dernière annexe (*Vérités interdites*) est la
+  **couture** entre les deux.
+
+### Le Fond / la Vérité / le Lac
+Sous le monde s'étend le **Fond** (la *Vérité*, le *Lac*) : la couche profonde du
+réel, source de **tout mana** et de **toute folie**. Le monde n'est que sa
+**surface**. *(Couche méta : le Fond = les **codes sources** du jeu.)* L'énergie
+en **remonte par trois canaux** — les **trois sources** : **Corps, Âme, Esprit**.
+
+### Les trois Arts *(détail dans le Codex)*
+| Source | Art | Geste | Prix | Chute |
+|--------|-----|-------|------|-------|
+| **Esprit** · Originel→Positif | **la Parole** (récitée) | réciter | **lucidité** | **le Dément** |
+| **Corps** · Sombre→Négatif | **le Souffle** (martial) | bouger | **humanité** | **la Bête** |
+| **Âme** · Spirituel | **le Symbole** (création) | croire | **essence** | **l'Errant** |
+
+- **La Parole** — `mot + élément + sort`, déjà détaillée plus haut (Compendium).
+- **Le Souffle** — art martial **instantané** : pas d'incantation, on lance « comme
+  on contracte un muscle ». Écoles (Onde, Brisure, Racine, Spectre), **progression
+  par le combat** (on absorbe le style adverse). Le mana sombre est un **sang de
+  bête** : la mémoire des **Ombrefauves**, une race ancienne au **sang violet**.
+- **Le Symbole** — **matérialiser** un objet d'âme (sentiment + désir + croyance),
+  **Résonance** (accorder deux âmes), **Lecture** (le Regard) ; et l'opération
+  **interdite**, la **Consommation** (dévorer des âmes → l'Errant). La **Marque**
+  prend la couleur de la source dominante : **Esprit bleu, Corps violet, Âme rose**.
+
+### 🩸 Les trois Chutes — déjà au cœur du jeu
+- **La Bête** (trop de Corps) — l'instinct dévore la raison ; le porteur **redevient
+  un Ombrefauve**. *↔ c'est exactement la **Corruption** (`CorruptedUI`, abus du
+  Mana Sombre, fin « Carnage »).*
+- **L'Errant** (trop d'Âme) — à force de **consommer** des âmes, on perd son corps
+  et l'on **glisse hors du monde** : on devient une **âme errante**. *↔ relie
+  directement à la **Reine Oubliée** : les Âmes Errantes sur lesquelles elle règne
+  **furent jadis** des Errants montés trop haut.*
+- **Le Dément** (trop d'Esprit) — la **lucidité** ouvre une **descente dans le Lac**
+  (5 seuils) ; trop loin, on voit *tout* et l'on sombre. *↔ c'est la **Santé
+  Mentale** (`JadeEntitePlunging`) poussée à l'extrême — sauf qu'ici, trop de
+  lucidité tue aussi.*
+
+> 🪞 Le centre des trois = le **Mana Semi-Parfait** (équilibre), exactement la
+> leçon du **Surpassement** : ni excès, ni fuite — **revenir au milieu**, encore
+> et encore.
+
+### 👑 Les Autorités = les Originels
+Accumuler assez d'essence (par n'importe quelle voie) fait de soi une **Autorité** :
+le monde **se plie** à elle. **Deux Autorités ne peuvent coexister** sans que le
+monde se brise — leur affrontement le **reconfigure** (les *Sommets*). *↔ Couche
+méta : c'est exactement ce que sont les **4 Originels** après avoir absorbé l'âme
+du Roi Démon — « dieux dans leur discipline ». Le **Concordat des Sommets** (nul ne
+doit fabriquer d'Autorité) est la peur qu'a le monde de leurs guerres.*
+
+### 🏛️ Les Quatre Royaumes ↔ le casting de Battle World
+| Royaume (Codex) | Voie | Pont avec la méta |
+|-----------------|------|-------------------|
+| **L'Ordre d'Or** *(Aurelune)* | l'**équilibre** (Elden Ring / Jedi) | l'**Église de l'Équilibre** ; la maison de **Donovan, l'Élu** |
+| **L'Empire Vultric** *(Kragenvar)* | le **Corps / la force** | l'empire de **Kev** — son Empereur « rêve d'être la 1ʳᵉ Autorité » |
+| **Les Mages des Étoiles** *(Stellaria)* | l'**Esprit / le savoir** | les **Sorcières des Étoiles** ; le **Royaume des Étoiles** de Jade |
+| **L'Empire Uni de l'Est** *(Eshkar)* | l'**Âme / l'essence** | les **Voix de l'Âme** ; proche du **Culte des Âmes** de la femme de Dono |
+
+### 🔓 La couture : les Vérités Interdites
+Au **3ᵉ seuil du Lac — le Mur** — tous les *descendeurs* rapportent la même chose :
+**quelque chose regarde** le monde de l'extérieur ; des **présences qui décident** ;
+des **vies reprises après la mort** comme si le temps revenait en arrière ; des
+**instants rejoués** ; et **les oubliés** — des êtres effacés dont seule subsiste
+une trace au fond du Lac. Les Mages appellent ça la **Folie du Mur**.
+
+> 🌌 **C'est la méta, vue d'en bas.** « Ce qui regarde et décide » = les **joueurs**
+> et le **Créateur**. « Les vies reprises » = les **sauvegardes** (seuls les joueurs
+> non corrompus reviennent). « Les oubliés » = les personnages **effacés** — et la
+> **Reine Oubliée / Déesse Blanche**, la plus grande des présences du dehors. Le
+> sorcier qui voit le Mur en face *« cesse d'appartenir au monde »* : il comprend
+> qu'il **vit dans un jeu**. La corruption ultime n'est pas la folie — c'est la
+> **lucidité totale**.
 
 ---
 
@@ -550,7 +639,14 @@ faction, etc.
   intérieurs (49-54) : le refus de la **fausse lumière**, donc la vraie réponse
   à la **Déesse Blanche**.
 
-### Nouvelles pistes (issues du carnet)
+### Nouvelles pistes (issues du carnet & du Codex)
+- **La descente dans le Lac (lucidité).** Mécanique de seuils : haute Santé
+  Mentale = voir le caché (âmes errantes, marques, secrets), mais trop haut = le
+  Mur → risque « Dément ». Relie `JadeEntitePlunging` à l'exploration/horreur.
+- **Les trois Chutes comme game-over thématiques.** Bête (Corps/Corruption),
+  Errant (Âme/Consommation), Dément (Esprit/Lucidité) — chacune un épilogue.
+- **Le Souffle & le Symbole en combat.** Au-delà de la Parole : arts martiaux
+  instantanés (Corps) et matérialisation d'objet d'âme / Résonance (Âme).
 - **La Déesse Blanche comme tentation de fin.** Un embranchement « Aldébaran » :
   écouter / regarder l'autre monde → une **fin-illusion** cosmique (paix totale,
   dissolution dans son ciel). *Détourner le regard* = la rejeter. Mécanique

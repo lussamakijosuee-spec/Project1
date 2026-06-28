@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Codex des Trois Sources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0910; --card:#16121F; --card2:#1D1729; --line:rgba(190,170,120,.14);
+    --ink:#ECE6D8; --soft:#B6AE9C; --faint:#7E7688; --gold:#D8B254; --gold2:#EBC974;
+    --esp:#5E92E6; --esp2:#9CC0F5;
+    --corps:#9166E6; --corps2:#B79CF5;
+    --ame:#E0726E; --ame2:#F0928E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1200px 700px at 50% -240px,#191436,#0A0910 60%) fixed;color:var(--ink);
+    font-family:'Spectral',Georgia,serif;line-height:1.78;font-size:17px}
+  a{color:inherit;text-decoration:none}
+  .layout{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:256px 1fr;gap:2.4rem;padding:0 1.2rem}
+
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:1.8rem 0;font-size:.88rem}
+  nav::-webkit-scrollbar{width:6px} nav::-webkit-scrollbar-thumb{background:var(--card2);border-radius:3px}
+  nav .brand{font-family:'Cinzel',serif;color:var(--gold2);font-size:.82rem;letter-spacing:.14em;margin-bottom:1.1rem;line-height:1.5}
+  nav .pt{font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:1.1rem 0 .3rem .7rem}
+  nav a{display:block;color:var(--faint);padding:.26rem .7rem;border-left:2px solid transparent;transition:.15s;line-height:1.35}
+  nav a:hover{color:var(--soft)}
+  nav a.on{color:var(--ink);border-left-color:var(--gold)}
+
+  main{padding:2rem 0 6rem;max-width:66ch}
+  header.hero{text-align:center;padding:1.6rem 0 2.6rem;border-bottom:1px solid var(--line)}
+  .deco{color:var(--gold);letter-spacing:.5em;font-size:.72rem;margin-bottom:1rem}
+  h1{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(2.1rem,5.5vw,3.2rem);line-height:1.06;
+    background:linear-gradient(180deg,#F5EEDA,#CBAE6F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header.hero p{color:var(--soft);font-style:italic;margin-top:.9rem;font-size:1.06rem;max-width:50ch;margin-inline:auto}
+
+  .partbar{margin:3.4rem 0 0;padding:1.4rem 0 .2rem;border-top:1px solid var(--line);text-align:center}
+  .partbar .pn{font-family:'Cinzel',serif;letter-spacing:.32em;color:var(--gold);font-size:.72rem}
+  .partbar .ph{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--ink);margin-top:.3rem}
+
+  section{padding:2.2rem 0;border-bottom:1px solid var(--line)}
+  .kicker{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent,var(--gold));font-weight:600;margin-bottom:.4rem}
+  h2{font-family:'Cinzel',serif;font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1.18}
+  h2 .accent{color:var(--accent,var(--gold))}
+  h3{font-family:'Cinzel',serif;font-weight:600;font-size:1.12rem;color:var(--accent,var(--gold2));margin:1.9rem 0 .3rem}
+  h4{font-family:'Cinzel',serif;font-weight:600;font-size:.95rem;color:var(--ink);margin:1.2rem 0 .2rem;letter-spacing:.02em}
+  p{margin:.85rem 0}
+  .lead{font-size:1.07rem;color:var(--soft)}
+  .soft{color:var(--soft)} em{color:var(--gold2);font-style:italic} strong{color:#F4EEDC;font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;background:var(--card2);padding:.1rem .42rem;border-radius:5px;color:var(--gold2);font-size:.82em}
+  blockquote{border-left:2px solid var(--accent,var(--gold));margin:1.2rem 0;padding:.2rem 0 .2rem 1.1rem;font-style:italic;color:var(--soft)}
+  blockquote .src{display:block;font-style:normal;font-size:.8rem;color:var(--faint);margin-top:.3rem}
+
+  .crest{display:flex;align-items:center;gap:1rem;margin:.4rem 0 1.2rem}
+  .crest svg{flex:0 0 auto;filter:drop-shadow(0 0 12px var(--glow,rgba(216,178,84,.35)))}
+  .crest .meta{font-size:.85rem;color:var(--faint);line-height:1.55}
+  .crest .meta b{color:var(--accent,var(--gold2))}
+
+  .rule{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-left:3px solid var(--accent,var(--gold));border-radius:0 12px 12px 0;padding:.9rem 1.1rem;margin:1.1rem 0}
+  .rule .t{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent,var(--gold2));margin-bottom:.3rem}
+  .rule p{margin:.3rem 0;font-size:.94rem;color:var(--soft)}
+
+  .ways{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1rem 0}
+  @media(max-width:560px){.ways{grid-template-columns:1fr}}
+  .way{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:.85rem .95rem}
+  .way .n{font-family:'Cinzel',serif;color:var(--accent,var(--gold2));font-size:.95rem}
+  .way .d{font-size:.85rem;color:var(--soft);margin-top:.25rem;line-height:1.5}
+  .way .sig{font-size:.77rem;color:var(--faint);margin-top:.4rem;font-style:italic}
+
+  .ladder{list-style:none;counter-reset:l;margin:1rem 0;padding:0}
+  .ladder li{counter-increment:l;position:relative;padding:.72rem 0 .72rem 2.7rem;border-bottom:1px solid var(--line)}
+  .ladder li::before{content:counter(l);position:absolute;left:0;top:.7rem;width:1.8rem;height:1.8rem;border-radius:50%;
+    border:1px solid var(--accent,var(--gold));color:var(--accent,var(--gold2));display:grid;place-items:center;font-family:'Cinzel',serif;font-size:.8rem}
+  .ladder li:last-child{border-bottom:none}
+  .ladder b{color:var(--ink)} .ladder .d{color:var(--soft);font-size:.92rem;margin-top:.1rem}
+
+  .era{position:relative;border-left:2px solid var(--line);margin-left:.5rem;padding:.2rem 0 1.4rem 1.4rem}
+  .era::before{content:'';position:absolute;left:-7px;top:.4rem;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+  .era .en{font-family:'Cinzel',serif;color:var(--gold2);font-size:1.02rem}
+  .era .et{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:.3rem}
+  .era p{font-size:.94rem;margin:.5rem 0}
+
+  .price{display:flex;align-items:baseline;gap:.6rem;margin:.7rem 0;padding:.5rem .8rem;background:rgba(0,0,0,.25);border-radius:8px}
+  .price .lab{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .price .val{color:var(--accent,var(--gold2));font-weight:600}
+
+  .fall{border:1px solid var(--accent,var(--gold));border-radius:12px;padding:.95rem 1.1rem;margin:1.3rem 0;background:linear-gradient(180deg,rgba(0,0,0,.22),transparent)}
+  .fall .h{font-family:'Cinzel',serif;color:var(--accent,var(--gold2));font-size:1rem;margin-bottom:.2rem}
+  .fall p{font-size:.93rem;color:var(--soft);margin:.25rem 0}
+
+  .insp{font-size:.82rem;color:var(--faint);font-style:italic;border-top:1px dashed var(--line);padding-top:.7rem;margin-top:1.2rem}
+
+  .realm{border:1px solid var(--line);border-left:3px solid var(--accent,var(--gold));border-radius:0 12px 12px 0;
+    padding:1.1rem 1.2rem;margin:1.2rem 0;background:linear-gradient(180deg,var(--card2),var(--card))}
+  .realm .rn{font-family:'Cinzel',serif;font-weight:700;font-size:1.2rem;color:var(--accent,var(--gold2))}
+  .realm .tag{font-size:.76rem;letter-spacing:.04em;color:var(--faint);text-transform:uppercase;margin:.15rem 0 .6rem}
+  .realm p{font-size:.94rem} .realm .insp{margin-top:.7rem}
+  .realm .row{display:flex;gap:.6rem;font-size:.85rem;padding:.28rem 0;border-top:1px solid var(--line)}
+  .realm .row .k{color:var(--faint);min-width:7rem;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+  .realm .row .v{color:var(--soft)}
+
+  table.tbl{width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0}
+  table.tbl th,table.tbl td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tbl th{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  table.tbl td b{color:var(--ink)}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.4rem;vertical-align:middle}
+  .tri-wrap{display:flex;justify-content:center;margin:1.4rem 0}
+
+  .lex dt{font-family:'Cinzel',serif;color:var(--gold2);font-size:.95rem;margin-top:.9rem}
+  .lex dd{color:var(--soft);font-size:.92rem;margin:.15rem 0 0}
+
+  footer{text-align:center;color:var(--faint);font-size:.82rem;font-style:italic;padding-top:2.4rem}
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr}
+    nav{position:static;height:auto;border-bottom:1px solid var(--line);padding:1.1rem 0 .4rem}
+    nav .pt{display:inline-block;margin:.6rem .4rem 0}
+    nav a{display:inline-block;border-left:none;border-bottom:2px solid transparent}
+    nav a.on{border-left:none;border-bottom-color:var(--gold)}
+    main{padding-top:1.4rem}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav id="toc">
+    <div class="brand">✦ Le Codex<br>des Trois Sources</div>
+    <a href="#prologue">Prologue</a>
+    <div class="pt">I · Cosmogonie & Mythe</div>
+    <a href="#origine">L'Origine & le Fond</a>
+    <a href="#premiers">Les Premiers</a>
+    <a href="#ages">Les Cinq Âges</a>
+    <div class="pt">II · La Science des Sources</div>
+    <a href="#esprit">L'Esprit — la Parole</a>
+    <a href="#corps">Le Corps — les Souffles</a>
+    <a href="#ame">L'Âme — le Symbole</a>
+    <div class="pt">III · Équilibre & Au-delà</div>
+    <a href="#equilibre">L'Équilibre & les Chutes</a>
+    <a href="#autorites">Les Autorités</a>
+    <a href="#audela">Les âmes & l'au-delà</a>
+    <div class="pt">IV · Géopolitique</div>
+    <a href="#royaumes">Les Quatre Royaumes</a>
+    <a href="#puissances">L'Équilibre des puissances</a>
+    <a href="#marges">Les Marges</a>
+    <div class="pt">Annexes</div>
+    <a href="#lexique">Lexique</a>
+    <a href="#verites">Vérités interdites</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="deco">✦ ✦ ✦</div>
+      <h1>Le Codex des Trois Sources</h1>
+      <p>Mythe, science et géopolitique d'un monde bâti sur trois sources — Corps, Âme, Esprit — et sur la peur de ce qui se tient au-delà d'elles.</p>
+    </header>
+
+    <section id="prologue">
+      <p class="lead">Ce codex réunit ce que les sages des quatre royaumes ont pu écrire d'un même monde sans jamais s'accorder : d'où vient le pouvoir, ce qu'il coûte, et pourquoi les nations qui le manient se craignent autant qu'elles s'attirent. On y a tressé le mythe et la mesure, car ici les deux disent vrai.</p>
+      <blockquote>« Trois sources remontent du Fond. Trois manières de toucher le monde. Et un seul abîme au bout des trois. »
+        <span class="src">— inscription liminaire, attribuée au Premier</span></blockquote>
+    </section>
+
+    <!-- ============ PARTIE I ============ -->
+    <div class="partbar"><div class="pn">Partie I</div><div class="ph">Cosmogonie & Mythe</div></div>
+
+    <section id="origine">
+      <div class="kicker">Cosmogonie</div>
+      <h2>L'Origine & le Fond</h2>
+      <p class="lead">Avant le monde, il y avait la <strong>Vérité</strong> — un fond unique, total, où tout ce qui peut être su était déjà. On la nomme aussi le <em>Fond</em>, ou le <em>Lac</em>, car le monde flotte sur elle comme une surface flotte sur l'eau.</p>
+
+      <p>Le monde n'est pas le contraire de la Vérité : il en est la <strong>surface</strong>. Vivre, c'est rester en haut, ignorer le fond, accepter que les choses aient un nom et une paix. Mais l'énergie, elle, remonte du Fond — et elle remonte par trois canaux. C'est de ces trois remontées que naît tout ce qui pense, bouge ou ressent.</p>
+
+      <h3>Les trois remontées</h3>
+      <p>On les appelle les <strong>trois sources</strong>. Chacune est une manière dont un être touche le réel, et chacune porte son mana :</p>
+      <table class="tbl">
+        <thead><tr><th>Source</th><th>Touche le monde par</th><th>Mana</th><th>Art</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:var(--esp)"></span><b>Esprit</b></td><td>la pensée</td><td>Originel → Positif</td><td>la Parole</td></tr>
+          <tr><td><span class="dot" style="background:var(--corps)"></span><b>Corps</b></td><td>le geste</td><td>Sombre → Négatif</td><td>le Souffle</td></tr>
+          <tr><td><span class="dot" style="background:var(--ame)"></span><b>Âme</b></td><td>le sentiment</td><td>Spirituel</td><td>le Symbole</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tri-wrap">
+        <svg viewBox="0 0 320 232" width="300" height="218" aria-label="Triangle des trois sources.">
+          <polygon points="160,28 36,196 284,196" fill="none" stroke="rgba(216,178,84,.35)" stroke-width="1.5"/>
+          <line x1="160" y1="28" x2="160" y2="155" stroke="rgba(216,178,84,.12)"/>
+          <line x1="36" y1="196" x2="222" y2="92" stroke="rgba(216,178,84,.12)"/>
+          <line x1="284" y1="196" x2="98" y2="92" stroke="rgba(216,178,84,.12)"/>
+          <circle cx="160" cy="118" r="4" fill="#D8B254"/>
+          <text x="160" y="138" fill="#7E7688" font-size="9" text-anchor="middle" font-family="Spectral">équilibre</text>
+          <g font-family="Cinzel, serif" font-size="13" font-weight="600">
+            <circle cx="160" cy="28" r="7" fill="#5E92E6"/><text x="160" y="16" fill="#9CC0F5" text-anchor="middle">ESPRIT</text>
+            <circle cx="36" cy="196" r="7" fill="#9166E6"/><text x="36" y="220" fill="#B79CF5" text-anchor="middle">CORPS</text>
+            <circle cx="284" cy="196" r="7" fill="#E0726E"/><text x="284" y="220" fill="#F0928E" text-anchor="middle">ÂME</text>
+          </g>
+        </svg>
+      </div>
+
+      <h3>Sources primordiales &amp; branches secondaires</h3>
+      <p>Les trois sources sont <strong>primordiales</strong> — des puits bruts, presque impossibles à manier tels quels. Toucher directement le Mana Originel, le Mana Sombre ou le Mana de l'Âme demande un génie que peu possèdent. Aussi les cultures ont-elles forgé, au fil des âges, des <strong>branches secondaires</strong> : des manières apprivoisées d'employer chaque source.</p>
+      <table class="tbl">
+        <thead><tr><th>Source primordiale</th><th>Branche secondaire</th><th>Forgée par</th></tr></thead>
+        <tbody>
+          <tr><td>Esprit · Mana Originel</td><td><b>Mana Positif</b></td><td>le Culte des Sorcières des Étoiles, fondé par l'une des Quatre</td></tr>
+          <tr><td>Corps · Mana Sombre</td><td><b>Mana Négatif</b></td><td>l'Empire Vultric, qui fit d'un mana réputé maléfique une discipline où l'émotion décuple la force</td></tr>
+          <tr><td>Âme · Mana de l'Âme</td><td><b>Mana Spirituel</b></td><td>ouvert à tous avec le temps ; il se déplace au gré des choix d'une vie</td></tr>
+        </tbody>
+      </table>
+      <p class="soft">Les <strong>éléments</strong> eux-mêmes ne sont pas naturels : ils dérivent de ces branches secondaires. Et tout au sommet, hors d'atteinte du commun, se tient le <strong>Mana Pur</strong> — la source sans détour, celle des Autorités.</p>
+
+      <h3>La marque — la porte</h3>
+      <p>Nul n'accède aux sources sans une <strong>marque</strong> au cœur, l'<em>ADN de l'âme</em> : un interrupteur gravé qui ouvre les trois canaux. Sans elle, l'énergie reste enfermée. Avec elle, on devient un <em>marqué</em> — un être capable de puiser au Fond. Et cette marque n'est pas morte : elle vit, et change avec l'âme. C'est par elle que commence toute l'histoire qui suit.</p>
+      <p>La marque prend la <strong>couleur de la source dominante</strong> de celui qui la porte : <span style="color:var(--esp)">bleue</span> pour l'Esprit, <span style="color:var(--corps)">violette</span> pour le mana sombre du Corps, <span style="color:var(--ame)">rose</span> pour l'Âme. D'un seul regard, un lecteur d'âmes sait donc quelle voie domine un marqué — et, à la teinte mêlée des rares équilibrés, reconnaît un être qui les porte toutes.</p>
+    </section>
+
+    <section id="premiers">
+      <div class="kicker">Mythe</div>
+      <h2>Les Premiers</h2>
+      <p class="lead">Le mythe dit qu'un être, avant tous les autres, remonta du Fond avec la Vérité encore accrochée à lui. On le nomme le <strong>Premier</strong>. Il ne fut pas créé : il <em>se souvint</em>, et le monde prit forme autour de ce souvenir.</p>
+
+      <p>Le Premier portait les trois sources en équilibre parfait — la seule fois, dit-on, où cela arriva sans effort. De lui descendent les <strong>trois lignées</strong> qui deviendront les peuples du monde, chacune ayant hérité d'une source plus que des autres :</p>
+
+      <div class="ways">
+        <div class="way"><div class="n">Les Sorcières des Étoiles</div><div class="d">héritières de l'Esprit. Elles apprirent à descendre dans le Lac et à rapporter des Paroles. De leurs cercles naîtra, bien plus tard, la République du Savoir.</div></div>
+        <div class="way"><div class="n">Les Sang-de-Bête</div><div class="d">héritiers du Corps. Ils gardèrent en eux la mémoire d'une race ancienne et en firent une force de combat. Leur descendance fondera l'Empire Vultric.</div></div>
+        <div class="way"><div class="n">Les Liseurs d'Âmes</div><div class="d">héritiers de l'Âme. Ils virent les âmes comme une matière, lurent les marques, honorèrent les morts. Leurs clans formeront l'Empire Uni de l'Est.</div></div>
+      </div>
+
+      <p>Quant à l'équilibre du Premier, nul ne l'hérita. Sa perte est la blessure du monde : depuis, chacun penche, et chacun paie. C'est en mémoire de cet équilibre perdu que naîtra, des siècles plus tard, l'<strong>Ordre d'Or</strong> — non d'une lignée, mais d'un regret.</p>
+
+      <blockquote>« Le Premier ne nous a pas donné le pouvoir. Il nous a donné le manque. »
+        <span class="src">— catéchisme de l'Ordre d'Or</span></blockquote>
+    </section>
+
+    <section id="ages">
+      <div class="kicker">Histoire</div>
+      <h2>Les Cinq Âges</h2>
+      <p class="lead">Les sages comptent cinq âges depuis la remontée du Premier. Les dates manquent — le temps des premiers âges est mythe — mais l'ordre, lui, fait consensus.</p>
+
+      <div class="era">
+        <div class="et">Premier Âge — le mythe</div>
+        <div class="en">L'Âge du Fond</div>
+        <p>Le Premier remonte ; le monde prend forme. Les trois sources s'ouvrent, les premières lignées naissent. Tout est neuf, et personne ne sait encore le prix de rien. C'est l'âge sans chute — le seul.</p>
+      </div>
+      <div class="era">
+        <div class="et">Deuxième Âge — la légende</div>
+        <div class="en">L'Âge des Marqués</div>
+        <p>Les marques se répandent. On découvre les arts : la Parole se codifie, les premiers Souffles se transmettent, les âmes se lisent. Les trois cultures s'enracinent sur trois terres. C'est aussi l'âge des premières chutes — les premiers Déments, les premières Bêtes, les premiers Errants — et de la terreur qu'elles inspirent.</p>
+      </div>
+      <div class="era">
+        <div class="et">Troisième Âge — la catastrophe</div>
+        <div class="en">L'Âge des Sommets · la Guerre des Autorités</div>
+        <p>Des marqués accumulent assez d'essence pour devenir des <strong>Autorités</strong> : le monde se plie à eux. Plusieurs se lèvent en même temps — ce qui ne peut pas durer. Leurs affrontements <strong>reconfigurent le monde</strong> à chaque fois : des continents changent de loi, des cieux se renversent, des peuples disparaissent. On dit que le Premier lui-même tomba à la fin de cet âge. Le monde qu'on habite aujourd'hui est ce qui restait après le dernier Sommet.</p>
+      </div>
+      <div class="era">
+        <div class="et">Quatrième Âge — la reconstruction</div>
+        <div class="en">L'Âge des Cendres & des Royaumes</div>
+        <p>Sur les ruines, les survivants se regroupent par affinité. Quatre puissances coalescent : Vultric autour de la force, les Mages autour du savoir, l'Est autour de l'âme, et — né du regret de l'équilibre perdu — l'<strong>Ordre d'Or</strong>, qui se donne pour mission d'empêcher un nouveau Sommet. À la fin de l'âge, les quatre signent le <strong>Concordat des Sommets</strong> : nul ne devra plus jamais fabriquer une Autorité.</p>
+      </div>
+      <div class="era">
+        <div class="et">Cinquième Âge — le présent</div>
+        <div class="en">L'Âge de l'Équilibre Fragile</div>
+        <p>L'âge où tout se joue. Le Concordat tient, mais à peine : chaque royaume soupçonne les autres de préparer en secret leur Autorité, et chacun, en vérité, le fait. Les marqués sont plus nombreux, le Lac est sondé plus profond, le sang de bête coule plus librement. Partout, les sages lisent les mêmes signes — et tous murmurent que le sixième âge sera un Sommet.</p>
+      </div>
+    </section>
+
+    <!-- ============ PARTIE II ============ -->
+    <div class="partbar"><div class="pn">Partie II</div><div class="ph">La Science des Sources</div></div>
+
+    <!-- ESPRIT -->
+    <section id="esprit" style="--accent:var(--esp);--glow:rgba(94,146,230,.4)">
+      <div class="kicker">Première source</div>
+      <h2>L'<span class="accent">Esprit</span> — l'Art de la Parole</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 70" width="60" height="60">
+          <circle cx="35" cy="35" r="26" fill="none" stroke="#5E92E6" stroke-width="2"/>
+          <circle cx="35" cy="35" r="14" fill="none" stroke="#5E92E6" stroke-width="1.4" opacity=".6"/>
+          <circle cx="35" cy="35" r="5" fill="#5E92E6"/>
+          <g stroke="#5E92E6" stroke-width="2"><line x1="35" y1="3" x2="35" y2="11"/><line x1="35" y1="59" x2="35" y2="67"/><line x1="3" y1="35" x2="11" y2="35"/><line x1="59" y1="35" x2="67" y2="35"/></g>
+        </svg>
+        <div class="meta"><b>Mana :</b> Originel → Positif · <b>Geste :</b> réciter<br><b>Prix :</b> la lucidité · <b>Chute :</b> le Dément</div>
+      </div>
+
+      <p class="lead">L'Esprit est la source de la pensée claire. Son mana, le <strong>Positif</strong>, est universel : il entre dans presque toute Parole comme une base sur laquelle s'écrit le reste. On le commande en <strong>récitant</strong>.</p>
+
+      <h3>La grammaire de la Parole</h3>
+      <p>Une Parole est un code prononcé : <code>mot de passe + élément + sort</code>. Le mot de passe nomme le mana, l'élément donne sa nature, le sort sa forme. L'exactitude fait tout — une syllabe fausse, et rien ne vient. Plus la phrase est longue, plus elle porte loin et frappe fort ; mais plus elle exige de concentration et de temps, et sous la pression, la formule trop longue se brise avant d'aboutir.</p>
+      <div class="rule"><div class="t">Le dilemme du lettré</div><p>La puissance croît avec la longueur ; la fiabilité décroît avec elle. Dire <em>court et juste</em> bat presque toujours dire long et tremblant. Le maître n'est pas le plus savant — c'est le plus économe.</p></div>
+
+      <h3>La Lucidité — la descente dans le Lac</h3>
+      <p>Le vrai prix de la Parole n'est pas la fatigue : c'est la <strong>lucidité</strong>. Plus on s'ouvre au Mana Originel, plus on voit ce que les autres ne voient pas. La perception devient un lac où l'on peut plonger : chaque palier révèle une couche plus profonde, donne plus de pouvoir — mais on n'en remonte pas indemne.</p>
+      <ol class="ladder">
+        <li><b>La surface — le monde ordinaire.</b><div class="d">Les choses ont leur nom et leur paix.</div></li>
+        <li><b>Le premier seuil — le voile.</b><div class="d">Apparaissent les âmes errantes, le sang sous la peau, les marques au cœur des gens. On voit qui manie le mana, et combien.</div></li>
+        <li><b>Le deuxième seuil — la trame.</b><div class="d">On perçoit le code sous les choses : les Paroles qui tiennent le monde, les fils, les nombres. Le réel devient écriture.</div></li>
+        <li><b>Le troisième seuil — le Mur.</b><div class="d">On sent ce qui regarde le monde du dehors : des voix qui décident, des vies reprises après la mort comme si rien n'avait eu lieu, et les oubliés — ceux qu'on a effacés. Peu en reviennent lucides.</div></li>
+        <li><b>Le Fond — la Vérité.</b><div class="d">Tout, d'un coup. Plus aucune distance entre soi et le réel. C'est la folie. Nul n'en est revenu.</div></li>
+      </ol>
+      <div class="rule"><div class="t">Loi de la Noyade</div><p>Passé une certaine profondeur, la descente devient irréversible — et l'on ne paie plus seulement en raison, mais en âme. Le voyant trop profond perd à la fois ce qu'il pensait et ce qu'il était.</p></div>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">la lucidité — la santé mentale, puis l'âme</span></div>
+      <div class="fall"><div class="h">↯ La Chute : le Dément</div>
+        <p>Quand l'Esprit l'emporte, les seuils s'effondrent les uns dans les autres. Le Dément vit en permanence ce que les autres n'aperçoivent qu'un instant. Ce n'est pas une folie de malade, mais de clairvoyance : il ne ment jamais — et c'est pour cela qu'on ne peut plus le supporter.</p></div>
+      <p class="insp">Inspiration : la lucidité comme l'<em>Insight</em> de Bloodborne — le savoir qui dévoile le monde et le rend invivable. Le troisième seuil pousse l'idée jusqu'à percer le quatrième mur.</p>
+    </section>
+
+    <!-- CORPS -->
+    <section id="corps" style="--accent:var(--corps);--glow:rgba(145,102,230,.45)">
+      <div class="kicker">Deuxième source</div>
+      <h2>Le <span class="accent">Corps</span> — l'Art des Souffles</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 70" width="60" height="60">
+          <path d="M35,8 C24,18 24,30 35,36 C46,30 46,18 35,8 Z" fill="#9166E6" opacity=".85"/>
+          <path d="M14,40 C26,34 44,34 56,40 C46,52 24,52 14,40 Z" fill="none" stroke="#9166E6" stroke-width="2.2"/>
+          <circle cx="35" cy="42" r="4" fill="#9166E6"/><path d="M35,46 L35,62" stroke="#9166E6" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <div class="meta"><b>Mana :</b> Sombre → Négatif · <b>Geste :</b> bouger<br><b>Prix :</b> l'humanité · <b>Chute :</b> la Bête</div>
+      </div>
+
+      <p class="lead">Le Corps ne récite rien. Son mana, le <strong>Négatif</strong> — le mana sombre — circule en lui comme le sang et répond au geste, jamais au mot. On ne le commande pas : on le <em>bouge</em>, comme on contracte un muscle. Sa voie est un art martial, et son langage, le <strong>Souffle</strong>.</p>
+
+      <h3>La science du Souffle</h3>
+      <p>Le Souffle est la maîtrise du rythme intérieur : respiration, posture et élan deviennent un seul flux qui pousse le mana dans le geste. Là où la Parole demande du temps, le Souffle est <strong>instantané</strong> — pas d'incantation, pas de délai. On l'apprend par des <em>formes</em>, enchaînements codifiés qu'on répète jusqu'à les oublier, pour ne garder que le réflexe. La puissance se lit dans la fluidité : un geste juste libère plus qu'un cri.</p>
+
+      <h4>Les grandes écoles de Souffle</h4>
+      <div class="ways">
+        <div class="way"><div class="n">Le Souffle de l'Onde</div><div class="d">Redirige et absorbe. On n'arrête pas la force, on l'épouse et on la retourne.</div><div class="sig">Forme : « le Reflux » — rendre un coup deux fois plus fort.</div></div>
+        <div class="way"><div class="n">Le Souffle de la Brisure</div><div class="d">Concentre tout en un point, un instant. Rien n'est gardé en réserve.</div><div class="sig">Forme : « le Point Final » — une frappe, ou rien.</div></div>
+        <div class="way"><div class="n">Le Souffle de la Racine</div><div class="d">Tient et encaisse. Le corps devient mur ; on use l'adversaire jusqu'à ce qu'il se brise.</div><div class="sig">Forme : « l'Ancrage » — immobile comme la pierre.</div></div>
+        <div class="way"><div class="n">Le Souffle du Spectre</div><div class="d">Vitesse et déplacement. On frappe avant d'être vu, on laisse des images de soi.</div><div class="sig">Forme : « les Sept Ombres » — sept positions, une seule réelle.</div></div>
+      </div>
+      <p class="soft">Il existe des Souffles rares — hybrides, perdus, ou <strong>interdits</strong>. Les interdits puisent trop profond : puissance immédiate, mais ils réveillent le sang de bête bien plus vite. On les enseigne en secret ; on le regrette toujours.</p>
+
+      <h3>Apprendre en combattant</h3>
+      <p>Le Corps <strong>progresse par le combat lui-même</strong>. À force d'affronter d'autres styles, le porteur les lit, les comprend, puis les recompose dans le sien. Un duel n'est pas qu'une épreuve : c'est une leçon volée. Les plus doués ont « combattu » mille Souffles sans en avoir étudié un seul — leur corps a tout retenu. Montée vertigineuse, et piège : à trop boire le combat, on cesse d'être un homme.</p>
+
+      <h3>Le sang de bête &amp; les Ombrefauves</h3>
+      <p>Le mana sombre n'est pas neutre : c'est un <strong>sang de bête</strong>, la mémoire enfouie d'une race ancienne — <strong>les Ombrefauves</strong>. Avant le monde tel qu'on le connaît, avant même le Premier, le Chaos Originaire grouillait de bêtes : des prédateurs de pénombre au <strong>sang violet</strong>, premiers fauves remontés du Fond. Ce sont les Ombrefauves. Ils ont reculé, ou presque disparu — mais leur sang demeure, dilué dans la chair des marqués, et c'est lui que l'on réveille en maniant le mana négatif. Le manier rouvre un peu cette mémoire : à petite dose, elle aiguise ; trop réveillée, elle prend le dessus, et la chair se souvient de ce qu'elle fut. La descente se fait par paliers :</p>
+      <ol class="ladder">
+        <li><b>Le Calme.</b><div class="d">Le sang dort. Le porteur est pleinement maître ; le mana obéit.</div></li>
+        <li><b>Le Frémissement.</b><div class="d">Le sang s'éveille : sens exacerbés, vitesse, ivresse de puissance. Encore réversible.</div></li>
+        <li><b>La Fièvre.</b><div class="d">Le corps mute par éclats — une griffe, un œil de nuit, une faim. La volonté lutte contre l'instinct.</div></li>
+        <li><b>La Mue.</b><div class="d">La Bête prend tout. Plus de mots, plus de symboles — rien que le mouvement, parfait et vide.</div></li>
+      </ol>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">l'humanité — un palier de plus à chaque excès</span></div>
+      <div class="fall"><div class="h">↯ La Chute : la Bête</div>
+        <p>Au bout de la Mue, le porteur n'est plus un homme : il <strong>redevient un Ombrefauve</strong>. La forme de la race ancienne remonte tout entière — pelage de pénombre, yeux de braise violette, faim sans fond. Il gagne en puissance brute tout ce qu'il perd en conscience. On ne raisonne pas une Bête : on la fuit, ou on l'abat.</p></div>
+      <p class="insp">Inspirations : les <em>souffles</em> et leurs formes façon Demon Slayer, les arts martiaux des manhwa et manga ; la progression par absorption du style adverse façon Garou ; la Bête et le sang de bête façon Bloodborne.</p>
+    </section>
+
+    <!-- AME -->
+    <section id="ame" style="--accent:var(--ame);--glow:rgba(224,114,110,.4)">
+      <div class="kicker">Troisième source</div>
+      <h2>L'<span class="accent">Âme</span> — l'Art du Symbole</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 74" width="60" height="64">
+          <path d="M26,24 A20,20 0 1 0 44,24" fill="none" stroke="#E0726E" stroke-width="5" stroke-linecap="round"/>
+          <path d="M30,52 Q35,72 40,52 Z" fill="#E0726E"/><circle cx="35" cy="36" r="5.5" fill="#E0726E"/>
+          <path d="M35,4 L42,15 L35,22 L28,15 Z" fill="#E0726E"/>
+          <path d="M8,36 L24,32 L24,40 Z" fill="#E0726E"/><path d="M62,36 L46,32 L46,40 Z" fill="#E0726E"/>
+        </svg>
+        <div class="meta"><b>Mana :</b> Spirituel · <b>Geste :</b> croire<br><b>Prix :</b> l'essence · <b>Chute :</b> l'Errant</div>
+      </div>
+
+      <p class="lead">L'Âme est la source des émotions et des sentiments. Son mana, le <strong>Spirituel</strong>, ne frappe ni ne récite : il <strong>crée</strong>. Il donne corps, à partir de rien, à ce que l'on ressent et croit assez fort. C'est la plus intime des trois voies — et la plus dangereuse pour soi, car on y dépense ce qu'on est.</p>
+
+      <h3>L'âme comme matière</h3>
+      <p>Pour le lucide, une âme n'est pas une abstraction : c'est une <strong>substance</strong> qu'on voit, pèse et façonne. Chaque âme a une <em>masse</em> (sa force), une <em>forme</em>, une <em>nature</em> (sa teinte dominante) et une <em>santé</em>. La nature décide de ce que l'on pourra matérialiser.</p>
+      <h4>Les natures d'âme</h4>
+      <div class="ways">
+        <div class="way"><div class="n">Volonté</div><div class="d">l'âme qui veut → armes, lames, outils de conquête.</div></div>
+        <div class="way"><div class="n">Attachement</div><div class="d">l'âme qui aime → gardiens, familiers, boucliers.</div></div>
+        <div class="way"><div class="n">Colère</div><div class="d">l'âme qui brûle → objets cruels, voraces, instables.</div></div>
+        <div class="way"><div class="n">Foi</div><div class="d">l'âme qui croit → sceaux, reliques, masques rituels.</div></div>
+        <div class="way"><div class="n">Deuil</div><div class="d">l'âme qui a perdu → objets liés aux morts, échos, présences.</div></div>
+        <div class="way"><div class="n">Curiosité</div><div class="d">l'âme qui cherche → clés, lentilles, objets qui révèlent.</div></div>
+      </div>
+      <p class="soft">Aucune âme n'est d'une seule teinte, mais une domine — et c'est elle qui parle quand vient le moment de créer.</p>
+
+      <h3>Les trois opérations du Symbole</h3>
+      <p>Comme la Parole a sa grammaire et le Souffle ses formes, l'Âme a ses <strong>opérations</strong>. Trois, plus une interdite.</p>
+      <h4>1 · La Matérialisation — tirer un objet de soi</h4>
+      <p>Faire surgir un objet <strong>directement de l'âme</strong> : arme, masque, hache, familier. Trois forces doivent se rejoindre — <strong>sentiment, désir, croyance</strong>. <em>Il le ressent, il le désire, il le croit : la chose apparaît.</em> L'objet est <strong>unique</strong>, <strong>évolue</strong> avec l'âme, et sa puissance garde une part d'<strong>aléatoire</strong> : une grande âme peut n'enfanter qu'un objet modeste, et un instant de conviction totale faire naître une merveille chez un être ordinaire. Un objet assez nourri peut devenir un <em>familier</em> doté d'une volonté propre — bénédiction, ou rival intime.</p>
+      <h4>2 · La Résonance — accorder deux âmes</h4>
+      <p>Deux âmes peuvent se <strong>synchroniser</strong>. Un porteur et son objet d'âme, ou deux personnes, entrent en <em>résonance</em> : leurs manas s'accordent et leur puissance se décuple, chacun devenant l'arme et l'armure de l'autre. Mais la résonance exige l'accord réel des deux âmes — la moindre discorde profonde la rompt, et la rupture se paie en blessure d'âme, parfois mortelle. Les plus grands duos du monde sont des âmes qui résonnent ; les pires trahisons aussi.</p>
+      <h4>3 · La Lecture — le Regard sur les âmes</h4>
+      <p>Voir une âme et la <strong>lire</strong> : sa nature, sa masse, sa santé, et l'état de sa marque. Le Regard dit qui ment, qui faiblit, qui monte, qui se brise. Discipline reine de l'Est, où l'on lit les marques comme d'autres lisent des blasons — et arme redoutable, car connaître une âme, c'est savoir où frapper.</p>
+      <h4 style="color:var(--corps2)">✕ L'opération interdite · la Consommation</h4>
+      <p>Prendre l'essence d'une autre âme pour grossir la sienne. Elle fonctionne — c'est bien là le problème. Chaque âme dévorée gonfle la marque et le pouvoir, mais déforme celui qui consomme, et le mène, palier après palier, vers l'Errant. Tous les royaumes la condamnent ; tous l'ont pratiquée.</p>
+
+      <h3>La marque vivante & la santé de l'âme</h3>
+      <p>La marque — l'<em>ADN de l'âme</em> — n'est pas figée : <strong>elle évolue avec l'âme</strong>. Le tracé s'étend et se ramifie chez ceux dont l'âme s'élargit, se resserre et s'épure chez ceux dont l'âme se concentre, et se <strong>rétracte</strong> jusqu'à presque disparaître chez ceux dont l'âme s'éteint ou se brise. Lire une marque, c'est lire où en est une âme.</p>
+      <p>Car une âme a une <strong>santé</strong>, et l'on peut en mesurer l'état :</p>
+      <table class="tbl">
+        <thead><tr><th>État</th><th>Marque</th><th>Sens</th></tr></thead>
+        <tbody>
+          <tr><td><b>Pleine</b></td><td>nette, ample</td><td>âme saine, en croissance</td></tr>
+          <tr><td><b>Fêlée</b></td><td>brisée, cicatrices</td><td>trauma, perte ; matérialise mal</td></tr>
+          <tr><td><b>Affamée</b></td><td>rétractée</td><td>âme qui s'épuise — danger</td></tr>
+          <tr><td><b>Gonflée</b></td><td>débordante, difforme</td><td>âme nourrie d'autres âmes — voie de l'Errant</td></tr>
+          <tr><td><b>Creuse</b></td><td>éteinte</td><td>âme vidée ; un corps sans plus de feu</td></tr>
+        </tbody>
+      </table>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">l'essence — on dépense ce que l'on est</span></div>
+      <div class="fall"><div class="h">↯ La Chute : l'Errant</div>
+        <p>Quand l'Âme domine — surtout par la Consommation — le porteur absorbe l'essence de ce qu'il abat : chaque vie prise le grandit, sa marque enfle, son pouvoir gonfle. Mais à force, il perd sa forme et son corps et glisse hors du monde physique. Les <em>âmes errantes</em>, ces entités muettes que seuls les lucides aperçoivent, furent jadis de tels êtres — montés trop haut, restés là, à regarder un monde qu'ils ne peuvent plus toucher.</p></div>
+      <p class="insp">Inspirations : l'âme comme matière qu'on voit, pèse et façonne, et la <em>résonance</em> entre deux âmes façon Soul Eater ; les natures d'âme et la marque qui croît ou se rétracte façon Undertale.</p>
+    </section>
+
+    <!-- ============ PARTIE III ============ -->
+    <div class="partbar"><div class="pn">Partie III</div><div class="ph">Équilibre & Au-delà</div></div>
+
+    <section id="equilibre">
+      <div class="kicker">Le cœur du système</div>
+      <h2>L'Équilibre & les trois Chutes</h2>
+      <p class="lead">Les trois sources se tiennent comme un trépied. Tant qu'elles s'équilibrent, le porteur reste lui-même. Mais chaque source <strong>tire vers son propre gouffre</strong> dès qu'on la laisse dominer.</p>
+      <table class="tbl">
+        <thead><tr><th>Source dominante</th><th>Chute</th><th>On gagne</th><th>On perd</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:var(--esp)"></span><b>Esprit</b></td><td>le Dément</td><td>voir toute vérité</td><td>la raison</td></tr>
+          <tr><td><span class="dot" style="background:var(--corps)"></span><b>Corps</b></td><td>la Bête</td><td>une puissance brute</td><td>la conscience</td></tr>
+          <tr><td><span class="dot" style="background:var(--ame)"></span><b>Âme</b></td><td>l'Errant</td><td>un pouvoir sans fin</td><td>le corps, le monde</td></tr>
+        </tbody>
+      </table>
+      <p>Au centre se tient un état rare : le <strong>Mana Semi-Parfait</strong>, où les trois affinités se valent. Celui qui l'atteint peut tout — réciter, frapper, créer — sans jamais basculer. Mais l'équilibre n'est pas un repos : c'est une tension tenue à chaque instant. On n'y reste pas par hasard ; on y revient, encore et encore, contre la pente.</p>
+      <div class="rule" style="--accent:var(--gold)"><div class="t">Loi de l'Équilibre</div><p>La survie est dans le centre. Le maître n'est pas celui qui pousse le plus loin une source, mais celui qui sait toujours revenir.</p></div>
+    </section>
+
+    <section id="autorites" style="--accent:var(--gold);--glow:rgba(216,178,84,.4)">
+      <div class="kicker">Le sommet du pouvoir</div>
+      <h2>Les Autorités</h2>
+      <p class="lead">Il existe un seuil au-delà des chutes. Quand un être accumule assez d'essence — par n'importe quelle voie — il cesse d'être soumis au monde : le monde commence à se plier à <strong>lui</strong>. On le nomme alors une <strong>Autorité</strong>.</p>
+      <p>Là où l'Errant se perd en absorbant trop, l'Autorité <em>garde sa forme et sa volonté</em> au même seuil. La différence n'est pas de quantité, mais de maîtrise. Atteindre ce point réécrit les règles autour de soi : là où marche une Autorité, le réel se reconfigure pour lui ressembler.</p>
+      <ul class="ladder">
+        <li><b>Elle impose sa loi au lieu.</b><div class="d">Son domaine n'obéit plus aux lois communes, mais aux siennes.</div></li>
+        <li><b>Elle aimante le pouvoir.</b><div class="d">Les sources affluent vers elle ; près d'elle, les autres sentent leur mana tirer comme vers un gouffre.</div></li>
+        <li><b>Elle devient un terme du monde.</b><div class="d">Tant qu'elle règne, elle est l'horizon que rien ne dépasse. Pour aller plus loin, il faut la défaire.</div></li>
+      </ul>
+      <div class="rule"><div class="t">La loi des Autorités</div><p>Il ne peut y avoir deux Autorités sur un même monde sans qu'il se brise. Leur seule rencontre possible est l'affrontement — et de cet affrontement naît, toujours, une nouvelle configuration du monde. C'est ce que le Concordat des Sommets cherche désespérément à empêcher.</p></div>
+    </section>
+
+    <section id="audela" style="--accent:var(--ame);--glow:rgba(224,114,110,.35)">
+      <div class="kicker">Métaphysique</div>
+      <h2>Les âmes & l'au-delà</h2>
+      <p class="lead">Où vont les âmes ? Le codex répond, prudemment, car c'est là que la science et la foi se disputent le plus.</p>
+      <p>À la mort, une âme ordinaire <strong>redescend vers le Fond</strong> — elle retourne à la Vérité dont elle était remontée, et le monde se referme au-dessus d'elle. C'est le sort commun, et l'Est l'honore : on ne pleure pas un retour, on le salue.</p>
+      <p>Mais certaines âmes ne redescendent pas. Trop chargées d'essence, ou retenues par un attachement, un serment, une rage, elles restent <strong>accrochées à la surface</strong> : ce sont les <em>âmes errantes</em>. Muettes, passives, visibles seulement aux lucides, elles regardent sans pouvoir agir. Les Errants déchus en sont la forme extrême — des êtres entiers restés coincés entre le monde et le Fond.</p>
+      <div class="rule"><div class="t">Le commerce des morts</div><p>Parce que l'âme est une matière, on peut la retenir, la lier, la voler. Les pires arts de l'Est et des Mages tournent autour de cela : ancrer une âme qui devrait partir, ou en consommer une qui voudrait rester. Toute nécromancie, ici, est une affaire d'âme — et un crime devant l'Ordre d'Or.</p></div>
+    </section>
+
+    <!-- ============ PARTIE IV ============ -->
+    <div class="partbar"><div class="pn">Partie IV</div><div class="ph">Géopolitique</div></div>
+
+    <section id="royaumes">
+      <div class="kicker">Les puissances</div>
+      <h2>Les Quatre Royaumes</h2>
+      <p class="lead">Trois royaumes épousent chacun une source ; le quatrième révère leur équilibre et juge les autres. Voici leurs institutions, leurs forces et leurs failles.</p>
+
+      <div class="realm" style="--accent:var(--gold)">
+        <div class="rn"><span class="dot" style="background:var(--gold)"></span>L'Ordre d'Or</div>
+        <div class="tag">la voie de l'équilibre</div>
+        <p>Royaume-religion voué au culte de l'<strong>équilibre</strong> des trois sources. Pour l'Ordre, suivre une seule voie est une hérésie qui mène à la chute : seul est sauvé celui qui porte les trois sans pencher. Sa noblesse est réelle — il protège, guérit, tempère, combat les Bêtes, les Déments et les Errants. Sa part d'ombre l'est tout autant : il traque les voies uniques, surveille les prodiges, et brise sans trembler un être trop penché « pour son bien et celui de tous ». Sa justice est lumineuse et froide.</p>
+        <div class="row"><div class="k">Capitale</div><div class="v">Aurelune, la Cité d'Or, bâtie sur le plateau central</div></div>
+        <div class="row"><div class="k">Pouvoir</div><div class="v">le Hiérophante, et l'ordre chevaleresque des Arbitres</div></div>
+        <div class="row"><div class="k">Régime</div><div class="v">théocratie chevaleresque hiérarchisée</div></div>
+        <div class="row"><div class="k">Force</div><div class="v">les Arbitres — chevaliers entraînés aux trois voies, gardiens du Concordat</div></div>
+        <div class="row"><div class="k">Faille</div><div class="v">le dogme : il confond parfois l'équilibre avec l'obéissance</div></div>
+        <p class="insp">Résonances : l'Ordre Jedi de l'Ancienne République (lumière et dogmatisme) ; la religion de l'Ordre d'Or d'Elden Ring.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--corps)">
+        <div class="rn"><span class="dot" style="background:var(--corps)"></span>L'Empire Vultric</div>
+        <div class="tag">la voie du Corps · la force</div>
+        <p>Empire fier et puissant qui prône la <strong>force, la fraternité et le combat</strong>. On y mesure un être à ce qu'il peut vaincre ; la faiblesse n'y a pas droit de cité, mais le frère d'armes est sacré et la loyauté au sang vaut plus que tout titre. Terre de guerre, Vultric forge ses enfants aux Souffles dès l'enfance et n'a pas peur du <strong>sang de bête</strong> : on y pratique des rites où l'on frôle la Fièvre pour en revenir plus fort — jeu mortel dont peu ressortent indemnes. Brutal, mais d'une fierté et d'une camaraderie que les autres envient en secret.</p>
+        <div class="row"><div class="k">Capitale</div><div class="v">Kragenvar, la forteresse aux mille forges</div></div>
+        <div class="row"><div class="k">Pouvoir</div><div class="v">l'Empereur, le plus fort des vivants — qui rêve d'être la première Autorité</div></div>
+        <div class="row"><div class="k">Régime</div><div class="v">empire martial, hiérarchie de la force</div></div>
+        <div class="row"><div class="k">Force</div><div class="v">les Légions de Souffle, et les Sang-de-Bête contrôlés</div></div>
+        <div class="row"><div class="k">Faille</div><div class="v">le sang de bête : ses meilleurs guerriers sont à un pas de la Bête</div></div>
+        <p class="insp">Résonances : la fierté guerrière des Viltrumites ; la dureté de l'empire de Kenshi ; un pays de la guerre.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--esp)">
+        <div class="rn"><span class="dot" style="background:var(--esp)"></span>Les Mages des Étoiles</div>
+        <div class="tag">la voie de l'Esprit · le savoir · « la République du Savoir »</div>
+        <p>République magique gouvernée par un <strong>conseil</strong>, vouée à <strong>préserver le savoir</strong> et percer les mystères du monde. On y récite, on y étudie, on y descend dans le Lac plus loin que partout ailleurs — leurs grands sages sont des <em>descendeurs</em> qui rapportent des seuils profonds des fragments de la trame. Idéal noble : la connaissance contre les ténèbres. Mais un conseil qui croit tout savoir se croit vite en droit de tout décider, et derrière la lumière veillent des secrets, des ambitions, et des descendeurs revenus du Lac un peu trop changés.</p>
+        <div class="row"><div class="k">Capitale</div><div class="v">la Spire de Stellaria, tour-observatoire tournée vers le Fond</div></div>
+        <div class="row"><div class="k">Pouvoir</div><div class="v">le Conseil des Étoiles — archimages élus à vie</div></div>
+        <div class="row"><div class="k">Régime</div><div class="v">république magocratique</div></div>
+        <div class="row"><div class="k">Force</div><div class="v">la Parole portée à son sommet, et le savoir du Lac</div></div>
+        <div class="row"><div class="k">Faille</div><div class="v">l'orgueil : descendre trop bas, savoir ce qu'il ne faut pas</div></div>
+        <p class="insp">Résonances : l'Ordre Jedi et la République de la prélogie Star Wars — le meilleur comme le pire d'un pouvoir éclairé.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--ame)">
+        <div class="rn"><span class="dot" style="background:var(--ame)"></span>L'Empire Uni de l'Est</div>
+        <div class="tag">la voie de l'Âme · l'essence & la nature</div>
+        <p>Moins un empire qu'une <strong>union de royaumes et de clans</strong>, liés sans être fondus. On y place au-dessus de tout l'<strong>essence de l'âme</strong> et la <strong>nature</strong> : la terre, le sang, la lignée, l'esprit des lieux et des ancêtres. Chaque clan lit les âmes et les marques comme d'autres lisent des blasons ; on honore les morts comme des présences réelles ; on transmet des objets d'âme de génération en génération. Force éclatée — l'union se déchire souvent en querelles — mais profonde, enracinée, impossible à conquérir vraiment : on ne soumet pas une terre qui a une âme.</p>
+        <div class="row"><div class="k">Capitale</div><div class="v">Eshkar, la cité-bosquet où siège l'Assemblée</div></div>
+        <div class="row"><div class="k">Pouvoir</div><div class="v">l'Assemblée des Sangs — les chefs de clan réunis</div></div>
+        <div class="row"><div class="k">Régime</div><div class="v">confédération de clans, autorité partagée</div></div>
+        <div class="row"><div class="k">Force</div><div class="v">la Lecture des âmes, les objets d'âme ancestraux, le terrain</div></div>
+        <div class="row"><div class="k">Faille</div><div class="v">la division : les clans s'unissent rarement à temps</div></div>
+        <p class="insp">Résonances : les Séparatistes de Star Wars ; la logique des clans.</p>
+      </div>
+    </section>
+
+    <section id="puissances">
+      <div class="kicker">Rapports de force</div>
+      <h2>L'Équilibre des puissances</h2>
+      <p class="lead">Le Cinquième Âge tient sur un seul fil : le <strong>Concordat des Sommets</strong>, qui interdit de fabriquer une Autorité. Tous l'ont signé ; aucun n'y croit vraiment. Voici la carte des tensions.</p>
+
+      <h3>Le rôle de l'Ordre d'Or</h3>
+      <p>L'Ordre se pose en <strong>arbitre</strong> : c'est lui qui surveille le Concordat, inspecte les royaumes, et intervient dès qu'un prodige menace de monter trop haut. Cela lui donne une autorité morale immense — et fait de lui la cible de tous les ressentiments. Car nul n'aime être jugé, et l'Ordre juge tout le monde.</p>
+
+      <h3>Les lignes de tension</h3>
+      <table class="tbl">
+        <thead><tr><th>Entre</th><th>Nature</th><th>Point de rupture</th></tr></thead>
+        <tbody>
+          <tr><td><b>Vultric ↔ Mages</b></td><td>mépris mutuel : la force contre le savoir</td><td>Vultric veut les secrets du Lac ; les Mages les lui refusent</td></tr>
+          <tr><td><b>Mages ↔ Est</b></td><td>rivalité froide sur l'âme</td><td>les Mages étudient les âmes ; l'Est les dit profanées</td></tr>
+          <tr><td><b>Vultric ↔ Est</b></td><td>guerres de frontière récurrentes</td><td>Vultric convoite les terres-à-âme de l'Est</td></tr>
+          <tr><td><b>Ordre ↔ tous</b></td><td>tutelle mal supportée</td><td>chacun cache à l'Ordre son projet d'Autorité</td></tr>
+        </tbody>
+      </table>
+
+      <h3>L'enjeu silencieux</h3>
+      <p>Sous la diplomatie, une seule course : <strong>qui fera naître son Autorité en premier</strong>. Vultric mise sur son Empereur, les Mages sur un descendeur revenu du Fond, l'Est sur une âme-ancêtre nourrie de générations, l'Ordre sur personne — il veut empêcher les trois autres. Le jour où l'un réussira, le Concordat tombera, et le Sixième Âge commencera par un Sommet. Tous le savent. Tous s'y préparent en jurant le contraire.</p>
+      <blockquote>« La paix n'est pas l'absence de guerre. C'est le temps qu'il faut à chacun pour préparer la sienne. »
+        <span class="src">— un ambassadeur de l'Est, avant sa disparition</span></blockquote>
+    </section>
+
+    <section id="marges">
+      <div class="kicker">Hors des royaumes</div>
+      <h2>Les Marges</h2>
+      <p class="lead">Tout ne tient pas dans les quatre royaumes. Aux bords du monde vivent ceux qui ont refusé, fui ou chuté.</p>
+      <div class="ways">
+        <div class="way"><div class="n">Les Sans-Marque</div><div class="d">nés sans interrupteur, ou marqués déchus. Ils ne puisent rien — et l'on s'étonne qu'ils survivent quand même.</div></div>
+        <div class="way"><div class="n">Les Meutes</div><div class="d">communautés de Sang-de-Bête trop avancés, rejetées de Vultric, qui vivent à la lisière de la Bête sans tomber tout à fait.</div></div>
+        <div class="way"><div class="n">Les Noyés</div><div class="d">descendeurs revenus fous du Lac, qui parlent de voix et de murs. Les Mages les enferment ; certains disent vrai.</div></div>
+        <div class="way"><div class="n">Les Errants liés</div><div class="d">âmes errantes retenues par des clans ou des mages, esclaves d'outre-monde. Le plus grand des tabous, et l'un des plus pratiqués.</div></div>
+      </div>
+      <p class="soft">C'est aux Marges que naissent le plus souvent les Autorités : loin des regards, là où nul Concordat ne s'applique vraiment.</p>
+    </section>
+
+    <!-- ============ ANNEXES ============ -->
+    <div class="partbar"><div class="pn">Annexes</div><div class="ph">Pour aller plus loin</div></div>
+
+    <section id="lexique">
+      <div class="kicker">Annexe</div>
+      <h2>Lexique</h2>
+      <dl class="lex">
+        <dt>Le Fond / la Vérité / le Lac</dt><dd>la couche profonde du réel sous le monde ; source de tout mana et de toute folie.</dd>
+        <dt>Marqué</dt><dd>être porteur d'une marque, capable de puiser aux sources.</dd>
+        <dt>Marque / ADN de l'âme</dt><dd>sceau vivant au cœur ; interrupteur d'accès aux sources, qui évolue avec l'âme.</dd>
+        <dt>Parole</dt><dd>sort récité (mot + élément + sort) ; art de l'Esprit.</dd>
+        <dt>Souffle</dt><dd>art martial qui façonne le mana sombre par le mouvement ; art du Corps.</dd>
+        <dt>Symbole</dt><dd>art de matérialiser, lier et lire les âmes ; art de l'Âme.</dd>
+        <dt>Lucidité</dt><dd>profondeur de perception ; prix de la Parole, mesurée en seuils du Lac.</dd>
+        <dt>Sang de bête</dt><dd>nature du mana négatif ; mémoire d'une ancienne race qui mène à la Bête.</dd>
+        <dt>Résonance</dt><dd>synchronisation de deux âmes, qui décuple leur pouvoir.</dd>
+        <dt>Les trois Chutes</dt><dd>le Dément (Esprit), la Bête (Corps), l'Errant (Âme).</dd>
+        <dt>Autorité</dt><dd>être dont le pouvoir reconfigure le monde autour de lui ; sommet du système.</dd>
+        <dt>Concordat des Sommets</dt><dd>traité du Quatrième Âge interdisant de fabriquer une Autorité.</dd>
+        <dt>Mana Semi-Parfait</dt><dd>état rare d'équilibre des trois sources.</dd>
+      </dl>
+    </section>
+
+    <section id="verites" style="--accent:var(--esp);--glow:rgba(94,146,230,.3)">
+      <div class="kicker">Annexe — à ne lire qu'averti</div>
+      <h2>Vérités interdites</h2>
+      <p class="lead">Ce qui suit n'est enseigné nulle part. Les Mages l'effacent de leurs archives ; l'Ordre le punit de mort. On le consigne ici parce qu'un codex complet ne peut pas mentir par omission.</p>
+      <p>Au <strong>troisième seuil du Lac</strong> — le Mur — les descendeurs rapportent tous la même chose, et tous croient être seuls à l'avoir vue. Ils disent qu'au-delà du code du monde, <em>quelque chose regarde</em>. Des présences, hors du monde, qui semblent <strong>décider</strong>. Ils parlent de vies reprises après la mort, comme si le temps revenait en arrière sans que nul ne s'en souvienne. Ils parlent d'instants rejoués à l'identique. Et ils parlent des <strong>oubliés</strong> — des êtres qui ont existé, puis qui ont été effacés, dont seule subsiste, au fond du Lac, une trace que personne d'autre ne peut voir.</p>
+      <p>Les Mages nomment cela la <em>Folie du Mur</em> et la tiennent pour une hallucination des grandes profondeurs. Mais les Noyés, eux, sont formels : ce n'est pas une folie. C'est la dernière vérité — celle que le monde a été fait pour qu'on ne la voie pas. Le sorcier qui la regarde en face cesse d'appartenir au monde ; il devient un de ceux que l'on oublie.</p>
+      <blockquote>« Tu crois lire le monde. Mais le monde, lui, est lu. Et celui qui le lit peut refermer le livre. »
+        <span class="src">— graffiti dans la cellule d'un Noyé, effacé depuis</span></blockquote>
+      <p class="insp">Cette annexe noue ensemble la lucidité de Bloodborne et la dimension méta de ton univers : la corruption la plus profonde n'est pas de devenir fou, mais de voir les joueurs, les sauvegardes et les personnages effacés — et de comprendre où l'on vit vraiment.</p>
+    </section>
+
+    <footer>Le Codex des Trois Sources · édition complète · système des Paroles</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var secs=links.map(function(a){var el=document.querySelector(a.getAttribute('href'));return el;});
+  function onScroll(){
+    var y=window.scrollY+160, idx=0;
+    for(var i=0;i<secs.length;i++){ if(secs[i] && secs[i].offsetTop<=y) idx=i; }
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paroles — Guide du Joueur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F0C1C; --bg2:#161126; --card:#1C1738; --card2:#241D45;
+    --line:rgba(169,156,245,.16); --ink:#ECE6D8; --soft:#B6AECF; --faint:#827AA0;
+    --violet:#A99CF5; --gold:#E0B23C; --green:#5DCAA5; --rose:#E0726E; --shadow:#9B6FD8;
+    --feu:#E0653C;--eau:#3E8FD8;--vent:#4FB8A8;--terre:#B07B3E;--foudre:#E0B23C;--glace:#7FC6E8;--lumiere:#EFE0A2;--ombre:#9B6FD8;
+    --r:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(900px 500px at 50% -180px,#1e1844,#0F0C1C 60%) fixed;color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;line-height:1.65;padding:0 0 4rem}
+  .wrap{max-width:680px;margin:0 auto;padding:0 1.1rem}
+  header{text-align:center;padding:2.6rem 1rem 1rem}
+  .kick{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--violet);font-weight:700}
+  h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,5.5vw,2.5rem);margin:.4rem 0;
+    background:linear-gradient(180deg,#F4EFE0,#B9AEE6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header p{color:var(--soft);max-width:42ch;margin:0 auto;font-size:1rem}
+  .big{font-size:1.15rem;font-weight:700;color:#fff;background:rgba(93,202,165,.14);border:1px solid rgba(93,202,165,.4);
+    border-radius:999px;display:inline-block;padding:.4rem 1.1rem;margin-top:1rem}
+
+  .step{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:var(--r);
+    padding:1.3rem 1.3rem 1.4rem;margin-top:1.4rem}
+  .step h2{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);display:flex;align-items:center;gap:.7rem;margin-bottom:.3rem}
+  .step h2 .n{width:1.7rem;height:1.7rem;border-radius:50%;background:rgba(224,178,60,.16);border:1px solid var(--gold);
+    color:var(--gold);font-size:.9rem;display:grid;place-items:center;font-family:'Inter';font-weight:700;flex:none}
+  .step p{color:var(--soft);font-size:.96rem;margin:.5rem 0}
+  .step p.big-rule{color:var(--ink);font-size:1.05rem;font-weight:600;background:var(--card2);border-radius:10px;padding:.7rem 1rem;border-left:3px solid var(--violet)}
+
+  table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.92rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+  th{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td.c{font-weight:700;color:var(--violet);font-variant-numeric:tabular-nums}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.4rem;box-shadow:0 0 8px currentColor;vertical-align:middle}
+  .ex{background:var(--card2);border-radius:10px;padding:.7rem .9rem;margin-top:.7rem;font-size:.92rem;color:var(--soft)}
+  .ex b{color:#fff}
+  .pill{display:inline-block;font-weight:700;padding:.12rem .5rem;border-radius:6px;font-size:.86em}
+  .pe{background:rgba(169,156,245,.15);color:var(--violet)} .pc{background:rgba(155,111,216,.15);color:var(--shadow)} .pa{background:rgba(224,114,110,.15);color:var(--rose)}
+
+  /* mini calc */
+  .calc{background:var(--card2);border-radius:10px;padding:1rem;margin-top:.9rem}
+  .calc label{font-size:.8rem;color:var(--faint);display:block;margin-bottom:.4rem}
+  .seg{display:flex;gap:.4rem;flex-wrap:wrap}
+  .seg button{flex:1;min-width:54px;background:var(--card);border:1px solid var(--line);color:var(--soft);border-radius:8px;
+    padding:.5rem;font-weight:600;cursor:pointer;font-family:inherit}
+  .seg button.on{background:rgba(169,156,245,.18);border-color:var(--violet);color:#fff}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--card);margin-top:.5rem}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--violet);border:3px solid var(--bg2);cursor:pointer}
+  .verdict{margin-top:.9rem;border-radius:8px;padding:.7rem .9rem;font-weight:600;font-size:.95rem}
+  .verdict.ok{background:rgba(93,202,165,.14);border:1px solid rgba(93,202,165,.4);color:#bff0df}
+  .verdict.no{background:rgba(224,114,110,.14);border:1px solid rgba(224,114,110,.4);color:#f3c9c7}
+  .three{display:grid;grid-template-columns:1fr;gap:.5rem;margin-top:.4rem}
+  .fall{display:flex;gap:.6rem;align-items:baseline;font-size:.92rem;padding:.5rem .7rem;background:var(--card2);border-radius:8px}
+  .fall b{font-family:'Cinzel',serif;min-width:5.5rem}
+  footer{text-align:center;color:var(--faint);font-size:.82rem;margin-top:2.5rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">Paroles · pour bien débuter</div>
+    <h1>Guide du Joueur</h1>
+    <p>Tout le système, sans une seule formule compliquée. Si tu sais additionner, tu sais jouer.</p>
+    <div class="big">Mana + Élément + Sort, et c'est parti ✦</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="step">
+    <h2><span class="n">1</span>Lancer un sort</h2>
+    <p>Un sort, c'est trois petits nombres qu'on additionne : le <b>mot de passe</b> (ton type de mana), l'<b>élément</b>, et le <b>numéro du sort</b>.</p>
+    <table>
+      <tr><th>Mot de passe</th><th>Nombre</th></tr>
+      <tr><td>Positif</td><td class="c">3</td></tr>
+      <tr><td>Négatif</td><td class="c">4</td></tr>
+      <tr><td>Spirituel</td><td class="c">2</td></tr>
+    </table>
+    <table>
+      <tr><th>Élément</th><th>N°</th><th>Élément</th><th>N°</th></tr>
+      <tr><td><span class="dot" style="color:var(--feu)"></span>Feu</td><td class="c">8</td><td><span class="dot" style="color:var(--foudre)"></span>Foudre</td><td class="c">12</td></tr>
+      <tr><td><span class="dot" style="color:var(--eau)"></span>Eau</td><td class="c">9</td><td><span class="dot" style="color:var(--glace)"></span>Glace</td><td class="c">13</td></tr>
+      <tr><td><span class="dot" style="color:var(--vent)"></span>Vent</td><td class="c">10</td><td><span class="dot" style="color:var(--lumiere)"></span>Lumière</td><td class="c">14</td></tr>
+      <tr><td><span class="dot" style="color:var(--terre)"></span>Terre</td><td class="c">11</td><td><span class="dot" style="color:var(--ombre)"></span>Ombre</td><td class="c">15</td></tr>
+    </table>
+    <div class="ex"><b>Exemple :</b> une boule de feu positive, sort n°5 → <b>3 + 8 + 5 = 16</b>. Voilà, le sort est formé.</div>
+  </div>
+
+  <!-- arbre des éléments -->
+  <div class="step">
+    <h2><span class="n">✦</span>Créer tes propres éléments</h2>
+    <p>Les 8 éléments de base ne sont qu'un début. <b>Mélange-en deux</b> et additionne leurs numéros : tu obtiens un nouvel élément. C'est tout l'arbre des éléments.</p>
+    <p class="big-rule">Élément + Élément = nouvel élément (additionne les deux numéros)</p>
+    <div class="ex"><b>Exemple :</b> Terre (11) + Eau (9) = <b>20</b> → <b>Plante</b></div>
+
+    <div class="calc">
+      <label>Mélange un élément…</label>
+      <div class="seg" id="elA">
+        <button data-v="8" class="on">Feu</button><button data-v="9">Eau</button><button data-v="10">Vent</button><button data-v="11">Terre</button>
+        <button data-v="12">Foudre</button><button data-v="13">Glace</button><button data-v="14">Lumière</button><button data-v="15">Ombre</button>
+      </div>
+      <label style="margin-top:.8rem">…avec un autre :</label>
+      <div class="seg" id="elB">
+        <button data-v="8">Feu</button><button data-v="9">Eau</button><button data-v="10">Vent</button><button data-v="11" class="on">Terre</button>
+        <button data-v="12">Foudre</button><button data-v="13">Glace</button><button data-v="14">Lumière</button><button data-v="15">Ombre</button>
+      </div>
+      <div class="verdict ok" id="cmb"></div>
+    </div>
+
+    <p style="margin-top:1rem">Quelques mélanges pour t'inspirer (à garder ou renommer comme tu veux) :</p>
+    <table>
+      <tr><th>Mélange</th><th>Total</th><th>Nouvel élément</th></tr>
+      <tr><td>Terre + Eau</td><td class="c">20</td><td>Plante</td></tr>
+      <tr><td>Feu + Eau</td><td class="c">17</td><td>Vapeur</td></tr>
+      <tr><td>Feu + Terre</td><td class="c">19</td><td>Lave</td></tr>
+      <tr><td>Terre + Foudre</td><td class="c">23</td><td>Métal</td></tr>
+      <tr><td>Eau + Glace</td><td class="c">22</td><td>Givre</td></tr>
+      <tr><td>Lumière + Ombre</td><td class="c">29</td><td>Crépuscule</td></tr>
+    </table>
+  </div>
+
+  <!-- 2 -->
+  <div class="step">
+    <h2><span class="n">2</span>Court ou long ?</h2>
+    <p>Plus tu ajoutes de mots à ta parole, plus elle frappe fort — mais plus elle est dure à lancer. Pas de calcul : tu lis le tableau.</p>
+    <table>
+      <tr><th>Longueur</th><th>Puissance</th><th>Difficulté</th></tr>
+      <tr><td>1 mot</td><td class="c">10</td><td>Très facile</td></tr>
+      <tr><td>2 mots</td><td class="c">25</td><td>Facile</td></tr>
+      <tr><td>3 mots</td><td class="c">40</td><td>Moyen</td></tr>
+      <tr><td>4 mots</td><td class="c">60</td><td>Difficile</td></tr>
+      <tr><td>5 mots</td><td class="c">85</td><td>Très difficile</td></tr>
+    </table>
+    <p class="big-rule">En plein combat, un sort court qui part vaut mieux qu'un sort long qui rate.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="step">
+    <h2><span class="n">3</span>La lucidité</h2>
+    <p>Ta <b>lucidité</b> (de 0 à 100) sert à deux choses : tenir les longs sorts, et <b>voir le caché</b> — les secrets, et les âmes errantes qui rôdent autour de toi. Basse lucidité = tes grands sorts ratent. Pour lancer long, il faut être lucide :</p>
+    <table>
+      <tr><th>Pour lancer…</th><th>Lucidité requise</th></tr>
+      <tr><td>1 à 2 mots</td><td class="c">n'importe laquelle</td></tr>
+      <tr><td>3 mots</td><td class="c">40+</td></tr>
+      <tr><td>4 mots</td><td class="c">60+</td></tr>
+      <tr><td>5 mots</td><td class="c">80+</td></tr>
+    </table>
+
+    <div class="calc">
+      <label>Essaie : ton sort réussit-il ?</label>
+      <div class="seg" id="len">
+        <button data-l="1" class="on">1</button><button data-l="2">2</button>
+        <button data-l="3">3</button><button data-l="4">4</button><button data-l="5">5</button>
+      </div>
+      <label style="margin-top:.8rem">Lucidité : <span id="ov" style="color:var(--violet);font-weight:700">70</span></label>
+      <input type="range" id="luc" min="0" max="100" value="70" step="5">
+      <div class="verdict ok" id="vd"></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="step">
+    <h2><span class="n">4</span>Monter en puissance</h2>
+    <p>Tu as trois voies : <span class="pill pe">Esprit</span> <span class="pill pc">Corps</span> <span class="pill pa">Âme</span>. Chaque niveau coûte un peu plus que le précédent — rien de sorcier :</p>
+    <table>
+      <tr><th>Niveau</th><th>Coût (XP)</th><th>Cumul</th></tr>
+      <tr><td>Niv 1</td><td class="c">100</td><td>100</td></tr>
+      <tr><td>Niv 2</td><td class="c">200</td><td>300</td></tr>
+      <tr><td>Niv 3</td><td class="c">300</td><td>600</td></tr>
+      <tr><td>Niv 4</td><td class="c">400</td><td>1000</td></tr>
+    </table>
+    <p class="big-rule">Le secret du débutant : monte tes <b>trois</b> voies, pas une seule. C'est plus rentable et ça débloque le meilleur.</p>
+    <div class="ex">
+      <b>Fusion</b> de sorts → il faut 2 voies au niveau 2.<br>
+      <b>Mana Semi-Parfait</b> (le top) → il faut les 3 voies au niveau 3.<br>
+      Personne n'a besoin de tout maxer — juste de toucher aux trois.
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="step">
+    <h2><span class="n">5</span>Garde l'équilibre</h2>
+    <p>La seule règle à retenir pour ne pas mal finir :</p>
+    <p class="big-rule">Si tu utilises une voie plus de la moitié du temps, tu commences à dériver vers sa chute.</p>
+    <div class="three">
+      <div class="fall"><b style="color:var(--shadow)">la Bête</b><span>trop de <span class="pill pc">Corps</span> → tu deviens une bête : cornes, griffes, plus de raison.</span></div>
+      <div class="fall"><b style="color:var(--rose)">l'Errant</b><span>trop d'<span class="pill pa">Âme</span> (tuer pour absorber les âmes) → tu perds ton corps et erres hors du monde.</span></div>
+      <div class="fall"><b style="color:var(--violet)">le Dément</b><span>trop d'<span class="pill pe">Esprit</span> → tu vois trop de vérités cachées et tu sombres dans la folie.</span></div>
+    </div>
+    <p style="margin-top:.9rem">Reste au milieu des trois et tu restes toi-même. C'est tout.</p>
+  </div>
+
+  <footer>Guide du Joueur · la version complète et la lore vivent dans le Compendium et le Traité.</footer>
+</div>
+
+<script>
+(function(){
+  var len=1, luc=70;
+  var req={1:0,2:0,3:40,4:60,5:80}, pow={1:10,2:25,3:40,4:60,5:85};
+  function render(){
+    document.getElementById('ov').textContent=luc;
+    var vd=document.getElementById('vd'), need=req[len];
+    if(luc>=need){
+      vd.className='verdict ok';
+      vd.innerHTML='✦ Le sort part ! Puissance '+pow[len]+'. '+(len<=2?'Aucune lucidité requise.':'Lucidité '+luc+' ≥ '+need+' requise.');
+    } else {
+      vd.className='verdict no';
+      vd.innerHTML='✕ Trop long pour ta tête : il faut '+need+' de lucidité (tu en as '+luc+'). Raccourcis le sort ou repose-toi.';
+    }
+  }
+  document.querySelectorAll('#len button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#len button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); len=+b.dataset.l; render();
+    });
+  });
+  document.getElementById('luc').addEventListener('input',function(){ luc=+this.value; render(); });
+  render();
+
+  // --- Mélangeur d'éléments ---
+  var EL={8:'Feu',9:'Eau',10:'Vent',11:'Terre',12:'Foudre',13:'Glace',14:'Lumière',15:'Ombre'};
+  var COMBO={'9+11':'Plante','8+9':'Vapeur','8+11':'Lave','11+12':'Métal','9+13':'Givre','14+15':'Crépuscule'};
+  var elA=8, elB=11;
+  function ckey(x,y){ return Math.min(x,y)+'+'+Math.max(x,y); }
+  function mix(){
+    var sum=elA+elB, nom=COMBO[ckey(elA,elB)];
+    var box=document.getElementById('cmb'); box.className='verdict ok';
+    if(elA===elB){
+      box.innerHTML=EL[elA]+' + '+EL[elB]+' = <b>'+sum+'</b> — un même élément doublé, très puissant !';
+    } else {
+      box.innerHTML=EL[elA]+' ('+elA+') + '+EL[elB]+' ('+elB+') = <b>'+sum+'</b> → '
+        +(nom ? '<b>'+nom+'</b> ✦' : 'un nouvel élément, à toi de le nommer !');
+    }
+  }
+  function bindMix(id, set){
+    document.querySelectorAll('#'+id+' button').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('#'+id+' button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); set(+b.dataset.v); mix();
+      });
+    });
+  }
+  bindMix('elA', function(v){elA=v;});
+  bindMix('elB', function(v){elB=v;});
+  mix();
+})();
+</script>
+</body>
+</html>
