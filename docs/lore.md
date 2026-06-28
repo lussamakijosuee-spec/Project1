@@ -26,6 +26,172 @@
 
 ---
 
+## 🜂 Le Mana — la matière de toute chose
+
+Tout, ici, est **énergie** : le monde, les corps, les âmes, les sorts. Cette
+énergie se décline en **familles**, et c'est leur source qui change tout.
+
+- **Mana Spirituel** — l'**énergie de l'Âme** : faite d'**ambitions** et de
+  **sentiments**. C'est la plus noble et la plus rare. Avec elle, on ne lance pas
+  seulement des sorts : on **matérialise** directement des choses *issues de
+  l'âme* (voir *la Marque de l'Âme*).
+- **Mana Positif** — le mana **« de base »**, propre, harmonieux. Celui qu'on
+  apprend, qu'on canalise, qu'on récite.
+- **Mana Négatif** — le mana de la **pulsion**, du désir, de l'instinct. Plus
+  brut, plus puissant, plus dangereux pour celui qui le porte.
+- **Mana Sombre** — l'extrême du négatif : l'**énergie sortie** de soi, arrachée,
+  qui ronge. C'est lui que **Kev** a poussé au maximum ; c'est de lui que
+  **Donovan** n'est plus qu'« à un doigt ».
+
+> **Les sources** *(d'après le schéma « Source » du carnet)* :
+> - **Âme → Mana Origine → Mana Positif → Mana Spirituel** (la voie ascendante)
+> - **Mana Sombre → énergie sortie → Mana Négatif** (la voie descendante)
+> Chaque mana porte ensuite l'**effet élémentaire** choisi par le lanceur.
+
+### Les états du mana (profondeur d'accès)
+- **Mana de Surface** — celui que tout le monde manie : on récite, on canalise,
+  l'effet sort. Lent, lisible, sûr.
+- **Mana Pénultiel** — un cran plus profond : on agence des paroles plus
+  complexes pour un coût moindre.
+- **Mana Origine** — le plus profond. La parole est **déjà créée**, **enregistrée
+  dans l'être** : on ne prononce **ni le mot de passe, ni l'élément**. On *est* le
+  sort. Le rêve de tout mage, et le privilège des Originels.
+
+> 🔑 **Accès direct à la Source.** Normalement, un humain **ne peut pas**
+> manipuler les sources brutes pour en faire de l'énergie : il lui faut tout
+> réciter. Mais grâce au génie de certains, on a **forgé une clé** — une
+> **Marque** qui « ouvre le sceau » et donne accès **directement** aux **5 sortes
+> de mana, tout type confondu**. C'est extrêmement rare. (Voir *Donovan*.)
+
+---
+
+## 🔺 La Trinité — Δ = Corps + Âme + Esprit
+
+La loi métaphysique qui régit **tout être capable de lancer une parole**. Tirée
+des notes de **Vothra**.
+
+> **Δ = C + A + E**
+> - **C — le Corps** → l'**Humanité** (ce qui te rattache au vivant, au réel)
+> - **A — l'Âme** → l'**Existence** (ce qui fait que tu *es*, ton essence)
+> - **E — l'Esprit** → la **Lucidité** (ta clarté, ta santé mentale)
+
+L'**état d'un lanceur** se note comme un **triplet** : **T = (C, A, E)**. Toute
+parole qu'il prononce incarne, à doses minimes, son corps, son âme et son esprit,
+de sorte que **C + A + E = T = Δ**.
+
+> ### ⚖️ L'Axiome de Vothra
+> « **Tout pouvoir lancé doit nécessairement être précédé d'au moins un autre.
+> Il n'existe pas de quatrième voie. Δ est complète.** »
+>
+> Autrement dit : on ne crée rien à partir de rien. Toute magie s'appuie sur une
+> magie antérieure ; la Trinité ne se contourne pas. Il n'y a **pas de raccourci**
+> qui échapperait au Corps, à l'Âme et à l'Esprit.
+
+### 🎯 Pourquoi c'est le cœur du jeu
+La Trinité **fusionne le lore et la mécanique** déjà en place :
+- L'**Esprit (E) = la Lucidité = la Santé Mentale** (var 11-14) que pilote déjà
+  `JadeEntitePlunging` et qu'exploite `ParolesMagic`. Quand l'esprit se brise, la
+  parole se brise : ce n'est pas une règle de gameplay arbitraire, c'est la
+  **Trinité qui se déséquilibre**.
+- L'**Âme (A)** est ce que les boss veulent **voler** (fin du Culte, fin Vultric,
+  Jada). Toucher à l'Âme d'un être, c'est l'amputer de son **Existence**.
+- Le **Corps (C)** est ce que **Jada** convoite : un **corps humain réel** pour
+  enfin *ressentir*. Elle a l'Âme (volée à Jade), il lui manque le Corps.
+
+> 💡 **Les trois grandes tragédies du jeu sont chacune une Trinité brisée** :
+> Josu a sacrifié son **Esprit** (lucidité noyée dans un faux bonheur) ; le Culte
+> veut dissoudre toutes les **Âmes** en une seule ; Jada veut arracher un
+> **Corps**. Trois manières de refuser que *Δ soit complète*.
+
+---
+
+## 🗣️ Le Compendium des Paroles — la grammaire de la magie
+
+Ici, on ne « jette » pas un sort : on **prononce une Parole**. Une parole est un
+**code chiffré** récité au lieu de dire l'intention à voix haute. Sa structure :
+
+> **Parole = Mot de passe (mana) + Élément + Sort (numéro)**
+> *ex. : `Positif + N°1 + Eau` → « Parole Positif n°1, Eau ».*
+
+Chaque **mana** et chaque **élément** a un **code**. On écrit le sort directement
+en chiffres : c'est la **Parole runique minimale**.
+
+### 🔢 Les codes élémentaires *(table du carnet — à confirmer)*
+| Élément | Code | Élément | Code |
+|--------|------|---------|------|
+| Feu | 8 | Vapeur | 17 |
+| Eau | 9 | Brasier | 18 |
+| Vent | 10 | Lave | 19 |
+| Terre | 11 | Plasma | 20 |
+| Foudre | 12 | Givre | 21 |
+| Glace | 13 | Double | 22 |
+| Lumière | 14 | Métal | 23 |
+| Tonnerre | 15 | Ombre / Abysse | 24 |
+| Brume | 16 | Gravité | 26 |
+| | | Temps | 29 |
+
+> Les **mots de passe** (familles de mana) ont aussi un code : **Spirituel = 2**,
+> **Positif = 3** (base), **Négatif = 4**.
+
+### 🧬 Les Formes d'une Parole
+1. **Simple** — `mot + élément + sort`. La forme de base, fiable.
+2. **Double élément** — on **concatène** deux codes d'élément.
+   *ex. : `Eau(9) + Glace(13)` → Parole **n°913**.*
+3. **Amplifiée** — le **mana multiplie** le sort (plus de puissance, plus de coût).
+4. **Soin / Restauration** — on **soustrait / divise** un effet pour le *réparer*
+   au lieu de le détruire. *ex. : « Parole n°15 / Parole n°9 » → restaurer les os,
+   réparer.* La magie de soin est, littéralement, une **division de la douleur**.
+5. **Fusion de sorts** — deux sorts fusionnés **s'amplifient** mutuellement.
+6. **Mana Origine** — le sort est **déjà créé** : on ne récite **ni mot de passe
+   ni élément**. Paroles plus complexes, **moins d'énergie**, certaines
+   **enregistrées** à demeure dans l'être. *(En jeu : balise `<Origine>` —
+   jamais de contrecoup.)*
+7. **Création d'élément** — on **additionne deux éléments** pour en **forger un
+   nouveau**. *ex. : `Terre(11) + Eau(9)` → **Plante (n°20)**.* C'est ainsi que
+   naissent Vapeur, Lave, Givre, Plasma… des éléments « enfants ».
+
+### 🎚️ Les variables d'une Parole
+- **Longueur de formule (L)** — sa **complexité**. Plus L est grand, plus il faut
+  de **concentration**.
+- **Valeur de Parole (Vₓ)** — son identité chiffrée.
+- **Puissance** — ce qu'elle déchaîne.
+- **Lucidité** — l'**Esprit** du lanceur (Trinité). **Concentration ≈ talent ×
+  (santé mentale / 100).** Si la lucidité est trop basse pour la longueur L, la
+  **parole se brise** → contrecoup. *(C'est exactement ce qu'applique
+  `ParolesMagic.js`.)*
+
+> 🕯️ **Pourquoi un système de mot de passe ?** Parce que **réciter à voix haute
+> son intention, c'est s'exposer**. Le chiffrement protège le mage… mais il exige
+> une lucidité parfaite. Un esprit brisé bafouille la Parole — et se blesse.
+
+---
+
+## 🕯️ La Marque de l'Âme — l'ADN de l'Âme
+
+Le **Mana Spirituel** permet de **matérialiser**, *directement depuis l'âme*, un
+objet ou un être qui n'existait pas. Cette création porte la **signature** de son
+créateur : on l'appelle la **Marque de l'Âme**, ou **ADN de l'Âme**.
+
+- Ce peut être **n'importe quoi** : une **arme**, un **objet**, un **familier**.
+- Elle est **unique à une âme**. **Personne** ne peut posséder la même : deux âmes
+  errantes ne produiront **jamais** le même objet. Puissant ou non, **c'est un
+  vrai** — pas une illusion. *« Ça peut être n'importe quoi, mais ce sera
+  toujours **le sien**. »*
+- L'**ADN de l'Âme** sert aussi de **clé d'accès** : c'est lui qui « ouvre le
+  sceau » et permet d'atteindre **directement les 5 sortes de mana**. Sans lui,
+  un humain reste cantonné à la récitation de surface.
+
+> **Affinité.** On ne peut tirer une énergie que des **sources auxquelles on est
+> accordé**. L'affinité d'un être, c'est l'**extension** de son âme dans le
+> spectre des manas. *(En jeu : c'est le système d'affinités élémentaires posé
+> sur les 443 compétences, coloré par `ManaVisuals`.)*
+
+> 💔 **Résonance thématique.** Un familier d'âme, c'est un morceau de soi rendu
+> visible. **Donovan** a matérialisé le sien et l'a nommé **« Envy »** —
+> *l'envie*. On crée, sans toujours le vouloir, à l'image de ce qui nous **ronge**.
+
+---
+
 ## 🗝️ Les Artefacts d'Admin
 
 - **La Clé** — une **clé d'administrateur** qui permet de **sortir du monde**.
@@ -109,6 +275,68 @@ meilleur qu'eux dans leur domaine, sans pour autant tout pouvoir.
 
 ---
 
+## 👁️ La Reine Oubliée — la Déesse Blanche
+
+> *Au-dessus des Originels, au-dessus des boss, au-dessus du Créateur lui-même,
+> il y a une présence que personne ne nomme. Parce que la nommer, c'est qu'elle
+> t'a déjà entendu.*
+
+La **Reine Oubliée** — aussi appelée la **Déesse Blanche** — est une **entité**
+dont les pouvoirs sont, à toutes fins pratiques, **infinis (∞)**, et dont les
+limites sont **inconnues**. Elle **règne** sur les **Âmes Errantes** (« les
+Amerrants ») : ces âmes perdues, déconnectées d'elles-mêmes, restent **branchées
+sur elle comme une oreille** — figées dans un **état éternel de « vérité du
+monde »**, persuadées de tout voir, de tout comprendre.
+
+- **On ne sait ni pourquoi, ni comment** elle agit. On sait seulement qu'elle
+  **guide** les âmes vers **son royaume**.
+- Son royaume porte plusieurs noms : le **Royaume des Étoiles Noires**, une
+  **cité sublime au cœur des étoiles**, parfois simplement **Aldébaran**.
+- Son **type** est **l'Âme**. Aucune Âme Errante ne la « connaît » vraiment —
+  on la **sous-connaît**, on la **devine**, et c'est déjà trop.
+
+### ⚠️ L'Avertissement *(transcrit du carnet)*
+> *« Si un jour tu peux **entendre** ou **voir** l'autre monde — surtout : ne
+> l'écoute pas, ne le regarde pas. **Détourne le regard. Éloigne-toi.** Ne le
+> cherche pas. **Ignore-la, à tout prix.***
+> ***NE FAIS PAS CONFIANCE AUX ANGES : ILS N'EXISTENT PAS.** C'est une illusion,
+> ou un **faux prophète**. »*
+
+- Elle peut **« aller plus loin »** : tisser un lien, te faire **croire**, te
+  pousser à **désirer** ce qu'elle te montre, jusqu'à ce que tu **te perdes**
+  toi-même dans son ciel.
+- Si **elle s'intéresse à toi**, fuis : éloigne-toi tant que tu le peux encore.
+  Sinon, comme une **étoile de plus** dans sa cité, tu **resteras dans son être**
+  — oublié, à ton tour, dans le grand Oubli.
+- Ce qu'elle offre a le visage de la **paix**, de la **lumière**, de la
+  **révélation**. C'est pour ça qu'elle est si dangereuse : ce n'est pas un
+  monstre qui hurle. C'est un **ange qui sourit**.
+
+### 🪞 Pourquoi elle compte (résonance OMORI)
+La Reine Oubliée est la **fausse lumière** du monde — et le jeu tout entier parle
+de **fausses lumières** :
+- **Josu** se réfugie dans un **faux bonheur** pour ne pas voir ce qu'il est
+  devenu.
+- Le **Culte des Âmes** promet une **fausse paix** où plus personne ne souffre…
+  parce que plus personne ne *ressent*.
+- **Jada** se ment en croyant qu'un **corps volé** la rendra vivante.
+
+> 🌌 La Déesse Blanche est la **forme cosmique** de cette tentation : *« arrête de
+> lutter, laisse-toi accueillir, tout sera clair et doux. »* Le vrai courage du
+> jeu, ce n'est pas de **vaincre** la lumière — c'est de **détourner le regard**
+> et de **rester soi**, imparfait, lucide, vivant. *(C'est exactement la leçon
+> des Pensées et du Surpassement : dompter sa facette plutôt que fuir dans
+> l'illusion.)*
+
+> 🔗 **Lien avec Jade.** Le **Royaume des Étoiles** (l'ancienne dimension de Jade,
+> repris par la Marionnette) et le **Royaume des Étoiles Noires** de la Reine
+> partagent le même ciel. Question ouverte du lore : Jada **expérimente-t-elle
+> sans le savoir** sous le regard de la Déesse Blanche ? Le « au-delà des
+> étoiles » que cherchent les boss est-il **son** royaume — un piège déguisé en
+> évasion ?
+
+---
+
 ## 🔮 Les Miroirs — Héros & Boss (l'équilibre et l'excès)
 
 **Thème central du jeu :** chaque héros incarne un **état mental** ; son boss est
@@ -166,6 +394,59 @@ nouveaux venus comme **Louise**.
 
 ---
 
+## ⚖️ L'Ordre d'Or & l'Église de l'Équilibre
+
+Une **puissance** qui n'est ni les boss, ni Jada, ni le Culte : une institution
+qui prétend **maintenir l'équilibre** du monde (la Trinité intacte, les Paroles
+réglées, les Âmes Errantes tenues à l'écart de la Déesse Blanche).
+
+- **L'Ordre d'Or** — sa **garde royale**. Sa branche armée et politique.
+- **L'Église de l'Équilibre** — sa branche spirituelle. Elle **reconnaît** des
+  **« Élus »** : des êtres dont l'affinité et l'âme sont jugées exceptionnelles.
+- Sa doctrine officielle est belle — *préserver l'équilibre* — mais une
+  institution qui décide **qui** est « élu » et **ce qu'est** l'équilibre est,
+  par nature, **ambivalente**. Équilibre pour qui ? Au prix de quoi ?
+
+> 🤔 **Piste narrative.** L'Équilibre peut devenir sa propre tyrannie : à force de
+> vouloir que *Δ reste complète* pour tous, l'Église pourrait **interdire** le
+> déséquilibre — c'est-à-dire **interdire de ressentir trop fort**. Encore une
+> fausse paix, plus polie que les autres.
+
+---
+
+## 🗡️ Donovan — l'Élu Divin
+
+> *Affinité : **toutes**. Titre : **Élu Divin**. Âge : 21.*
+> *ATK : S · DEF : S · Endurance : A · Pouvoir : S.*
+
+**Capitaine de la garde royale de l'Ordre d'Or**, reconnu comme **Élu** par
+l'Église de l'Équilibre. **Niveau 80+**, sans doute **le plus fort du royaume**.
+
+- Son **talent d'affinité est monstrueux** : il **brise le triple seuil de
+  lucidité** (la Trinité tendue à l'extrême) et touche **toutes** les sources. De
+  ce fait, il n'est plus qu'**à un doigt du Mana Sombre** — la maîtrise même le
+  rapproche du gouffre.
+- À **21 ans**, il a **matérialisé un familier** en Mana Spirituel — un **fantôme,
+  esprit vengeur** — qu'il a nommé **« Envy »** (*l'envie*).
+- Sa **source** est la **plus pure et la plus vaste jamais enregistrée**.
+- Son **trait unique** lui donne un **accès direct à la Source**, **sans
+  récitation**, pendant **~5 minutes** : il surcharge son être, prend le contrôle
+  total du flux, et peut **créer librement** (un état d'« harmonisation » intégrale).
+  Passé ce délai, le contrecoup le guette.
+- **Style de combat :** *« l'Âme en équilibre »*. **Arme : katana.** Modèle vivant
+  de l'**Église de l'Équilibre**.
+
+> 🪞 **Sa faille (façon miroir).** Donovan est l'incarnation de l'**équilibre
+> parfait** — et c'est précisément ce qui le menace. Maîtriser *tout*, c'est
+> n'avoir plus aucune marge avant la chute. Son familier s'appelle **« Envy »** :
+> que **désire** un homme qui peut déjà tout faire ? La perfection est, peut-être,
+> la plus solitaire des fausses lumières.
+
+*(Note de lecture : fiche transcrite d'un croquis manuscrit — détails de rang/âge
+à confirmer par JOKO.)*
+
+---
+
 ## 🌓 Les Fins (matière à système d'embranchements)
 
 ### La Fin du Créateur — *l'absence de bonne fin*
@@ -213,5 +494,30 @@ faction, etc.
   possession de la **Clé** et/ou du **Masque**, faction ralliée.
 - **Artefacts** : la **Clé** (sortie) et le **Masque** (code source / Mana Pur)
   comme objets-clés de quête.
-- **Factions jouables** : Culte des Âmes ↔ Empire Vultric ↔ Jada ↔ « refaire sa
-  vie » — chacune route vers sa fin.
+- **Factions jouables** : Culte des Âmes ↔ Empire Vultric ↔ Jada ↔ Ordre d'Or /
+  Église de l'Équilibre ↔ « refaire sa vie » — chacune route vers sa fin.
+
+### Déjà en place (à relier au lore ci-dessus)
+- **Trinité ↔ Santé Mentale.** `JadeEntitePlunging` (vars 11-14) = la composante
+  **Esprit / Lucidité** de chaque héros. `Surpassement` = dompter sa facette
+  (Δ qui se rééquilibre) ; `ParolesMagic` = la Parole qui se **brise** quand la
+  lucidité est trop basse pour la longueur L (Axiome de Vothra rendu jouable).
+- **Compendium des Paroles ↔ compétences.** Les 443 skills portent une
+  **affinité** ; `ManaVisuals` les colore par élément. Reste à exposer en jeu :
+  codes élémentaires, formes (double, amplifiée, soin, origine), `<Origine>` =
+  sans contrecoup.
+- **Pensées & Miroirs ↔ thème.** `Pensees`, `MirrorTaunts`, les CE des miroirs
+  intérieurs (49-54) : le refus de la **fausse lumière**, donc la vraie réponse
+  à la **Déesse Blanche**.
+
+### Nouvelles pistes (issues du carnet)
+- **La Déesse Blanche comme tentation de fin.** Un embranchement « Aldébaran » :
+  écouter / regarder l'autre monde → une **fin-illusion** cosmique (paix totale,
+  dissolution dans son ciel). *Détourner le regard* = la rejeter. Mécanique
+  possible : un **compteur de Regard** (combien de fois on a « écouté les anges »).
+- **Marque de l'Âme / familier.** Matérialiser un objet/familier **unique** par
+  héros, lié à sa facette (cf. « Envy » pour Donovan) — bonus d'affinité.
+- **Trait d'Élu (Donovan).** État temporaire « accès direct à la Source » : ~5
+  tours sans coût de Parole ni contrecoup, puis **surchauffe** (gros backlash).
+- **Création d'élément.** Système de craft de Paroles : additionner deux codes
+  (ex. Terre 11 + Eau 9 → Plante 20) pour débloquer un sort enfant.
