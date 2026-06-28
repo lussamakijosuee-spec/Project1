@@ -26,36 +26,37 @@
 
 ---
 
-## 🜂 Le Mana — la matière de toute chose
+## 🜂 Le Mana — rappel & profondeur d'accès
 
-Tout, ici, est **énergie** : le monde, les corps, les âmes, les sorts. Cette
-énergie se décline en **familles**, et c'est leur source qui change tout.
+> 📚 **La bible canonique du mana est `docs/SYSTEME_DE_MANA.md`.** On n'y touche
+> pas ici : la Trinité des sources, les 3 branches, le cycle Pokémon, les 8
+> éléments, les affinités (Alignés/Duaux/Atones/Trines/Élus du Prisme), l'Objet
+> Spirituel et le Mana Pur y sont déjà posés. Cette section **ne fait que
+> rappeler** le strict nécessaire et **ajoute** ce que le carnet apporte de neuf.
 
-- **Mana Spirituel** — l'**énergie de l'Âme** : faite d'**ambitions** et de
-  **sentiments**. C'est la plus noble et la plus rare. Avec elle, on ne lance pas
-  seulement des sorts : on **matérialise** directement des choses *issues de
-  l'âme* (voir *la Marque de l'Âme*).
-- **Mana Positif** — le mana **« de base »**, propre, harmonieux. Celui qu'on
-  apprend, qu'on canalise, qu'on récite.
-- **Mana Négatif** — le mana de la **pulsion**, du désir, de l'instinct. Plus
-  brut, plus puissant, plus dangereux pour celui qui le porte.
-- **Mana Sombre** — l'extrême du négatif : l'**énergie sortie** de soi, arrachée,
-  qui ronge. C'est lui que **Kev** a poussé au maximum ; c'est de lui que
-  **Donovan** n'est plus qu'« à un doigt ».
+Rappel canon (voir `SYSTEME_DE_MANA.md` §1-2) :
 
-> **Les sources** *(d'après le schéma « Source » du carnet)* :
-> - **Âme → Mana Origine → Mana Positif → Mana Spirituel** (la voie ascendante)
-> - **Mana Sombre → énergie sortie → Mana Négatif** (la voie descendante)
-> Chaque mana porte ensuite l'**effet élémentaire** choisi par le lanceur.
+| Facette | Source primordiale (brute) | Branche secondaire (maniable) |
+|--------|-----------------------------|-------------------------------|
+| **Corps** | Mana Sombre *(id 5)* | **Mana Négatif** *(id 4)* |
+| **Âme** | Mana Spirituelle *(id 2)* | **Mana Spirituelle** *(id 2)* |
+| **Esprit** | Mana Originel *(id 6)* | **Mana Positif** *(id 3)* |
+| — | **Mana Pur / Parfait** *(id 7)* | *au-dessus du cycle* |
 
-### Les états du mana (profondeur d'accès)
-- **Mana de Surface** — celui que tout le monde manie : on récite, on canalise,
-  l'effet sort. Lent, lisible, sûr.
-- **Mana Pénultiel** — un cran plus profond : on agence des paroles plus
-  complexes pour un coût moindre.
-- **Mana Origine** — le plus profond. La parole est **déjà créée**, **enregistrée
-  dans l'être** : on ne prononce **ni le mot de passe, ni l'élément**. On *est* le
-  sort. Le rêve de tout mage, et le privilège des Originels.
+> 🔎 **Note de cohérence (carnet vs canon).** Sur un schéma du carnet, les flèches
+> « Âme → mana origine → mana positif » semblent rattacher le **mana origine** à
+> l'**Âme**. La bible, elle, rattache le **Mana Originel** à l'**Esprit**. On
+> **garde le canon** (Originel = Esprit) ; le mot « origine » du carnet désigne
+> plutôt l'**état Mana Origine** ci-dessous (la parole gravée), pas une 4ᵉ source.
+
+### Les états du mana (profondeur d'accès) — *apport du carnet*
+Une même branche se manie à plusieurs **profondeurs** :
+- **Mana de Surface** — on récite, on canalise, l'effet sort. Lent, lisible, sûr.
+- **Mana Pénultiel** — un cran plus profond : paroles plus complexes, coût moindre.
+- **Mana Origine** — le plus profond. La parole est **déjà gravée dans l'être** :
+  ni mot de passe, ni élément à prononcer. On *est* le sort. Le rêve de tout mage.
+  *(C'est la forme « Enregistrée » du Compendium ; en jeu, balise `<Origine>` =
+  jamais de contrecoup.)*
 
 > 🔑 **Accès direct à la Source.** Normalement, un humain **ne peut pas**
 > manipuler les sources brutes pour en faire de l'énergie : il lui faut tout
@@ -70,10 +71,10 @@ Tout, ici, est **énergie** : le monde, les corps, les âmes, les sorts. Cette
 La loi métaphysique qui régit **tout être capable de lancer une parole**. Tirée
 des notes de **Vothra**.
 
-> **Δ = C + A + E**
-> - **C — le Corps** → l'**Humanité** (ce qui te rattache au vivant, au réel)
-> - **A — l'Âme** → l'**Existence** (ce qui fait que tu *es*, ton essence)
-> - **E — l'Esprit** → la **Lucidité** (ta clarté, ta santé mentale)
+> **Δ = C + A + E** *(la même Trinité que `SYSTEME_DE_MANA.md` §1, vue côté lanceur)*
+> - **C — le Corps** → l'**Humanité** (vivant, réel) · source **Sombre** → branche **Négatif**
+> - **A — l'Âme** → l'**Existence** (ton essence) · source & branche **Spirituelle**
+> - **E — l'Esprit** → la **Lucidité** / la **SAN** · source **Originel** → branche **Positif**
 
 L'**état d'un lanceur** se note comme un **triplet** : **T = (C, A, E)**. Toute
 parole qu'il prononce incarne, à doses minimes, son corps, son âme et son esprit,
@@ -116,22 +117,48 @@ Ici, on ne « jette » pas un sort : on **prononce une Parole**. Une parole est 
 Chaque **mana** et chaque **élément** a un **code**. On écrit le sort directement
 en chiffres : c'est la **Parole runique minimale**.
 
-### 🔢 Les codes élémentaires *(table du carnet — à confirmer)*
+### 🔢 Les codes élémentaires
+
+**Canon actuel — 8 éléments** *(`System.json` ids 8-15, repris tels quels par
+`compendium-paroles.html`)* :
+
 | Élément | Code | Élément | Code |
 |--------|------|---------|------|
-| Feu | 8 | Vapeur | 17 |
-| Eau | 9 | Brasier | 18 |
-| Vent | 10 | Lave | 19 |
-| Terre | 11 | Plasma | 20 |
-| Foudre | 12 | Givre | 21 |
-| Glace | 13 | Double | 22 |
-| Lumière | 14 | Métal | 23 |
-| Tonnerre | 15 | Ombre / Abysse | 24 |
-| Brume | 16 | Gravité | 26 |
-| | | Temps | 29 |
+| Feu | 8 | Glace | 13 |
+| Eau | 9 | Lumière | 14 |
+| Vent | 10 | **Ombre** | **15** |
+| Terre | 11 | | |
+| Foudre | 12 | | |
 
-> Les **mots de passe** (familles de mana) ont aussi un code : **Spirituel = 2**,
-> **Positif = 3** (base), **Négatif = 4**.
+> Les **mots de passe** (familles de mana) : **Spirituel = 2**, **Positif = 3**
+> (base), **Négatif = 4**.
+
+> ⚠️ **REWORK proposé (carnet) — décision à prendre.** Ton carnet dessine un
+> **système élémentaire étendu** où l'on *crée* de nouveaux éléments en
+> additionnant les anciens (Vapeur, Brasier, Lave, Plasma, Givre, Métal, Gravité,
+> Temps, Abysse…). Mais sa numérotation **entre en conflit** avec le canon
+> actuel : dans le carnet, **15 = Tonnerre** et **Ombre = 24**, alors qu'en jeu
+> **15 = Ombre**. On ne peut pas avoir les deux. Table étendue du carnet *(à
+> valider)* :
+>
+> | Élément | Code | Élément | Code |
+> |--------|------|---------|------|
+> | Feu | 8 | Lave | 19 |
+> | Eau | 9 | Plasma | 20 |
+> | Vent | 10 | Givre | 21 |
+> | Terre | 11 | Double | 22 |
+> | Foudre | 12 | Métal | 23 |
+> | Glace | 13 | Ombre / Abysse | 24 |
+> | Lumière | 14 | Gravité | 26 |
+> | Tonnerre | 15 | Temps | 29 |
+> | Brume | 16 | | |
+> | Vapeur | 17 | | |
+> | Brasier | 18 | | |
+>
+> 👉 **À trancher :** (a) garder le canon 8 éléments et ajouter les nouveaux
+> **au-dessus de 15** (Ombre reste 15) ; ou (b) renuméroter complètement façon
+> carnet — ce qui oblige à **réétiqueter `System.json` + les 443 compétences +
+> `ManaVisuals`**. *(Recommandé : option (a), bien moins risquée.)*
 
 ### 🧬 Les Formes d'une Parole
 1. **Simple** — `mot + élément + sort`. La forme de base, fiable.
@@ -167,6 +194,12 @@ en chiffres : c'est la **Parole runique minimale**.
 ---
 
 ## 🕯️ La Marque de l'Âme — l'ADN de l'Âme
+
+> 🔗 **C'est l'envers de l'Objet Spirituel** (`SYSTEME_DE_MANA.md` §6 & §17).
+> L'**Objet Spirituel** est la **surface** matérialisée de l'âme (l'arme/objet de
+> départ qui évolue) ; la **Marque / ADN de l'Âme** en est la **signature unique
+> des profondeurs** — ce qui rend cet objet *le sien* et nul autre, et la **clé**
+> qui ouvre l'accès aux sources. Même chose, deux faces.
 
 Le **Mana Spirituel** permet de **matérialiser**, *directement depuis l'âme*, un
 objet ou un être qui n'existait pas. Cette création porte la **signature** de son
@@ -421,6 +454,11 @@ réglées, les Âmes Errantes tenues à l'écart de la Déesse Blanche).
 
 **Capitaine de la garde royale de l'Ordre d'Or**, reconnu comme **Élu** par
 l'Église de l'Équilibre. **Niveau 80+**, sans doute **le plus fort du royaume**.
+
+> 🌈 **Donovan est un Élu du Prisme** (`SYSTEME_DE_MANA.md` §7.1 — Mana
+> Semi-Parfait, ~1/1000) : un **Trine** qui a **cristallisé** ses trois sources.
+> « Briser le triple seuil », c'est exactement ça — toucher les trois puits à la
+> fois, au prix de distordre la réalité autour de soi.
 
 - Son **talent d'affinité est monstrueux** : il **brise le triple seuil de
   lucidité** (la Trinité tendue à l'extrême) et touche **toutes** les sources. De
