@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Traité des Trois Sources — édition complète</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0910; --card:#16121F; --card2:#1D1729; --line:rgba(190,170,120,.14);
+    --ink:#ECE6D8; --soft:#B6AE9C; --faint:#7E7688; --gold:#D8B254; --gold2:#EBC974;
+    --esp:#5E92E6; --esp2:#9CC0F5;
+    --corps:#C8473E; --corps2:#E8786C;
+    --ame:#C77ED8; --ame2:#E0A2EC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1100px 650px at 50% -220px,#191436,#0A0910 62%) fixed;color:var(--ink);
+    font-family:'Spectral',Georgia,serif;line-height:1.78;font-size:17px}
+  a{color:inherit;text-decoration:none}
+  .layout{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:2.2rem;padding:0 1.2rem}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:2rem 0;font-size:.9rem}
+  nav .brand{font-family:'Cinzel',serif;color:var(--gold2);font-size:.8rem;letter-spacing:.16em;margin-bottom:1rem;line-height:1.5}
+  nav a{display:block;color:var(--faint);padding:.3rem .7rem;border-left:2px solid transparent;transition:.15s}
+  nav a:hover{color:var(--soft)}
+  nav a.on{color:var(--ink);border-left-color:var(--gold)}
+  nav a.sub{padding-left:1.4rem;font-size:.83rem}
+  nav .grp{margin-top:.5rem}
+  main{padding:2.2rem 0 5rem;max-width:64ch}
+  header.hero{text-align:center;padding:1.4rem 0 2.4rem;border-bottom:1px solid var(--line)}
+  .deco{color:var(--gold);letter-spacing:.5em;font-size:.72rem;margin-bottom:1rem}
+  h1{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(2rem,5vw,3rem);line-height:1.08;
+    background:linear-gradient(180deg,#F5EEDA,#CBAE6F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header.hero p{color:var(--soft);font-style:italic;margin-top:.8rem;font-size:1.05rem}
+  section{padding:2.4rem 0;border-bottom:1px solid var(--line)}
+  section:last-child{border-bottom:none}
+  .kicker{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent,var(--gold));font-weight:600;margin-bottom:.4rem}
+  h2{font-family:'Cinzel',serif;font-weight:700;font-size:1.75rem;color:var(--ink);line-height:1.2}
+  h2 .accent{color:var(--accent,var(--gold))}
+  h3{font-family:'Cinzel',serif;font-weight:600;font-size:1.12rem;color:var(--accent,var(--gold2));margin:1.8rem 0 .3rem}
+  h4{font-family:'Cinzel',serif;font-weight:600;font-size:.96rem;color:var(--ink);margin:1.1rem 0 .2rem;letter-spacing:.02em}
+  p{margin:.85rem 0}
+  .lead{font-size:1.08rem;color:var(--soft)}
+  .soft{color:var(--soft)} em{color:var(--gold2);font-style:italic}
+  strong{color:#F4EEDC;font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;background:var(--card2);padding:.1rem .42rem;border-radius:5px;color:var(--gold2);font-size:.82em}
+  blockquote{border-left:2px solid var(--accent,var(--gold));margin:1.2rem 0;padding:.2rem 0 .2rem 1.1rem;font-style:italic;color:var(--soft)}
+  blockquote .src{display:block;font-style:normal;font-size:.8rem;color:var(--faint);margin-top:.3rem}
+
+  .crest{display:flex;align-items:center;gap:1rem;margin:.4rem 0 1.2rem}
+  .crest svg{flex:0 0 auto;filter:drop-shadow(0 0 12px var(--glow,rgba(216,178,84,.35)))}
+  .crest .meta{font-size:.86rem;color:var(--faint);line-height:1.55}
+  .crest .meta b{color:var(--accent,var(--gold2))}
+
+  .rule{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-left:3px solid var(--accent,var(--gold));border-radius:0 12px 12px 0;padding:.9rem 1.1rem;margin:1.1rem 0}
+  .rule .t{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent,var(--gold2));margin-bottom:.3rem}
+  .rule p{margin:.3rem 0;font-size:.95rem;color:var(--soft)}
+
+  .ways{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1rem 0}
+  @media(max-width:560px){.ways{grid-template-columns:1fr}}
+  .way{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:.85rem .95rem}
+  .way .n{font-family:'Cinzel',serif;color:var(--accent,var(--gold2));font-size:.96rem}
+  .way .d{font-size:.85rem;color:var(--soft);margin-top:.25rem;line-height:1.5}
+  .way .sig{font-size:.78rem;color:var(--faint);margin-top:.4rem;font-style:italic}
+
+  .ladder{list-style:none;counter-reset:l;margin:1rem 0;padding:0}
+  .ladder li{counter-increment:l;position:relative;padding:.75rem 0 .75rem 2.7rem;border-bottom:1px solid var(--line)}
+  .ladder li::before{content:counter(l);position:absolute;left:0;top:.7rem;width:1.8rem;height:1.8rem;border-radius:50%;
+    border:1px solid var(--accent,var(--gold));color:var(--accent,var(--gold2));display:grid;place-items:center;font-family:'Cinzel',serif;font-size:.82rem}
+  .ladder li:last-child{border-bottom:none}
+  .ladder b{color:var(--ink)} .ladder .d{color:var(--soft);font-size:.93rem;margin-top:.1rem}
+
+  .price{display:flex;align-items:baseline;gap:.6rem;margin:.7rem 0;padding:.5rem .8rem;background:rgba(0,0,0,.25);border-radius:8px}
+  .price .lab{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .price .val{color:var(--accent,var(--gold2));font-weight:600}
+
+  .fall{border:1px solid var(--accent,var(--gold));border-radius:12px;padding:.95rem 1.1rem;margin:1.3rem 0;background:linear-gradient(180deg,rgba(0,0,0,.22),transparent)}
+  .fall .h{font-family:'Cinzel',serif;color:var(--accent,var(--gold2));font-size:1.02rem;margin-bottom:.2rem}
+  .fall p{font-size:.94rem;color:var(--soft);margin:.25rem 0}
+
+  .insp{font-size:.83rem;color:var(--faint);font-style:italic;border-top:1px dashed var(--line);padding-top:.7rem;margin-top:1.2rem}
+  .realm{border:1px solid var(--line);border-left:3px solid var(--accent,var(--gold));border-radius:0 12px 12px 0;
+    padding:1.1rem 1.2rem;margin:1.2rem 0;background:linear-gradient(180deg,var(--card2),var(--card))}
+  .realm .rn{font-family:'Cinzel',serif;font-weight:700;font-size:1.2rem;color:var(--accent,var(--gold2))}
+  .realm .tag{font-size:.77rem;letter-spacing:.04em;color:var(--faint);text-transform:uppercase;margin:.15rem 0 .6rem}
+  .realm p{font-size:.95rem} .realm .insp{margin-top:.7rem}
+  .realm .row{display:flex;gap:.6rem;font-size:.86rem;padding:.25rem 0;border-top:1px solid var(--line)}
+  .realm .row .k{color:var(--faint);min-width:6.5rem;font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase}
+  .realm .row .v{color:var(--soft)}
+
+  table.sources{width:100%;border-collapse:collapse;font-size:.92rem;margin:1rem 0}
+  table.sources th,table.sources td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+  table.sources th{font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  table.sources td b{color:var(--ink)}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.4rem;vertical-align:middle}
+  .tri-wrap{display:flex;justify-content:center;margin:1.4rem 0}
+  footer{text-align:center;color:var(--faint);font-size:.82rem;font-style:italic;padding-top:2rem}
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr}
+    nav{position:static;height:auto;border-bottom:1px solid var(--line);padding:1.2rem 0 .5rem}
+    nav a{display:inline-block;border-left:none;border-bottom:2px solid transparent}
+    nav a.on{border-left:none;border-bottom-color:var(--gold)} nav a.sub{display:none}
+    main{padding-top:1.4rem}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav id="toc">
+    <div class="brand">✦ Le Traité<br>des Trois Sources</div>
+    <a href="#preambule">Préambule — l'Origine</a>
+    <div class="grp">
+      <a href="#esprit">I · L'Esprit</a>
+      <a href="#esprit" class="sub">la Parole & le Lac</a>
+    </div>
+    <div class="grp">
+      <a href="#corps">II · Le Corps</a>
+      <a href="#corps" class="sub">les Souffles & la Bête</a>
+    </div>
+    <div class="grp">
+      <a href="#ame">III · L'Âme</a>
+      <a href="#ame" class="sub">le Symbole & les âmes</a>
+    </div>
+    <a href="#equilibre">L'Équilibre & les Chutes</a>
+    <a href="#autorites">Les Autorités</a>
+    <a href="#royaumes">Les Quatre Royaumes</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="deco">✦ ✦ ✦</div>
+      <h1>Le Traité des Trois Sources</h1>
+      <p>Corps, Âme, Esprit — trois sources, trois manas, trois arts.<br>De leur accord naît la magie ; de leur déséquilibre, les monstres.</p>
+    </header>
+
+    <!-- PREAMBULE -->
+    <section id="preambule">
+      <div class="kicker">Préambule</div>
+      <h2>La Trinité & l'Origine</h2>
+      <p class="lead">Avant les royaumes, avant les hommes, il y eut la Vérité — un fond unique d'où tout remonte. Le monde flotte au-dessus d'elle comme une surface au-dessus d'un lac. Vivre, c'est ignorer ce fond ; manier le mana, c'est y puiser sans s'y noyer.</p>
+
+      <p>De cette Vérité, l'énergie remonte par trois canaux, et c'est de là que vient toute chose vivante. On les nomme les <strong>trois sources</strong> : l'<strong>Esprit</strong>, le <strong>Corps</strong> et l'<strong>Âme</strong>. Aucune n'a précédé les autres. Elles sont les trois manières dont un être touche le réel — par la <em>pensée</em>, par le <em>geste</em>, par le <em>sentiment</em> — et chacune produit son propre mana.</p>
+
+      <blockquote>« On croit que le sorcier crée. Il ne crée rien. Il descend chercher ce qui était déjà là, et le rapporte à la surface. »
+        <span class="src">— maxime des Mages des Étoiles</span></blockquote>
+
+      <div class="tri-wrap">
+        <svg viewBox="0 0 320 232" width="300" height="218" aria-label="Triangle des trois sources : Esprit en haut, Corps en bas à gauche, Âme en bas à droite, équilibre au centre.">
+          <polygon points="160,28 36,196 284,196" fill="none" stroke="rgba(216,178,84,.35)" stroke-width="1.5"/>
+          <line x1="160" y1="28" x2="160" y2="155" stroke="rgba(216,178,84,.12)"/>
+          <line x1="36" y1="196" x2="222" y2="92" stroke="rgba(216,178,84,.12)"/>
+          <line x1="284" y1="196" x2="98" y2="92" stroke="rgba(216,178,84,.12)"/>
+          <circle cx="160" cy="118" r="4" fill="#D8B254"/>
+          <text x="160" y="138" fill="#7E7688" font-size="9" text-anchor="middle" font-family="Spectral">équilibre</text>
+          <g font-family="Cinzel, serif" font-size="13" font-weight="600">
+            <circle cx="160" cy="28" r="7" fill="#5E92E6"/><text x="160" y="16" fill="#9CC0F5" text-anchor="middle">ESPRIT</text>
+            <circle cx="36" cy="196" r="7" fill="#C8473E"/><text x="36" y="220" fill="#E8786C" text-anchor="middle">CORPS</text>
+            <circle cx="284" cy="196" r="7" fill="#C77ED8"/><text x="284" y="220" fill="#E0A2EC" text-anchor="middle">ÂME</text>
+          </g>
+        </svg>
+      </div>
+
+      <table class="sources">
+        <thead><tr><th>Source</th><th>Mana</th><th>Art</th><th>Geste</th><th>Prix</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:var(--esp)"></span><b>Esprit</b></td><td>Originel → Positif</td><td>la Parole</td><td>réciter</td><td>la lucidité</td></tr>
+          <tr><td><span class="dot" style="background:var(--corps)"></span><b>Corps</b></td><td>Sombre → Négatif</td><td>le Souffle</td><td>bouger</td><td>l'humanité</td></tr>
+          <tr><td><span class="dot" style="background:var(--ame)"></span><b>Âme</b></td><td>Spirituel</td><td>le Symbole</td><td>croire</td><td>l'essence</td></tr>
+        </tbody>
+      </table>
+
+      <h3>L'interrupteur : la marque</h3>
+      <p>Nul ne naît capable de puiser. Il faut une <strong>marque</strong> gravée au cœur — l'<em>ADN de l'âme</em> — qui ouvre l'accès direct aux sources. Sans elle, l'énergie reste enfermée ; avec elle, les trois canaux s'ouvrent. Cette marque n'est pas un tatouage mort : elle <strong>vit, et change avec l'âme</strong> qui la porte. On y reviendra : c'est par elle que tout commence.</p>
+    </section>
+
+    <!-- ESPRIT -->
+    <section id="esprit" style="--accent:var(--esp);--glow:rgba(94,146,230,.4)">
+      <div class="kicker">Première source</div>
+      <h2>I. <span class="accent">L'Esprit</span> — la Parole & le Lac</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 70" width="64" height="64">
+          <circle cx="35" cy="35" r="26" fill="none" stroke="#5E92E6" stroke-width="2"/>
+          <circle cx="35" cy="35" r="14" fill="none" stroke="#5E92E6" stroke-width="1.4" opacity=".6"/>
+          <circle cx="35" cy="35" r="5" fill="#5E92E6"/>
+          <g stroke="#5E92E6" stroke-width="2"><line x1="35" y1="3" x2="35" y2="11"/><line x1="35" y1="59" x2="35" y2="67"/><line x1="3" y1="35" x2="11" y2="35"/><line x1="59" y1="35" x2="67" y2="35"/></g>
+        </svg>
+        <div class="meta"><b>Source :</b> Mana Originel → Mana Positif<br><b>Couleur :</b> bleu · <b>Art :</b> la Parole · <b>Prix :</b> la lucidité</div>
+      </div>
+
+      <p class="lead">L'Esprit est la source de la pensée claire. Son mana, le <strong>Positif</strong>, est universel : il entre dans presque toutes les Paroles, comme une base sur laquelle s'écrit le reste. On le commande en <strong>récitant</strong> — une formule juste, et le monde obéit.</p>
+
+      <h3>L'art de la Parole</h3>
+      <p>Une Parole est un code prononcé : <code>mot de passe + élément + sort</code>. Le mot de passe nomme le mana employé, l'élément donne sa nature, le sort sa forme. Tout tient dans l'exactitude : une syllabe fausse, et rien ne vient. C'est l'art du lettré — on ne force pas le monde, on le <em>formule</em>. Plus la phrase est longue, plus elle porte loin et frappe fort ; mais plus elle exige de concentration et de temps, et sous la pression d'un combat, la formule trop longue se brise avant d'aboutir. Le maître apprend donc à dire <em>court et juste</em>.</p>
+
+      <h3>La lucidité — descendre dans le Lac</h3>
+      <p>Le prix de la Parole n'est pas la fatigue : c'est la <strong>lucidité</strong>. Plus on s'ouvre au Mana Originel, plus on voit ce que les autres ne voient pas. La perception devient un <em>lac</em> où l'on peut plonger : chaque palier révèle une couche plus profonde du réel, et donne plus de pouvoir — mais on n'en remonte pas indemne.</p>
+
+      <ol class="ladder">
+        <li><b>La surface — le monde ordinaire.</b><div class="d">Ce que voit chacun. Les choses ont leur nom, leur poids, leur paix.</div></li>
+        <li><b>Le premier seuil — le voile se lève.</b><div class="d">Apparaissent les âmes errantes, le sang qui circule sous la peau, les marques au cœur des gens. On voit qui manie le mana, et combien.</div></li>
+        <li><b>Le deuxième seuil — la trame.</b><div class="d">On perçoit le code sous les choses : les Paroles qui tiennent le monde, les fils, les nombres. Le réel cesse d'être solide ; il devient écriture.</div></li>
+        <li><b>Le troisième seuil — le Mur.</b><div class="d">On sent ce qui regarde le monde de l'extérieur : des voix, des présences qui décident, des vies reprises après la mort comme si rien n'avait eu lieu, et les oubliés — ceux qu'on a effacés. Peu reviennent de ce seuil avec leur raison.</div></li>
+        <li><b>Le fond — la Vérité.</b><div class="d">Tout, d'un coup. Plus aucune distance entre soi et le réel. C'est la lucidité totale, et c'est la folie. Personne n'en est revenu.</div></li>
+      </ol>
+
+      <div class="rule">
+        <div class="t">Loi de la Noyade</div>
+        <p>Au-delà d'une certaine profondeur, la descente devient irréversible. On ne paie plus seulement en raison : on paie aussi en âme. Le voyant qui va trop bas perd à la fois ce qu'il pensait et ce qu'il était.</p>
+      </div>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">la lucidité — la santé mentale, puis l'âme</span></div>
+
+      <div class="fall">
+        <div class="h">↯ La Chute : le Dément</div>
+        <p>Quand l'Esprit l'emporte, le voyant voit <strong>trop</strong>. Les seuils s'effondrent les uns dans les autres, et il vit en permanence ce que les autres n'aperçoivent qu'un instant. Ce n'est pas une folie de malade : c'est une folie de clairvoyance. Le Dément ne ment jamais — c'est précisément pour cela qu'on ne peut plus le supporter.</p>
+      </div>
+
+      <p class="insp">Inspiration : la lucidité comme l'<em>Insight</em> de Bloodborne — la connaissance qui dévoile le monde et le rend invivable. Le troisième seuil pousse l'idée jusqu'au bout : la lucidité finit par percer le quatrième mur lui-même.</p>
+    </section>
+
+    <!-- CORPS -->
+    <section id="corps" style="--accent:var(--corps);--glow:rgba(200,71,62,.45)">
+      <div class="kicker">Deuxième source</div>
+      <h2>II. <span class="accent">Le Corps</span> — les Souffles & la Bête</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 70" width="64" height="64">
+          <path d="M35,8 C24,18 24,30 35,36 C46,30 46,18 35,8 Z" fill="#C8473E" opacity=".85"/>
+          <path d="M14,40 C26,34 44,34 56,40 C46,52 24,52 14,40 Z" fill="none" stroke="#C8473E" stroke-width="2.2"/>
+          <circle cx="35" cy="42" r="4" fill="#C8473E"/>
+          <path d="M35,46 L35,62" stroke="#C8473E" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <div class="meta"><b>Source :</b> Mana Sombre → Mana Négatif<br><b>Couleur :</b> noir-rouge · <b>Art :</b> le Souffle · <b>Prix :</b> l'humanité</div>
+      </div>
+
+      <p class="lead">Le Corps ne récite rien. Son mana, le <strong>Négatif</strong> — le mana sombre — circule en lui comme le sang, et répond au geste, jamais au mot. On ne le commande pas : on le <em>bouge</em>, comme on contracte un muscle. C'est pourquoi la voie du Corps est un <strong>art martial</strong>, et son langage, le <strong>Souffle</strong>.</p>
+
+      <h3>Le Souffle — façonner le mana par le mouvement</h3>
+      <p>Le Souffle, c'est la maîtrise du rythme intérieur : la respiration, la posture et l'élan deviennent un seul flux qui pousse le mana sombre dans le geste. Là où la Parole demande du temps, le Souffle est <strong>instantané</strong> : pas d'incantation, pas de délai. Une garde, une esquive, une frappe sont des « phrases » dites avec le corps. La puissance se lit dans la fluidité — un geste juste libère plus qu'un cri.</p>
+      <p>On apprend un Souffle comme on apprend une langue : par des <em>formes</em>, enchaînements codifiés qu'on répète jusqu'à les oublier, pour ne plus garder que le réflexe. Chaque grande école a son principe, ses formes et ses techniques signatures.</p>
+
+      <h4>Les grandes écoles de Souffle</h4>
+      <div class="ways">
+        <div class="way"><div class="n">Le Souffle de l'Onde</div><div class="d">Redirige et absorbe. On ne bloque pas la force, on l'épouse et on la retourne. Le corps coule, l'adversaire trébuche sur sa propre puissance.</div><div class="sig">Forme signature : « le Reflux » — rendre un coup deux fois plus fort.</div></div>
+        <div class="way"><div class="n">Le Souffle de la Brisure</div><div class="d">Concentre tout en un point, un instant. Frappe courte, sèche, dévastatrice. Rien n'est gardé en réserve : tout part d'un coup.</div><div class="sig">Forme signature : « le Point Final » — une seule frappe, ou rien.</div></div>
+        <div class="way"><div class="n">Le Souffle de la Racine</div><div class="d">Tient et encaisse. Le corps devient mur ; on ne recule pas d'un pouce. La patience faite art : on use l'adversaire jusqu'à ce qu'il se brise seul.</div><div class="sig">Forme signature : « l'Ancrage » — devenir immobile comme la pierre.</div></div>
+        <div class="way"><div class="n">Le Souffle du Spectre</div><div class="d">Vitesse et déplacement. On frappe avant d'être vu, on laisse des images de soi derrière soi. L'art de n'être jamais où l'on regarde.</div><div class="sig">Forme signature : « les Sept Ombres » — sept positions, une seule réelle.</div></div>
+      </div>
+      <p class="soft">Il existe des Souffles plus rares — hybrides, perdus, ou <strong>interdits</strong>. Les Souffles interdits puisent trop profond dans le mana sombre : ils donnent une puissance immédiate, mais réveillent le sang de bête bien plus vite. Beaucoup d'écoles les enseignent en secret ; toutes le regrettent.</p>
+
+      <h3>Apprendre en combattant</h3>
+      <p>Le secret du Corps : il <strong>progresse par le combat lui-même</strong>. À force d'affronter d'autres styles, le porteur les lit, les comprend, puis les recompose dans le sien. Un duel n'est pas qu'une épreuve — c'est une leçon volée. Les plus doués finissent par avoir « combattu » mille Souffles sans jamais les avoir étudiés : leur corps a tout retenu. Montée en puissance vertigineuse, et piège : à trop boire le combat, on cesse d'être un homme.</p>
+
+      <h3>Le sang de bête</h3>
+      <p>Le mana sombre n'est pas neutre. C'est un <strong>sang de bête</strong> : la mémoire, enfouie dans la chair, d'une <em>ancienne race</em> que le corps n'a jamais oubliée. Le manier, c'est rouvrir un peu cette mémoire. À petite dose, elle aiguise — sens plus vifs, réflexes plus rapides, force accrue. Trop souvent réveillée, elle prend le dessus. La descente se fait par paliers :</p>
+      <ol class="ladder">
+        <li><b>Le Calme.</b><div class="d">Le sang dort. Le porteur est pleinement maître de lui ; le mana obéit.</div></li>
+        <li><b>Le Frémissement.</b><div class="d">Le sang s'éveille au combat : sens exacerbés, vitesse, une ivresse de puissance. Encore réversible — il suffit de s'arrêter à temps.</div></li>
+        <li><b>La Fièvre.</b><div class="d">Le corps mute par éclats : une griffe, un œil de nuit, une faim. La volonté lutte contre l'instinct. Beaucoup ne reviennent de là qu'au prix d'une part d'eux-mêmes.</div></li>
+        <li><b>La Mue.</b><div class="d">La Bête prend tout. Plus de mots, plus de symboles — rien que le mouvement, parfait et vide.</div></li>
+      </ol>
+
+      <div class="rule">
+        <div class="t">Règle du Corps</div>
+        <p>Le Souffle est instantané mais aveugle : il réagit avant de réfléchir. Sa force est sa vitesse ; son danger est qu'il n'attend pas la permission de l'esprit.</p>
+      </div>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">l'humanité — un palier de plus à chaque excès</span></div>
+
+      <div class="fall">
+        <div class="h">↯ La Chute : la Bête</div>
+        <p>Au bout de la Mue, le porteur n'est plus un homme qui se bat : il est le combat fait chair. Cornes, griffes, yeux de nuit — la forme de l'ancienne race remonte tout entière. Il gagne en puissance brute tout ce qu'il perd en conscience. On ne raisonne pas une Bête. On la fuit, ou on l'abat.</p>
+      </div>
+
+      <p class="insp">Inspirations : les <em>souffles</em> et leurs formes façon Demon Slayer, les arts martiaux des manhwa et manga ; la progression par l'absorption du style adverse façon Garou ; et, pour la Bête et le sang de bête, l'horreur de Bloodborne.</p>
+    </section>
+
+    <!-- AME -->
+    <section id="ame" style="--accent:var(--ame);--glow:rgba(199,126,216,.4)">
+      <div class="kicker">Troisième source</div>
+      <h2>III. <span class="accent">L'Âme</span> — le Symbole & les âmes</h2>
+      <div class="crest">
+        <svg viewBox="0 0 70 74" width="64" height="68">
+          <path d="M26,24 A20,20 0 1 0 44,24" fill="none" stroke="#C77ED8" stroke-width="5" stroke-linecap="round"/>
+          <path d="M30,52 Q35,72 40,52 Z" fill="#C77ED8"/>
+          <circle cx="35" cy="36" r="5.5" fill="#C77ED8"/>
+          <path d="M35,4 L42,15 L35,22 L28,15 Z" fill="#C77ED8"/>
+          <path d="M8,36 L24,32 L24,40 Z" fill="#C77ED8"/><path d="M62,36 L46,32 L46,40 Z" fill="#C77ED8"/>
+        </svg>
+        <div class="meta"><b>Source :</b> l'Âme → Mana Spirituel<br><b>Couleur :</b> rouge-violet · <b>Art :</b> le Symbole · <b>Prix :</b> l'essence</div>
+      </div>
+
+      <p class="lead">L'Âme est la source des émotions et des sentiments. Son mana, le <strong>Spirituel</strong>, ne frappe pas et ne récite pas : il <strong>crée</strong>. Il donne corps, à partir de rien, à ce que l'on ressent et croit assez fort pour le faire exister. C'est la plus intime des trois voies, et la plus dangereuse pour soi.</p>
+
+      <h3>L'âme comme matière</h3>
+      <p>Pour le lucide, une âme n'est pas une abstraction : c'est une <strong>substance</strong> qu'on voit, qu'on pèse et qu'on peut façonner. Chaque âme a une <em>masse</em> (sa force), une <em>forme</em> et une <em>nature</em> — la teinte dominante de ce qu'elle est. Cette nature décide de ce qu'une personne pourra matérialiser.</p>
+      <div class="ways">
+        <div class="way"><div class="n">Volonté</div><div class="d">âmes qui veulent ; matérialisent des armes, des lames, des outils de conquête.</div></div>
+        <div class="way"><div class="n">Attachement</div><div class="d">âmes qui aiment ; matérialisent des gardiens, des familiers, des boucliers.</div></div>
+        <div class="way"><div class="n">Colère</div><div class="d">âmes qui brûlent ; matérialisent des objets cruels, voraces, instables.</div></div>
+        <div class="way"><div class="n">Foi</div><div class="d">âmes qui croient ; matérialisent des sceaux, des reliques, des masques rituels.</div></div>
+      </div>
+      <p class="soft">Une âme n'est jamais d'une seule teinte — mais une domine, et c'est elle qui parle quand vient le moment de créer.</p>
+
+      <h3>Les objets d'âme</h3>
+      <p>Matérialiser, c'est tirer un objet <strong>directement de l'âme</strong> : une arme, un masque, une hache, un familier. Il n'est pas pris dans le monde — il en sort. Trois forces doivent se rejoindre pour qu'il apparaisse :</p>
+      <div class="ways">
+        <div class="way"><div class="n">Sentiment</div><div class="d">ce qu'il ressent</div></div>
+        <div class="way"><div class="n">Désir</div><div class="d">ce qu'il veut</div></div>
+        <div class="way"><div class="n">Croyance</div><div class="d">ce qu'il croit possible</div></div>
+      </div>
+      <p class="soft"><em>Il le ressent, il le désire, il le croit — alors la chose apparaît.</em> L'objet est <strong>unique</strong> : aucun n'est tout à fait le même d'une personne à l'autre. Il <strong>grandit et évolue</strong> avec l'âme qui le porte. Et sa puissance garde une part d'<strong>aléatoire</strong> : une grande âme peut n'enfanter qu'un objet modeste, et un être ordinaire, par un seul instant de conviction totale, faire naître une merveille.</p>
+
+      <h3>La marque vivante</h3>
+      <p>La marque au cœur — l'<strong>ADN de l'âme</strong> — est l'interrupteur qui autorise l'accès aux sources. Sans elle, rien. Mais surtout, elle n'est pas figée : <strong>elle évolue avec l'âme</strong>. À mesure que l'âme grandit, le tracé se transforme — il s'étend et se ramifie chez ceux dont l'âme s'élargit, se resserre et s'épure chez ceux dont l'âme se concentre, et se <strong>rétracte</strong>, presque jusqu'à disparaître, chez ceux dont l'âme s'éteint ou se brise. Lire une marque, c'est lire où en est une âme — et certains en ont fait un art : ils savent, d'un regard, qui monte et qui s'effondre.</p>
+
+      <div class="rule">
+        <div class="t">Règle de l'Âme</div>
+        <p>On ne matérialise que ce que l'on croit vraiment. Une âme faible ne crée rien ; une âme convaincue façonne le réel. Ici, la foi en soi est une force au sens propre — et le doute, une impuissance.</p>
+      </div>
+
+      <div class="price"><span class="lab">Prix</span><span class="val">l'essence même de l'âme — on dépense ce qu'on est</span></div>
+
+      <div class="fall">
+        <div class="h">↯ La Chute : l'Errant</div>
+        <p>Quand l'Âme domine, le porteur se met à <strong>absorber l'essence</strong> de ce qu'il abat : chaque vie prise le grandit, sa marque enfle, son pouvoir gonfle. Mais à force, il perd sa forme et son corps, et glisse hors du monde physique. Les <em>âmes errantes</em> — ces entités muettes que seuls les lucides aperçoivent — furent jadis de tels êtres, montés trop haut, restés là, à regarder un monde qu'ils ne peuvent plus toucher.</p>
+      </div>
+
+      <p class="insp">Inspirations : l'âme comme matière que l'on voit, pèse et façonne — façon Soul Eater et Undertale ; la marque qui croît ou se rétracte selon ce qu'est l'âme.</p>
+    </section>
+
+    <!-- EQUILIBRE -->
+    <section id="equilibre">
+      <div class="kicker">Le cœur du système</div>
+      <h2>L'Équilibre & les trois Chutes</h2>
+      <p class="lead">Les trois sources se tiennent comme un trépied. Tant qu'elles s'équilibrent, le porteur reste lui-même. Mais chaque source <strong>tire vers son propre gouffre</strong> dès qu'on la laisse dominer — et plus on pousse loin, plus la pente devient raide.</p>
+
+      <table class="sources">
+        <thead><tr><th>Source dominante</th><th>Chute</th><th>Ce qu'on gagne</th><th>Ce qu'on perd</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:var(--esp)"></span><b>Esprit</b></td><td>le Dément</td><td>voir toute vérité</td><td>la raison</td></tr>
+          <tr><td><span class="dot" style="background:var(--corps)"></span><b>Corps</b></td><td>la Bête</td><td>une puissance brute</td><td>la conscience</td></tr>
+          <tr><td><span class="dot" style="background:var(--ame)"></span><b>Âme</b></td><td>l'Errant</td><td>un pouvoir sans fin</td><td>le corps, le monde</td></tr>
+        </tbody>
+      </table>
+
+      <p>Au centre du triangle se tient un état rare : le <strong>Mana Semi-Parfait</strong>, où les trois affinités se valent. Celui qui l'atteint ne se réduit à aucune des trois — ni voyant, ni bête, ni spectre. Il est entier, et peut tout : réciter, frapper, créer, sans jamais basculer. Mais l'équilibre n'est pas un repos : c'est une tension tenue à chaque instant, le fil sur lequel marche tout grand sorcier. On n'y reste pas par hasard — on y revient, encore et encore, contre la pente.</p>
+
+      <div class="rule" style="--accent:var(--gold)">
+        <div class="t">Loi de l'Équilibre</div>
+        <p>La survie est dans le centre. Pencher d'un côté donne de la puissance — et un peu de la chute qui va avec. Le maître n'est pas celui qui pousse le plus loin une source, mais celui qui sait toujours revenir.</p>
+      </div>
+      <blockquote>« Les faibles choisissent une voie. Les forts les portent toutes. Les sages savent qu'aucune ne se porte sans prix. »
+        <span class="src">— enseignement de l'Ordre d'Or</span></blockquote>
+    </section>
+
+    <!-- AUTORITES -->
+    <section id="autorites" style="--accent:var(--gold);--glow:rgba(216,178,84,.4)">
+      <div class="kicker">Le sommet du pouvoir</div>
+      <h2>Les Autorités</h2>
+      <p class="lead">Il existe un seuil au-delà des chutes. Quand un être accumule assez d'essence — par l'âme, par le sang, par la lucidité, peu importe la voie — il cesse d'être soumis au monde : le monde commence à se plier à <strong>lui</strong>. On le nomme alors une <strong>Autorité</strong>.</p>
+
+      <p>Là où l'Errant se perd en absorbant trop, l'Autorité <em>garde sa forme et sa volonté</em> tout en franchissant le même seuil. La différence n'est pas de quantité, mais de maîtrise : l'Errant est emporté, l'Autorité tient la barre. Atteindre ce point réécrit les règles autour de soi — le climat, la gravité du lieu, ce qui y est possible. Là où marche une Autorité, le réel se reconfigure pour lui ressembler.</p>
+
+      <h3>Ce que devient une Autorité</h3>
+      <ul class="ladder">
+        <li><b>Elle impose sa loi au lieu.</b><div class="d">Son domaine cesse d'obéir aux lois communes : il obéit aux siennes. Entrer chez une Autorité, c'est entrer dans un monde qui n'a plus tout à fait les mêmes règles.</div></li>
+        <li><b>Elle aimante le pouvoir.</b><div class="d">Les sources affluent vers elle. Les autres porteurs, près d'elle, sentent leur propre mana tirer comme vers un gouffre.</div></li>
+        <li><b>Elle devient un terme du monde.</b><div class="d">Tant qu'elle règne, elle est la fin de toute chose dans son orbe — l'horizon que rien ne dépasse. Pour aller plus loin, il faut la défaire.</div></li>
+      </ul>
+
+      <div class="rule">
+        <div class="t">La loi des Autorités</div>
+        <p>Il ne peut y avoir deux Autorités sur un même monde sans qu'il se brise. Leur seule rencontre possible est l'affrontement — et de cet affrontement naît, toujours, une nouvelle configuration du monde.</p>
+      </div>
+
+      <p class="soft">Les quatre royaumes vivent dans l'ombre de cette vérité. Chacun rêve de voir naître <em>son</em> Autorité — un champion qui imposerait sa voie au monde entier — et chacun redoute celle des autres. C'est, au fond, l'enjeu silencieux de toute leur histoire.</p>
+    </section>
+
+    <!-- ROYAUMES -->
+    <section id="royaumes">
+      <div class="kicker">Le monde</div>
+      <h2>Les Quatre Royaumes</h2>
+      <p class="lead">Le monde se partage entre quatre grandes puissances. Trois épousent chacune une source ; la quatrième révère leur équilibre et juge les autres. Toute la géopolitique tient dans ce déséquilibre à quatre.</p>
+
+      <div class="realm" style="--accent:var(--gold)">
+        <div class="rn"><span class="dot" style="background:var(--gold)"></span>L'Ordre d'Or</div>
+        <div class="tag">la voie de l'équilibre</div>
+        <p>Un royaume-religion voué au culte de l'<strong>équilibre</strong> des trois sources. Pour l'Ordre, suivre une seule voie est une hérésie qui mène à la chute : le monde n'est sauvé que par ceux qui portent les trois sans pencher. Sa noblesse est réelle — il protège, il guérit, il tempère. Mais sa <strong>part d'ombre</strong> l'est tout autant : l'Ordre traque les voies uniques, surveille les prodiges, et n'hésite pas à briser un être trop penché « pour son bien et celui de tous ». Il combat les Bêtes, les Déments et les Errants — et, parfois, de simples talents qu'il juge déséquilibrés. Sa justice est lumineuse et froide.</p>
+        <div class="row"><div class="k">Régime</div><div class="v">théocratie chevaleresque, ordre saint hiérarchisé</div></div>
+        <div class="row"><div class="k">Doctrine</div><div class="v">l'équilibre est sacré ; la voie unique est un péché</div></div>
+        <div class="row"><div class="k">Voit les autres</div><div class="v">comme trois maladies à surveiller</div></div>
+        <p class="insp">Résonances : l'Ordre Jedi de l'Ancienne République (sa lumière, et son dogmatisme) ; la religion de l'Ordre d'Or d'Elden Ring.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--corps)">
+        <div class="rn"><span class="dot" style="background:var(--corps)"></span>L'Empire Vultric</div>
+        <div class="tag">la voie du Corps · la force</div>
+        <p>Un empire fier et puissant, qui prône la <strong>force, la fraternité et le combat</strong>. On y mesure un être à ce qu'il peut vaincre : la faiblesse n'y a pas droit de cité, mais le frère d'armes y est sacré, et la loyauté au sang vaut plus que tout titre. C'est une terre de guerre, qui forge ses enfants aux Souffles dès l'enfance et n'a pas peur du <strong>sang de bête</strong> — Vultric cultive même des rites où l'on s'approche de la Fièvre pour en revenir plus fort, jeu mortel dont peu ressortent indemnes. Brutal, oui ; mais d'une fierté et d'une camaraderie que les autres royaumes lui envient en secret.</p>
+        <div class="row"><div class="k">Régime</div><div class="v">empire martial, hiérarchie de la force</div></div>
+        <div class="row"><div class="k">Doctrine</div><div class="v">la force prouve la valeur ; le frère d'armes est sacré</div></div>
+        <div class="row"><div class="k">Voit les autres</div><div class="v">les Mages, faibles ; l'Est, mou ; l'Or, hypocrite</div></div>
+        <p class="insp">Résonances : la fierté guerrière des Viltrumites ; la dureté de l'empire de Kenshi ; un pays de la guerre.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--esp)">
+        <div class="rn"><span class="dot" style="background:var(--esp)"></span>Les Mages des Étoiles</div>
+        <div class="tag">la voie de l'Esprit · le savoir · <span style="text-transform:none">« la République du Savoir »</span></div>
+        <p>Une république magique gouvernée par un <strong>conseil</strong>, vouée à <strong>préserver le savoir</strong> et à percer les mystères du monde. On y récite, on y étudie, on y plonge dans le Lac de la Vérité plus loin que partout ailleurs — leurs plus grands sages sont des descendeurs, qui rapportent des seuils profonds des fragments de la trame. Idéal noble : la connaissance contre les ténèbres. Mais un conseil qui croit tout savoir se croit vite en droit de tout décider, et derrière la lumière de la République veillent des secrets, des ambitions et des descendeurs revenus du Lac un peu trop changés. Le meilleur et le pire d'un pouvoir éclairé.</p>
+        <div class="row"><div class="k">Régime</div><div class="v">république magocratique, conseil de sages</div></div>
+        <div class="row"><div class="k">Doctrine</div><div class="v">le savoir sauve ; tout mystère doit être percé</div></div>
+        <div class="row"><div class="k">Voit les autres</div><div class="v">Vultric, des brutes ; l'Or, des dogmatiques ; l'Est, des superstitieux</div></div>
+        <p class="insp">Résonances : l'Ordre Jedi et la République de la prélogie Star Wars — le meilleur comme le pire d'un pouvoir éclairé.</p>
+      </div>
+
+      <div class="realm" style="--accent:var(--ame)">
+        <div class="rn"><span class="dot" style="background:var(--ame)"></span>L'Empire Uni de l'Est</div>
+        <div class="tag">la voie de l'Âme · l'essence & la nature</div>
+        <p>Moins un empire qu'une <strong>union de royaumes et de clans</strong>, liés sans être fondus. On y place au-dessus de tout l'<strong>essence de l'âme</strong> et la <strong>nature</strong> : la terre, le sang, la lignée, l'esprit des lieux et des ancêtres. Chaque clan lit les âmes et les marques comme d'autres lisent des blasons ; on y honore les morts comme des présences réelles, et l'on y matérialise des objets d'âme transmis de génération en génération. Force éclatée — l'union se déchire souvent en querelles de clans — mais profonde, enracinée, impossible à conquérir vraiment, car on ne soumet pas une terre qui a une âme.</p>
+        <div class="row"><div class="k">Régime</div><div class="v">confédération de clans, autorité partagée</div></div>
+        <div class="row"><div class="k">Doctrine</div><div class="v">l'âme et la nature priment ; les ancêtres veillent</div></div>
+        <div class="row"><div class="k">Voit les autres</div><div class="v">tous des déracinés qui ont oublié d'où ils viennent</div></div>
+        <p class="insp">Résonances : les Séparatistes de Star Wars ; la logique des clans.</p>
+      </div>
+
+      <div class="rule" style="--accent:var(--gold)">
+        <div class="t">Le jeu des Quatre</div>
+        <p>Trois royaumes incarnent chacun une source — le Corps à Vultric, l'Esprit chez les Mages, l'Âme à l'Est — et l'Ordre d'Or se dresse au centre pour les juger tous. Chacun craint et espère la même chose : qu'une <em>Autorité</em> naisse en son sein avant de naître ailleurs. Toute l'histoire du monde tient dans cette course muette.</p>
+      </div>
+    </section>
+
+    <footer>Le Traité des Trois Sources · édition complète · système des Paroles</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('#toc a:not(.sub)'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var y=window.scrollY+150, idx=0;
+    for(var i=0;i<secs.length;i++){ if(secs[i] && secs[i].offsetTop<=y) idx=i; }
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>

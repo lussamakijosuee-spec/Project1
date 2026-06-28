@@ -228,10 +228,15 @@ créateur : on l'appelle la **Marque de l'Âme**, ou **ADN de l'Âme**.
 
 ## 🌑 Le Codex des Trois Sources — le monde vu de l'intérieur
 
-> 📜 **Bible diégétique : `docs/codex-trois-sources.html`.** C'est le grand
-> document de **mythe, science et géopolitique** — ce que les habitants *croient*
-> savoir de leur monde. Player-facing : `regles-simples.html` (le jeu en 5 règles)
-> et `fiche-mana-ame.html` (la voie de l'Âme).
+> 📜 **Bibles diégétiques :**
+> - `docs/codex-trois-sources.html` — l'**édition complète** : mythe (le Fond, le
+>   Premier, les Cinq Âges), science des sources, **géopolitique** (Quatre
+>   Royaumes, Autorités) et l'annexe **Vérités interdites** (la couture méta).
+> - `docs/traite-trois-sources.html` — l'**édition « science »** : version
+>   resserrée des trois sources, arts, chutes, Autorités et Royaumes (sans les
+>   Cinq Âges ni les Vérités interdites). Le « Traité » cité par le guide joueur.
+> - Player-facing : `regles-simples.html` (le jeu en 5 règles), `fiche-mana-ame.html`
+>   (la voie de l'Âme), `compendium-paroles.html` (calculateur de Paroles).
 
 ### Deux couches de vérité
 - **Couche diégétique (le Codex)** — la cosmogonie telle que la vivent les
