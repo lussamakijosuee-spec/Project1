@@ -260,20 +260,10 @@
         var atk = actionBranch(this);
         var subject = this.subject();
 
-        // Cycle d'avantages (uniquement entre les 3 branches secondaires)
-        if (atk === EL_NEG || atk === EL_SPI || atk === EL_POS) {
-            var aff1 = affinityOf(target);
-            var aff2 = affinity2Of(target);
-            var f = cycleFactor(atk, aff1, aff2);
-            if (f !== 1) {
-                value = Math.floor(value * f);
-                var isDual = !!aff2;
-                if (f >= ADV)       this._manaCycleFlag = 'sup';
-                else if (f > 1)     this._manaCycleFlag = isDual ? 'dual_sup' : 'sup';
-                else if (f <= DIS)  this._manaCycleFlag = 'inf';
-                else                this._manaCycleFlag = isDual ? 'dual_inf' : 'inf';
-            }
-        }
+        // ⚠️ Cycle pierre-feuille-ciseaux RETIRÉ (refonte Trois Sources) :
+        // l'avantage de combat ne vient plus d'un cycle entre branches, mais
+        // des Arts et des Chutes. On conserve le recul PV (prix du Corps), le
+        // couplage Positif/Santé Mentale, et le Mana Pur perce-résistances.
 
         // Mana Positif affaibli par la santé mentale
         if (atk === EL_POS) {
