@@ -1,370 +1,261 @@
-# 🌌 SYSTÈME DE MANA — BIBLE DU JEU
-### RPG Maker MV · Guide complet des Énergies, Sources, Éléments & Affinités
-> Version remodelée & cohérente — intègre l'ancien guide (les 8 éléments, Âme vs Esprit, classes) avec la nouvelle théorie des **3 Sources Primordiales**.
+# 🌌 SYSTÈME DE MANA — BIBLE TECHNIQUE
+### RPG Maker MV · La traduction *jouable* du système des Trois Sources
+> **v2 — refonte complète.** Cette bible remplace l'ancien modèle (cycle
+> Pokémon + 5 paliers d'affinité). Le canon narratif vit dans
+> `docs/codex-trois-sources.html` (édition complète) et `docs/traite-trois-sources.html`
+> (édition science). Ce document est leur **traduction en données & plugins**.
+>
+> 🔁 **Ce qui change vs l'ancien système :** voir §0bis « Migration ».
 
 ---
 
 ## 0. RÉSUMÉ EN UNE PHRASE
-> Tout être est un **triptyque — Corps, Âme, Esprit**. Chacun est un **puits de magie primordial** quasi impossible à puiser directement, alors les civilisations ont creusé des **branches secondaires** plus maniables (Négatif, Spirituelle, Positif), à partir desquelles naissent les **sorts, capacités et éléments**. Au sommet, transcendant tout : le **Mana Pur**.
+> Tout être est un **trépied — Corps, Âme, Esprit**. Chaque source remonte du
+> **Fond** (les codes sources) et se manie par un **art** (Souffle, Symbole,
+> Parole). Pencher vers une source donne de la puissance **et** sa **Chute**
+> (la Bête, l'Errant, le Dément). Rester au **centre** = le **Mana Semi-Parfait**.
 
 ---
 
-## 1. LA TRINITÉ — LES 3 SOURCES PRIMORDIALES
+## 0bis. MIGRATION — ce qui remplace quoi
 
-Au commencement, il n'existe pas « de la magie » mais **trois puits de réalité**, un par facette de l'être vivant. Ce sont des **sources primordiales** : immenses, brutes, presque impossibles à utiliser directement. Un joueur peut avoir **plus d'affinité** avec l'une d'elles selon la nature de son **âme**.
+| Ancien système (retiré) | Nouveau système (canon) |
+|--------------------------|--------------------------|
+| Cycle Pokémon Négatif>Spirituel>Positif (×1.5/×0.5) | **Pas de pierre-feuille-ciseaux des branches.** Le coût/risque vient des **Chutes**, pas d'un cycle. *(cf. §6)* |
+| 5 paliers d'affinité (Alignés/Duaux/Atones/Trines/Élus) | **3 voies qu'on entraîne** (Esprit/Corps/Âme) + **équilibre**. L'« Élu » = celui qui tient les **trois** en équilibre (Semi-Parfait). |
+| Affinité = case figée à la naissance | **Affinité = où penche ton entraînement**, qui évolue (et te rapproche d'une Chute). |
+| « Mana Pur = chance 1/1000 » | **Mana Semi-Parfait = équilibre maîtrisé des trois** (rare car dur à *tenir*, pas à *tirer au sort*). |
 
-| Facette | Source primordiale | Élément (ID jeu) | Nature | Couleur |
-|---|---|---|---|---|
-| **LE CORPS** | **Mana Sombre** | 5 · `Mana Sombre` | Manifestation physique de **toutes les émotions et désirs enfouis**. Puissance brute et dévastatrice. | ⬛ Noir |
-| **L'ÂME** | **Âme / Mana Spirituelle** | 2 · `mana spirituelle` | L'**essence immortelle** de l'être. Énergie produite directement par l'âme. | 🟥 Cramoisi |
-| **L'ESPRIT** | **Mana Originel** | 6 · `Mana Originel` | Le **mental & la santé mentale** convertis en énergie créatrice. | 🟦 Cyan |
-
-> ⚠️ **Pourquoi des branches secondaires ?**
-> Puiser une source primordiale **directement** revient à plonger les mains dans un soleil. C'est mortel pour la quasi-totalité des joueurs. Pour rendre la magie **utilisable**, les peuples ont « domestiqué » chaque source en une **branche secondaire** plus douce et plus stable.
-
----
-
-## 2. LES 3 BRANCHES SECONDAIRES (la magie « utilisable »)
-
-Chaque source primordiale a été raffinée par une civilisation en une branche secondaire. **C'est là que naissent les vrais sorts, capacités et éléments.**
-
-### 🟪 MANA NÉGATIF — la branche du **Corps** (ID 4 · `mana négative`)
-- **Origine** : l'**Empire Vultric**, fondé par un joueur. Ils ont démontré que le Mana Sombre, longtemps cru **purement maléfique**, est en réalité un **concept fondamental** de la réalité.
-- **Principe** : transformer ses **émotions et ses pensées sombres** en **puissance physique extraordinaire**.
-- **Force** : capacités physiques surhumaines, dégâts bruts.
-- **Contrepartie** : **inflige des blessures à l'utilisateur** et **draine ses PV**. Plus on frôle ses émotions les plus noires, plus on devient fort — au prix de son corps.
-
-### 🟥 MANA SPIRITUELLE — la branche de l'**Âme** (ID 2)
-- **Origine** : aussi ancienne que les âmes elles-mêmes. **Tout le monde peut l'apprendre** avec le temps.
-- **Principe** : manipuler l'énergie produite par l'âme. Sa **forme et sa nature changent selon l'âme** de chacun (deux personnes n'ont jamais le même Mana Spirituel).
-- **Utilisée par** : **Invocateurs**, **Nécromanciens**, et **Lou**, pour **manipuler les âmes**.
-- **Contrepartie** : communiquer avec les âmes et jouer avec leur énergie est **extrêmement dangereux**, même pour les plus talentueux → **traumas et cauchemars** des âmes contactées.
-
-### 🟦 MANA POSITIF — la branche de l'**Esprit** (ID 3 · `mana positive`)
-- **Origine** : le **Culte des Sorcières des Étoiles**, fondé par une **joueuse**. Ce sont **les femmes** qui ont créé les sorts purement positifs.
-- **Principe** : énergie liée à l'**intelligence**, aux **soins**, à l'**eau** et au **cosmos**.
-- **Force** : la plus **polyvalente** ; facile à modifier et adapter.
-- **Contrepartie** : de **plus en plus faible** quand la **santé mentale** du joueur décline (l'esprit fatigué produit moins de Mana Originel à raffiner).
-
-> 📝 **Note de lore** : Mana Originel (primordial) ≈ le **potentiel mental brut** ; Mana Positif (secondaire) ≈ sa version **canalisée et bienveillante**. De même, Mana Sombre (brut, corps) ↔ Mana Négatif (canalisé). L'Âme/Spirituelle est particulière : sa branche secondaire porte presque le même nom car l'âme se laisse moins « domestiquer » — on travaille presque la source brute.
+> ⚙️ **Bonne nouvelle :** `data/System.json` est **déjà aligné** (voir §11). Le
+> chantier est surtout du **texte/lore** et le **recadrage** de quelques plugins.
 
 ---
 
-## 3. LE CYCLE DES AVANTAGES (style Pokémon)
+## 1. LE FOND & LES TROIS SOURCES
 
-Les trois branches secondaires forment un **pierre-feuille-ciseaux** :
+Sous le monde s'étend le **Fond** (la *Vérité*, le *Lac*) : la couche profonde du
+réel, source de **tout mana** et de **toute folie**. *(Couche méta : le Fond = les
+**codes sources** du jeu.)* L'énergie en **remonte par trois canaux** — les
+**trois sources** — une par facette de l'être :
 
-```
-        ┌──────────────────────────────┐
-        ▼                              │
-   MANA NÉGATIF  ──bat──►  ÂME / SPIRITUELLE  ──bat──►  MANA POSITIF
-   (Corps)                  (Âme)                        (Esprit)
-        ▲                                                   │
-        └───────────────────bat─────────────────────────────┘
-```
+| Facette | Touche le monde par | Source primordiale (brute) | Branche maniable | Art | Prix | Chute |
+|---------|---------------------|----------------------------|------------------|-----|------|-------|
+| **ESPRIT** | la pensée | Mana Originel *(id 6)* | **Positif** *(id 3)* | la **Parole** | lucidité | le **Dément** |
+| **CORPS** | le geste | Mana Sombre *(id 5)* | **Négatif** *(id 4)* | le **Souffle** | humanité | la **Bête** |
+| **ÂME** | le sentiment | Mana de l'Âme *(id 2)* | **Spirituel** *(id 2)* | le **Symbole** | essence | l'**Errant** |
 
-- **Mana Négatif > Âme/Spirituelle** : la fureur du corps brise les âmes fragiles.
-- **Âme/Spirituelle > Mana Positif** : l'essence pure transperce les barrières de l'esprit.
-- **Mana Positif > Mana Négatif** : la lumière de l'esprit apaise et contre la rage du corps.
+Au sommet, hors cycle : le **Mana Pur / Parfait** *(id 7)*, et son état rare
+d'équilibre, le **Mana Semi-Parfait** *(id 16)*.
 
-> ⚖️ **Règle de combat** : frapper avec la branche **avantagée** inflige **×1.5 dégâts** ; frapper avec la branche **désavantagée** inflige **×0.5**. (Réglable dans les éléments de la base de données.)
-
-### 👑 LE MANA PUR — au-dessus de tout (ID 7 · `Mana Parfait`)
-Le **Mana Pur** transcende le cycle : il **ignore** les avantages/faiblesses des trois branches et des éléments. C'est l'énergie des **attaques magiques spéciales** des êtres transcendants.
-- **Sous-branche ultra-rare : le MANA SEMI-PARFAIT** (skill type 7 dans ton jeu).
-  - **1 chance sur 1000** : naître avec une affinité pour **toutes les sources** à la fois.
-  - **Risque** : son usage **défie la réalité** elle-même (instabilité, conséquences imprévisibles).
+> **La Marque (l'ADN de l'âme)** est l'**interrupteur** : sans elle, aucun accès
+> aux sources. Elle **vit** et change avec l'âme ; sa couleur trahit la source
+> dominante. *(Plugin : `ObjetSpirituel` — la Marque = la face « profondeurs » de
+> l'Objet Spirituel.)*
 
 ---
 
-## 4. LES 8 ÉLÉMENTS PHYSIQUES (la couche tactique)
+## 2. LES TROIS ARTS (la magie *utilisable*)
 
-Les éléments ne sont **pas naturellement utilisables** : ce sont des **formes** que l'on apprend à donner au mana. Ils constituent la couche tactique du combat, **indépendante** du cycle Négatif/Âme/Positif, mais **amplifiable** par certains manas. Le **Mana Pur** transcende les affinités élémentaires.
+### 🔵 LA PAROLE — l'art de l'Esprit *(branche Positif, id 3)*
+Un sort **récité** : `mot de passe (mana) + élément + sort`. Précis, modulable,
+**lent**. Plus la parole est longue (L), plus elle frappe — mais plus il faut de
+**lucidité** pour la tenir ; sinon elle se **brise** (contrecoup).
+- **Plugin :** `ParolesMagic` (réussite = f(lucidité, L)), `ManaVisuals` (couleurs).
+- **Réf joueur :** `compendium-paroles.html`, `regles-simples.html`.
 
-| Élément (ID jeu) | Faiblesse | Rôle | Amplifié par | Lié à la source |
-|---|---|---|---|---|
-| 🔴 **FEU** (8) | EAU | Attaque directe, brûlure continue | Mana Négatif | Corps |
-| 🔵 **EAU** (9) | FOUDRE | Soin, ralentissement | Mana Positif | Esprit |
-| 🟢 **VENT** (10) | GLACE | Vitesse, évasion, dégâts de zone | Mana Originel | Esprit |
-| 🟤 **TERRE** (11) | VENT | Défense, écrasement | Résistance physique | Corps |
-| 🟡 **FOUDRE** (12) | TERRE | Paralysie, dégâts techniques | INT (Mana Positif) | Esprit |
-| 🧊 **GLACE** (13) | FEU | Gel, ralenti, armure | Précision mentale | Esprit |
-| ⬜ **LUMIÈRE** (14) | OMBRE | Purification, guérison d'âme | Mana Pur | Âme |
-| 🟣 **OMBRE** (15) | LUMIÈRE | Silence, peur, corruption | Mana Sombre | Corps |
+### 🔴 LE SOUFFLE — l'art du Corps *(branche Négatif, id 4)*
+Un **art martial instantané** : pas d'incantation, on lance « comme on contracte
+un muscle ». Le mana sombre **circule comme le sang**. Écoles : Onde, Brisure,
+Racine, Spectre. **Progresse par le combat** (on absorbe le style adverse).
+- **Coût mécanique :** **recul PV** (le Corps se paie en chair) → `ManaAffinity`
+  (recoil Négatif/Sombre) + montée de **Corruption** → `CorruptionAme`.
+- **Skill types existants à rattacher :** `10 · sang`, les `ombre de <arme>` (11-18).
 
-### La Roue des Éléments (faiblesses)
-```
-FEU ─► EAU ─► FOUDRE ─► TERRE ─► VENT ─► GLACE ─► FEU
-(chaque élément est faible contre le suivant)
-
-OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
-```
-
-### Combinaisons ÉLÉMENT + MANA (sorts signature)
-| Combinaison | Sort | Effet |
-|---|---|---|
-| **Feu + Mana Négatif** | *Flammes Maudites* | Dégâts ×1.5, la brûlure **ignore la résistance au feu** |
-| **Eau + Mana Positif** | *Vague Sacrée* | Soin de zone + **bouclier cosmique** pour tous les alliés |
-| **Ombre + Mana Sombre** | *Puits d'Abîme* | Réduit à **0** la résistance magique ennemie pendant 2 tours |
-| **Lumière + Mana Pur** | *Nova Sainte* | Purifie la corruption d'âme + dégâts massifs **non-élémentaux** |
-| **Foudre + Mana Originel** | *Arc Créatif* | Le joueur **définit librement** la forme du sort au lancement |
-| **Terre + Mana Spirituel** | *Forteresse d'Âme* | Crée un bouclier lié directement aux **PV de l'Objet Spirituel** |
+### 🟣 LE SYMBOLE — l'art de l'Âme *(branche Spirituel, id 2)*
+On **crée** depuis l'âme : **matérialiser** un objet/familier (sentiment + désir +
+croyance), **Résonance** (accorder deux âmes), **Lecture** (le Regard). Opération
+**interdite** : la **Consommation** (dévorer des âmes → l'Errant).
+- **Plugins :** `ObjetSpirituel` (matérialisation/évolution), `InvocationAmes`,
+  `LouCopySystem` (absorption/copie), `AmeStatusScene`.
+- **Skill types existants :** `9 · ame`, `8 · invocation`.
 
 ---
 
-## 5. ÂME vs ESPRIT — différences fondamentales
+## 3. LA LUCIDITÉ — descendre dans le Lac
 
-| | **ÂME** | **ESPRIT** |
-|---|---|---|
-| Nature | Essence spirituelle et **immortelle** | Dimension **mentale et intellectuelle** |
-| Destructibilité | **Ne peut jamais être détruite** — elle retourne dans les **codes sources** du jeu | Peut être **fragilisé, brisé, ou guéri** selon la Santé Mentale (SAN) |
-| Énergie produite | **Mana Spirituelle** | **Mana Originel** |
-| Représentation | l'**Objet Spirituel** en surface | la **barre de Santé Mentale (SAN)** |
-| Affinités | Invocateurs, nécromanciens | Mages créateurs, stratèges |
-| Dégradation | **Corruption → perte de personnage permanente** | **Traumatisme → réduction du Mana Originel disponible** |
+La **lucidité = la Santé Mentale** (vars 11-14, plugin `JadeEntitePlunging`).
+Elle sert à **deux** choses : **tenir les longues Paroles**, et **voir le caché**.
+C'est une **descente par seuils** :
 
-> 💡 **Le retour des âmes** : une âme peut être **absorbée, manipulée, changée, scellée**… mais **jamais réellement détruite**. Elle retourne dans les codes sources. **Seuls les joueurs non corrompus** peuvent revenir via les **sauvegardes**. Une âme corrompue, elle, ne revient **jamais vraiment**.
+| Seuil | Ce qu'on voit | En jeu |
+|-------|---------------|--------|
+| 0 · Surface | le monde ordinaire | normal |
+| 1 · Le voile | âmes errantes, sang, **marques** des gens | indices, PNJ cachés |
+| 2 · La trame | le **code** sous les choses (Paroles, nombres) | secrets, glitches lisibles |
+| 3 · Le Mur | ce qui **regarde du dehors** : présences, **vies reprises** (sauvegardes), **oubliés** | horreur méta (`CorruptedUI`) |
+| 4 · Le Fond | tout, d'un coup — la folie | game-over « Dément » |
 
----
-
-## 6. L'OBJET SPIRITUEL
-
-L'arme/objet que le joueur reçoit **au début du jeu**.
-- C'est la **manifestation physique de son âme en surface**.
-- Il **évolue avec le joueur** : directement relié à son **niveau** et à son **âme**.
-- Peut être un **objet, une arme ou une armure**.
-
-**Image de l'âme = une coquille :**
-- **La surface** : ce qui peut être **touché et matérialisé** physiquement → l'Objet Spirituel.
-- **Les profondeurs** : là où résident les **capacités spéciales**, la **nature** de l'âme et ses **traits**.
+> 💡 **Double tranchant :** trop **basse** → les grandes Paroles ratent ; trop
+> **haute** → on touche le Mur et on glisse vers le **Dément**. L'équilibre se tient.
 
 ---
 
-## 7. AFFINITÉS — comment un joueur se connecte aux sources
+## 4. LES TROIS CHUTES (le cœur du gameplay)
 
-L'affinité dépend de la **nature de l'âme**. Elle détermine la **puissance** et la **facilité** dans chaque branche :
+Pencher trop vers une source **brise l'équilibre** et appelle sa Chute. **Chaque
+Chute existe déjà comme mécanique** — il s'agit de les unifier sous ce nom :
 
-- **Plus d'affinité** avec une source → plus **puissant** et plus **à l'aise** dans sa branche secondaire… mais **des difficultés** dans les autres branches.
-- L'affinité **n'est pas figée** : elle peut **changer au fil des décisions** prises dans la vie du personnage (lien direct avec le système de **Santé Mentale de l'Âme**).
+| Chute | Source | On gagne | On perd | Plugin / mécanique |
+|-------|--------|----------|---------|--------------------|
+| **La Bête** | Corps (sang de bête / Ombrefauves) | puissance brute | la conscience | `CorruptionAme` (jauge 0-100), `CorruptionFX`, `CorruptedUI` |
+| **L'Errant** | Âme (Consommation) | pouvoir sans fin (+ATK/+MAT) | le corps (fragilité +dégâts subis) | **jauge `Errance`** (0-100 : Ancré→Décharné→Gonflé→l'Errant), nourrie par `AmeSouls`/`LouCopySystem` |
+| **Le Dément** | Esprit (lucidité au Mur) | voir toute vérité | la raison | Santé Mentale extrême (`JadeEntitePlunging`) |
 
-**Distribution des affinités dans la population :**
-| Cas | Fréquence | Description |
-|---|---|---|---|
-| Cas | Nom de société | Fréquence | Description courte |
-| **Affinité Simple** (1 source) | *les Alignés* | **≈ 72 %** | Prédisposition claire à un puits. Le cas « normal ». |
-| **Affinité Double** (2 sources) | *les Duaux* | **≈ 15 %** | Polyvalents, deux branches accessibles. Souvent élites/leaders. |
-| **Aucune Affinité** (0 source) | *les Atones* | **≈ 12 %** | Aucun bonus naturel — tout apprendre à la dure. |
-| **Affinité Triple** (3 sources, faibles) | *les Trines* | **≈ 0,9 %** | Touchent les 3 puits, mais aucun n'est dominant. |
-| **Mana Semi-Parfait** (3 sources maîtrisées) | *les Élus du Prisme* | **≈ 0,1 % (1/1000)** | Apex absolu — sous-branche du Mana Pur. Défie la réalité. |
+> 🔗 **Lien lore :** les **âmes errantes** que régit la **Reine Oubliée / Déesse
+> Blanche** *furent* des Errants montés trop haut (voir `lore.md`).
 
-> *(Les pourcentages se cumulent à 100 % de la population des joueurs.)*
-
-### 7.1 · Détail des cinq cas
-
-**🟦 LES ALIGNÉS — Affinité Simple (≈72 %)**
-La grande majorité. Une âme « penche » naturellement vers **un seul** puits (Corps, Âme ou Esprit).
-- **Avantages** : puissance et facilité d'apprentissage **élevées** dans la branche secondaire correspondante. Coûts en mana réduits, montée en compétence rapide.
-- **Inconvénients** : **difficulté marquée** dans les deux autres branches (coûts majorés, sorts instables, plafond de puissance bas).
-- **Gameplay** : +20 % de dégâts/efficacité dans sa branche, −20 % dans les autres.
-- **Exemples** : **Thylane** *(Corps → Négatif)*, **Neyssa** & **Tianna** *(Esprit → Positif)*.
-
-**🟪 LES DUAUX — Affinité Double (≈15 %)**
-Deux puits répondent à l'âme. Plus rare, souvent perçu comme un signe de destin.
-- **Avantages** : **deux branches** réellement utilisables → grande **adaptabilité tactique** (peut couvrir une faiblesse du cycle).
-- **Inconvénients** : maîtrise un peu **moins profonde** qu'un Aligné dans chaque branche (l'âme se partage). Risque de **conflit intérieur** si les deux sources s'opposent (ex. Corps + Esprit).
-- **Gameplay** : +10 % dans ses deux branches, neutre dans la troisième.
-- **Exemple** : **Lou** *(Âme + Esprit → Spirituelle + Originel)* — d'où sa capacité unique à manipuler les âmes **et** à copier/adapter, mais aussi ses **traumatismes intenses** (deux sources = deux portes ouvertes aux contrecoups).
-
-**⬛ LES ATONES — Aucune Affinité (≈12 %)**
-L'âme ne résonne avec aucun puits. Longtemps méprisés, parfois… les plus libres.
-- **Avantages** : **aucune corruption naturelle**, aucune dépendance ; ils choisissent **librement** la branche qu'ils travaillent, et progressent de façon **stable et prévisible**. Insensibles à certains pièges (la rage du Négatif les blesse moins).
-- **Inconvénients** : **aucun bonus** ; tout coûte plus cher et plus lentement au départ. Plafond plus bas sans entraînement acharné.
-- **Gameplay** : 0 % bonus partout, mais **réduction des malus** (recul PV du Négatif/Sombre divisé par 2, immunité partielle à la corruption).
-- **Lore** : beaucoup d'**artisans, marchands et stratèges** sont des Atones — ils compensent par l'intelligence et la technique, pas la magie.
-
-**🌗 LES TRINES — Affinité Triple faible (≈0,9 %)**
-Les trois puits frémissent, mais **aucun ne domine**. État instable, souvent transitoire.
-- **Avantages** : accès aux **trois branches** → couvre tout le cycle.
-- **Inconvénients** : **puissance diluée** (aucune source forte), grande **instabilité** — une mauvaise série de décisions peut faire basculer brutalement vers une seule source… ou vers la corruption.
-- **Gameplay** : −10 % partout, mais peut utiliser **toutes** les branches sans pénalité d'accès.
-- **Destin** : un Trine qui **stabilise** ses trois sources par une volonté extraordinaire peut « cristalliser » en **Élu du Prisme**.
-
-**🌈 LES ÉLUS DU PRISME — Mana Semi-Parfait (≈0,1 %, 1/1000)**
-L'apex. Sous-branche directe du **Mana Pur**. Affinité **totale et maîtrisée** avec les trois sources.
-- **Avantages** : ignore le cycle, lance du **Mana Semi-Parfait** (skill type 7), accès quasi-illimité aux trois branches **et** aux éléments.
-- **Le prix** : leur magie **défie la réalité** — chaque usage intense peut provoquer des **distorsions** (glitches du monde, retours de code, conséquences imprévisibles). Plus ils sont puissants, plus le monde **devient instable** autour d'eux.
-- **Lore** : un Élu du Prisme est à la fois **bénédiction et menace** pour la trame du jeu. Les civilisations les craignent autant qu'elles les vénèrent.
-
-### 7.2 · L'affinité n'est PAS figée
-L'affinité dépend de la **nature de l'âme**, mais cette nature **évolue avec les décisions** du personnage :
-- Frôler ses émotions noires sans cesse → glissement vers le **Corps (Négatif/Sombre)**.
-- Cultiver la sérénité, l'étude, l'altruisme → renforcement de l'**Esprit (Positif)**.
-- Côtoyer la mort, les âmes, le deuil → ouverture vers l'**Âme (Spirituelle)**.
-- Une **chute de santé mentale (SAN)** peut **fermer** temporairement l'accès à une source (l'esprit brisé produit moins de Mana Originel).
-
-> ⚙️ **Branchement jeu** : ce glissement est déjà piloté par tes jauges de **Santé Mentale de l'Âme** (vars 11–14). On peut faire **changer l'affinité `<Mana>` d'un héros automatiquement** quand sa jauge bascule de phase (ex. Thylane qui sombre → son affinité Négatif s'intensifie).
+> 🎯 **Paliers de la Bête (canon, à garder dans `CorruptionAme`) :**
+> 40 = Ternie · 70 = Souillée · 100 = Corrompue. Renommables en
+> **Calme → Frémissement → Fièvre → Mue** pour coller au lore.
 
 ---
 
-## 8. CLASSES & AFFINITÉS DE MANA
+## 5. L'ÉQUILIBRE — le Mana Semi-Parfait
 
-| Classe | Affinité dominante | Spécialité |
-|---|---|---|
-| **Mage des Étoiles** | Mana Positif + Eau/Cosmos | Guérison cosmique, prédiction, protection |
-| **Nécromancien** | Mana Spirituelle + Ombre | Manipulation d'âmes, résurrection corrompue |
-| **Berserker Arcanique** | Mana Négatif + Feu | Dégâts bruts, auto-destruction maîtrisée |
-| **Invocateur** | Mana Spirituelle + Terre/Vent | Création d'entités, lien avec les âmes |
-| **Ombremancien** | Mana Sombre + Ombre | Corruption, manipulation psychique, abîme |
-| **Artiste Arcanique** | Mana Originel + Tout élément | Sorts libres, adaptation en combat |
-| **Élu / Transcendant** | Mana Pur + Multi-éléments | **Classe finale**, accès aux pouvoirs absolus |
-| **Lou** *(personnage)* | Mana Spirituelle + Originel | Manipulation d'âmes — **traumatismes intenses** |
+Le **centre** des trois sources : ni Bête, ni Errant, ni Dément. Celui qui le tient
+peut **tout** (réciter, frapper, créer) sans basculer. **Rare**, non par chance,
+mais parce que c'est une **tension** à tenir en permanence.
+- **Plugin :** `Surpassement` (jauge mentale 9-10 → état « Surpassé » +stats/+crit).
+- **Élément/skill-type :** `mana semi parfait` (élém 16), skill type `7`.
+- **Progression (cf. `compendium-paroles.html` onglet Progression) :** entraîner
+  ses **trois** voies > en maxer une. Portes : Fusion (2 voies niv 2),
+  Semi-Parfait (3 voies niv 3), Parole ultime (3 voies niv 5 + équilibre tenu).
 
 ---
 
-## 9. HISTOIRE — les grands tournants de la magie
+## 6. LES ÉLÉMENTS (couche tactique)
 
-1. **L'Ère des Sources Brutes** : les premiers joueurs ne pouvaient toucher que les puits primordiaux. La plupart en mouraient. La magie était rare, terrifiante, presque mythique.
-2. **Le Culte des Sorcières des Étoiles** *(fondé par une joueuse)* : domestication de l'Esprit en **Mana Positif**. Naissance des **soins**, de l'**eau** et des sorts **cosmiques**. La magie devient enseignable.
-3. **L'Empire Vultric** *(fondé par un joueur)* : réhabilitation du **Mana Sombre**, longtemps cru maléfique. Création du **Mana Négatif** — la force par les émotions. La guerre change de visage.
-4. **Les Nécromanciens & Invocateurs** : maîtrise progressive de la **Mana Spirituelle**, au prix de traumas. On apprend à parler aux âmes.
-5. **L'Éveil du Mana Pur** : l'apparition des premiers **Transcendants**, et la légende du **Mana Semi-Parfait** (1/1000) qui défie la réalité.
+8 éléments de base, **inchangés** (`System.json` 8-15) :
+
+| id | Élément | id | Élément |
+|----|---------|----|---------|
+| 8 | FEU | 12 | FOUDRE |
+| 9 | EAU | 13 | GLACE |
+| 10 | VENT | 14 | LUMIÈRE |
+| 11 | TERRE | 15 | **OMBRE** |
+
+### Créer des éléments — la règle de la somme
+**Élément + Élément = nouvel élément** (on additionne les codes → résultat ≥ 16,
+donc le canon 8 reste intact). Ex. : Terre (11) + Eau (9) = **20 · Plante** ;
+Feu + Eau = 17 · Vapeur ; Feu + Terre = 19 · Lave ; Terre + Foudre = 23 · Métal ;
+Eau + Glace = 22 · Givre ; Lumière + Ombre = 29 · Crépuscule.
+- **Réf joueur :** `regles-simples.html` (mélangeur). **À implémenter :** entrées
+  `System.json` 16+ + couleurs `ManaVisuals` quand on voudra des sorts dérivés.
+
+> ⚠️ **Plus de cycle pierre-feuille-ciseaux des branches.** Lumière ⇄ Ombre
+> peuvent rester opposés (lisible), mais l'avantage de combat ne vient plus d'un
+> cycle Négatif/Positif/Spirituel : il vient des **Arts** et des **Chutes**.
 
 ---
 
-## 10. EXEMPLES CONCRETS (pour comprendre vite)
+## 7. LES AUTORITÉS (au-delà des Chutes)
 
-- **Une berserker au Mana Négatif** lance *Flammes Maudites* sur une nécromancienne (Âme) → **avantage du cycle (×1.5)** : la rage du corps brise l'âme fragile. Mais elle **perd des PV** à chaque coup.
-- **Une Sorcière des Étoiles (Mana Positif)** affronte cette même berserker → **avantage (×1.5)** : la lumière de l'esprit apaise la rage. Sauf que si la Sorcière a une **mauvaise SAN**, son Mana Positif s'**affaiblit**.
-- **Lou (Mana Spirituelle)** absorbe une âme ennemie → il se renforce, mais **récolte le trauma** de l'âme (cf. *LouCopySystem* : aspiration → soin + risque de Trauma).
-- **Un Élu** lance *Nova Sainte* (Lumière + Mana Pur) → **ignore toutes les résistances** et purifie la corruption : aucun cycle ne le contre.
-- **Un joueur sans affinité** doit choisir une branche et l'apprendre lentement, sans bonus — mais sans malus de corruption non plus.
+Accumuler assez d'essence (par n'importe quelle voie) **sans** être emporté = une
+**Autorité** : le monde se **plie** à elle. Deux Autorités ne coexistent pas sans
+que le monde se brise (les *Sommets*).
+> 🔗 **Couche méta :** les **4 Originels** (âme du Roi Démon) **sont** des
+> Autorités. Le **Concordat des Sommets** = la peur de leurs guerres. *(Boss :
+> `JadeObsession`, `DonoBoss`, `MahoragaBoss`, `KevSignature`, `JosuMirror`.)*
 
 ---
 
-## 11. CORRESPONDANCE AVEC TA BASE DE DONNÉES (RPG Maker MV)
+## 8. LES QUATRE ROYAUMES ↔ le casting
 
-**Éléments (`System.json`)** — déjà en place, à utiliser tels quels :
-| ID | Nom en base | Rôle dans le lore |
-|---|---|---|
-| 1 | Physique | attaques d'arme / Objet Spirituel |
-| 2 | mana spirituelle | **Âme** (source) |
-| 3 | mana positive | branche **Esprit** |
-| 4 | mana négative | branche **Corps** |
+| Royaume | Voie | Pont méta (Battle World) |
+|---------|------|--------------------------|
+| **Ordre d'Or** | équilibre | Église de l'Équilibre · **Donovan, l'Élu** |
+| **Empire Vultric** | Corps / force | l'empire de **Kev** |
+| **Mages des Étoiles** | Esprit / savoir | Sorcières des Étoiles · **Royaume des Étoiles** (Jade) |
+| **Empire Uni de l'Est** | Âme / essence | **Voix de l'Âme** · proche du Culte des Âmes (femme de Dono) |
+
+*(Factions jouables : `FactionsAmes`. Détail : `lore.md` & `codex-trois-sources.html`.)*
+
+---
+
+## 9. LES ÂMES & L'AU-DELÀ
+
+À la mort, l'âme **redescend vers le Fond** (les codes sources). Certaines
+**restent accrochées** = âmes errantes. **Seuls les joueurs non corrompus
+reviennent** (sauvegardes). La **corruption** = réécriture irréversible.
+- **Plugins :** `AmeSouls` (Feu d'Âme, mort = perte d'âmes, pas de Game Over),
+  `Bloodstain` (récupérer ses âmes), `ForgeAmes`, `SanctuaireAmes`.
+
+---
+
+## 10. L'OBJET SPIRITUEL & LA MARQUE
+
+- **Surface** = l'**Objet Spirituel** (arme de départ, 4 paliers
+  Éclat→Forme→Résonance→Vérité ; `ObjetSpirituel`).
+- **Profondeurs** = la **Marque / ADN** : signature **unique**, **interrupteur**
+  d'accès aux sources, **vit** avec l'âme (s'étend, se rétracte si l'âme se brise).
+- **Natures d'âme** (ce qu'on matérialise) : Volonté → armes ; Attachement →
+  familiers/boucliers ; Colère → objets voraces ; Foi → sceaux/masques ; Deuil →
+  objets liés aux morts ; Curiosité → clés/lentilles.
+
+---
+
+## 11. CORRESPONDANCE BASE DE DONNÉES (déjà en place)
+
+**Éléments (`System.json`)** — *alignés, ne rien renuméroter :*
+| id | Nom en base | Rôle |
+|----|-------------|------|
+| 1 | Physique | arme / Objet Spirituel |
+| 2 | mana spirituelle | **Âme** (source & branche) — le Symbole |
+| 3 | mana positive | branche **Esprit** — la Parole |
+| 4 | mana négative | branche **Corps** — le Souffle |
 | 5 | Mana Sombre | **Corps** (source brute) |
 | 6 | Mana Originel | **Esprit** (source brute) |
-| 7 | Mana Parfait | **Mana Pur** |
-| 8–15 | FEU…OMBRE | les 8 éléments physiques |
+| 7 | AME / Parfait | **Mana Pur** |
+| 8-15 | FEU…OMBRE | les 8 éléments |
+| 16 | mana semi parfait | l'**équilibre** des trois |
 
-**Réglage du cycle (à faire dans Base de données ▸ Types ▸ Éléments, onglet des traits d'ennemis/armures, OU via un plugin d'affinités) :**
-- mana négative **fort** contre mana spirituelle → résistance cible **200 %**
-- mana spirituelle **fort** contre mana positive → **200 %**
-- mana positive **fort** contre mana négative → **200 %**
-- branche désavantagée → **50 %**
-- Mana Parfait → **100 %** partout (jamais réduit, jamais augmenté)
-
-**Skill Types utiles déjà présents** : `9 · ame`, `10 · sang`, `7 · MANA semi-parfait`, `19 · Arts Sereins`.
+**Skill types utiles :** `7 · MANA semi-parfait`, `8 · invocation`, `9 · ame`,
+`10 · sang`, `11-18 · ombre de <arme>` (Souffle), `19 · Arts Sereins`.
 
 ---
 
-## 12. LES 8 ÉLÉMENTS EN DÉTAIL
+## 12. CARTE DES PLUGINS (qui fait quoi)
 
-> Les éléments ne sont que des **formes** données au mana. Chacun « penche » vers une des trois sources, ce qui explique qui les manie le mieux.
-
-- **🔴 FEU (8) — source : Corps.** L'élément de la fureur. Attaque directe et **brûlure continue** qui ronge tour après tour. Amplifié par le Mana Négatif (*Flammes Maudites*). Manié par les **Berserkers Arcaniques**. *« La colère qui prend forme. »*
-- **🔵 EAU (9) — source : Esprit.** Le flux apaisant. **Soin** et **ralentissement** de l'ennemi. Amplifié par le Mana Positif (*Vague Sacrée*). Cœur de l'art des **Mages des Étoiles**. *« L'intelligence qui s'écoule. »*
-- **🟢 VENT (10) — source : Esprit.** La liberté. **Vitesse, esquive, dégâts de zone**. Lié au Mana Originel — un esprit vif fend l'air. Favori des **Invocateurs** mobiles.
-- **🟤 TERRE (11) — source : Corps.** L'ancrage. **Défense et écrasement**. Lié à la résistance physique : un corps solide devient une muraille.
-- **🟡 FOUDRE (12) — source : Esprit.** La sanction. **Paralysie** et dégâts techniques. Sa puissance suit l'**INT** (Mana Positif). *Arc Créatif* avec le Mana Originel : le lanceur **dessine** son éclair.
-- **🧊 GLACE (13) — source : Esprit.** Le contrôle. **Gel, ralenti, armure**. Lié à la précision mentale — l'esprit froid ne tremble pas.
-- **⬜ LUMIÈRE (14) — source : Âme.** La rédemption. **Purification** et **guérison d'âme**. Seul élément qui répare la corruption. Amplifié par le Mana Pur (*Nova Sainte*). *« Ce qui ramène l'âme à sa source. »*
-- **🟣 OMBRE (15) — source : Corps.** L'abîme. **Silence, peur, corruption**. Amplifié par le Mana Sombre (*Puits d'Abîme*). Arme des **Ombremanciens** et des **Nécromanciens**. *« Les désirs qu'on n'ose pas nommer. »*
-
-**Règle d'or** : Lumière ⇄ Ombre s'annulent ; le reste suit la Roue (Feu→Eau→Foudre→Terre→Vent→Glace→Feu). Le **Mana Pur** ignore toute affinité élémentaire.
-
----
-
-## 13. LES GRANDES FACTIONS
-
-**🟦 Le Culte des Sorcières des Étoiles** *(branche : Mana Positif)*
-Fondé par **une joueuse** à l'Ère où l'Esprit semblait inutilisable. Les Sorcières ont prouvé qu'en canalisant l'intelligence et la compassion, on pouvait **soigner, prédire et protéger**. Hiérarchie matriarcale, sanctuaires bâtis sous le ciel étoilé (d'où le nom), savoir transmis de maîtresse à élève. Aujourd'hui, elles **enseignent** la magie au plus grand nombre — sans elles, la magie serait restée mortelle.
-
-**🟪 L'Empire Vultric** *(branche : Mana Négatif)*
-Fondé par **un joueur** visionnaire. Là où tous voyaient le **Mana Sombre** comme purement maléfique, Vultric a démontré que c'était un **concept fondamental** : transformer ses émotions — même les plus noires — en **force physique extraordinaire**. L'Empire en a fait une discipline militaire. Leurs guerriers sont terrifiants… mais **se consument** de l'intérieur (le Négatif draine la vie). Doctrine : *« La force se paie avec sa propre chair. »*
-
-**🟥 Les Voix de l'Âme** *(branche : Mana Spirituelle)*
-Ni un empire ni un culte, mais une **constellation de cercles** : nécromanciens, invocateurs, médiums. Ils parlent aux âmes, en tirent puissance et savoir interdit. **Lou** en est un héritier sauvage. Leur règle tacite : ne **jamais** écouter une âme trop longtemps — les traumas des morts deviennent les tiens.
-
-**🌈 L'Ordre du Prisme** *(Mana Pur / Semi-Parfait)*
-Quasi-mythique. Rassemblerait les rares **Élus du Prisme**. Vénéré et craint, car la présence prolongée d'un Élu **déforme la réalité** autour de lui. Beaucoup doutent qu'il existe encore.
+| Pilier | Plugin(s) |
+|--------|-----------|
+| La Parole (Esprit) | `ParolesMagic`, `ManaVisuals`, `ManaCodex` |
+| Le Souffle (Corps) | `ManaAffinity` (recul PV), skill types `sang`/`ombre` |
+| Le Symbole (Âme) | `ObjetSpirituel`, `InvocationAmes`, `LouCopySystem`, `AmeStatusScene` |
+| Lucidité / Dément | `JadeEntitePlunging`, `Neyssa_Concentration`, `CorruptedUI` |
+| Bête (Corps) | `CorruptionAme` (Calme/Frémissement/Fièvre/Mue), `CorruptionFX` |
+| Errant (Âme) | `Errance` (jauge dédiée), `AmeSouls`, `Bloodstain`, `LouCopySystem` |
+| Équilibre / Semi-Parfait | `Surpassement` |
+| Feu d'Âme / mort | `AmeSouls`, `ForgeAmes`, `SanctuaireAmes` |
+| Factions / Royaumes | `FactionsAmes` |
 
 ---
 
-## 14. LA MÉTAPHYSIQUE DES CODES SOURCES
+## 13. CHANTIER DE COHÉRENCE
 
-Ce monde est **numérique**. Cela a des conséquences concrètes sur les règles de l'existence :
-- Une **âme** n'est jamais vraiment détruite : absorbée, scellée, brisée… elle **retourne dans les codes sources** du jeu.
-- Les **joueurs** (âmes non corrompues) peuvent **revenir** grâce aux **sauvegardes** — c'est leur privilège, et la vraie raison de leur quasi-immortalité.
-- Les **PNJ** et les **âmes corrompues** n'ont pas ce filet : une fois retournés au code, ils ne reviennent **jamais vraiment** identiques.
-- La **corruption** n'est donc pas une « mort » ordinaire : c'est une **réécriture** de l'âme dans les sources, irréversible.
-
-> C'est pourquoi protéger son âme > protéger son corps : le corps n'est qu'un fichier temporaire ; l'âme est la **donnée originelle**.
-
----
-
-## 15. CORRUPTION, MORT & RÉSURRECTION
-
-**Comment l'âme se corrompt :**
-- Abus du **Mana Sombre/Négatif** (frôler sans cesse ses émotions noires).
-- Écouter trop d'**âmes** (Mana Spirituelle mal maîtrisé → traumas qui s'incrustent).
-- **Santé mentale (SAN)** au plus bas trop longtemps → fissures, puis réécriture.
-
-**À la mort du corps :**
-1. L'**Objet Spirituel** se brise (manifestation de surface détruite).
-2. L'âme se replie vers les **codes sources**.
-3. **Si joueur non corrompu** → peut **recharger une sauvegarde** et revenir intact.
-4. **Si corrompu** → réécriture : retour possible, mais **altéré** (perte de traits, de souvenirs, voire de personnage — *game over narratif*).
-
-**Lien avec tes systèmes** : c'est exactement ce que modélise **JadeEntitePlunging** (jauges 11–14, phases d'effondrement) et la fin **« Carnage »/« Dévoré »** du calcul de fin.
+- [x] `ManaCodex` : pages refaites → 3 Arts / 3 Voies / 3 Chutes / équilibre.
+- [x] `ManaAffinity` : **cycle ×1.5/×0.5 retiré**. Conservés : recul PV (prix du
+      Corps), couplage Positif/Santé Mentale, Mana Pur perce-résistances.
+- [x] `CorruptionAme` : paliers → **Calme / Frémissement / Fièvre / la Mue**
+      (états 181-183 renommés, écran + messages mis à jour).
+- [x] **Errant** : jauge `Errance` formalisée (plugin dédié, auto-suffisant).
+- [x] **Éléments dérivés créés** dans `System.json` (17 Vapeur, 19 Lave,
+      20 Plante, 22 Givre, 23 Métal, 29 Crépuscule) + couleurs `ManaVisuals` +
+      6 sorts signatures (Skills 801-806, `<Parole: 4>`). Slots 18/21/24-28
+      réservés pour d'autres sommes.
+- [ ] (Option) brancher le gain d'`Errance` sur les skills de Consommation précis
+      (balise `<Consume>`) plutôt que tout art de l'Âme.
 
 ---
 
-## 16. L'ÉCONOMIE DU MANA (règles de combat avancées)
-
-- **Coût** : chaque sort puise dans la source du lanceur. Plus on est **éloigné** de son affinité, plus le coût explose (cf. malus des Alignés).
-- **Surmenage / Surcharge d'Âme** : puiser au-delà de ses limites inflige les états **Surcharge d'Âme (1/2/MAX)** — d'abord un boost, puis l'effondrement.
-- **Mana Négatif & Sombre** : ne coûtent pas (ou peu) de PM… mais **des PV** (recul). C'est le marché du Corps : la vie contre la puissance.
-- **Mana Positif & la SAN** : sa puissance **décroît** avec une mauvaise santé mentale (un esprit brisé soigne mal).
-- **Mana Pur** : le plus coûteux et le plus rare ; en échange, il **ignore les défenses**.
-
-> ⚙️ **Déjà en jeu** via `ManaAffinity.js` (recul PV, Positif/SAN, Pur perce-résistances) et les états Surcharge d'Âme de ta base.
-
----
-
-## 17. L'OBJET SPIRITUEL — ÉVOLUTION
-
-L'Objet Spirituel grandit avec le **niveau** et l'**âme** du porteur. On peut imaginer **quatre paliers** :
-1. **Éclat** (Niv. 1+) : forme brute, à peine éveillée. Reflète un trait dominant.
-2. **Forme** (Niv. ~15) : l'objet « choisit » sa nature définitive (arme/objet/armure) selon les **décisions** du joueur.
-3. **Résonance** (Niv. ~35) : les **profondeurs** de l'âme s'ouvrent — une capacité spéciale unique se débloque.
-4. **Vérité** (Niv. ~60) : l'objet devient l'expression totale de l'âme. Forme « finale », liée à la fin obtenue.
-
-**Surface vs Profondeurs** : la *surface* est ce qu'on touche (stats, apparence) ; les *profondeurs* portent les **traits, la nature et les pouvoirs secrets**. Deux héros avec la même arme n'ont **jamais** le même Objet Spirituel.
-
----
-
-## 18. LEXIQUE EXPRESS
-
-| Terme | Définition |
-|---|---|
-| **Source primordiale** | Un des 3 puits bruts : Corps (Sombre), Âme, Esprit (Originel). |
-| **Branche secondaire** | Version domestiquée d'une source : Négatif, Spirituelle, Positif. |
-| **Affinité** | Penchant de l'âme vers une/plusieurs sources. Évolue avec les choix. |
-| **SAN** | Santé Mentale ; gouverne l'Esprit et le Mana Originel/Positif. |
-| **Objet Spirituel** | Manifestation physique de l'âme ; arme/objet de départ évolutif. |
-| **Codes sources** | Le « code » du monde où retournent les âmes. |
-| **Corruption** | Réécriture irréversible d'une âme dans les codes sources. |
-| **Mana Pur / Semi-Parfait** | Énergie transcendante ; 1/1000 la maîtrise, au prix de la réalité. |
-
----
-
-> *« Au centre de tout se trouve l'Âme — unique, immortelle, et seul vrai reflet du joueur dans ce monde. Protège-la. Car si le corps peut guérir, une âme corrompue ne revient jamais vraiment. »*
+> *« Les faibles choisissent une voie. Les forts les portent toutes. Les sages
+> savent qu'aucune ne se porte sans prix. »* — enseignement de l'Ordre d'Or
