@@ -1,7 +1,7 @@
 # 🎬 Scénario — *Le Monde des Trois Sources*
 
 > Fil rouge de la refonte. Canon : `docs/lore.md`, casting : `docs/personnages.md`.
-> **Surface :** la course aux Autorités. **Profondeur :** le Lac, le Mur, la Reine
+> **Surface :** la fissure du Traité des Cendres. **Profondeur :** le Lac, le Mur, la Reine
 > Oubliée. **Cœur :** rester soi quand chaque source t'appelle vers sa Chute.
 
 ---
@@ -60,9 +60,8 @@ par un nom qu'il n'a jamais dit à personne.
 ## Acte IV — *L'Appel d'Aldébaran* (la Reine Oubliée)
 La **Déesse Blanche** s'adresse à Aël : elle lui promet la **fin du déchirement**.
 Plus de trois sources qui tirent, plus de Chute à craindre — juste la paix de son
-ciel, le **Royaume des Étoiles Noires**. Pendant ce temps, la course aux Autorités
-atteint son point de rupture : un Royaume est sur le point de **faire naître son
-Sommet**. Le monde et l'au-delà réclament Aël en même temps.
+ciel, le **Royaume des Étoiles Noires**. Pendant ce temps, la fissure du Traité des Cendres
+atteint son point de rupture : le Traité des Cendres est sur le point de **rompre**. Le monde et l'au-delà réclament Aël en même temps.
 
 ---
 

@@ -41,7 +41,7 @@ réel, source de **tout mana** et de **toute folie**. *(Couche méta : le Fond =
 | Facette | Touche le monde par | Source primordiale (brute) | Branche maniable | Art | Prix | Chute |
 |---------|---------------------|----------------------------|------------------|-----|------|-------|
 | **ESPRIT** | la pensée | Mana Originel *(id 6)* | **Positif** *(id 3)* | la **Parole** | lucidité | le **Dément** |
-| **CORPS** | le geste | Mana Sombre *(id 5)* | **Négatif** *(id 4)* | le **Souffle** | humanité | la **Bête** |
+| **CORPS** | le geste | Mana Sombre *(id 5)* | **Négatif** *(id 4)* | la **Maîtrise** | humanité | la **Bête** |
 | **ÂME** | le sentiment | Mana de l'Âme *(id 2)* | **Spirituel** *(id 2)* | le **Symbole** | essence | l'**Errant** |
 
 Au sommet, hors cycle : le **Mana Pur / Parfait** *(id 7)*, et son état rare
@@ -63,10 +63,10 @@ Un sort **récité** : `mot de passe (mana) + élément + sort`. Précis, modula
 - **Plugin :** `ParolesMagic` (réussite = f(lucidité, L)), `ManaVisuals` (couleurs).
 - **Réf joueur :** `compendium-paroles.html`, `regles-simples.html`.
 
-### 🔴 LE SOUFFLE — l'art du Corps *(branche Négatif, id 4)*
-Un **art martial instantané** : pas d'incantation, on lance « comme on contracte
-un muscle ». Le mana sombre **circule comme le sang**. Écoles : Onde, Brisure,
-Racine, Spectre. **Progresse par le combat** (on absorbe le style adverse).
+### 🔴 LA MAÎTRISE — l'art du Corps *(branche Négatif, id 4)*
+Un **art martial instantané** : **renforcer** sa chair, **projeter** le mana
+sombre (ondes, lames). Les **5 Voies** : Forge, Onde, Source, Miroir, Vide.
+**Progresse par le combat** (leçon volée). Le sang de bête marque le corps.
 - **Coût mécanique :** **recul PV** (le Corps se paie en chair) → `ManaAffinity`
   (recoil Négatif/Sombre) + montée de **Corruption** → `CorruptionAme`.
 - **Skill types existants à rattacher :** `10 · sang`, les `ombre de <arme>` (11-18).
@@ -158,11 +158,11 @@ Eau + Glace = 22 · Givre ; Lumière + Ombre = 29 · Crépuscule.
 
 ---
 
-## 7. LES AUTORITÉS (au-delà des Chutes)
+## 7. LES RANGS DE PUISSANCE (v5 — remplace les « Autorités »)
 
-Accumuler assez d'essence (par n'importe quelle voie) **sans** être emporté = une
-**Autorité** : le monde se **plie** à elle. Deux Autorités ne coexistent pas sans
-que le monde se brise (les *Sommets*).
+Échelle D → S : **D** l'Étincelle · **C** l'Adepte · **B** le Maître · **A** le
+Champion · **S** la Légende (Donovano, Kevératus, Sève). Au-delà : **l'Astre**
+(le Mana Pur, le Premier, la Reine) — hors échelle.
 > 🔗 **Couche méta :** les **4 Originels** (âme du Roi Démon) **sont** des
 > Autorités. Le **Concordat des Sommets** = la peur de leurs guerres. *(Boss :
 > `JadeObsession`, `DonoBoss`, `MahoragaBoss`, `KevSignature`, `JosuMirror`.)*
@@ -173,8 +173,8 @@ que le monde se brise (les *Sommets*).
 
 | Royaume | Voie | Pont méta (Battle World) |
 |---------|------|--------------------------|
-| **Ordre d'Or** | équilibre | Église de l'Équilibre · **Donovan, l'Élu** |
-| **Empire Vultric** | Corps / force | l'empire de **Kev** |
+| **Ordre d'Or** | équilibre / la foi du dieu absent | **Donovano « le Second »** |
+| **Empire Vultric** | Corps / force | l'Empereur **Kevératus** (Divinité du Corps) |
 | **Mages des Étoiles** | Esprit / savoir | Sorcières des Étoiles · **Royaume des Étoiles** (Jade) |
 | **Empire Uni de l'Est** | Âme / essence | **Voix de l'Âme** · proche du Culte des Âmes (femme de Dono) |
 
@@ -229,7 +229,9 @@ reviennent** (sauvegardes). La **corruption** = réécriture irréversible.
 | Pilier | Plugin(s) |
 |--------|-----------|
 | La Parole (Esprit) | `ParolesMagic`, `ManaVisuals`, `ManaCodex` |
-| Le Souffle (Corps) | `ManaAffinity` (recul PV), skill types `sang`/`ombre` |
+| L'Aura des paliers | `AuraPaliers` (couleur d'affinité, intensité par palier) |
+| La Frappe d'âme | `FrappeAme` (`<FrappeAme>` ignore DEF/résistances, prix en Errance) |
+| La Maîtrise (Corps) | `ManaAffinity` (recul PV), skill types `sang`/`ombre` |
 | Le Symbole (Âme) | `ObjetSpirituel`, `InvocationAmes`, `LouCopySystem`, `AmeStatusScene` |
 | Lucidité / Dément | `JadeEntitePlunging`, `Neyssa_Concentration`, `CorruptedUI` |
 | Bête (Corps) | `CorruptionAme` (Calme/Frémissement/Fièvre/Mue), `CorruptionFX` |

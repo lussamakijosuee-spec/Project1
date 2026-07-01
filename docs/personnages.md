@@ -24,8 +24,8 @@ l'**équilibre** fragile entre les trois — ce que le monde a perdu avec le Pre
 - **Rôle de combat :** polyvalent, pivot d'équipe (hérite du rôle « lead »).
 - **Lien système :** `Surpassement` (Mana Semi-Parfait), les trois jauges de Chute.
 
-### 2. KORRAH — *« le Souffle »* · le Corps *(actor 2)*
-- **Source :** Corps (Mana Négatif). **Art :** le Souffle. **Chute :** la **Bête**.
+### 2. KORRAH — *« la Maîtrise »* · le Corps *(actor 2)*
+- **Source :** Corps (Mana Négatif). **Art :** la Maîtrise (Voie de la Forge). **Chute :** la **Bête**.
 - **Ce qu'il est :** un **exilé de Vultric**, ou un fils de **Meute** — il porte le
   **sang de bête** plus fort que les autres. Il s'est entraîné à frôler la Fièvre
   pour en revenir… jusqu'ici. Loyal, direct, terrifié de ce qu'il pourrait devenir.
@@ -63,7 +63,7 @@ ce qui pourrait l'atteindre, *elle*. Elle l'appelle vers **Aldébaran**, lui pro
 la fin de sa douleur d'être tiraillé entre trois sources. Le vrai boss final n'est
 pas un combat : c'est la **tentation de cesser d'être soi**.
 
-### L'Empereur de Vultric *(antagoniste « course aux Autorités »)*
+### L'Empereur Kevératus *(antagoniste « course aux Autorités »)*
 Le plus fort des vivants, qui **rêve d'être la première Autorité**. Si lui y
 arrive, le Concordat tombe et le sixième Âge commence par un Sommet. Miroir sombre
 de Korrah (le Corps poussé jusqu'au bout sans peur de la Bête).
