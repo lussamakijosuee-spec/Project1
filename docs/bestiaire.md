@@ -11,9 +11,9 @@
 | ID | Nouveau nom | Rôle dans le monde | Ancien (archivé) |
 |----|-------------|--------------------|------------------|
 | 76 | **La Reine Oubliée** | la Déesse Blanche — le boss cosmique final (la tentation) | Josu, le Dieu Fou |
-| 39 | **L'Empereur de Vultric** | l'Autorité qui veut naître la première (course aux Sommets) | JADE prime |
+| 39 | **L'Empereur Kevératus** | l'Autorité qui veut naître la première (course aux Sommets) | JADE prime |
 | 34 | **Arbitre de l'Ordre d'Or** | le juge qui traque Aël ; la part d'ombre de l'équilibre | Dono |
-| 21 | **Champion de Vultric** | le bras armé de l'Empire (Souffle interdit, sang de bête) | Kev phase 2 |
+| 21 | **Champion de Vultric** | le bras armé de l'Empire (Maîtrise interdite, sang de bête) | Kev phase 2 |
 | 25 | **Errant Gonflé** | une âme qui a trop consommé — boss de la Chute de l'Âme | Jade la marionnette |
 | 23 | **Noyé du Lac** | un descendeur perdu au Mur — horreur, voix, oubliés | Jade corrompu |
 | 72 | **Esprit Errant** | une âme errante hostile (mini-boss du Lac) | Esprit Vengeur de Dono |
@@ -32,7 +32,7 @@
   quand on les dérange. Drainent l'essence, infligent l'Errance.
 - **Les Arbitres de l'Ordre d'Or** — chevaliers des trois voies, traquent les
   déséquilibrés. Combattants complets, durs.
-- **Les soldats des Royaumes** — troupe de Vultric (Souffle), des Mages (Parole,
+- **Les soldats des Royaumes** — troupe de Vultric (Maîtrise), des Mages (Parole,
   invocations), de l'Est (familiers d'âme).
 - **Les créatures du Lac / du Fond** — formes du Mur, Ombrefauves primordiaux,
   fragments de Vérité. Le bestiaire d'horreur des profondeurs.

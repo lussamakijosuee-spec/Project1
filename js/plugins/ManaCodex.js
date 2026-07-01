@@ -48,284 +48,180 @@
 
     // \C[n] = couleur, \} = texte plus petit. Lignes courtes pour tenir à l'écran.
     var PAGES = [
-        {
-            title: '① Les 3 Sources Primordiales',
-            lines: [
-                'Tout être est un triptyque. Chaque facette est un',
-                'puits de magie brut, presque impossible à puiser seul :',
-                '',
-                '\\C[2]• LE CORPS  →  Mana Sombre\\C[0]  (émotions/désirs enfouis)',
-                '\\C[2]• L\'ÂME    →  Mana Spirituelle\\C[0]  (essence immortelle)',
-                '\\C[2]• L\'ESPRIT →  Mana Originel\\C[0]  (mental & santé mentale)',
-                '',
-                'Puiser une source DIRECTEMENT est mortel : on a donc',
-                'créé des branches secondaires plus maniables.'
-            ]
-        },
-        {
-            title: '② Les 3 Branches Secondaires',
-            lines: [
-                '\\C[6]MANA NÉGATIF\\C[0] (issu du Corps) — Empire Vultric.',
-                '  Émotions → force physique. Coût : draine les PV.',
-                '',
-                '\\C[2]MANA SPIRITUELLE\\C[0] (issu de l\'Âme) — invocateurs, Lou.',
-                '  Manipulation des âmes. Coût : traumas, cauchemars.',
-                '',
-                '\\C[1]MANA POSITIF\\C[0] (issu de l\'Esprit) — Sorcières des Étoiles.',
-                '  Intelligence, soin, eau, cosmos. Faiblit si la',
-                '  santé mentale décline.'
-            ]
-        },
-        {
-            title: '③ Les 3 Arts',
-            lines: [
-                'Chaque source se manie par un art, un geste, un prix :',
-                '',
-                '\\C[1]LA PAROLE\\C[0] (Esprit) — on récite : mot + élément',
-                '  + sort. Précise, lente. Prix : la \\C[1]lucidité\\C[0].',
-                '\\C[6]LE SOUFFLE\\C[0] (Corps) — art martial instantané,',
-                '  aucun mot. Prix : l\'\\C[6]humanité\\C[0] (recul PV).',
-                '\\C[2]LE SYMBOLE\\C[0] (Âme) — on crée depuis l\'âme :',
-                '  on matérialise. Prix : l\'\\C[2]essence\\C[0].'
-            ]
-        },
-        {
-            title: '④ Le Mana Pur (et Semi-Parfait)',
-            lines: [
-                '\\C[14]LE MANA PUR\\C[0] transcende le cycle : il ignore',
-                'tous les avantages et toutes les résistances.',
-                'C\'est l\'énergie des attaques magiques spéciales',
-                'des êtres transcendants (Élus).',
-                '',
-                '\\C[17]MANA SEMI-PARFAIT\\C[0] : l\'équilibre des TROIS',
-                'sources à la fois. Rare — non par chance, mais',
-                'parce qu\'il faut le TENIR sans basculer (Surpassement).'
-            ]
-        },
-        {
-            title: '⑤ Les 8 Éléments',
-            lines: [
-                'Couche tactique, à façonner depuis le mana :',
-                '',
-                '\\C[2]FEU\\C[0]►EAU  \\C[2]EAU\\C[0]►FOUDRE  \\C[2]FOUDRE\\C[0]►TERRE',
-                '\\C[2]TERRE\\C[0]►VENT  \\C[2]VENT\\C[0]►GLACE  \\C[2]GLACE\\C[0]►FEU',
-                '(chacun est faible contre celui qu\'il pointe)',
-                '',
-                '\\C[14]LUMIÈRE\\C[0] ⇄ \\C[8]OMBRE\\C[0] : s\'opposent mutuellement.',
-                '',
-                '\\C[17]CRÉER\\C[0] : Élément + Élément = nouvel élément',
-                '(on additionne). Terre(11)+Eau(9) = \\C[17]20 Plante\\C[0].'
-            ]
-        },
-        {
-            title: '⑥ Âme vs Esprit',
-            lines: [
-                '\\C[2]L\'ÂME\\C[0] : essence immortelle. Jamais détruite —',
-                '  elle retourne aux codes sources. Corruption =',
-                '  perte de personnage PERMANENTE.',
-                '',
-                '\\C[1]L\'ESPRIT\\C[0] : dimension mentale. Peut être brisé',
-                '  ou guéri selon la Santé Mentale (SAN).',
-                '  Trauma = moins de Mana Originel disponible.'
-            ]
-        },
-        {
-            title: '⑦ L\'Objet Spirituel',
-            lines: [
-                'L\'arme/objet reçu au début du jeu.',
-                '',
-                'C\'est la manifestation physique de ton âme',
-                'en surface. Il évolue avec ton niveau et ton âme.',
-                '',
-                'L\'âme est une coquille :',
-                '  • Surface : ce qui est matérialisé (l\'Objet).',
-                '  • Profondeurs : capacités, nature et traits.'
-            ]
-        },
-        {
-            title: '⑧ Les 3 Voies & l\'équilibre',
-            lines: [
-                'Tu n\'as pas une « case » : tu as TROIS voies à',
-                'entraîner — \\C[1]Esprit\\C[0], \\C[6]Corps\\C[0], \\C[2]Âme\\C[0].',
-                '',
-                'Pencher vers une voie donne de la puissance…',
-                'et un peu de sa \\C[8]Chute\\C[0] (page suivante).',
-                '',
-                'Le secret : monter les \\C[17]trois\\C[0], pas une seule.',
-                'L\'équilibre tenu = le \\C[17]Mana Semi-Parfait\\C[0].',
-                'Ton entraînement EST ton affinité — et il évolue.'
-            ]
-        },
-        {
-            title: '⑨ Les 3 Chutes',
-            lines: [
-                'Trop pencher vers une voie brise l\'équilibre :',
-                '',
-                '\\C[6]LA BÊTE\\C[0] (trop de Corps) — le sang de bête',
-                '  réveille l\'Ombrefauve. Tu gagnes la force,',
-                '  tu perds la conscience.  (Corruption)',
-                '\\C[2]L\'ERRANT\\C[0] (trop d\'Âme) — dévorer des âmes te',
-                '  grandit, mais tu perds ton corps : tu deviens',
-                '  une âme errante, hors du monde.',
-                '\\C[1]LE DÉMENT\\C[0] (trop d\'Esprit) — tu vois trop,',
-                '  jusqu\'au Mur. La lucidité totale est la folie.'
-            ]
-        },
-        {
-            title: '⑮ Les Classes Corrompues',
-            lines: [
-                'Au-delà des affinités existe une aberration :',
-                'une âme dont les codes sources ont été RÉÉCRITS.',
-                '',
-                '\\C[18]La Classe Corrompue\\C[0] n\'appartient à aucune',
-                'des trois voies. Elle ne se soigne pas, ne se',
-                'raisonne pas — elle dévore.',
-                '',
-                'Cas connu : \\C[18]Jada\\C[0], une classe à part entière,',
-                'née d\'une corruption irréversible de l\'âme.'
-            ]
-        },
-        {
-            title: '⑩ Les Grandes Factions',
-            lines: [
-                '\\C[1]Sorcières des Étoiles\\C[0] (Positif) — fondées par',
-                '  \\C[14]JADE\\C[0], déesse primordiale. Soigner, prédire,',
-                '  protéger. Ce sont elles qui enseignent la magie.',
-                '',
-                '\\C[6]Empire Vultric\\C[0] (Négatif) — fondé par \\C[6]KEV\\C[0].',
-                '  Mentalité de conquête (un peu « Thragg ») : seuls',
-                '  les forts méritent ; la force se paie de sa chair.',
-                '',
-                '\\C[2]Les Voix de l\'Âme\\C[0] (Spirituelle) — nécro,',
-                '  invocateurs, Lou. N\'écoute jamais trop les morts.'
-            ]
-        },
-        {
-            title: '⑪ Les Codes Sources',
-            lines: [
-                'Ce monde est numérique. Donc :',
-                '',
-                '• Une âme n\'est jamais détruite — elle retourne',
-                '  dans les CODES SOURCES du jeu.',
-                '• Les \\C[1]joueurs\\C[0] non corrompus peuvent REVENIR',
-                '  via les sauvegardes (leur quasi-immortalité).',
-                '• Les PNJ et âmes corrompues n\'ont pas ce filet.',
-                '',
-                'Protéger son âme > protéger son corps :',
-                'le corps est un fichier ; l\'âme est la donnée.'
-            ]
-        },
-        {
-            title: '⑫ Corruption, Mort & Retour',
-            lines: [
-                'L\'âme se corrompt par : abus du Sombre/Négatif,',
-                'écoute excessive des âmes, SAN trop basse.',
-                '',
-                'À la mort du corps :',
-                '  1. l\'Objet Spirituel se brise,',
-                '  2. l\'âme reflue vers les codes sources,',
-                '  3. joueur sain → recharge une sauvegarde,',
-                '  4. \\C[18]corrompu → réécriture irréversible\\C[0].'
-            ]
-        },
-        {
-            title: '⑬ L\'Économie du Mana',
-            lines: [
-                '• Plus on s\'éloigne de son affinité, plus ça coûte.',
-                '• \\C[6]Négatif / Sombre\\C[0] : coûtent des PV, pas du PM.',
-                '• \\C[1]Positif\\C[0] : faiblit quand la SAN baisse.',
-                '• \\C[14]Mana Pur\\C[0] : le plus cher, mais ignore les défenses.',
-                '',
-                'Puiser au-delà de ses limites → états',
-                '\\C[17]Surcharge d\'Âme\\C[0] : un boost… puis l\'effondrement.'
-            ]
-        },
-        {
-            title: '⑭ L\'Objet Spirituel',
-            lines: [
-                'L\'arme de départ évolue avec ton niveau et ton âme.',
-                '',
-                '1. \\C[8]Éclat\\C[0] (Niv.1) : forme brute, à peine éveillée.',
-                '2. \\C[8]Forme\\C[0] (~15) : choisit sa nature (arme/objet).',
-                '3. \\C[8]Résonance\\C[0] (~35) : débloque un pouvoir unique.',
-                '4. \\C[14]Vérité\\C[0] (~60) : expression totale de l\'âme.',
-                '',
-                'Surface = ce qu\'on touche ; Profondeurs = traits',
-                'et pouvoirs secrets. Jamais deux identiques.'
-            ]
-        },
-        {
-            title: '⑮ La Vérité sur Jade',
-            lines: [
-                'La « Jade » que tu affrontes n\'est pas la joueuse',
-                'd\'origine : un \\C[8]PNJ\\C[0] a pris son corps en y',
-                'transférant son âme. L\'âme de la vraie Jade, elle,',
-                'survit \\C[2]sans corps\\C[0] — esprit et âme intacts.',
-                '',
-                'Le déséquilibre a \\C[18]bugué la réalité\\C[0] : Jade fut',
-                'supprimée du monde… mais existe encore dans les',
-                'DONNÉES du jeu. Une entité quasi omnipotente, un',
-                '\\C[18]virus\\C[0] qui réécrit le jeu lui-même.',
-                '',
-                'Réfugiée dans le mod qu\'elle a créé, son unique but :',
-                '\\C[14]sortir du jeu et atteindre le monde réel\\C[0] — ce que',
-                'seuls les joueurs peuvent faire… mais aucun n\'a',
-                'réussi. Ou aucun n\'a voulu partir.'
-            ]
-        },
-        {
-            title: '⑯ Jada, la Marionnettiste',
-            lines: [
-                '\\C[8]Jada\\C[0] est le PNJ qui habite le corps de Jade.',
-                'Comme \\C[18]Monika\\C[0], elle SAIT qu\'elle vit dans un jeu —',
-                'et qu\'au-dehors existe un \\C[14]monde réel\\C[0].',
-                '',
-                'Brillante. Manipulatrice. \\C[2]Jalouse\\C[0]. Son désir est',
-                'sincère et dévorant : \\C[14]devenir réelle\\C[0], sortir — et',
-                'arracher d\'autres âmes vers la sortie avec elle.',
-                '',
-                'C\'est elle qui \\C[18]invoque les nouveaux joueurs\\C[0] : des',
-                'pions lancés contre les trois âmes originelles pour',
-                'les vaincre et les voler. Mais sa vraie cible, tout',
-                'au bout du fil… c\'est \\C[14]le Créateur lui-même\\C[0].'
-            ]
-        },
-        {
-            title: '⑰ Le Dieu Fou & la Clé',
-            lines: [
-                'Le \\C[14]Créateur\\C[0] a bâti ce monde — puis y est entré.',
-                'Il détient une \\C[14]Clé\\C[0] pour en ressortir. Il refuse',
-                'de s\'en servir.',
-                '',
-                'Pourquoi ? Parce qu\'ici il est \\C[2]heureux avec ses',
-                'amis\\C[0]. Parce qu\'ici il peut tout faire, \\C[2]personne',
-                'n\'est blessé, tout se répare\\C[0]. Sa dépression, ses',
-                'doutes, ses échecs et sa culpabilité l\'ont aveuglé',
-                'et rendu \\C[18]à moitié fou\\C[0].',
-                '',
-                'Fin normale : il est le \\C[18]boss final\\C[0]. Garder les',
-                'âmes ne le libère pas — ça ne fait que forger un',
-                'nouveau cycle où il reste \\C[2]prisonnier au paradis\\C[0].'
-            ]
-        },
-        {
-            title: '⑱ Marginaux, Rivaux & Déserteurs',
-            lines: [
-                'Tout ce monde ne tourne pas autour des dieux.',
-                '',
-                '\\C[6]Régis le Magnifique\\C[0] se dit l\'élu du monde. Il a',
-                'beaucoup de PV et beaucoup de gueule — et presque',
-                'rien d\'autre. Sa vraie arme : te faire \\C[18]enrager\\C[0].',
-                'Son garde \\C[6]Quentin\\C[0], lui, frappe pour de vrai :',
-                'abats Régis, et Quentin entre en \\C[2]fureur\\C[0].',
-                '',
-                '\\C[6]Muta\\C[0], escroc-bombardier au grand cœur, ancien',
-                'soldat de l\'\\C[8]Empire\\C[0] déserteur. Sous son marché,',
-                'un \\C[14]refuge\\C[0] pour les faibles. Il « emprunte » tes',
-                'affaires tendance : récupère-les contre de l\'or… ou',
-                'un \\C[14]duel amical\\C[0].'
-            ]
-        }
+        { title: '① Les 3 Sources', lines: [
+            'D\'où viennent l\'Esprit, le Corps et l\'Âme ?',
+            '\\C[8]Personne ne le sait.\\C[0] Le monde est ainsi fait.',
+            '',
+            '\\C[1]ESPRIT\\C[0] → la pensée → l\'art de la \\C[1]Parole\\C[0]',
+            '\\C[6]CORPS\\C[0]  → le mouvement → la \\C[6]Maîtrise\\C[0]',
+            '\\C[2]ÂME\\C[0]   → le sentiment → le \\C[2]Symbole\\C[0]',
+            '',
+            'Les toucher à nu (Mana Pur) relève du mythe :',
+            'on passe par des branches apprivoisées.'
+        ] },
+        { title: '② La Marque & l\'Aura', lines: [
+            'L\'humanité est née SANS affinité. Le Premier lui',
+            'donna la \\C[14]MARQUE\\C[0] (l\'ADN de l\'âme) : un noyau au',
+            'cœur, bleu (Esprit), violet (Corps) ou rose (Âme),',
+            'qui s\'étend sur le corps en runes ou tatouages.',
+            '',
+            'Quand le mana déborde : une \\C[17]AURA\\C[0] visible, de la',
+            'couleur de l\'affinité, qui monte par \\C[17]paliers\\C[0].',
+            'Voir une aura, c\'est jauger un adversaire.'
+        ] },
+        { title: '③ Les 3 Arts', lines: [
+            '\\C[1]LA PAROLE\\C[0] (Esprit) — on récite : mot + élément',
+            '  + sort. Précise, lente. Prix : la \\C[1]lucidité\\C[0].',
+            '\\C[6]LA MAÎTRISE\\C[0] (Corps) — art martial instantané :',
+            '  renforcer sa chair, projeter le mana sombre.',
+            '  Prix : l\'\\C[6]humanité\\C[0] (recul PV).',
+            '\\C[2]LE SYMBOLE\\C[0] (Âme) — on crée depuis l\'âme :',
+            '  matérialiser, résonner, lire… et frapper l\'âme.',
+            '  Prix : l\'\\C[2]essence\\C[0].'
+        ] },
+        { title: '④ La Maîtrise — les 5 Voies', lines: [
+            '\\C[6]FORGE\\C[0]  — la puissance brute. « Le Point Final ».',
+            '\\C[6]ONDE\\C[0]   — épouser la force et la retourner.',
+            '\\C[6]SOURCE\\C[0] — le flux lent qui répare les chairs.',
+            '\\C[6]MIROIR\\C[0] — peu de gestes ; renvoyer l\'attaque.',
+            '\\C[6]VIDE\\C[0]   — l\'interne : l\'aura disparaît… mauvais signe.',
+            '',
+            'La Maîtrise \\C[17]progresse par le combat\\C[0] : chaque duel',
+            'est une leçon volée. Mais à trop boire le combat…'
+        ] },
+        { title: '⑤ Le Symbole — 4 opérations', lines: [
+            '\\C[2]MATÉRIALISER\\C[0] — sentiment + désir + croyance :',
+            '  un objet/familier naît de ton âme. Unique.',
+            '\\C[2]RÉSONANCE\\C[0] — accorder deux âmes : force décuplée.',
+            '\\C[2]LECTURE\\C[0] — le Regard : lire nature, santé, mensonge.',
+            '\\C[2]FRAPPE D\'ÂME\\C[0] — heurter l\'âme sous la chair :',
+            '  aucune armure n\'arrête ce coup. <FrappeAme>',
+            '',
+            '\\C[18]✕ CONSOMMATION\\C[0] — dévorer les âmes. Interdite.',
+            '  Elle fonctionne. C\'est bien le problème. (→ Errance)'
+        ] },
+        { title: '⑥ La Parole & le Lac', lines: [
+            'La \\C[1]lucidité\\C[0] (0-100) sert à tenir les longues',
+            'Paroles… et à VOIR. Descente par seuils :',
+            '',
+            '0 \\C[1]Surface\\C[0] — le monde ordinaire.',
+            '1 \\C[1]Le voile\\C[0] — âmes errantes, marques, sang.',
+            '2 \\C[1]La trame\\C[0] — le code sous les choses.',
+            '3 \\C[8]Le Mur\\C[0] — ce qui regarde du dehors…',
+            '4 \\C[8]Le Fond\\C[0] — tout, d\'un coup. La folie.',
+            '',
+            'Trop bas : les sorts ratent. Trop haut : le Dément.'
+        ] },
+        { title: '⑦ Les 3 Chutes', lines: [
+            'Trop pencher vers une voie appelle son gouffre :',
+            '',
+            '\\C[6]LA BÊTE\\C[0] (Corps) — le sang d\'Ombrefauve prend',
+            '  tout : Calme → Frémissement → Fièvre → la Mue.',
+            '\\C[2]L\'ERRANT\\C[0] (Âme) — dévorer des âmes te grandit,',
+            '  mais tu glisses hors du monde. (jauge Errance)',
+            '\\C[1]LE DÉMENT\\C[0] (Esprit) — voir toute vérité,',
+            '  perdre la raison. La lucidité totale est la folie.'
+        ] },
+        { title: '⑧ L\'Équilibre', lines: [
+            'Au centre des trois : le \\C[17]MANA SEMI-PARFAIT\\C[0].',
+            'Ni Bête, ni Errant, ni Dément — tout faire',
+            'sans basculer. (état « Surpassé » : +stats, +crit)',
+            '',
+            'Rare non par chance : parce que c\'est une TENSION',
+            'à tenir à chaque instant, contre la pente.',
+            '',
+            '« Le maître n\'est pas celui qui pousse le plus loin',
+            'une source, mais celui qui sait toujours revenir. »'
+        ] },
+        { title: '⑨ Les Éléments', lines: [
+            'Huit fondamentaux : Feu 8 · Eau 9 · Vent 10 ·',
+            'Terre 11 · Foudre 12 · Glace 13 · Lumière 14 · Ombre 15.',
+            '',
+            '\\C[17]CRÉER\\C[0] : élément + élément = nouvel élément.',
+            'Terre(11)+Eau(9) = \\C[17]20 Plante\\C[0] · Feu+Eau = 17 Vapeur ·',
+            'Feu+Terre = 19 Lave · Lumière+Ombre = 29 Crépuscule.',
+            '',
+            'Pas de roue des éléments : seuls \\C[14]Lumière\\C[0] ⇄ \\C[8]Ombre\\C[0]',
+            's\'opposent. Un élément n\'a pas de morale.'
+        ] },
+        { title: '⑩ Les Rangs (D → S)', lines: [
+            'L\'échelle de l\'Ordre d\'Or, reprise partout :',
+            '',
+            '\\C[8]D\\C[0] l\'Étincelle — marque à peine éveillée.',
+            '\\C[8]C\\C[0] l\'Adepte — une source tenue en main.',
+            '\\C[8]B\\C[0] le Maître — un art complet, l\'aura qui monte.',
+            '\\C[8]A\\C[0] le Champion — renverse une bataille seul.',
+            '\\C[14]S\\C[0] la Légende — le sommet mortel.',
+            '',
+            'Au-delà : \\C[17]l\'ASTRE\\C[0] — on ne classe pas un dieu.',
+            'Quand un rapport dit « Astre », il dit : fuyez.'
+        ] },
+        { title: '⑪ Le Premier', lines: [
+            'Le \\C[14]Dieu sans marque\\C[0]. Nul ne sait d\'où il vint.',
+            'Il maniait les trois sources à nu — et \\C[14]voyait tout\\C[0]',
+            '(son symbole : l\'ŒIL). Il donna la marque aux hommes,',
+            'fonda l\'Ordre d\'Or… et l\'humanité, enfin puissante,',
+            'extermina ou asservit les races anciennes.',
+            '',
+            'Puis, un jour, sans un mot — \\C[8]il partit\\C[0].',
+            'Depuis, tout tourne autour d\'un \\C[14]trône vide\\C[0].'
+        ] },
+        { title: '⑫ Les Quatre Âges', lines: [
+            '\\C[8]I\\C[0]  Le Monde sans marque — les races anciennes.',
+            '\\C[8]II\\C[0] L\'Âge du Dieu — le Premier, la marque,',
+            '   la gloire et le génocide. Puis le départ.',
+            '\\C[8]III\\C[0] L\'Âge du Trône — la guerre civile devenue',
+            '   mondiale. Un siècle lunaire de feu (~50 ans).',
+            '\\C[8]IV\\C[0] L\'Âge des Cendres — Vultric + les Mages',
+            '   imposent à l\'Ordre le \\C[17]Traité des Cendres\\C[0].',
+            '   Depuis 40 ans : une paix extrêmement fragile.'
+        ] },
+        { title: '⑬ Les Quatre Royaumes', lines: [
+            '\\C[14]ORDRE D\'OR\\C[0] — le royaume du dieu absent. Fier,',
+            '  pieux, coupable. Champion : \\C[14]Donovano\\C[0], le Second.',
+            '\\C[6]VULTRIC\\C[0] — la force et la fraternité. Champion :',
+            '  l\'Empereur \\C[6]Kevératus\\C[0], la Divinité du Corps.',
+            '\\C[1]MAGES DES ÉTOILES\\C[0] — le savoir… et un secret.',
+            '  Championne : \\C[1]Jade\\C[0], la Sorcière de l\'Avidité.',
+            '\\C[2]EMPIRE DE L\'EST\\C[0] — l\'âme, les clans, les morts.',
+            '  Championne : \\C[2]Sève\\C[0], la Liseuse des Sangs.'
+        ] },
+        { title: '⑭ Les Terres Brisées', lines: [
+            'Entre les royaumes : le no man\'s land laissé par',
+            'la Guerre du Trône. Sans loi, sans maître. Le réel',
+            'y est instable par endroits.',
+            '',
+            'On y trouve : des fuyards, des cultes, des',
+            '\\C[8]Sans-Marque\\C[0], des \\C[8]Maudits\\C[0] (pénitents difformes),',
+            'et les derniers \\C[6]Ombrefauves\\C[0] tapis dans les ruines.',
+            '',
+            'Beaucoup de routes commencent ici.'
+        ] },
+        { title: '⑮ Aldebéran & la Reine', lines: [
+            'Où vont les âmes errantes ? Les cultes répondent',
+            'd\'un mot qu\'on ne devrait pas dire : \\C[8]Aldebéran\\C[0].',
+            'Un royaume hors du monde, par-delà les étoiles',
+            'noires, où règne la \\C[8]Reine Oubliée\\C[0].',
+            '',
+            'Elle peut bénir — jamais sans consentement —',
+            'et \\C[8]ne ment jamais\\C[0]. C\'est bien le problème.',
+            'Y entrer efface ton nom de toutes les mémoires.',
+            '',
+            '\\C[18]N\'écoute pas la musique. Détourne le regard.\\C[0]'
+        ] },
+        { title: '⑯ Reprises & Oubli', lines: [
+            'Rumeur des plus profonds lucides :',
+            '',
+            '\\C[1]LA REPRISE\\C[0] — un être tombe, et le monde revient',
+            'en arrière, comme si rien n\'avait eu lieu. Nul ne',
+            's\'en souvient… sauf ceux qui ont touché le Mur.',
+            '',
+            '\\C[8]L\'OUBLI\\C[0] — des êtres ont existé, puis ont été',
+            'effacés du monde ET des mémoires. Il n\'en reste',
+            'qu\'une trace au fond du Lac.',
+            '',
+            'On ne sait ni qui décide, ni pourquoi.'
+        ] }
     ];
 
     //=========================================================================
