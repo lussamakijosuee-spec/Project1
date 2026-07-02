@@ -1,6 +1,6 @@
 [
 null,
-{"id":1,"expanded":true,"name":"Plaine de Départ","order":8,"parentId":0,"scrollX":1404,"scrollY":768},
+{"id":1,"expanded":true,"name":"Plaine de Départ","order":8,"parentId":0,"scrollX":819,"scrollY":448},
 {"id":2,"expanded":true,"name":"Zone Commune","order":10,"parentId":4,"scrollX":1404,"scrollY":768},
 {"id":3,"expanded":true,"name":"Monde 3","order":11,"parentId":2,"scrollX":3409.7142857142853,"scrollY":3072},
 {"id":4,"expanded":true,"name":"Salle Intérieure","order":9,"parentId":1,"scrollX":1404,"scrollY":768},
