@@ -10,7 +10,7 @@
 Aël reçoit (ou découvre) sa **Marque** — et elle porte les **trois couleurs
 mêlées**. Un équilibre. La chose que le monde a perdue avec le Premier. Très vite,
 un **Arbitre de l'Ordre d'Or** le repère : on ne laisse pas un équilibre grandir
-sans surveillance. Tutoriel diégétique : la Parole, le Souffle, le Symbole, et la
+sans surveillance. Tutoriel diégétique : la Parole, la Maîtrise, le Symbole, et la
 première **jauge de Chute**.
 
 > Hook : *« Tu es ce qu'on prie et ce qu'on craint. Et nous ne savons pas encore
@@ -33,9 +33,8 @@ trois est le plus dur des chemins.
 
 ---
 
-## Acte II — *La Course aux Sommets* (la géopolitique se referme)
-Les Quatre Royaumes comprennent ce qu'est Aël et veulent **s'en servir** : un
-équilibre pourrait devenir l'**Autorité** que chacun rêve de fabriquer en premier.
+## Acte II — *La fissure du Traité des Cendres* (la géopolitique se referme)
+Les Quatre Royaumes comprennent ce qu'est Aël et veulent **s'en servir** : un équilibre bouleverserait la Paix Fragile — chacun veut s'en servir.
 - **Vultric** veut en faire une arme (son Empereur prépare la sienne).
 - **Les Mages** veulent l'**étudier** (et descendre plus loin grâce à lui).
 - **L'Est** veut **lire** son âme à trois couleurs.

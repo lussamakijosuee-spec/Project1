@@ -33,9 +33,9 @@ l'**équilibre** fragile entre les trois — ce que le monde a perdu avec le Pre
   l'ancienne cheffe — conservé)*.
 - **Lien système :** `CorruptionAme` (Calme→Frémissement→Fièvre→la Mue), recul PV.
 
-### 3. SIERAN — *« le Symbole »* · l'Âme *(actor 3)*
+### 3. LUDWING — *« le Symbole »* · l'Âme *(actor 3)*
 - **Source :** Âme (Mana Spirituel). **Art :** le Symbole. **Chute :** l'**Errant**.
-- **Ce qu'il est :** un **liseur d'âmes de l'Est**, qui porte un **familier d'âme**.
+- **Ce qu'il est :** ludwing, un **liseur d'âmes de l'Est**, qui porte un **familier d'âme**.
   Il voit ce que les autres cachent, lit les marques, débusque les faiblesses. La
   tentation de la **Consommation** le suit comme une ombre.
 - **Rôle de combat :** **debuff & esquive**, rapide, peu de dégâts bruts *(rôle de
@@ -64,8 +64,8 @@ la fin de sa douleur d'être tiraillé entre trois sources. Le vrai boss final n
 pas un combat : c'est la **tentation de cesser d'être soi**.
 
 ### L'Empereur Kevératus *(antagoniste « course aux Autorités »)*
-Le plus fort des vivants, qui **rêve d'être la première Autorité**. Si lui y
-arrive, le Concordat tombe et le sixième Âge commence par un Sommet. Miroir sombre
+Le plus fort des vivants, qui **vise la Divinité du Corps**. Si lui y
+arrive, le Traité des Cendres se rompt. Miroir sombre
 de Korrah (le Corps poussé jusqu'au bout sans peur de la Bête).
 
 ### Un Arbitre de l'Ordre d'Or *(antagoniste « tutélaire »)*
@@ -82,7 +82,7 @@ terrible vers les **Vérités Interdites** — et de présage pour Vesper.
 
 ## 🧵 Le fil rouge (proposé)
 
-**Surface :** la **course aux Autorités**. Les Royaumes préparent en secret leur
+**Surface :** la **fissure du Traité des Cendres**. Les Royaumes préparent en secret leur
 champion ; Aël, l'équilibre incarné, devient l'enjeu (et la cible) de tous.
 
 **Profondeur :** plus l'équipe descend (dans le Lac, dans le pouvoir), plus elle
