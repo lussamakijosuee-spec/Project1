@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mana de l'Âme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#100A10; --card:#1E1422; --card2:#28192E; --line:rgba(224,114,110,.18);
+    --ink:#F0E4E2; --soft:#C8AEB0; --faint:#8E7480; --rose:#E0726E; --rose2:#F0928E; --gold:#D8B254; --violet:#A99CF5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(900px 520px at 50% -160px,#3a1828,#100A10 62%) fixed;color:var(--ink);
+    font-family:'Spectral',Georgia,serif;line-height:1.7;padding:0 0 4rem}
+  .wrap{max-width:720px;margin:0 auto;padding:0 1.1rem}
+  header{text-align:center;padding:2.8rem 1rem 1.2rem}
+  .deco{color:var(--rose);letter-spacing:.5em;font-size:.75rem;margin-bottom:1rem}
+  h1{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(1.9rem,5.5vw,2.8rem);
+    background:linear-gradient(180deg,#F6E6E4,#D78A86);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header p{color:var(--soft);max-width:46ch;margin:.6rem auto 0;font-style:italic;font-size:1.02rem}
+  h2.sec{font-family:'Cinzel',serif;font-weight:600;font-size:1.25rem;color:var(--rose2);margin:2.4rem 0 .4rem;letter-spacing:.02em}
+  p{margin:.85rem 0} .soft{color:var(--soft)}
+  strong{color:#F6E6E4}
+  .dropcap::first-letter{font-family:'Cinzel',serif;font-size:3rem;float:left;line-height:.8;padding:.1rem .5rem 0 0;color:var(--rose)}
+  .card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.3rem;margin-top:1.1rem}
+  .row{display:flex;gap:.7rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .row .k{font-family:'Cinzel',serif;color:var(--rose2);min-width:8.5rem;font-size:.95rem}
+  .row .v{color:var(--soft);font-size:.95rem}
+  .note{background:var(--card);border-left:3px solid var(--rose);border-radius:0 10px 10px 0;padding:.85rem 1.1rem;margin:1.2rem 0;font-size:.94rem;color:var(--soft)}
+  .note b{color:var(--ink)}
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin:1rem 0}
+  @media(max-width:520px){.trio{grid-template-columns:1fr}}
+  .trio .t{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:.8rem;text-align:center}
+  .trio .t .n{font-family:'Cinzel',serif;color:var(--rose2);font-size:.95rem}
+  .trio .t .d{font-size:.82rem;color:var(--faint);margin-top:.2rem}
+  .sigil{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin:1.2rem 0}
+  .sigil svg{filter:drop-shadow(0 0 12px rgba(224,114,110,.5))}
+  .sigil .cap{font-size:.82rem;color:var(--faint);font-style:italic;text-align:center}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:.4rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+  th{font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td b{color:var(--ink)}
+  footer{text-align:center;color:var(--faint);font-size:.82rem;font-style:italic;margin-top:2.6rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="deco">✦ ✦ ✦</div>
+    <h1>Mana de l'Âme</h1>
+    <p>L'énergie de l'âme, des émotions et des sentiments — la seule voie qui crée de la matière à partir de soi.</p>
+  </header>
+
+  <p class="soft dropcap">Le mana spirituel est l'énergie de l'<strong>Âme</strong> : celle des émotions et des sentiments. Là où la Parole projette et le Mouvement frappe, l'Âme <strong>matérialise</strong>. Elle donne corps à ce que le lanceur ressent, désire et croit assez fort pour le faire exister.</p>
+
+  <h2 class="sec">Les objets d'âme</h2>
+  <p class="soft">Avec le mana spirituel, on matérialise un objet <strong>directement depuis l'âme</strong> : une arme, un masque, une hache, un familier… L'objet n'est pas pris dans le monde — il en est tiré.</p>
+
+  <div class="card">
+    <div class="row"><div class="k">Condition</div><div class="v">Il faut être <strong>assez puissant</strong> : une âme faible ne matérialise rien.</div></div>
+    <div class="row"><div class="k">Déclencheur</div><div class="v">Trois forces, ensemble — le <strong>sentiment</strong>, le <strong>désir</strong>, la <strong>croyance</strong>. « Il le croit, il l'imagine, ça apparaît. »</div></div>
+    <div class="row"><div class="k">Évolution</div><div class="v">L'objet <strong>grandit et évolue avec l'âme</strong> du lanceur : il mûrit comme son porteur.</div></div>
+    <div class="row"><div class="k">Unicité</div><div class="v">Lié à une seule âme — un objet d'âme n'est <strong>jamais tout à fait le même</strong> d'un porteur à l'autre.</div></div>
+    <div class="row"><div class="k">Puissance</div><div class="v">Un objet d'âme peut être très puissant… ou pas. C'est en partie <strong>aléatoire</strong>.</div></div>
+  </div>
+
+  <div class="trio">
+    <div class="t"><div class="n">Sentiment</div><div class="d">ce qu'il ressent</div></div>
+    <div class="t"><div class="n">Désir</div><div class="d">ce qu'il veut</div></div>
+    <div class="t"><div class="n">Croyance</div><div class="d">ce qu'il croit possible</div></div>
+  </div>
+
+  <div class="note"><b>Des âmes peuvent se ressembler.</b> Plusieurs personnes peuvent porter le même type d'objet ou le même trait — sans lien évident entre eux, ni avec leur âme. La ressemblance existe ; la cause reste un mystère.</div>
+
+  <h2 class="sec">La Marque de l'Âme — l'ADN</h2>
+  <div class="sigil">
+    <svg viewBox="0 0 120 145" width="118" height="142" fill="#E0726E" stroke="none" aria-label="Sceau de l'âme : un anneau ouvert, une pupille, un losange au sommet et des pointes latérales.">
+      <path d="M44,40 A33,33 0 1 0 76,40" fill="none" stroke="#E0726E" stroke-width="9" stroke-linecap="round"/>
+      <path d="M50,90 Q60,134 70,90 Z"/>
+      <circle cx="60" cy="62" r="9"/>
+      <path d="M60,8 L71,26 L60,38 L49,26 Z"/>
+      <path d="M16,62 L41,56 L41,68 Z"/>
+      <path d="M104,62 L79,56 L79,68 Z"/>
+    </svg>
+    <div class="cap">le sceau varie d'une âme à l'autre — celui-ci n'est qu'un exemple</div>
+  </div>
+
+  <p class="soft">La marque au cœur est l'<strong>ADN de l'âme</strong>. Ce n'est pas un ornement : c'est un <strong>interrupteur</strong>. Sans elle, un humain ne pourrait pas manipuler les sources pour en tirer de l'énergie — elle ouvre l'accès <strong>direct</strong> aux sources, sans passer par tout le circuit du mana.</p>
+
+  <div class="card">
+    <div class="row"><div class="k">Rôle</div><div class="v">Interrupteur d'accès : elle <strong>autorise</strong> l'usage des sources. Pas de marque, pas de mana.</div></div>
+    <div class="row"><div class="k">Accès</div><div class="v">Direct à toutes les sources — donc à <strong>tous les types de mana</strong>, sans détour.</div></div>
+    <div class="row"><div class="k">Tracé</div><div class="v">Il <strong>varie d'une personne à l'autre</strong>, et se propage sur le corps une fois l'ADN gravé (tracé aléatoire).</div></div>
+    <div class="row"><div class="k">Rareté</div><div class="v">La poser revient à <strong>graver un ADN</strong> : œuvre de génie, réservée à de rares maîtres.</div></div>
+  </div>
+
+  <h2 class="sec">Les trois sources internes</h2>
+  <p class="soft">La marque ouvre sur trois sources, chacune produisant son mana :</p>
+  <table>
+    <thead><tr><th>Source interne</th><th>Produit</th><th>Voie</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mana Sombre</b></td><td>mana négatif</td><td>le Corps · le mouvement</td></tr>
+      <tr><td><b>Âme</b></td><td>mana spirituel</td><td>l'Âme · le symbole</td></tr>
+      <tr><td><b>Mana Originel</b></td><td>mana positif</td><td>l'Esprit · la parole</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><b>Le trait spécial.</b> L'objet matérialisé apporte un pouvoir unique à l'âme du joueur. Il peut aller très loin, mais reste toujours lié au sentiment, au désir et à la croyance qui l'ont fait naître. Il apparaît quand le lanceur y croit — et seulement alors.</div>
+
+  <footer>Fiche · Mana de l'Âme · système des Paroles</footer>
+</div>
+</body>
+</html>
