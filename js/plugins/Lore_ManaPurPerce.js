@@ -1,19 +1,20 @@
 //=============================================================================
-// Lore_ManaPurPerce.js — v1.0 · Le Mana Pur / Semi-Parfait IGNORE les
-//   résistances élémentaires (il transcende le cycle).
+// Lore_ManaPurPerce.js — v2.0 · STUB de compatibilité
+//   « Le Mana Pur perce toute résistance » est désormais géré, sans doublon,
+//   par ManaAffinity.js (refonte « Trois Sources »).
 //=============================================================================
 /*:
- * @plugindesc [Lore 04/50] Elements Mana Parfait(7) et Mana semi-parfait(16) ignorent la resistance elementaire de la cible (taux force a 100%).
+ * @plugindesc [Lore 04/50] (CONSOLIDÉ) Le perce-résistances du Mana Pur(7)/Semi-Parfait(16) est géré par ManaAffinity. Ce plugin ne fait plus rien : gardé pour compat.
  * @author JOKO
- * @help Aucune config. Perce toute resistance/faiblesse pour ces deux elements.
+ * @help
+ *  La règle « Mana Pur / Semi-Parfait ignore la résistance élémentaire de la
+ *  cible (taux forcé à 100 %) » a été FUSIONNÉE dans ManaAffinity.js, pour
+ *  éviter deux surcharges de calcElementRate.
+ *
+ *  Ce fichier est laissé volontairement INERTE. Vous pouvez le désactiver dans
+ *  le gestionnaire de plugins sans rien perdre.
  */
 (function () {
     'use strict';
-    var PUR=[7,16];
-    var _rate = Game_Action.prototype.calcElementRate;
-    Game_Action.prototype.calcElementRate = function(target){
-        var it=this.item();
-        if(it&&it.damage&&PUR.indexOf(it.damage.elementId)>=0) return 1.0;
-        return _rate.call(this,target);
-    };
+    // Intentionnellement vide : logique déplacée dans ManaAffinity.js.
 })();

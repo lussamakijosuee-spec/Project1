@@ -5,8 +5,8 @@
 //=============================================================================
 
 /*:
- * @plugindesc v1.0 ■ Codex du Système de Mana (lisible en jeu, multi-pages)
- * Sources primordiales, branches, cycle, éléments, âme vs esprit, affinités.
+ * @plugindesc v2.0 ■ Codex du Système de Mana (lisible en jeu, multi-pages)
+ * Sources, Marque & Aura, les 3 Arts, les 5 Voies, les 3 Chutes, Éléments…
  * @author JOKO
  *
  * @param menuCommand
@@ -27,8 +27,10 @@
  *  CODEX DU MANA                                                       by JOKO
  * ═══════════════════════════════════════════════════════════════════════════
  *  Un livre consultable en jeu qui explique tout le système de Mana.
- *  Pages : Sources, Branches, Cycle, Mana Pur, Éléments, Âme/Esprit,
- *  Objet Spirituel, Affinités.
+ *  Pages : les 3 Sources, la Marque & l'Aura, les 3 Arts, les 5 Voies de la
+ *  Maîtrise, le Symbole, la Parole & le Lac, les 3 Chutes, l'Équilibre, les
+ *  Éléments, les Rangs, le Premier, les Âges, les Royaumes.
+ *  (Refonte « Trois Sources » : plus de cycle pierre-feuille-ciseaux.)
  *
  *  OUVRIR :
  *   • Plugin Command :  MANA codex
