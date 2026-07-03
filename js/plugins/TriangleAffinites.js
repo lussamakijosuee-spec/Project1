@@ -23,6 +23,33 @@
  * @default 15
  * @desc En dessous de ce niveau sur les trois jauges, le héros est en équilibre calme (centre du triangle).
  *
+ * @param hudDefaut
+ * @text Mini-triangle sur la carte ?
+ * @type boolean
+ * @on Affiché
+ * @off Caché
+ * @default false
+ * @desc Affiche un petit triangle en surimpression sur la carte (le meneur du groupe). Basculable par TRIANGLE hud.
+ *
+ * @param hudCoin
+ * @text Coin du mini-triangle
+ * @type select
+ * @option Haut-droite
+ * @value HD
+ * @option Haut-gauche
+ * @value HG
+ * @option Bas-droite
+ * @value BD
+ * @option Bas-gauche
+ * @value BG
+ * @default HD
+ *
+ * @param hudSwitch
+ * @text Interrupteur d'affichage (0 = ignorer)
+ * @type switch
+ * @default 0
+ * @desc Si > 0, le mini-triangle ne s'affiche que quand cet interrupteur est ON (en plus du réglage TRIANGLE hud).
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LE TRIANGLE DES TROIS SOURCES                                       by JOKO
@@ -42,6 +69,8 @@
  *  • Point près d'un SOMMET           → cette voie domine ; la Chute approche.
  *
  *  OUVRIR : commande de plugin  TRIANGLE     (ou l'entrée de menu)
+ *  MINI-TRIANGLE (HUD carte) :  TRIANGLE hud on | off | toggle
+ *    (montre le meneur du groupe dans un coin ; réglable par paramètre + interrupteur)
  *  Aucune donnée modifiée. Lecture seule des jauges ; tout est optionnel :
  *  une jauge absente compte pour 0.
  * ═══════════════════════════════════════════════════════════════════════════
@@ -53,6 +82,9 @@
     var P = PluginManager.parameters('TriangleAffinites');
     var MENU = String(P['menuCommand'] || 'Le Triangle');
     var CALME = (parseInt(P['seuilCalme'] || 15) || 15) / 100;
+    var HUD_DEFAULT = String(P['hudDefaut'] || 'false') === 'true';
+    var HUD_CORNER = String(P['hudCoin'] || 'HD');
+    var HUD_SWITCH = parseInt(P['hudSwitch'] || 0) || 0;
 
     var COL = {
         esprit: '#5E92E6', esprit2: '#9CC0F5',
@@ -252,13 +284,100 @@
     };
 
     //=========================================================================
+    // MINI-TRIANGLE (HUD carte) — le meneur du groupe, en surimpression
+    //=========================================================================
+
+    function hudEnabled() {
+        if (!$gameSystem) return HUD_DEFAULT;
+        if ($gameSystem._triHud === undefined) $gameSystem._triHud = HUD_DEFAULT;
+        if (!$gameSystem._triHud) return false;
+        if (HUD_SWITCH > 0 && $gameSwitches && !$gameSwitches.value(HUD_SWITCH)) return false;
+        return true;
+    }
+
+    function Sprite_TriangleHUD() { this.initialize.apply(this, arguments); }
+    Sprite_TriangleHUD.prototype = Object.create(Sprite.prototype);
+    Sprite_TriangleHUD.prototype.constructor = Sprite_TriangleHUD;
+    Sprite_TriangleHUD.prototype.initialize = function () {
+        Sprite.prototype.initialize.call(this);
+        this._W = 132; this._H = 122; this._t = 0; this._sig = '';
+        this.bitmap = new Bitmap(this._W, this._H);
+        this.opacity = 0;
+        this.place();
+    };
+    Sprite_TriangleHUD.prototype.place = function () {
+        var m = 8, x = Graphics.boxWidth - this._W - m, y = m;
+        if (HUD_CORNER === 'HG') { x = m; y = m; }
+        else if (HUD_CORNER === 'BD') { y = Graphics.boxHeight - this._H - m; }
+        else if (HUD_CORNER === 'BG') { x = m; y = Graphics.boxHeight - this._H - m; }
+        this.x = x; this.y = y;
+    };
+    Sprite_TriangleHUD.prototype.leader = function () {
+        return $gameParty && $gameParty.leader ? $gameParty.leader() : null;
+    };
+    Sprite_TriangleHUD.prototype.update = function () {
+        Sprite.prototype.update.call(this);
+        var on = hudEnabled() && this.leader();
+        this.opacity += ((on ? 255 : 0) - this.opacity) * 0.15;
+        if (!on) return;
+        this._t++;
+        var a = this.leader(), id = a.actorId();
+        var sig = id + ':' + fallEsprit(id).toFixed(2) + ':' + fallCorps(id).toFixed(2) + ':' + fallAme(id).toFixed(2);
+        if (sig !== this._sig || this._t % 30 === 0) { this._sig = sig; this.redraw(); }
+    };
+    Sprite_TriangleHUD.prototype.redraw = function () {
+        var b = this.bitmap; b.clear();
+        var pad = 20, topY = 30, w = this._W, h = this._H;
+        var T = { x: w / 2, y: topY }, L = { x: pad, y: h - pad }, R = { x: w - pad, y: h - pad };
+        var G = { x: (T.x + L.x + R.x) / 3, y: (T.y + L.y + R.y) / 3 };
+        var ctx = b._context;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(216,178,84,0.4)'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(T.x, T.y); ctx.lineTo(L.x, L.y); ctx.lineTo(R.x, R.y); ctx.closePath(); ctx.stroke();
+        ctx.restore();
+        if (b._setDirty) b._setDirty();
+        b.drawCircle(T.x, T.y, 3, COL.esprit);
+        b.drawCircle(L.x, L.y, 3, COL.corps);
+        b.drawCircle(R.x, R.y, 3, COL.ame);
+        b.fontSize = 12; b.textColor = COL.faint;
+        b.drawText('E', T.x - 20, T.y - 16, 40, 14, 'center');
+        b.drawText('C', L.x - 22, L.y + 2, 20, 14, 'center');
+        b.drawText('A', R.x + 2, R.y + 2, 20, 14, 'center');
+
+        var a = this.leader(), id = a.actorId();
+        var e = fallEsprit(id), c = fallCorps(id), am = fallAme(id);
+        var px = G.x + e * (T.x - G.x) + c * (L.x - G.x) + am * (R.x - G.x);
+        var py = G.y + e * (T.y - G.y) + c * (L.y - G.y) + am * (R.y - G.y);
+        var td = tendance(e, c, am);
+        b.drawCircle(px, py, 5, td.col);
+        b.drawCircle(px, py, 2, '#ffffff');
+        b.fontSize = 12; b.textColor = COL.or2;
+        b.drawText(a.name(), 0, h - 16, w, 14, 'center');
+    };
+
+    var _createDisplayObjects = Scene_Map.prototype.createDisplayObjects;
+    Scene_Map.prototype.createDisplayObjects = function () {
+        _createDisplayObjects.call(this);
+        this._triHud = new Sprite_TriangleHUD();
+        this.addChild(this._triHud);
+    };
+
+    //=========================================================================
     // Commande de plugin + entrée menu
     //=========================================================================
 
     var _pc = Game_Interpreter.prototype.pluginCommand;
     Game_Interpreter.prototype.pluginCommand = function (cmd, args) {
         _pc.call(this, cmd, args);
-        if (String(cmd).toUpperCase() === 'TRIANGLE') SceneManager.push(Scene_Triangle);
+        if (String(cmd).toUpperCase() !== 'TRIANGLE') return;
+        var sub = (args[0] || '').toLowerCase();
+        if (sub === 'hud') {
+            var v = (args[1] || 'toggle').toLowerCase();
+            if ($gameSystem._triHud === undefined) $gameSystem._triHud = HUD_DEFAULT;
+            $gameSystem._triHud = (v === 'on') ? true : (v === 'off') ? false : !$gameSystem._triHud;
+        } else {
+            SceneManager.push(Scene_Triangle);
+        }
     };
 
     if (MENU.length > 0) {
