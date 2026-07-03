@@ -1,0 +1,279 @@
+//=============================================================================
+// TriangleAffinites.js — v1.0
+// Le Triangle des Trois Sources — évolution & voie suivie (RPG Maker MV)
+// by JOKO
+//=============================================================================
+
+/*:
+ * @plugindesc v1.0 ■ Écran-triangle Esprit/Corps/Âme : montre où chaque héros
+ * se situe entre les trois sources, sa voie suivie et la Chute qui l'attire.
+ * @author JOKO
+ *
+ * @param menuCommand
+ * @text Entrée Menu (vide = aucune)
+ * @type string
+ * @default Le Triangle
+ * @desc Libellé ajouté au menu principal. Vide = ne pas ajouter (ouvrable par la commande TRIANGLE).
+ *
+ * @param seuilCalme
+ * @text Seuil « équilibre » (%)
+ * @type number
+ * @min 1
+ * @max 100
+ * @default 15
+ * @desc En dessous de ce niveau sur les trois jauges, le héros est en équilibre calme (centre du triangle).
+ *
+ * @help
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  LE TRIANGLE DES TROIS SOURCES                                       by JOKO
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  Un écran visuel qui place chaque héros DANS le triangle Esprit–Corps–Âme,
+ *  selon ses trois jauges de Chute. Le centre = l'équilibre (Mana Semi-Parfait) ;
+ *  chaque sommet = une Chute. Plus une jauge monte, plus le point glisse vers
+ *  son sommet — on lit d'un regard « quelle voie tu suis » et vers quel gouffre.
+ *
+ *      ▲ ESPRIT (le Dément)   — jauge : santé mentale / lucidité (window.Ame)
+ *     CORPS (la Bête)  ◣───◢  ÂME (l'Errant)
+ *        window.Corruption      window.Errance
+ *
+ *  • Point au CENTRE + jauges basses  → Équilibre calme (vert).
+ *  • Point au CENTRE + jauges hautes  → Mana Semi-Parfait : la tension tenue
+ *    (or, pulsant) — tout faire sans basculer.
+ *  • Point près d'un SOMMET           → cette voie domine ; la Chute approche.
+ *
+ *  OUVRIR : commande de plugin  TRIANGLE     (ou l'entrée de menu)
+ *  Aucune donnée modifiée. Lecture seule des jauges ; tout est optionnel :
+ *  une jauge absente compte pour 0.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+(function () {
+    'use strict';
+
+    var P = PluginManager.parameters('TriangleAffinites');
+    var MENU = String(P['menuCommand'] || 'Le Triangle');
+    var CALME = (parseInt(P['seuilCalme'] || 15) || 15) / 100;
+
+    var COL = {
+        esprit: '#5E92E6', esprit2: '#9CC0F5',
+        corps:  '#9166E6', corps2:  '#B79CF5',
+        ame:    '#E0726E', ame2:    '#F0928E',
+        or:     '#D8B254', or2:     '#EBC974',
+        calme:  '#5CC98A', line: 'rgba(216,178,84,0.35)', faint: '#7E7688'
+    };
+
+    //=========================================================================
+    // Lecture des trois jauges de Chute (0..1), défensive.
+    //=========================================================================
+
+    function fallCorps(id) {
+        try { return window.Corruption ? Math.max(0, Math.min(1, window.Corruption.niveau(id) / 100)) : 0; }
+        catch (e) { return 0; }
+    }
+    function fallAme(id) {
+        try { return window.Errance ? Math.max(0, Math.min(1, window.Errance.niveau(id) / 100)) : 0; }
+        catch (e) { return 0; }
+    }
+    function fallEsprit(id) {
+        // window.Ame = santé mentale, phase 5 (Maîtrise) → 1 (Effondrement).
+        // Plus la phase est basse, plus on glisse vers le Dément.
+        try {
+            if (!window.Ame) return 0;
+            var ph = window.Ame.phase(id);
+            if (!ph) return 0;
+            return Math.max(0, Math.min(1, (5 - ph) / 4));
+        } catch (e) { return 0; }
+    }
+
+    /** Décrit la voie suivie d'après les trois intensités. */
+    function tendance(e, c, a) {
+        var max = Math.max(e, c, a);
+        if (max < CALME) return { txt: 'Équilibre — l\'âme est calme', col: COL.calme };
+        var spread = max - Math.min(e, c, a);
+        if (spread < CALME) return { txt: 'Mana Semi-Parfait — la tension tenue', col: COL.or2 };
+        if (max === c) return { txt: 'la Voie du Corps → la Bête', col: COL.corps2 };
+        if (max === a) return { txt: 'la Voie de l\'Âme → l\'Errant', col: COL.ame2 };
+        return { txt: 'la Voie de l\'Esprit → le Dément', col: COL.esprit2 };
+    }
+
+    //=========================================================================
+    // Fenêtre-triangle
+    //=========================================================================
+
+    function Window_Triangle() { this.initialize.apply(this, arguments); }
+    Window_Triangle.prototype = Object.create(Window_Base.prototype);
+    Window_Triangle.prototype.constructor = Window_Triangle;
+
+    Window_Triangle.prototype.initialize = function () {
+        Window_Base.prototype.initialize.call(this, 0, 0, Graphics.boxWidth, Graphics.boxHeight);
+        this._t = 0;
+        this.refresh();
+    };
+
+    Window_Triangle.prototype.update = function () {
+        Window_Base.prototype.update.call(this);
+        this._t++;
+        if (this._t % 6 === 0) this.refresh(); // pulsation douce
+    };
+
+    Window_Triangle.prototype.geom = function () {
+        var w = this.contentsWidth(), h = this.contentsHeight();
+        var pad = 40, top = this.lineHeight() * 2.2;
+        var cx = w * 0.5;
+        var T = { x: cx,            y: top + 6 };                 // Esprit (haut)
+        var L = { x: pad + 30,      y: h - pad - 24 };           // Corps (bas-gauche)
+        var R = { x: w - pad - 30,  y: h - pad - 24 };           // Âme (bas-droite)
+        var G = { x: (T.x + L.x + R.x) / 3, y: (T.y + L.y + R.y) / 3 }; // centre
+        return { T: T, L: L, R: R, G: G };
+    };
+
+    Window_Triangle.prototype.pointFor = function (g, e, c, a) {
+        // Le point part du centre et se laisse tirer vers chaque sommet.
+        var px = g.G.x + e * (g.T.x - g.G.x) + c * (g.L.x - g.G.x) + a * (g.R.x - g.G.x);
+        var py = g.G.y + e * (g.T.y - g.G.y) + c * (g.L.y - g.G.y) + a * (g.R.y - g.G.y);
+        return { x: px, y: py };
+    };
+
+    Window_Triangle.prototype.line = function (x1, y1, x2, y2, color, width) {
+        var ctx = this.contents._context;
+        ctx.save();
+        ctx.strokeStyle = color; ctx.lineWidth = width || 1.5;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        ctx.restore();
+        if (this.contents._setDirty) this.contents._setDirty();
+    };
+
+    Window_Triangle.prototype.refresh = function () {
+        this.contents.clear();
+        var g = this.geom();
+
+        // Titre
+        this.resetFontSettings();
+        this.changeTextColor(COL.or2);
+        this.drawText('— LE TRIANGLE DES TROIS SOURCES —', 0, 0, this.contentsWidth(), 'center');
+        this.resetTextColor();
+
+        // Arêtes du triangle
+        this.line(g.T.x, g.T.y, g.L.x, g.L.y, COL.line, 1.5);
+        this.line(g.L.x, g.L.y, g.R.x, g.R.y, COL.line, 1.5);
+        this.line(g.R.x, g.R.y, g.T.x, g.T.y, COL.line, 1.5);
+        // Médianes discrètes vers le centre
+        this.line(g.T.x, g.T.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
+        this.line(g.L.x, g.L.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
+        this.line(g.R.x, g.R.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
+
+        // Sommets (pastilles + libellés)
+        this.contents.drawCircle(g.T.x, g.T.y, 7, COL.esprit);
+        this.contents.drawCircle(g.L.x, g.L.y, 7, COL.corps);
+        this.contents.drawCircle(g.R.x, g.R.y, 7, COL.ame);
+        this.changeTextColor(COL.esprit2);
+        this.drawText('ESPRIT', g.T.x - 60, g.T.y - this.lineHeight() - 2, 120, 'center');
+        this.changeTextColor(COL.faint);
+        this.contents.fontSize = 18;
+        this.drawText('le Dément', g.T.x - 60, g.T.y - 6, 120, 'center');
+        this.resetFontSettings();
+        this.changeTextColor(COL.corps2);
+        this.drawText('CORPS', g.L.x - 30, g.L.y + 8, 120, 'left');
+        this.changeTextColor(COL.faint); this.contents.fontSize = 18;
+        this.drawText('la Bête', g.L.x - 30, g.L.y + 8 + this.lineHeight() - 6, 120, 'left');
+        this.resetFontSettings();
+        this.changeTextColor(COL.ame2);
+        this.drawText('ÂME', g.R.x - 90, g.R.y + 8, 120, 'right');
+        this.changeTextColor(COL.faint); this.contents.fontSize = 18;
+        this.drawText('l\'Errant', g.R.x - 90, g.R.y + 8 + this.lineHeight() - 6, 120, 'right');
+        this.resetFontSettings();
+
+        // Centre — équilibre
+        this.contents.drawCircle(g.G.x, g.G.y, 3, 'rgba(216,178,84,0.7)');
+        this.changeTextColor(COL.faint); this.contents.fontSize = 16;
+        this.drawText('équilibre', g.G.x - 50, g.G.y + 4, 100, 'center');
+        this.resetFontSettings();
+
+        // Points des héros
+        var members = $gameParty.members();
+        var pulse = (Math.sin(this._t * 0.1) * 0.5 + 0.5);
+        for (var i = 0; i < members.length; i++) {
+            var actor = members[i], id = actor.actorId();
+            var e = fallEsprit(id), c = fallCorps(id), a = fallAme(id);
+            var pt = this.pointFor(g, e, c, a);
+            var t = tendance(e, c, a);
+
+            // halo pulsant si Semi-Parfait (jauges hautes mais équilibrées)
+            var max = Math.max(e, c, a), spread = max - Math.min(e, c, a);
+            var isSemi = (max >= CALME && spread < CALME);
+            if (isSemi) this.contents.drawCircle(pt.x, pt.y, 10 + Math.floor(6 * pulse), 'rgba(235,201,116,' + (0.10 + 0.18 * pulse).toFixed(2) + ')');
+
+            this.contents.drawCircle(pt.x, pt.y, 6, t.col);
+            this.contents.drawCircle(pt.x, pt.y, 3, '#ffffff');
+            this.contents.fontSize = 18;
+            this.changeTextColor('#ECE6D8');
+            this.drawText(actor.name(), pt.x + 10, pt.y - this.lineHeight() + 4, 160, 'left');
+            this.resetFontSettings();
+        }
+
+        // Panneau bas : détail par héros
+        var y0 = this.contentsHeight() - members.length * this.lineHeight() - 6;
+        for (var j = 0; j < members.length; j++) {
+            var m = members[j], mid = m.actorId();
+            var fe = fallEsprit(mid), fc = fallCorps(mid), fa = fallAme(mid);
+            var td = tendance(fe, fc, fa);
+            var y = y0 + j * this.lineHeight();
+            this.changeTextColor('#ECE6D8');
+            this.drawText(m.name(), 8, y, 150, 'left');
+            this.changeTextColor(td.col);
+            this.drawText(td.txt, 150, y, this.contentsWidth() - 380, 'left');
+            this.contents.fontSize = 18;
+            this.changeTextColor(COL.faint);
+            this.drawText('E ' + Math.round(fe * 100) + '  C ' + Math.round(fc * 100) + '  A ' + Math.round(fa * 100),
+                this.contentsWidth() - 230, y, 222, 'right');
+            this.resetFontSettings();
+        }
+    };
+
+    //=========================================================================
+    // Scène
+    //=========================================================================
+
+    function Scene_Triangle() { this.initialize.apply(this, arguments); }
+    window.Scene_Triangle = Scene_Triangle;
+    Scene_Triangle.prototype = Object.create(Scene_MenuBase.prototype);
+    Scene_Triangle.prototype.constructor = Scene_Triangle;
+    Scene_Triangle.prototype.create = function () {
+        Scene_MenuBase.prototype.create.call(this);
+        this._win = new Window_Triangle();
+        this.addWindow(this._win);
+    };
+    Scene_Triangle.prototype.update = function () {
+        Scene_MenuBase.prototype.update.call(this);
+        if (Input.isTriggered('cancel') || Input.isTriggered('ok') || TouchInput.isCancelled()) {
+            SoundManager.playCancel();
+            this.popScene();
+        }
+    };
+
+    //=========================================================================
+    // Commande de plugin + entrée menu
+    //=========================================================================
+
+    var _pc = Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand = function (cmd, args) {
+        _pc.call(this, cmd, args);
+        if (String(cmd).toUpperCase() === 'TRIANGLE') SceneManager.push(Scene_Triangle);
+    };
+
+    if (MENU.length > 0) {
+        var _add = Window_MenuCommand.prototype.addOriginalCommands;
+        Window_MenuCommand.prototype.addOriginalCommands = function () {
+            _add.call(this);
+            this.addCommand(MENU, 'triangleAffinites', true);
+        };
+        var _cw = Scene_Menu.prototype.createCommandWindow;
+        Scene_Menu.prototype.createCommandWindow = function () {
+            _cw.call(this);
+            this._commandWindow.setHandler('triangleAffinites', function () {
+                SceneManager.push(Scene_Triangle);
+            });
+        };
+    }
+
+})();
