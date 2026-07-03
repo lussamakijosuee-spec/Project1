@@ -94,6 +94,51 @@
  * @min 0
  * @default 40
  *
+ * @param --- VOIES ANIME ---
+ * @default
+ *
+ * @param eclairCrit
+ * @text Éclair — bonus de critique
+ * @type number
+ * @decimals 2
+ * @default 0.50
+ * @desc « l'Instant Foudroyant » : + chance de critique, et la frappe ne rate jamais (ignore l'esquive).
+ *
+ * @param domaineRate
+ * @text Domaine — dégâts (×)
+ * @type number
+ * @decimals 2
+ * @default 1.30
+ * @desc « le Territoire Scellé » : touche GARANTIE (aucune esquive) et dégâts ×domaineRate.
+ *
+ * @param domaineCorruption
+ * @text Domaine — corruption ajoutée
+ * @type number
+ * @min 0
+ * @default 3
+ * @desc Ouvrir un Territoire puise profond dans la source : enfonce vers la Bête (via window.Corruption).
+ *
+ * @param flashChance
+ * @text Flash — proba d'Éclat Noir (%)
+ * @type number
+ * @min 0
+ * @max 100
+ * @default 25
+ * @desc « l'Éclat Noir » (Black Flash) : chance que la frappe se distorde en coup dévastateur.
+ *
+ * @param flashMult
+ * @text Flash — dégâts sur Éclat Noir (×)
+ * @type number
+ * @decimals 2
+ * @default 2.50
+ *
+ * @param sangSteal
+ * @text Sang — vol de vie (% des dégâts)
+ * @type number
+ * @min 0
+ * @default 45
+ * @desc « l'Art du Sang » : le lanceur se soigne d'une part des dégâts infligés (drain).
+ *
  * @param showLog
  * @text Messages de combat ?
  * @type boolean
@@ -140,6 +185,18 @@
  *      signe : chaque usage enfonce vers la Bête (+videCorruption).
  *
  *  ─────────────────────────────────────────────────────────────────────────
+ *  VOIES INTERDITES / ÉTRANGÈRES  (inspiration anime)
+ *  ─────────────────────────────────────────────────────────────────────────
+ *  ▶ ÉCLAIR — « l'Instant Foudroyant ». Vitesse pure : + critique, et la frappe
+ *      ne rate JAMAIS (ignore l'esquive).
+ *  ▶ DOMAINE — « le Territoire Scellé ». On enferme la cible : touche GARANTIE
+ *      et dégâts ×domaineRate — mais ouvrir un Territoire puise profond (+corruption).
+ *  ▶ FLASH — « l'Éclat Noir ». Une frappe qui se distord : chance (flashChance)
+ *      d'un coup dévastateur ×flashMult.
+ *  ▶ SANG — « l'Art du Sang ». Drain : le lanceur se soigne d'une part des
+ *      dégâts infligés (sangSteal %).
+ *
+ *  ─────────────────────────────────────────────────────────────────────────
  *  PROGRESSER PAR LE COMBAT
  *  ─────────────────────────────────────────────────────────────────────────
  *  Chaque technique lancée fait gagner de la MAÎTRISE dans sa Voie
@@ -173,7 +230,17 @@
     var MAST_CAP     = N('masteryCap', 40);
     var SHOW_LOG     = String(P['showLog'] || 'true') === 'true';
 
-    var VOIES = ['forge', 'onde', 'source', 'miroir', 'vide'];
+    // --- Voies inspirées d'anime (extensions) ---
+    var ECLAIR_CRIT  = N('eclairCrit', 0.5);          // + chance de critique
+    var DOM_RATE     = N('domaineRate', 1.30);        // × dégâts (touche garantie)
+    var DOM_CORR     = N('domaineCorruption', 3);     // ouvrir un Territoire puise profond
+    var FLASH_CHANCE = N('flashChance', 25) / 100;    // proba d'Éclat Noir
+    var FLASH_MULT   = N('flashMult', 2.50);          // × dégâts sur Éclat Noir
+    var SANG_STEAL   = N('sangSteal', 45) / 100;      // % des dégâts volés en PV
+
+    // 5 voies canoniques + 4 voies anime.
+    var VOIES = ['forge', 'onde', 'source', 'miroir', 'vide',
+                 'eclair', 'domaine', 'flash', 'sang'];
 
     function log(text) {
         if (!SHOW_LOG) return;
@@ -266,8 +333,43 @@
             // Bonus borné, proportionnel à la « défense ignorée ».
             var pierce = Math.min(0.95, VIDE_PIERCE * Voies.scale(subject, 'vide'));
             value = Math.floor(value * (1 + pierce * 0.5));
+        } else if (voie === 'domaine') {
+            // Le Territoire amplifie la sentence.
+            value = Math.floor(value * DOM_RATE * Voies.scale(subject, 'domaine'));
+        } else if (voie === 'flash') {
+            // L'Éclat Noir : la frappe se distord parfois en coup dévastateur.
+            var chance = Math.min(0.9, FLASH_CHANCE * Voies.scale(subject, 'flash'));
+            if (Math.random() < chance) {
+                this._voieFlash = true;
+                value = Math.floor(value * FLASH_MULT);
+            }
         }
         return value;
+    };
+
+    //=========================================================================
+    // ÉCLAIR & DOMAINE — touche garantie (ignore l'esquive) ; ÉCLAIR — critique
+    //=========================================================================
+
+    var _itemHit = Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit = function (target) {
+        var v = actionVoie(this);
+        if (v === 'eclair' || v === 'domaine') return 1.0;   // ne rate jamais
+        return _itemHit.call(this, target);
+    };
+    var _itemEva = Game_Action.prototype.itemEva;
+    Game_Action.prototype.itemEva = function (target) {
+        var v = actionVoie(this);
+        if (v === 'eclair' || v === 'domaine') return 0;      // ignore l'esquive
+        return _itemEva.call(this, target);
+    };
+    var _itemCri = Game_Action.prototype.itemCri;
+    Game_Action.prototype.itemCri = function (target) {
+        var base = _itemCri.call(this, target);
+        if (actionVoie(this) === 'eclair') {
+            return Math.min(1, base + ECLAIR_CRIT * Voies.scale(this.subject(), 'eclair'));
+        }
+        return base;
     };
 
     //=========================================================================
@@ -325,6 +427,34 @@
                 // L'aura disparaît — mauvais signe : on s'enfonce vers la Bête.
                 if (VIDE_CORR > 0 && subject.isActor && subject.isActor() && window.Corruption) {
                     try { window.Corruption.add(subject.actorId(), VIDE_CORR); } catch (e) {}
+                }
+                break;
+
+            case 'domaine':
+                // Ouvrir un Territoire puise profond dans la source.
+                if (DOM_CORR > 0 && subject.isActor && subject.isActor() && window.Corruption) {
+                    try { window.Corruption.add(subject.actorId(), DOM_CORR); } catch (e) {}
+                }
+                break;
+
+            case 'flash':
+                // L'Éclat Noir a-t-il jailli ? (drapeau posé dans makeDamageValue)
+                if (this._voieFlash) {
+                    this._voieFlash = false;
+                    if ($gameScreen) $gameScreen.startFlash([20, 20, 40, 200], 20);
+                    log('✦ ' + (subject.name ? subject.name() : 'Le lanceur') + ' — ÉCLAT NOIR ! La frappe se distord.');
+                }
+                break;
+
+            case 'sang':
+                // L'Art du Sang : drain — une part des dégâts revient en PV.
+                if (result && subject.isAlive()) {
+                    var dealt = (result.hpDamage > 0) ? result.hpDamage : 0;
+                    var drain = Math.floor(dealt * SANG_STEAL * Voies.scale(subject, 'sang'));
+                    if (drain > 0) {
+                        subject.gainHp(drain); subject.startDamagePopup();
+                        log((subject.name ? subject.name() : 'Le lanceur') + ' boit le sang de la blessure (+' + drain + ' PV).');
+                    }
                 }
                 break;
         }

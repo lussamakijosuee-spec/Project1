@@ -148,15 +148,21 @@
         if (this._t % 6 === 0) this.refresh(); // pulsation douce
     };
 
+    Window_Triangle.prototype.standardFontSize = function () { return 20; };
+    Window_Triangle.prototype.ROW_H = 26;
+
     Window_Triangle.prototype.geom = function () {
         var w = this.contentsWidth(), h = this.contentsHeight();
-        var pad = 40, top = this.lineHeight() * 2.2;
+        var n = $gameParty.members().length;
+        var panelH = n * this.ROW_H + 14;                         // panneau bas réservé
+        var pad = 46, top = 44;                                    // sous le titre
+        var baseY = h - panelH - 30;                              // base du triangle
         var cx = w * 0.5;
         var T = { x: cx,            y: top + 6 };                 // Esprit (haut)
-        var L = { x: pad + 30,      y: h - pad - 24 };           // Corps (bas-gauche)
-        var R = { x: w - pad - 30,  y: h - pad - 24 };           // Âme (bas-droite)
+        var L = { x: pad + 24,      y: baseY };                   // Corps (bas-gauche)
+        var R = { x: w - pad - 24,  y: baseY };                  // Âme (bas-droite)
         var G = { x: (T.x + L.x + R.x) / 3, y: (T.y + L.y + R.y) / 3 }; // centre
-        return { T: T, L: L, R: R, G: G };
+        return { T: T, L: L, R: R, G: G, panelH: panelH };
     };
 
     Window_Triangle.prototype.pointFor = function (g, e, c, a) {
@@ -175,51 +181,43 @@
         if (this.contents._setDirty) this.contents._setDirty();
     };
 
+    Window_Triangle.prototype.tf = function (size, color) {
+        this.contents.fontSize = size;
+        if (color) this.changeTextColor(color);
+    };
+
     Window_Triangle.prototype.refresh = function () {
         this.contents.clear();
         var g = this.geom();
+        var W = this.contentsWidth();
 
-        // Titre
-        this.resetFontSettings();
-        this.changeTextColor(COL.or2);
-        this.drawText('— LE TRIANGLE DES TROIS SOURCES —', 0, 0, this.contentsWidth(), 'center');
-        this.resetTextColor();
+        // Titre + filet
+        this.tf(21, COL.or2);
+        this.drawText('LE TRIANGLE DES TROIS SOURCES', 0, 2, W, 'center');
+        this.line(W * 0.5 - 150, 34, W * 0.5 + 150, 34, 'rgba(216,178,84,0.25)', 1);
 
-        // Arêtes du triangle
+        // Arêtes + médianes
         this.line(g.T.x, g.T.y, g.L.x, g.L.y, COL.line, 1.5);
         this.line(g.L.x, g.L.y, g.R.x, g.R.y, COL.line, 1.5);
         this.line(g.R.x, g.R.y, g.T.x, g.T.y, COL.line, 1.5);
-        // Médianes discrètes vers le centre
-        this.line(g.T.x, g.T.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
-        this.line(g.L.x, g.L.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
-        this.line(g.R.x, g.R.y, g.G.x, g.G.y, 'rgba(216,178,84,0.12)', 1);
+        this.line(g.T.x, g.T.y, g.G.x, g.G.y, 'rgba(216,178,84,0.10)', 1);
+        this.line(g.L.x, g.L.y, g.G.x, g.G.y, 'rgba(216,178,84,0.10)', 1);
+        this.line(g.R.x, g.R.y, g.G.x, g.G.y, 'rgba(216,178,84,0.10)', 1);
 
         // Sommets (pastilles + libellés)
-        this.contents.drawCircle(g.T.x, g.T.y, 7, COL.esprit);
-        this.contents.drawCircle(g.L.x, g.L.y, 7, COL.corps);
-        this.contents.drawCircle(g.R.x, g.R.y, 7, COL.ame);
-        this.changeTextColor(COL.esprit2);
-        this.drawText('ESPRIT', g.T.x - 60, g.T.y - this.lineHeight() - 2, 120, 'center');
-        this.changeTextColor(COL.faint);
-        this.contents.fontSize = 18;
-        this.drawText('le Dément', g.T.x - 60, g.T.y - 6, 120, 'center');
-        this.resetFontSettings();
-        this.changeTextColor(COL.corps2);
-        this.drawText('CORPS', g.L.x - 30, g.L.y + 8, 120, 'left');
-        this.changeTextColor(COL.faint); this.contents.fontSize = 18;
-        this.drawText('la Bête', g.L.x - 30, g.L.y + 8 + this.lineHeight() - 6, 120, 'left');
-        this.resetFontSettings();
-        this.changeTextColor(COL.ame2);
-        this.drawText('ÂME', g.R.x - 90, g.R.y + 8, 120, 'right');
-        this.changeTextColor(COL.faint); this.contents.fontSize = 18;
-        this.drawText('l\'Errant', g.R.x - 90, g.R.y + 8 + this.lineHeight() - 6, 120, 'right');
-        this.resetFontSettings();
+        this.contents.drawCircle(g.T.x, g.T.y, 6, COL.esprit);
+        this.contents.drawCircle(g.L.x, g.L.y, 6, COL.corps);
+        this.contents.drawCircle(g.R.x, g.R.y, 6, COL.ame);
+        this.tf(19, COL.esprit2); this.drawText('ESPRIT', g.T.x - 80, g.T.y - 44, 160, 'center');
+        this.tf(13, COL.faint);   this.drawText('le Dément', g.T.x - 80, g.T.y - 24, 160, 'center');
+        this.tf(19, COL.corps2);  this.drawText('CORPS', g.L.x - 14, g.L.y + 6, 120, 'left');
+        this.tf(13, COL.faint);   this.drawText('la Bête', g.L.x - 14, g.L.y + 26, 120, 'left');
+        this.tf(19, COL.ame2);    this.drawText('ÂME', g.R.x - 106, g.R.y + 6, 120, 'right');
+        this.tf(13, COL.faint);   this.drawText('l\'Errant', g.R.x - 106, g.R.y + 26, 120, 'right');
 
         // Centre — équilibre
         this.contents.drawCircle(g.G.x, g.G.y, 3, 'rgba(216,178,84,0.7)');
-        this.changeTextColor(COL.faint); this.contents.fontSize = 16;
-        this.drawText('équilibre', g.G.x - 50, g.G.y + 4, 100, 'center');
-        this.resetFontSettings();
+        this.tf(12, COL.faint); this.drawText('équilibre', g.G.x - 50, g.G.y + 6, 100, 'center');
 
         // Points des héros
         var members = $gameParty.members();
@@ -229,37 +227,31 @@
             var e = fallEsprit(id), c = fallCorps(id), a = fallAme(id);
             var pt = this.pointFor(g, e, c, a);
             var t = tendance(e, c, a);
-
-            // halo pulsant si Semi-Parfait (jauges hautes mais équilibrées)
             var max = Math.max(e, c, a), spread = max - Math.min(e, c, a);
-            var isSemi = (max >= CALME && spread < CALME);
-            if (isSemi) this.contents.drawCircle(pt.x, pt.y, 10 + Math.floor(6 * pulse), 'rgba(235,201,116,' + (0.10 + 0.18 * pulse).toFixed(2) + ')');
-
+            if (max >= CALME && spread < CALME) {
+                this.contents.drawCircle(pt.x, pt.y, 10 + Math.floor(6 * pulse), 'rgba(235,201,116,' + (0.10 + 0.18 * pulse).toFixed(2) + ')');
+            }
             this.contents.drawCircle(pt.x, pt.y, 6, t.col);
             this.contents.drawCircle(pt.x, pt.y, 3, '#ffffff');
-            this.contents.fontSize = 18;
-            this.changeTextColor('#ECE6D8');
-            this.drawText(actor.name(), pt.x + 10, pt.y - this.lineHeight() + 4, 160, 'left');
-            this.resetFontSettings();
+            this.tf(15, '#ECE6D8');
+            this.drawText(actor.name(), pt.x + 9, pt.y - 20, 150, 'left');
         }
 
-        // Panneau bas : détail par héros
-        var y0 = this.contentsHeight() - members.length * this.lineHeight() - 6;
+        // Panneau bas : détail par héros (compact, séparé)
+        var rowH = this.ROW_H, y0 = this.contentsHeight() - g.panelH + 8;
+        this.line(0, y0 - 8, W, y0 - 8, 'rgba(216,178,84,0.18)', 1);
         for (var j = 0; j < members.length; j++) {
             var m = members[j], mid = m.actorId();
             var fe = fallEsprit(mid), fc = fallCorps(mid), fa = fallAme(mid);
             var td = tendance(fe, fc, fa);
-            var y = y0 + j * this.lineHeight();
-            this.changeTextColor('#ECE6D8');
-            this.drawText(m.name(), 8, y, 150, 'left');
-            this.changeTextColor(td.col);
-            this.drawText(td.txt, 150, y, this.contentsWidth() - 380, 'left');
-            this.contents.fontSize = 18;
-            this.changeTextColor(COL.faint);
+            var y = y0 + j * rowH + (rowH - 22) / 2;
+            this.tf(17, '#ECE6D8'); this.drawText(m.name(), 6, y, 132, 'left');
+            this.tf(16, td.col);    this.drawText(td.txt, 142, y, W - 340, 'left');
+            this.tf(14, COL.faint);
             this.drawText('E ' + Math.round(fe * 100) + '  C ' + Math.round(fc * 100) + '  A ' + Math.round(fa * 100),
-                this.contentsWidth() - 230, y, 222, 'right');
-            this.resetFontSettings();
+                W - 196, y, 190, 'right');
         }
+        this.resetFontSettings();
     };
 
     //=========================================================================
