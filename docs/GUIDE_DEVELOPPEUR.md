@@ -14,10 +14,12 @@
 
 | Acteur | ID | Clé script | Variable santé mentale | Facette (excès) |
 |---|---|---|---|---|
-| **Thylane** | 1 | `'thylane'` | **Var 11** | la Colère |
-| **Neyssa** | 2 | `'neyssa'` | **Var 12** | la Concentration perdue |
-| **Lou** | 3 | `'lou'` | **Var 13** | les Âmes (porteuse du stock) |
-| **Tianna** | 4 | `'tianna'` | **Var 14** | le Doute / la Confiance |
+| **Aël** — l'Équilibre | 1 | `'thylane'` (clé héritée) | **Var 11** | l'équilibre qui vacille (dérive aléatoire) |
+| **Korrah** — la Maîtrise | 2 | `'neyssa'` (clé héritée) | **Var 12** | le Corps → **la Bête** |
+| **ludwing** — le Symbole | 3 | `'lou'` (clé héritée) | **Var 13** | l'Âme → **l'Errant** (porteur du stock, Var 15) |
+| **Vesper** — la Parole | 4 | `'tianna'` (clé héritée) | **Var 14** | l'Esprit → **le Dément** |
+
+> Les clés texte (`'lou'`…) datent d'anciens prénoms mais fonctionnent toujours ; le plus sûr est d'utiliser les **IDs** (1-4).
 
 Toutes les commandes acceptent la clé **ou** l'ID : `CORRUPTION add lou 10` = `CORRUPTION add 3 10`.
 
@@ -209,7 +211,7 @@ Tu choisis **un** héros au départ ; les trois autres **vivent leur vie** :
 | Mécanique | Chiffres |
 |---|---|
 | Battement de vie | tous les **60 pas** du groupe |
-| Dérive par battement | **+1 à +2** vers SA voie (Thylane→Corps, Neyssa→Esprit, Lou→Âme, Tianna→aléatoire) |
+| Dérive par battement | **+1 à +2** vers SA voie (Aël→aléatoire, Korrah→Corps, ludwing→Âme, Vesper→Esprit) |
 | Répit | **30 %** de chance que la jauge **recule** au lieu d'avancer |
 | XP des absents | **50 %** de l'XP de tes combats (ils mènent les leurs) |
 | Rumeurs | 1 message aux paliers **40 / 70 / 100** franchis (une seule fois chacun) |
@@ -424,6 +426,8 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
+PremiersPas · AtelierTest
+GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
 Stubs sans effet (activés ou non) : `ParolesMagic`, `Lore_ManaReculVital`, `Lore_ManaPurPerce`, `Lore_CyclePopup`.
 
@@ -466,3 +470,47 @@ Corruption.niveau(1) < 40 && Errance.niveau(1) < 40 && Ame.phase(1) >= 4
 ```
 
 **Débloquer la fusion narrativement** : crée l'interrupteur #41 « Porte de Fusion », mets-le dans `PortesProgression.fusionSwitch` **et** `FusionElements.switchId`. La fusion s'ouvrira quand un héros aura 2 arts au niveau 2.
+
+---
+
+# PARTIE D — CONTENU & OUTILS PRÊTS À L'EMPLOI
+
+## 🗡️ Les 4 versions « chutées » (déjà dans la base !)
+
+| Ennemi | ID | Troupe | Rang | Faiblesse | Skills |
+|---|---|---|---|---|---|
+| **Aël, le Déchiré** | 401 | **504** | A | Mana Pur ×1.2 | black flash, sort d'inversion, Frappe Aveuglante |
+| **Korrah, la Bête** | 402 | **505** | A | Lumière ×1.3 · résiste Sombre ×0.5 | lame de mana sombre, Fendoir Obscur (Voie Forge) |
+| **Ludwing, l'Errant** | 403 | **506** | A | Lumière ×1.2 · résiste Physique ×0.7 | Aspiration des Âmes, Déchirure d'Âme, Moisson |
+| **Vesper, le Dément** | 404 | **507** | A | Ombre ×1.3 | l'onde, sort d'inversion, black flash |
+
+Les battlers utilisent tes images `Actor*_*.png` existantes (change-les dans l'éditeur si tu préfères d'autres visuels ; teintes déjà réglées).
+
+## 🎬 Les 4 événements de rencontre (déjà écrits !)
+
+**Événements communs 201-204** : `201` = Aël · `202` = Korrah · `203` = Ludwing · `204` = Vesper.
+
+Pose un PNJ sur une carte → `Appeler un événement commun → 201-204`. L'événement fait TOUT :
+- il vérifie `Destins.chute(N)` ;
+- **pas chuté** → dialogue + choix « Fais route avec nous » → recrutement (`\N[n]`, jauges conservées) ;
+- **chuté** → dialogue sombre + **combat contre sa version chutée** (troupe liée).
+
+Tu peux les modifier librement dans l'éditeur (onglet Événements communs).
+
+## 📖 Le Grimoire (`GrimoireHub`) — le menu rangé
+UNE entrée « Grimoire » regroupe tous les écrans : Triangle, Rangs, Marque, Destins, Entraînement, Corruption, Errance, Codex. Les entrées individuelles sont masquées (paramètre `masquerEntrees`, désactivable). Un plugin d'écran désactivé disparaît de la liste tout seul.
+```
+GRIMOIRE                → ouvrir le hub par commande
+```
+
+## 🎓 Premiers Pas (`PremiersPas`) — tutoriels contextuels
+La **première fois** qu'un système touche le joueur (1er gain de corruption, 1re errance, 1re perte de lucidité, 1re Voie, 1er Frémissement, 1er Surpassé, 1re rumeur des Destins), deux lignes l'expliquent — une seule fois par partie.
+```
+TUTOS reset             → tout revoir
+TUTOS off / on          → couper / réactiver
+```
+
+## ⚙️ L'Atelier (`AtelierTest`) — playtest uniquement
+En test depuis l'éditeur : entrée « ⚙ Atelier » dans le menu (invisible en jeu exporté) ou commande `ATELIER`. En deux clics :
+Corruption/Errance ±, santé mentale ±, +20 âmes, +300 entraînement, **simuler chaque chute** (Korrah→Bête, Ludwing→Errant, Vesper→Dément), avancer les Destins de 50 battements, tout purger.
+

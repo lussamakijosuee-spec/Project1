@@ -49,8 +49,21 @@
  * @default 0
  * @desc ON = les vies parallèles se figent (cutscenes, prologue…).
  *
- * @param voieThylane
- * @text Dérive de Thylane (1)
+ * @param voieActor1
+ * @text Dérive du héros 1 (Aël, l'Équilibre)
+ * @type select
+ * @option corps (la Bête)
+ * @value corps
+ * @option esprit (le Dément)
+ * @value esprit
+ * @option ame (l'Errant)
+ * @value ame
+ * @option aleatoire
+ * @value aleatoire
+ * @default aleatoire
+ *
+ * @param voieActor2
+ * @text Dérive du héros 2 (Korrah, la Maîtrise)
  * @type select
  * @option corps (la Bête)
  * @value corps
@@ -62,21 +75,8 @@
  * @value aleatoire
  * @default corps
  *
- * @param voieNeyssa
- * @text Dérive de Neyssa (2)
- * @type select
- * @option corps (la Bête)
- * @value corps
- * @option esprit (le Dément)
- * @value esprit
- * @option ame (l'Errant)
- * @value ame
- * @option aleatoire
- * @value aleatoire
- * @default esprit
- *
- * @param voieLou
- * @text Dérive de Lou (3)
+ * @param voieActor3
+ * @text Dérive du héros 3 (ludwing, le Symbole)
  * @type select
  * @option corps (la Bête)
  * @value corps
@@ -88,8 +88,8 @@
  * @value aleatoire
  * @default ame
  *
- * @param voieTianna
- * @text Dérive de Tianna (4)
+ * @param voieActor4
+ * @text Dérive du héros 4 (Vesper, la Parole)
  * @type select
  * @option corps (la Bête)
  * @value corps
@@ -99,7 +99,7 @@
  * @value ame
  * @option aleatoire
  * @value aleatoire
- * @default aleatoire
+ * @default esprit
  *
  * @param rumeurs
  * @text Rumeurs aux paliers ?
@@ -166,10 +166,10 @@
     var RUMEURS = String(P['rumeurs'] || 'true') === 'true';
 
     var VOIE = {
-        1: String(P['voieThylane'] || 'corps'),
-        2: String(P['voieNeyssa'] || 'esprit'),
-        3: String(P['voieLou'] || 'ame'),
-        4: String(P['voieTianna'] || 'aleatoire')
+        1: String(P['voieActor1'] || 'aleatoire'),   // Aël — l'Équilibre qui vacille
+        2: String(P['voieActor2'] || 'corps'),       // Korrah — la Maîtrise → la Bête
+        3: String(P['voieActor3'] || 'ame'),         // ludwing — le Symbole → l'Errant
+        4: String(P['voieActor4'] || 'esprit')       // Vesper — la Parole → le Dément
     };
     var HEROS = [1, 2, 3, 4];
     var AXES = ['corps', 'esprit', 'ame'];
