@@ -1,11 +1,10 @@
 //=============================================================================
-// Errance.js — v1.0  ·  La Chute de l'Âme : l'Errant
+// Errance.js — v1.1  ·  La Chute de l'Âme : l'Errant
 // RPG Maker MV   ·   by JOKO
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Consommer des âmes (art du Symbole) fait enfler la jauge
- * d'ERRANCE : on gagne en puissance, mais on glisse hors du monde — l'Errant.
- * Additif, auto-suffisant (aucun état de base requis).
+ * @plugindesc v1.1 ■ Consommer/ACCUMULER des âmes fait enfler la jauge d'ERRANCE :
+ * plus on a d'âme, plus on sombre hors du monde — l'Errant. Additif, auto-suffisant.
  * @author JOKO
  *
  * @param elAme
@@ -30,6 +29,25 @@
  * @type number
  * @default 1
  *
+ * @param soulVar
+ * @text Variable du stock d'âmes
+ * @type variable
+ * @default 15
+ * @desc Le stock d'âmes accumulées. En ACQUÉRIR (dévorer) fait monter l'Errance : « plus on a d'âme, plus on sombre ».
+ *
+ * @param gainPerSoul
+ * @text Errance par âme acquise
+ * @type number
+ * @min 0
+ * @default 2
+ * @desc Errance gagnée pour chaque âme ajoutée au stock. Dépenser des âmes ne réduit PAS l'Errance (la marque reste gonflée).
+ *
+ * @param soulActorId
+ * @text Porteur des âmes (0 = affinité Âme)
+ * @type number
+ * @default 3
+ * @desc À qui va cette Errance quand le stock monte. 0 = tous les héros d'affinité Âme (note <Mana: ame>).
+ *
  * @param menuCommand
  * @text Entrée Menu (vide = aucune)
  * @type string
@@ -52,7 +70,10 @@
  *   • Fragilité : on encaisse de plus en plus (jusqu'à +40 % de dégâts subis au
  *     palier 100) — le corps se dissout, on n'appartient plus tout à fait au réel.
  *
- *  GAGNER :  achever un ennemi avec un art de l'Âme (élém 2 / skill type 9).
+ *  GAGNER :  ① achever un ennemi avec un art de l'Âme (élém 2 / skill type 9) ;
+ *            ② ACCUMULER des âmes — chaque âme ajoutée au stock (var soulVar)
+ *              gonfle la marque et fait monter l'Errance (« plus on a d'âme,
+ *              plus on sombre »). Dépenser des âmes ne la réduit PAS.
  *  RÉDUIRE : commande  ERRANCE purge <héros> <n>   (ex. au Feu d'Âme / Sanctuaire)
  *  Écran :   ERRANCE ecran      ·   Script : Errance.niveau('lou')
  * ═══════════════════════════════════════════════════════════════════════════
@@ -64,6 +85,9 @@
     var SKT_AME   = parseInt(P['sktAme'] || 9);
     var GAIN_KILL = parseInt(P['gainKill'] || 5);
     var GAIN_USE  = parseInt(P['gainUse'] || 1);
+    var SOUL_VAR   = parseInt(P['soulVar'] || 15);
+    var GAIN_SOUL  = parseInt(P['gainPerSoul'] || 2);
+    var SOUL_ACTOR = parseInt(P['soulActorId'] || 3);
     var MENU      = String(P['menuCommand'] || 'Errance');
 
     var KEY = { thylane: 1, neyssa: 2, lou: 3, tianna: 4 };
@@ -105,6 +129,30 @@
             var gain = GAIN_USE;
             if (target && target.isEnemy && target.isEnemy() && target.isDead()) gain += GAIN_KILL;
             Errance.add(s.actorId(), gain);
+        }
+    };
+
+    // « Plus on a d'âme, plus on sombre » : acquérir/dévorer des âmes (le stock,
+    // var SOUL_VAR) gonfle la marque → monte l'Errance. Dépenser n'annule rien.
+    function soulBearers() {
+        if (SOUL_ACTOR > 0) { return ($gameActors && $gameActors.actor(SOUL_ACTOR)) ? [SOUL_ACTOR] : []; }
+        var ids = [];
+        ($gameParty ? $gameParty.members() : []).forEach(function (m) {
+            var note = ((m.actor && m.actor()) ? m.actor().note : '') + ' ' +
+                       ((m.currentClass && m.currentClass()) ? m.currentClass().note : '');
+            if (/<Mana2?:\s*(ame|âme|spirituelle)/i.test(note)) ids.push(m.actorId());
+        });
+        return ids;
+    }
+    var _setValue = Game_Variables.prototype.setValue;
+    Game_Variables.prototype.setValue = function (variableId, value) {
+        if (variableId !== SOUL_VAR) { _setValue.call(this, variableId, value); return; }
+        var before = this.value(variableId);
+        _setValue.call(this, variableId, value);
+        var delta = this.value(variableId) - before;
+        if (delta > 0 && GAIN_SOUL > 0 && $gameActors) {
+            var gain = delta * GAIN_SOUL;
+            soulBearers().forEach(function (id) { Errance.add(id, gain); });
         }
     };
 
