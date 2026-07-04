@@ -550,3 +550,44 @@ CHUTE calme             CHUTE reprendre      (couper / relancer l'ambiance)
 
 Les **rencontres 201-204** branchent maintenant automatiquement sur le TYPE de chute (`Destins.chute(n)`) et lancent la bonne troupe. Rien à faire : pose le PNJ, appelle l'événement commun.
 
+## 🎆 Le catalogue des 100 animations (361-460)
+
+25 effets × 4 teintes chacun (base / **·Violet** / **·Rose** / **·Or**). Assigne-les à tes skills dans l'éditeur (champ Animation) :
+
+| IDs | Effet | Feuille | Idéal pour |
+|---|---|---|---|
+| 361-364 | Éclat | FX_Eclat | explosions, Forge |
+| 365-368 | Onde de choc | FX_Onde | Onde, eau, chocs |
+| 369-372 | Lames triples | FX_Lames | attaques d'armes |
+| 373-376 | Pilier | FX_Pilier | lumière, invocations |
+| 377-380 | Pluie perçante | FX_Pluie | eau, flèches |
+| 381-384 | Foudre | FX_Foudre | foudre, Éclair |
+| 385-388 | Cristal | FX_Cristal | glace, Givre |
+| 389-392 | Pétales | FX_Petales | Plante, soins |
+| 393-396 | Bulles | FX_Bulles | eau, souffle |
+| 397-400 | Braises | FX_Braises | feu, Lave |
+| 401-404 | Vortex | FX_Vortex | ombre, Domaine |
+| 405-408 | Concentration | FX_Charge | charges, buffs |
+| 409-412 | Croix de lumière | FX_Croix | Lumière, Saint |
+| 413-416 | Cercle de runes | FX_Runes | Paroles, Symbole |
+| 417-420 | L'Œil | FX_Oeil | lucidité, Regard |
+| 421-424 | Griffes | FX_Griffes | la Bête, arts interdits |
+| 425-428 | Grande vague (écran) | FX_Vague | ultimes d'eau |
+| 429-432 | Éclats brisés | FX_Eclats | Miroir, Métal |
+| 433-436 | Drain de vie | FX_Drain | Voie du Sang |
+| 437-440 | Dôme gardien | FX_Dome | Terre, défenses |
+| 441-444 | Rayon | FX_Rayon | lasers, Mana Pur |
+| 445-448 | Étoiles noires (écran) | FX_EtoilesNoires | Aldébaran, la Reine |
+| 449-452 | Volutes d'âme | FX_Volutes | âmes, soins spirituels |
+| 453-456 | Corruption (écran) | FX_Glitch | méta, glitch |
+| 457-460 | Mains de l'ombre | FX_Mains | peur, malédictions |
+
+## 🖼️ Les 70 nouvelles images (img/pictures)
+
+**Glyphes & symboles** : `glyphe_feu/eau/vent/terre/foudre/glace/lumiere/ombre` · `mana_positif/negatif/sombre/spirituel/pur/semiparfait` · `crest_esprit/corps/ame` · `triangle_sources` · `rune1-6` · `sceau_codex` · `porte_fusion`
+**Chutes & figures** : `chute_bete/errant/dement/dechire` · `reine_oubliee` · `trone_vide` · `oeil_unique` · `flaque_ombre` · `feu_ame` · `nom_oublie`
+**Stickmen (BROKENSCRIPT)** : `stick_rampant/tendu/porte/rangee` · `portrait_glitch1-4`
+**Plein écran (816×624)** : `etoiles_noires` · `aldebaran_ciel` · `lune_noire` · `lac_fond` · `brume1-3` · `static1-3` · `fissure1-3` · `eclats1-3` · `pluie1-2` · `neige1` · `distorsion`
+
+**Personnages posables** (img/characters, événements) : `$AmeErrante` · `$BeteOmbre` · `$StickDement` · `$ReineBlanche` · `$StickRampant` (+ `$OmbreStick`, `$OmbreStickGrand`).
+
