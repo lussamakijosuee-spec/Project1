@@ -245,7 +245,9 @@
             var fe = fallEsprit(mid), fc = fallCorps(mid), fa = fallAme(mid);
             var td = tendance(fe, fc, fa);
             var y = y0 + j * rowH + (rowH - 22) / 2;
-            this.tf(17, '#ECE6D8'); this.drawText(m.name(), 6, y, 132, 'left');
+            var rang = '';
+            try { if (window.Rangs) rang = ' · ' + window.Rangs.rang(mid); } catch (e) {}
+            this.tf(17, '#ECE6D8'); this.drawText(m.name() + rang, 6, y, 132, 'left');
             this.tf(16, td.col);    this.drawText(td.txt, 142, y, W - 340, 'left');
             this.tf(14, COL.faint);
             this.drawText('E ' + Math.round(fe * 100) + '  C ' + Math.round(fc * 100) + '  A ' + Math.round(fa * 100),

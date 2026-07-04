@@ -18,6 +18,19 @@
  * @type number
  * @default 30
  *
+ * @param retourPct
+ * @text Retour sur échec (% PV max)
+ * @type number
+ * @min 0
+ * @default 10
+ * @desc « Mal exécutée, la Frappe revient à l'envoyeur » : si elle rate, le lanceur encaisse ce % de ses PV max.
+ *
+ * @param retourErrance
+ * @text Errance en plus sur échec
+ * @type number
+ * @min 0
+ * @default 2
+ *
  * @help
  *  « On ne blesse pas le corps : on heurte l'âme. Une lame qu'aucun bouclier
  *  n'arrête. Mais frapper une âme, c'est toucher la sienne au passage. »
@@ -34,6 +47,8 @@
     var P = PluginManager.parameters('FrappeAme');
     var PRIX = parseInt(P['errancePrix'] || 2);
     var STUN = parseInt(P['stunChance'] || 30);
+    var RET_PCT = parseInt(P['retourPct'] || 10) / 100;
+    var RET_ERR = parseInt(P['retourErrance'] || 2);
 
     function isFrappe(action) {
         var it = action && action.item && action.item();
@@ -77,5 +92,24 @@
             if (st > 0 && Math.randomInt(100) < STUN && target.isAlive()) target.addState(st);
             if ($gameScreen) $gameScreen.startFlash([240, 120, 160, 140], 20);
         }
+    };
+
+    // « Mal exécutée, la Frappe revient à l'envoyeur » : sur échec, contrecoup.
+    var _apply = Game_Action.prototype.apply;
+    Game_Action.prototype.apply = function (target) {
+        _apply.call(this, target);
+        if (!isFrappe(this)) return;
+        var r = target && target.result ? target.result() : null;
+        if (!r || !r.used || !(r.missed || r.evaded)) return;
+        var s = this.subject();
+        if (!s || !s.isAlive()) return;
+        if (RET_PCT > 0) {
+            var back = Math.max(1, Math.floor(s.mhp * RET_PCT));
+            s.gainHp(-back); s.startDamagePopup(); s.clearResult();
+            var w = SceneManager._scene && SceneManager._scene._logWindow;
+            if (w) w.addText('La Frappe se retourne : l\'âme de ' + (s.name ? s.name() : 'l\'envoyeur') + ' encaisse le coup (-' + back + ' PV).');
+            if (s.isDead()) s.performCollapse();
+        }
+        if (RET_ERR > 0 && s.isActor && s.isActor() && window.Errance) Errance.add(s.actorId(), RET_ERR);
     };
 })();
