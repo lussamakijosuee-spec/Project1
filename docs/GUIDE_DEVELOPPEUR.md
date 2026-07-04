@@ -204,6 +204,18 @@ Sorts 14/15 seulement : camp opposé **×1.5** · même camp **×0.5**.
 ### 🩸 Interdites (`Lore_MaitrisesInterdites`)
 `<Interdit>` = dégâts **×1.6** (ou `<Interdit: x>`) · **+8 corruption** / usage.
 
+### 🛤️ Les Destins parallèles (`DestinsParalleles`)
+Tu choisis **un** héros au départ ; les trois autres **vivent leur vie** :
+| Mécanique | Chiffres |
+|---|---|
+| Battement de vie | tous les **60 pas** du groupe |
+| Dérive par battement | **+1 à +2** vers SA voie (Thylane→Corps, Neyssa→Esprit, Lou→Âme, Tianna→aléatoire) |
+| Répit | **30 %** de chance que la jauge **recule** au lieu d'avancer |
+| XP des absents | **50 %** de l'XP de tes combats (ils mènent les leurs) |
+| Rumeurs | 1 message aux paliers **40 / 70 / 100** franchis (une seule fois chacun) |
+| Chute | Corruption 100 → **la Bête** · Errance 100 → **l'Errant** · phase 1 → **le Dément** |
+| Recruté | la vie parallèle **s'arrête**, il **garde ses jauges** (jauges partagées) |
+
 ### 💀 Âmes & mort (systèmes existants)
 | Système | Chiffres |
 |---|---|
@@ -354,6 +366,35 @@ Portes.xp(1, 'ame')          // cumul
 <Camp: lumiere>     <Camp: ombre>
 ```
 
+## 🛤️ Destins parallèles (`DestinsParalleles`)
+```
+DESTINS ecran               → l'écran des vies parallèles (jauges, rang, chute)
+DESTINS tick 30             → ellipse : la vie des absents avance de 30 battements
+DESTINS pause on            → fige les dérives (prologue, cutscene)
+DESTINS pause off           → relance
+```
+```js
+Destins.absent(2)            // true si l'acteur 2 vit sa vie ailleurs
+Destins.chute(2)             // '' | 'bete' | 'dement' | 'errant'
+Destins.aChute(2)            // true s'il a chuté
+```
+
+### Recette — l'événement de rencontre (recruter OU affronter)
+```
+◆ Si (Script) : Destins.chute(2) === ''
+    ◆ Texte : « Neyssa ?! Tu es vivante… »
+    ◆ Afficher choix : Rejoins-moi / Pas encore
+      ◆ Si Rejoins-moi : Script : $gameParty.addActor(2)
+◆ Sinon
+    ◆ Texte : « Ce qui te fait face n'est plus tout à fait Neyssa. »
+    ◆ Lancer le combat : « Neyssa, la Démente » (ennemi à créer dans la base,
+      avec <Rang: A> <Mana: positif> et ses skills à elle)
+```
+Astuce : varie le dialogue selon la gravité **avant** la chute :
+```js
+Corruption.niveau(1) >= 70        // Thylane au bord du gouffre : dialogue urgent
+```
+
 ## 💀 Âmes (systèmes existants)
 ```
 <Invocation: 5>              // note de skill : dépense 5 âmes
@@ -380,7 +421,7 @@ JadeEntitePlunging → CorruptionAme → Errance
 ────────────────────────────────────────────
 ManaAffinity · MaitriseVoies · ParolesSysteme · FrappeAme
 Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
-FusionElements · PortesProgression
+FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
 ```
