@@ -73,10 +73,10 @@
 
     // Répliques d'excès quand une voie domine (par héros).
     var EXCES = {
-        1: 'La colère brûle dans les yeux de %1.',
-        2: '%1 perd le fil. Son esprit s\'éparpille.',
-        3: '%1 ne se retient plus. Quelque chose déborde.',
-        4: '%1 doute. « …et si je n\'y arrivais pas ? »'
+        1: 'L\'équilibre de %1 vacille — tout déborde à la fois.',          // Aël, l'Équilibre
+        2: 'Le sang de %1 gronde. La Maîtrise cherche à le maîtriser.',      // Korrah, la Maîtrise
+        3: 'Quelque chose tire %1 hors du monde. Sa marque enfle.',          // ludwing, le Symbole
+        4: 'Les mots de %1 se brouillent. Le Lac murmure trop fort.'         // Vesper, la Parole
     };
 
     function log(t) { var w = BattleManager._logWindow; if (w) { w.push('addText', t); w.push('wait'); } }
