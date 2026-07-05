@@ -35,8 +35,8 @@
  * @type number
  * @min 0
  * @max 29
- * @default 8
- * @desc Index du thème ChutesLacMusique joué pendant le poème (0-29).
+ * @default 20
+ * @desc Index du thème ChutesLacMusique joué pendant le poème (20 = Berceuse du Fond).
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
@@ -70,7 +70,7 @@
     var SEUIL = Number(P['seuil'] || 18) / 100;
     var SONS = String(P['sons'] || 'true') === 'true';
     var VAR_AMES = Number(P['variableAmes'] || 0);
-    var THEME_POEME = Number(P['themePoeme'] || 8);
+    var THEME_POEME = Number(P['themePoeme'] || 20);
 
     function phase(id) { try { return window.Ame ? (Ame.phase(id) || 5) : 5; } catch (e) { return 5; } }
     function jErr(id)  { try { return window.Errance ? Errance.niveau(id) : 0; } catch (e) { return 0; } }
