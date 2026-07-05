@@ -428,7 +428,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
-ChutesCinematiques · ChutesDefinitives · Cinematiques
+ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -626,4 +626,27 @@ CINE jouer <prefixe> <nb> <ms>   tes propres séquences (img/pictures/<prefixe>_
 Cine.jouer('cine_duel', 17, {tempo:[...ms], se:{5:'Slash2'}})
 ```
 Letterbox auto, joueur figé, images 88-90 réservées (picId).
+
+## 🌪️ L'esprit du sort (`ElementsVivants`) — les éléments servent enfin
+
+Sans roue ni cycle (fidèle au Codex) : quand un sort élémentaire **fait des dégâts**, son esprit a **25 %** de chance d'agir (**35 %** pour les dérivés de Fusion) :
+
+| Élément | Esprit en combat |
+|---|---|
+| Feu (8) | **Brûlure** (état 91) sur la cible |
+| Eau (9) | soigne le lanceur (10 % des dégâts) |
+| Vent (10) | **+AGI** au lanceur (2 tours) |
+| Terre (11) | **+DEF** au lanceur (2 tours) |
+| Foudre (12) | **Étourdi** (134) sur la cible |
+| Glace (13) | **Gelure** (94) sur la cible |
+| Lumière (14) | soigne **l'allié le plus blessé** (15 %) |
+| Ombre (15) | **Aveuglé** (5) sur la cible |
+| Vapeur (17) | Brûlure **+** Aveuglé |
+| Lave (19) | Brûlure (chance **×2**) |
+| Plante (20) | drain : vole 15 % des dégâts |
+| Givre (22) | Gelure (chance **×2**) |
+| Métal (23) | **Paralysie** (136) |
+| Crépuscule (29) | Aveuglé + soigne le lanceur |
+
+→ choisir son élément = un choix **tactique** (contrôle / soutien / dégâts sur la durée), et la **Fusion** devient doublement précieuse. Les ennemis profitent des mêmes esprits. Chance + IDs d'états réglables.
 
