@@ -42,7 +42,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *  LE LAC MURMURE — et compte les âmes
  * ═══════════════════════════════════════════════════════════════════════════
- *  ▶ MURMURES — quand un héros sombre (phase mentale qui descend, Errance…),
+ *  ▶ MURMURES — quand la santé mentale d'un héros s'effondre (phase mentale),
  *    des mots doux flottent à l'écran : « laisse-toi couler… », « détends-toi… »,
  *    « l'eau est douce… ». L'invitation à lâcher prise, à se laisser aller dans
  *    le lac. Plus il sombre, plus les murmures sont nombreux et pressants.
@@ -79,7 +79,7 @@
         var m = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            m = Math.max(m, (5 - phase(id)) / 4, jErr(id) / 100 * 0.85);
+            m = Math.max(m, (3 - phase(id)) / 2); // lac = mental pur, démarre phase 2
         });
         return m.clamp(0, 1);
     }

@@ -111,7 +111,7 @@
     }
     function pDement() {
         var m = 0;
-        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, (5 - phase(a.actorId())) / 4); });
+        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, (3 - phase(a.actorId())) / 2); });
         return ressenti(m.clamp(0, 1));
     }
     function actif() { return !($gameSystem && $gameSystem._chuteHallOff); }

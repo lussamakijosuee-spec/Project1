@@ -95,7 +95,7 @@
             var id = a.actorId();
             b = Math.max(b, jCorr(id) / 100);
             e = Math.max(e, jErr(id) / 100);
-            f = Math.max(f, (5 - phase(id)) / 4);
+            f = Math.max(f, (3 - phase(id)) / 2); // mental : démarre phase 2
         });
         return { bete: b.clamp(0, 1), errant: e.clamp(0, 1), fond: f.clamp(0, 1) };
     }

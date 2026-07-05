@@ -118,8 +118,8 @@
                 var id = m.actorId();
                 bete   = Math.max(bete,   jCorr(id) / 100);
                 errant = Math.max(errant, jErr(id) / 100);
-                // phase 5 → 0, phase 1 → 1
-                fond   = Math.max(fond,   (5 - phase(id)) / 4);
+                // démarre phase 2 : phase≥3 → 0, phase 2 → 0.5, phase 1 → 1
+                fond   = Math.max(fond,   (3 - phase(id)) / 2);
             });
         }
         return {
