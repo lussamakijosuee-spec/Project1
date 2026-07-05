@@ -426,6 +426,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
+ChutesCinematiques · ChutesDefinitives · Cinematiques
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -590,4 +591,37 @@ Les **rencontres 201-204** branchent maintenant automatiquement sur le TYPE de c
 **Plein écran (816×624)** : `etoiles_noires` · `aldebaran_ciel` · `lune_noire` · `lac_fond` · `brume1-3` · `static1-3` · `fissure1-3` · `eclats1-3` · `pluie1-2` · `neige1` · `distorsion`
 
 **Personnages posables** (img/characters, événements) : `$AmeErrante` · `$BeteOmbre` · `$StickDement` · `$ReineBlanche` · `$StickRampant` (+ `$OmbreStick`, `$OmbreStickGrand`).
+
+## 💀 Les Chutes définitives (`ChutesDefinitives`) — Fear & Hunger
+
+**Une Chute = une perte.** Quand un héros DU GROUPE chute (détection sur la carte, la cinématique se joue d'abord) :
+
+| Chute | Ce qui arrive |
+|---|---|
+| **la Bête** | quitte l'équipe → son ennemi (matrice 401-412) prend **sa puissance modifiée** : PV ×8.4, **ATK ×2.2**, DEF ×1.6, MAT ×0.6 + **ses 5 meilleures techniques** en actions |
+| **le Dément** | quitte l'équipe en riant → son ennemi **garde ses capacités et son niveau** (stats reprises, MAT ×1.6, PV ×7) + ses skills |
+| **l'Errant** | **écran noir · mélodie (Curse2) · poème** écrit ligne à ligne… puis le jeu reprend. Il a disparu. Aucun message. Personne ne se souvient. |
+| **tous chutés** | « Le monde, lui, continue. Sans vous. » → **Game Over** |
+
+Le transfert de puissance **survit à la sauvegarde** et les rencontres 201-204 font affronter la version chutée **avec la vraie force du joueur perdu**.
+
+```
+CHUTEDEF off / on            (désactiver pendant une cutscene scriptée)
+CHUTEDEF forcer bete 2       (mise en scène : forcer une perte)
+```
+```js
+Chutes.perdu(2)              // '' | 'bete' | 'dement' | 'errant'
+Chutes.survivants()          // héros encore debout (0 = fin)
+```
+Ordre : charger **après** ChutesCinematiques.
+
+## 🎬 Cinématiques en images (`Cinematiques`)
+```
+CINE duel                        le duel pixel art inclus (17 frames, sons calés)
+CINE jouer <prefixe> <nb> <ms>   tes propres séquences (img/pictures/<prefixe>_01.png…)
+```
+```js
+Cine.jouer('cine_duel', 17, {tempo:[...ms], se:{5:'Slash2'}})
+```
+Letterbox auto, joueur figé, images 88-90 réservées (picId).
 
