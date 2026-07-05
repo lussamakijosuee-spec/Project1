@@ -128,18 +128,20 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 
 ## A7. Tous les bonus/malus chiffrés par système
 
-### ⚔️ Les 9 Voies (`MaitriseVoies`) — chaque usage : +1 maîtrise (plafond 40, chaque point = +0.5 % d'effet → jusqu'à **+20 %**)
-| Voie | Bonus | Malus / prix |
+### ⚔️ Les 9 Voies (`MaitriseVoies`) — LA LOI DU PRIX
+Chaque usage : +1 maîtrise (plafond 40). La maîtrise amplifie **les bonus ET les malus** du même facteur (jusqu'à **×1.2**) : *plus tu es puissant, plus tu paies.*
+
+| Voie | Bonus | Prix (grandit avec la maîtrise) |
 |---|---|---|
-| `forge` | dégâts **×1.5** | si la frappe **rate** : −12 % PV max |
-| `onde` | prochaine attaque subie **contrée ×2** | (une seule charge) |
-| `source` | soigne **60 %** des dégâts infligés (min 8 % PV max) | — |
-| `miroir` | prochaine attaque **−30 %** + **renvoyée à 100 %** | (une seule charge) |
-| `vide` | traverse la garde (jusqu'à **+20 %** dégâts) | **+2 corruption** / usage |
-| `eclair` | **+50 % critique**, **ne rate jamais** | — |
-| `domaine` | **touche garantie**, dégâts **×1.3** | **+3 corruption** / usage |
-| `flash` | **25 %** de chance d'Éclat Noir **×2.5** | — |
-| `sang` | vole **45 %** des dégâts en PV | — |
+| `forge` | dégâts **×1.5** | **−5 % des dégâts** en PV à chaque coup · ratée : **−12 % PV max** |
+| `onde` | prochaine attaque **contrée ×2** | Reflux armé = exposé : l'attaque contrée frappe **+20 %** |
+| `source` | soigne **60 %** des dégâts (min 8 % PV max) | **+1 Errance** par soin (réparer la chair puise dans l'être) |
+| `miroir` | attaque **−30 %** + **renvoyée à 100 %** | le miroir se fêle : le porteur encaisse **20 % du renvoyé** |
+| `vide` | traverse la garde (jusqu'à **+20 %**) | **+2 corruption** / usage |
+| `eclair` | **+50 % critique**, ne rate jamais | la vitesse brûle : **−8 % des dégâts** en PV |
+| `domaine` | touche garantie, dégâts **×1.3** | **+3 corruption** / usage |
+| `flash` | **25 %** d'Éclat Noir **×2.5** | au déclenchement : **−10 % PV max** (la distorsion revient) |
+| `sang` | vole **45 %** des dégâts en PV | **+2 corruption** / drain (le sang appelle le sang) |
 
 ### 📜 Les Paroles (`ParolesSysteme`) — formules exactes
 - Concentration requise **Kr = 8 · L^1.8** · fenêtre de combat **tf = 5.0** · temps **0.8·L**.
@@ -426,6 +428,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
+ChutesCinematiques · ChutesDefinitives · Cinematiques
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -590,4 +593,37 @@ Les **rencontres 201-204** branchent maintenant automatiquement sur le TYPE de c
 **Plein écran (816×624)** : `etoiles_noires` · `aldebaran_ciel` · `lune_noire` · `lac_fond` · `brume1-3` · `static1-3` · `fissure1-3` · `eclats1-3` · `pluie1-2` · `neige1` · `distorsion`
 
 **Personnages posables** (img/characters, événements) : `$AmeErrante` · `$BeteOmbre` · `$StickDement` · `$ReineBlanche` · `$StickRampant` (+ `$OmbreStick`, `$OmbreStickGrand`).
+
+## 💀 Les Chutes définitives (`ChutesDefinitives`) — Fear & Hunger
+
+**Une Chute = une perte.** Quand un héros DU GROUPE chute (détection sur la carte, la cinématique se joue d'abord) :
+
+| Chute | Ce qui arrive |
+|---|---|
+| **la Bête** | quitte l'équipe → son ennemi (matrice 401-412) prend **sa puissance modifiée** : PV ×8.4, **ATK ×2.2**, DEF ×1.6, MAT ×0.6 + **ses 5 meilleures techniques** en actions |
+| **le Dément** | quitte l'équipe en riant → son ennemi **garde ses capacités et son niveau** (stats reprises, MAT ×1.6, PV ×7) + ses skills |
+| **l'Errant** | **écran noir · mélodie (Curse2) · poème** écrit ligne à ligne… puis le jeu reprend. Il a disparu. Aucun message. Personne ne se souvient. |
+| **tous chutés** | « Le monde, lui, continue. Sans vous. » → **Game Over** |
+
+Le transfert de puissance **survit à la sauvegarde** et les rencontres 201-204 font affronter la version chutée **avec la vraie force du joueur perdu**.
+
+```
+CHUTEDEF off / on            (désactiver pendant une cutscene scriptée)
+CHUTEDEF forcer bete 2       (mise en scène : forcer une perte)
+```
+```js
+Chutes.perdu(2)              // '' | 'bete' | 'dement' | 'errant'
+Chutes.survivants()          // héros encore debout (0 = fin)
+```
+Ordre : charger **après** ChutesCinematiques.
+
+## 🎬 Cinématiques en images (`Cinematiques`)
+```
+CINE duel                        le duel pixel art inclus (17 frames, sons calés)
+CINE jouer <prefixe> <nb> <ms>   tes propres séquences (img/pictures/<prefixe>_01.png…)
+```
+```js
+Cine.jouer('cine_duel', 17, {tempo:[...ms], se:{5:'Slash2'}})
+```
+Letterbox auto, joueur figé, images 88-90 réservées (picId).
 
