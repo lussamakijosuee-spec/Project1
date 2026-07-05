@@ -128,18 +128,20 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 
 ## A7. Tous les bonus/malus chiffrés par système
 
-### ⚔️ Les 9 Voies (`MaitriseVoies`) — chaque usage : +1 maîtrise (plafond 40, chaque point = +0.5 % d'effet → jusqu'à **+20 %**)
-| Voie | Bonus | Malus / prix |
+### ⚔️ Les 9 Voies (`MaitriseVoies`) — LA LOI DU PRIX
+Chaque usage : +1 maîtrise (plafond 40). La maîtrise amplifie **les bonus ET les malus** du même facteur (jusqu'à **×1.2**) : *plus tu es puissant, plus tu paies.*
+
+| Voie | Bonus | Prix (grandit avec la maîtrise) |
 |---|---|---|
-| `forge` | dégâts **×1.5** | si la frappe **rate** : −12 % PV max |
-| `onde` | prochaine attaque subie **contrée ×2** | (une seule charge) |
-| `source` | soigne **60 %** des dégâts infligés (min 8 % PV max) | — |
-| `miroir` | prochaine attaque **−30 %** + **renvoyée à 100 %** | (une seule charge) |
-| `vide` | traverse la garde (jusqu'à **+20 %** dégâts) | **+2 corruption** / usage |
-| `eclair` | **+50 % critique**, **ne rate jamais** | — |
-| `domaine` | **touche garantie**, dégâts **×1.3** | **+3 corruption** / usage |
-| `flash` | **25 %** de chance d'Éclat Noir **×2.5** | — |
-| `sang` | vole **45 %** des dégâts en PV | — |
+| `forge` | dégâts **×1.5** | **−5 % des dégâts** en PV à chaque coup · ratée : **−12 % PV max** |
+| `onde` | prochaine attaque **contrée ×2** | Reflux armé = exposé : l'attaque contrée frappe **+20 %** |
+| `source` | soigne **60 %** des dégâts (min 8 % PV max) | **+1 Errance** par soin (réparer la chair puise dans l'être) |
+| `miroir` | attaque **−30 %** + **renvoyée à 100 %** | le miroir se fêle : le porteur encaisse **20 % du renvoyé** |
+| `vide` | traverse la garde (jusqu'à **+20 %**) | **+2 corruption** / usage |
+| `eclair` | **+50 % critique**, ne rate jamais | la vitesse brûle : **−8 % des dégâts** en PV |
+| `domaine` | touche garantie, dégâts **×1.3** | **+3 corruption** / usage |
+| `flash` | **25 %** d'Éclat Noir **×2.5** | au déclenchement : **−10 % PV max** (la distorsion revient) |
+| `sang` | vole **45 %** des dégâts en PV | **+2 corruption** / drain (le sang appelle le sang) |
 
 ### 📜 Les Paroles (`ParolesSysteme`) — formules exactes
 - Concentration requise **Kr = 8 · L^1.8** · fenêtre de combat **tf = 5.0** · temps **0.8·L**.
