@@ -139,6 +139,58 @@
  * @default 45
  * @desc « l'Art du Sang » : le lanceur se soigne d'une part des dégâts infligés (drain).
  *
+ * @param --- LES PRIX (chaque Voie a un malus, qui grandit avec la maîtrise) ---
+ * @default
+ *
+ * @param forgeRecul
+ * @text Forge — élan brûlé (% des dégâts)
+ * @type number
+ * @min 0
+ * @default 5
+ * @desc Même réussie, la frappe Forge coûte : le lanceur perd ce % des dégâts infligés en PV.
+ *
+ * @param ondeExpo
+ * @text Onde — exposition (% dégâts subis en plus)
+ * @type number
+ * @min 0
+ * @default 20
+ * @desc Reflux armé = on s'ouvre pour épouser le coup : l'attaque contrée frappe ce % plus fort.
+ *
+ * @param sourceErrance
+ * @text Source — prix en Errance
+ * @type number
+ * @min 0
+ * @default 1
+ * @desc Réparer la chair puise dans l'être : chaque soin de la Source coûte de l'Errance.
+ *
+ * @param miroirRetour
+ * @text Miroir — éclats (% des dégâts renvoyés)
+ * @type number
+ * @min 0
+ * @default 20
+ * @desc Le miroir se fêle : quand le Renvoi frappe, le porteur encaisse ce % des dégâts renvoyés.
+ *
+ * @param eclairRecul
+ * @text Éclair — brûlure (% des dégâts)
+ * @type number
+ * @min 0
+ * @default 8
+ * @desc La vitesse brûle le corps : le lanceur perd ce % des dégâts infligés en PV.
+ *
+ * @param flashContrecoup
+ * @text Flash — contrecoup (% PV max)
+ * @type number
+ * @min 0
+ * @default 10
+ * @desc Quand l'Éclat Noir jaillit, la distorsion revient : le lanceur perd ce % de ses PV max.
+ *
+ * @param sangCorruption
+ * @text Sang — corruption par usage
+ * @type number
+ * @min 0
+ * @default 2
+ * @desc Le sang appelle le sang : chaque drain précipite la Bête.
+ *
  * @param showLog
  * @text Messages de combat ?
  * @type boolean
@@ -195,6 +247,22 @@
  *      d'un coup dévastateur ×flashMult.
  *  ▶ SANG — « l'Art du Sang ». Drain : le lanceur se soigne d'une part des
  *      dégâts infligés (sangSteal %).
+ *
+ *  ─────────────────────────────────────────────────────────────────────────
+ *  LA LOI DU PRIX — chaque Voie a un malus, et il GRANDIT avec la maîtrise
+ *  ─────────────────────────────────────────────────────────────────────────
+ *   forge   : même réussie, la frappe brûle l'élan (−5 % des dégâts en PV)
+ *             + ratée : −12 % PV max
+ *   onde    : Reflux armé = on s'expose (l'attaque contrée frappe +20 %)
+ *   source  : réparer la chair puise dans l'être (+1 Errance par soin)
+ *   miroir  : le Renvoi fêle le miroir (le porteur encaisse 20 % du renvoyé)
+ *   vide    : +2 corruption par usage
+ *   eclair  : la vitesse brûle le corps (−8 % des dégâts en PV)
+ *   domaine : +3 corruption par usage
+ *   flash   : l'Éclat Noir revient dans le bras (−10 % PV max au déclenchement)
+ *   sang    : le sang appelle le sang (+2 corruption par drain)
+ *  Tous ces prix sont multipliés par le même facteur de maîtrise que les
+ *  bonus (jusqu'à ×1.2 au plafond) : plus tu es puissant, plus tu paies.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  PROGRESSER PAR LE COMBAT
@@ -322,6 +390,10 @@
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var value = _makeDamageValue.call(this, target, critical);
         if (value <= 0) return value;
+        // Prix de l'Onde : Reflux armé = on s'expose (l'attaque frappe plus fort)
+        if (target && target._voieReflux && ONDE_EXPO > 0) {
+            value = Math.floor(value * (1 + ONDE_EXPO * Voies.scale(target, 'onde')));
+        }
         var voie = actionVoie(this);
         if (!voie) return value;
         var subject = this.subject();
@@ -419,6 +491,10 @@
                     if (heal > 0) {
                         subject.gainHp(heal); subject.startDamagePopup();
                         log((subject.name ? subject.name() : 'Le lanceur') + ' referme ses chairs (+' + heal + ' PV).');
+                        // le prix : réparer la chair puise dans l'être
+                        if (SRC_ERR > 0 && subject.isActor && subject.isActor() && window.Errance) {
+                            try { window.Errance.add(subject.actorId(), Math.round(SRC_ERR * Voies.scale(subject, 'source'))); } catch (e) {}
+                        }
                     }
                 }
                 break;
@@ -426,14 +502,14 @@
             case 'vide':
                 // L'aura disparaît — mauvais signe : on s'enfonce vers la Bête.
                 if (VIDE_CORR > 0 && subject.isActor && subject.isActor() && window.Corruption) {
-                    try { window.Corruption.add(subject.actorId(), VIDE_CORR); } catch (e) {}
+                    try { window.Corruption.add(subject.actorId(), Math.round(VIDE_CORR * Voies.scale(subject, 'vide'))); } catch (e) {}
                 }
                 break;
 
             case 'domaine':
                 // Ouvrir un Territoire puise profond dans la source.
                 if (DOM_CORR > 0 && subject.isActor && subject.isActor() && window.Corruption) {
-                    try { window.Corruption.add(subject.actorId(), DOM_CORR); } catch (e) {}
+                    try { window.Corruption.add(subject.actorId(), Math.round(DOM_CORR * Voies.scale(subject, 'domaine'))); } catch (e) {}
                 }
                 break;
 
@@ -443,6 +519,13 @@
                     this._voieFlash = false;
                     if ($gameScreen) $gameScreen.startFlash([20, 20, 40, 200], 20);
                     log('✦ ' + (subject.name ? subject.name() : 'Le lanceur') + ' — ÉCLAT NOIR ! La frappe se distord.');
+                    // le prix : la distorsion revient dans le bras
+                    if (FLASH_CC > 0 && subject.isAlive()) {
+                        var cc = Math.max(1, Math.floor(subject.mhp * FLASH_CC * Voies.scale(subject, 'flash')));
+                        subject.gainHp(-cc); subject.startDamagePopup(); subject.clearResult();
+                        log('La distorsion revient dans le bras (-' + cc + ' PV).');
+                        if (subject.isDead()) subject.performCollapse();
+                    }
                 }
                 break;
 
@@ -454,6 +537,10 @@
                     if (drain > 0) {
                         subject.gainHp(drain); subject.startDamagePopup();
                         log((subject.name ? subject.name() : 'Le lanceur') + ' boit le sang de la blessure (+' + drain + ' PV).');
+                        // le prix : le sang appelle le sang
+                        if (SANG_CORR > 0 && subject.isActor && subject.isActor() && window.Corruption) {
+                            try { window.Corruption.add(subject.actorId(), Math.round(SANG_CORR * Voies.scale(subject, 'sang'))); } catch (e) {}
+                        }
                     }
                 }
                 break;
@@ -481,10 +568,30 @@
                     (attacker.name ? attacker.name() : 'l\'agresseur') + ' frappe sa propre image (-' + back + ' PV).');
                 if (attacker.isDead()) attacker.performCollapse();
             }
+            // le prix : le miroir se fêle dans la main du porteur
+            if (MIR_RETOUR > 0 && target.isAlive()) {
+                var eclat = Math.max(1, Math.floor(back * MIR_RETOUR * Voies.scale(target, 'miroir')));
+                target.gainHp(-eclat); target.startDamagePopup(); target.clearResult();
+                log('Le miroir se fêle (-' + eclat + ' PV).');
+                if (target.isDead()) target.performCollapse();
+            }
             return;
         }
 
         _executeDamage.call(this, target, value);
+
+        // Prix de la Forge & de l'Éclair : frapper coûte de la chair.
+        if (value > 0 && attacker && attacker.isAlive() && attacker !== target) {
+            var vAtk = actionVoie(this);
+            var taux = vAtk === 'forge' ? FORGE_RECUL : (vAtk === 'eclair' ? ECL_RECUL : 0);
+            if (taux > 0) {
+                var brulure = Math.max(1, Math.floor(value * taux * Voies.scale(attacker, vAtk)));
+                attacker.gainHp(-brulure); attacker.startDamagePopup(); attacker.clearResult();
+                log((attacker.name ? attacker.name() : 'Le lanceur') +
+                    (vAtk === 'forge' ? ' brûle son élan' : ' brûle sa vitesse') + ' (-' + brulure + ' PV).');
+                if (attacker.isDead()) attacker.performCollapse();
+            }
+        }
 
         // Onde : contrer la frappe subie.
         var reflux = target && target._voieReflux;
