@@ -35,7 +35,8 @@ CorruptionAme           ← window.Corruption (déjà présent)
 MaitriseVoies           ← window.Voies    (déjà présent)
 ParolesSysteme          ← window.Paroles  (déjà présent)
 
-LoreCanon               ★ NOUVEAU — source de vérité (AVANT les HUD)
+LoreCanon               ★ NOUVEAU — source de vérité affichage (AVANT les HUD)
+ChutesNoyau             ★ NOUVEAU — cerveau partagé des pressions (AVANT les Chutes*)
 
 VisualOverhaul          ★ refonte visuelle générale (assez bas dans la liste)
 
@@ -59,6 +60,7 @@ GuideVoiesParoles       ★ écran d'explication (APRÈS MaitriseVoies + Paroles
 | Plugin | Version | Rôle | Dépend de |
 |---|---|---|---|
 | `LoreCanon` | 1.0 | Noms de paliers + couleurs + jauge arrondie partagés. Aucun effet de jeu. | — |
+| `ChutesNoyau` | 1.0 | Cerveau partagé : source unique des pressions de Chute (mental/errant/bête). Aucune écriture. | Ame, Errance, Corruption |
 | `VisualOverhaul` | 1.0 | Rendu net, fondus doux, fenêtres animées, jauges arrondies, vignette. | — |
 | `ChutesProgression` | 1.0 | Voiles d'écran progressifs (violet Bête / vignette Errant / vert Fond). | Ame, Errance, Corruption |
 | `ChutesHallucinations` | 1.0 | Errant → créatures d'ombre ; Dément → faux monde enfantin. | Ame, Errance |
@@ -96,4 +98,6 @@ APIs script utiles : `ChutesLac.voie('bete',0.9)`, `Chutes.survivants()`,
 - Aucun plugin de la suite n'écrit dans `$gameScreen` (teintes d'événements intactes).
 - Aucun ID d'image `showPicture` réservé (tout passe par des calques Sprite gérés).
 - Chaque Chute ne réagit qu'à **sa** jauge (mental→phase, Errant→Errance, Bête→Corruption).
+- Les 5 plugins Chutes* lisent leurs pressions dans **`ChutesNoyau`** (un seul cerveau) :
+  ils restent synchronisés, et gardent un repli local si le noyau est absent.
 - Tout est paramétrable et désactivable dans le gestionnaire de plugins.

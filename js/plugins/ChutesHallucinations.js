@@ -107,12 +107,12 @@
     function pErrant() {
         var m = 0;
         // Errance : rien avant l'éveil (Décharné 40), plein à l'Errant (100)
-        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, (jErr(a.actorId()) - 40) / 60); });
+        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.errantActeur(a.actorId()) : (jErr(a.actorId()) - 40) / 60); });
         return ressenti(m.clamp(0, 1));
     }
     function pDement() {
         var m = 0;
-        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, (3 - phase(a.actorId())) / 2); });
+        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(a.actorId()) : (3 - phase(a.actorId())) / 2); });
         return ressenti(m.clamp(0, 1));
     }
     function actif() { return !($gameSystem && $gameSystem._chuteHallOff); }

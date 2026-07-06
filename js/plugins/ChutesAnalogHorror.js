@@ -90,7 +90,7 @@
         var m = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            m = Math.max(m, (3 - phase(id)) / 2); // VHS/BROKENSCRIPT = le Fond mental, démarre phase 2
+            m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2); // VHS = le Fond mental (noyau)
         });
         return m.clamp(0, 1);
     }
