@@ -17,9 +17,11 @@
         this.drawText('❖ SANTÉ MENTALE DE L’ÂME',0,0,this.contentsWidth(),'center'); this.resetTextColor();
         var y=this.lineHeight()*2, m=$gameParty?$gameParty.members():[];
         for(var i=0;i<m.length;i++){ var a=m[i]; var ph=(typeof window.Ame!=='undefined')?window.Ame.phase(a.actorId()):3; if(!ph)ph=3;
+            var mi=window.LoreCanon?LoreCanon.mental(ph):{nom:NAM[ph-1],couleur:COL[ph-1]};
             this.drawText(a.name(),40,y,180); var bx=240,bw=Graphics.boxWidth-320;
-            this.contents.fillRect(bx,y+8,bw,20,'rgba(0,0,0,.5)'); this.contents.fillRect(bx,y+8,Math.floor(bw*ph/5),20,COL[ph-1]);
-            this.changeTextColor(this.textColor(0)); this.drawText(NAM[ph-1],bx+bw+12,y,200); this.resetTextColor(); y+=this.lineHeight()*1.6; } };
+            if(window.LoreCanon){ LoreCanon.bar(this.contents,bx,y+8,bw,20,ph/5,mi.couleur); }
+            else { this.contents.fillRect(bx,y+8,bw,20,'rgba(0,0,0,.5)'); this.contents.fillRect(bx,y+8,Math.floor(bw*ph/5),20,COL[ph-1]); }
+            this.changeTextColor(mi.couleur); this.drawText(mi.nom,bx+bw+12,y,200); this.resetTextColor(); y+=this.lineHeight()*1.6; } };
     function S(){ this.initialize.apply(this,arguments); }
     S.prototype=Object.create(Scene_MenuBase.prototype); S.prototype.constructor=S;
     S.prototype.create=function(){ Scene_MenuBase.prototype.create.call(this); this._w=new W(); this.addWindow(this._w); };

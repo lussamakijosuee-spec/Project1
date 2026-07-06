@@ -62,8 +62,9 @@
  *    • PERTES DE SIGNAL : neige plein écran + « AUCUN SIGNAL / VEUILLEZ
  *      PATIENTER », et des lignes de diffusion qui te parlent.
  *
- *  L'intensité suit la Chute la plus forte du groupe (Errance / folie /
- *  Corruption). La voie du Fond (BROKENSCRIPT) pousse l'effet au maximum.
+ *  C'est l'esthétique du FOND (BROKENSCRIPT) : l'intensité suit la santé
+ *  mentale qui s'effondre (phase mentale). Rien tant que l'esprit tient
+ *  (phases 5-4-3) ; ça démarre phase 2 et culmine à la folie (phase 1).
  *  Calque non interactif ; $gameScreen n'est pas touché.
  *
  *  COMMANDES :
@@ -89,7 +90,7 @@
         var m = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            m = Math.max(m, (5 - phase(id)) / 4, jErr(id) / 100, jCorr(id) / 100 * 0.9);
+            m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2); // VHS = le Fond mental (noyau)
         });
         return m.clamp(0, 1);
     }

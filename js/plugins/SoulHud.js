@@ -65,8 +65,11 @@
         this.resetTextColor();
         this.drawText(c + '%', 0, lh, W - 4, 'right');
         var by = lh + Math.floor(lh * 0.72), bw = W;
-        this.contents.fillRect(0, by, bw, 8, 'rgba(0,0,0,0.5)');
-        this.contents.fillRect(1, by + 1, Math.floor((bw - 2) * Math.min(c, 100) / 100), 6, col);
+        if (window.LoreCanon) { LoreCanon.bar(this.contents, 0, by, bw, 8, Math.min(c, 100) / 100, col); }
+        else {
+            this.contents.fillRect(0, by, bw, 8, 'rgba(0,0,0,0.5)');
+            this.contents.fillRect(1, by + 1, Math.floor((bw - 2) * Math.min(c, 100) / 100), 6, col);
+        }
     };
     Window_SoulHud.prototype.update = function () {
         Window_Base.prototype.update.call(this);

@@ -198,13 +198,13 @@
         var h = 16;
         var gy = y + (this.lineHeight() - h) / 2;
         rate = Math.max(0, Math.min(1, rate));
-        // Fond
-        this.contents.fillRect(x, gy, width, h, 'rgba(0,0,0,0.6)');
-        // Remplissage
-        this.contents.fillRect(x + 1, gy + 1, Math.floor((width - 2) * rate), h - 2, color);
-        // Cadre clair
-        this.contents.fillRect(x, gy, width, 1, '#ffffff');
-        this.contents.fillRect(x, gy + h - 1, width, 1, '#ffffff');
+        if (window.LoreCanon) { LoreCanon.bar(this.contents, x, gy, width, h, rate, color); }
+        else {
+            this.contents.fillRect(x, gy, width, h, 'rgba(0,0,0,0.6)');
+            this.contents.fillRect(x + 1, gy + 1, Math.floor((width - 2) * rate), h - 2, color);
+            this.contents.fillRect(x, gy, width, 1, '#ffffff');
+            this.contents.fillRect(x, gy + h - 1, width, 1, '#ffffff');
+        }
     };
 
     //=========================================================================

@@ -104,8 +104,11 @@
             var bw = W - 20, by = y + 52;
             this.contents.fontSize = 12; this.changeTextColor('#7E7688');
             this.drawText('étendue ' + ext + ' %', 8, by - 4, 140, 'left');
-            this.contents.fillRect(140, by, bw - 140, 10, 'rgba(0,0,0,0.5)');
-            this.contents.fillRect(141, by + 1, Math.floor((bw - 142) * ext / 100), 8, inf.col);
+            if (window.LoreCanon) { LoreCanon.bar(this.contents, 140, by, bw - 140, 10, ext / 100, inf.col); }
+            else {
+                this.contents.fillRect(140, by, bw - 140, 10, 'rgba(0,0,0,0.5)');
+                this.contents.fillRect(141, by + 1, Math.floor((bw - 142) * ext / 100), 8, inf.col);
+            }
         }
         this.resetFontSettings();
     };

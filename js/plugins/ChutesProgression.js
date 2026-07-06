@@ -116,10 +116,11 @@
         if ($gameParty) {
             $gameParty.members().forEach(function (m) {
                 var id = m.actorId();
-                bete   = Math.max(bete,   jCorr(id) / 100);
-                errant = Math.max(errant, jErr(id) / 100);
-                // phase 5 → 0, phase 1 → 1
-                fond   = Math.max(fond,   (5 - phase(id)) / 4);
+                // paliers du lore : rien avant l'éveil (40), plein à la Chute (100)
+                // toutes les pressions viennent du noyau partagé (repli local si absent)
+                bete   = Math.max(bete,   window.ChutesNoyau ? ChutesNoyau.beteActeur(id)   : (jCorr(id) - 40) / 60);
+                errant = Math.max(errant, window.ChutesNoyau ? ChutesNoyau.errantActeur(id) : (jErr(id)  - 40) / 60);
+                fond   = Math.max(fond,   window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2);
             });
         }
         return {
