@@ -428,7 +428,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
-ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants
+ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -649,4 +649,28 @@ Sans roue ni cycle (fidèle au Codex) : quand un sort élémentaire **fait des d
 | Crépuscule (29) | Aveuglé + soigne le lanceur |
 
 → choisir son élément = un choix **tactique** (contrôle / soutien / dégâts sur la durée), et la **Fusion** devient doublement précieuse. Les ennemis profitent des mêmes esprits. Chance + IDs d'états réglables.
+
+## 🟣 La Fusion des Mana (`FusionMana`) — « la Chair d'Âme »
+
+**Le canon :** le *Mana Semi-Parfait* équilibre les trois sources (le centre, la voie sûre). La **Fusion** en fond **deux** l'une dans l'autre — plus puissant qu'une source seule, mais instable : faute d'équilibre, elle tire vers les **deux Chutes** concernées.
+
+**Les 3 Fusions** — chaque paire de sources tire vers ses **deux** Chutes :
+
+| Fusion | Sources | État | Gain | Prix / tour (escalade) |
+|---|---|---|---|---|
+| **Chair d'Âme** | Âme → Corps | 195 | ATK ×1.45 · DEF ×1.30 · +12 % crit · robuste | **+4 Bête** & **+3 Errant** |
+| **Fil du Rasoir** | Corps → Esprit | 196 | **AGI ×1.6** · ATK ×1.2 · +15 % crit · +précision · +esquive | **+3 Bête** & **−1 lucidité** (Dément) |
+| **Songe Incarné** | Esprit → Âme | 197 | **MAT ×1.5** · MDF ×1.30 · +12 % crit | **−1 lucidité** (Dément) & **+3 Errant** |
+
+**Entrée :** Chair = 4 âmes (var 15, sinon +18 Errance) · Rasoir & Songe = −2 santé mentale (ouvrir/plonger l'esprit).
+→ Rester fusionné = courir vers **deux gouffres à la fois**. Avec `ChutesDefinitives`, une double chute est une **perte définitive rapide**.
+
+```
+FUSION chair 1      FUSION rasoir 1      FUSION songe 1
+FUSION fin 1        (arrêter ; tombe aussi en fin de combat)
+```
+```js
+Fusion.actif(1)     // clé de la fusion active ('chair'/'rasoir'/'songe') ou ''
+```
+Skills prêts : **807** (chair, `<Fusion: chair>`) · **808** (rasoir) · **809** (songe). Réservable à un acteur (`acteurRequis`). Charger **après** CorruptionAme, Errance et JadeEntitePlunging.
 
