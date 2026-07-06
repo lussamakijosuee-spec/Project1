@@ -654,22 +654,23 @@ Sans roue ni cycle (fidèle au Codex) : quand un sort élémentaire **fait des d
 
 **Le canon :** le *Mana Semi-Parfait* équilibre les trois sources (le centre, la voie sûre). La **Fusion** en fond **deux** l'une dans l'autre — plus puissant qu'une source seule, mais instable : faute d'équilibre, elle tire vers les **deux Chutes** concernées.
 
-**La technique de Thylane — Âme → Corps :** elle verse son âme dans son corps et se taille une chair de mana négatif.
+**Les 3 Fusions** — chaque paire de sources tire vers ses **deux** Chutes :
 
-| | |
-|---|---|
-| **Gain** | état **Chair d'Âme (195)** : ATK ×1.45 · DEF ×1.30 · +12 % crit · robuste |
-| **Entrée** | consomme **4 âmes** (var 15) ; sinon elle s'arrache l'âme (**+18 Errance** d'un coup) |
-| **Prix / tour** | **+4 Corruption** (→ la Bête) **ET +3 Errance** (→ l'Errant) — et ça **monte chaque tour** (escalade) |
+| Fusion | Sources | État | Gain | Prix / tour (escalade) |
+|---|---|---|---|---|
+| **Chair d'Âme** | Âme → Corps | 195 | ATK ×1.45 · DEF ×1.30 · +12 % crit · robuste | **+4 Bête** & **+3 Errant** |
+| **Fil du Rasoir** | Corps → Esprit | 196 | **AGI ×1.6** · ATK ×1.2 · +15 % crit · +précision · +esquive | **+3 Bête** & **−1 lucidité** (Dément) |
+| **Songe Incarné** | Esprit → Âme | 197 | **MAT ×1.5** · MDF ×1.30 · +12 % crit | **−1 lucidité** (Dément) & **+3 Errant** |
 
-→ Rester fusionné longtemps = courir vers **deux gouffres à la fois**. Avec `ChutesDefinitives`, une double chute est une perte définitive rapide. Arme à double tranchant, exactement dans l'esprit du lore.
+**Entrée :** Chair = 4 âmes (var 15, sinon +18 Errance) · Rasoir & Songe = −2 santé mentale (ouvrir/plonger l'esprit).
+→ Rester fusionné = courir vers **deux gouffres à la fois**. Avec `ChutesDefinitives`, une double chute est une **perte définitive rapide**.
 
 ```
-FUSION chair 1      (entrer — ou via le skill 807 « ⟡ Fusion — la Chair d'Âme »)
+FUSION chair 1      FUSION rasoir 1      FUSION songe 1
 FUSION fin 1        (arrêter ; tombe aussi en fin de combat)
 ```
 ```js
-Fusion.actif(1)     // true si l'acteur est fusionné
+Fusion.actif(1)     // clé de la fusion active ('chair'/'rasoir'/'songe') ou ''
 ```
-Skill prêt : **#807** (note `<FusionChair>`). Réservable à un seul acteur (paramètre `acteurRequis`). Charger **après** CorruptionAme et Errance. Les deux autres paires (Corps→Esprit, Esprit→Âme) s'ajoutent sur le même moteur — à la demande.
+Skills prêts : **807** (chair, `<Fusion: chair>`) · **808** (rasoir) · **809** (songe). Réservable à un acteur (`acteurRequis`). Charger **après** CorruptionAme, Errance et JadeEntitePlunging.
 
