@@ -106,7 +106,8 @@
     // pressions max du groupe (0..1)
     function pErrant() {
         var m = 0;
-        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, jErr(a.actorId()) / 100); });
+        // Errance : rien avant l'éveil (Décharné 40), plein à l'Errant (100)
+        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, (jErr(a.actorId()) - 40) / 60); });
         return ressenti(m.clamp(0, 1));
     }
     function pDement() {

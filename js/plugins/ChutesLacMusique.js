@@ -93,8 +93,8 @@
         var b = 0, e = 0, f = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            b = Math.max(b, jCorr(id) / 100);
-            e = Math.max(e, jErr(id) / 100);
+            b = Math.max(b, (jCorr(id) - 40) / 60); // Corruption : éveil 40 → la Mue 100
+            e = Math.max(e, (jErr(id)  - 40) / 60); // Errance : éveil 40 → l'Errant 100
             f = Math.max(f, (3 - phase(id)) / 2); // mental : démarre phase 2
         });
         return { bete: b.clamp(0, 1), errant: e.clamp(0, 1), fond: f.clamp(0, 1) };

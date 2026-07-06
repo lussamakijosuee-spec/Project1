@@ -116,8 +116,9 @@
         if ($gameParty) {
             $gameParty.members().forEach(function (m) {
                 var id = m.actorId();
-                bete   = Math.max(bete,   jCorr(id) / 100);
-                errant = Math.max(errant, jErr(id) / 100);
+                // paliers du lore : rien avant l'éveil (40), plein à la Chute (100)
+                bete   = Math.max(bete,   (jCorr(id) - 40) / 60); // Corruption : Frémissement→la Mue
+                errant = Math.max(errant, (jErr(id)  - 40) / 60); // Errance : Décharné→l'Errant
                 // démarre phase 2 : phase≥3 → 0, phase 2 → 0.5, phase 1 → 1
                 fond   = Math.max(fond,   (3 - phase(id)) / 2);
             });
