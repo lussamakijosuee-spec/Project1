@@ -428,7 +428,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
-ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants
+ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -649,4 +649,27 @@ Sans roue ni cycle (fidèle au Codex) : quand un sort élémentaire **fait des d
 | Crépuscule (29) | Aveuglé + soigne le lanceur |
 
 → choisir son élément = un choix **tactique** (contrôle / soutien / dégâts sur la durée), et la **Fusion** devient doublement précieuse. Les ennemis profitent des mêmes esprits. Chance + IDs d'états réglables.
+
+## 🟣 La Fusion des Mana (`FusionMana`) — « la Chair d'Âme »
+
+**Le canon :** le *Mana Semi-Parfait* équilibre les trois sources (le centre, la voie sûre). La **Fusion** en fond **deux** l'une dans l'autre — plus puissant qu'une source seule, mais instable : faute d'équilibre, elle tire vers les **deux Chutes** concernées.
+
+**La technique de Thylane — Âme → Corps :** elle verse son âme dans son corps et se taille une chair de mana négatif.
+
+| | |
+|---|---|
+| **Gain** | état **Chair d'Âme (195)** : ATK ×1.45 · DEF ×1.30 · +12 % crit · robuste |
+| **Entrée** | consomme **4 âmes** (var 15) ; sinon elle s'arrache l'âme (**+18 Errance** d'un coup) |
+| **Prix / tour** | **+4 Corruption** (→ la Bête) **ET +3 Errance** (→ l'Errant) — et ça **monte chaque tour** (escalade) |
+
+→ Rester fusionné longtemps = courir vers **deux gouffres à la fois**. Avec `ChutesDefinitives`, une double chute est une perte définitive rapide. Arme à double tranchant, exactement dans l'esprit du lore.
+
+```
+FUSION chair 1      (entrer — ou via le skill 807 « ⟡ Fusion — la Chair d'Âme »)
+FUSION fin 1        (arrêter ; tombe aussi en fin de combat)
+```
+```js
+Fusion.actif(1)     // true si l'acteur est fusionné
+```
+Skill prêt : **#807** (note `<FusionChair>`). Réservable à un seul acteur (paramètre `acteurRequis`). Charger **après** CorruptionAme et Errance. Les deux autres paires (Corps→Esprit, Esprit→Âme) s'ajoutent sur le même moteur — à la demande.
 
