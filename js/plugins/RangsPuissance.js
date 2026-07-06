@@ -168,8 +168,11 @@
             this.drawText('réserves ' + d.reserves + ' · maîtrise ' + d.maitrise + ' · aura ' + d.aura + '  =  ' + d.score, 104, y + 44, W - 300, 'left');
             // Jauge de score
             var bw = 150, bx = W - bw - 10, by = y + 18;
-            this.contents.fillRect(bx, by, bw, 12, 'rgba(0,0,0,0.5)');
-            this.contents.fillRect(bx + 1, by + 1, Math.floor((bw - 2) * Math.min(100, d.score) / 100), 10, COULEURS[d.rang] || '#ECE6D8');
+            if (window.LoreCanon) { LoreCanon.bar(this.contents, bx, by, bw, 12, Math.min(100, d.score) / 100, COULEURS[d.rang] || '#ECE6D8'); }
+            else {
+                this.contents.fillRect(bx, by, bw, 12, 'rgba(0,0,0,0.5)');
+                this.contents.fillRect(bx + 1, by + 1, Math.floor((bw - 2) * Math.min(100, d.score) / 100), 10, COULEURS[d.rang] || '#ECE6D8');
+            }
         }
         this.resetFontSettings();
     };

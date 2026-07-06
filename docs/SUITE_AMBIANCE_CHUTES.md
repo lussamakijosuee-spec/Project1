@@ -67,8 +67,10 @@ GuideVoiesParoles       ★ écran d'explication (APRÈS MaitriseVoies + Paroles
 | `ChutesAnalogHorror` | 1.0 | Écran-cassette VHS (scanlines, tracking, REC, pertes de signal). | Ame |
 | `GuideVoiesParoles` | 1.0 | Écran clair expliquant Voies (maîtrise+Prix) et Paroles (fiabilité). | Voies, Ame, ParolesSysteme, LoreCanon |
 
-Retouchés pour l'unification (repli sûr si `LoreCanon` absent) :
-`Errance`, `CorruptionAme`, `Lore_SANEcran`.
+Retouchés pour l'unification — jauges arrondies via `LoreCanon.bar` (repli sûr
+si `LoreCanon` absent) :
+`Errance`, `CorruptionAme`, `Lore_SANEcran`, `AmeStatusScene`, `SoulHud`,
+`ManaVisuals`, `ManaVisualEX`, `RangsPuissance`, `MarqueVivante`.
 
 ---
 

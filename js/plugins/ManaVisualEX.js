@@ -191,8 +191,11 @@
                 var by = yy + Math.floor(lh * 0.74);
                 var ratio = (val / mx) * r;
                 var col = (val / mx) >= 0.85 ? '#5fd6a0' : (val / mx) >= 0.5 ? '#ffd95a' : '#e08a5a';
-                this.contents.fillRect(x, by, barW, 6, 'rgba(0,0,0,0.4)');
-                this.contents.fillRect(x + 1, by + 1, Math.floor((barW - 2) * ratio), 4, col);
+                if (window.LoreCanon) { LoreCanon.bar(this.contents, x, by, barW, 6, ratio, col); }
+                else {
+                    this.contents.fillRect(x, by, barW, 6, 'rgba(0,0,0,0.4)');
+                    this.contents.fillRect(x + 1, by + 1, Math.floor((barW - 2) * ratio), 4, col);
+                }
             }
 
             drawAffinityPanel.call(this, a, x, y, lh, r);

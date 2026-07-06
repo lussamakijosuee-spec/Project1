@@ -82,8 +82,11 @@
                 var bw = 210, by = y2 + Math.floor(lh * 0.74);
                 var ratio = val / mx;
                 var col = ratio >= 0.85 ? '#5fd6a0' : ratio >= 0.5 ? '#ffd95a' : '#e08a5a';
-                this.contents.fillRect(x, by, bw, 6, 'rgba(0,0,0,0.4)');
-                this.contents.fillRect(x + 1, by + 1, Math.floor((bw - 2) * ratio), 4, col);
+                if (window.LoreCanon) { LoreCanon.bar(this.contents, x, by, bw, 6, ratio, col); }
+                else {
+                    this.contents.fillRect(x, by, bw, 6, 'rgba(0,0,0,0.4)');
+                    this.contents.fillRect(x + 1, by + 1, Math.floor((bw - 2) * ratio), 4, col);
+                }
             }
         };
     }
