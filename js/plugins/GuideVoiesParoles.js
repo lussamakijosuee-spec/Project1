@@ -193,8 +193,10 @@
 
         // ── Santé mentale ────────────────────────────────────────────────
         var p = sante(a.actorId());
-        this._txt('Santé mentale — ' + nomSante(p), 0, y, W, 'left', couleurSante(p), 20); y += 30;
-        this.drawGauge(2, y - 22 - this._scroll, W - 4, p, couleurSante(p), '#ffffff');
+        var ph = (window.Ame && Ame.phase) ? (Ame.phase(a.actorId()) || Math.round(p * 5)) : Math.round(p * 5);
+        var mi = window.LoreCanon ? LoreCanon.mental(ph) : { nom: nomSante(p), couleur: couleurSante(p) };
+        this._txt('Santé mentale — ' + mi.nom, 0, y, W, 'left', mi.couleur, 20); y += 30;
+        this.drawGauge(2, y - 22 - this._scroll, W - 4, p, mi.couleur, '#ffffff');
         this._txt(Math.round(p * 100) + ' %', 0, y - 4, W - 6, 'right', '#e8e8e8', 16); y += 22;
         this._txt('C\'est elle qui tient tes Paroles. Esprit clair = magie sûre ; esprit qui vacille = ratés.',
                   0, y, W, 'left', '#9aa0b0', 16); y += 32;

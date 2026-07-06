@@ -106,13 +106,14 @@
         for (var i = 1; i <= 4; i++) {
             var a = $gameActors.actor(i); if (!a) continue;
             var y = top + (i - 1) * rowH, lv = Corruption.niveau(i);
-            var col = lv >= 100 ? '#8e44ad' : lv >= 70 ? '#c0392b' : lv >= 40 ? '#e67e22' : '#2ecc71';
-            var stage = lv >= 100 ? 'la Mue' : lv >= 70 ? 'Fièvre' : lv >= 40 ? 'Frémissement' : 'Calme';
+            var info = window.LoreCanon ? LoreCanon.corruption(lv) : null;
+            var col = info ? info.couleur : (lv >= 100 ? '#8e44ad' : lv >= 70 ? '#c0392b' : lv >= 40 ? '#e67e22' : '#2ecc71');
+            var stage = info ? info.nom : (lv >= 100 ? 'la Mue' : lv >= 70 ? 'Fièvre' : lv >= 40 ? 'Frémissement' : 'Calme');
             this.changeTextColor(this.normalColor()); this.drawText(a.name(), 0, y, 220);
             this.changeTextColor(col); this.drawText(stage + ' · ' + lv + ' / 100', 0, y, this.contentsWidth(), 'right');
             var bw = this.contentsWidth() - 20, gy = y + this.lineHeight() + 6;
-            this.contents.fillRect(0, gy, bw, 16, 'rgba(0,0,0,0.5)');
-            this.contents.fillRect(1, gy + 1, Math.floor((bw - 2) * lv / 100), 14, col);
+            if (window.LoreCanon) { LoreCanon.bar(this.contents, 0, gy, bw, 16, lv / 100, col); }
+            else { this.contents.fillRect(0, gy, bw, 16, 'rgba(0,0,0,0.5)'); this.contents.fillRect(1, gy + 1, Math.floor((bw - 2) * lv / 100), 14, col); }
             this.resetTextColor();
         }
     };
