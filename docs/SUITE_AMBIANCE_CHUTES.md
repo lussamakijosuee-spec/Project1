@@ -49,6 +49,8 @@ ChutesMurmures          ★ murmures + poème des âmes (APRÈS ChutesLacMusique
 ChutesAnalogHorror      ★ VHS / analog horror (APRÈS ChutesLacMusique)
 
 GuideVoiesParoles       ★ écran d'explication (APRÈS MaitriseVoies + ParolesSysteme)
+
+SafetyNet               ★ NOUVEAU — filet anti-gel (TOUT EN BAS de la liste)
 ```
 
 ★ = créé/retouché pendant la refonte.
@@ -68,6 +70,7 @@ GuideVoiesParoles       ★ écran d'explication (APRÈS MaitriseVoies + Paroles
 | `ChutesMurmures` | 1.0 | Murmures « laisse-toi couler » + poème adapté au nb d'âmes. | Ame, ChutesLacMusique, Chutes |
 | `ChutesAnalogHorror` | 1.0 | Écran-cassette VHS (scanlines, tracking, REC, pertes de signal). | Ame |
 | `GuideVoiesParoles` | 1.0 | Écran clair expliquant Voies (maîtrise+Prix) et Paroles (fiabilité). | Voies, Ame, ParolesSysteme, LoreCanon |
+| `SafetyNet` | 1.0 | Filet anti-gel : une erreur d'un plugin ne fige plus la carte/le combat. À charger EN DERNIER. | — |
 
 Retouchés pour l'unification — jauges arrondies via `LoreCanon.bar` (repli sûr
 si `LoreCanon` absent) :
