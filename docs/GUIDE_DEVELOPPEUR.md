@@ -76,6 +76,10 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 | **182** | Fièvre | MAT ×0.8 · MDF ×0.8 · PV max ×0.9 | Corruption ≥ 70 |
 | **183** | la Mue | MAT ×0.65 · MDF ×0.65 · PV max ×0.8 · **dégâts Sombre reçus ×1.4** | Corruption = 100 |
 | **188** | Surpassé | **ATK ×1.15 · MAT ×1.15 · +10 % critique** | Équilibre Semi-Parfait tenu (chaque tour) |
+| **195-197** | Chair d'Âme · Fil du Rasoir · Songe Incarné | les 3 **Fusions** (voir Fusion des Mana) | `<Fusion: …>` |
+| **198** | Royaume Impérial des Ténèbres — Domaine | **MAT ×1.6 · MDF ×1.4 · ATK ×1.3** + invocations libres | skill 810 `<RoyaumeImperial>` |
+| **199** | Contre Totale | renvoie **toute** frappe subie ce tour à l'envoyeur | skill 812 `<ContreTotale>` |
+| **200** | Traumatisé — déstabilisé | prix de l'Aspiration (revivre les morts) | skill 70 `<AspirationDamnees>` |
 | 17 | Saigment | (ta base) | ex. Aspiration des Âmes Damnées |
 | 39 | Royaume Impérial | domaine de Lou (copies infinies) | skill « copie d'Ame » |
 | 45 | Technique Incomplète | (ta base) | prix de la copie |
@@ -429,6 +433,7 @@ FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
 ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
+RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -674,3 +679,34 @@ Fusion.actif(1)     // clé de la fusion active ('chair'/'rasoir'/'songe') ou ''
 ```
 Skills prêts : **807** (chair, `<Fusion: chair>`) · **808** (rasoir) · **809** (songe). Réservable à un acteur (`acteurRequis`). Charger **après** CorruptionAme, Errance et JadeEntitePlunging.
 
+
+## ☠ Le Royaume Impérial des Ténèbres (`RoyaumeImperial`) — l'ultime de ludwing
+
+**Le canon :** ludwing est le porteur du **Symbole** et le porteur du **stock d'âmes** (Var 15). Sa dernière carte est une **expansion de domaine** : il déploie son Royaume, et **toutes les âmes qu'il a jamais récoltées reviennent**. Dans son domaine, il est le maître — les invocations ne coûtent plus rien, ses stats se décuplent, et il ouvre l'arsenal des Ténèbres. Fidèle au lore : faire revenir toutes les âmes d'un coup **gonfle l'Errance** (plus une âme porte d'âmes, plus elle sombre vers l'Errant).
+
+### Déployer le Domaine — skill **810** `<RoyaumeImperial>` (à donner à ludwing)
+| Effet | Chiffres |
+|---|---|
+| Les âmes reviennent | **+30** au stock (Var 15) d'un coup — ce qui **monte l'Errance** |
+| Invocations libres | tant que le Domaine tient, `<Invocation: n>` ne **coûte plus d'âmes** et n'est jamais grisée |
+| Stats décuplées | état **198** : **MAT ×1.6 · MDF ×1.4 · ATK ×1.3** |
+
+### L'arsenal (utilisable dans le Domaine)
+| Skill | Note | Effet |
+|---|---|---|
+| **66** Lotus des Ténèbres | (base) | attaque unique dévastatrice (déjà présente) |
+| **811** Pluie de Lance du Styx | `<Invocation: 3>` | pluie d'ombre sur **tous** les ennemis (invocation, donc gratuite en Domaine) |
+| **68** Annihilation des Ténèbres | `<SceauMagie>` | **zone** : détruit le corps **et** la magie → PM de la cible **à 0** + **MAT brisé** (debuff 3 tours) |
+| **812** Contre Totale | `<ContreTotale>` | état **199** : **tout** ce qui te frappe ce tour est **renvoyé à l'envoyeur** |
+| **70** Aspiration des Âmes Damnées | `<AspirationDamnees>` | aspire les âmes de **tous ceux tués dans l'aventure** : régénère PV + PM + **santé mentale** au prorata du **total récolté** — mais revivre les morts te **déstabilise** (état **200 Traumatisé**) |
+
+### Le total d'âmes de toute la partie
+`RoyaumeImperial` tient un compteur **cumulatif** (`$gameSystem._amesTotal`, incrémenté à chaque hausse de la Var 15). C'est **lui** qui alimente l'Aspiration : régen = `aspirationParAme` (défaut **6**) × total en PV, ×0.6 en PM, et **+1 santé mentale par 15 âmes**.
+```js
+RoyaumeTenebres.total()          // âmes récoltées depuis le début de la partie
+RoyaumeTenebres.domaineActif(3)  // le Domaine de ludwing est-il ouvert ?
+```
+```
+DOMAINE ouvrir 3     DOMAINE fermer 3     (mise en scène hors skill)
+```
+Charger **après** `InvocationAmes`, `Errance` et `JadeEntitePlunging`. Skill 810 → à équiper sur **ludwing (acteur 3)**. Le nettoyage de skill 70 supprime l'ancien `<Before Eval>` (qui doublait la régen sur le stock courant) : la régen passe désormais **uniquement** par le total cumulatif du plugin.
