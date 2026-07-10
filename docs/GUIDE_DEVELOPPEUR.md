@@ -817,3 +817,18 @@ Le système existant fonctionne : `<Ulti>`/`<UltiColor>` → **UltiCinematics** 
 | 453 Dévoreur d'Âmes · 454 Tout ou Rien | ludwing | la **Porte** ouverte en grand / son âme jouée à pile ou face | 30/35 % PV + Folie du Joueur (192) |
 | 457 Éclat de Conviction · 458 Certitude Absolue | Vesper | le **Verbe Vrai** à pleine voix | 20/28 % PV + Doute Paralysant (193) |
 | 413-416 (Duos) · 417 Trinité d'Âmes · 418 **Communion des Quatre** (ex-« Convergence des Ames ») | combos | descriptions passées aux **vrais noms** (Aël/Korrah/ludwing/Vesper — fini Thylane/Neyssa/Lou/Tianna) | TP 30/50/80 via ComboLiens |
+
+### La canonisation TOTALE (4e passe — Ennemis · États · Objets · Armes · Classes)
+| Avant | Référence (vérifiée) | Après |
+|---|---|---|
+| boss secret dio (ennemi 12, battler Vampire + état « le monde ») | **JoJo** — DIO, le vampire qui arrête le temps | **Dio, le Voleur d'Instants** (son « arrêt du temps » = un Trait de froid, comme Korrah) |
+| GASTER (ennemi 83) | **Undertale** — W.D. Gaster, « tombé dans sa création », fragmenté, accessible par glitch | **Celui qui est Tombé** (canon du Fond ; le tag `<Gaster>` de `JadeGaster.js` est conservé, rien ne casse) |
+| Confiance Absolue (nah i'd win) (état 40) | **JJK** — le « Nah, I'd win » de Gojo | **Confiance Absolue** |
+| le monde (état 13) · territoire (état 16) | JoJo · JJK | **Monde Gelé** · **Domaine Déployé** (suivent les skills 24 et 46 canonisés) |
+| Maître du Chill (état 34) | meme | **Maître Serein** (Arts Sereins) |
+| soul breaker · void chopper · emperor · siren song · soldier's rifle · nightbane · darkeheart (armes 26-66) | nommage anglais type WoW/MMO | **Brise-Âme · Fendeur du Vide · L'Empereur · Chant de Sirène · Fusil du Soldat · Fléau-Nocturne · Cœur-Sombre** (+ descriptions) |
+| téléphones iPhone/Samsung/Redmi/Nokia/stream + live intedit (armes 7, 59-64 · objet 5) | anachronismes volontaires | **gardés** — canonisés en **Reliques du Fond** : des objets qui n'existent pas dans ce monde, l'entité les a laissés filtrer |
+| Objets Spirituels 501-516 | anciens prénoms (Thylane/Neyssa/Lou/Tianna) | descriptions passées à **Aël/Korrah/ludwing/Vesper** + lien canon : « le don spirituel de sa marque — presque une extension de son Trait » |
+| classes « maitrise / aprenti / confiance / magie » | — | **l'Équilibre · la Maîtrise · le Symbole · la Parole** (alignées sur A1) |
+| bot boss · 2LITE GARDE D2MONIAQUE · IMAGE REMANAT · arc dechu · dragon abuse · poulet bizzare… | typos | **Colosse Sans Âme · Élite — Garde Démoniaque · Image Rémanente · Archange Déchu · Dragon Tyran · Poulet Bizarre**… (~25 ennemis) |
+| Épée rouillé · diament ×4 · tenerbre · scetre des ame perdus · Saigment… | typos | tout corrigé (armes, objets 1-10 avec descriptions, états) |
