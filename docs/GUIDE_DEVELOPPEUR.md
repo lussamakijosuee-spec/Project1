@@ -806,3 +806,14 @@ Charger **après** Errance, JadeEntitePlunging et MarqueVivante. Les notes exist
 | Glitch/404/.exe/.sys (76-88) | esthétique BROKENSCRIPT / creepypasta | noms **gardés** | canon : c'est le langage de **l'entité du Fond** (méta-horreur des Chutes) |
 | TRANSFORMATION ×3 (26/126/127) | — | **Transformation / — Second Stade / — Stade Final** | la chair qui se refond, palier par palier |
 | + ~35 corrections | fautes de frappe, majuscules, descriptions vides | (Fuir, Griffe, Souffle Draconique, Poing Fracassant…) | chaque skill du jeu a désormais un nom propre et une description canon |
+
+### Les ultimes signature & combos (3e passe — canonisés et VÉRIFIÉS branchés)
+Le système existant fonctionne : `<Ulti>`/`<UltiColor>` → **UltiCinematics** · `<HP Cost: x%>` + `<After Eval>` → **YEP_SkillCore** · `<Combo>`/`<ComboLien>` → **ComboLiens**. Les contre-coups (états 190-193) ont de vrais malus — c'est déjà la **Loi du Prix**.
+
+| Skill | Héros | Canonisé | Contre-coup |
+|---|---|---|---|
+| 445 Tranche-Néant · 446 Jugement de Soi | Aël | le **Point de Rupture** porté au comble | 25/33 % PV + Épuisement de l'Âme (190) |
+| 449 **Instant Absolu** (ex-« Convergence Absolue », renommé : collision avec la Convergence 813) · 450 Point Zéro | Korrah | l'**Instant Gelé** comprimé puis relâché / le Zéro Absolu concentré | 15/25 % PV + Brûlure Mentale (191) |
+| 453 Dévoreur d'Âmes · 454 Tout ou Rien | ludwing | la **Porte** ouverte en grand / son âme jouée à pile ou face | 30/35 % PV + Folie du Joueur (192) |
+| 457 Éclat de Conviction · 458 Certitude Absolue | Vesper | le **Verbe Vrai** à pleine voix | 20/28 % PV + Doute Paralysant (193) |
+| 413-416 (Duos) · 417 Trinité d'Âmes · 418 **Communion des Quatre** (ex-« Convergence des Ames ») | combos | descriptions passées aux **vrais noms** (Aël/Korrah/ludwing/Vesper — fini Thylane/Neyssa/Lou/Tianna) | TP 30/50/80 via ComboLiens |
