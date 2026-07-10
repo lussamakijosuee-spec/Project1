@@ -83,6 +83,7 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 | **201** | la Convergence — ultime d'Aël | **ATK/MAT ×1.35 · DEF/MDF ×1.25 · +15 % crit** + ignore les résistances | skill 813 `<Ultime: convergence>` |
 | **202** | la Mue Souveraine — ultime de Korrah | **ATK ×1.7 · DEF/AGI ×1.4 · +20 % crit · MAT ×0.5** + vol de vie 15 % | skill 815 `<Ultime: mue>` |
 | **203** | la Parole Originelle — ultime de Vesper | **MAT ×1.7 · MDF ×1.4 · +10 % crit** + magie infaillible | skill 818 `<Ultime: parole>` |
+| **204** | l'Envers — Trait de ludwing | **+50 % esquive** (1 tour) : un pied encore de l'autre côté | après un `<Trait: porte>` |
 | 17 | Saigment | (ta base) | ex. Aspiration des Âmes Damnées |
 | 39 | Royaume Impérial | domaine de Lou (copies infinies) | skill « copie d'Ame » |
 | 45 | Technique Incomplète | (ta base) | prix de la copie |
@@ -438,6 +439,7 @@ Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
 ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
 RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
 UltimesSources     ← après CorruptionAme, Errance, JadeEntitePlunging, ManaAffinity
+TraitsAme          ← après Errance, JadeEntitePlunging, MarqueVivante
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -742,3 +744,47 @@ ULTIME fin <id>          (refermer)
 Ultimes.actif(2)     // 'convergence'|'mue'|'parole' ou ''
 ```
 **Apprentissage câblé dans les classes** (niveau 1) : classe 1 → 813-814 · classe 2 → 815-817 · classe 3 → **810-812** · classe 4 → 818-820. Charger `UltimesSources` **après** CorruptionAme, Errance, JadeEntitePlunging et ManaAffinity (le `<ReculVital>` de 817 et le `<SceauMagie>` de 819 passent par ManaAffinity/RoyaumeImperial).
+
+## 🧬 Les Traits d'Âme (`TraitsAme`) — le don de naissance
+
+**Le canon :** l'Âme est la source la **moins comprise** du monde et la plus imprévisible — elle peut être bonne, mauvaise, faire l'impossible. À la naissance, elle offre **toujours deux choses** : un **don spirituel** (arme, familier ou objet spirituel) et un **TRAIT** — une capacité unique, aléatoire, qui n'appartient qu'à toi. Tout le reste s'apprend ; le Trait, lui, est là depuis le début : un **mana pur primitif, instinctif**, que personne ne contrôle vraiment. C'est la **Marque** (l'ADN de l'âme) qui l'active — et les objets spirituels en sont presque une extension. *(Le modèle : le Kamui de Dono, `DonoKamui.js` — son familier Mimi, l'Esprit Vengeur, EST son deuxième œil.)*
+
+### Les quatre Traits
+| Héros | Trait | Ce qu'il fait (bonus en combat) | Don spirituel |
+|---|---|---|---|
+| **Aël** | **le Point de Rupture** `<Trait: rupture>` | voir la faille exacte où tout casse → ses Traits sont **toujours critiques** | son **arme** — la lame qui trouve la faille |
+| **Korrah** | **l'Instant Gelé** `<Trait: gel>` | le **Zéro Absolu** : pas du contrôle du temps, du FROID qui fige tout → ses Traits **ne ratent jamais** + engourdissent (**−AGI 2 tours**) | le **Sablier de Givre** |
+| **ludwing** | **la Porte d'Ombre** `<Trait: porte>` | son âme ouvre sur **l'Envers** (le pays des âmes errantes) : pas de téléportation, un passage → après un Trait, **esquive +50 % 1 tour** (état 204) | ses **familiers** — les âmes liées (ses invocations) |
+| **Vesper** | **le Verbe Vrai** `<Trait: verbe>` | ce qu'elle nomme, le monde l'écoute → ses Traits **ne ratent jamais** | le **Premier Mot** |
+
+### Le prix (la vraie contrainte)
+Le Trait **réunit toutes les sources** d'un coup — alors il **empiète sur toutes les énergies en même temps** :
+| Prix | Chiffres |
+|---|---|
+| Drain de PM (en plus du coût du skill) | **20 % des PM max** / usage → ton prochain sort peut être hors de portée |
+| Drain de TP | **20 TP** / usage |
+| Forcer la marque | **+2 Errance** / usage |
+| Trait d'un autre (marque étrangère) | prix **doublé** + **+6 Errance** |
+| **Marque CREUSE** (âme vidée) | le Trait **ne répond plus** (skill inutilisable) |
+
+### Les skills canonisés (l'inspiration anime → le canon)
+| Avant | Après | L'explication canon |
+|---|---|---|
+| black flash (11, 130) | **Éclat Noir** / Concentré | frapper le point de rupture exact — critique né du Trait, pas de la chance |
+| speed blist (18) · attaque ultra rapide (131) | **Pas de Rupture** · **Frappe de l'Instant Juste** | l'œil du Trait lit l'ouverture avant le geste |
+| super gama (133) | **Déflagration Spirituelle** | Mana Spirituelle pure |
+| le monde (24) | **le Monde Gelé** (élém → Glace 13) | l'air gèle au Zéro Absolu : rien ne bouge — le froid, pas le temps |
+| armure/arrêt du temps (89-91) | **Armure de Givre · Instant Gelé · Zéro Absolu** | tous en Glace : l'instant figé par le froid |
+| ta prochaine phrase sera (25) | **Lecture du Corps** | la Maîtrise lit la tension des muscles, pas l'avenir |
+| Best Friendo (93) | **Main Ouverte** | une prise de Maîtrise désarme (voie de l'onde) |
+| génie incompris QI 530 000 (95) | **Œil du Stratège** | trois échanges d'avance |
+| Boogie Woogie (97) | **Valse des Positions** | une passe de Maîtrise si vive que les postures s'échangent |
+| portail d'ombre (69) · déplacement d'ombre (110) | **Porte de l'Envers** · **Abri de l'Envers** | pas de téléportation : il PASSE par l'Envers et ressort ailleurs |
+| Bleu/Rouge (101, 102) | **« Viens. » — l'Attraction** · **« Pars. » — la Répulsion** (élém → Positif 3) | le Verbe Vrai : elle le dit, le monde obéit |
+| snap rouge (19) · TRAIN DE LA HYPE (22) · rage quit (23) · aura farm (29) | **Claquement du Verbe** · **« Debout ! » — l'Appel** · **« Assez. »** · **Recueillement** | des Paroles, dans sa voix à elle |
+
+```js
+Traits.de(2)              // {cle:'gel', nom:"l'Instant Gelé", don:'le Sablier de Givre'}
+Traits.possede(1,'rupture')  // true
+```
+Charger **après** Errance, JadeEntitePlunging et MarqueVivante. Les notes existantes (Paroles, mises en scène YEP) ont été **conservées** — le tag `<Trait: x>` s'ajoute, il ne remplace rien.
