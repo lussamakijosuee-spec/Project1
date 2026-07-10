@@ -788,3 +788,21 @@ Traits.de(2)              // {cle:'gel', nom:"l'Instant Gelé", don:'le Sablier 
 Traits.possede(1,'rupture')  // true
 ```
 Charger **après** Errance, JadeEntitePlunging et MarqueVivante. Les notes existantes (Paroles, mises en scène YEP) ont été **conservées** — le tag `<Trait: x>` s'ajoute, il ne remplace rien.
+
+### La canonisation complète (2e passe — références vérifiées sur internet)
+| Avant | Référence identifiée | Après | L'explication canon |
+|---|---|---|---|
+| ORRAAAAAAAAAA (16) | JoJo's Bizarre Adventure (le cri « ORA » de Star Platinum) | **Déluge de Poings** | le Corps à l'état pur : l'instinct déchaîné en avalanche de coups |
+| l'onde (15) | JoJo (le Hamon / l'Onde) | **l'Onde** (gardé !) | déjà canon : la **voie de l'onde** existe dans les 9 Voies |
+| sort d'inversion (17) | Jujutsu Kaisen (technique d'inversion de Gojo) | **Technique d'Inversion** | inverser le flux du mana pour reconstruire — soigner est plus dur que blesser |
+| extension du térritoir (46) | Jujutsu Kaisen (l'Extension du Territoire) | **Déploiement de Domaine** | le sommet de la **voie du domaine** (canon depuis les 9 Voies) |
+| Arise (98) | Solo Leveling (« Lève-toi » de Sung Jinwoo) | **« Relève-toi. » — le Rappel** | une âme tombée se relève de **l'Envers** par la Porte de ludwing |
+| speed blist (18, 136) | « Speed Blitz » (terme VS Battle : frapper avant la perception) | **Pas de Rupture** · **Blitz — l'Éclair Humain** | l'écart de vitesse devient un mur : la cible ne voit jamais le coup |
+| super gama (133) | One-Punch Man (le Gamma Ray Burst de Garou) | **Déflagration Spirituelle** | une déflagration de Mana Spirituelle |
+| lame/pluie/disque de sang (53, 55, 138…) | Demon Slayer (l'Art du Sang de Gyutaro : faucilles de sang durci) | noms gardés, orthographe corrigée | **l'art du sang** : le Corps se taille des armes dans sa propre chair (voie du sang) |
+| Danse de l'Acier (423) | Sekiro (mention retirée de la description) | inchangé | la Maîtrise absolue de l'acier |
+| Danse du Sauvageon (433) | Elden Ring (Waterfowl Dance de Malenia, mention retirée) | inchangé | un corps poussé au-delà de ce que la chair permet |
+| Fléau des Étoiles (437) | Elden Ring (Radahn le Fléau des Astres) | inchangé | Kev retombe en étoile filante — c'est SON histoire maintenant |
+| Glitch/404/.exe/.sys (76-88) | esthétique BROKENSCRIPT / creepypasta | noms **gardés** | canon : c'est le langage de **l'entité du Fond** (méta-horreur des Chutes) |
+| TRANSFORMATION ×3 (26/126/127) | — | **Transformation / — Second Stade / — Stade Final** | la chair qui se refond, palier par palier |
+| + ~35 corrections | fautes de frappe, majuscules, descriptions vides | (Fuir, Griffe, Souffle Draconique, Poing Fracassant…) | chaque skill du jeu a désormais un nom propre et une description canon |
