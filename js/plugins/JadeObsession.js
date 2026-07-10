@@ -656,7 +656,7 @@
                     executeScreamer();
                 }
 
-                // Virus temporel
+                // Virus du Fond : gèle les techniques (cooldown forcé)
                 if (isPhase2Active() && (skillId === CRI_SKILL || skillId === WATERFOWL_SKILL || Math.random() < 0.35)) {
                     inflictCyberVirusCooldown(target);
                 }

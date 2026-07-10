@@ -842,3 +842,6 @@ Audit complet des plugins custom. Les clés script minuscules (`thylane`/`neyssa
 | **MirrorTaunts** · Lore_MiroirJosu/Dono/Kev · JosuMirror | les Miroirs raillaient « Thylane, Neyssa, Tianna » | toutes les répliques passées à **Aël, Korrah, Vesper** |
 | **JadeEntitePlunging** · Neyssa_Concentration · JadeEchos · FusionElements · Lore_AffiniteAlignes | labels/textes aux anciens prénoms | textes canonisés (les **clés de paramètres** sont inchangées : tes réglages sauvegardés marchent toujours) |
 ⚠️ Si `ThylaneFormes` est déjà coché dans ton gestionnaire de plugins avec 196/197 en paramètres, mets à jour ces deux nombres (**205** et **206**) ou re-ajoute le plugin.
+
+### Le sceau canon (6e passe — balayage final)
+Plus **aucune** trace hors-lore dans tout le projet : commentaires des evals de skills/états canonisés (8+11 remplacements), événements communs **Miroir 50/51/53** renommés et dialogues passés aux vrais noms, `Lore_DilatationTemps` re-canonisé — « Battle World » devient **l'Envers** (1 min réelle ≈ 1000 ans : le temps de l'Envers ne passe pas comme le nôtre, assez pour qu'une âme y oublie son nom), et le « virus temporel » de Jade devient le **Virus du Fond** (gel des techniques). Vérifié : zéro occurrence de Thylane/Neyssa/Tianna dans data/ et js/plugins/.

@@ -1,9 +1,9 @@
 //=============================================================================
 // Lore_DilatationTemps.js — v1.0 · Dilatation temporelle : 1 min réelle ≈ 1000
-//   ans dans Battle World. Commande : TEMPS afficher
+//   ans dans l'Envers. Commande : TEMPS afficher
 //=============================================================================
 /*:
- * @plugindesc [Lore 43/50] Commande TEMPS afficher : montre les « annees » ecoulees dans Battle World selon le temps de jeu (1 min = 1000 ans). Vertige du lore.
+ * @plugindesc [Lore 43/50] Commande TEMPS afficher : montre les « annees » ecoulees dans l'Envers selon le temps de jeu (1 min = 1000 ans). Le temps de l'Envers ne passe pas comme le nôtre.
  * @author JOKO
  * @help TEMPS afficher · TEMPS var <id> (stocke les annees).
  */
@@ -14,5 +14,5 @@
     Game_Interpreter.prototype.pluginCommand=function(c,a){ _pc.call(this,c,a);
         if(String(c).toUpperCase()!=='TEMPS')return; var sub=String(a[0]||'afficher').toLowerCase();
         if(sub==='var'&&a[1]){ $gameVariables.setValue(Number(a[1]),years()); }
-        else { $gameMessage.add('\\C[6]⏳ Dans Battle World, '+fmt(years())+' ans se sont écoulés…\\C[0]'); $gameMessage.add('Assez pour que l’ennui devienne folie.'); } };
+        else { $gameMessage.add('\\C[6]⏳ Dans l\'Envers, '+fmt(years())+' ans se sont écoulés…\\C[0]'); $gameMessage.add('Assez pour qu\'une âme y oublie son nom.'); } };
 })();
