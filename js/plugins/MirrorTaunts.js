@@ -14,7 +14,7 @@
  *
  * @help
  *  Couples miroir (boss → héros) :
- *   Josu(76)→Thylane(1) · Kev(21)→Tianna(4) · Dono(34)→Neyssa(2) ·
+ *   Josu(76)→Aël(1) · Kev(21)→Vesper(4) · Dono(34)→Korrah(2) ·
  *   Jade-Marionnette(25)→Lou(3). Aucune configuration.
  */
 (function () {
@@ -23,17 +23,17 @@
 
     var PAIRS = {
         76: { hero: 1, lines: [
-            'Josu : « Pourquoi tant de colère, Thylane ? Moi, je souris. C\'est plus simple. »',
+            'Josu : « Pourquoi tant de colère, Aël ? Moi, je souris. C\'est plus simple. »',
             'Josu : « Ta rage te dévore. Ma joie me dévore aussi. On est pareils, au fond. »',
             'Josu : « Frappe-moi. Plus fort. On va bien s\'amuser, toi et moi. »'
         ] },
         21: { hero: 4, lines: [
-            'Kev : « Regarde-toi trembler, Tianna. La confiance, ça s\'arrache. Comme moi. »',
+            'Kev : « Regarde-toi trembler, Vesper. La confiance, ça s\'arrache. Comme moi. »',
             'Kev : « Tu doutes ? Moi jamais. Et regarde ce que je suis devenu. »',
             'Kev : « Baisse les yeux, petite. C\'est ta place, non ? »'
         ] },
         34: { hero: 2, lines: [
-            'Dono : « Concentre-toi, Neyssa. Moi, j\'ai trop bien su — sur la mauvaise chose. »',
+            'Dono : « Concentre-toi, Korrah. Moi, j\'ai trop bien su — sur la mauvaise chose. »',
             'Dono : « J\'ai tout donné pour être aimé. Et j\'ai oublié de m\'aimer. Ne fais pas ça. »',
             'Dono : « Un cœur trop offert finit en cendres. Garde le tien. »'
         ] },

@@ -689,9 +689,9 @@
 
         // ---- Attaques des alliés contre Jade ----
         if (target && target.isEnemy() && target.enemyId() === JADE_ID && subject.isActor()) {
-            var isNeyssaPlunging = (subject.actorId() === 2) && (skillId === 13 || skillId === 72 || skillId === 73);
+            var isKorrahPlunging = (subject.actorId() === 2) && (skillId === 13 || skillId === 72 || skillId === 73);
 
-            if (isNeyssaPlunging && isPhase2Active() && Math.random() < 0.35) {
+            if (isKorrahPlunging && isPhase2Active() && Math.random() < 0.35) {
                 result.hpDamage = 0;
                 result.mpDamage = 0;
                 BattleManager._jadeNightmareCounterTargetIdx = subject.index();
@@ -704,7 +704,7 @@
                     }
                 }
                 AudioManager.playSe({ name: 'Scream', volume: 150, pitch: 35, pan: 0 });
-                logMessage("⚠️ JADE DÉCHIRE LA STASE TEMPORELLE DE NEYSSA !");
+                logMessage("⚠️ JADE DÉCHIRE LA STASE GELÉE DE KORRAH !");
 
                 // Flash rapide du visage d'horreur sur la contre-attaque
                 JadeScreamer.flashHorreur();
@@ -834,11 +834,11 @@
             return;
         }
 
-        // ===== CONTRE-ATTAQUE NEYSSA (Plunging) =====
+        // ===== CONTRE-ATTAQUE KORRAH (Plunging) =====
         if (BattleManager._jadeNightmareCounterTargetIdx !== undefined) {
             var nTarget = BattleManager._jadeNightmareCounterTargetIdx;
             BattleManager._jadeNightmareCounterTargetIdx = undefined;
-            logMessage("JADE S'ABAT SUR NEYSSA AVEC SA DANSE DES AILES ÉCORCHÉES !");
+            logMessage("JADE S'ABAT SUR KORRAH AVEC SA DANSE DES AILES ÉCORCHÉES !");
             if (typeof $gameScreen.startAdvancedShake === 'function') {
                 $gameScreen.startAdvancedShake(25, 25, 50, 'vertical');
             }

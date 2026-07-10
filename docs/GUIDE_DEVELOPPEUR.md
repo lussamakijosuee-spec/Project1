@@ -832,3 +832,13 @@ Le système existant fonctionne : `<Ulti>`/`<UltiColor>` → **UltiCinematics** 
 | classes « maitrise / aprenti / confiance / magie » | — | **l'Équilibre · la Maîtrise · le Symbole · la Parole** (alignées sur A1) |
 | bot boss · 2LITE GARDE D2MONIAQUE · IMAGE REMANAT · arc dechu · dragon abuse · poulet bizzare… | typos | **Colosse Sans Âme · Élite — Garde Démoniaque · Image Rémanente · Archange Déchu · Dragon Tyran · Poulet Bizarre**… (~25 ennemis) |
 | Épée rouillé · diament ×4 · tenerbre · scetre des ame perdus · Saigment… | typos | tout corrigé (armes, objets 1-10 avec descriptions, états) |
+
+### La mise en conformité des plugins (5e passe)
+Audit complet des plugins custom. Les clés script minuscules (`thylane`/`neyssa`/`lou`/`tianna`) sont **canon** (héritées, gardées partout). Corrigé :
+| Plugin | Ce qui n'était pas conforme | Réparé |
+|---|---|---|
+| **ThylaneFormes** | ⚠️ utilisait les états **196/197** — pris depuis par les **Fusions** (conflit réel !) | Formes repointées sur **205** (Art Serein ◈ Forme d'Aël, ATK/MAT ×1.25 +esquive) et **206** (Semi-Forme, ×1.15) — les 3 visages de l'Équilibre : rage / sérénité / entre-deux |
+| **JadeObsession** | « STASE TEMPORELLE de Neyssa » (le contrôle du temps n'existe pas) | « **STASE GELÉE** de Korrah » — l'Instant Gelé, son Trait |
+| **MirrorTaunts** · Lore_MiroirJosu/Dono/Kev · JosuMirror | les Miroirs raillaient « Thylane, Neyssa, Tianna » | toutes les répliques passées à **Aël, Korrah, Vesper** |
+| **JadeEntitePlunging** · Neyssa_Concentration · JadeEchos · FusionElements · Lore_AffiniteAlignes | labels/textes aux anciens prénoms | textes canonisés (les **clés de paramètres** sont inchangées : tes réglages sauvegardés marchent toujours) |
+⚠️ Si `ThylaneFormes` est déjà coché dans ton gestionnaire de plugins avec 196/197 en paramètres, mets à jour ces deux nombres (**205** et **206**) ou re-ajoute le plugin.

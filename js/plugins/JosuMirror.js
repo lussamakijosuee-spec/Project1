@@ -1,11 +1,11 @@
 //=============================================================================
-// JosuMirror.js — v1.0  ·  Josu, le Miroir de Thylane (Joie destructrice)
+// JosuMirror.js — v1.0  ·  Josu, le Miroir de Aël (Joie destructrice)
 // RPG Maker MV   ·   by JOKO
 //=============================================================================
 /*:
  * @plugindesc v1.0 ■ Josu : plus on le frappe, plus sa JOIE monte (il devient
  * fort/agressif). Refuse de le frapper et sa joie retombe → le masque tombe,
- * il s'expose (Le Vide). Le contraste de Thylane. Additif.
+ * il s'expose (Le Vide). Le contraste de Aël. Additif.
  * @author JOKO
  *
  * @param josuId
