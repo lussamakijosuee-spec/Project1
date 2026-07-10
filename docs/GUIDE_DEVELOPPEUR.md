@@ -80,6 +80,9 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 | **198** | Royaume Impérial des Ténèbres — Domaine | **MAT ×1.6 · MDF ×1.4 · ATK ×1.3** + invocations libres | skill 810 `<RoyaumeImperial>` |
 | **199** | Contre Totale | renvoie **toute** frappe subie ce tour à l'envoyeur | skill 812 `<ContreTotale>` |
 | **200** | Traumatisé — déstabilisé | prix de l'Aspiration (revivre les morts) | skill 70 `<AspirationDamnees>` |
+| **201** | la Convergence — ultime d'Aël | **ATK/MAT ×1.35 · DEF/MDF ×1.25 · +15 % crit** + ignore les résistances | skill 813 `<Ultime: convergence>` |
+| **202** | la Mue Souveraine — ultime de Korrah | **ATK ×1.7 · DEF/AGI ×1.4 · +20 % crit · MAT ×0.5** + vol de vie 15 % | skill 815 `<Ultime: mue>` |
+| **203** | la Parole Originelle — ultime de Vesper | **MAT ×1.7 · MDF ×1.4 · +10 % crit** + magie infaillible | skill 818 `<Ultime: parole>` |
 | 17 | Saigment | (ta base) | ex. Aspiration des Âmes Damnées |
 | 39 | Royaume Impérial | domaine de Lou (copies infinies) | skill « copie d'Ame » |
 | 45 | Technique Incomplète | (ta base) | prix de la copie |
@@ -434,6 +437,7 @@ Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
 ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
 RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
+UltimesSources     ← après CorruptionAme, Errance, JadeEntitePlunging, ManaAffinity
 PremiersPas · AtelierTest
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
@@ -710,3 +714,31 @@ RoyaumeTenebres.domaineActif(3)  // le Domaine de ludwing est-il ouvert ?
 DOMAINE ouvrir 3     DOMAINE fermer 3     (mise en scène hors skill)
 ```
 Charger **après** `InvocationAmes`, `Errance` et `JadeEntitePlunging`. Skill 810 → à équiper sur **ludwing (acteur 3)**. Le nettoyage de skill 70 supprime l'ancien `<Before Eval>` (qui doublait la régen sur le stock courant) : la régen passe désormais **uniquement** par le total cumulatif du plugin.
+
+## ✶⚔✴ Les Ultimes des Trois Sources (`UltimesSources`) — la carte finale de chacun
+
+**Le canon :** le Royaume Impérial de ludwing a ouvert la voie — chaque héros a **SA** carte finale, taillée dans sa source. Et, **Loi du Prix** oblige : chacune coûte exactement ce qu'elle donne. Le prix **s'escalade** (+1 par tour tenu au-delà du premier) ; tout tombe en fin de combat.
+
+| Héros | Ultime | Skill | État | Gain | Prix / tour (escalade) |
+|---|---|---|---|---|---|
+| **Aël** (Équilibre) | ✶ **la Convergence** — fondre les TROIS sources | **813** `<Ultime: convergence>` | 201 | ATK/MAT ×1.35 · DEF/MDF ×1.25 · +15 % crit · **ignore les résistances** | **+2 Bête, +2 Errant, −1 lucidité** — les trois gouffres à la fois |
+| **Korrah** (Corps) | ⚔ **la Mue Souveraine** — lâcher la Bête, garder la laisse | **815** `<Ultime: mue>` | 202 | ATK ×1.7 · DEF/AGI ×1.4 · +20 % crit · **vol de vie 15 %** (coups physiques) | **+4 Bête** · MAT ×0.5 (le corps dévore l'esprit) |
+| **Vesper** (Esprit) | ✴ **la Parole Originelle** — le premier mot du monde | **818** `<Ultime: parole>` | 203 | MAT ×1.7 · MDF ×1.4 · +10 % crit · **la magie ne rate jamais** | **−1 lucidité** — elle court vers le Dément |
+| **ludwing** (Âme) | ☠ le Royaume Impérial | **810** | 198 | (voir sa section) | +30 âmes → **+Errance** |
+
+### L'arsenal de chacun (appris au niveau 1, avec l'ultime)
+| Héros | Skills |
+|---|---|
+| Aël | **814** Tranche des Trois Sources — zone, mana **semi-parfait (16) : perce tout** |
+| Korrah | **816** Carnage des Neuf Voies (zone physique) · **817** Étreinte de la Bête (frappe Sombre massive, `<ReculVital: 20>` : la chair paie) |
+| Vesper | **819** le Verbe qui Défait — zone + `<SceauMagie>` : **PM à 0 + MAT brisé** · **820** Syllabe de la Fin — Mana Pur (7), perce |
+| ludwing | 811 Pluie du Styx · 68 Annihilation · 812 Contre Totale · 70 Aspiration |
+
+```
+ULTIME convergence 1     ULTIME mue 2     ULTIME parole 4     (mise en scène)
+ULTIME fin <id>          (refermer)
+```
+```js
+Ultimes.actif(2)     // 'convergence'|'mue'|'parole' ou ''
+```
+**Apprentissage câblé dans les classes** (niveau 1) : classe 1 → 813-814 · classe 2 → 815-817 · classe 3 → **810-812** · classe 4 → 818-820. Charger `UltimesSources` **après** CorruptionAme, Errance, JadeEntitePlunging et ManaAffinity (le `<ReculVital>` de 817 et le `<SceauMagie>` de 819 passent par ManaAffinity/RoyaumeImperial).
