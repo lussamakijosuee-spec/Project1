@@ -125,7 +125,15 @@
     var TEINTES = { 1:[40,140,60], 2:[170,130,20], 3:[130,130,150], 4:[110,60,130] };
     function teinteDe(a){
         if(!a) return null;
-        var id=a.actorId(), c=jc(id);
+        var id=a.actorId(), c=jc(id), S=$gameSystem||{};
+        // LE VISUEL DES CHUTES EN COURS (prioritaire sur les formes partielles)
+        if(S._beteLachee&&S._beteLachee.id===id)   return [200,20,20,120];   // la laisse cassée : rouge sang
+        if(S._dementSpectre&&S._dementSpectre.id===id) return [180,200,255,90]; // le spectre : bleu pâle
+        if(S._errantEfface&&S._errantEfface.id===id)   return [40,40,60,60];    // l'effacement : gris d'ombre
+        if(S._dechire&&S._dechire.id===id){
+            var ph=Math.floor(Date.now()/700)%3;   // le Déchiré : les 3 teintes qui clignotent
+            return [[200,20,20,110],[180,200,255,110],[110,60,130,110]][ph];
+        }
         if(c<40) return null;
         try{ if(window.Fusion&&Fusion.actif(id)) return null; }catch(e){}
         var t=TEINTES[id]||[120,40,40], f=(c>=70)?1:0.4;
@@ -147,6 +155,8 @@
             else if(ch&&ch.actor&&typeof ch.actor==='function')a=ch.actor();
             if(!a)return;
             var b=teinteDe(a);
+            var ef=$gameSystem&&$gameSystem._errantEfface;
+            this.opacity=(ef&&ef.id===a.actorId())?150:255;
             if(b){this._fpT=(this._fpT||0)+0.05;var pl=Math.sin(this._fpT)*0.3+0.7;
                 this.setBlendColor([b[0],b[1],b[2],Math.floor(b[3]*pl)]);}
             else if(this._fpT){this.setBlendColor([0,0,0,0]);this._fpT=0;}
