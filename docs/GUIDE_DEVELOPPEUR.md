@@ -883,3 +883,16 @@ Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après Fusio
 | **Reprises** | automatique | chaque chargement compté ; à 5/10/20 le Fond laisse des traces (`$gameSystem._reprises`) |
 
 **Équilibrage corrigé** : le Royaume Impérial coûte **+15 Errance fixes** au déploiement (plus jamais +2/âme ×30 = +60). L'aide (`ClarteUI`) affiche désormais **« TRAIT de X — marque étrangère : prix ×2 »** quand un héros utilise le Trait d'un autre. **`docs/ORDRE_PLUGINS.md`** : la référence complète du gestionnaire de plugins (js/plugins.js n'étant pas dans git).
+
+## 🗣️ Les PNJ vivants+ (`PNJVivantsPlus`) — le monde te voit, te raconte, et meurt aussi
+| Outil | Usage (dans un événement PNJ) | Ce que ça fait |
+|---|---|---|
+| **Réactions aux jauges** | `PNJ react` | le PNJ commente l'état du chef : marque creuse/gonflée, Corruption 40/70+, Errance 70+, lucidité basse — 8 répliques automatiques |
+| **Rumeurs des vies** | `PNJ rumeur` | raconte la dernière action d'un héros absent (lit le journal de ViesParalleles) |
+| **Le PNJ du Fond** | `PNJ fond` | se souvient des Reprises : normal / 5+ (« Encore vous ? ») / 20+ (« Il te regarde faire ») |
+| **Le Graveur incarné** | `PNJ graveur` | dialogue complet : refuse si lucidité < 5, sinon 5 âmes → rune 65/66/67 |
+| **Destins de PNJ** | `PNJ destin marc 5` · `PNJ soigner marc 20` · `PNJ lire marc` | chaque PNJ nommé a SA chute (0-100, +1 auto/120 pas) — le Regard la lit (PLEINE/FÊLÉE/AFFAMÉE/CREUSE) |
+| **L'Envers caché** | note d'événement `<Envers>` | l'événement n'existe QUE si le chef voit l'autre côté (Errance ≥ 40 ou lucidité ≤ 3) |
+| **Liens PNJ** | `PNJLIEN up marc` | compteur de lien par PNJ, pour débloquer des services |
+| **Conditions script** | `PNJ.peur()` · `PNJ.voitEnvers()` · `PNJ.destin('marc')` · `PNJ.perdu('marc')` · `PNJ.lien('marc')` | pour les pages conditionnelles d'événements |
+Recette « PNJ qui chute » : page 1 dialogue normal + `PNJ destin marc 1` au premier contact · page 2 (condition script `PNJ.destin('marc')>=70`) il supplie qu'on l'aide → quête → `PNJ soigner marc 40` · page 3 (`PNJ.perdu('marc')`) maison vide, monstre à sa place. Charger **après** ViesParalleles et CanonPlus.
