@@ -441,6 +441,7 @@ RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
 UltimesSources     ← après CorruptionAme, Errance, JadeEntitePlunging, ManaAffinity
 TraitsAme          ← après Errance, JadeEntitePlunging, MarqueVivante
 PremiersPas · AtelierTest
+ClarteUI            ← l'aide enrichie lit les notetags de TOUS les systèmes
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
 Stubs sans effet (activés ou non) : `ParolesMagic`, `Lore_ManaReculVital`, `Lore_ManaPurPerce`, `Lore_CyclePopup`.
@@ -845,3 +846,15 @@ Audit complet des plugins custom. Les clés script minuscules (`thylane`/`neyssa
 
 ### Le sceau canon (6e passe — balayage final)
 Plus **aucune** trace hors-lore dans tout le projet : commentaires des evals de skills/états canonisés (8+11 remplacements), événements communs **Miroir 50/51/53** renommés et dialogues passés aux vrais noms, `Lore_DilatationTemps` re-canonisé — « Battle World » devient **l'Envers** (1 min réelle ≈ 1000 ans : le temps de l'Envers ne passe pas comme le nôtre, assez pour qu'une âme y oublie son nom), et le « virus temporel » de Jade devient le **Virus du Fond** (gel des techniques). Vérifié : zéro occurrence de Thylane/Neyssa/Tianna dans data/ et js/plugins/.
+
+## 👁️ Clarté (`ClarteUI`) — voir ce qu'on paie, en combat et dehors
+
+**« Toute puissance a un prix — encore faut-il le VOIR. »** Purement additif, aucune donnée modifiée, deux options désactivables :
+
+▶ **L'aide enrichie** (combat **et** menus) : en survolant une compétence, la 2e ligne d'aide affiche automatiquement, lus dans les notetags : l'**élément**, la **Voie et son prix** (ex. `Voie forge (×1.5 — prix −5 % PV/coup)`), le **niveau de Parole**, le **TRAIT et son prix** (20 % PM · 20 TP · +2 Errance), la **Fusion** et ses deux Chutes, l'**Ultime**, le **Domaine**, l'**Invocation** (coût en âmes), l'**Interdit**, le **recul vital**, le **coût en % PV**. Rien à configurer.
+
+▶ **Les 3 Chutes en combat** : sous chaque héros, trois mini-barres — **violet** = Corruption (la Bête), **rouge** = Errance (l'Errant), **bleu** = santé mentale (pleine = saine). Le joueur voit ses gouffres en permanence.
+
+▶ **Icônes d'états distinctes** : les états 195-206 (Fusions, Domaine, Ultimes, Traits, Formes) partageaient la même icône — chacun a maintenant la sienne.
+
+Charger **en dernier**, juste avant GrimoireHub. Hors combat, rappel : le HUD des jauges sur la carte existe déjà (`TRIANGLE hud on`).
