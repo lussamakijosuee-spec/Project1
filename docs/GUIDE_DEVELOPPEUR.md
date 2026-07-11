@@ -872,3 +872,14 @@ Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après Fusio
 **Le Codex en jeu (`CodexSources`)** — parce qu'en combat le texte est coupé et qu'on n'a pas le temps de lire : commande **`CODEX`** → un livre posé, 7 pages (les Trois Sources · la Fusion généralisée · les Traits & les natures d'âme · les 4 Traits des marqués · l'Envers & le Fond · la Loi du Prix · la Mort & les Reprises). Les natures d'âme (canon v6) : **Volonté**→armes · **Attachement**→familiers/boucliers · **Colère**→objets voraces · **Foi**→sceaux/masques · **Deuil**→objets des morts · **Curiosité**→clés/lentilles. Les mystères du codex (le Fond, le Premier…) restent volontairement inexpliqués.
 
 **Messages de combat raccourcis** : les logs de RoyaumeImperial, FusionMana, TraitsAme et UltimesSources tiennent maintenant sur une ligne courte — l'explication complète vit dans le CODEX et l'aide enrichie (`ClarteUI`), pas au milieu du combat.
+
+## ➕ CanonPlus — purge tragique · Graveur · Traits des boss · Fiche · Reprises
+| Système | Usage | Chiffres |
+|---|---|---|
+| **Purge** (on transvase, on n'efface pas) | `PURGE bete/errant/dement <id>` | bête : −30 Corr **+10 Err** · errant : −30 Err **−2 lucidité** · dément : +3 lucidité **+10 Corr** |
+| **Graveur** | `GRAVER entrave/renvoi/saignee` | **5 âmes** → 1 rune gravée (items **65-67**, jamais ratées) |
+| **Traits des boss** | note `<TraitBoss: Nom\|type>` | types : gel (10 % fige) · faim (vole 10 %) · rupture (+15 % crit) · renvoi (10 % contre ×0.5) · regard (ne rate jamais). Posé sur Dio, Muta ×2, Kevératus, Régis, la Reine, Celui qui est Tombé |
+| **Fiche du marqué** | `FICHE` | Trait, don, nature d'âme (Aël=Volonté · Korrah=Attachement · ludwing=Deuil · Vesper=Foi), marque, rang, 3 jauges |
+| **Reprises** | automatique | chaque chargement compté ; à 5/10/20 le Fond laisse des traces (`$gameSystem._reprises`) |
+
+**Équilibrage corrigé** : le Royaume Impérial coûte **+15 Errance fixes** au déploiement (plus jamais +2/âme ×30 = +60). L'aide (`ClarteUI`) affiche désormais **« TRAIT de X — marque étrangère : prix ×2 »** quand un héros utilise le Trait d'un autre. **`docs/ORDRE_PLUGINS.md`** : la référence complète du gestionnaire de plugins (js/plugins.js n'étant pas dans git).

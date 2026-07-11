@@ -128,7 +128,8 @@
             }
             return null;
         },
-        possede: function (actorId, cle) { return !!(TRAITS[cle] && TRAITS[cle].actor === actorId); }
+        possede: function (actorId, cle) { return !!(TRAITS[cle] && TRAITS[cle].actor === actorId); },
+        infos: function (cle) { return TRAITS[cle] ? { actor: TRAITS[cle].actor, nom: TRAITS[cle].nom } : null; }
     };
     window.Traits = Traits;
 

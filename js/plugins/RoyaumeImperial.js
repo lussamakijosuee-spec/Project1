@@ -141,7 +141,13 @@
             var id = actor.actorId();
             if ($gameScreen) { $gameScreen.startTint([-90, -90, -50, 130], 40); $gameScreen.startFlash([90, 0, 130, 220], 40); }
             if (SURGE > 0 && $gameVariables) {
-                $gameVariables.setValue(SOUL_VAR, $gameVariables.value(SOUL_VAR) + SURGE);
+                // écriture directe : le retour des âmes ne compte PAS +2 Errance/âme
+                var cur = $gameVariables.value(SOUL_VAR);
+                if ($gameVariables._data) $gameVariables._data[SOUL_VAR] = cur + SURGE;
+                else $gameVariables.setValue(SOUL_VAR, cur + SURGE);
+                if ($gameSystem) $gameSystem._amesTotal = (($gameSystem._amesTotal) || 0) + SURGE;
+                // le prix du Domaine : +15 Errance, fixe et annoncé (pas +2/âme)
+                try { if (window.Errance) window.Errance.add(id, 15); } catch (e) {}
             }
             actor.addState(DOMAINE);
             log('\\C[18]★ ROYAUME IMPÉRIAL — ' + actor.name() + '\\C[0]');

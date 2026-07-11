@@ -79,7 +79,20 @@
         }
         if (m.ParoleL) p.push('\\C[23]Parole niv ' + String(m.ParoleL).trim() + '\\C[0]');
         else if (m.Parole !== undefined && String(m.Parole).indexOf('origine') >= 0) p.push('\\C[23]Parole d\'origine (infaillible)\\C[0]');
-        if (m.Trait) p.push('\\C[18]TRAIT\\C[0] (prix : 20 % PM · 20 TP · +2 Errance)');
+        if (m.Trait) {
+            var tl = '\\C[18]TRAIT\\C[0] (prix : 20 % PM · 20 TP · +2 Errance)';
+            try {
+                var k2 = String(m.Trait).toLowerCase().trim();
+                var inf = window.Traits && window.Traits.infos && window.Traits.infos(k2);
+                var act = ($gameParty && $gameParty.inBattle() && BattleManager.actor()) ||
+                          (SceneManager._scene && SceneManager._scene.actor && SceneManager._scene.actor());
+                if (inf && act && act.actorId && act.actorId() !== inf.actor) {
+                    var pn = $gameActors.actor(inf.actor);
+                    tl = '\\C[2]TRAIT de ' + (pn ? pn.name() : '?') + ' — marque étrangère : prix ×2 (+6 Errance)\\C[0]';
+                }
+            } catch (e) {}
+            p.push(tl);
+        }
         if (m.Fusion || m.FusionChair !== undefined) {
             var f = m.FusionChair !== undefined ? 'chair' : String(m.Fusion).toLowerCase().trim();
             p.push('\\C[18]FUSION\\C[0]' + (FUSIONS[f] ? ' (' + FUSIONS[f] + ')' : ''));
