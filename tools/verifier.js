@@ -1,4 +1,8 @@
 // node tools/verifier.js — le docteur du projet : vérifie tous les IDs croisés.
+// ⚠️ OUTIL DE TERMINAL — ne PAS l'ajouter au gestionnaire de plugins du jeu !
+if (typeof PluginManager !== 'undefined') {
+    console.warn('verifier.js est un outil de terminal, pas un plugin. Il ne fait rien en jeu.');
+} else {
 var fs=require('fs'); function L(f){return JSON.parse(fs.readFileSync('data/'+f+'.json'));}
 var sk=L('Skills'),st=L('States'),en=L('Enemies'),tr=L('Troops'),cl=L('Classes'),an=L('Animations'),it=L('Items');
 var err=0; function bad(m){console.log('✗',m);err++;}
@@ -13,3 +17,4 @@ tr.forEach(function(t){ if(!t)return; (t.members||[]).forEach(function(m){ if(!e
 en.forEach(function(e){ if(!e)return; (e.actions||[]).forEach(function(a){ if(!sk[a.skillId]) bad('ennemi '+e.id+' skill inexistant '+a.skillId); });});
 console.log(err?('— '+err+' problème(s)'):'✓ TOUT EST SAIN — aucun ID cassé.');
 process.exit(err?1:0);
+}
