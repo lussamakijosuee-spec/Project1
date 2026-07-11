@@ -33,7 +33,12 @@
         _pc.call(this, cmd, args);
         if (String(cmd).toUpperCase() !== 'DEBUT') return;
         if ((args[0] || '').toLowerCase() === 'reset') { $gameSystem._debutFait = false; return; }
-        if ($gameSystem && $gameSystem._debutFait) return;   // déjà choisi : on JOUE
+        if ($gameSystem && $gameSystem._debutFait) {
+            // déjà choisi : on efface l'événement d'intro NOUS-MÊMES,
+            // même s'il est en Démarrage automatique → le joueur peut bouger.
+            if (this._eventId > 0) this.command214();
+            return;
+        }
         var itp = this;
         var noms = [1, 2, 3, 4].map(function (i) {
             var a = $gameActors.actor(i);
