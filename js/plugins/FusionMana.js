@@ -143,14 +143,14 @@
             actor._fusionTours = 0;
             if (F.anim > 0 && $gameParty.inBattle()) actor.startAnimation(F.anim);
             if ($gameScreen) $gameScreen.startFlash([F.aura[0] + 60, F.aura[1] + 40, F.aura[2] + 40, 200], 24);
-            log('\\C[18]★ ' + actor.name() + ' fond deux sources en une — FUSION : ' + F.nom + '.\\C[0]');
+            log('\\C[18]★ ' + actor.name() + ' — FUSION : ' + F.nom + '\\C[0]');
         },
         finir: function (actor) {
             if (!actor) return;
             var k = this.actif(actor.actorId());
             if (k) {
                 actor.removeState(FUSIONS[k].etat);
-                log('\\C[6]La Fusion reflue. ' + actor.name() + ' redevient un seul être.\\C[0]');
+                log('\\C[6]La Fusion reflue.\\C[0]');
             }
         }
     };
@@ -200,7 +200,7 @@
                 if (corr) parts.push('+' + corr + ' Bête');
                 if (err) parts.push('+' + err + ' Errant');
                 if (ment) parts.push('-' + ment + ' lucidité');
-                log('\\C[8]La Fusion dévore ' + a.name() + ' des deux côtés… (' + parts.join(', ') + ')\\C[0]');
+                log('\\C[8]Fusion — prix : (' + parts.join(', ') + ')\\C[0]');
             }
         });
         _startTurn.call(this);

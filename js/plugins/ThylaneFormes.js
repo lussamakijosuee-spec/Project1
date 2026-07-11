@@ -1,16 +1,16 @@
 //=============================================================================
-// ThylaneFormes.js — v1.0  ·  Les trois formes de Thylane :
+// AëlFormes.js — v1.0  ·  Les trois formes de Aël :
 //   Berserk (rage aveugle) · Art Serein (corps sans émotion) · Semi (mélange)
 // RPG Maker MV   ·   by JOKO   ·   charger APRÈS YEP_BattleEngineCore & ParolesSysteme
 //=============================================================================
 /*:
  * @target MV
- * @plugindesc v1.0 ■ Formes de Thylane : Berserk frappe ses alliés si on l'arrête ;
+ * @plugindesc v1.0 ■ Formes de Aël : Berserk frappe ses alliés si on l'arrête ;
  * l'Art Serein abandonne la defense des allies ; le Semi ne tient qu'a l'esprit normal.
  * @author JOKO
  *
  * @param ActorId
- * @text Acteur concerné (Thylane)
+ * @text Acteur concerné (Aël)
  * @type actor
  * @default 1
  *
@@ -27,12 +27,12 @@
  * @param SereinState
  * @text État Art Serein
  * @type state
- * @default 196
+ * @default 205
  *
  * @param SemiState
  * @text État Semi-Transformation
  * @type state
- * @default 197
+ * @default 206
  *
  * @param SemiMin
  * @text Semi — santé mentale minimale
@@ -46,7 +46,7 @@
  *
  * @param SereinAllyExtra
  * @text Art Serein — surcoût de dégâts subis par les alliés
- * @desc Les alliés (hors Thylane) subissent +X% de dégâts tant qu'elle est en Art Serein. 0.25 = +25%.
+ * @desc Les alliés (hors Aël) subissent +X% de dégâts tant qu'elle est en Art Serein. 0.25 = +25%.
  * @default 0.25
  *
  * @param BerserkLashChance
@@ -56,7 +56,7 @@
  *
  * @help
  * ============================================================================
- *  ThylaneFormes — cohérence des trois formes                            JOKO
+ *  AëlFormes — cohérence des trois formes                            JOKO
  * ============================================================================
  *  Les états/compétences sont déjà en base. Ce plugin garantit l'IDENTITÉ et
  *  les DÉFAUTS de chaque forme, ainsi que l'exclusivité (une seule à la fois).
@@ -81,12 +81,12 @@
 (function () {
     'use strict';
 
-    var P = PluginManager.parameters('ThylaneFormes');
+    var P = PluginManager.parameters('AëlFormes');
     var ACTOR_ID    = Number(P['ActorId'] || 1);
     var SAN_VAR     = Number(P['SanityVar'] || 11);
     var ST_BERSERK  = Number(P['BerserkState'] || 12);
-    var ST_SEREIN   = Number(P['SereinState'] || 196);
-    var ST_SEMI     = Number(P['SemiState'] || 197);
+    var ST_SEREIN   = Number(P['SereinState'] || 205);
+    var ST_SEMI     = Number(P['SemiState'] || 206);
     var SEMI_MIN    = Number(P['SemiMin'] || 6);
     var SEMI_MAX    = Number(P['SemiMax'] || 8);
     var SEREIN_X    = parseFloat(P['SereinAllyExtra'] || 0.25) || 0;
@@ -94,7 +94,7 @@
 
     var FORMS = [ST_BERSERK, ST_SEREIN, ST_SEMI];
 
-    function isThylane(b) { return b && b.isActor && b.isActor() && b.actorId && b.actorId() === ACTOR_ID; }
+    function isAël(b) { return b && b.isActor && b.isActor() && b.actorId && b.actorId() === ACTOR_ID; }
     function thylane()    { return $gameActors ? $gameActors.actor(ACTOR_ID) : null; }
     function sanity()     { return $gameVariables ? $gameVariables.value(SAN_VAR) : 7; }
     function inBattle()   { return !!($gameParty && $gameParty.inBattle()); }
@@ -112,7 +112,7 @@
     //========================================================================
     var _addState = Game_Battler.prototype.addState;
     Game_Battler.prototype.addState = function (stateId) {
-        if (isThylane(this) && FORMS.indexOf(stateId) >= 0) {
+        if (isAël(this) && FORMS.indexOf(stateId) >= 0) {
             FORMS.forEach(function (s) {
                 if (s !== stateId && this.isStateAffected(s)) this.removeState(s);
             }, this);
@@ -122,7 +122,7 @@
 
     //========================================================================
     // 2) BERSERK — « si on l'arrête, elle frappe ses amis »
-    //    Détecte une action AMICALE ciblant Thylane enragée et la fait se
+    //    Détecte une action AMICALE ciblant Aël enragée et la fait se
     //    retourner contre un allié.
     //========================================================================
     function helpfulAction(action) {
@@ -164,10 +164,10 @@
         _GA_apply.call(this, target);
         if (!inBattle()) return;
         var subj = this.subject();
-        if (isThylane(target) && target.isStateAffected(ST_BERSERK) &&
+        if (isAël(target) && target.isStateAffected(ST_BERSERK) &&
             subj && subj.isActor && subj.isActor() && subj !== target &&
             helpfulAction(this)) {
-            // On laisse l'effet amical se résoudre, puis Thylane riposte.
+            // On laisse l'effet amical se résoudre, puis Aël riposte.
             berserkRetaliate(subj);
         }
     };
@@ -177,7 +177,7 @@
     Game_Battler.prototype.onTurnEnd = function () {
         _onTurnEnd.call(this);
         if (!inBattle()) return;
-        if (isThylane(this) && this.isStateAffected(ST_BERSERK) && this.isAlive()) {
+        if (isAël(this) && this.isStateAffected(ST_BERSERK) && this.isAlive()) {
             if (Math.randomInt(100) < LASH_PCT) {
                 var pool = otherLivingAllies(this);
                 if (pool.length) {
@@ -192,7 +192,7 @@
             }
         }
         // SEMI — vérifie que l'esprit reste normal, sinon la forme se brise
-        if (isThylane(this) && this.isStateAffected(ST_SEMI)) {
+        if (isAël(this) && this.isStateAffected(ST_SEMI)) {
             var j = sanity();
             if (j < SEMI_MIN || j > SEMI_MAX) {
                 this.removeState(ST_SEMI);

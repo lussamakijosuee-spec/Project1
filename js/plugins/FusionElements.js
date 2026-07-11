@@ -48,8 +48,8 @@
  *    La fusion consomme l'élément en suspens. Un nouveau tour efface tout.
  *
  *  ▶ EXEMPLES DE JEU
- *    Tour 1 : Thylane lance Feu (8) → « une chaleur reste en suspens… »
- *             Neyssa lance un sort d'Eau (9) → 8+9=17 → FUSION : Vapeur !
+ *    Tour 1 : Aël lance Feu (8) → « une chaleur reste en suspens… »
+ *             Korrah lance un sort d'Eau (9) → 8+9=17 → FUSION : Vapeur !
  *    Les paires non déclarées dans la base (somme sans nom) ne fusionnent pas.
  *
  *  ▶ VERROUILLAGE (optionnel) : paramètre switchId — idéal avec la « Porte de

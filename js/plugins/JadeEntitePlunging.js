@@ -14,12 +14,12 @@
  * @default
  *
  * @param thylaneActorId
- * @text ID Acteur — Thylane
+ * @text ID Acteur — Aël
  * @type actor
  * @default 1
  *
  * @param neyssaActorId
- * @text ID Acteur — Neyssa
+ * @text ID Acteur — Korrah
  * @type actor
  * @default 2
  *
@@ -29,7 +29,7 @@
  * @default 3
  *
  * @param tiannaActorId
- * @text ID Acteur — Tianna
+ * @text ID Acteur — Vesper
  * @type actor
  * @default 4
  *
@@ -37,12 +37,12 @@
  * @default
  *
  * @param thylaneVar
- * @text Variable — Maîtrise (Thylane)
+ * @text Variable — Maîtrise (Aël)
  * @type variable
  * @default 11
  *
  * @param neyssaVar
- * @text Variable — Concentration (Neyssa)
+ * @text Variable — Concentration (Korrah)
  * @type variable
  * @default 12
  *
@@ -52,7 +52,7 @@
  * @default 13
  *
  * @param tiannaVar
- * @text Variable — Confiance (Tianna)
+ * @text Variable — Confiance (Vesper)
  * @type variable
  * @default 14
  *
@@ -90,22 +90,22 @@
  * @text État « Enragé »
  * @type state
  * @default 7
- * @desc État de confusion (restriction « attaque n'importe qui ») appliqué à Thylane quand elle s'effondre.
+ * @desc État de confusion (restriction « attaque n'importe qui ») appliqué à Aël quand elle s'effondre.
  *
  * @param coupsThreshold
  * @text Coups avant Rage
  * @type number
  * @min 1
  * @default 5
- * @desc Rappel : géré par le notetag de Thylane. Sert ici à remettre le compteur à zéro à chaque combat.
+ * @desc Rappel : géré par le notetag de Aël. Sert ici à remettre le compteur à zéro à chaque combat.
  *
  * @param thylaneTargetsLou
- * @text Thylane vise Lou (%)
+ * @text Aël vise Lou (%)
  * @type number
  * @min 0
  * @max 100
  * @default 75
- * @desc Quand Thylane enragée frappe un allié, probabilité que ce soit Lou (celui qui la taquine).
+ * @desc Quand Aël enragée frappe un allié, probabilité que ce soit Lou (celui qui la taquine).
  *
  * @param === FINS ===
  * @default
@@ -126,14 +126,14 @@
  *  Elle monte avec les bons choix, descend avec les mauvais — et JAMAIS un
  *  choix n'est sans conséquence : il sculpte le combat, le dialogue et la fin.
  *
- *  • Thylane (Var 11)  — Maîtrise de soi vs Colère.
+ *  • Aël (Var 11)  — Maîtrise de soi vs Colère.
  *      Bons choix → garde son calme (perce-armure, sérénité).
  *      Mauvais choix → gagne en FORCE mais perd en maîtrise : agressive,
  *      elle finit par frapper ses propres alliés, surtout LOU qui la taquine.
- *  • Neyssa (Var 12)   — Concentration vs Tête en l'air.
+ *  • Korrah (Var 12)   — Concentration vs Tête en l'air.
  *  • Lou (Var 13)      — Sérénité vs Trauma. Absorber des âmes le rend
  *      plus puissant (Var 15) mais ronge sa santé mentale.
- *  • Tianna (Var 14)   — Confiance en soi vs Hésitation.
+ *  • Vesper (Var 14)   — Confiance en soi vs Hésitation.
  *
  *  ──────────────────────────────────────────────────────────────────────────
  *  LES 5 PHASES PSYCHOLOGIQUES (mêmes paliers pour les 4 personnages)
@@ -192,11 +192,11 @@
  *  ──────────────────────────────────────────────────────────────────────────
  *  3) FORCER DES ACTIONS EN COMBAT  (la rage prend le contrôle)
  *  ──────────────────────────────────────────────────────────────────────────
- *  • Le notetag de Thylane la fait passer « Enragée » après N coups subis.
+ *  • Le notetag de Aël la fait passer « Enragée » après N coups subis.
  *    Ce plugin remet ce compteur à zéro à chaque nouveau combat.
- *  • Quand Thylane est enragée (ou en Phase 1) et qu'elle frappe au hasard,
- *    elle vise LOU en priorité (paramètre « Thylane vise Lou »).
- *  • Si la jauge de Thylane tombe à son minimum PENDANT un combat, l'état
+ *  • Quand Aël est enragée (ou en Phase 1) et qu'elle frappe au hasard,
+ *    elle vise LOU en priorité (paramètre « Aël vise Lou »).
+ *  • Si la jauge de Aël tombe à son minimum PENDANT un combat, l'état
  *    Enragé est appliqué immédiatement : la rupture force la perte de contrôle.
  *
  *  ──────────────────────────────────────────────────────────────────────────
@@ -204,7 +204,7 @@
  *  ──────────────────────────────────────────────────────────────────────────
  *    AME fin            range un ID 1–5 dans la « Variable de Fin »
  *      1 · HARMONIE      — les 4 âmes domptées (toutes Phase >= 4)
- *      2 · CARNAGE       — Thylane s'effondre dans la rage (Phase 1)
+ *      2 · CARNAGE       — Aël s'effondre dans la rage (Phase 1)
  *      3 · DÉVORÉ        — Lou consumé par les âmes (Sérénité <= 2)
  *      4 · FRACTURE      — au moins une âme brisée (une Phase <= 2)
  *      5 · ÉQUILIBRE FRAGILE — tout le reste
@@ -420,7 +420,7 @@
         /**
          * Conséquences automatiques d'un changement de jauge.
          * Le franchissement vers le bas est commenté ; en plein combat,
-         * l'effondrement de Thylane force immédiatement la rage.
+         * l'effondrement de Aël force immédiatement la rage.
          */
         _onGaugeChanged: function (actorId, before, after) {
             if (after === before) return;
@@ -433,7 +433,7 @@
                     var thy = findPartyActor(actorId);
                     if (thy && thy.isAlive() && !thy.isStateAffected(RAGE_STATE)) {
                         thy.addState(RAGE_STATE);
-                        battleLog('Thylane craque : la fureur prend le contrôle !');
+                        battleLog('Aël craque : la fureur prend le contrôle !');
                     }
                 }
             }
@@ -461,7 +461,7 @@
 
     //=========================================================================
     // RESET DU COMPTEUR « COUPS SUBIS » À CHAQUE COMBAT
-    // (le notetag de Thylane incrémente target._coupsSubis ; on le purge ici
+    // (le notetag de Aël incrémente target._coupsSubis ; on le purge ici
     //  pour que la rage soit déclenchée par combat et non cumulée à vie)
     //=========================================================================
 
@@ -472,7 +472,7 @@
     };
 
     //=========================================================================
-    // CIBLAGE AGRESSIF — Thylane enragée vise Lou en priorité
+    // CIBLAGE AGRESSIF — Aël enragée vise Lou en priorité
     //=========================================================================
 
     var _Game_Action_confusionTarget = Game_Action.prototype.confusionTarget;
@@ -485,7 +485,7 @@
 
             var lou = findPartyActor(ACTOR.lou);
             if (lou && lou.isAlive() && lou !== subject && Math.random() < THY_LOU_PCT) {
-                battleLog('La rage de Thylane se fixe sur Lou !');
+                battleLog('La rage de Aël se fixe sur Lou !');
                 return lou;
             }
         }

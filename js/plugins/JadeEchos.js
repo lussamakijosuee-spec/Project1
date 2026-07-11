@@ -34,7 +34,7 @@
  *  À chaque fin de tour, un membre du groupe peut COMMENTER l'état mental d'un
  *  autre, selon les jauges de Maîtrise (plugin JadeEntitePlunging) :
  *    • Quelqu'un s'effondre → un allié s'inquiète (ou Lou en rajoute).
- *    • Lou taquine Thylane quand elle perd son calme (rage-bait, cf. lore).
+ *    • Lou taquine Aël quand elle perd son calme (rage-bait, cf. lore).
  *    • Tout le monde stable → réplique de complicité, rare et précieuse.
  *
  *  Aucune dépendance dure : lit window.Ame s'il existe, sinon les variables.
@@ -101,7 +101,7 @@
         var hasLou = group.find(function (g) { return g.id === LOU; });
         var hasThy = group.find(function (g) { return g.id === THYLANE; });
 
-        // 1) Thylane vacille + Lou présent → Lou la taquine (rage-bait, lore existant)
+        // 1) Aël vacille + Lou présent → Lou la taquine (rage-bait, lore existant)
         if (hasThy && hasThy.phase <= 2 && hasLou && hasLou.phase >= 3 && hasLou.id !== hasThy.id) {
             return pick([
                 nameOf(hasLou.actor) + ' : « Oooh, ' + nameOf(hasThy.actor) + ' va exploser ! Vas-y, frappe-MOI, pour voir. »',

@@ -1,11 +1,11 @@
 //=============================================================================
-// Neyssa_Concentration.js — v1.2
-// Plugin de Concentration pour Neyssa (RPG Maker MV)
+// Korrah_Concentration.js — v1.2
+// Plugin de Concentration pour Korrah (RPG Maker MV)
 // by JOKO
 //=============================================================================
 
 /*:
- * @plugindesc v1.2 ■ Système de Concentration de Neyssa
+ * @plugindesc v1.2 ■ Système de Concentration de Korrah
  * Quatre paliers mentaux pilotés par variable, avec compteurs par combat.
  * @author JOKO
  *
@@ -13,10 +13,10 @@
  * @default
  *
  * @param actorId
- * @text ID Acteur — Neyssa
+ * @text ID Acteur — Korrah
  * @type actor
  * @default 2
- * @desc ID de Neyssa dans la base de données Acteurs.
+ * @desc ID de Korrah dans la base de données Acteurs.
  *
  * @param concVar
  * @text Variable de Concentration
@@ -147,7 +147,7 @@
  *  NEYSSA_CONC set_shockwave <N>     Force le compteur d'ondes à N
  *
  *  Exemples :
- *    NEYSSA_CONC set_evasion 0       → Neyssa retrouve tous ses réflexes
+ *    NEYSSA_CONC set_evasion 0       → Korrah retrouve tous ses réflexes
  *    NEYSSA_CONC set_shockwave 99    → Désactive les ondes pour ce combat
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -159,7 +159,7 @@
     // LECTURE DES PARAMÈTRES
     //=========================================================================
 
-    var P = PluginManager.parameters('Neyssa_Concentration');
+    var P = PluginManager.parameters('Korrah_Concentration');
 
     var ACTOR_ID    = parseInt(P['actorId']        || 2);
     var CONC_VAR    = parseInt(P['concVar']         || 12);
@@ -211,10 +211,10 @@
     }
 
     /**
-     * Vérifie qu'un battler est bien Neyssa.
+     * Vérifie qu'un battler est bien Korrah.
      * Défensif : ne plante pas si battler est null ou un ennemi.
      */
-    function isNeyssa(battler) {
+    function isKorrah(battler) {
         return !!(
             battler &&
             battler.isActor &&
@@ -296,7 +296,7 @@
         // ─────────────────────────────────────────────────────────────────────
         // PALIER 9–10 ▶ HYPER-CONCENTRATION : Esquive par réflexe
         // ─────────────────────────────────────────────────────────────────────
-        if (isNeyssa(target) && this.isPhysical() && c >= 9) {
+        if (isKorrah(target) && this.isPhysical() && c >= 9) {
 
             var limitOk = (_counters.evasions < EVA_LIMIT);
             var diceOk  = (Math.random() < EVA_CHANCE);
@@ -318,8 +318,8 @@
                 var evaRest = EVA_LIMIT - _counters.evasions;
                 battleLog(
                     evaRest > 0
-                        ? "L'Hyper-Concentration de Neyssa dévie le coup ! (" + evaRest + " réflexe(s) restant)"
-                        : "L'Hyper-Concentration de Neyssa dévie le coup ! — Réflexes épuisés pour ce combat."
+                        ? "L'Hyper-Concentration de Korrah dévie le coup ! (" + evaRest + " réflexe(s) restant)"
+                        : "L'Hyper-Concentration de Korrah dévie le coup ! — Réflexes épuisés pour ce combat."
                 );
 
                 // Drain de concentration après l'esquive
@@ -336,15 +336,15 @@
         // L'objet est déjà consommé par le moteur avant d'arriver ici ;
         // on bloque uniquement ses effets via le drapeau _neyssaItemDropped.
         // ─────────────────────────────────────────────────────────────────────
-        if (isNeyssa(this.subject()) && this.isItem() && c >= 2 && c <= 8) {
+        if (isKorrah(this.subject()) && this.isItem() && c >= 2 && c <= 8) {
 
             if (Math.random() < DROP_CHANCE) {
                 this._neyssaItemDropped = true; // bloquera applyItemEffect / applyItemUserEffect
                 playSE('Shatter', 90, 100);
                 battleLog(
                     c <= 3
-                        ? "Distraction — l'objet échappe des mains de Neyssa ! (perdu)"
-                        : "Maladresse — Neyssa fait tomber l'objet ! (perdu)"
+                        ? "Distraction — l'objet échappe des mains de Korrah ! (perdu)"
+                        : "Maladresse — Korrah fait tomber l'objet ! (perdu)"
                 );
                 // On laisse apply() se terminer normalement pour que result.used soit posé,
                 // mais aucun effet ne sera appliqué grâce au drapeau.
@@ -419,10 +419,10 @@
     Game_Action.prototype.executeDamage = function (target, value) {
         var c = getConc();
 
-        if (isNeyssa(this.subject()) && c <= 1 && value > 0) {
+        if (isKorrah(this.subject()) && c <= 1 && value > 0) {
 
             if (Math.random() < FAIL_CHANCE) {
-                // Animation et son côté Neyssa (le sujet, pas la cible)
+                // Animation et son côté Korrah (le sujet, pas la cible)
                 this.subject().startAnimation(FAIL_ANIM);
                 playSE('Buzzer1', 80, 100);
 
@@ -431,7 +431,7 @@
                     this.subject().gainTp(-FAIL_TP);
                 }
 
-                battleLog("Neyssa a la tête ailleurs… Son action échoue complètement !");
+                battleLog("Korrah a la tête ailleurs… Son action échoue complètement !");
                 value = 0; // Les dégâts sont annulés
             }
         }

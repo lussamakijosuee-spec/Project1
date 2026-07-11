@@ -1,6 +1,6 @@
 //=============================================================================
 // Lore_AffiniteAlignes.js — v1.0 · LES ALIGNÉS (72%) : +20% dans la branche de
-//   leur âme, -20% dans les autres. (Thylane/Neyssa/Tianna.)
+//   leur âme, -20% dans les autres. (Aël/Korrah/Vesper.)
 //=============================================================================
 /*:
  * @plugindesc [Lore 08/50] Acteur <Mana: x> SANS <Mana2> et SANS <Atone> : +20% degats dans sa source, -20% dans les autres sources (hors physique/pur).
