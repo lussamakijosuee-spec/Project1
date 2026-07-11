@@ -121,4 +121,34 @@
             if(e&&e.meta&&e.meta.DechireTombe!==undefined&&t._cycle===3&&Math.random()<0.4){
                 wlog('\\C[8]Le coup traverse ce qui reste de lui.\\C[0]');return 0;}}
         return _hit.call(this,t);};
+    //── LES FORMES PARTIELLES : la bête affleure avant de sortir ──
+    var TEINTES = { 1:[40,140,60], 2:[170,130,20], 3:[130,130,150], 4:[110,60,130] };
+    function teinteDe(a){
+        if(!a) return null;
+        var id=a.actorId(), c=jc(id);
+        if(c<40) return null;
+        try{ if(window.Fusion&&Fusion.actif(id)) return null; }catch(e){}
+        var t=TEINTES[id]||[120,40,40], f=(c>=70)?1:0.4;
+        return [Math.floor(t[0]*f),Math.floor(t[1]*f),Math.floor(t[2]*f),Math.floor((c>=70?70:28))];
+    }
+    if(typeof Sprite_Actor!=='undefined'){
+        var _sau=Sprite_Actor.prototype.update;
+        Sprite_Actor.prototype.update=function(){_sau.call(this);
+            try{var b=teinteDe(this._actor);
+                if(b){this._fpT=(this._fpT||0)+0.07;var pl=Math.sin(this._fpT)*0.3+0.7;
+                    this.setBlendColor([b[0],b[1],b[2],Math.floor(b[3]*pl)]);}
+                else if(this._fpT){this.setBlendColor([0,0,0,0]);this._fpT=0;}
+            }catch(e){}};
+    }
+    var _scu=Sprite_Character.prototype.update;
+    Sprite_Character.prototype.update=function(){_scu.call(this);
+        try{var ch=this._character,a=null;
+            if(ch===$gamePlayer)a=$gameParty.leader();
+            else if(ch&&ch.actor&&typeof ch.actor==='function')a=ch.actor();
+            if(!a)return;
+            var b=teinteDe(a);
+            if(b){this._fpT=(this._fpT||0)+0.05;var pl=Math.sin(this._fpT)*0.3+0.7;
+                this.setBlendColor([b[0],b[1],b[2],Math.floor(b[3]*pl)]);}
+            else if(this._fpT){this.setBlendColor([0,0,0,0]);this._fpT=0;}
+        }catch(e){}};
 })();
