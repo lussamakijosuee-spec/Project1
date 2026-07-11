@@ -45,6 +45,14 @@
             $gameScreen.startFlash([255, 40, 40, 200], 40);
             $gameMessage.add(a.name() + ' tombe à genoux. Quelque chose craque — pas un os.');
             $gameMessage.add('\\C[2]La laisse.\\C[0]');
+            // canon : le sang de bête prend les traits de SA bête (Ombrefauves)
+            var FORMES = {
+                1: 'Des écailles percent sa peau. Un DRAGON dort dans son sang.',
+                2: 'Ses épaules s\'élargissent — l\'OURS. Et ses yeux… des yeux d\'AIGLE.',
+                3: 'Ses crocs poussent. Le LOUP-GAROU hurle avant lui.',
+                4: 'Sa forme n\'a pas encore de nom. C\'est pire.'
+            };
+            if (FORMES[id]) $gameMessage.add('\\C[18]' + FORMES[id] + '\\C[0]');
         }
         if (C === 'ERRANT' && (args[0] || '') === 'chute' && a) {
             $gameSystem._errantEfface = { id: id, combats: 0 };
