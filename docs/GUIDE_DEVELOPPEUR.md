@@ -80,6 +80,10 @@ Interrupteurs : aucun réservé par défaut. À créer toi-même : un pour la **
 | **198** | Royaume Impérial des Ténèbres — Domaine | **MAT ×1.6 · MDF ×1.4 · ATK ×1.3** + invocations libres | skill 810 `<RoyaumeImperial>` |
 | **199** | Contre Totale | renvoie **toute** frappe subie ce tour à l'envoyeur | skill 812 `<ContreTotale>` |
 | **200** | Traumatisé — déstabilisé | prix de l'Aspiration (revivre les morts) | skill 70 `<AspirationDamnees>` |
+| **201** | la Convergence — ultime d'Aël | **ATK/MAT ×1.35 · DEF/MDF ×1.25 · +15 % crit** + ignore les résistances | skill 813 `<Ultime: convergence>` |
+| **202** | la Mue Souveraine — ultime de Korrah | **ATK ×1.7 · DEF/AGI ×1.4 · +20 % crit · MAT ×0.5** + vol de vie 15 % | skill 815 `<Ultime: mue>` |
+| **203** | la Parole Originelle — ultime de Vesper | **MAT ×1.7 · MDF ×1.4 · +10 % crit** + magie infaillible | skill 818 `<Ultime: parole>` |
+| **204** | l'Envers — Trait de ludwing | **+50 % esquive** (1 tour) : un pied encore de l'autre côté | après un `<Trait: porte>` |
 | 17 | Saigment | (ta base) | ex. Aspiration des Âmes Damnées |
 | 39 | Royaume Impérial | domaine de Lou (copies infinies) | skill « copie d'Ame » |
 | 45 | Technique Incomplète | (ta base) | prix de la copie |
@@ -434,7 +438,10 @@ Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
 ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
 RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
+UltimesSources     ← après CorruptionAme, Errance, JadeEntitePlunging, ManaAffinity
+TraitsAme          ← après Errance, JadeEntitePlunging, MarqueVivante
 PremiersPas · AtelierTest
+ClarteUI            ← l'aide enrichie lit les notetags de TOUS les systèmes
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
 Stubs sans effet (activés ou non) : `ParolesMagic`, `Lore_ManaReculVital`, `Lore_ManaPurPerce`, `Lore_CyclePopup`.
@@ -710,3 +717,169 @@ RoyaumeTenebres.domaineActif(3)  // le Domaine de ludwing est-il ouvert ?
 DOMAINE ouvrir 3     DOMAINE fermer 3     (mise en scène hors skill)
 ```
 Charger **après** `InvocationAmes`, `Errance` et `JadeEntitePlunging`. Skill 810 → à équiper sur **ludwing (acteur 3)**. Le nettoyage de skill 70 supprime l'ancien `<Before Eval>` (qui doublait la régen sur le stock courant) : la régen passe désormais **uniquement** par le total cumulatif du plugin.
+
+## ✶⚔✴ Les Ultimes des Trois Sources (`UltimesSources`) — la carte finale de chacun
+
+**Le canon :** le Royaume Impérial de ludwing a ouvert la voie — chaque héros a **SA** carte finale, taillée dans sa source. Et, **Loi du Prix** oblige : chacune coûte exactement ce qu'elle donne. Le prix **s'escalade** (+1 par tour tenu au-delà du premier) ; tout tombe en fin de combat.
+
+| Héros | Ultime | Skill | État | Gain | Prix / tour (escalade) |
+|---|---|---|---|---|---|
+| **Aël** (Équilibre) | ✶ **la Convergence** — fondre les TROIS sources | **813** `<Ultime: convergence>` | 201 | ATK/MAT ×1.35 · DEF/MDF ×1.25 · +15 % crit · **ignore les résistances** | **+2 Bête, +2 Errant, −1 lucidité** — les trois gouffres à la fois |
+| **Korrah** (Corps) | ⚔ **la Mue Souveraine** — lâcher la Bête, garder la laisse | **815** `<Ultime: mue>` | 202 | ATK ×1.7 · DEF/AGI ×1.4 · +20 % crit · **vol de vie 15 %** (coups physiques) | **+4 Bête** · MAT ×0.5 (le corps dévore l'esprit) |
+| **Vesper** (Esprit) | ✴ **la Parole Originelle** — le premier mot du monde | **818** `<Ultime: parole>` | 203 | MAT ×1.7 · MDF ×1.4 · +10 % crit · **la magie ne rate jamais** | **−1 lucidité** — elle court vers le Dément |
+| **ludwing** (Âme) | ☠ le Royaume Impérial | **810** | 198 | (voir sa section) | +30 âmes → **+Errance** |
+
+### L'arsenal de chacun (appris au niveau 1, avec l'ultime)
+| Héros | Skills |
+|---|---|
+| Aël | **814** Tranche des Trois Sources — zone, mana **semi-parfait (16) : perce tout** |
+| Korrah | **816** Carnage des Neuf Voies (zone physique) · **817** Étreinte de la Bête (frappe Sombre massive, `<ReculVital: 20>` : la chair paie) |
+| Vesper | **819** le Verbe qui Défait — zone + `<SceauMagie>` : **PM à 0 + MAT brisé** · **820** Syllabe de la Fin — Mana Pur (7), perce |
+| ludwing | 811 Pluie du Styx · 68 Annihilation · 812 Contre Totale · 70 Aspiration |
+
+```
+ULTIME convergence 1     ULTIME mue 2     ULTIME parole 4     (mise en scène)
+ULTIME fin <id>          (refermer)
+```
+```js
+Ultimes.actif(2)     // 'convergence'|'mue'|'parole' ou ''
+```
+**Apprentissage câblé dans les classes** (niveau 1) : classe 1 → 813-814 · classe 2 → 815-817 · classe 3 → **810-812** · classe 4 → 818-820. Charger `UltimesSources` **après** CorruptionAme, Errance, JadeEntitePlunging et ManaAffinity (le `<ReculVital>` de 817 et le `<SceauMagie>` de 819 passent par ManaAffinity/RoyaumeImperial).
+
+## 🧬 Les Traits d'Âme (`TraitsAme`) — le don de naissance
+
+**Le canon :** l'Âme est la source la **moins comprise** du monde et la plus imprévisible — elle peut être bonne, mauvaise, faire l'impossible. À la naissance, elle offre **toujours deux choses** : un **don spirituel** (arme, familier ou objet spirituel) et un **TRAIT** — une capacité unique, aléatoire, qui n'appartient qu'à toi. Tout le reste s'apprend ; le Trait, lui, est là depuis le début : un **mana pur primitif, instinctif**, que personne ne contrôle vraiment. C'est la **Marque** (l'ADN de l'âme) qui l'active — et les objets spirituels en sont presque une extension. *(Le modèle : le Kamui de Dono, `DonoKamui.js` — son familier Mimi, l'Esprit Vengeur, EST son deuxième œil.)*
+
+### Les quatre Traits
+| Héros | Trait | Ce qu'il fait (bonus en combat) | Don spirituel |
+|---|---|---|---|
+| **Aël** | **le Point de Rupture** `<Trait: rupture>` | voir la faille exacte où tout casse → ses Traits sont **toujours critiques** | son **arme** — la lame qui trouve la faille |
+| **Korrah** | **l'Instant Gelé** `<Trait: gel>` | le **Zéro Absolu** : pas du contrôle du temps, du FROID qui fige tout → ses Traits **ne ratent jamais** + engourdissent (**−AGI 2 tours**) | le **Sablier de Givre** |
+| **ludwing** | **la Porte d'Ombre** `<Trait: porte>` | son âme ouvre sur **l'Envers** (le pays des âmes errantes) : pas de téléportation, un passage → après un Trait, **esquive +50 % 1 tour** (état 204) | ses **familiers** — les âmes liées (ses invocations) |
+| **Vesper** | **le Verbe Vrai** `<Trait: verbe>` | ce qu'elle nomme, le monde l'écoute → ses Traits **ne ratent jamais** | le **Premier Mot** |
+
+### Le prix (la vraie contrainte)
+Le Trait **réunit toutes les sources** d'un coup — alors il **empiète sur toutes les énergies en même temps** :
+| Prix | Chiffres |
+|---|---|
+| Drain de PM (en plus du coût du skill) | **20 % des PM max** / usage → ton prochain sort peut être hors de portée |
+| Drain de TP | **20 TP** / usage |
+| Forcer la marque | **+2 Errance** / usage |
+| Trait d'un autre (marque étrangère) | prix **doublé** + **+6 Errance** |
+| **Marque CREUSE** (âme vidée) | le Trait **ne répond plus** (skill inutilisable) |
+
+### Les skills canonisés (l'inspiration anime → le canon)
+| Avant | Après | L'explication canon |
+|---|---|---|
+| black flash (11, 130) | **Éclat Noir** / Concentré | frapper le point de rupture exact — critique né du Trait, pas de la chance |
+| speed blist (18) · attaque ultra rapide (131) | **Pas de Rupture** · **Frappe de l'Instant Juste** | l'œil du Trait lit l'ouverture avant le geste |
+| super gama (133) | **Déflagration Spirituelle** | Mana Spirituelle pure |
+| le monde (24) | **le Monde Gelé** (élém → Glace 13) | l'air gèle au Zéro Absolu : rien ne bouge — le froid, pas le temps |
+| armure/arrêt du temps (89-91) | **Armure de Givre · Instant Gelé · Zéro Absolu** | tous en Glace : l'instant figé par le froid |
+| ta prochaine phrase sera (25) | **Lecture du Corps** | la Maîtrise lit la tension des muscles, pas l'avenir |
+| Best Friendo (93) | **Main Ouverte** | une prise de Maîtrise désarme (voie de l'onde) |
+| génie incompris QI 530 000 (95) | **Œil du Stratège** | trois échanges d'avance |
+| Boogie Woogie (97) | **Valse des Positions** | une passe de Maîtrise si vive que les postures s'échangent |
+| portail d'ombre (69) · déplacement d'ombre (110) | **Porte de l'Envers** · **Abri de l'Envers** | pas de téléportation : il PASSE par l'Envers et ressort ailleurs |
+| Bleu/Rouge (101, 102) | **« Viens. » — l'Attraction** · **« Pars. » — la Répulsion** (élém → Positif 3) | le Verbe Vrai : elle le dit, le monde obéit |
+| snap rouge (19) · TRAIN DE LA HYPE (22) · rage quit (23) · aura farm (29) | **Claquement du Verbe** · **« Debout ! » — l'Appel** · **« Assez. »** · **Recueillement** | des Paroles, dans sa voix à elle |
+
+```js
+Traits.de(2)              // {cle:'gel', nom:"l'Instant Gelé", don:'le Sablier de Givre'}
+Traits.possede(1,'rupture')  // true
+```
+Charger **après** Errance, JadeEntitePlunging et MarqueVivante. Les notes existantes (Paroles, mises en scène YEP) ont été **conservées** — le tag `<Trait: x>` s'ajoute, il ne remplace rien.
+
+### La canonisation complète (2e passe — références vérifiées sur internet)
+| Avant | Référence identifiée | Après | L'explication canon |
+|---|---|---|---|
+| ORRAAAAAAAAAA (16) | JoJo's Bizarre Adventure (le cri « ORA » de Star Platinum) | **Déluge de Poings** | le Corps à l'état pur : l'instinct déchaîné en avalanche de coups |
+| l'onde (15) | JoJo (le Hamon / l'Onde) | **l'Onde** (gardé !) | déjà canon : la **voie de l'onde** existe dans les 9 Voies |
+| sort d'inversion (17) | Jujutsu Kaisen (technique d'inversion de Gojo) | **Technique d'Inversion** | inverser le flux du mana pour reconstruire — soigner est plus dur que blesser |
+| extension du térritoir (46) | Jujutsu Kaisen (l'Extension du Territoire) | **Déploiement de Domaine** | le sommet de la **voie du domaine** (canon depuis les 9 Voies) |
+| Arise (98) | Solo Leveling (« Lève-toi » de Sung Jinwoo) | **« Relève-toi. » — le Rappel** | une âme tombée se relève de **l'Envers** par la Porte de ludwing |
+| speed blist (18, 136) | « Speed Blitz » (terme VS Battle : frapper avant la perception) | **Pas de Rupture** · **Blitz — l'Éclair Humain** | l'écart de vitesse devient un mur : la cible ne voit jamais le coup |
+| super gama (133) | One-Punch Man (le Gamma Ray Burst de Garou) | **Déflagration Spirituelle** | une déflagration de Mana Spirituelle |
+| lame/pluie/disque de sang (53, 55, 138…) | Demon Slayer (l'Art du Sang de Gyutaro : faucilles de sang durci) | noms gardés, orthographe corrigée | **l'art du sang** : le Corps se taille des armes dans sa propre chair (voie du sang) |
+| Danse de l'Acier (423) | Sekiro (mention retirée de la description) | inchangé | la Maîtrise absolue de l'acier |
+| Danse du Sauvageon (433) | Elden Ring (Waterfowl Dance de Malenia, mention retirée) | inchangé | un corps poussé au-delà de ce que la chair permet |
+| Fléau des Étoiles (437) | Elden Ring (Radahn le Fléau des Astres) | inchangé | Kev retombe en étoile filante — c'est SON histoire maintenant |
+| Glitch/404/.exe/.sys (76-88) | esthétique BROKENSCRIPT / creepypasta | noms **gardés** | canon : c'est le langage de **l'entité du Fond** (méta-horreur des Chutes) |
+| TRANSFORMATION ×3 (26/126/127) | — | **Transformation / — Second Stade / — Stade Final** | la chair qui se refond, palier par palier |
+| + ~35 corrections | fautes de frappe, majuscules, descriptions vides | (Fuir, Griffe, Souffle Draconique, Poing Fracassant…) | chaque skill du jeu a désormais un nom propre et une description canon |
+
+### Les ultimes signature & combos (3e passe — canonisés et VÉRIFIÉS branchés)
+Le système existant fonctionne : `<Ulti>`/`<UltiColor>` → **UltiCinematics** · `<HP Cost: x%>` + `<After Eval>` → **YEP_SkillCore** · `<Combo>`/`<ComboLien>` → **ComboLiens**. Les contre-coups (états 190-193) ont de vrais malus — c'est déjà la **Loi du Prix**.
+
+| Skill | Héros | Canonisé | Contre-coup |
+|---|---|---|---|
+| 445 Tranche-Néant · 446 Jugement de Soi | Aël | le **Point de Rupture** porté au comble | 25/33 % PV + Épuisement de l'Âme (190) |
+| 449 **Instant Absolu** (ex-« Convergence Absolue », renommé : collision avec la Convergence 813) · 450 Point Zéro | Korrah | l'**Instant Gelé** comprimé puis relâché / le Zéro Absolu concentré | 15/25 % PV + Brûlure Mentale (191) |
+| 453 Dévoreur d'Âmes · 454 Tout ou Rien | ludwing | la **Porte** ouverte en grand / son âme jouée à pile ou face | 30/35 % PV + Folie du Joueur (192) |
+| 457 Éclat de Conviction · 458 Certitude Absolue | Vesper | le **Verbe Vrai** à pleine voix | 20/28 % PV + Doute Paralysant (193) |
+| 413-416 (Duos) · 417 Trinité d'Âmes · 418 **Communion des Quatre** (ex-« Convergence des Ames ») | combos | descriptions passées aux **vrais noms** (Aël/Korrah/ludwing/Vesper — fini Thylane/Neyssa/Lou/Tianna) | TP 30/50/80 via ComboLiens |
+
+### La canonisation TOTALE (4e passe — Ennemis · États · Objets · Armes · Classes)
+| Avant | Référence (vérifiée) | Après |
+|---|---|---|
+| boss secret dio (ennemi 12, battler Vampire + état « le monde ») | **JoJo** — DIO, le vampire qui arrête le temps | **Dio, le Voleur d'Instants** (son « arrêt du temps » = un Trait de froid, comme Korrah) |
+| GASTER (ennemi 83) | **Undertale** — W.D. Gaster, « tombé dans sa création », fragmenté, accessible par glitch | **Celui qui est Tombé** (canon du Fond ; le tag `<Gaster>` de `JadeGaster.js` est conservé, rien ne casse) |
+| Confiance Absolue (nah i'd win) (état 40) | **JJK** — le « Nah, I'd win » de Gojo | **Confiance Absolue** |
+| le monde (état 13) · territoire (état 16) | JoJo · JJK | **Monde Gelé** · **Domaine Déployé** (suivent les skills 24 et 46 canonisés) |
+| Maître du Chill (état 34) | meme | **Maître Serein** (Arts Sereins) |
+| soul breaker · void chopper · emperor · siren song · soldier's rifle · nightbane · darkeheart (armes 26-66) | nommage anglais type WoW/MMO | **Brise-Âme · Fendeur du Vide · L'Empereur · Chant de Sirène · Fusil du Soldat · Fléau-Nocturne · Cœur-Sombre** (+ descriptions) |
+| téléphones iPhone/Samsung/Redmi/Nokia/stream + live intedit (armes 7, 59-64 · objet 5) | anachronismes volontaires | **gardés** — canonisés en **Reliques du Fond** : des objets qui n'existent pas dans ce monde, l'entité les a laissés filtrer |
+| Objets Spirituels 501-516 | anciens prénoms (Thylane/Neyssa/Lou/Tianna) | descriptions passées à **Aël/Korrah/ludwing/Vesper** + lien canon : « le don spirituel de sa marque — presque une extension de son Trait » |
+| classes « maitrise / aprenti / confiance / magie » | — | **l'Équilibre · la Maîtrise · le Symbole · la Parole** (alignées sur A1) |
+| bot boss · 2LITE GARDE D2MONIAQUE · IMAGE REMANAT · arc dechu · dragon abuse · poulet bizzare… | typos | **Colosse Sans Âme · Élite — Garde Démoniaque · Image Rémanente · Archange Déchu · Dragon Tyran · Poulet Bizarre**… (~25 ennemis) |
+| Épée rouillé · diament ×4 · tenerbre · scetre des ame perdus · Saigment… | typos | tout corrigé (armes, objets 1-10 avec descriptions, états) |
+
+### La mise en conformité des plugins (5e passe)
+Audit complet des plugins custom. Les clés script minuscules (`thylane`/`neyssa`/`lou`/`tianna`) sont **canon** (héritées, gardées partout). Corrigé :
+| Plugin | Ce qui n'était pas conforme | Réparé |
+|---|---|---|
+| **ThylaneFormes** | ⚠️ utilisait les états **196/197** — pris depuis par les **Fusions** (conflit réel !) | Formes repointées sur **205** (Art Serein ◈ Forme d'Aël, ATK/MAT ×1.25 +esquive) et **206** (Semi-Forme, ×1.15) — les 3 visages de l'Équilibre : rage / sérénité / entre-deux |
+| **JadeObsession** | « STASE TEMPORELLE de Neyssa » (le contrôle du temps n'existe pas) | « **STASE GELÉE** de Korrah » — l'Instant Gelé, son Trait |
+| **MirrorTaunts** · Lore_MiroirJosu/Dono/Kev · JosuMirror | les Miroirs raillaient « Thylane, Neyssa, Tianna » | toutes les répliques passées à **Aël, Korrah, Vesper** |
+| **JadeEntitePlunging** · Neyssa_Concentration · JadeEchos · FusionElements · Lore_AffiniteAlignes | labels/textes aux anciens prénoms | textes canonisés (les **clés de paramètres** sont inchangées : tes réglages sauvegardés marchent toujours) |
+⚠️ Si `ThylaneFormes` est déjà coché dans ton gestionnaire de plugins avec 196/197 en paramètres, mets à jour ces deux nombres (**205** et **206**) ou re-ajoute le plugin.
+
+### Le sceau canon (6e passe — balayage final)
+Plus **aucune** trace hors-lore dans tout le projet : commentaires des evals de skills/états canonisés (8+11 remplacements), événements communs **Miroir 50/51/53** renommés et dialogues passés aux vrais noms, `Lore_DilatationTemps` re-canonisé — « Battle World » devient **l'Envers** (1 min réelle ≈ 1000 ans : le temps de l'Envers ne passe pas comme le nôtre, assez pour qu'une âme y oublie son nom), et le « virus temporel » de Jade devient le **Virus du Fond** (gel des techniques). Vérifié : zéro occurrence de Thylane/Neyssa/Tianna dans data/ et js/plugins/.
+
+## 👁️ Clarté (`ClarteUI`) — voir ce qu'on paie, en combat et dehors
+
+**« Toute puissance a un prix — encore faut-il le VOIR. »** Purement additif, aucune donnée modifiée, deux options désactivables :
+
+▶ **L'aide enrichie** (combat **et** menus) : en survolant une compétence, la 2e ligne d'aide affiche automatiquement, lus dans les notetags : l'**élément**, la **Voie et son prix** (ex. `Voie forge (×1.5 — prix −5 % PV/coup)`), le **niveau de Parole**, le **TRAIT et son prix** (20 % PM · 20 TP · +2 Errance), la **Fusion** et ses deux Chutes, l'**Ultime**, le **Domaine**, l'**Invocation** (coût en âmes), l'**Interdit**, le **recul vital**, le **coût en % PV**. Rien à configurer.
+
+▶ **Les 3 Chutes en combat** : sous chaque héros, trois mini-barres — **violet** = Corruption (la Bête), **rouge** = Errance (l'Errant), **bleu** = santé mentale (pleine = saine). Le joueur voit ses gouffres en permanence.
+
+▶ **Icônes d'états distinctes** : les états 195-206 (Fusions, Domaine, Ultimes, Traits, Formes) partageaient la même icône — chacun a maintenant la sienne.
+
+Charger **en dernier**, juste avant GrimoireHub. Hors combat, rappel : le HUD des jauges sur la carte existe déjà (`TRIANGLE hud on`).
+
+## ⟡ La Fusion généralisée (`FusionsEtendues`) + le Codex en jeu (`CodexSources`) — Codex v6
+
+**Le canon (v6) : la Fusion est un PRINCIPE, pas un sort.** Dès que l'âme, le mana originel ou le mana sombre fondent ensemble — technique, rune ou transformation — c'est une Fusion. Trois échelles :
+| Forme | Skills | Prix |
+|---|---|---|
+| **La Technique** `<FusionTech: chair\|rasoir\|songe>` — fondre UN instant | **821** Lame de Chair · **822** Pensée Tranchante · **823** Vision Faite Chair | **immédiat** (moitié du prix/tour des formes) : chair +2 Bête +2 Errant · rasoir +2 Bête −1 lucidité · songe −1 lucidité +2 Errant |
+| **La Rune** `<Rune>` — une Parole **gravée en chiffres**, agit sans être récitée | **824** Rune d'Entrave (fige) · **825** Rune de Renvoi (contre) · **826** Rune de Saignée | **jamais ratée**, utilisable même **Muet** (la gravure ne se récite pas) |
+| **La Forme** (transformation) | 807-809, états 195-197 (`FusionMana`) | prix/tour qui escalade — inchangé |
+Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après FusionMana/CorruptionAme/Errance/JadeEntitePlunging.
+
+**Le Codex en jeu (`CodexSources`)** — parce qu'en combat le texte est coupé et qu'on n'a pas le temps de lire : commande **`CODEX`** → un livre posé, 7 pages (les Trois Sources · la Fusion généralisée · les Traits & les natures d'âme · les 4 Traits des marqués · l'Envers & le Fond · la Loi du Prix · la Mort & les Reprises). Les natures d'âme (canon v6) : **Volonté**→armes · **Attachement**→familiers/boucliers · **Colère**→objets voraces · **Foi**→sceaux/masques · **Deuil**→objets des morts · **Curiosité**→clés/lentilles. Les mystères du codex (le Fond, le Premier…) restent volontairement inexpliqués.
+
+**Messages de combat raccourcis** : les logs de RoyaumeImperial, FusionMana, TraitsAme et UltimesSources tiennent maintenant sur une ligne courte — l'explication complète vit dans le CODEX et l'aide enrichie (`ClarteUI`), pas au milieu du combat.
+
+## ➕ CanonPlus — purge tragique · Graveur · Traits des boss · Fiche · Reprises
+| Système | Usage | Chiffres |
+|---|---|---|
+| **Purge** (on transvase, on n'efface pas) | `PURGE bete/errant/dement <id>` | bête : −30 Corr **+10 Err** · errant : −30 Err **−2 lucidité** · dément : +3 lucidité **+10 Corr** |
+| **Graveur** | `GRAVER entrave/renvoi/saignee` | **5 âmes** → 1 rune gravée (items **65-67**, jamais ratées) |
+| **Traits des boss** | note `<TraitBoss: Nom\|type>` | types : gel (10 % fige) · faim (vole 10 %) · rupture (+15 % crit) · renvoi (10 % contre ×0.5) · regard (ne rate jamais). Posé sur Dio, Muta ×2, Kevératus, Régis, la Reine, Celui qui est Tombé |
+| **Fiche du marqué** | `FICHE` | Trait, don, nature d'âme (Aël=Volonté · Korrah=Attachement · ludwing=Deuil · Vesper=Foi), marque, rang, 3 jauges |
+| **Reprises** | automatique | chaque chargement compté ; à 5/10/20 le Fond laisse des traces (`$gameSystem._reprises`) |
+
+**Équilibrage corrigé** : le Royaume Impérial coûte **+15 Errance fixes** au déploiement (plus jamais +2/âme ×30 = +60). L'aide (`ClarteUI`) affiche désormais **« TRAIT de X — marque étrangère : prix ×2 »** quand un héros utilise le Trait d'un autre. **`docs/ORDRE_PLUGINS.md`** : la référence complète du gestionnaire de plugins (js/plugins.js n'étant pas dans git).
