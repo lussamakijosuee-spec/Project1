@@ -85,6 +85,7 @@
     //── PNJ graveur : incarné, avec ses conditions ──
     function graveur(itp) {
         var a = chef(); if (!a) return;
+        if (window.Porteur && !Porteur.present()) { $gameMessage.add('\\C[8]LE GRAVEUR — « Ces âmes ne répondent qu\'à leur porteur. Reviens avec lui. »\\C[0]'); return; }
         if (jm(a.actorId()) < 5) {
             $gameMessage.add('\\C[8]LE GRAVEUR — « Les mains qui tremblent gravent des mots faux. »');
             $gameMessage.add('« Reviens quand ton esprit tiendra debout. » (lucidité 5 requise)\\C[0]');

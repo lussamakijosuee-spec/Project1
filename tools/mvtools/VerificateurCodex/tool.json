@@ -1,0 +1,7 @@
+{
+  "name": "Vérificateur du Codex",
+  "version": "1.0.0",
+  "description": "Le docteur du projet : vérifie tous les IDs (skills, états, ennemis, troupes, classes, objets).",
+  "exec": "verifier.bat",
+  "icon": ""
+}
