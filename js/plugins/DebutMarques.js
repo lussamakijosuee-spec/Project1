@@ -7,6 +7,8 @@
  * autres vivent leur vie (DestinsParalleles). Discours d'entrée inclus.
  * @author JOKO
  * @help  DEBUT choisir  — ouvre la sélection (à mettre au tout début du jeu).
+ *  ANTI-BOUCLE : une fois le choix fait, la commande ne refait RIEN
+ *  (même en Démarrage automatique). DEBUT reset — pour re-choisir (test).
  *  Le choix : retire les 3 autres du groupe, santé mentale de tous à 8
  *  (normale — elle bougera selon les choix), et joue le discours du marqué.
  */
@@ -30,6 +32,13 @@
     Game_Interpreter.prototype.pluginCommand = function (cmd, args) {
         _pc.call(this, cmd, args);
         if (String(cmd).toUpperCase() !== 'DEBUT') return;
+        if ((args[0] || '').toLowerCase() === 'reset') { $gameSystem._debutFait = false; return; }
+        if ($gameSystem && $gameSystem._debutFait) {
+            // déjà choisi : on efface l'événement d'intro NOUS-MÊMES,
+            // même s'il est en Démarrage automatique → le joueur peut bouger.
+            if (this._eventId > 0) this.command214();
+            return;
+        }
         var itp = this;
         var noms = [1, 2, 3, 4].map(function (i) {
             var a = $gameActors.actor(i);
@@ -38,6 +47,7 @@
         $gameMessage.setChoices(noms, 0, 0);
         $gameMessage.add('\\C[6]Quatre marques. Quatre chemins. Un seul se joue.\\C[0]');
         $gameMessage.setChoiceCallback(function (n) {
+            $gameSystem._debutFait = true;
             var id = n + 1;
             [1, 2, 3, 4].forEach(function (i) {
                 $gameVariables.setValue(10 + i, 8);              // santé mentale normale

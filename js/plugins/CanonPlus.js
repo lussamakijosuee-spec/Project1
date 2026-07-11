@@ -56,6 +56,7 @@
             var quoi = (args[0] || '').toLowerCase();
             var MAP = { entrave: 65, renvoi: 66, saignee: 67 };
             var itemId = MAP[quoi];
+            if (itemId && window.Porteur && !Porteur.present()) { log('\\C[8]« Ces âmes ne répondent qu\'à leur porteur. »\\C[0]'); return; }
             if (itemId && $gameVariables) {
                 var souls = $gameVariables.value(15);
                 if (souls >= 5) {
