@@ -858,3 +858,17 @@ Plus **aucune** trace hors-lore dans tout le projet : commentaires des evals de 
 ▶ **Icônes d'états distinctes** : les états 195-206 (Fusions, Domaine, Ultimes, Traits, Formes) partageaient la même icône — chacun a maintenant la sienne.
 
 Charger **en dernier**, juste avant GrimoireHub. Hors combat, rappel : le HUD des jauges sur la carte existe déjà (`TRIANGLE hud on`).
+
+## ⟡ La Fusion généralisée (`FusionsEtendues`) + le Codex en jeu (`CodexSources`) — Codex v6
+
+**Le canon (v6) : la Fusion est un PRINCIPE, pas un sort.** Dès que l'âme, le mana originel ou le mana sombre fondent ensemble — technique, rune ou transformation — c'est une Fusion. Trois échelles :
+| Forme | Skills | Prix |
+|---|---|---|
+| **La Technique** `<FusionTech: chair\|rasoir\|songe>` — fondre UN instant | **821** Lame de Chair · **822** Pensée Tranchante · **823** Vision Faite Chair | **immédiat** (moitié du prix/tour des formes) : chair +2 Bête +2 Errant · rasoir +2 Bête −1 lucidité · songe −1 lucidité +2 Errant |
+| **La Rune** `<Rune>` — une Parole **gravée en chiffres**, agit sans être récitée | **824** Rune d'Entrave (fige) · **825** Rune de Renvoi (contre) · **826** Rune de Saignée | **jamais ratée**, utilisable même **Muet** (la gravure ne se récite pas) |
+| **La Forme** (transformation) | 807-809, états 195-197 (`FusionMana`) | prix/tour qui escalade — inchangé |
+Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après FusionMana/CorruptionAme/Errance/JadeEntitePlunging.
+
+**Le Codex en jeu (`CodexSources`)** — parce qu'en combat le texte est coupé et qu'on n'a pas le temps de lire : commande **`CODEX`** → un livre posé, 7 pages (les Trois Sources · la Fusion généralisée · les Traits & les natures d'âme · les 4 Traits des marqués · l'Envers & le Fond · la Loi du Prix · la Mort & les Reprises). Les natures d'âme (canon v6) : **Volonté**→armes · **Attachement**→familiers/boucliers · **Colère**→objets voraces · **Foi**→sceaux/masques · **Deuil**→objets des morts · **Curiosité**→clés/lentilles. Les mystères du codex (le Fond, le Premier…) restent volontairement inexpliqués.
+
+**Messages de combat raccourcis** : les logs de RoyaumeImperial, FusionMana, TraitsAme et UltimesSources tiennent maintenant sur une ligne courte — l'explication complète vit dans le CODEX et l'aide enrichie (`ClarteUI`), pas au milieu du combat.

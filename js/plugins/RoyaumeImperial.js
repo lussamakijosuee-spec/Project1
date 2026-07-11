@@ -144,8 +144,7 @@
                 $gameVariables.setValue(SOUL_VAR, $gameVariables.value(SOUL_VAR) + SURGE);
             }
             actor.addState(DOMAINE);
-            log('\\C[18]★ ' + actor.name() + ' déploie le ROYAUME IMPÉRIAL DES TÉNÈBRES.\\C[0]');
-            log('\\C[8]Les âmes reviennent. Toutes. Ici, il est le maître.\\C[0]');
+            log('\\C[18]★ ROYAUME IMPÉRIAL — ' + actor.name() + '\\C[0]');
         },
         fermer: function (actor) {
             if (actor && actor.isStateAffected(DOMAINE)) {
@@ -191,7 +190,7 @@
             }
             // …mais revivre les traumas déstabilise
             if (s.addState) s.addState(TRAUMA);
-            log('\\C[2]' + (s.name ? s.name() : '') + ' aspire les âmes des damnés (' + total + ' âmes) — et revit chacune de leurs morts.\\C[0]');
+            log('\\C[2]' + (s.name ? s.name() : '') + ' aspire ' + total + ' âmes — et revit leurs morts.\\C[0]');
         }
 
         // Contre Totale : armer la garde absolue
@@ -212,7 +211,7 @@
             if (attacker && attacker !== target && attacker.isAlive()) {
                 attacker.gainHp(-value);
                 attacker.startDamagePopup(); attacker.clearResult();
-                log('\\C[16]CONTRE TOTALE — le coup revient à l\'envoyeur (-' + value + ' PV).\\C[0]');
+                log('\\C[16]CONTRE TOTALE (-' + value + ' PV renvoyés).\\C[0]');
                 if (attacker.isDead()) attacker.performCollapse();
             }
         }

@@ -197,10 +197,10 @@
         if (k === 'porte' && estSien) { s.addState(ENVERS); }
 
         if (!estSien) {
-            log('\\C[2]Cette marque n\'est pas la tienne — le Trait déchire ' + s.name() + ' au passage.\\C[0]');
+            log('\\C[2]Marque étrangère — le Trait déchire ' + s.name() + '.\\C[0]');
         } else if (!s._traitVu) {
             s._traitVu = true;
-            log('\\C[18]★ Le Trait de ' + s.name() + ' — ' + TRAITS[k].nom + ' — répond à sa marque.\\C[0]');
+            log('\\C[18]★ TRAIT — ' + TRAITS[k].nom + '\\C[0]');
         }
     };
 

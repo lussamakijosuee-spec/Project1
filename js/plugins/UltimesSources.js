@@ -146,7 +146,7 @@
                 if (corr) parts.push('+' + corr + ' Bête');
                 if (err) parts.push('+' + err + ' Errant');
                 if (ment) parts.push('-' + ment + ' lucidité');
-                log('\\C[8]' + U.nom + ' réclame son dû… (' + parts.join(', ') + ')\\C[0]');
+                log('\\C[8]' + U.nom + ' — prix : (' + parts.join(', ') + ')\\C[0]');
             }
         });
         _startTurn.call(this);
