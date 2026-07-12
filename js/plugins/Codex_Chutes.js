@@ -1,14 +1,17 @@
 //=============================================================================
-// Codex_Chutes.js — v3.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
+// Codex_Chutes.js — v4.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
 //  Remplace ChuteDement + ChutesBeteErrant + ChutesProfondeur (à décocher !)
 // RPG Maker MV · by JOKO · charger APRÈS JadeEntitePlunging, CorruptionAme,
 //  Errance, ChutesDefinitives. UN SEUL hook par méthode : zéro entrechoc.
 //  v3.0 : LES LOIS DES CHUTES — Loi du Sang (Bête) & Loi des Amarres (Errant).
+//  v4.0 : LE SPECTACLE DES CHUTES — cartes de palier plein écran, battement de
+//         cœur, vision du sang, l'Instinct, la Curée, nom qui s'efface,
+//         la Traversée, les étoiles noires, griffures, âmes qui brûlent.
 //=============================================================================
 /*:
- * @plugindesc v3.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
- * Bête (la laisse + Loi du Sang + l'Ancre), Errant (l'effacement + Loi des
- * Amarres + la musique d'Aldébaran), Déchiré (Aël) + tout le visuel.
+ * @plugindesc v4.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
+ * Bête (Loi du Sang + l'Ancre + Instinct/Curée), Errant (Loi des Amarres +
+ * Aldébaran + Traversée), Déchiré (Aël) + cartes de palier & tout le visuel.
  * @author JOKO
  * @param switchTrahison
  * @text Interrupteur — trahison du Dément
@@ -46,6 +49,19 @@
  *     en combat, les dévorés parlent par sa bouche.
  *   • ERRANT ancrage <id> : les alliés au Lien ≥ 5 le nomment et le
  *     retiennent (purge + annule l'effacement en cours).
+ *
+ *  ── LE SPECTACLE DES CHUTES (v4.0) — tout est automatique ──────────
+ *  CARTES DE PALIER : franchir 40/70/100 (Corruption ou Errance) affiche
+ *   une carte plein écran sur la carte (titre du palier, vers du codex).
+ *  LA BÊTE : battement de cœur à Fièvre (s'accélère avec la corruption) ·
+ *   vision du sang (les ennemis blessés pulsent rouge) · l'INSTINCT (30 %,
+ *   l'odeur du sang choisit sa cible : le plus faible) · la CURÉE (victoire
+ *   en Fièvre : +15 % PV, +2 corruption — il a goûté) · GRIFFURES à l'écran
+ *   quand la Bête est lâchée.
+ *  L'ERRANT : le nom s'efface des menus (lettres manquantes, encre pâle) ·
+ *   la TRAVERSÉE (12 %, les coups physiques le traversent) · les ÉTOILES
+ *   NOIRES au-dessus de la carte à errance ≥ 90 · pendant l'effacement,
+ *   ses techniques coûtent 0 PM (ses âmes volées brûlent à sa place).
  *  Tout le détail : docs/GUIDE_DEVELOPPEUR.md (sections chutes).
  */
 // ═══════════ module: ChuteDement ═══════════
@@ -596,5 +612,281 @@
                 $gameMessage.add('\\C[2]C\'est cela, la Loi des Amarres.\\C[0]');
             }
         }
+    };
+})();
+// ═══════════ module v4.0 : LE SPECTACLE DES CHUTES ═══════════
+//  Visuels & mécaniques poussés au maximum. Tout est procédural (zéro asset),
+//  additif et défensif. Lit Corruption / Errance / LoreCanon si présents.
+(function () {
+    'use strict';
+    function jc(i){try{return window.Corruption?Corruption.niveau(i):0;}catch(e){return 0;}}
+    function je(i){try{return window.Errance?Errance.niveau(i):0;}catch(e){return 0;}}
+    function maxParty(fn){var m=0;try{$gameParty.members().forEach(function(a){m=Math.max(m,fn(a.actorId()));});}catch(e){}return m;}
+    function wlog(t){var w=BattleManager._logWindow;if(w){w.push('addText',t);w.push('wait');}}
+
+    //──────────────────────────────────────────────────────────────────
+    //  ANIMS PARTAGÉES (cartes, griffures, étoiles) — carte & combat
+    //──────────────────────────────────────────────────────────────────
+    var ANIMS=[];
+    function animer(){
+        for(var i=ANIMS.length-1;i>=0;i--){
+            var A=ANIMS[i];A.t++;
+            try{
+                if(A.sc!==SceneManager._scene){ANIMS.splice(i,1);continue;}
+                A.upd(A);
+                if(A.t>=A.dur){A.sc.removeChild(A.sp);ANIMS.splice(i,1);}
+            }catch(e){ANIMS.splice(i,1);}
+        }
+    }
+    function pousser(sp,dur,upd){
+        var sc=SceneManager._scene;if(!sc)return;
+        sc.addChild(sp);ANIMS.push({sp:sp,sc:sc,t:0,dur:dur,upd:upd});
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  CARTES DE PALIER — franchir 40/70/100 s'annonce en plein écran
+    //──────────────────────────────────────────────────────────────────
+    var FILE=[]; // annonces en attente (affichées sur la carte)
+    var PALIERS={
+        bete:{
+            40:['LE FRÉMISSEMENT','Le sang s\'éveille. Les odeurs deviennent des phrases.','Blow2',95],
+            70:['LA FIÈVRE','Le corps mute par éclats. La volonté perd du terrain.','Blow3',75],
+            100:['LA MUE','Le dieu mort se lève.','Collapse3',60]
+        },
+        errant:{
+            40:['DÉCHARNÉ','Le monde met une seconde de trop à te reconnaître.','Bell1',70],
+            70:['GONFLÉ D\'ÂMES','Les dévorés ne partent pas : ils pèsent.','Bell2',60],
+            100:['L\'ERRANT','La chair cède. L\'âme reste debout, hors du monde.','Darkness2',80]
+        }
+    };
+    function couleurDe(voie,lv){
+        try{if(window.LoreCanon)return voie==='bete'?LoreCanon.corruption(lv).couleur:LoreCanon.errance(lv).couleur;}catch(e){}
+        return voie==='bete'?'#c0392b':'#7f8cff';
+    }
+    function franchit(voie,actorId,avant,apres){
+        [40,70,100].forEach(function(s){
+            if(avant<s&&apres>=s){
+                var a=$gameActors&&$gameActors.actor(actorId);
+                FILE.push({voie:voie,seuil:s,nom:a?a.name():'',coul:couleurDe(voie,s)});
+                if(FILE.length>4)FILE.shift();
+            }
+        });
+    }
+    // greffe sur les jauges (par-dessus les Lois : l'ordre est sans importance)
+    if(window.Corruption&&Corruption.add){
+        var _ca=Corruption.add;
+        Corruption.add=function(id,n){var av=jc(id);_ca.call(Corruption,id,n);try{franchit('bete',id,av,jc(id));}catch(e){}};
+    }
+    if(window.Errance&&Errance.add){
+        var _ea=Errance.add;
+        Errance.add=function(id,n){var av=je(id);_ea.call(Errance,id,n);try{franchit('errant',id,av,je(id));}catch(e){}};
+    }
+    function montrerCarte(d){
+        var P=PALIERS[d.voie][d.seuil];if(!P)return;
+        var w=Graphics.boxWidth,h=210,sp=new Sprite(new Bitmap(w,h));
+        sp.y=Math.floor((Graphics.boxHeight-h)/2);sp.opacity=0;
+        var b=sp.bitmap;
+        b.fillRect(0,0,w,h,'rgba(4,2,8,0.86)');
+        b.fillRect(0,0,w,2,d.coul);b.fillRect(0,h-2,w,2,d.coul);
+        b.fontSize=19;b.textColor='#8d8d9c';b.outlineWidth=3;
+        b.drawText(d.nom+' — '+(d.voie==='bete'?'la Chute du Corps':'la Chute de l\'Âme'),0,14,w,26,'center');
+        b.fontSize=56;b.textColor=d.coul;b.outlineColor='rgba(0,0,0,0.9)';b.outlineWidth=7;
+        b.drawText(P[0],0,58,w,66,'center');
+        b.fontSize=19;b.textColor='#d6d6e0';b.outlineWidth=3;
+        b.drawText(P[1],0,148,w,30,'center');
+        try{AudioManager.playSe({name:P[2],volume:75,pitch:P[3],pan:0});}catch(e){}
+        if(d.seuil>=100)$gameScreen.startShake(7,8,50);
+        pousser(sp,170,function(A){
+            A.sp.opacity=A.t<18?Math.floor(A.t*255/18):(A.t>130?Math.max(0,Math.floor(255*(170-A.t)/40)):255);
+        });
+        if(d.voie==='bete'&&d.seuil>=100)griffures();
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  GRIFFURES — trois lacérations déchirent l'écran (la Bête)
+    //──────────────────────────────────────────────────────────────────
+    function griffures(){
+        var w=Graphics.boxWidth,h=Graphics.boxHeight;
+        var sp=new Sprite(new Bitmap(w,h));
+        var b=sp.bitmap;
+        for(var i=0;i<3;i++){
+            var x0=w*0.28+i*w*0.16+(Math.random()*50-25),pente=110+Math.random()*90;
+            for(var t=0;t<=1;t+=0.016){
+                var x=x0+t*pente-pente/2,y=t*h;
+                b.fillRect(x-2,y,7,18,'rgba(180,20,20,0.75)');
+                b.fillRect(x,y,3,18,'rgba(255,235,235,0.95)');
+            }
+        }
+        $gameScreen.startShake(9,9,45);
+        try{AudioManager.playSe({name:'Blow3',volume:85,pitch:65,pan:0});}catch(e){}
+        pousser(sp,55,function(A){A.sp.opacity=Math.max(0,255-A.t*5);});
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  LES ÉTOILES NOIRES — errance ≥ 90 : Aldébaran se laisse voir
+    //──────────────────────────────────────────────────────────────────
+    var etoiles=null,etoilesVues=false;
+    function majEtoiles(){
+        var lv=maxParty(je);
+        var sc=SceneManager._scene;
+        if(lv>=90&&!etoiles&&sc){
+            var w=Graphics.boxWidth,hh=190,sp=new Sprite(new Bitmap(w,hh));
+            sp.opacity=0;sp._pts=[];
+            for(var i=0;i<42;i++)sp._pts.push({x:Math.random()*w,y:Math.random()*hh*(0.3+Math.random()*0.7),r:Math.random()<0.25?2:1,ph:Math.random()*6.28,v:0.03+Math.random()*0.05});
+            sc.addChild(sp);etoiles={sp:sp,sc:sc,t:0};
+            if(!etoilesVues){etoilesVues=true;
+                if(!$gameMessage.isBusy()){
+                    $gameMessage.add('\\C[8]Au-dessus des toits : des étoiles qu\'aucune carte ne montre.\\C[0]');
+                    $gameMessage.add('\\C[8]Noires. Fixes. Patientes. Personne d\'autre ne les voit.\\C[0]');
+                }
+            }
+        }
+        if(etoiles){
+            var E=etoiles;
+            if(E.sc!==SceneManager._scene){etoiles=null;return;}
+            E.t++;
+            if(lv<90){E.sp.opacity-=4;if(E.sp.opacity<=0){E.sc.removeChild(E.sp);etoiles=null;}return;}
+            if(E.sp.opacity<130)E.sp.opacity+=2;
+            if(E.t%8===0){
+                var b=E.sp.bitmap;b.clear();
+                E.sp._pts.forEach(function(p){
+                    p.ph+=p.v*8;
+                    var al=0.25+0.75*Math.abs(Math.sin(p.ph));
+                    b.fillRect(p.x,p.y,p.r,p.r,'rgba(200,210,255,'+al.toFixed(2)+')');
+                });
+            }
+        }
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  BATTEMENT DE CŒUR — la Fièvre s'entend (carte)
+    //──────────────────────────────────────────────────────────────────
+    var coeurT=0,coeur2=0;
+    function majCoeur(){
+        var c=maxParty(jc);
+        if(c<70){coeurT=0;coeur2=0;return;}
+        if(coeur2>0&&--coeur2===0)
+            try{AudioManager.playSe({name:'Blow1',volume:16,pitch:48,pan:0});}catch(e){}
+        var cad=Math.max(46,132-c);        // 70 → toutes les ~62 f · 100 → ~46 f
+        if(++coeurT>=cad){coeurT=0;coeur2=9;
+            try{AudioManager.playSe({name:'Blow1',volume:20,pitch:56,pan:0});}catch(e){}}
+    }
+
+    //── ticker carte : anime tout + déroule la file des cartes ──
+    var _um=Scene_Map.prototype.update,_fT=0;
+    Scene_Map.prototype.update=function(){
+        _um.call(this);
+        try{
+            animer();majEtoiles();majCoeur();
+            if(++_fT>=30){_fT=0;
+                if(FILE.length&&!$gameMessage.isBusy()&&!ANIMS.length)montrerCarte(FILE.shift());
+            }
+        }catch(e){}
+    };
+    var _ub=Scene_Battle.prototype.update;
+    Scene_Battle.prototype.update=function(){_ub.call(this);try{animer();}catch(e){}};
+
+    //──────────────────────────────────────────────────────────────────
+    //  VISION DU SANG — les ennemis blessés pulsent rouge (Fièvre)
+    //──────────────────────────────────────────────────────────────────
+    if(typeof Sprite_Enemy!=='undefined'){
+        var _seu=Sprite_Enemy.prototype.update;
+        Sprite_Enemy.prototype.update=function(){
+            _seu.call(this);
+            try{
+                var e=this._enemy;
+                if(e&&e.isAlive()&&e.hpRate()<0.3&&maxParty(jc)>=70){
+                    this._sangT=(this._sangT||0)+0.12;
+                    this.setBlendColor([255,30,30,Math.floor(55+45*Math.abs(Math.sin(this._sangT)))]);
+                }else if(this._sangT){this.setBlendColor([0,0,0,0]);this._sangT=0;}
+            }catch(er){}
+        };
+    }
+    //──────────────────────────────────────────────────────────────────
+    //  MÉCANIQUES DE COMBAT : l'Instinct · la Traversée · âmes qui brûlent
+    //──────────────────────────────────────────────────────────────────
+    // l'Instinct : l'odeur du sang choisit la cible (le plus faible)
+    var _ma=Game_Actor.prototype.makeActions;
+    Game_Actor.prototype.makeActions=function(){
+        _ma.call(this);
+        try{
+            if(jc(this.actorId())<70||this.numActions()<=0||Math.random()>=0.30)return;
+            var faibles=$gameTroop.aliveMembers().filter(function(m){return m.hpRate()<0.25;});
+            if(!faibles.length)return;
+            faibles.sort(function(a,b){return a.hpRate()-b.hpRate();});
+            this.action(0).setAttack();
+            this.action(0).setTarget(faibles[0].index());
+            wlog('\\C[2]L\'odeur du sang décide pour '+this.name()+'.\\C[0]');
+        }catch(e){}
+    };
+    // la Traversée : les coups physiques passent au travers du Gonflé d'âmes
+    var _hit=Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit=function(t){
+        try{
+            if(this.isPhysical&&this.isPhysical()&&t&&t.isActor&&t.isActor()&&je(t.actorId())>=70&&Math.random()<0.12){
+                wlog('\\C[8]Le coup traverse '+t.name()+' — il n\'est plus tout à fait là.\\C[0]');
+                return 0;
+            }
+        }catch(e){}
+        return _hit.call(this,t);
+    };
+    // pendant l'effacement : les techniques coûtent 0 PM (ses âmes brûlent)
+    var _mpc=Game_BattlerBase.prototype.skillMpCost;
+    Game_BattlerBase.prototype.skillMpCost=function(skill){
+        try{
+            var ef=$gameSystem&&$gameSystem._errantEfface;
+            if(ef&&this.isActor&&this.isActor()&&this.actorId()===ef.id)return 0;
+        }catch(e){}
+        return _mpc.call(this,skill);
+    };
+    // la Curée : victoire en Fièvre — il a goûté
+    var _pv=BattleManager.processVictory;
+    BattleManager.processVictory=function(){
+        try{
+            $gameParty.battleMembers().forEach(function(m){
+                if(jc(m.actorId())>=70&&m.isAlive()){
+                    m.gainHp(Math.floor(m.mhp*0.15));
+                    if(window.Corruption)Corruption.add(m.actorId(),2);
+                    $gameMessage.add('\\C[2]'+m.name()+' se repaît sur ce qui reste. (+PV… +corruption)\\C[0]');
+                }
+            });
+        }catch(e){}
+        _pv.call(this);
+    };
+    // ouvertures de combat : l'arène sent le sang · griffures · âmes qui brûlent
+    var _sb=BattleManager.startBattle;
+    BattleManager.startBattle=function(){
+        _sb.call(this);
+        try{
+            if($gameSystem._beteLachee)griffures();
+            else if(maxParty(jc)>=70)wlog('\\C[2]L\'arène sent le sang.\\C[0]');
+            var ef=$gameSystem._errantEfface;
+            if(ef){var a=$gameActors.actor(ef.id);
+                if(a)wlog('\\C[8]Les techniques de '+a.name()+' ne coûtent plus rien.\\C[0]');
+                wlog('\\C[8]Ses âmes volées brûlent à sa place.\\C[0]');}
+        }catch(e){}
+    };
+    //──────────────────────────────────────────────────────────────────
+    //  LE NOM QUI S'EFFACE — l'encre pâlit dans tous les menus (Errance)
+    //──────────────────────────────────────────────────────────────────
+    var _dan=Window_Base.prototype.drawActorName;
+    Window_Base.prototype.drawActorName=function(actor,x,y,width){
+        try{
+            var lv=actor&&actor.actorId?je(actor.actorId()):0;
+            if(lv>=40){
+                var n=actor.name(),ch=n.split(''),trous=lv>=90?3:lv>=70?2:1;
+                for(var i=0;i<trous&&ch.length>2;i++){
+                    var p=1+((i*2+Math.floor(lv/10))%(ch.length-2));
+                    ch[p]=' ';
+                }
+                var old=this.contents.paintOpacity;
+                this.contents.paintOpacity=lv>=90?150:lv>=70?185:220;
+                this.changeTextColor(this.hpColor(actor));
+                this.drawText(ch.join(''),x,y,width||168);
+                this.contents.paintOpacity=old;
+                return;
+            }
+        }catch(e){}
+        _dan.call(this,actor,x,y,width);
     };
 })();

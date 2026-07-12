@@ -663,6 +663,36 @@ ERRANT ancrage <id>   les alliés au Lien ≥ 5 le nomment (errance -20 chacun,
 Note ennemi ajoutée : `<Bete>` (bête sauvage non tombée — loups, fauves…).
 Codex en jeu : `ManaCodex` page **⑦bis Les Lois des Chutes**.
 
+### 🎆 Le Spectacle des Chutes (`Codex_Chutes` v4.0) — visuels & mécaniques max
+
+Tout est automatique, procédural (aucun asset), et lit les jauges existantes.
+
+**Partagé** — les **cartes de palier** : franchir 40/70/100 en Corruption ou
+Errance affiche sur la carte une carte plein écran (titre du palier aux
+couleurs `LoreCanon`, vers du codex, SE dédié ; tremblement à 100). Les
+franchissements en combat sont mis en file et montrés au retour sur la carte.
+
+**La Bête** :
+| Effet | Détail |
+|---|---|
+| Battement de cœur | à Fièvre, double pouls sonore (Blow1) qui **s'accélère** avec la corruption (~62 f → ~46 f) |
+| Vision du sang | ennemis sous 30 % PV : leur sprite **pulse rouge** tant qu'un porteur est en Fièvre |
+| l'Instinct | 30 % : l'action du Fiévreux devient **attaque forcée sur l'ennemi le plus faible** (< 25 % PV) |
+| la Curée | victoire en Fièvre : **+15 % PV, +2 corruption** (« il a goûté » — et la nuit, la Loi du Sang rend la Curée plus chère : ×1.5) |
+| Griffures | 3 lacérations rouges déchirent l'écran quand la Bête est lâchée (début de combat) et au passage de la Mue |
+
+**L'Errant** :
+| Effet | Détail |
+|---|---|
+| Le nom qui s'efface | dans **tous les menus** : lettres manquantes (1/2/3 selon 40/70/90) + encre de plus en plus pâle |
+| la Traversée | 12 % : les **coups physiques traversent** le héros à errance ≥ 70 (compense le +40 % de dégâts subis) |
+| Les étoiles noires | errance ≥ 90 : **42 étoiles scintillantes** apparaissent en haut de la carte — Aldébaran se laisse voir (annonce unique) |
+| Âmes qui brûlent | pendant l'effacement (`_errantEfface`) : **toutes ses techniques coûtent 0 PM** |
+
+Équilibrage : l'Instinct ne se déclenche que s'il existe une cible sous 25 % ;
+la Curée nourrit la boucle de risque (soin immédiat contre corruption) ; la
+Traversée rend l'Errant « intouchable par éclats » sans annuler sa fragilité.
+
 ## 🎬 Cinématiques en images (`Cinematiques`)
 ```
 CINE duel                        le duel pixel art inclus (17 frames, sons calés)
