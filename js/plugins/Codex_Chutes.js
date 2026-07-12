@@ -1,12 +1,14 @@
 //=============================================================================
-// Codex_Chutes.js — v2.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
+// Codex_Chutes.js — v3.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
 //  Remplace ChuteDement + ChutesBeteErrant + ChutesProfondeur (à décocher !)
 // RPG Maker MV · by JOKO · charger APRÈS JadeEntitePlunging, CorruptionAme,
 //  Errance, ChutesDefinitives. UN SEUL hook par méthode : zéro entrechoc.
+//  v3.0 : LES LOIS DES CHUTES — Loi du Sang (Bête) & Loi des Amarres (Errant).
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
- * Bête (la laisse), Errant (l effacement), Déchiré (Aël) + tout le visuel.
+ * @plugindesc v3.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
+ * Bête (la laisse + Loi du Sang + l'Ancre), Errant (l'effacement + Loi des
+ * Amarres + la musique d'Aldébaran), Déchiré (Aël) + tout le visuel.
  * @author JOKO
  * @param switchTrahison
  * @text Interrupteur — trahison du Dément
@@ -24,9 +26,26 @@
  * @text Interrupteur — le Déchiré
  * @type switch
  * @default 95
- * @help Commandes : DEMENT chute/ancrage <id> · BETE chute <id> ·
- *  ERRANT chute <id> · DECHIRE chute/ancrage <id>.
- *  Notes ennemis : <DementTombe> <BeteTombee> <ErrantTombe> <DechireTombe>.
+ * @help Commandes : DEMENT chute/ancrage <id> · BETE chute/ancre <id> ·
+ *  ERRANT chute/ancrage <id> · DECHIRE chute/ancrage <id>.
+ *  Notes ennemis : <DementTombe> <BeteTombee> <ErrantTombe> <DechireTombe>
+ *  + <Bete> (bête sauvage : reconnaît le sang des porteurs avancés).
+ *
+ *  ── LES LOIS DES CHUTES (v3.0) ──────────────────────────────────────
+ *  LOI DU SANG (la Bête) :
+ *   • La nuit, la corruption gagnée est ×1.5 (le mana sombre est roi).
+ *   • Ennemis <Bete>/<BeteTombee> : à Fièvre (corr≥70) ils épargnent
+ *     parfois le porteur — le sang reconnaît le sang. Sur la carte, les
+ *     mobs <Bete> (ChaseEnemies) cessent de te chasser.
+ *   • BETE ancre <id> : présenter l'Ancre (l'Objet Spirituel du tombé)
+ *     pendant la chute — la griffe suspend UN battement. Jamais deux.
+ *  LOI DES AMARRES (l'Errant) :
+ *   • Chaque niveau de Lien du héros réduit l'errance gagnée (-6 %/niv).
+ *   • Errance≥40 : les petits oublis (PNJ qui ne te voient plus).
+ *   • Errance≥70 : la musique d'Aldébaran, que lui seul entend ;
+ *     en combat, les dévorés parlent par sa bouche.
+ *   • ERRANT ancrage <id> : les alliés au Lien ≥ 5 le nomment et le
+ *     retiennent (purge + annule l'effacement en cours).
  *  Tout le détail : docs/GUIDE_DEVELOPPEUR.md (sections chutes).
  */
 // ═══════════ module: ChuteDement ═══════════
@@ -371,9 +390,211 @@
             if(!a)return;
             var b=teinteDe(a);
             var ef=$gameSystem&&$gameSystem._errantEfface;
-            this.opacity=(ef&&ef.id===a.actorId())?150:255;
+            // Loi des Amarres : le corps doute avant la chute (opacité graduée)
+            var op=255;
+            if(ef&&ef.id===a.actorId())op=150;
+            else{try{var elv=window.Errance?Errance.niveau(a.actorId()):0;
+                if(elv>=70)op=205;else if(elv>=40)op=235;}catch(eo){}}
+            this.opacity=op;
             if(b){this._fpT=(this._fpT||0)+0.05;var pl=Math.sin(this._fpT)*0.3+0.7;
                 this.setBlendColor([b[0],b[1],b[2],Math.floor(b[3]*pl)]);}
             else if(this._fpT){this.setBlendColor([0,0,0,0]);this._fpT=0;}
         }catch(e){}};
+})();
+// ═══════════ module v3.0 : LES LOIS DES CHUTES ═══════════
+//  Loi du Sang (la Bête)     : la nuit accélère · le sang reconnaît le sang ·
+//                              l'Ancre (l'Objet Spirituel suspend la griffe).
+//  Loi des Amarres (l'Errant): les Liens amarrent · les petits oublis ·
+//                              la musique d'Aldébaran · les dévorés parlent.
+(function () {
+    'use strict';
+    function jc(i){try{return window.Corruption?Corruption.niveau(i):0;}catch(e){return 0;}}
+    function je(i){try{return window.Errance?Errance.niveau(i):0;}catch(e){return 0;}}
+    function jl(i){try{return window.Lien?Lien.niveau(i):0;}catch(e){return 0;}}
+    function wlog(t){var w=BattleManager._logWindow;if(w){w.push('addText',t);w.push('wait');}}
+
+    //── LOI DU SANG ① : la nuit, la corruption gagnée est ×1.5 ──
+    if(window.Corruption&&Corruption.add){
+        var _cadd=Corruption.add;
+        Corruption.add=function(actorId,n){
+            try{
+                if(n>0&&$gameSystem&&$gameSystem.estNuit&&$gameSystem.estNuit()){
+                    n=Math.ceil(n*1.5);
+                    if($gameParty&&$gameParty.inBattle()&&Math.random()<0.08)
+                        wlog('\\C[2]La nuit boit avec lui. Le sang descend plus vite.\\C[0]');
+                }
+            }catch(e){}
+            _cadd.call(Corruption,actorId,n);
+        };
+    }
+    //── LOI DU SANG ② : en combat, la bête épargne le sang avancé ──
+    var _hit=Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit=function(t){
+        try{
+            var s=this.subject();
+            if(s&&s.isEnemy&&s.isEnemy()&&t&&t.isActor&&t.isActor()){
+                var e=s.enemy();
+                if(e&&e.meta&&(e.meta.Bete!==undefined||e.meta.BeteTombee!==undefined)){
+                    if(jc(t.actorId())>=70&&Math.random()<0.35){
+                        wlog('\\C[23]Les crocs s\'arrêtent à un souffle de '+t.name()+'.\\C[0]');
+                        wlog('\\C[23]Le sang a reconnu le sang.\\C[0]');
+                        return 0;
+                    }
+                }
+            }
+        }catch(er){}
+        return _hit.call(this,t);
+    };
+    //── LOI DU SANG ③ : sur la carte, les mobs <Bete> ne chassent plus le Fiévreux ──
+    function eventEstBete(ev){
+        if(ev._betePage===ev._pageIndex)return!!ev._beteFlag;
+        ev._betePage=ev._pageIndex;ev._beteFlag=false;
+        var page=ev.page&&ev.page();
+        if(page)page.list.forEach(function(c){
+            if((c.code===108||c.code===408)&&/<Bete>/i.test(c.parameters[0]))ev._beteFlag=true;
+        });
+        return ev._beteFlag;
+    }
+    if(Game_Event.prototype.chaseTroop){
+        var _ct=Game_Event.prototype.chaseTroop;
+        Game_Event.prototype.chaseTroop=function(){
+            var id=_ct.call(this);
+            if(id>0){try{
+                var l=$gameParty&&$gameParty.leader();
+                if(l&&jc(l.actorId())>=70&&eventEstBete(this)){
+                    if(!this._sangReconnu&&Math.abs(this.x-$gamePlayer.x)+Math.abs(this.y-$gamePlayer.y)<=6){
+                        this._sangReconnu=true;$gameTemp.requestBalloon(this,8); // silence : elle te regarde, puis détourne la tête
+                    }
+                    return 0;
+                }
+            }catch(e){}}
+            return id;
+        };
+    }
+    //── LOI DES AMARRES ① : les Liens retiennent (gain d'errance réduit) ──
+    if(window.Errance&&Errance.add){
+        var _eadd=Errance.add;
+        Errance.add=function(actorId,n){
+            try{
+                if(n>0){
+                    var lv=jl(actorId);
+                    if(lv>0){
+                        var n2=Math.max(Math.ceil(n*0.2),Math.round(n*(1-0.06*Math.min(lv,10))));
+                        if(n2<n&&$gameParty&&$gameParty.inBattle()&&Math.random()<0.07)
+                            wlog('\\C[23]Les amarres tiennent — on l\'attend quelque part.\\C[0]');
+                        n=n2;
+                    }
+                }
+            }catch(e){}
+            _eadd.call(Errance,actorId,n);
+        };
+    }
+    //── LOI DES AMARRES ② : les dévorés parlent (Gonflé d'âmes, en combat) ──
+    var _ma=Game_Actor.prototype.makeActions;
+    Game_Actor.prototype.makeActions=function(){
+        _ma.call(this);
+        try{
+            if(je(this.actorId())<70||this.numActions()<=0||Math.random()>=0.10)return;
+            var self=this,pool=[];
+            $gameParty.battleMembers().forEach(function(m){
+                if(m.actorId()===self.actorId())return;
+                m.skills().forEach(function(sk){
+                    if(sk&&sk.stypeId>0&&sk.mpCost<40&&self.canUse(sk))pool.push(sk.id);
+                });
+            });
+            if(pool.length&&Math.random()<0.6){
+                this.action(0).setSkill(pool[Math.floor(Math.random()*pool.length)]);
+                wlog('\\C[8]Une voix qui n\'est pas la sienne sort de la bouche de '+this.name()+'.\\C[0]');
+                wlog('\\C[8]Les dévorés se souviennent.\\C[0]');
+            }else{
+                this.clearActions();
+                wlog('\\C[8]'+this.name()+' ouvre la bouche — une voix étrangère en sort.\\C[0]');
+                wlog('\\C[8]Il perd le fil de son propre geste.\\C[0]');
+            }
+        }catch(e){}
+    };
+    //── AMBIANCE CARTE : oublis · musique d'Aldébaran · l'ouest qui appelle ──
+    var OUBLIS=[
+        '\\C[8]L\'aubergiste a regardé %1 sans le voir.\\C[0]',
+        '\\C[8]Un enfant montre %1 du doigt : « C\'était qui, déjà ? »\\C[0]',
+        '\\C[8]Le nom de %1 met une seconde de trop à venir aux lèvres.\\C[0]',
+        '\\C[8]L\'ombre de %1 est plus pâle que les autres, ce matin.\\C[0]'
+    ];
+    var _u=Scene_Map.prototype.update,_cd=0;
+    Scene_Map.prototype.update=function(){_u.call(this);
+        if(--_cd>0)return;_cd=1150;
+        try{
+            if($gameMessage.isBusy()||Math.random()<0.55)return;
+            var pool=[];
+            $gameParty.members().forEach(function(m){
+                var id=m.actorId(),er=je(id),co=jc(id);
+                if(er>=70)pool.push({t:'musique',a:m});
+                else if(er>=40)pool.push({t:'oubli',a:m});
+                if(co>=70)pool.push({t:'ouest',a:m});
+            });
+            if(!pool.length)return;
+            var p=pool[Math.floor(Math.random()*pool.length)];
+            if(p.t==='musique'){
+                AudioManager.playSe({name:'Bell3',volume:22,pitch:62,pan:Math.random()<0.5?-60:60});
+                $gameMessage.add('\\C[8]'+p.a.name()+' s\'immobilise. De la musique — très loin.\\C[0]');
+                $gameMessage.add('\\C[8]Personne d\'autre ne l\'entend.\\C[0]');
+            }else if(p.t==='oubli'){
+                $gameMessage.add(OUBLIS[Math.floor(Math.random()*OUBLIS.length)].replace('%1',p.a.name()));
+            }else{
+                $gameMessage.add('\\C[2]'+p.a.name()+' fixe l\'ouest — les Terres Brisées.\\C[0]');
+                $gameMessage.add('\\C[2]Quelque chose l\'appelle là-bas. Il ne le sait pas encore.\\C[0]');
+            }
+        }catch(e){}
+    };
+    //── COMMANDES : BETE ancre <id> · ERRANT ancrage <id> ──
+    var _pc=Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand=function(cmd,args){
+        _pc.call(this,cmd,args);
+        var C=String(cmd).toUpperCase(),sub=(args[0]||'').toLowerCase();
+        var id=parseInt(args[1])||1,a=$gameActors.actor(id);
+        // l'Ancre : l'Objet Spirituel suspend la griffe — un battement, jamais deux
+        if(C==='BETE'&&sub==='ancre'&&a){
+            var b=$gameSystem._beteLachee;
+            if(!b||b.id!==id){
+                $gameMessage.add('Le sang de '+a.name()+' est calme. Rien à rappeler.');
+                return;
+            }
+            $gameSystem._ancres=$gameSystem._ancres||{};
+            if($gameSystem._ancres[id]){
+                $gameMessage.add('\\C[2]L\'Ancre ne chante plus pour lui.\\C[0]');
+                $gameMessage.add('\\C[2]Un battement. Jamais deux.\\C[0]');
+                return;
+            }
+            var w=(a.weapons&&a.weapons()[0])?a.weapons()[0].name:null;
+            if(w)$gameMessage.add('Vous levez '+w+' — son arme. Elle porte son nom. Elle chante.');
+            else $gameMessage.add('Vous criez son nom. Encore. Encore.');
+            $gameMessage.add('\\C[23]La griffe s\'arrête. Un battement.\\C[0]');
+            $gameSystem._ancres[id]=true;
+            $gameSystem._beteLachee=null;
+            try{Corruption.purge(id,45);}catch(e){}
+            $gameMessage.add('\\C[23]'+a.name()+' revient. À genoux. Humain — à peine.\\C[0]');
+            $gameMessage.add('\\C[2]La prochaine fois, l\'Ancre ne suffira pas.\\C[0]');
+        }
+        // l'Ancrage : les alliés au Lien ≥ 5 le nomment et le retiennent
+        if(C==='ERRANT'&&sub==='ancrage'&&a){
+            var n=0;
+            $gameParty.members().forEach(function(m){
+                if(m.actorId()!==id&&jl(m.actorId())>=5&&n<3){
+                    n++;$gameMessage.add(m.name()+' le nomme : « '+a.name()+'. Tu me dois encore quelque chose. »');
+                }
+            });
+            if(n>0){
+                try{Errance.purge(id,20*n);}catch(e){}
+                if($gameSystem._errantEfface&&$gameSystem._errantEfface.id===id){
+                    $gameSystem._errantEfface=null;
+                    $gameMessage.add('\\C[23]Les amarres tiennent. '+a.name()+' reprend du poids.\\C[0]');
+                }else{
+                    $gameMessage.add('\\C[23]'+a.name()+' se souvient qu\'on l\'attend. (-'+(20*n)+' errance)\\C[0]');
+                }
+            }else{
+                $gameMessage.add('\\C[2]Personne ne le connaît assez pour le retenir.\\C[0]');
+                $gameMessage.add('\\C[2]C\'est cela, la Loi des Amarres.\\C[0]');
+            }
+        }
+    };
 })();

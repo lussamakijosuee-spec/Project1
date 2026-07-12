@@ -629,6 +629,40 @@ Chutes.survivants()          // héros encore debout (0 = fin)
 ```
 Ordre : charger **après** ChutesCinematiques.
 
+## ⚖️ Les Lois des Chutes (`Codex_Chutes` v3.0) — la Bête & l'Errant approfondis
+
+Le module « Lois des Chutes » traduit en jeu le canon du codex (Loi du Sang,
+l'Ancre, Loi des Amarres, la musique d'Aldébaran). Tout est automatique.
+
+**Loi du Sang (la Bête)** :
+- La **nuit** (`JourNuit`), toute corruption gagnée est **×1.5**.
+- Ennemis notés `<Bete>` ou `<BeteTombee>` : face à un héros en **Fièvre**
+  (corr ≥ 70), **35 %** de leurs coups s'arrêtent — « le sang a reconnu le
+  sang ». Sur la carte, un mob `<Chase>` portant aussi `<Bete>` en
+  commentaire **cesse de chasser** le leader en Fièvre (ballon silence).
+- Ambiance : à Fièvre, le héros « fixe l'ouest — les Terres Brisées ».
+
+**Loi des Amarres (l'Errant)** :
+- Chaque niveau de **Lien** (`LiensSocial`) réduit l'errance gagnée de
+  **6 %** (plancher 20 %) : les attaches amarrent l'âme au monde.
+- Errance ≥ 40 : **petits oublis** sur la carte (PNJ qui ne te voient plus)
+  et sprite légèrement translucide (205/235 d'opacité selon le palier).
+- Errance ≥ 70 : la **musique d'Aldébaran** (Bell3, que lui seul entend) ;
+  en combat, **10 %** : les dévorés parlent par sa bouche (il lance une
+  technique d'un AUTRE héros, ou perd le fil de son geste).
+
+```
+BETE ancre <id>       pendant la chute : l'Objet Spirituel suspend la griffe.
+                      UN battement (annule la chute, corruption -45).
+                      Jamais deux : la 2e fois, l'Ancre ne chante plus.
+ERRANT ancrage <id>   les alliés au Lien ≥ 5 le nomment (errance -20 chacun,
+                      max 3) et annulent l'effacement en cours. Sans allié
+                      au Lien ≥ 5 : « Personne ne le connaît assez. »
+```
+
+Note ennemi ajoutée : `<Bete>` (bête sauvage non tombée — loups, fauves…).
+Codex en jeu : `ManaCodex` page **⑦bis Les Lois des Chutes**.
+
 ## 🎬 Cinématiques en images (`Cinematiques`)
 ```
 CINE duel                        le duel pixel art inclus (17 frames, sons calés)
