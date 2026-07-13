@@ -1048,3 +1048,46 @@ héros : pétales quand l'esprit est stable, **fêlures** qui tremblent (Dément
 anneau **boursouflé et pâle** (Errant), **épines** sombres (Bête), cœur creux
 si l'âme s'éteint. L'API v1 (`Marque.etat/etendue/info`) est **préservée** —
 rien de ce qui en dépend ne casse. Param `animer` (on par défaut).
+
+## 🐺🔥⚔️👁‍🗨 Quatre systèmes de plus — Mue, Rêves, Résonance, Monde te Lit
+
+Quatre systèmes ajoutés d'un bloc, tous branchés sur les jauges canon. La Mue et
+la Résonance passent par des **compétences notetaggées** (robuste avec YEP).
+
+### 🐺 La Mue Maîtrisée (`MueMaitrisee`) — chevaucher la Bête
+Compétence `<Mue>` (« Déchaîner », scope soi) : transforme le lanceur si sa
+**corruption ≥ seuil** (40). Pendant la Mue : +ATK/+AGI, +40 % dégâts, régén par
+tour, mais un **compteur de contrôle** (3 tours + 1 par 20 de corruption)
+descend, et la corruption monte. `<MueFin>` (« Reprendre forme ») pour ressortir
+humain à temps. À **contrôle zéro → berserk** : la Bête frappe la cible la plus
+proche (alliée comprise) jusqu'à la fin du combat (pas de perte définitive).
+`<MueSkill>` = techniques bestiales utilisables seulement en Mue. Cmds `MUE
+forcer/fin <id>`. Script `Mue.actif(id)` / `Mue.controle(id)`.
+
+### 🔥 Les Rêves du Feu d'Âme (`RevesFeuAme`) — dormir, c'est baisser la garde
+Après `FEUAME repos` / `FEU repos` (proba réglable, 70 %) ou via `REVE`, le héros
+dont la **Chute pèse le plus** rêve — chasse (Bête), rive de l'oubli (Errant),
+monde d'enfant qui saigne (Dément), ou rêve doux (âme en paix). Chaque rêve pose
+un **choix** : céder (gagner des âmes / un savoir, mais s'enfoncer) ou résister
+(apaiser sa Chute). Effets sur Corruption/Errance/santé mentale. `REVE <id>`
+force un héros précis.
+
+### ⚔️ La Résonance (`Resonance`) — deux âmes accordées
+Compétence `<Resonance>` (scope allié) : lie le lanceur et sa cible s'ils ont
+**tous deux Lien ≥ 5**. En résonance (une paire) : **aura** +20 % (ATK/DEF/MAT/
+MDF aux deux), **PV partagés** (35 % des dégâts de l'un encaissés par l'autre),
+et l'**ultime duo** `<ResonanceUlt>` se débloque. **Instabilité** : à chaque fin
+de tour, si l'un est près d'une Chute, risque de **rupture** (backlash 15 % PV
+aux deux + perte de l'aura). `<ResonanceFin>` rompt volontairement. Fin sur
+rupture, mort d'un partenaire ou fin de combat. Script `Resonance.actif()` /
+`Resonance.paire()`.
+
+### 👁‍🗨 Le Monde te Lit (`MondeTeLit`) — le miroir du Regard
+Les PNJ lucides **te lisent en retour**. Sur la carte, près d'un PNJ (event
+niveau personnage, hors `<NoRead>`) : corruption ≥ 35 → **méfiance** (bulle
+sueur, « hmm. ») ; ≥ 70 → **peur** (bulle !, recul, « ça sent la Bête »,
+répliques flottantes) ; errance ≥ 70 → **on ne te voit plus** (« … c'était
+qui ? »). Chez les **marchands**, la corruption **gonfle les prix d'achat**
+(jusqu'à +50 % à corruption 100) + une réplique du marchand. Se marie à
+`NPCRoutines` (qui fait carrément fuir les très corrompus). Script
+`MondeLit.reputation()`.
