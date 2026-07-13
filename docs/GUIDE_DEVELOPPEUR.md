@@ -1091,3 +1091,32 @@ qui ? »). Chez les **marchands**, la corruption **gonfle les prix d'achat**
 (jusqu'à +50 % à corruption 100) + une réplique du marchand. Se marie à
 `NPCRoutines` (qui fait carrément fuir les très corrompus). Script
 `MondeLit.reputation()`.
+
+## 🎯🩸🗡️ Trois systèmes de conséquence — Chasseurs, Contagion, Objet Éveillé
+
+### 🎯 Les Chasseurs (`ChasseursAme`) — tu es traqué
+Suite du « Monde te Lit » : à corruption/errance ≥ seuil (45 %), au fil des pas,
+une **embuscade renforcée** peut éclater (chance à l'échelle de la pression,
+délai mini `pasMin`). Clé-en-main : par défaut elle **pioche une troupe dans les
+rencontres de la carte**, mais les ennemis sont **+35 % de stats** et te prennent
+par **surprise**, avec une intro selon la voie dominante (cultes de la Bête /
+traqueurs de l'Errant / inquisiteurs de l'Ordre). Assigne `troupeBete/Errant/
+Dement` pour des chasseurs sur mesure. Jamais sur carte `<SafeZone>`. Cmds
+`CHASSE off/on`, `CHASSE force [voie]`. Script `Chasseurs.pression()`.
+
+### 🩸 La Contagion (`ContagionAme`) — la Chute déteint
+Un membre **actif** (équipe de combat) dont la corruption/errance ≥ seuil (60)
+**contamine les autres actifs** (+`taux` par cycle : tous les 25 pas + fin de
+tour), sans jamais les porter au-dessus de lui. **Le mettre au banc (formation)
+stoppe tout** — isoler devient une décision. Les héros `<Atone>` ne captent que
+la moitié. Ne fait que monter des jauges déjà gérées ailleurs (zéro double
+peine). Cmd `CONTAGION off/on`.
+
+### 🗡️ L'Objet Éveillé (`ObjetEveille`) — l'arme qui parle
+L'Objet Spirituel prend une **voix** en combat, selon la Chute du porteur : la
+Bête → elle jubile ; l'Errant → elle le supplie de rester et se souvient de son
+nom ; le Dément → elle jure qu'elle est réelle ; calme → elle encourage.
+Répliques aux moments-clés (action, gros coup encaissé, victoire ; fréquence
+`bavardage`). **L'Ancre** : à corruption ≥ 85, l'arme **crie son nom** (1×/combat)
+et fait refluer la corruption (−20) — l'Ancre du codex, mécanisée. Parlent : les
+héros listés (`heros`, déf. 1-4) + toute arme notée `<Eveil>`.
