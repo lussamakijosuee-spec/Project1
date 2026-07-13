@@ -1,11 +1,11 @@
 //=============================================================================
-// ChutesMurmures.js — v1.0 · Le Lac murmure · Poème des âmes
+// ChutesMurmures.js — v2.0 · Trois voix murmurent · Poème des âmes
 // RPG Maker MV   ·   à charger APRÈS ChutesLacMusique
 //=============================================================================
 /*:
- * @plugindesc [v1.0] Le Lac murmure de se laisser couler, de se détendre — de
- * plus en plus fort à mesure qu'on sombre. Et un POÈME qui s'adapte au nombre
- * d'âmes déjà tombées au fond.
+ * @plugindesc [v2.0] Chaque Chute murmure la sienne : le Lac invite à couler
+ * (Dément), le Sang réclame la chasse (Bête), les Dévorés appellent à partir
+ * (Errant). De plus en plus fort en sombrant. + un POÈME des âmes tombées.
  * @author JOKO / Claude
  *
  * @param seuil
@@ -74,15 +74,20 @@
 
     function phase(id) { try { return window.Ame ? (Ame.phase(id) || 5) : 5; } catch (e) { return 5; } }
     function jErr(id)  { try { return window.Errance ? Errance.niveau(id) : 0; } catch (e) { return 0; } }
+    function jCorr(id) { try { return window.Corruption ? Corruption.niveau(id) : 0; } catch (e) { return 0; } }
 
-    function pression() {
-        var m = 0;
+    // Les trois pressions du groupe (0..1). Le Lac (mental) déclenche aussi le poème.
+    function pressionsVoies() {
+        var f = 0, b = 0, e = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2); // lac = mental (noyau)
+            f = Math.max(f, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2);
+            b = Math.max(b, window.ChutesNoyau ? ChutesNoyau.beteActeur(id)   : (jCorr(id) - 40) / 60);
+            e = Math.max(e, window.ChutesNoyau ? ChutesNoyau.errantActeur(id) : (jErr(id)  - 40) / 60);
         });
-        return m.clamp(0, 1);
+        return { fond: f.clamp(0, 1), bete: b.clamp(0, 1), errant: e.clamp(0, 1) };
     }
+    function pression() { return pressionsVoies().fond; } // le Lac = mental (poème)
     function actif() { return !($gameSystem && $gameSystem._murmureOff); }
 
     //=========================================================================
@@ -134,6 +139,7 @@
     //=========================================================================
     // MURMURES — mots flottants qui invitent à lâcher prise
     //=========================================================================
+    // Le LAC (Dément) — l'invitation à se laisser couler
     var MURMURES = [
         'laisse-toi couler…', 'détends-toi…', 'l\'eau est si douce…', 'ferme les yeux…',
         'plus besoin de lutter…', 'viens te reposer…', 'le lac te tiendra…',
@@ -141,18 +147,37 @@
         'respire, tout doucement…', 'reste avec nous, en bas…', 'tout s\'arrête ici…',
         'abandonne, c\'est doux…', 'glisse… glisse…', 'ce n\'est pas grave de lâcher…'
     ];
+    // Le SANG (Bête) — la faim qui monte, l'appel de la chasse
+    var MURMURES_SANG = [
+        'cours…', 'chasse…', 'mords…', 'tu les sens ? leur sang…', 'lâche prise, laisse-moi sortir…',
+        'plus de mots… juste courir…', 'ils sont si lents, si tendres…', 'la meute t\'attend…',
+        'tu as faim, avoue-le…', 'arrête de te retenir…', 'deviens ce que tu es…', 'goûte…',
+        'la nuit t\'appartient…', 'rappelle-toi… tu étais un dieu…'
+    ];
+    // Les DÉVORÉS (Errant) — les âmes prises qui parlent depuis la marque
+    var MURMURES_AMES = [
+        'personne ne te retient…', 'tu peux partir, maintenant…', 'deviens léger…',
+        'on t\'a gardé une place, là-haut…', 'ton nom pèse trop lourd, laisse-le…',
+        'nous sommes tant, en toi…', 'plus rien ne t\'amarre…', 'traverse…',
+        'entends-tu la musique ?', 'les étoiles noires t\'attendent…', 'lâche la rive…',
+        'tu ne sens déjà plus le froid…', 'oublie, c\'est plus léger…', 'flotte avec nous…'
+    ];
+    var PALV = {
+        fond:   { pool: MURMURES, col: function (pr) { return 'rgba(' + (120 + (pr * 40 | 0)) + ',' + (150 + (pr * 60 | 0)) + ',' + (170 + (pr * 50 | 0)) + ',1)'; }, out: 'rgba(0,10,20,0.5)', pan: 'lat', son: 0.6 },
+        bete:   { pool: MURMURES_SANG, col: function (pr) { return 'rgba(' + (170 + (pr * 60 | 0)) + ',' + (40 - (pr * 30 | 0)) + ',' + (46 - (pr * 20 | 0)) + ',1)'; }, out: 'rgba(20,0,0,0.6)', pan: 'lat', son: 0.5 },
+        errant: { pool: MURMURES_AMES, col: function (pr) { return 'rgba(' + (150 + (pr * 40 | 0)) + ',' + (150 + (pr * 60 | 0)) + ',' + (235) + ',' + (0.85).toFixed(2) + ')'; }, out: 'rgba(4,4,20,0.55)', pan: 'lat', son: 0.7 }
+    };
 
-    function spawnMurmure(scene, pr) {
-        var mot = MURMURES[Math.floor(Math.random() * MURMURES.length)];
+    function spawnMurmure(scene, voie, pr) {
+        var pal = PALV[voie] || PALV.fond;
+        var mot = pal.pool[Math.floor(Math.random() * pal.pool.length)];
         var W = 460, H = 60;
         var bmp = new Bitmap(W, H);
         bmp.fontFace = 'GameFont';
         bmp.fontSize = 22 + Math.round(pr * 8);
         bmp.fontItalic = true;
-        // bleu-vert froid d'eau profonde, plus pâle quand ça sombre
-        var teinte = 150 + Math.round(pr * 60);
-        bmp.textColor = 'rgba(' + (120 + Math.round(pr * 40)) + ',' + teinte + ',' + (170 + Math.round(pr * 50)) + ',1)';
-        bmp.outlineColor = 'rgba(0,10,20,0.5)';
+        bmp.textColor = pal.col(pr);
+        bmp.outlineColor = pal.out;
         bmp.outlineWidth = 3;
         bmp.drawText(mot, 0, 0, W, H, 'center');
         if (bmp._setDirty) bmp._setDirty();
@@ -162,10 +187,12 @@
         sp.x = (Graphics.width / 2) + (Math.random() * 2 - 1) * Graphics.width * 0.28;
         sp.y = Graphics.height * (0.35 + Math.random() * 0.4);
         sp.opacity = 0;
-        sp._mur = { t: 0, fadeIn: 40, hold: 60 + Math.round(pr * 60), fadeOut: 55, max: 90 + Math.round(pr * 90), monte: 0.12 + Math.random() * 0.1 };
+        // le Sang tremble et reste ; le Lac et les âmes remontent comme des bulles
+        var monte = voie === 'bete' ? 0.02 + Math.random() * 0.04 : 0.12 + Math.random() * 0.1;
+        sp._mur = { t: 0, fadeIn: 40, hold: 60 + Math.round(pr * 60), fadeOut: 55, max: 90 + Math.round(pr * 90), monte: monte, voie: voie, shake: voie === 'bete' ? 1 : 0 };
         scene._murLayer.addChild(sp);
         scene._murs.push(sp);
-        souffle(sp.x < Graphics.width / 2 ? -0.5 : 0.5, 0.6 + pr);
+        souffle(sp.x < Graphics.width / 2 ? -0.5 : 0.5, pal.son + pr);
     }
 
     function majMurmure(sp) {
@@ -176,6 +203,7 @@
         else op = d.max * (1 - (d.t - d.fadeIn - d.hold) / d.fadeOut);
         sp.opacity = Math.max(0, Math.round(op));
         sp.y -= d.monte; // le mot remonte lentement, comme une bulle
+        if (d.shake) sp.x += (Math.random() * 2 - 1) * 0.8; // le Sang vibre
         return d.t < d.fadeIn + d.hold + d.fadeOut;
     }
 
@@ -291,13 +319,20 @@
                 }
             }
             if (!actif() || poeme.actif || $gameMessage.isBusy()) return;
-            var pr = pression();
+            var pv = pressionsVoies();
+            var pr = Math.max(pv.fond, pv.bete, pv.errant);
             if (pr < SEUIL || this._murs.length >= 3) return;
             this._murCd = (this._murCd || Math.round(120 + Math.random() * 180));
             this._murCd--;
             if (this._murCd <= 0) {
                 this._murCd = Math.round((60 + Math.random() * 180) * (1 - 0.7 * pr)) + 30;
-                spawnMurmure(this, pr);
+                // tirage pondéré par la pression de chaque voie
+                var total = pv.fond + pv.bete + pv.errant;
+                var r = Math.random() * total, voie, p;
+                if (r < pv.fond) { voie = 'fond'; p = pv.fond; }
+                else if (r < pv.fond + pv.bete) { voie = 'bete'; p = pv.bete; }
+                else { voie = 'errant'; p = pv.errant; }
+                spawnMurmure(this, voie, p);
             }
         } catch (e) {}
     };

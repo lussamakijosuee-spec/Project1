@@ -1,11 +1,13 @@
 //=============================================================================
-// ChutesAnalogHorror.js — v1.0 · La cassette qui te regarde (analog horror)
+// ChutesAnalogHorror.js — v2.0 · La cassette qui te regarde (analog horror)
 // RPG Maker MV   ·   à charger APRÈS ChutesLacMusique
+//  v2.0 : la cassette change de MALADIE selon la Chute dominante (Fond glitche,
+//         Errant se dissout et se désature, Bête saigne et déchire la bande).
 //=============================================================================
 /*:
- * @plugindesc [v1.0] Esthétique ANALOG HORROR : l'écran devient une vieille
- * cassette VHS — scanlines, tracking qui roule, neige, incrustation REC +
- * horodatage corrompu, pertes de signal et messages de diffusion. Selon la Chute.
+ * @plugindesc [v2.0] Esthétique ANALOG HORROR : l'écran devient une vieille
+ * cassette VHS. La dégradation DÉPEND de la Chute : le Fond glitche (VHS),
+ * l'Errant se dissout (désaturé, effacé), la Bête saigne (rouge, déchirée).
  * @author JOKO / Claude
  *
  * @param seuil
@@ -86,21 +88,51 @@
     function phase(id) { try { return window.Ame ? (Ame.phase(id) || 5) : 5; } catch (e) { return 5; } }
     function jErr(id)  { try { return window.Errance ? Errance.niveau(id) : 0; } catch (e) { return 0; } }
     function jCorr(id) { try { return window.Corruption ? Corruption.niveau(id) : 0; } catch (e) { return 0; } }
-    function pression() {
-        var m = 0;
+
+    // La cassette suit la Chute DOMINANTE du groupe (pas seulement le Fond).
+    function pressionsVoies() {
+        var f = 0, e = 0, b = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) {
             var id = a.actorId();
-            m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2); // VHS = le Fond mental (noyau)
+            f = Math.max(f, window.ChutesNoyau ? ChutesNoyau.mentalActeur(id) : (3 - phase(id)) / 2);
+            e = Math.max(e, window.ChutesNoyau ? ChutesNoyau.errantActeur(id) : (jErr(id)  - 40) / 60);
+            b = Math.max(b, window.ChutesNoyau ? ChutesNoyau.beteActeur(id)   : (jCorr(id) - 40) / 60);
         });
-        return m.clamp(0, 1);
+        return { fond: f.clamp(0, 1), errant: e.clamp(0, 1), bete: b.clamp(0, 1) };
     }
+    function voieEtPression() {
+        var p = pressionsVoies();
+        var mx = Math.max(p.fond, p.errant, p.bete);
+        if (mx <= 0) return { voie: 'fond', pr: 0 };
+        var v = p.fond === mx ? 'fond' : (p.errant === mx ? 'errant' : 'bete');
+        return { voie: v, pr: mx };
+    }
+    function pression() { return voieEtPression().pr; }
     function actif() { return !($gameSystem && $gameSystem._vhsOff); }
 
-    var MESSAGES = [
-        'AUCUN SIGNAL', 'VEUILLEZ PATIENTER', 'NE FERMEZ PAS LES YEUX',
-        'CETTE CASSETTE VOUS REGARDE', 'PROPRIÉTÉ DU LAC', 'ENREGISTREMENT EN COURS',
-        'IL EST DERRIÈRE VOUS', 'REMBOBINEZ SI VOUS L\'OSEZ', 'SUJET TOUJOURS CONSCIENT'
-    ];
+    // Messages par Chute — chacune parle sa propre horreur.
+    var MESSAGES = {
+        fond: [
+            'AUCUN SIGNAL', 'VEUILLEZ PATIENTER', 'NE FERMEZ PAS LES YEUX',
+            'CETTE CASSETTE VOUS REGARDE', 'PROPRIÉTÉ DU LAC', 'ENREGISTREMENT EN COURS',
+            'REMBOBINEZ SI VOUS L\'OSEZ', 'SUJET TOUJOURS CONSCIENT'
+        ],
+        errant: [
+            'SUJET NON RÉPERTORIÉ', 'CE NOM N\'EXISTE PAS', 'PERSONNE N\'A ÉTÉ FILMÉ ICI',
+            'BANDE VIERGE', 'QUI REGARDE CETTE CASSETTE ?', 'IL N\'A JAMAIS ÉTÉ ENREGISTRÉ',
+            'EFFACEMENT EN COURS', 'VOUS NE VOUS SOUVIENDREZ PAS'
+        ],
+        bete: [
+            'NE COUREZ PAS', 'IL VOUS A SENTI', 'RESTEZ IMMOBILE', 'ÇA A FAIM',
+            'LA VIANDE EST FRAÎCHE', 'FERMEZ LA PORTE', 'TROP TARD', 'SOURIEZ POUR LA BÊTE'
+        ]
+    };
+    // Teinte d'écran par Chute (superposée) : fond=froid, errant=désaturé/pâle, bete=sang.
+    var TEINTE = {
+        fond:   'rgba(20,30,50,',
+        errant: 'rgba(120,120,140,',
+        bete:   'rgba(120,10,14,'
+    };
 
     //=========================================================================
     // Fabrication des calques (une fois)
@@ -171,6 +203,12 @@
         vhs.track.opacity = 0; vhs.track.y = -9999; vhs.track.blendMode = 1;
         vhs.root.addChild(vhs.track);
 
+        // teinte maladive de la Chute dominante (calque de couleur multiplié)
+        vhs.teinte = new Sprite(new Bitmap(W, H));
+        vhs.teinte.opacity = 0; vhs.teinte.blendMode = 2; // MULTIPLY : assombrit et colore
+        vhs.teinteVoie = ''; vhs.teinteCol = '';
+        vhs.root.addChild(vhs.teinte);
+
         // scanlines + vignette de tube
         vhs.scan = new Sprite(scanBmp());
         vhs.scan.opacity = 0;
@@ -228,7 +266,8 @@
         if (bmp._setDirty) bmp._setDirty();
     }
 
-    function majCalque(vhs, prBrut) {
+    function majCalque(vhs, info) {
+        var prBrut = info.pr, voie = info.voie;
         var pr = TOUJOURS ? Math.max(0.12, prBrut) : prBrut;
         var forced = ($gameSystem && $gameSystem._vhsNiveau != null) ? $gameSystem._vhsNiveau : null;
         if (forced != null) pr = forced;
@@ -238,6 +277,20 @@
 
         var on = pr > 0.001;
         var force = OPMAX * pr;
+
+        // teinte maladive de la voie dominante (redessinée si la voie change)
+        if (vhs.teinteVoie !== voie) {
+            vhs.teinteVoie = voie;
+            var tb = vhs.teinte.bitmap; tb.clear();
+            tb.fillRect(0, 0, W, H, (TEINTE[voie] || TEINTE.fond) + '1)');
+            if (tb._setDirty) tb._setDirty();
+        }
+        // l'Errant DÉSATURE (teinte pâle très présente) ; la Bête bat au rythme du sang
+        var teinteOp;
+        if (voie === 'errant') teinteOp = Math.round(150 * force);
+        else if (voie === 'bete') teinteOp = Math.round((90 + 60 * Math.abs(Math.sin(vhs.t * 0.12))) * force);
+        else teinteOp = Math.round(70 * force);
+        vhs.teinte.opacity = teinteOp;
 
         // scanlines / vignette : présence de base dès qu'on est dedans
         vhs.scan.opacity = Math.round(160 * force);
@@ -275,7 +328,8 @@
         } else {
             vhs.msg.opacity = Math.max(0, vhs.msg.opacity - 20);
             if (MSG && on && Math.random() < 0.0016 + pr * 0.004) {
-                vhs.msgTxt = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+                var pool = MESSAGES[voie] || MESSAGES.fond;
+                vhs.msgTxt = pool[Math.floor(Math.random() * pool.length)];
                 dessinerMessage(vhs.msg.bitmap, vhs.msgTxt);
                 vhs.signal = 24 + Math.floor(Math.random() * 40 + pr * 40);
             }
@@ -295,7 +349,7 @@
     var _updMap = Scene_Map.prototype.update;
     Scene_Map.prototype.update = function () {
         _updMap.call(this);
-        try { if (this._vhs) majCalque(this._vhs, pression()); } catch (e) {}
+        try { if (this._vhs) majCalque(this._vhs, voieEtPression()); } catch (e) {}
     };
 
     //=========================================================================
@@ -311,7 +365,8 @@
         else if (sub === 'on') { if ($gameSystem) $gameSystem._vhsOff = false; }
         else if (sub === 'burst') {
             if (sc && sc._vhs) {
-                sc._vhs.msgTxt = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+                var pool = MESSAGES[voieEtPression().voie] || MESSAGES.fond;
+                sc._vhs.msgTxt = pool[Math.floor(Math.random() * pool.length)];
                 dessinerMessage(sc._vhs.msg.bitmap, sc._vhs.msgTxt);
                 sc._vhs.signal = 50; sc._vhs.burst = 10;
             }

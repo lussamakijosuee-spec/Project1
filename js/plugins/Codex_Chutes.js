@@ -1,12 +1,17 @@
 //=============================================================================
-// Codex_Chutes.js — v2.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
+// Codex_Chutes.js — v4.0 · LES QUATRE CHUTES UNIFIÉES (mécanique + visuel)
 //  Remplace ChuteDement + ChutesBeteErrant + ChutesProfondeur (à décocher !)
 // RPG Maker MV · by JOKO · charger APRÈS JadeEntitePlunging, CorruptionAme,
 //  Errance, ChutesDefinitives. UN SEUL hook par méthode : zéro entrechoc.
+//  v3.0 : LES LOIS DES CHUTES — Loi du Sang (Bête) & Loi des Amarres (Errant).
+//  v4.0 : LE SPECTACLE DES CHUTES — cartes de palier plein écran, battement de
+//         cœur, vision du sang, l'Instinct, la Curée, nom qui s'efface,
+//         la Traversée, les étoiles noires, griffures, âmes qui brûlent.
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
- * Bête (la laisse), Errant (l effacement), Déchiré (Aël) + tout le visuel.
+ * @plugindesc v4.0 ■ Les 4 chutes en UN plugin : Dément (il croit rester),
+ * Bête (Loi du Sang + l'Ancre + Instinct/Curée), Errant (Loi des Amarres +
+ * Aldébaran + Traversée), Déchiré (Aël) + cartes de palier & tout le visuel.
  * @author JOKO
  * @param switchTrahison
  * @text Interrupteur — trahison du Dément
@@ -24,9 +29,39 @@
  * @text Interrupteur — le Déchiré
  * @type switch
  * @default 95
- * @help Commandes : DEMENT chute/ancrage <id> · BETE chute <id> ·
- *  ERRANT chute <id> · DECHIRE chute/ancrage <id>.
- *  Notes ennemis : <DementTombe> <BeteTombee> <ErrantTombe> <DechireTombe>.
+ * @help Commandes : DEMENT chute/ancrage <id> · BETE chute/ancre <id> ·
+ *  ERRANT chute/ancrage <id> · DECHIRE chute/ancrage <id>.
+ *  Notes ennemis : <DementTombe> <BeteTombee> <ErrantTombe> <DechireTombe>
+ *  + <Bete> (bête sauvage : reconnaît le sang des porteurs avancés).
+ *
+ *  ── LES LOIS DES CHUTES (v3.0) ──────────────────────────────────────
+ *  LOI DU SANG (la Bête) :
+ *   • La nuit, la corruption gagnée est ×1.5 (le mana sombre est roi).
+ *   • Ennemis <Bete>/<BeteTombee> : à Fièvre (corr≥70) ils épargnent
+ *     parfois le porteur — le sang reconnaît le sang. Sur la carte, les
+ *     mobs <Bete> (ChaseEnemies) cessent de te chasser.
+ *   • BETE ancre <id> : présenter l'Ancre (l'Objet Spirituel du tombé)
+ *     pendant la chute — la griffe suspend UN battement. Jamais deux.
+ *  LOI DES AMARRES (l'Errant) :
+ *   • Chaque niveau de Lien du héros réduit l'errance gagnée (-6 %/niv).
+ *   • Errance≥40 : les petits oublis (PNJ qui ne te voient plus).
+ *   • Errance≥70 : la musique d'Aldébaran, que lui seul entend ;
+ *     en combat, les dévorés parlent par sa bouche.
+ *   • ERRANT ancrage <id> : les alliés au Lien ≥ 5 le nomment et le
+ *     retiennent (purge + annule l'effacement en cours).
+ *
+ *  ── LE SPECTACLE DES CHUTES (v4.0) — tout est automatique ──────────
+ *  CARTES DE PALIER : franchir 40/70/100 (Corruption ou Errance) affiche
+ *   une carte plein écran sur la carte (titre du palier, vers du codex).
+ *  LA BÊTE : battement de cœur à Fièvre (s'accélère avec la corruption) ·
+ *   vision du sang (les ennemis blessés pulsent rouge) · l'INSTINCT (30 %,
+ *   l'odeur du sang choisit sa cible : le plus faible) · la CURÉE (victoire
+ *   en Fièvre : +15 % PV, +2 corruption — il a goûté) · GRIFFURES à l'écran
+ *   quand la Bête est lâchée.
+ *  L'ERRANT : le nom s'efface des menus (lettres manquantes, encre pâle) ·
+ *   la TRAVERSÉE (12 %, les coups physiques le traversent) · les ÉTOILES
+ *   NOIRES au-dessus de la carte à errance ≥ 90 · pendant l'effacement,
+ *   ses techniques coûtent 0 PM (ses âmes volées brûlent à sa place).
  *  Tout le détail : docs/GUIDE_DEVELOPPEUR.md (sections chutes).
  */
 // ═══════════ module: ChuteDement ═══════════
@@ -371,9 +406,487 @@
             if(!a)return;
             var b=teinteDe(a);
             var ef=$gameSystem&&$gameSystem._errantEfface;
-            this.opacity=(ef&&ef.id===a.actorId())?150:255;
+            // Loi des Amarres : le corps doute avant la chute (opacité graduée)
+            var op=255;
+            if(ef&&ef.id===a.actorId())op=150;
+            else{try{var elv=window.Errance?Errance.niveau(a.actorId()):0;
+                if(elv>=70)op=205;else if(elv>=40)op=235;}catch(eo){}}
+            this.opacity=op;
             if(b){this._fpT=(this._fpT||0)+0.05;var pl=Math.sin(this._fpT)*0.3+0.7;
                 this.setBlendColor([b[0],b[1],b[2],Math.floor(b[3]*pl)]);}
             else if(this._fpT){this.setBlendColor([0,0,0,0]);this._fpT=0;}
         }catch(e){}};
+})();
+// ═══════════ module v3.0 : LES LOIS DES CHUTES ═══════════
+//  Loi du Sang (la Bête)     : la nuit accélère · le sang reconnaît le sang ·
+//                              l'Ancre (l'Objet Spirituel suspend la griffe).
+//  Loi des Amarres (l'Errant): les Liens amarrent · les petits oublis ·
+//                              la musique d'Aldébaran · les dévorés parlent.
+(function () {
+    'use strict';
+    function jc(i){try{return window.Corruption?Corruption.niveau(i):0;}catch(e){return 0;}}
+    function je(i){try{return window.Errance?Errance.niveau(i):0;}catch(e){return 0;}}
+    function jl(i){try{return window.Lien?Lien.niveau(i):0;}catch(e){return 0;}}
+    function wlog(t){var w=BattleManager._logWindow;if(w){w.push('addText',t);w.push('wait');}}
+
+    //── LOI DU SANG ① : la nuit, la corruption gagnée est ×1.5 ──
+    if(window.Corruption&&Corruption.add){
+        var _cadd=Corruption.add;
+        Corruption.add=function(actorId,n){
+            try{
+                if(n>0&&$gameSystem&&$gameSystem.estNuit&&$gameSystem.estNuit()){
+                    n=Math.ceil(n*1.5);
+                    if($gameParty&&$gameParty.inBattle()&&Math.random()<0.08)
+                        wlog('\\C[2]La nuit boit avec lui. Le sang descend plus vite.\\C[0]');
+                }
+            }catch(e){}
+            _cadd.call(Corruption,actorId,n);
+        };
+    }
+    //── LOI DU SANG ② : en combat, la bête épargne le sang avancé ──
+    var _hit=Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit=function(t){
+        try{
+            var s=this.subject();
+            if(s&&s.isEnemy&&s.isEnemy()&&t&&t.isActor&&t.isActor()){
+                var e=s.enemy();
+                if(e&&e.meta&&(e.meta.Bete!==undefined||e.meta.BeteTombee!==undefined)){
+                    if(jc(t.actorId())>=70&&Math.random()<0.35){
+                        wlog('\\C[23]Les crocs s\'arrêtent à un souffle de '+t.name()+'.\\C[0]');
+                        wlog('\\C[23]Le sang a reconnu le sang.\\C[0]');
+                        return 0;
+                    }
+                }
+            }
+        }catch(er){}
+        return _hit.call(this,t);
+    };
+    //── LOI DU SANG ③ : sur la carte, les mobs <Bete> ne chassent plus le Fiévreux ──
+    function eventEstBete(ev){
+        if(ev._betePage===ev._pageIndex)return!!ev._beteFlag;
+        ev._betePage=ev._pageIndex;ev._beteFlag=false;
+        var page=ev.page&&ev.page();
+        if(page)page.list.forEach(function(c){
+            if((c.code===108||c.code===408)&&/<Bete>/i.test(c.parameters[0]))ev._beteFlag=true;
+        });
+        return ev._beteFlag;
+    }
+    if(Game_Event.prototype.chaseTroop){
+        var _ct=Game_Event.prototype.chaseTroop;
+        Game_Event.prototype.chaseTroop=function(){
+            var id=_ct.call(this);
+            if(id>0){try{
+                var l=$gameParty&&$gameParty.leader();
+                if(l&&jc(l.actorId())>=70&&eventEstBete(this)){
+                    if(!this._sangReconnu&&Math.abs(this.x-$gamePlayer.x)+Math.abs(this.y-$gamePlayer.y)<=6){
+                        this._sangReconnu=true;$gameTemp.requestBalloon(this,8); // silence : elle te regarde, puis détourne la tête
+                    }
+                    return 0;
+                }
+            }catch(e){}}
+            return id;
+        };
+    }
+    //── LOI DES AMARRES ① : les Liens retiennent (gain d'errance réduit) ──
+    if(window.Errance&&Errance.add){
+        var _eadd=Errance.add;
+        Errance.add=function(actorId,n){
+            try{
+                if(n>0){
+                    var lv=jl(actorId);
+                    if(lv>0){
+                        var n2=Math.max(Math.ceil(n*0.2),Math.round(n*(1-0.06*Math.min(lv,10))));
+                        if(n2<n&&$gameParty&&$gameParty.inBattle()&&Math.random()<0.07)
+                            wlog('\\C[23]Les amarres tiennent — on l\'attend quelque part.\\C[0]');
+                        n=n2;
+                    }
+                }
+            }catch(e){}
+            _eadd.call(Errance,actorId,n);
+        };
+    }
+    //── LOI DES AMARRES ② : les dévorés parlent (Gonflé d'âmes, en combat) ──
+    var _ma=Game_Actor.prototype.makeActions;
+    Game_Actor.prototype.makeActions=function(){
+        _ma.call(this);
+        try{
+            if(je(this.actorId())<70||this.numActions()<=0||Math.random()>=0.10)return;
+            var self=this,pool=[];
+            $gameParty.battleMembers().forEach(function(m){
+                if(m.actorId()===self.actorId())return;
+                m.skills().forEach(function(sk){
+                    if(sk&&sk.stypeId>0&&sk.mpCost<40&&self.canUse(sk))pool.push(sk.id);
+                });
+            });
+            if(pool.length&&Math.random()<0.6){
+                this.action(0).setSkill(pool[Math.floor(Math.random()*pool.length)]);
+                wlog('\\C[8]Une voix qui n\'est pas la sienne sort de la bouche de '+this.name()+'.\\C[0]');
+                wlog('\\C[8]Les dévorés se souviennent.\\C[0]');
+            }else{
+                this.clearActions();
+                wlog('\\C[8]'+this.name()+' ouvre la bouche — une voix étrangère en sort.\\C[0]');
+                wlog('\\C[8]Il perd le fil de son propre geste.\\C[0]');
+            }
+        }catch(e){}
+    };
+    //── AMBIANCE CARTE : oublis · musique d'Aldébaran · l'ouest qui appelle ──
+    var OUBLIS=[
+        '\\C[8]L\'aubergiste a regardé %1 sans le voir.\\C[0]',
+        '\\C[8]Un enfant montre %1 du doigt : « C\'était qui, déjà ? »\\C[0]',
+        '\\C[8]Le nom de %1 met une seconde de trop à venir aux lèvres.\\C[0]',
+        '\\C[8]L\'ombre de %1 est plus pâle que les autres, ce matin.\\C[0]'
+    ];
+    var _u=Scene_Map.prototype.update,_cd=0;
+    Scene_Map.prototype.update=function(){_u.call(this);
+        if(--_cd>0)return;_cd=1150;
+        try{
+            if($gameMessage.isBusy()||Math.random()<0.55)return;
+            var pool=[];
+            $gameParty.members().forEach(function(m){
+                var id=m.actorId(),er=je(id),co=jc(id);
+                if(er>=70)pool.push({t:'musique',a:m});
+                else if(er>=40)pool.push({t:'oubli',a:m});
+                if(co>=70)pool.push({t:'ouest',a:m});
+            });
+            if(!pool.length)return;
+            var p=pool[Math.floor(Math.random()*pool.length)];
+            if(p.t==='musique'){
+                AudioManager.playSe({name:'Bell3',volume:22,pitch:62,pan:Math.random()<0.5?-60:60});
+                $gameMessage.add('\\C[8]'+p.a.name()+' s\'immobilise. De la musique — très loin.\\C[0]');
+                $gameMessage.add('\\C[8]Personne d\'autre ne l\'entend.\\C[0]');
+            }else if(p.t==='oubli'){
+                $gameMessage.add(OUBLIS[Math.floor(Math.random()*OUBLIS.length)].replace('%1',p.a.name()));
+            }else{
+                $gameMessage.add('\\C[2]'+p.a.name()+' fixe l\'ouest — les Terres Brisées.\\C[0]');
+                $gameMessage.add('\\C[2]Quelque chose l\'appelle là-bas. Il ne le sait pas encore.\\C[0]');
+            }
+        }catch(e){}
+    };
+    //── COMMANDES : BETE ancre <id> · ERRANT ancrage <id> ──
+    var _pc=Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand=function(cmd,args){
+        _pc.call(this,cmd,args);
+        var C=String(cmd).toUpperCase(),sub=(args[0]||'').toLowerCase();
+        var id=parseInt(args[1])||1,a=$gameActors.actor(id);
+        // l'Ancre : l'Objet Spirituel suspend la griffe — un battement, jamais deux
+        if(C==='BETE'&&sub==='ancre'&&a){
+            var b=$gameSystem._beteLachee;
+            if(!b||b.id!==id){
+                $gameMessage.add('Le sang de '+a.name()+' est calme. Rien à rappeler.');
+                return;
+            }
+            $gameSystem._ancres=$gameSystem._ancres||{};
+            if($gameSystem._ancres[id]){
+                $gameMessage.add('\\C[2]L\'Ancre ne chante plus pour lui.\\C[0]');
+                $gameMessage.add('\\C[2]Un battement. Jamais deux.\\C[0]');
+                return;
+            }
+            var w=(a.weapons&&a.weapons()[0])?a.weapons()[0].name:null;
+            if(w)$gameMessage.add('Vous levez '+w+' — son arme. Elle porte son nom. Elle chante.');
+            else $gameMessage.add('Vous criez son nom. Encore. Encore.');
+            $gameMessage.add('\\C[23]La griffe s\'arrête. Un battement.\\C[0]');
+            $gameSystem._ancres[id]=true;
+            $gameSystem._beteLachee=null;
+            try{Corruption.purge(id,45);}catch(e){}
+            $gameMessage.add('\\C[23]'+a.name()+' revient. À genoux. Humain — à peine.\\C[0]');
+            $gameMessage.add('\\C[2]La prochaine fois, l\'Ancre ne suffira pas.\\C[0]');
+        }
+        // l'Ancrage : les alliés au Lien ≥ 5 le nomment et le retiennent
+        if(C==='ERRANT'&&sub==='ancrage'&&a){
+            var n=0;
+            $gameParty.members().forEach(function(m){
+                if(m.actorId()!==id&&jl(m.actorId())>=5&&n<3){
+                    n++;$gameMessage.add(m.name()+' le nomme : « '+a.name()+'. Tu me dois encore quelque chose. »');
+                }
+            });
+            if(n>0){
+                try{Errance.purge(id,20*n);}catch(e){}
+                if($gameSystem._errantEfface&&$gameSystem._errantEfface.id===id){
+                    $gameSystem._errantEfface=null;
+                    $gameMessage.add('\\C[23]Les amarres tiennent. '+a.name()+' reprend du poids.\\C[0]');
+                }else{
+                    $gameMessage.add('\\C[23]'+a.name()+' se souvient qu\'on l\'attend. (-'+(20*n)+' errance)\\C[0]');
+                }
+            }else{
+                $gameMessage.add('\\C[2]Personne ne le connaît assez pour le retenir.\\C[0]');
+                $gameMessage.add('\\C[2]C\'est cela, la Loi des Amarres.\\C[0]');
+            }
+        }
+    };
+})();
+// ═══════════ module v4.0 : LE SPECTACLE DES CHUTES ═══════════
+//  Visuels & mécaniques poussés au maximum. Tout est procédural (zéro asset),
+//  additif et défensif. Lit Corruption / Errance / LoreCanon si présents.
+(function () {
+    'use strict';
+    function jc(i){try{return window.Corruption?Corruption.niveau(i):0;}catch(e){return 0;}}
+    function je(i){try{return window.Errance?Errance.niveau(i):0;}catch(e){return 0;}}
+    function maxParty(fn){var m=0;try{$gameParty.members().forEach(function(a){m=Math.max(m,fn(a.actorId()));});}catch(e){}return m;}
+    function wlog(t){var w=BattleManager._logWindow;if(w){w.push('addText',t);w.push('wait');}}
+
+    //──────────────────────────────────────────────────────────────────
+    //  ANIMS PARTAGÉES (cartes, griffures, étoiles) — carte & combat
+    //──────────────────────────────────────────────────────────────────
+    var ANIMS=[];
+    function animer(){
+        for(var i=ANIMS.length-1;i>=0;i--){
+            var A=ANIMS[i];A.t++;
+            try{
+                if(A.sc!==SceneManager._scene){ANIMS.splice(i,1);continue;}
+                A.upd(A);
+                if(A.t>=A.dur){A.sc.removeChild(A.sp);ANIMS.splice(i,1);}
+            }catch(e){ANIMS.splice(i,1);}
+        }
+    }
+    function pousser(sp,dur,upd){
+        var sc=SceneManager._scene;if(!sc)return;
+        sc.addChild(sp);ANIMS.push({sp:sp,sc:sc,t:0,dur:dur,upd:upd});
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  CARTES DE PALIER — franchir 40/70/100 s'annonce en plein écran
+    //──────────────────────────────────────────────────────────────────
+    var FILE=[]; // annonces en attente (affichées sur la carte)
+    var PALIERS={
+        bete:{
+            40:['LE FRÉMISSEMENT','Le sang s\'éveille. Les odeurs deviennent des phrases.','Blow2',95],
+            70:['LA FIÈVRE','Le corps mute par éclats. La volonté perd du terrain.','Blow3',75],
+            100:['LA MUE','Le dieu mort se lève.','Collapse3',60]
+        },
+        errant:{
+            40:['DÉCHARNÉ','Le monde met une seconde de trop à te reconnaître.','Bell1',70],
+            70:['GONFLÉ D\'ÂMES','Les dévorés ne partent pas : ils pèsent.','Bell2',60],
+            100:['L\'ERRANT','La chair cède. L\'âme reste debout, hors du monde.','Darkness2',80]
+        }
+    };
+    function couleurDe(voie,lv){
+        try{if(window.LoreCanon)return voie==='bete'?LoreCanon.corruption(lv).couleur:LoreCanon.errance(lv).couleur;}catch(e){}
+        return voie==='bete'?'#c0392b':'#7f8cff';
+    }
+    function franchit(voie,actorId,avant,apres){
+        [40,70,100].forEach(function(s){
+            if(avant<s&&apres>=s){
+                var a=$gameActors&&$gameActors.actor(actorId);
+                FILE.push({voie:voie,seuil:s,nom:a?a.name():'',coul:couleurDe(voie,s)});
+                if(FILE.length>4)FILE.shift();
+            }
+        });
+    }
+    // greffe sur les jauges (par-dessus les Lois : l'ordre est sans importance)
+    if(window.Corruption&&Corruption.add){
+        var _ca=Corruption.add;
+        Corruption.add=function(id,n){var av=jc(id);_ca.call(Corruption,id,n);try{franchit('bete',id,av,jc(id));}catch(e){}};
+    }
+    if(window.Errance&&Errance.add){
+        var _ea=Errance.add;
+        Errance.add=function(id,n){var av=je(id);_ea.call(Errance,id,n);try{franchit('errant',id,av,je(id));}catch(e){}};
+    }
+    function montrerCarte(d){
+        var P=PALIERS[d.voie][d.seuil];if(!P)return;
+        var w=Graphics.boxWidth,h=210,sp=new Sprite(new Bitmap(w,h));
+        sp.y=Math.floor((Graphics.boxHeight-h)/2);sp.opacity=0;
+        var b=sp.bitmap;
+        b.fillRect(0,0,w,h,'rgba(4,2,8,0.86)');
+        b.fillRect(0,0,w,2,d.coul);b.fillRect(0,h-2,w,2,d.coul);
+        b.fontSize=19;b.textColor='#8d8d9c';b.outlineWidth=3;
+        b.drawText(d.nom+' — '+(d.voie==='bete'?'la Chute du Corps':'la Chute de l\'Âme'),0,14,w,26,'center');
+        b.fontSize=56;b.textColor=d.coul;b.outlineColor='rgba(0,0,0,0.9)';b.outlineWidth=7;
+        b.drawText(P[0],0,58,w,66,'center');
+        b.fontSize=19;b.textColor='#d6d6e0';b.outlineWidth=3;
+        b.drawText(P[1],0,148,w,30,'center');
+        try{AudioManager.playSe({name:P[2],volume:75,pitch:P[3],pan:0});}catch(e){}
+        if(d.seuil>=100)$gameScreen.startShake(7,8,50);
+        pousser(sp,170,function(A){
+            A.sp.opacity=A.t<18?Math.floor(A.t*255/18):(A.t>130?Math.max(0,Math.floor(255*(170-A.t)/40)):255);
+        });
+        if(d.voie==='bete'&&d.seuil>=100)griffures();
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  GRIFFURES — trois lacérations déchirent l'écran (la Bête)
+    //──────────────────────────────────────────────────────────────────
+    function griffures(){
+        var w=Graphics.boxWidth,h=Graphics.boxHeight;
+        var sp=new Sprite(new Bitmap(w,h));
+        var b=sp.bitmap;
+        for(var i=0;i<3;i++){
+            var x0=w*0.28+i*w*0.16+(Math.random()*50-25),pente=110+Math.random()*90;
+            for(var t=0;t<=1;t+=0.016){
+                var x=x0+t*pente-pente/2,y=t*h;
+                b.fillRect(x-2,y,7,18,'rgba(180,20,20,0.75)');
+                b.fillRect(x,y,3,18,'rgba(255,235,235,0.95)');
+            }
+        }
+        $gameScreen.startShake(9,9,45);
+        try{AudioManager.playSe({name:'Blow3',volume:85,pitch:65,pan:0});}catch(e){}
+        pousser(sp,55,function(A){A.sp.opacity=Math.max(0,255-A.t*5);});
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  LES ÉTOILES NOIRES — errance ≥ 90 : Aldébaran se laisse voir
+    //──────────────────────────────────────────────────────────────────
+    var etoiles=null,etoilesVues=false;
+    function majEtoiles(){
+        var lv=maxParty(je);
+        var sc=SceneManager._scene;
+        if(lv>=90&&!etoiles&&sc){
+            var w=Graphics.boxWidth,hh=190,sp=new Sprite(new Bitmap(w,hh));
+            sp.opacity=0;sp._pts=[];
+            for(var i=0;i<42;i++)sp._pts.push({x:Math.random()*w,y:Math.random()*hh*(0.3+Math.random()*0.7),r:Math.random()<0.25?2:1,ph:Math.random()*6.28,v:0.03+Math.random()*0.05});
+            sc.addChild(sp);etoiles={sp:sp,sc:sc,t:0};
+            if(!etoilesVues){etoilesVues=true;
+                if(!$gameMessage.isBusy()){
+                    $gameMessage.add('\\C[8]Au-dessus des toits : des étoiles qu\'aucune carte ne montre.\\C[0]');
+                    $gameMessage.add('\\C[8]Noires. Fixes. Patientes. Personne d\'autre ne les voit.\\C[0]');
+                }
+            }
+        }
+        if(etoiles){
+            var E=etoiles;
+            if(E.sc!==SceneManager._scene){etoiles=null;return;}
+            E.t++;
+            if(lv<90){E.sp.opacity-=4;if(E.sp.opacity<=0){E.sc.removeChild(E.sp);etoiles=null;}return;}
+            if(E.sp.opacity<130)E.sp.opacity+=2;
+            if(E.t%8===0){
+                var b=E.sp.bitmap;b.clear();
+                E.sp._pts.forEach(function(p){
+                    p.ph+=p.v*8;
+                    var al=0.25+0.75*Math.abs(Math.sin(p.ph));
+                    b.fillRect(p.x,p.y,p.r,p.r,'rgba(200,210,255,'+al.toFixed(2)+')');
+                });
+            }
+        }
+    }
+
+    //──────────────────────────────────────────────────────────────────
+    //  BATTEMENT DE CŒUR — la Fièvre s'entend (carte)
+    //──────────────────────────────────────────────────────────────────
+    var coeurT=0,coeur2=0;
+    function majCoeur(){
+        var c=maxParty(jc);
+        if(c<70){coeurT=0;coeur2=0;return;}
+        if(coeur2>0&&--coeur2===0)
+            try{AudioManager.playSe({name:'Blow1',volume:16,pitch:48,pan:0});}catch(e){}
+        var cad=Math.max(46,132-c);        // 70 → toutes les ~62 f · 100 → ~46 f
+        if(++coeurT>=cad){coeurT=0;coeur2=9;
+            try{AudioManager.playSe({name:'Blow1',volume:20,pitch:56,pan:0});}catch(e){}}
+    }
+
+    //── ticker carte : anime tout + déroule la file des cartes ──
+    var _um=Scene_Map.prototype.update,_fT=0;
+    Scene_Map.prototype.update=function(){
+        _um.call(this);
+        try{
+            animer();majEtoiles();majCoeur();
+            if(++_fT>=30){_fT=0;
+                if(FILE.length&&!$gameMessage.isBusy()&&!ANIMS.length)montrerCarte(FILE.shift());
+            }
+        }catch(e){}
+    };
+    var _ub=Scene_Battle.prototype.update;
+    Scene_Battle.prototype.update=function(){_ub.call(this);try{animer();}catch(e){}};
+
+    //──────────────────────────────────────────────────────────────────
+    //  VISION DU SANG — les ennemis blessés pulsent rouge (Fièvre)
+    //──────────────────────────────────────────────────────────────────
+    if(typeof Sprite_Enemy!=='undefined'){
+        var _seu=Sprite_Enemy.prototype.update;
+        Sprite_Enemy.prototype.update=function(){
+            _seu.call(this);
+            try{
+                var e=this._enemy;
+                if(e&&e.isAlive()&&e.hpRate()<0.3&&maxParty(jc)>=70){
+                    this._sangT=(this._sangT||0)+0.12;
+                    this.setBlendColor([255,30,30,Math.floor(55+45*Math.abs(Math.sin(this._sangT)))]);
+                }else if(this._sangT){this.setBlendColor([0,0,0,0]);this._sangT=0;}
+            }catch(er){}
+        };
+    }
+    //──────────────────────────────────────────────────────────────────
+    //  MÉCANIQUES DE COMBAT : l'Instinct · la Traversée · âmes qui brûlent
+    //──────────────────────────────────────────────────────────────────
+    // l'Instinct : l'odeur du sang choisit la cible (le plus faible)
+    var _ma=Game_Actor.prototype.makeActions;
+    Game_Actor.prototype.makeActions=function(){
+        _ma.call(this);
+        try{
+            if(jc(this.actorId())<70||this.numActions()<=0||Math.random()>=0.30)return;
+            var faibles=$gameTroop.aliveMembers().filter(function(m){return m.hpRate()<0.25;});
+            if(!faibles.length)return;
+            faibles.sort(function(a,b){return a.hpRate()-b.hpRate();});
+            this.action(0).setAttack();
+            this.action(0).setTarget(faibles[0].index());
+            wlog('\\C[2]L\'odeur du sang décide pour '+this.name()+'.\\C[0]');
+        }catch(e){}
+    };
+    // la Traversée : les coups physiques passent au travers du Gonflé d'âmes
+    var _hit=Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit=function(t){
+        try{
+            if(this.isPhysical&&this.isPhysical()&&t&&t.isActor&&t.isActor()&&je(t.actorId())>=70&&Math.random()<0.12){
+                wlog('\\C[8]Le coup traverse '+t.name()+' — il n\'est plus tout à fait là.\\C[0]');
+                return 0;
+            }
+        }catch(e){}
+        return _hit.call(this,t);
+    };
+    // pendant l'effacement : les techniques coûtent 0 PM (ses âmes brûlent)
+    var _mpc=Game_BattlerBase.prototype.skillMpCost;
+    Game_BattlerBase.prototype.skillMpCost=function(skill){
+        try{
+            var ef=$gameSystem&&$gameSystem._errantEfface;
+            if(ef&&this.isActor&&this.isActor()&&this.actorId()===ef.id)return 0;
+        }catch(e){}
+        return _mpc.call(this,skill);
+    };
+    // la Curée : victoire en Fièvre — il a goûté
+    var _pv=BattleManager.processVictory;
+    BattleManager.processVictory=function(){
+        try{
+            $gameParty.battleMembers().forEach(function(m){
+                if(jc(m.actorId())>=70&&m.isAlive()){
+                    m.gainHp(Math.floor(m.mhp*0.15));
+                    if(window.Corruption)Corruption.add(m.actorId(),2);
+                    $gameMessage.add('\\C[2]'+m.name()+' se repaît sur ce qui reste. (+PV… +corruption)\\C[0]');
+                }
+            });
+        }catch(e){}
+        _pv.call(this);
+    };
+    // ouvertures de combat : l'arène sent le sang · griffures · âmes qui brûlent
+    var _sb=BattleManager.startBattle;
+    BattleManager.startBattle=function(){
+        _sb.call(this);
+        try{
+            if($gameSystem._beteLachee)griffures();
+            else if(maxParty(jc)>=70)wlog('\\C[2]L\'arène sent le sang.\\C[0]');
+            var ef=$gameSystem._errantEfface;
+            if(ef){var a=$gameActors.actor(ef.id);
+                if(a)wlog('\\C[8]Les techniques de '+a.name()+' ne coûtent plus rien.\\C[0]');
+                wlog('\\C[8]Ses âmes volées brûlent à sa place.\\C[0]');}
+        }catch(e){}
+    };
+    //──────────────────────────────────────────────────────────────────
+    //  LE NOM QUI S'EFFACE — l'encre pâlit dans tous les menus (Errance)
+    //──────────────────────────────────────────────────────────────────
+    var _dan=Window_Base.prototype.drawActorName;
+    Window_Base.prototype.drawActorName=function(actor,x,y,width){
+        try{
+            var lv=actor&&actor.actorId?je(actor.actorId()):0;
+            if(lv>=40){
+                var n=actor.name(),ch=n.split(''),trous=lv>=90?3:lv>=70?2:1;
+                for(var i=0;i<trous&&ch.length>2;i++){
+                    var p=1+((i*2+Math.floor(lv/10))%(ch.length-2));
+                    ch[p]=' ';
+                }
+                var old=this.contents.paintOpacity;
+                this.contents.paintOpacity=lv>=90?150:lv>=70?185:220;
+                this.changeTextColor(this.hpColor(actor));
+                this.drawText(ch.join(''),x,y,width||168);
+                this.contents.paintOpacity=old;
+                return;
+            }
+        }catch(e){}
+        _dan.call(this,actor,x,y,width);
+    };
 })();

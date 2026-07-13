@@ -1,11 +1,12 @@
 //=============================================================================
-// ChutesLacMusique.js — v2.0 · Trois Chutes, trois horreurs (musique procédurale)
+// ChutesLacMusique.js — v3.0 · Trois Chutes, trois horreurs (musique procédurale)
 // RPG Maker MV   ·   moteur WebAudio · BROKENSCRIPT / Lovecraft
+//  v3.0 : le CHANT D'ALDÉBARAN (chœur de formants) émerge à l'Errance extrême.
 //=============================================================================
 /*:
- * @plugindesc [v2.0] 30 mélodies GÉNÉRÉES en direct, une horreur par Chute :
- * l'Errant (dread cosmique lovecraftien), la Bête (drone qui grogne), le Fond
- * (boîte à musique VHS glitchée façon BROKENSCRIPT). Aucun fichier audio.
+ * @plugindesc [v3.0] 30 mélodies GÉNÉRÉES en direct, une horreur par Chute :
+ * l'Errant (dread cosmique + chant d'Aldébaran), la Bête (drone qui grogne),
+ * le Fond (boîte à musique VHS glitchée façon BROKENSCRIPT). Aucun fichier.
  * @author JOKO / Claude
  *
  * @param volume
@@ -179,6 +180,7 @@
         flutter: null, flutterGain: null, hiss: null, hissGain: null, hissHP: null,
         drone: [], droneGain: null, droneLP: null, droneShaper: null, beteShaper: null,
         whineOsc: null, whineGain: null,
+        chant: null, chantGain: null, chantForm: [], chantNext: 0,
         actif: false, intensite: 0, cible: 0, themeIndex: 20,
         nextTime: 0, timer: null, motif: [], motifPos: 0
     };
@@ -247,6 +249,20 @@
         Lac.whineGain = ctx.createGain(); Lac.whineGain.gain.value = 0;
         Lac.whineOsc.connect(Lac.whineGain); Lac.whineGain.connect(Lac.master); Lac.whineOsc.start();
 
+        // CHANT D'ALDÉBARAN : une source glissante passée dans 3 bandpass = formants
+        // de voyelle → une voix humaine qu'aucune bouche ne produit (le siren-song).
+        Lac.chantGain = ctx.createGain(); Lac.chantGain.gain.value = 0; Lac.chantGain.connect(Lac.master); Lac.chantGain.connect(Lac.delay);
+        Lac.chant = ctx.createOscillator(); Lac.chant.type = 'sawtooth'; Lac.chant.frequency.value = 220;
+        Lac.wobbleGain.connect(Lac.chant.detune);
+        var FORMANTS = [[650, 8], [1080, 6], [2650, 4]]; // voyelle « ah » qui glisse
+        FORMANTS.forEach(function (fp) {
+            var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = fp[0]; bp.Q.value = fp[1];
+            var g = ctx.createGain(); g.gain.value = 1 / fp[1];
+            Lac.chant.connect(bp); bp.connect(g); g.connect(Lac.chantGain);
+            Lac.chantForm.push(bp);
+        });
+        Lac.chant.start();
+
         return true;
     }
 
@@ -298,6 +314,29 @@
         gn.gain.exponentialRampToValueAtTime(g, t + dur * 0.5);
         gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
         o.connect(gn); gn.connect(Lac.master); o.start(t); o.stop(t + dur + 0.05);
+    }
+    // CHANT D'ALDÉBARAN : la voix lointaine que seul l'Errant entend.
+    // Émerge quand la voie errant approche l'Errant (intensité haute). On fait
+    // glisser la fondamentale entre des degrés graves = une plainte inhumaine.
+    var CHANT_MIDI = [45, 47, 43, 48, 45]; // La-Si-Sol-Do-La (aeolien, grave)
+    function chantAldebaran(t, it) {
+        var ctx = Lac.ctx;
+        // cible d'amplitude : nulle sous 0.6, forte près de 1 (l'Errant)
+        var amp = Math.max(0, (it - 0.6) / 0.4) * 0.05;
+        Lac.chantGain.gain.setTargetAtTime(amp, ctx.currentTime, 1.2);
+        if (amp <= 0.001) return;
+        if (t < Lac.chantNext) return;
+        Lac.chantNext = t + 2.2 + Math.random() * 2.4;    // une note tenue de temps en temps
+        var m = CHANT_MIDI[Math.floor(Math.random() * CHANT_MIDI.length)];
+        var f = midiFreq(m) * (Math.random() < 0.3 ? 2 : 1);
+        // glissando lent vers la note (portamento surnaturel)
+        Lac.chant.frequency.setValueAtTime(Lac.chant.frequency.value, t);
+        Lac.chant.frequency.exponentialRampToValueAtTime(f, t + 1.4);
+        // le formant s'ouvre légèrement (la « bouche » bouge)
+        Lac.chantForm.forEach(function (bp, i) {
+            var base = [650, 1080, 2650][i];
+            bp.frequency.setTargetAtTime(base * (0.9 + Math.random() * 0.3), t, 0.8);
+        });
     }
     // bégaiement / coupure numérique (BROKENSCRIPT)
     function glitchStutter(t, it) {
@@ -356,6 +395,9 @@
                 Lac.whineGain.gain.setTargetAtTime(0.004 + it * 0.01, t, 0.3);
                 Lac.whineGain.gain.setTargetAtTime(0, t + 0.5 + Math.random(), 0.6);
             }
+            // chant d'Aldébaran (voie errant seulement)
+            if (theme[6] === 'errant') chantAldebaran(t, it);
+            else Lac.chantGain.gain.setTargetAtTime(0, ctx.currentTime, 0.8);
             Lac.nextTime += step * (0.9 + Math.random() * 0.25);
         }
     }

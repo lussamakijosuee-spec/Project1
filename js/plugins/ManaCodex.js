@@ -119,10 +119,26 @@
             '',
             '\\C[6]LA BÊTE\\C[0] (Corps) — le sang d\'Ombrefauve prend',
             '  tout : Calme → Frémissement → Fièvre → la Mue.',
-            '\\C[2]L\'ERRANT\\C[0] (Âme) — dévorer des âmes te grandit,',
-            '  mais tu glisses hors du monde. (jauge Errance)',
+            '  Pas une rage : un souvenir. Le dieu mort se lève.',
+            '\\C[2]L\'ERRANT\\C[0] (Âme) — trop donner ou trop dévorer :',
+            '  Ancré → Décharné → Gonflé d\'âmes → l\'Errant.',
+            '  Deux routes, une porte : hors du monde.',
             '\\C[1]LE DÉMENT\\C[0] (Esprit) — voir toute vérité,',
             '  perdre la raison. La lucidité totale est la folie.'
+        ] },
+        { title: '⑦bis Les Lois des Chutes', lines: [
+            '\\C[6]LOI DU SANG\\C[0] — le sang appelle le sang.',
+            'La NUIT, la corruption descend plus vite (×1.5).',
+            'À Fièvre, les bêtes te reconnaissent : elles',
+            'détournent les crocs. Tu es des leurs, presque.',
+            '\\C[6]L\'ANCRE\\C[0] : l\'Objet Spirituel, gravé de son nom,',
+            'suspend la griffe UN battement. Jamais deux.',
+            '',
+            '\\C[2]LOI DES AMARRES\\C[0] — une âme ne tient au monde',
+            'que par ses attaches. Chaque \\C[23]Lien\\C[0] amarre (-6 %',
+            'd\'errance gagnée par niveau). À la dérive : les',
+            'petits oublis, puis la musique d\'Aldébaran…',
+            'Seuls ceux qui te connaissent peuvent te retenir.'
         ] },
         { title: '⑧ L\'Équilibre', lines: [
             'Au centre des trois : le \\C[17]MANA SEMI-PARFAIT\\C[0].',
