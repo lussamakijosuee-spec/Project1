@@ -1120,3 +1120,34 @@ Répliques aux moments-clés (action, gros coup encaissé, victoire ; fréquence
 `bavardage`). **L'Ancre** : à corruption ≥ 85, l'arme **crie son nom** (1×/combat)
 et fait refluer la corruption (−20) — l'Ancre du codex, mécanisée. Parlent : les
 héros listés (`heros`, déf. 1-4) + toute arme notée `<Eveil>`.
+
+## 🌀🎭👁️ Le Dément reconstruit — Plonger, le Théâtre, le Mur
+
+Le Dément passait sa Chute à SUBIR ; ces trois plugins lui donnent un pouvoir,
+un malaise et un sommet. La lucidité = profondeur du chef dans le Lac (santé
+mentale basse = plus profond : Surface 5 → Voile 4 → Trame 3 → Mur 2 → Fond 1).
+
+### 🌀 Plonger dans le Lac (`PlongerLac`) — la lucidité active
+Touche **F** (ou `PLONGER`) : le chef descend d'un palier de lucidité. Pendant
+la plongée (N pas) l'interrupteur `switchLucide` passe **ON** (câble tes passages
+secrets / ennemis invisibles / vérités du Regard dessus), les événements `<Cache>`
+**apparaissent**, le monde prend la teinte du Voile — et tu perds `coutSAN` de
+santé mentale (on n'en remonte pas indemne). `REMONTER` / F pour refaire surface
+(la SAN ne revient pas). Miroir de la Mue, pour l'Esprit. Script
+`PlongerLac.lucide()` / `PlongerLac.palier()`.
+
+### 🎭 Le Théâtre du Dément (`TheatreDement`) — le jeu te ment
+Sous la phase `seuilPhase` (3), l'interface **ment** (fréquence à l'échelle de la
+profondeur, jamais permanent) : PV/PM affichés brouillés, nom d'allié qui devient
+un inconnu, or truqué, journal de combat qui annonce des choses qui n'arrivent
+pas. **Trompe-l'œil intégral** : aucune vraie valeur ne bouge. Cmd `THEATRE
+off/on`.
+
+### 👁️ Le Mur (`LeMur`) — la méta-horreur + le rework visuel
+**Distorsion (visuel)** : dès la Trame, frange chromatique qui respire, glyphes de
+code qui suintent aux bords, clignements de réalité — intensité selon la
+profondeur. **Le 4e mur** : au Mur/Fond, de rares manifestations te visent TOI —
+il lit ta partie (temps de jeu, sauvegardes, Reprises) et te répond ; un **faux
+plantage** (écran noir, fausse erreur) puis « …non. Tu es là. » ; le **titre de la
+fenêtre** ment. **100 % simulé** dans le canvas : aucun accès au PC, aucune vraie
+erreur. Cmds `MUR off/on`, `MUR forcer`. À charger en dernier des plugins Dément.
