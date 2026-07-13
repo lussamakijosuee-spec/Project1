@@ -1,11 +1,11 @@
 //=============================================================================
-// ChutesHallucinations.js — v1.0 · Voir ce qui n'existe pas
+// ChutesHallucinations.js — v2.0 · Voir ce qui n'existe pas (les TROIS voies)
 // RPG Maker MV   ·   à charger APRÈS ChutesProgression
 //=============================================================================
 /*:
- * @plugindesc [v1.0] Avant la Chute, on hallucine — de plus en plus. L'ERRANT
- * voit des âmes errantes / créatures d'ombre ; le DÉMENT voit un faux monde
- * enfantin (dessins, sourires, gens qui n'existent pas) qui vire au cauchemar.
+ * @plugindesc [v2.0] Avant la Chute, on hallucine — de plus en plus. L'ERRANT
+ * voit des créatures d'ombre ; le DÉMENT un faux monde enfantin ; la BÊTE voit
+ * du gibier détaler, du sang au sol, et des yeux de braise qui l'observent.
  * @author JOKO / Claude
  *
  * @param courbe
@@ -54,6 +54,13 @@
  * @off Non
  * @default true
  *
+ * @param beteActif
+ * @text Hallucinations de la Bête
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  VOIR CE QUI N'EXISTE PAS
@@ -76,8 +83,14 @@
  *    dessin d'enfant, c'est un cauchemar. Le bonheur pour lui ; l'horreur pour
  *    tous les autres.
  *
+ *  ▶ LA BÊTE (v2.0) — la corruption monte → le sang lui montre SA chasse :
+ *    du gibier d'ombre qui détale au bord de l'écran, des éclaboussures de
+ *    sang qui n'existent pas, et — le pire — des paires d'yeux de braise
+ *    violette qui l'observent depuis la pénombre. Les Ombrefauves attendent
+ *    de voir si le sang finira sa mue. Tout est dessiné, rien à installer.
+ *
  *  Les images d'ombre utilisées existent déjà (img/pictures) ; le monde
- *  enfantin est DESSINÉ par le plugin, donc rien à ajouter.
+ *  enfantin et les visions de la Bête sont DESSINÉS par le plugin.
  *
  *  COMMANDES :
  *      CHUTEHALL off / on     désactive / réactive les hallucinations
@@ -93,9 +106,11 @@
     var SONS     = String(P['sons'] || 'true') === 'true';
     var ERR_ON   = String(P['errantActif'] || 'true') === 'true';
     var DEM_ON   = String(P['dementActif'] || 'true') === 'true';
+    var BET_ON   = String(P['beteActif'] || 'true') === 'true';
 
     // -- lecture des jauges (mêmes sources que les plugins Chutes) ------------
     function jErr(id)  { try { return window.Errance ? Errance.niveau(id) : 0; } catch (e) { return 0; } }
+    function jCorr(id) { try { return window.Corruption ? Corruption.niveau(id) : 0; } catch (e) { return 0; } }
     function phase(id) { try { return window.Ame ? (Ame.phase(id) || 5) : 5; } catch (e) { return 5; } }
 
     function ressenti(p) {
@@ -113,6 +128,11 @@
     function pDement() {
         var m = 0;
         if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.mentalActeur(a.actorId()) : (3 - phase(a.actorId())) / 2); });
+        return ressenti(m.clamp(0, 1));
+    }
+    function pBete() {
+        var m = 0;
+        if ($gameParty) $gameParty.members().forEach(function (a) { m = Math.max(m, window.ChutesNoyau ? ChutesNoyau.beteActeur(a.actorId()) : (jCorr(a.actorId()) - 40) / 60); });
         return ressenti(m.clamp(0, 1));
     }
     function actif() { return !($gameSystem && $gameSystem._chuteHallOff); }
@@ -312,6 +332,115 @@
     }
 
     //=========================================================================
+    // BÊTE — la chasse que le sang lui montre (tout dessiné)
+    //=========================================================================
+    // silhouette de gibier (cervidé d'ombre) qui détale
+    function dessinerGibier(ctx, W, H) {
+        ctx.fillStyle = 'rgba(10,6,14,0.9)';
+        ctx.strokeStyle = 'rgba(10,6,14,0.9)';
+        ctx.lineWidth = 5; ctx.lineCap = 'round';
+        var cx = W * 0.5, cy = H * 0.55, s = H * 0.22;
+        // corps étiré (course)
+        ctx.beginPath(); ctx.ellipse(cx, cy, s * 1.5, s * 0.55, -0.08, 0, Math.PI * 2); ctx.fill();
+        // cou + tête projetés en avant
+        ctx.beginPath(); ctx.moveTo(cx + s * 1.2, cy - s * 0.2); ctx.lineTo(cx + s * 2.0, cy - s * 0.9); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(cx + s * 2.1, cy - s, s * 0.36, s * 0.2, -0.4, 0, Math.PI * 2); ctx.fill();
+        // bois fins
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(cx + s * 2.1, cy - s * 1.15); ctx.lineTo(cx + s * 1.85, cy - s * 1.7); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + s * 2.2, cy - s * 1.15); ctx.lineTo(cx + s * 2.4, cy - s * 1.75); ctx.stroke();
+        // pattes en pleine foulée
+        ctx.lineWidth = 4;
+        [[-1.1, 0.5, -1.7, 1.2], [-0.6, 0.5, -0.2, 1.25], [0.7, 0.5, 0.4, 1.2], [1.1, 0.5, 1.7, 1.1]].forEach(function (p) {
+            ctx.beginPath(); ctx.moveTo(cx + s * p[0], cy + s * p[1]); ctx.lineTo(cx + s * p[2], cy + s * p[3]); ctx.stroke();
+        });
+    }
+    // éclaboussure de sang qui n'existe pas
+    function dessinerSang(ctx, W, H, pr) {
+        var cx = W / 2, cy = H / 2;
+        var teinte = 'rgba(' + (110 + Math.round(pr * 60)) + ',10,' + (26 + Math.round(pr * 24)) + ',';
+        for (var i = 0; i < 9 + Math.round(pr * 8); i++) {
+            var a = rnd(0, Math.PI * 2), d = rnd(0, W * 0.3) * Math.pow(Math.random(), 0.6);
+            var r = rnd(3, 16) * (1 - d / (W * 0.38));
+            ctx.fillStyle = teinte + rnd(0.35, 0.8).toFixed(2) + ')';
+            ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.6, r, r * rnd(0.5, 1), a, 0, Math.PI * 2); ctx.fill();
+        }
+        // traînée principale
+        ctx.fillStyle = teinte + '0.7)';
+        ctx.beginPath(); ctx.ellipse(cx, cy, rnd(24, 44), rnd(12, 20), rnd(-0.4, 0.4), 0, Math.PI * 2); ctx.fill();
+    }
+    // paires d'yeux de braise violette dans une nappe de pénombre (Ombrefauves)
+    function dessinerYeux(ctx, W, H, pr) {
+        var g = ctx.createRadialGradient(W / 2, H / 2, 10, W / 2, H / 2, W * 0.45);
+        g.addColorStop(0, 'rgba(8,4,14,0.95)'); g.addColorStop(1, 'rgba(8,4,14,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        var paires = 1 + Math.round(pr * 2);
+        for (var i = 0; i < paires; i++) {
+            var ex = rnd(W * 0.25, W * 0.75), ey = rnd(H * 0.3, H * 0.7), ec = rnd(9, 15);
+            [-1, 1].forEach(function (s) {
+                var gg = ctx.createRadialGradient(ex + s * ec, ey, 0.5, ex + s * ec, ey, 6);
+                gg.addColorStop(0, 'rgba(240,180,255,1)');
+                gg.addColorStop(0.4, 'rgba(160,60,220,0.9)');
+                gg.addColorStop(1, 'rgba(160,60,220,0)');
+                ctx.fillStyle = gg;
+                ctx.beginPath(); ctx.arc(ex + s * ec, ey, 6, 0, Math.PI * 2); ctx.fill();
+            });
+        }
+    }
+
+    function spawnBete(scene, pr) {
+        var kind = Math.random();
+        var W, H, bmp, sp;
+        if (kind < 0.4) {
+            // LE GIBIER — il détale, vite, au bord de l'écran
+            W = 240; H = 140;
+            bmp = new Bitmap(W, H);
+            dessinerGibier(bmp.context, W, H);
+            if (bmp._setDirty) bmp._setDirty();
+            sp = new Sprite(bmp);
+            sp.anchor.x = 0.5; sp.anchor.y = 0.5;
+            var versDroite = Math.random() < 0.5;
+            if (!versDroite) sp.scale.x = -1;
+            sp.x = versDroite ? -W * 0.4 : Graphics.width + W * 0.4;
+            sp.y = rnd(Graphics.height * 0.55, Graphics.height * 0.9);
+            sp.opacity = 0;
+            sp._hall = { kind: 'bete', t: 0, fadeIn: 8, hold: 46, fadeOut: 14,
+                maxOp: Math.round(120 + 110 * pr),
+                drift: (versDroite ? 1 : -1) * rnd(7, 11), sway: rnd(0, 6.28) };
+            son('Blow1', Math.round(rnd(46, 60)), Math.round(25 + 30 * pr), versDroite ? -50 : 50);
+        } else if (kind < 0.72) {
+            // LE SANG — une éclaboussure au sol, qui n'y est pas
+            W = 200; H = 130;
+            bmp = new Bitmap(W, H);
+            dessinerSang(bmp.context, W, H, pr);
+            if (bmp._setDirty) bmp._setDirty();
+            sp = new Sprite(bmp);
+            sp.anchor.x = 0.5; sp.anchor.y = 0.5;
+            sp.x = rnd(Graphics.width * 0.2, Graphics.width * 0.8);
+            sp.y = rnd(Graphics.height * 0.5, Graphics.height * 0.92);
+            sp.opacity = 0;
+            sp._hall = { kind: 'bete', t: 0, fadeIn: 10, hold: Math.round(rnd(60, 110)), fadeOut: 40,
+                maxOp: Math.round(90 + 130 * pr), drift: 0, sway: rnd(0, 6.28) };
+        } else {
+            // LES YEUX — la race première le regarde mûrir
+            W = 260; H = 180;
+            bmp = new Bitmap(W, H);
+            dessinerYeux(bmp.context, W, H, pr);
+            if (bmp._setDirty) bmp._setDirty();
+            sp = new Sprite(bmp);
+            sp.anchor.x = 0.5; sp.anchor.y = 0.5;
+            sp.x = Math.random() < 0.5 ? rnd(30, Graphics.width * 0.22) : rnd(Graphics.width * 0.78, Graphics.width - 30);
+            sp.y = rnd(Graphics.height * 0.25, Graphics.height * 0.75);
+            sp.opacity = 0;
+            sp._hall = { kind: 'bete', t: 0, fadeIn: 30, hold: Math.round(rnd(70, 130)), fadeOut: 22,
+                maxOp: Math.round(110 + 120 * pr), drift: rnd(-0.1, 0.1), sway: rnd(0, 6.28) };
+            if (Math.random() < 0.5) son('Darkness3', Math.round(rnd(50, 70)), Math.round(30 + 35 * pr), sp.x < Graphics.width / 2 ? -60 : 60);
+        }
+        scene._hallLayer.addChild(sp);
+        scene._halls.push(sp);
+    }
+
+    //=========================================================================
     // Cycle de vie d'une apparition
     //=========================================================================
     function majApparition(sp) {
@@ -362,7 +491,8 @@
 
         var pe = ERR_ON ? pErrant() : 0;
         var pd = DEM_ON ? pDement() : 0;
-        var pr = Math.max(pe, pd);
+        var pb = BET_ON ? pBete() : 0;
+        var pr = Math.max(pe, pd, pb);
         if (pr <= 0 || this._halls.length >= MAX_SIM) { this._hallCd = this._hallCd || 0; return; }
 
         // cadence : plus la pression est haute, plus c'est fréquent
@@ -371,12 +501,15 @@
         if (this._hallCd > 0) return;
         this._hallCd = Math.round(rnd(30, 150) * (1 - 0.75 * pr)) + 15;
 
-        // choisir le type selon la pression dominante
-        var total = pe + pd;
-        var errant = total > 0 ? Math.random() < pe / total : false;
-        if (errant && pe > 0) spawnErrant(this, pe);
-        else if (pd > 0) spawnDement(this, pd);
+        // choisir la voie au tirage pondéré par sa pression
+        var total = pe + pd + pb;
+        if (total <= 0) return;
+        var r = Math.random() * total;
+        if (r < pe && pe > 0) spawnErrant(this, pe);
+        else if (r < pe + pd && pd > 0) spawnDement(this, pd);
+        else if (pb > 0) spawnBete(this, pb);
         else if (pe > 0) spawnErrant(this, pe);
+        else if (pd > 0) spawnDement(this, pd);
     };
 
     //=========================================================================

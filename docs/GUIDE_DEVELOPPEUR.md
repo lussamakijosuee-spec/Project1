@@ -693,6 +693,46 @@ franchissements en combat sont mis en file et montrés au retour sur la carte.
 la Curée nourrit la boucle de risque (soin immédiat contre corruption) ; la
 Traversée rend l'Errant « intouchable par éclats » sans annuler sa fragilité.
 
+## 🌫️ La suite d'ambiance des Chutes (reworkée) — les trois voies partout
+
+Ces quatre plugins d'atmosphère lisent les mêmes jauges (`ChutesNoyau`) et
+réagissent désormais aux **trois** Chutes, pas seulement à une. Tout est
+procédural (aucun asset), non interactif, et se coupe si la jauge redescend.
+
+**`ChutesHallucinations` v2.0** — on voit ce qui n'existe pas, selon la Chute :
+| Voie | Vision (dessinée en direct) |
+|---|---|
+| l'Errant (Errance) | créatures d'ombre au bord du regard (images existantes) |
+| le Dément (mental) | faux monde enfantin : sourires, « amis » au crayon, mots doux qui virent au sang |
+| **la Bête** (Corruption) | **gibier d'ombre qui détale, éclaboussures de sang fantômes, paires d'yeux de braise violette** (les Ombrefauves qui l'observent) |
+
+Le choix de la voie est un **tirage pondéré** par la pression de chacune. Cmd
+`CHUTEHALL off/on`. Nouveau paramètre : *Hallucinations de la Bête*.
+
+**`ChutesMurmures` v2.0** — chaque Chute chuchote la sienne (mots flottants) :
+- le **Lac** (Dément) : « laisse-toi couler… » (remonte comme une bulle) ;
+- le **Sang** (Bête) : « cours… mords… rappelle-toi, tu étais un dieu… » (rouge, vibre) ;
+- les **Dévorés** (Errant) : « personne ne te retient… traverse… » (bleu pâle).
+
+Le poème des âmes tombées (`CHUTEPOEME`) est inchangé. Cmd `CHUTEMURMURE off/on`.
+
+**`ChutesLacMusique` v3.0** — les 30 thèmes procéduraux gagnent le **chant
+d'Aldébaran** : sur la voie *errant* à haute intensité (jauge → l'Errant), un
+chœur de formants de voyelle (3 bandpass sur une source glissante) émerge — la
+voix lointaine que seul l'Errant entend, qui glisse entre des notes graves.
+S'éteint dès que la voie n'est plus *errant*. Cmds `CHUTELAC` inchangées.
+
+**`ChutesAnalogHorror` v2.0** — la cassette VHS change de **maladie** selon la
+Chute dominante (plus seulement le Fond) :
+| Voie | Dégradation |
+|---|---|
+| le Fond | teinte froide, glitch/tracking classique + « AUCUN SIGNAL… » |
+| l'Errant | **désaturé, délavé** + « SUJET NON RÉPERTORIÉ », « CE NOM N'EXISTE PAS » |
+| la Bête | **teinte sang pulsante** + « NE COUREZ PAS », « IL VOUS A SENTI » |
+
+Reste `status:false` par défaut (à cocher si tu veux l'esthétique VHS). Cmds
+`CHUTEVHS off/on/burst/niveau <%>`.
+
 ## 🎬 Cinématiques en images (`Cinematiques`)
 ```
 CINE duel                        le duel pixel art inclus (17 frames, sons calés)
