@@ -116,3 +116,29 @@ la **Mue** (Corps) et **Plonger** (Esprit) transforment tes Chutes en pouvoirs
 maîtrisables, la **Résonance** lie tes héros, les **Pactes** offrent la puissance
 contre un prix, les **Rêves** approfondissent, et au plus profond de l'Esprit le
 **Théâtre** puis le **Mur** brisent le 4e mur.
+
+---
+
+## 🌍 La Chronique du Monde (`ChroniqueMonde`) — le socle des missions vastes
+
+Le registre central qui fait tenir un jeu façon Skyrim/Kenshi (nations, factions,
+destins, journal, fins). Tes missions le modifient par commandes ; le jeu le lit
+pour débloquer des fins. Menu **Chronique** (écran à 3 pages : ← →).
+
+**Commandes** (identifiants en un seul mot, `_underscores_` pour les espaces) :
+```
+CHRONIQUE region <Nom> etat <Texte_d_etat> [valeur 0-100]
+CHRONIQUE region <Nom> valeur <+n|-n>
+CHRONIQUE faction <Nom> <+n|-n>
+CHRONIQUE pnj <Nom> <destin>
+CHRONIQUE flag <cle> <valeur>
+CHRONIQUE note <texte du journal…>
+CHRONIQUE fin <id> "<Titre>"            débloque une fin
+CHRONIQUE fin <id> secrete "<Titre>"     fin secrète (??? avant)
+CHRONIQUE ecran
+```
+**Fins** : registre lisible à l'écran ; les secrètes restent « ??? » avant.
+**l'Éveil** (fin secrète) est **automatique** : se dévoile dès que le groupe a
+touché les trois fonds (corruption 100 + errance 100 + phase mentale 1). C'est
+la fin cachée au bout des trois Chutes — celle décrite dans le design « l'Éveil ».
+**Script** : `Chronique.region/faction/pnj/flag/finDebloquee/records`.
