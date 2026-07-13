@@ -1000,3 +1000,51 @@ Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après Fusio
 | **Liens PNJ** | `PNJLIEN up marc` | compteur de lien par PNJ, pour débloquer des services |
 | **Conditions script** | `PNJ.peur()` · `PNJ.voitEnvers()` · `PNJ.destin('marc')` · `PNJ.perdu('marc')` · `PNJ.lien('marc')` | pour les pages conditionnelles d'événements |
 Recette « PNJ qui chute » : page 1 dialogue normal + `PNJ destin marc 1` au premier contact · page 2 (condition script `PNJ.destin('marc')>=70`) il supplie qu'on l'aide → quête → `PNJ soigner marc 40` · page 3 (`PNJ.perdu('marc')`) maison vide, monstre à sa place. Charger **après** ViesParalleles et CanonPlus.
+
+## 👁🌌🩸 Trois nouveaux systèmes — Le Regard, les Pactes, la Marque Vivante
+
+Trois systèmes ajoutés d'un bloc, tous branchés sur les jauges canon
+(`Corruption` / `Errance` / `Ame`), `Lien`, `LoreCanon`. Additifs, sûrs si un
+système manque.
+
+### 👁 Le Regard (`LeRegard`) — lire les âmes
+Discipline canon du Symbole (« reine des clans de l'Est »). Sur la carte,
+place-toi FACE à un PNJ et appuie sur **R** (paramétrable) : l'âme s'ouvre dans
+un vitrail. Ce que tu vois dépend de ta **lucidité** = profondeur du chef dans
+le Lac (santé mentale basse → tu vois loin ; la folie a ce don).
+
+| Lucidité | Ce que le Regard révèle |
+|---|---|
+| toujours | la **nature** de l'âme + l'état de sa **marque** (sigil dessiné) |
+| ≥ 3 | la **vérité** chuchotée (`<Verite: …>`) |
+| ≥ 5 | les **menteurs** (`<Menteur>`) et les **âmes errantes** déguisées (`<AmeErrante>`) |
+| ≥ 7 | les vérités du **Mur** (`<Mur: …>`, méta/interdit) |
+
+Marque tes PNJ (commentaires de page) : `<Ame: colère>` (volonte|attachement|
+colere|foi|deuil|curiosite), `<Marque: fêlée>` (pleine|felee|affamee|gonflee|
+creuse), `<Verite: …>`, `<Menteur>`, `<AmeErrante>`, `<Mur: …>`, `<Nom: …>`.
+Sans `<Ame>`, l'être est « illisible ». Ennemis : mêmes notetags. Cmd `REGARD`
+/ `REGARD event <id>`. Script `LeRegard.lucidite()` → 0-9.
+
+### 🌌 Les Pactes d'Aldébaran (`PactesAldebaran`) — deal avec la Reine Oubliée
+À un sanctuaire (événement), `PACTE` ouvre la scène. Trois offres, chacune avec
+son prix **affiché d'avance** (elle ne ment jamais ; jamais sans consentement,
+tu peux refuser). Le prix **monte** avec le nombre de pactes scellés ; au-delà
+de 3, elle te parle des **Reprises** (méta).
+
+| Offre | Don | Prix |
+|---|---|---|
+| ① La Bénédiction | +stats **permanentes** à tout le groupe (cumulable, via paramPlus) | une **vérité** → Errance +N à tous |
+| ② Les Âmes offertes | +N âmes (var stock) | ta **raison** → santé mentale du chef −N |
+| ③ L'Allègement | efface **entièrement** ta pire Chute (Corruption/Errance du chef) | un **Oubli** → un proche t'oublie (switch/var câblables) |
+
+Params : `soulVar` (15), `oubliSwitch`/`oubliVar` (0 = ignoré ; câble-les pour
+effacer un PNJ), `menuPactes` (écran des pactes scellés). Cmds `PACTE` /
+`PACTE oubli`. Script `Pactes.nombre()`, `Pactes.beni(id)`.
+
+### 🩸 La Marque Vivante (`MarqueVivante` v2.0) — le sigil qui dit tout
+L'écran `MARQUE` (déjà dans le jeu) passe du texte à un **sigil animé** par
+héros : pétales quand l'esprit est stable, **fêlures** qui tremblent (Dément),
+anneau **boursouflé et pâle** (Errant), **épines** sombres (Bête), cœur creux
+si l'âme s'éteint. L'API v1 (`Marque.etat/etendue/info`) est **préservée** —
+rien de ce qui en dépend ne casse. Param `animer` (on par défaut).
