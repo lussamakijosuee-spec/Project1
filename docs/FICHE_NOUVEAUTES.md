@@ -142,3 +142,16 @@ CHRONIQUE ecran
 touché les trois fonds (corruption 100 + errance 100 + phase mentale 1). C'est
 la fin cachée au bout des trois Chutes — celle décrite dans le design « l'Éveil ».
 **Script** : `Chronique.region/faction/pnj/flag/finDebloquee/records`.
+
+---
+
+## 🎭 Le Dément complété (`DementInterne`) — « il croit rester »
+
+Complète le Dément (le reste est déjà dans Codex_Chutes / TheatreDement / LeMur).
+- **Combats-hallucinations** : à phase mentale 1, un faux combat peut surgir ;
+  on gagne… mais **aucun butin, aucune exp, aucun corps** — « Il n'y avait rien. »
+  Auto (rare) ou commande `HALLUCO [troopId]`.
+- **Le Dément tombé** (ennemis `<DementTombe>`) : il **parle avec vos répliques**
+  recyclées de travers, et son Verbe se tord — **« Viens »** attire un allié au
+  hasard dans sa ligne.
+Cmd `DEMENTINT off/on`. (Se marie à `DEMENT chute/ancrage` de Codex_Chutes.)
