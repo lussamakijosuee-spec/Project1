@@ -6,6 +6,7 @@
 
 | …faire quoi ? | Va lire | En un mot |
 |---|---|---|
+| **Poser vite** n'importe quel plugin (commande / notetag / pose-éclair) | **[`FICHES_PLUGINS.md`](FICHES_PLUGINS.md)** | une mini-fiche par plugin (167 plugins) |
 | **Fabriquer** un PNJ, un ennemi, un skill, une quête, un donjon… | **[`RECETTES.md`](RECETTES.md)** | le livre de recettes copier-coller (tous les types + recettes avancées) |
 | **Retrouver** une commande, un notetag, une formule exacte | **[`FICHE_COMMANDES_COMPLETE.md`](FICHE_COMMANDES_COMPLETE.md)** | le catalogue exhaustif (279 plugins balayés) |
 | **Comprendre** un système en profondeur (chiffres, prix, paliers) | **[`GUIDE_DEVELOPPEUR.md`](GUIDE_DEVELOPPEUR.md)** | le manuel des Trois Sources (tous les bonus/malus) |
