@@ -23,6 +23,11 @@
 - La **FICHE** liste *tout ce que tu peux taper* : les commandes de **tous** les plugins, tous les notetags par cible, les formules de dégâts.
 - Les **RECETTES** montrent *comment assembler* : chaque type de contenu en bloc copier-coller, du PNJ simple au donjon multi-phases.
 
+## Fiches par plugin (un plugin, à fond)
+| Fichier | Plugin |
+|---|---|
+| [`PLUGIN_LivingNPC.md`](PLUGIN_LivingNPC.md) | `LivingNPC` — PNJ vivants : dialogues, barks, rumeurs, casting de 52 PNJ |
+
 ## Le reste du dossier `docs/`
 | Fichier | Contenu |
 |---|---|
