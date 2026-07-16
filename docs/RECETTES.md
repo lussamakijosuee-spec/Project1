@@ -23,6 +23,9 @@
 14. Fusion · Domaine · Mue · Ultime (5) · 15. Difficulté & New Game+ (3)
 16. HUD & visuel MOG (6) · 17. Ouvrir chaque écran (1 table)
 18. **Recettes avancées** — boss multi-phases, quête à embranchements, donjon complet, rencontre chutée, combat global, pacte à prix différé (6)
+19. Chutes & horreur — tout le reste (8) · 20. Le Regard / lire une âme · 21. ludwing copie · 22. Korrah concentration
+23. Pactes au sanctuaire · 24. Tutoriels · 25. Boss & entités signatures · 26. Affinités/camps/zones (notetags)
+27. **TABLE DE COUVERTURE** — chaque commande → sa recette (rien ne manque)
 
 ---
 
@@ -783,7 +786,196 @@ Mets-y, par exemple, une page « Début de bataille » :
 
 ---
 
+# 19. CHUTES & HORREUR — TOUT LE RESTE
+
+### 19.1 — Faire chuter un héros (Codex_Chutes, le plugin unifié)
+```
+◆ Commande de plugin : DEMENT chute 4      (Vesper croit rester lui-même — il ne l'est plus)
+◆ Commande de plugin : BETE chute 2         (Korrah : la laisse lâche — sa bête selon l'ID)
+◆ Commande de plugin : ERRANT chute 3       (ludwing : on voit au travers de ses mains)
+◆ Commande de plugin : DEMENT ancrage 4     (le raccrocher au réel — annule la dérive)
+```
+
+### 19.2 — Contagion de la chute (ContagionAme)
+```
+◆ Commande de plugin : CONTAGION on     (un héros trop enfoncé contamine les autres) · CONTAGION off
+```
+
+### 19.3 — Combats-hallucination du Dément (DementInterne)
+```
+◆ Commande de plugin : HALLUCO on        (combats sans butin ni XP quand l'esprit ment) · HALLUCO off
+◆ Commande de plugin : DEMENTINT on      (active le module) · DEMENTINT off
+```
+
+### 19.4 — Chasseurs d'âme (ChasseursAme)
+```
+◆ Commande de plugin : CHASSE on              (à corruption/errance hautes, on te traque)
+◆ Commande de plugin : CHASSE force bete      (déclenche une embuscade tout de suite)
+◆ Commande de plugin : CHASSE off             (zone sûre : voir <SafeZone> §26)
+```
+
+### 19.5 — L'interface qui ment (TheatreDement)
+```
+◆ Commande de plugin : THEATRE on      (faux PV, faux menus quand l'esprit sombre) · THEATRE off
+```
+
+### 19.6 — Jade exploite la faille (JadeRegard)
+```
+◆ Commande de plugin : REGARD whisper      (un murmure)      REGARD glitch   (glitch écran)
+◆ Commande de plugin : REGARD error         (fausse erreur)   REGARD title    (le titre murmure)
+◆ Commande de plugin : REGARD hp            (touche à la barre de vie)
+```
+
+### 19.7 — Jade se souvient de tes parties (JadeMemoire)
+```
+◆ Commande de plugin : MEMOIRE greet             (elle t'accueille selon tes parties passées)
+◆ Commande de plugin : MEMOIRE record_ending 3   (enregistre la fin obtenue)
+◆ Commande de plugin : MEMOIRE flag pacte_reine  (mémorise un fait entre parties)
+◆ Commande de plugin : MEMOIRE store_runs / store_kills / defeat_jade / forget
+```
+
+### 19.8 — Rêver au repos (RevesFeuAme)
+```
+◆ Commande de plugin : REVE 1        (le héros rêve — celui dont la chute est la plus proche)
+◆ Commande de plugin : FEUAME repos  (repos au Feu d'Âme + rêve)   (alias : FEU repos)
+```
+
+---
+
+# 20. LE REGARD — LIRE UNE ÂME (LeRegard)
+Lire le PNJ/ennemi en face (sa nature, sa marque, ses mensonges) :
+```
+◆ Commande de plugin : REGARD             (lit l'événement juste en face du héros)
+◆ Commande de plugin : REGARD event 12    (lit un événement précis par son ID)
+```
+Ce qu'il lit vient des notes de l'événement : `<Nom: ...>`, `<Verite: ...>`, `<Menteur>`, `<Marque: fêlée>`, `<Mur: ...>`.
+```
+Note d'un PNJ menteur :
+  <Nom: Le marchand souriant>
+  <Menteur>
+  <Verite: Il a vendu son frère aux Errants.>
+```
+
+---
+
+# 21. LUDWING — COPIER LES TECHNIQUES ENNEMIES (LouCopySystem)
+```
+◆ Commande de plugin : LOU copies            (affiche les techniques copiées, 4 slots)
+◆ Commande de plugin : LOU add_copy 66       (copie manuellement la compétence 66)
+◆ Commande de plugin : LOU clear_copies      (vide les slots)
+```
+En combat, ludwing copie les techniques ennemies automatiquement (2× de suite) — ces commandes servent à scénariser ou déboguer.
+
+---
+
+# 22. KORRAH — LA CONCENTRATION (Neyssa_Concentration)
+```
+◆ Commande de plugin : NEYSSA_CONC reset_counters      (remet les compteurs à zéro)
+◆ Commande de plugin : NEYSSA_CONC set_evasion 3       (fixe le compteur d'esquives)
+◆ Commande de plugin : NEYSSA_CONC set_shockwave 2     (fixe le compteur d'ondes de choc)
+```
+
+---
+
+# 23. LES PACTES DE LA REINE — AU SANCTUAIRE (PactesAldebaran)
+```
+◆ Commande de plugin : PACTE         (ouvre l'écran des pactes au sanctuaire)
+◆ Commande de plugin : PACTE oubli   (renonce à un pacte)
+```
+> À distinguer du pacte scénarisé direct : `REINE pacte 3` (§7.2), qui applique le prix tout de suite.
+
+---
+
+# 24. TUTORIELS CONTEXTUELS (PremiersPas)
+```
+◆ Commande de plugin : TUTOS reset   (tout revoir depuis le début)
+◆ Commande de plugin : TUTOS off     (couper les tutos) · TUTOS on (réactiver)
+```
+La 1re fois qu'un système touche le joueur (1re corruption, 1re Voie, 1er Surpassé…), deux lignes l'expliquent, une seule fois.
+
+---
+
+# 25. BOSS & ENTITÉS SIGNATURES (notetags — déjà câblés)
+Mets le bon tag dans la **Note de l'ennemi** :
+| Notetag | Entité |
+|---|---|
+| `<Gaster>` | Celui qui est Tombé (canon du Fond) — JadeGaster |
+| `<Radahn>` | le Fléau des Astres (Kev / Mahoraga) — KevSignature · MahoragaBoss |
+| `<Malenia>` | l'obsession de Jade — JadeObsession |
+| `<DonoBoss>` + `<DonoEsprit>` | Dono & son Kamui (le familier = son 2e œil) — DonoKamui |
+| `<TraitBoss: Nom\|type>` | trait générique (gel/faim/rupture/renvoi/regard) — CanonPlus (§2.3) |
+
+**Armes/objets signatures** (Note de l'arme/objet) :
+```
+<Signature: arc>         (arc créatif)      <Signature: flammes>   (flammes maudites)
+<Signature: forteresse>  (forteresse d'âme) <Signature: nova>      (nova sainte)
+<Signature: abime>       (puits d'abîme)    <Signature: vague>     (vague sacrée)
+```
+
+---
+
+# 26. AFFINITÉS, CAMPS, ROUE, ZONES (notetags — aide-mémoire complet)
+| Notetag | Sur | Effet |
+|---|---|---|
+| `<Mana: positif\|negatif\|spirituelle\|sombre\|pur\|semiparfait>` | acteur/classe/ennemi | affinité principale |
+| `<Mana2: …>` | idem | seconde affinité |
+| `<Atone>` | idem | sans affinité (recul vital ÷2) |
+| `<NoAura>` | idem | pas d'aura calculée |
+| `<Camp: lumiere\|ombre>` | idem | camp (sorts 14/15 : ×1.5 vs opposé) |
+| `<VoieDefaut: forge…>` | idem | Voie par défaut |
+| `<Faction: nom>` | idem | couleur/appartenance de faction |
+| `<RoueElem: 8>` | skill/ennemi | force un élément sur la roue |
+| `<ReculVital: 20>` | skill | recul PV forcé à 20 % |
+| `<NoParole>` | skill | ce skill n'est jamais « parlé » |
+| `<SafeZone>` | événement/carte | zone sûre (pas de chasseurs) |
+| `<Cache>` | événement | caché sauf en plongée |
+| `<NoRead>` | carte/zone | le monde ne « lit » pas ici |
+| `<Envers>` | événement | n'existe que côté Envers |
+| `<Chase: n>` | événement | poursuit le joueur (rayon n) |
+
+---
+
+# 27. TABLE DE COUVERTURE — chaque commande → sa recette
+> Preuve qu'il ne manque rien : les 105 plugins à commande, rangés vers leur recette.
+
+| Commande | Recette | Commande | Recette |
+|---|---|---|---|
+| CORRUPTION | §7.3, §7.4 | ERRANCE | §7.3 |
+| PURGE | §7.4 | VOIES / TRIANGLE / RANGS / MARQUE | §17 |
+| FUSION | §14.1, §3.8 | ULTIME | §14.3, §3.11 |
+| DOMAINE | §14.2 | MUE | §14.4 |
+| ULTI/JACKPOT/AURA/BURST | §14.5 | NEYSSA_CONC | §22 |
+| PORTES | §17, §18.3 | FICHE | §17 |
+| DESTINS / VIES | §17, §18.4 | REINE | §7.2 |
+| PACTE | §23 | NOYADE / REPRISES | §17 (script) |
+| FORGE / SANCTUAIRE / ALCHIMIE | §17 | GRAVER | §6.5 |
+| FEU | §7.3, §18.3 | OBJET | §6.4 |
+| LOU | §21 | CHUTE | §13.1 |
+| CHUTEDEF | §13.2, §18.3 | CHUTEPROG/HALL | §13.3 |
+| CHUTEVHS | §13.4, §18.1 | CHUTELAC | §13.5 |
+| DEMENT/BETE/ERRANT | §19.1 | CONTAGION | §19.2 |
+| HALLUCO/DEMENTINT | §19.3 | CHASSE | §19.4 |
+| MUR | §13.6 | PLONGER/REMONTER | §13.7 |
+| THEATRE | §19.5 | REGARD (Jade) | §19.6 |
+| MEMOIRE | §19.7 | REVE/FEUAME | §19.8 |
+| REGARD (âme) | §20 | PNJ / PNJLIEN | §1.3, §1.4 |
+| NPC | §1.2, §8 (PLUGIN_LivingNPC) | CHRONIQUE | §12 |
+| LIEN | §11 | QUEST | §8 |
+| MAINQUEST | §8 (principale) | SUCCES | §9 |
+| FACTION | §10 | DIFFICULTE | §15.1 |
+| NGPLUS | §15.2 | DEBUT | §15.3 |
+| TUTOS | §24 | TEMPS | §7.7 |
+| ELEMENTS | §18.5 | CINE | §7.5 |
+| PENSEE | §7.6 | GRIMOIRE/CODEX/BESTIAIRE/AME/GUIDEVP/MANA | §17 |
+| ATELIER | §17 | MOG_* (HUD/visuel) | §16 |
+| YEP_* (moteur) | FICHE §1.11 | signatures `<Gaster>`… | §25 |
+
+Si une commande n'apparaît pas ici, c'est un **écran** : appelle-la telle quelle (voir §17).
+
+---
+
 > **Voir aussi :** `docs/INDEX.md` (le sommaire de toute la doc),
 > `docs/FICHE_COMMANDES_COMPLETE.md` (le catalogue complet des commandes & notetags),
+> `docs/PLUGIN_LivingNPC.md` (le plugin PNJ, à fond),
 > `docs/GUIDE_DEVELOPPEUR.md` (les systèmes en profondeur, avec tous les chiffres),
 > `docs/ORDRE_PLUGINS.md` (⚠️ l'ordre de chargement des plugins).
