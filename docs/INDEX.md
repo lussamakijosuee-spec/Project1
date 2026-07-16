@@ -27,6 +27,7 @@
 | Fichier | Plugin |
 |---|---|
 | [`PLUGIN_LivingNPC.md`](PLUGIN_LivingNPC.md) | `LivingNPC` — PNJ vivants : dialogues, barks, rumeurs, casting de 52 PNJ |
+| [`RECETTES_LivingNPC.md`](RECETTES_LivingNPC.md) | `LivingNPC` — les 52 PNJ en blocs prêts à copier-coller |
 
 ## Le reste du dossier `docs/`
 | Fichier | Contenu |
