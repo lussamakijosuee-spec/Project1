@@ -22,6 +22,7 @@
 11. Liens sociaux (2) · 12. Chronique du monde (3) · 13. Chutes — mise en scène (7)
 14. Fusion · Domaine · Mue · Ultime (5) · 15. Difficulté & New Game+ (3)
 16. HUD & visuel MOG (6) · 17. Ouvrir chaque écran (1 table)
+18. **Recettes avancées** — boss multi-phases, quête à embranchements, donjon complet, rencontre chutée, combat global, pacte à prix différé (6)
 
 ---
 
@@ -656,6 +657,133 @@ Cocher un objectif fait (le prochain non fait) : `QUEST step herbe` — ou par n
 
 ---
 
-> **Voir aussi :** `docs/FICHE_COMMANDES_COMPLETE.md` (le catalogue complet des commandes & notetags),
+# 18. RECETTES AVANCÉES (assemblages complets)
+
+> Ici on combine plusieurs systèmes. Interrupteurs déjà **réservés & nommés** dans l'éditeur (utilise-les) :
+> 4 « combat boss1 » · 8 « combat de boss 2 » · 10 « PHASE 2 » · 11 « victoir joueur » ·
+> 41 Porte de Fusion · 42 HUD Triangle · 43 faux combat ·
+> 95 Chute le Déchiré (ennemi 407) · 96 l'Errant · 97 la Bête · 98 le Dément · 99 le Fond (20 Reprises).
+
+## 18.1 — Boss MULTI-PHASES (une seule troupe, il se transforme)
+Dans **Base ▸ Groupes**, choisis la troupe du boss, puis onglet **Événements de combat**. Crée des pages :
+
+```
+— PAGE 1 —  Condition : (aucune)   Portée : Début de la bataille
+◆ Texte : « Tu oses lever les yeux sur moi ? »
+
+— PAGE 2 —  Condition : PV de l'ennemi #1 ≤ 50 %   Portée : Bataille (une seule fois)
+◆ Texte : « Assez joué. »
+◆ Transformer un ennemi : #1 → « Le Fléau — Second Stade »   (choisis l'ennemi phase 2)
+◆ Interrupteur : 10 (PHASE 2) = ON
+◆ Commande de plugin : CHUTEVHS burst          (secousse visuelle de bascule)
+
+— PAGE 3 —  Condition : Interrupteur 10 ON  ET  PV de l'ennemi #1 ≤ 20 %   Portée : Tour
+◆ Forcer une action : #1 utilise « la Convergence » sur tout le groupe
+◆ Texte : « Regarde ce que tu m'as forcé à devenir. »
+```
+Astuces :
+- L'ennemi phase 2 est un **ennemi distinct** (Base ▸ Ennemis) avec ses stats/skills — la transformation garde le % de PV.
+- Pour un vrai « enrage », page condition **Tour ≥ 8** → `Forcer une action` sur un skill `<Interdit: 2.5>`.
+- Boss « signature » : mets `<TraitBoss: Nom|regard>` sur l'ennemi (il ne rate jamais en phase finale).
+- Musique par phase : page 2 → `CHUTELAC voie bete 70` ; à la victoire, interrupteur **11** (victoir joueur) ON.
+
+## 18.2 — QUÊTE À EMBRANCHEMENTS (deux camps, deux fins)
+```
+— DÉBUT (PNJ donneur de quête) —
+◆ Commande de plugin : QUEST add main pont Le_Pont_de_Valombre Choisis_un_camp.
+◆ Commande de plugin : QUEST obj pont Parler_à_l'Empire
+◆ Commande de plugin : QUEST obj pont Parler_aux_Affranchis
+◆ Commande de plugin : QUEST track pont
+
+— PNJ EMPIRE —  (condition : quête active)
+◆ Afficher choix : Rejoindre l'Empire / Refuser
+  ◆ Si Rejoindre l'Empire :
+      ◆ Commande de plugin : FACTION join empire
+      ◆ Commande de plugin : CHRONIQUE faction empire 15
+      ◆ Interrupteur : (crée « camp_empire ») = ON
+      ◆ Commande de plugin : QUEST step pont 1        (coche le 1er objectif)
+
+— PNJ AFFRANCHIS —  (symétrique)
+  ◆ Si Rejoindre : FACTION join libre · CHRONIQUE faction empire -10 · interrupteur « camp_libre » ON · QUEST step pont 2
+
+— RÉSOLUTION (garde du pont) —
+◆ Si (interrupteur camp_empire) : Texte « L'Empire te laisse passer. » · QUEST done pont
+◆ Sinon si (camp_libre) :         Texte « Les Affranchis ont saboté le pont. » · combat · QUEST done pont
+◆ Sinon :                          Texte « Reviens quand tu auras choisi. »
+◆ Commande de plugin : CHRONIQUE note Le_joueur_a_tranché_à_Valombre.
+```
+Variante « échec » : si le joueur trahit son camp → `QUEST fail pont` + `CHRONIQUE faction empire -30`.
+
+## 18.3 — DONJON COMPLET (checkpoint, chutes, gardien, récompense)
+Assemble sur une carte de donjon :
+
+**A) À l'entrée — le feu de repos (checkpoint)**
+```
+◆ Commande de plugin : FEU set                (pose le checkpoint)
+◆ Afficher choix : Se reposer / Continuer
+  ◆ Si Se reposer : Commande de plugin : FEU repos
+```
+**B) Dans les couloirs — pièges de chute (par région)**
+Peins une **région** (ex. 7) sur les cases dangereuses, puis un événement parallèle qui lit la région du joueur :
+```
+◆ Si (Script) : $gamePlayer.regionId() === 7
+    ◆ Si (Script) : Errance.niveau(1) >= 70
+        ◆ Commande de plugin : CHUTE errant 1     (la marque affleure — avertissement visible)
+    ◆ Commande de plugin : ERRANCE add 1 5
+```
+**C) Salle du gardien — le boss (voir 18.1)**
+```
+◆ Interrupteur : 4 (combat boss1) = ON
+◆ Lancer le combat : troupe du gardien (multi-phases)
+◆ Après victoire (interrupteur 11 victoir joueur ON) :
+    ◆ Objet : +1 clé du donjon
+    ◆ Commande de plugin : SUCCES unlock 7
+    ◆ Commande de plugin : CHRONIQUE region Donjon etat Purifié 0
+```
+**D) Sortie — la conséquence**
+```
+◆ Si (Script) : Corruption.niveau(1) >= 100
+    ◆ Commande de plugin : CHUTEDEF forcer bete 1     (le donjon a eu raison de lui)
+◆ Sinon
+    ◆ Commande de plugin : PORTES xp 1 corps 100       (récompense d'entraînement)
+```
+
+## 18.4 — RENCONTRE D'UN HÉROS CHUTÉ, branchée sur le vrai type de chute
+```
+◆ Appeler un événement commun : 202     (Korrah — fait tout : lit Destins.chute, recrute OU combat)
+```
+Ou à la main, avec les interrupteurs réservés :
+```
+◆ Si (Script) : Destins.chute(2) === 'bete'
+    ◆ Interrupteur : 97 (Chute la Bête) = ON
+    ◆ Lancer le combat : troupe 505 (Korrah, la Bête)
+◆ Sinon si (Script) : Destins.chute(2) === ''
+    ◆ Script : $gameParty.addActor(2)
+```
+
+## 18.5 — ÉVÉNEMENT DE COMBAT GLOBAL (tous les combats)
+`YEP_BaseTroopEvents` est activé : la **troupe #1** sert de modèle appliqué à TOUS les combats.
+Mets-y, par exemple, une page « Début de bataille » :
+```
+◆ Commande de plugin : ELEMENTS        (active les popups de dégâts teintés partout)
+```
+
+## 18.6 — PACTE + PRIX DIFFÉRÉ (le pouvoir qui revient te hanter)
+```
+— Au moment du pacte —
+◆ Commande de plugin : REINE pacte 3
+◆ Variable : (crée « dette_reine ») = 3
+
+— Plus tard, à un point de repos —
+◆ Si (Variable dette_reine ≥ 3)
+    ◆ Texte : « La Reine réclame son dû. »
+    ◆ Commande de plugin : ERRANCE add 3 15
+    ◆ Commande de plugin : CHUTEHALL on
+```
+
+---
+
+> **Voir aussi :** `docs/INDEX.md` (le sommaire de toute la doc),
+> `docs/FICHE_COMMANDES_COMPLETE.md` (le catalogue complet des commandes & notetags),
 > `docs/GUIDE_DEVELOPPEUR.md` (les systèmes en profondeur, avec tous les chiffres),
 > `docs/ORDRE_PLUGINS.md` (⚠️ l'ordre de chargement des plugins).

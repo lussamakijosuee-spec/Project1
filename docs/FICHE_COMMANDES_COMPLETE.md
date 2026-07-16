@@ -480,6 +480,7 @@ Note :
 
 ---
 
-> **Pour aller plus loin :** `docs/GUIDE_DEVELOPPEUR.md` (les systèmes expliqués en détail),
+> **Pour aller plus loin :** `docs/INDEX.md` (le sommaire de toute la doc),
+> `docs/RECETTES.md` (fabriquer chaque type de contenu), `docs/GUIDE_DEVELOPPEUR.md` (les systèmes en détail),
 > `docs/ORDRE_PLUGINS.md` (l'ordre de chargement — ⚠️ à respecter), `SYSTEME_DE_MANA.md` (le canon du mana),
-> `docs/CODEX` en jeu (commande `CODEX`).
+> `CODEX` en jeu (commande `CODEX`).
