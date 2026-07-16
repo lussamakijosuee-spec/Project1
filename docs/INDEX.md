@@ -29,6 +29,10 @@
 |---|---|
 | [`PLUGIN_LivingNPC.md`](PLUGIN_LivingNPC.md) | `LivingNPC` — PNJ vivants : dialogues, barks, rumeurs, casting de 52 PNJ |
 | [`RECETTES_LivingNPC.md`](RECETTES_LivingNPC.md) | `LivingNPC` — les 52 PNJ en blocs prêts à copier-coller |
+| [`PLUGIN_CorruptionAme.md`](PLUGIN_CorruptionAme.md) | `CorruptionAme` — la jauge de Corruption (la Bête), gains/paliers/états |
+| [`PLUGIN_RoyaumeImperial.md`](PLUGIN_RoyaumeImperial.md) | `RoyaumeImperial` — le Domaine de ludwing, invocations libres, arsenal |
+| [`PLUGIN_FusionMana.md`](PLUGIN_FusionMana.md) | `FusionMana` — les 3 Fusions, gains/prix/escalade |
+| [`PLUGIN_DestinsParalleles.md`](PLUGIN_DestinsParalleles.md) | `DestinsParalleles` — les vies parallèles, dérive/chute/recrutement |
 
 ## Le reste du dossier `docs/`
 | Fichier | Contenu |
