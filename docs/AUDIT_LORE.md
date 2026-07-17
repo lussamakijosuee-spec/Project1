@@ -41,7 +41,7 @@ Le scanner les a notés « effet 0 » à tort : ils hookent `BattleManager.*` (p
 | **`Lore_ObjetSpirituel`** | `Lore_ObjetSpirituel` + `Lore_ObjetSpirituelMenu` | paliers + ligne de menu (2 → 1) |
 | **`Lore_CombatFlavor`** | `Lore_ManaSourceTag` · `Lore_RoueElements` · `Lore_LiensCombo` · `Lore_FlashElement` · `Lore_PasDeCombat` | petits effets de journal/visuel de combat (5 → 1) |
 
-**Bilan** : ~26 fichiers fusionnés en **7**. Le dossier `Lore_` passerait de **51 → ~30**.
+**Bilan** : ✅ **TOUTES FAITES (2026-07-17)** — les 7 fusions exécutées (`Lore_Signatures`, `Lore_Affinites`, `Lore_Auras`, `Lore_Factions`, `Lore_SanteMentale`, `Lore_ObjetSpirituel`+menu, `Lore_CombatFlavor`). Dossier `Lore_` : **51 → 29**. Comportement reproduit à l'identique ; 25 anciens fichiers rangés dans `_abandonnes/`. Vérifié : 168 plugins actifs, 0 fichier manquant, syntaxe JS OK.
 
 ## 4. 🟡 À GARDER TELS QUELS (systèmes / commandes uniques)
 `Lore_AldebaranAppel` (REINE) · `Lore_LoiNoyade` (NOYADE) · `Lore_Reprises` · `Lore_CampsLumiereOmbre` · `Lore_MaitrisesInterdites` (`<Interdit>`) · `Lore_CodexAuto` · `Lore_CorruptionReecriture` · `Lore_Artefacts` (Clé/Masque) · `Lore_AbsorptionAme` (AMEABSORB) · `Lore_ScoreFin` (FINSCORE) · `Lore_SpirituelTrauma` · `Lore_SANEcran` (SAN afficher) · `Lore_AmeRetourCode` · `Lore_RealiteGlitch` (GLITCH) · `Lore_DilatationTemps` (TEMPS) · `Lore_FeuAmeRefuge` (FEUAME) · `Lore_RumeurMonde` · `Lore_JoueurPNJ` · `Lore_PrismeReel` · la famille **JADA** (`Lore_JadaTitre` · `Lore_JadaMail` · `Lore_JadaChoix` — méta-horreur, fusionnables entre elles si tu veux).
