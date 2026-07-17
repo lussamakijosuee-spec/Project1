@@ -33,7 +33,7 @@ Le scanner les a notés « effet 0 » à tort : ils hookent `BattleManager.*` (p
 
 | Nouveau plugin | Fusionne | Ce que ça fait |
 |---|---|---|
-| **`Lore_Signatures`** | `Lore_PuitsAbime` · `Lore_FlammesMaudites` · `Lore_NovaSainte` · `Lore_VagueSacree` · `Lore_ForteresseAme` · `Lore_ArcCreatif` | tous les `<Signature: x>` d'armes/objets (6 → 1) |
+| **`Lore_Signatures`** ✅ **FAIT** | `Lore_PuitsAbime` · `Lore_FlammesMaudites` · `Lore_NovaSainte` · `Lore_VagueSacree` · `Lore_ForteresseAme` · `Lore_ArcCreatif` | tous les `<Signature: x>` d'armes/objets (6 → 1). *Bug de récursion infinie de l'« arc » corrigé au passage. Aucune signature n'était encore branchée sur un skill → risque nul.* |
 | **`Lore_Affinites`** | `Lore_AffiniteAlignes` · `Lore_AffiniteDuaux` · `Lore_AffiniteAtones` · `Lore_AffiniteEvolue` | bonus/malus selon `<Mana>`/`<Mana2>`/`<Atone>` (4 → 1) |
 | **`Lore_SanteMentale`** | `Lore_SANReposMarche` · `Lore_SANPanique` · `Lore_SANMurmures` · `Lore_SANTeinte` · `Lore_SoinsSAN` | tous les effets liés à la SAN (5 → 1) *(`Lore_SANEcran` = commande, garder à part)* |
 | **`Lore_Auras`** | `Lore_AuraCorruption` · `Lore_AuraSource` | auras visuelles sous les acteurs (2 → 1) |
