@@ -14,8 +14,12 @@ npm-debug.log*
 /export/
 /out/
 /dist/
+
+# Image parasite (capture accidentelle) — pas un asset du jeu
 img/enemies/1000024844_347x239.png
-js/plugins.js
-data/Enemies.json
-data/Enemies.json
-data/Enemies.json
+
+# ⚠️ NE JAMAIS ignorer ces fichiers de jeu essentiels — ils DOIVENT être versionnés :
+#   js/plugins.js    → toute la config des plugins (ordre de chargement, activés, réglages)
+#   data/Enemies.json → tes 426 ennemis
+# (retirés d'ici le 2026-07-17 : ils étaient ignorés par erreur, ce qui risquait
+#  de les faire disparaître à un clone propre.)

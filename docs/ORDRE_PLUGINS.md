@@ -1,4 +1,4 @@
-# ORDRE DES PLUGINS — la référence À JOUR (js/plugins.js n'est pas dans git !)
+# ORDRE DES PLUGINS — la référence À JOUR (js/plugins.js EST versionné depuis le 2026-07-17)
 > Coche dans CET ordre. ⚠️ = réglage à vérifier. Les 3 anciens plugins de
 > chutes (ChuteDement, ChutesBeteErrant, ChutesProfondeur) N'EXISTENT PLUS :
 > les décocher/supprimer, Codex_Chutes les remplace.

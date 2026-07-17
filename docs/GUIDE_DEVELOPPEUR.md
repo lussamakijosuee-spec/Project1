@@ -882,7 +882,7 @@ Appris par **les 4 classes** au niveau 1. Charger `FusionsEtendues` après Fusio
 | **Fiche du marqué** | `FICHE` | Trait, don, nature d'âme (Aël=Volonté · Korrah=Attachement · ludwing=Deuil · Vesper=Foi), marque, rang, 3 jauges |
 | **Reprises** | automatique | chaque chargement compté ; à 5/10/20 le Fond laisse des traces (`$gameSystem._reprises`) |
 
-**Équilibrage corrigé** : le Royaume Impérial coûte **+15 Errance fixes** au déploiement (plus jamais +2/âme ×30 = +60). L'aide (`ClarteUI`) affiche désormais **« TRAIT de X — marque étrangère : prix ×2 »** quand un héros utilise le Trait d'un autre. **`docs/ORDRE_PLUGINS.md`** : la référence complète du gestionnaire de plugins (js/plugins.js n'étant pas dans git).
+**Équilibrage corrigé** : le Royaume Impérial coûte **+15 Errance fixes** au déploiement (plus jamais +2/âme ×30 = +60). L'aide (`ClarteUI`) affiche désormais **« TRAIT de X — marque étrangère : prix ×2 »** quand un héros utilise le Trait d'un autre. **`docs/ORDRE_PLUGINS.md`** : la référence complète du gestionnaire de plugins (js/plugins.js est désormais versionné).
 
 ## 🗣️ Les PNJ vivants+ (`PNJVivantsPlus`) — le monde te voit, te raconte, et meurt aussi
 | Outil | Usage (dans un événement PNJ) | Ce que ça fait |
