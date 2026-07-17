@@ -24,7 +24,7 @@ LOU_HakariJackpot · ComboLiens · UltiCinematics
 ## 5. Chutes & horreur (cet ordre)
 ChutesCinematiques → ChutesDefinitives → autres Chutes* existants ·
 **Codex_Chutes** (⚠️ remplace les 3 anciens · interrupteurs 95-98 nommés) ·
-Cinematiques · ElementsVivants
+ElementsVivants
 
 ## 6. Grands systèmes récents (cet ordre)
 FusionMana → FusionsEtendues · RoyaumeImperial · UltimesSources · TraitsAme ·

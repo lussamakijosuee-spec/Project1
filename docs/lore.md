@@ -214,7 +214,7 @@ monde entier l'ignore — à ne révéler qu'aux plus profonds.**
 ---
 
 ## 🎮 Traduction jouable *(Partie VI du codex — déjà en place)*
-Parole = `ParolesMagic` · Maîtrise = recul PV (`ManaAffinity`) · Symbole =
+Parole = `ParolesSysteme` · Maîtrise = recul PV (`ManaAffinity`) · Symbole =
 `ObjetSpirituel`/`InvocationAmes` + **`FrappeAme`** · Chutes = `CorruptionAme` /
 `Errance` / lucidité (`JadeEntitePlunging`) · Équilibre = `Surpassement` ·
 Aura = **`AuraPaliers`** · éléments dérivés (somme) + 200 animations (ids 158-357).

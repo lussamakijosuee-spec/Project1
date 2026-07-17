@@ -436,7 +436,7 @@ Surpassement · RangsPuissance · TriangleAffinites · MarqueVivante
 FusionElements · PortesProgression · DestinsParalleles
 Lore_LoiNoyade · Lore_AldebaranAppel · Lore_Reprises ·
 Lore_MaitrisesInterdites · Lore_CampsLumiereOmbre
-ChutesCinematiques · ChutesDefinitives · Cinematiques · ElementsVivants · FusionMana
+ChutesCinematiques · ChutesDefinitives · ElementsVivants · FusionMana
 RoyaumeImperial    ← après InvocationAmes, Errance, JadeEntitePlunging
 UltimesSources     ← après CorruptionAme, Errance, JadeEntitePlunging, ManaAffinity
 TraitsAme          ← après Errance, JadeEntitePlunging, MarqueVivante
@@ -444,7 +444,7 @@ PremiersPas · AtelierTest
 ClarteUI            ← l'aide enrichie lit les notetags de TOUS les systèmes
 GrimoireHub        ← EN DERNIER (il regroupe les écrans des autres)
 ```
-Stubs sans effet (activés ou non) : `ParolesMagic`, `Lore_ManaReculVital`, `Lore_ManaPurPerce`, `Lore_CyclePopup`.
+Stubs sans effet (activés ou non) : `Lore_ManaReculVital`, `Lore_ManaPurPerce`, `Lore_CyclePopup`. (`ParolesMagic` retiré — Lot 1 du nettoyage ; le vrai système est `ParolesSysteme`.)
 
 ## Recettes complètes
 
@@ -629,7 +629,7 @@ Chutes.survivants()          // héros encore debout (0 = fin)
 ```
 Ordre : charger **après** ChutesCinematiques.
 
-## 🎬 Cinématiques en images (`Cinematiques`)
+## 🎬 Cinématiques en images (`Cinematiques`) — ⚠️ plugin RETIRÉ (Lot 1 : il n'était chargé par rien)
 ```
 CINE duel                        le duel pixel art inclus (17 frames, sons calés)
 CINE jouer <prefixe> <nb> <ms>   tes propres séquences (img/pictures/<prefixe>_01.png…)

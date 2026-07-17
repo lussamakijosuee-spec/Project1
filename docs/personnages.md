@@ -51,7 +51,7 @@ l'**équilibre** fragile entre les trois — ce que le monde a perdu avec le Pre
   chaque descente la rapproche du **Mur**, et de ce qu'on ne devrait pas voir.
 - **Rôle de combat :** **soutien** (soin, buff, résurrection), énorme réserve de
   mana, peu offensive *(rôle de l'ancienne support — conservé)*.
-- **Lien système :** `JadeEntitePlunging` (lucidité/Santé Mentale), `ParolesMagic`.
+- **Lien système :** `JadeEntitePlunging` (lucidité/Santé Mentale), `ParolesSysteme`.
 
 ---
 
