@@ -65,6 +65,6 @@ J'ai contrôlé les « versions EX / 2 » qu'on croirait redondantes : elles son
 
 ## Plan proposé (par lots, réversibles, rien sans ton feu vert)
 1. **Lot 1 — mort sûr** (§1) : ✅ **FAIT (2026-07-17)** — 7 séparateurs orphelins + 4 custom abandonnés (`Cinematiques`, `JadeScreamer`, `ParolesMagic`, `PsychoSystem`) retirés ; docs corrigées (`ParolesMagic` → `ParolesSysteme`, `Cinematiques` marqué retiré). 278 → 267 fichiers.
-2. **Lot 2 — rangement** (§2) : déplacer la boîte à outils YEP/MOG/libs dans `_boite_a_outils/`. Dossier propre, rien perdu.
+2. **Lot 2 — rangement** (§2) : ✅ **FAIT (2026-07-17)** — les 46 orphelins (YEP/MOG/libs) déplacés dans `js/plugins/_boite_a_outils/` (voir le LISEZ-MOI du dossier). Racine : 221 fichiers, tous chargés. Vérifié : 190 plugins actifs, 0 fichier manquant.
 3. **Lot 3 — tes désactivés** (§3) : tu coches ceux dont tu es sûr, je retire fichier + entrée plugins.js.
 4. **Lot 4 — les `Lore_`** (§5) : audit détaillé plugin par plugin, puis fusion/élagage.
