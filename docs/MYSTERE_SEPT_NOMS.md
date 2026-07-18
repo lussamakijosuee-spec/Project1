@@ -24,6 +24,32 @@ Tout ce qui suit est **déjà installé et configuré** dans le projet :
 ⚠️ Les anciens numéros du guide HTML (interrupteurs 21–32, variables 41–42, héros 10)
 sont **abandonnés** : 21, 22, 28 servaient déjà à tes événements et 41–42 au gacha.
 
+## La carte de démo : « Sanctuaire des Sept Noms » (carte 56)
+
+Une carte complète est **déjà montée** (`data/Map056.json`, visible dans
+l'éditeur en bas de la liste des cartes). Tout y est fonctionnel et testé :
+
+- **L'autel** (flamme bleue, centre de la grande salle) : saisie du nom,
+  vérification, les trois réponses possibles.
+- **Les 7 âmes** en cercle autour de l'autel (`$AmeErrante`, tag
+  `<ZK Esprit>`, chacune avec ses commentaires LeRegard `<Nom:>`, `<Ame:>`
+  et `<Verite:>` — un Regard posé sur un spectre lit son âme).
+- **La porte scellée** (porte de fer, mur nord) : close tant que les 7 âmes
+  ne sont pas nommées *et* regardées. À l'ouverture elle joue un son et
+  affiche un message — remplace ce message par ta téléportation vers la
+  Chambre du Souvenir (le commentaire DEV dans l'événement te le rappelle).
+- **Le Scribe Gris** (silhouette noire, coin sud-ouest) : n'existe que si
+  Mazal = 7, s'efface en fondu après sa phrase, ne revient jamais.
+- **La stèle blanche** (cristal blanc, à l'écart) : n'existe que si Mazal = 77.
+- **Deux événements DEV invisibles** près de l'autel : « MODE D'EMPLOI »
+  (les instructions en jeu) et « DEV nommer les sept » (nomme les sept âmes
+  d'un coup pour tester). **À supprimer avant la sortie.**
+
+Pour y aller en playtest : console F8 →
+`$gamePlayer.reserveTransfer(56, 21, 21, 8, 0)` — ou copie-colle les
+événements vers ta vraie carte de sanctuaire (clic droit → Copier dans
+l'éditeur d'événements, tout est transportable tel quel).
+
 ## La règle de vision : uniquement avec le Regard
 
 Les Sept Âmes ne dépendent plus d'un seuil de lucidité permanent. **Elles
