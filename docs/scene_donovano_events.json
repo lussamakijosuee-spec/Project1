@@ -3,7 +3,7 @@
     "scene": "Rencontre du Champion — Donovano « le Second » (façon Cynthia)",
     "placeholders": {
       "SW_SCENE_FINIE": 70,
-      "TROOP_DONO": 517
+      "TROOP_DONO": 520
     },
     "injection": "Colle l'objet dans le tableau 'events' de ta data/MapXXX.json. Donne-lui un graphisme, ajuste id/x/y et les IDs (interrupteur 70, troupe 520).",
     "combat": "301 Traitement de combat avec canEscape=true et canLose=true : perdre NE fait PAS Game Over, la scène continue (branche 'lose' = il t'epargne). C'est là le 'mur' facon Cynthia.",
@@ -23,8 +23,7 @@
         "1-2 skills en zone tres puissants pour punir un groupe."
       ],
       "conseil": "Mets-le en troupe SEUL (un boss solo) avec, en evenement de combat, un message a l'entree ('Donovano n'a pas encore dégainé.') pour l'ambiance."
-    },
-    "fait": "Ennemi 427, troupe 517, skills 827-829 et Map048 créés automatiquement le 2026-07-17. Graphisme Actor1 (index 0) — à remplacer par le tien."
+    }
   },
   "events": {
     "Donovano_le_Second": {
@@ -52,11 +51,11 @@
           },
           "directionFix": false,
           "image": {
-            "characterName": "Actor1",
+            "tileId": 0,
+            "characterName": "",
             "direction": 2,
             "pattern": 1,
-            "characterIndex": 0,
-            "tileId": 0
+            "characterIndex": 0
           },
           "list": [
             {
@@ -417,7 +416,7 @@
               "indent": 1,
               "parameters": [
                 0,
-                517,
+                520,
                 true,
                 true
               ]
@@ -851,11 +850,11 @@
           },
           "directionFix": false,
           "image": {
-            "characterName": "Actor1",
+            "tileId": 0,
+            "characterName": "",
             "direction": 2,
             "pattern": 1,
-            "characterIndex": 0,
-            "tileId": 0
+            "characterIndex": 0
           },
           "list": [
             {
