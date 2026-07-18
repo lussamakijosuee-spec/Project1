@@ -4,7 +4,7 @@
 //=============================================================================
 
 /*:
- * @plugindesc v1.2 Mystère des Sept Noms : variable Mazal, autel des noms,
+ * @plugindesc v1.2.1 Mystère des Sept Noms : variable Mazal, autel des noms,
  * les Sept Âmes visibles uniquement par le Regard, Scribe Gris (mémoire globale).
  * @author JOKO & Claude
  *
@@ -88,10 +88,21 @@
  * @desc Interrupteur-miroir de la stèle blanche. 0 pour désactiver.
  * @default 53
  *
+ * @param Ghost Actor ID
+ * @desc L'acteur fantôme de l'autel. Créé automatiquement au chargement s'il n'existe pas dans la base de données.
+ * @default 5
+ *
  * @help
  * ============================================================================
- * Zikhrael_Mazal.js v1.2 — mode d'emploi
+ * Zikhrael_Mazal.js v1.2.1 — mode d'emploi
  * ============================================================================
+ *
+ * NOUVEAU EN v1.2.1 : le plugin est autonome. Si l'acteur fantôme n'existe
+ * pas dans la base de données, il est créé tout seul au chargement ; et si
+ * les paramètres enregistrés datent de la v1.0 (vieux plugins.js), ils sont
+ * ignorés au profit des bons numéros de ce projet (variables 43-44,
+ * interrupteurs 44-54). Copier ce seul fichier suffit à faire tourner
+ * le moteur.
  *
  * NOUVEAU EN v1.2 : le mode « regard ». Les Sept Âmes ne sont plus liées à
  * un seuil de lucidité permanent : elles n'apparaissent QUE lorsque le
@@ -184,12 +195,19 @@ var Zikhrael = Zikhrael || {};
     'use strict';
 
     //-------------------------------------------------------------------------
-    // Paramètres
+    // Paramètres.
+    // Si les paramètres enregistrés datent d'avant la v1.2 (pas de
+    // « Vision Mode » : vieux plugins.js jamais recopié), on les ignore
+    // entièrement et on prend les valeurs par défaut du fichier — les bons
+    // numéros pour ce projet. Rouvrir le Gestionnaire de plugins et
+    // sauvegarder réactive les réglages manuels.
     //-------------------------------------------------------------------------
     var params        = PluginManager.parameters('Zikhrael_Mazal');
+    if (params['Vision Mode'] === undefined) params = {};
     var pMazalVar     = Number(params['Mazal Variable ID'] || 43);
     var pAutoRoll     = String(params['Auto Roll'] || 'true').toLowerCase() === 'true';
-    var pNames        = String(params['Names'] || '');
+    var pNames        = String(params['Names'] ||
+        'TEMIRA:44, KAVOR:45, OSHKA:46, SULITH:47, NEDRA:48, ILESSE:49, MAROTH:50');
     var pResultSwitch = Number(params['Result Switch ID'] || 51);
     var pAmesVar      = Number(params['Ames Count Variable ID'] || 44);
     var pVisionMode   = String(params['Vision Mode'] || 'regard').trim().toLowerCase();
@@ -207,6 +225,33 @@ var Zikhrael = Zikhrael || {};
     var pScribeKey    = String(params['Scribe Global Key'] || 'scribe_vu').trim();
     var pSteleValue   = Number(params['Stele Mazal Value'] || 77);
     var pSteleSwitch  = Number(params['Stele Switch ID'] || 53);
+    var pGhostActor   = Number(params['Ghost Actor ID'] || 5);
+
+    //-------------------------------------------------------------------------
+    // L'acteur fantôme de l'autel : s'il n'existe pas dans la base de
+    // données (Actors.json jamais recopié), le plugin le crée lui-même au
+    // chargement. Sans lui, MV saute silencieusement « Entrer le nom d'un
+    // héros » et l'autel reste froid à jamais.
+    //-------------------------------------------------------------------------
+    function ensureGhostActor() {
+        if (!pGhostActor || !window.$dataActors) return;
+        while ($dataActors.length <= pGhostActor) $dataActors.push(null);
+        if (!$dataActors[pGhostActor]) {
+            $dataActors[pGhostActor] = {
+                id: pGhostActor, battlerName: '', characterIndex: 0,
+                characterName: '', classId: 1, equips: [0, 0, 0, 0, 0, 0, 0],
+                faceIndex: 0, faceName: '', traits: [], initialLevel: 1,
+                maxLevel: 99, name: '•', nickname: '', note: '', profile: ''
+            };
+        }
+    }
+
+    var _DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
+    DataManager.isDatabaseLoaded = function() {
+        if (!_DataManager_isDatabaseLoaded.call(this)) return false;
+        ensureGhostActor();
+        return true;
+    };
 
     //-------------------------------------------------------------------------
     // Normalisation : minuscules, sans accents, sans espaces parasites.
