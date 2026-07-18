@@ -1,12 +1,12 @@
-# Le Mystère des Sept Noms — guide de montage (v1.2)
+# Le Mystère des Sept Noms — guide de montage (v1.3)
 
-> *Sheva Shemot · Zikhrael_Mazal.js v1.2 · Les Sept Âmes n'apparaissent qu'avec LE REGARD (touche R).*
+> *Sheva Shemot · Zikhrael_Mazal.js v1.3 · Les Sept Âmes n'apparaissent qu'en PLONGÉE DANS LE LAC (touche F).*
 
 ## Ce qui est déjà fait (rien à refaire)
 
 Tout ce qui suit est **déjà installé et configuré** dans le projet :
 
-- `js/plugins/Zikhrael_Mazal.js` mis à jour en **v1.2** (chargé après LeRegard — ne pas le déplacer avant).
+- `js/plugins/Zikhrael_Mazal.js` mis à jour en **v1.3** (chargé après PlongerLac et LeRegard — ne pas le déplacer avant).
 - Les paramètres du plugin sont enregistrés dans `js/plugins.js`.
 - La base de données est nommée et réservée :
 
@@ -16,7 +16,7 @@ Tout ce qui suit est **déjà installé et configuré** dans le projet :
 | 51 | Interrupteur | ZK Résultat | ON si le nom entré est reconnu |
 | 52 | Interrupteur | ZK Scribe | géré par le plugin (Mazal = 7 et jamais vu) |
 | 53 | Interrupteur | ZK Stèle | géré par le plugin (Mazal = 77) |
-| 54 | Interrupteur | ZK Vision | géré par le plugin : ON pendant le Regard |
+| 54 | Interrupteur | ZK Vision | géré par le plugin : ON pendant la plongée (F) |
 | 43 | Variable | ZK Mazal | le tirage secret de la partie (1–100), jamais montré |
 | 44 | Variable | ZK Âmes | nombre d'âmes nommées (0–7) |
 | — | Héros n°5 | « • » | l'acteur fantôme de l'autel, jamais dans l'équipe |
@@ -35,7 +35,7 @@ l'éditeur en bas de la liste des cartes). Tout y est fonctionnel et testé :
   `<ZK Esprit>`, chacune avec ses commentaires LeRegard `<Nom:>`, `<Ame:>`
   et `<Verite:>` — un Regard posé sur un spectre lit son âme).
 - **La porte scellée** (porte de fer, mur nord) : close tant que les 7 âmes
-  ne sont pas nommées *et* regardées. À l'ouverture elle joue un son et
+  ne sont pas nommées *et* vues en plongée. À l'ouverture elle joue un son et
   affiche un message — remplace ce message par ta téléportation vers la
   Chambre du Souvenir (le commentaire DEV dans l'événement te le rappelle).
 - **Le Scribe Gris** (silhouette noire, coin sud-ouest) : n'existe que si
@@ -50,26 +50,25 @@ Pour y aller en playtest : console F8 →
 événements vers ta vraie carte de sanctuaire (clic droit → Copier dans
 l'éditeur d'événements, tout est transportable tel quel).
 
-## La règle de vision : uniquement avec le Regard
+## La règle de vision : uniquement en plongée (touche F)
 
-Les Sept Âmes ne dépendent plus d'un seuil de lucidité permanent. **Elles
-n'existent que pendant le Regard** : quand le joueur appuie sur **R** (le
-vitrail de LeRegard s'ouvre), l'interrupteur `ZK Vision (54)` passe ON et le
-reste **8 secondes** après la fermeture du vitrail, puis les âmes s'estompent.
-Changer de carte referme l'œil.
+Les Sept Âmes n'existent que **pendant la plongée dans le Lac** (ton plugin
+PlongerLac) : quand le joueur appuie sur **F** et plonge, l'interrupteur
+`ZK Vision (54)` passe ON — les âmes se matérialisent. Quand il remonte
+(re-F, ou automatiquement au bout des pas de plongée), l'œil se referme et
+elles s'estompent. Chaque plongée coûte de la santé mentale : voir les morts
+a un prix, comme tout le reste.
 
 Réglages dans le Gestionnaire de plugins (Zikhrael_Mazal) :
 
-- **Regard Vision Duree** : durée de la vision en secondes (défaut 8).
-- **Regard Lucidite Min** : lucidité minimale (échelle LeRegard 0–9) pour que
-  le Regard révèle les âmes. À 0, chaque Regard les révèle ; à 5 par exemple,
-  seul un esprit déjà proche du Lac les voit.
-- **Vision Mode** : `regard` (actuel). Repasser à `lucidite` rebranche
-  l'ancienne logique sur la jauge mentale de Thylane (variable 11, inversée,
-  seuil 4).
+- **Vision Mode** : `plongee` (actuel). `regard` rebranche sur la touche R,
+  `lucidite` sur la jauge mentale de Thylane.
+- **Plongee Palier Min** : profondeur exigée pour voir les âmes.
+  `0` = toute plongée les révèle. `3` = il faut atteindre **le Mur**.
+  `4` = seul **le Fond** les montre (réservé aux presque-Déments).
 
-Commandes de mise en scène : `Zikhrael VisionOn 20` (force la vision 20 s),
-`Zikhrael VisionOff` (la referme).
+Commandes de mise en scène : `Zikhrael VisionOn 20` (force la vision 20 s
+sans plonger), `Zikhrael VisionOff`.
 
 ## 1. L'autel des Sept Noms
 
@@ -95,7 +94,7 @@ Un événement sur la carte du sanctuaire, déclencheur **Touche action**.
 ```
 
 Le joueur peut donc rendre les sept âmes au monde **sans jamais en voir une
-seule** — s'il ne pense pas à Regarder. C'est voulu.
+seule** — s'il ne pense pas à plonger. C'est voulu.
 
 ## 2. Les Sept Âmes — les événements spectres
 
@@ -118,9 +117,9 @@ et scintillement spectral automatiques.
 | Ilesse | 0049 | « Shemi — Ilesse. Lo yachida. Me'olam lo. » | Mon nom — Ilesse. Pas seule. Plus jamais. |
 | Maroth | 0050 | « Shemi — Maroth. Ha-acharon. Ha-deleta : patach ! » | Mon nom — Maroth. Le dernier. La porte : ouvre ! |
 
-L'image à viser : le joueur nomme, ne voit rien… puis un soir il utilise le
-Regard sur un PNJ quelconque du sanctuaire — et sept silhouettes pâles se
-tiennent autour de lui pendant huit secondes.
+L'image à viser : le joueur nomme, ne voit rien… puis un soir il plonge dans
+le Lac au milieu du sanctuaire — et sept silhouettes pâles se tiennent
+autour de lui, le temps de la plongée.
 
 Bonus lore gratuit : chaque âme peut aussi porter des commentaires LeRegard
 (`<Ame: deuil>`, `<Nom: Temira>`, `<Verite: ...>`) — un Regard posé
@@ -142,9 +141,9 @@ directement sur un spectre ouvrira son vitrail comme pour un vivant.
 ◆ Téléporter : Chambre du Souvenir
 ```
 
-Nommer les sept ne suffit pas : il faut **les regarder en face**. Le joueur
-doit ouvrir le Regard devant la porte, entouré des sept âmes qu'il a
-ramenées, et la franchir pendant que l'œil est ouvert.
+Nommer les sept ne suffit pas : il faut **les voir en face**. Le joueur
+doit plonger devant la porte, entouré des sept âmes qu'il a ramenées, et la
+franchir sans remonter.
 
 ## 4. Le Scribe Gris
 
@@ -185,11 +184,11 @@ ce fichier, ou passes `Zikhrael GlobalOff scribe_vu` en événement de test.
    plugin en événement de test) pour le forcer.
 2. **L'autel** : entrer « temira » en minuscules → `Zikhrael.ames()` doit
    rendre 1, et sans Regard le message est « Un murmure. Personne. ».
-3. **La vision** : appuyer sur **R** n'importe où dans le sanctuaire →
-   les âmes nommées se matérialisent ~8 secondes (`Zikhrael.voit()` → true,
-   `Zikhrael.visionRestante()` → secondes restantes), puis s'estompent.
-4. **La porte** : 7 âmes nommées + Regard ouvert → page 2, téléportation.
-   7 âmes sans Regard → porte close : comportement voulu.
+3. **La vision** : appuyer sur **F** (plonger) n'importe où dans le
+   sanctuaire → les âmes nommées se matérialisent tant que dure la plongée
+   (`Zikhrael.voit()` → true), et s'estompent à la remontée (re-F).
+4. **La porte** : 7 âmes nommées + plongée en cours → page 2, ouverture.
+   7 âmes sans plonger → porte close : comportement voulu.
 5. **Le Scribe** : `Zikhrael MazalSet 7`, aller sur sa carte, lui parler :
    il s'efface. Nouvelle partie, re-forcer 7 : il n'est plus là. Supprimer
    `save/zikhrael.rpgsave` : il renaît.

@@ -4,8 +4,8 @@
 //=============================================================================
 
 /*:
- * @plugindesc v1.2.1 Mystère des Sept Noms : variable Mazal, autel des noms,
- * les Sept Âmes visibles uniquement par le Regard, Scribe Gris (mémoire globale).
+ * @plugindesc v1.3 Mystère des Sept Noms : variable Mazal, autel des noms,
+ * les Sept Âmes visibles uniquement en plongée dans le Lac, Scribe Gris (mémoire globale).
  * @author JOKO & Claude
  *
  * @param Mazal Variable ID
@@ -29,8 +29,12 @@
  * @default 44
  *
  * @param Vision Mode
- * @desc regard : les âmes n'apparaissent que pendant le Regard (touche R). lucidite : selon la variable de lucidité.
- * @default regard
+ * @desc plongee : âmes visibles pendant la plongée dans le Lac (touche F). regard : pendant le Regard (touche R). lucidite : selon la variable.
+ * @default plongee
+ *
+ * @param Plongee Palier Min
+ * @desc Mode plongee : palier minimal pour voir les âmes (0 = toute plongée, 3 = à partir du Mur, 4 = le Fond seul).
+ * @default 0
  *
  * @param Regard Vision Duree
  * @desc Mode regard : durée (en secondes) pendant laquelle les âmes restent visibles après un Regard.
@@ -94,8 +98,16 @@
  *
  * @help
  * ============================================================================
- * Zikhrael_Mazal.js v1.2.1 — mode d'emploi
+ * Zikhrael_Mazal.js v1.3 — mode d'emploi
  * ============================================================================
+ *
+ * NOUVEAU EN v1.3 : le mode « plongee » (par défaut). Les Sept Âmes
+ * n'apparaissent que pendant la PLONGÉE DANS LE LAC (touche F, plugin
+ * PlongerLac.js) : plonger ouvre l'œil aux morts, remonter le referme.
+ * Le paramètre « Plongee Palier Min » peut exiger une profondeur : à 3,
+ * seuls ceux qui atteignent le Mur voient les âmes ; à 4, le Fond seul.
+ * Les modes « regard » (touche R) et « lucidite » restent disponibles.
+ * Charger ce plugin APRÈS PlongerLac.js et LeRegard.js.
  *
  * NOUVEAU EN v1.2.1 : le plugin est autonome. Si l'acteur fantôme n'existe
  * pas dans la base de données, il est créé tout seul au chargement ; et si
@@ -119,6 +131,7 @@
  *  2. LES INTERRUPTEURS-MIROIRS : à chaque changement de carte, le plugin
  *     met à jour tout seul l'interrupteur du Scribe Gris, celui de la stèle
  *     blanche, ET l'interrupteur de vision (ZK Vision).
+ *     - Mode « plongee » : ZK Vision suit la plongée dans le Lac (touche F).
  *     - Mode « regard » : ZK Vision suit l'usage du Regard (touche R).
  *     - Mode « lucidite » : ZK Vision suit la variable de lucidité, en
  *       direct, dès qu'elle change.
@@ -210,7 +223,8 @@ var Zikhrael = Zikhrael || {};
         'TEMIRA:44, KAVOR:45, OSHKA:46, SULITH:47, NEDRA:48, ILESSE:49, MAROTH:50');
     var pResultSwitch = Number(params['Result Switch ID'] || 51);
     var pAmesVar      = Number(params['Ames Count Variable ID'] || 44);
-    var pVisionMode   = String(params['Vision Mode'] || 'regard').trim().toLowerCase();
+    var pVisionMode   = String(params['Vision Mode'] || 'plongee').trim().toLowerCase();
+    var pPlongeePalier= Number(params['Plongee Palier Min'] || 0);
     var pRegardDuree  = Number(params['Regard Vision Duree'] || 8);
     var pRegardLucMin = Number(params['Regard Lucidite Min'] || 0);
     var pLucVar       = Number(params['Lucidite Variable ID'] || 11);
@@ -344,6 +358,14 @@ var Zikhrael = Zikhrael || {};
         return true;
     }
 
+    // La plongée dans le Lac (PlongerLac.js, touche F) ouvre-t-elle l'œil ?
+    function plongeeOuverte() {
+        try {
+            if (!window.PlongerLac || !PlongerLac.lucide()) return false;
+            return pPlongeePalier <= 0 || PlongerLac.palier() >= pPlongeePalier;
+        } catch (e) { return false; }
+    }
+
     //-------------------------------------------------------------------------
     // API publique — utilisable dans les Embranchements conditionnels (Script)
     //-------------------------------------------------------------------------
@@ -365,6 +387,9 @@ var Zikhrael = Zikhrael || {};
     };
 
     Zikhrael.voit = function() {
+        if (pVisionMode === 'plongee') {
+            return plongeeOuverte() || visionFrames > 0;
+        }
         if (pVisionMode === 'regard') {
             return visionFrames > 0 && luciditeRegardOk();
         }
@@ -495,13 +520,21 @@ var Zikhrael = Zikhrael || {};
     var _Scene_Map_update = Scene_Map.prototype.update;
     Scene_Map.prototype.update = function() {
         _Scene_Map_update.call(this);
-        if (pVisionMode !== 'regard') return;
-        if (regardOuvert()) {
-            visionFrames = Math.max(1, Math.round(pRegardDuree * 60));
-        } else if (visionFrames > 0 && $gameMap && !$gameMap.isEventRunning()) {
-            visionFrames--;
+        if (pVisionMode === 'regard') {
+            if (regardOuvert()) {
+                visionFrames = Math.max(1, Math.round(pRegardDuree * 60));
+            } else if (visionFrames > 0 && $gameMap && !$gameMap.isEventRunning()) {
+                visionFrames--;
+            }
+            refreshVisionIfChanged();
+        } else if (pVisionMode === 'plongee') {
+            // L'œil suit la plongée dans le Lac (touche F) — et les
+            // ouvertures forcées (VisionOn) gardent leur compte à rebours.
+            if (visionFrames > 0 && $gameMap && !$gameMap.isEventRunning()) {
+                visionFrames--;
+            }
+            refreshVisionIfChanged();
         }
-        refreshVisionIfChanged();
     };
 
     //-------------------------------------------------------------------------
@@ -511,7 +544,7 @@ var Zikhrael = Zikhrael || {};
     var _Game_Variables_setValue = Game_Variables.prototype.setValue;
     Game_Variables.prototype.setValue = function(variableId, value) {
         _Game_Variables_setValue.call(this, variableId, value);
-        if (variableId === pLucVar && pVisionMode !== 'regard') refreshVision();
+        if (variableId === pLucVar && pVisionMode === 'lucidite') refreshVision();
     };
 
     //-------------------------------------------------------------------------
