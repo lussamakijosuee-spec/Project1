@@ -54,5 +54,10 @@ null,
 {"id":52,"expanded":true,"name":"Forteresse","order":14,"parentId":51,"scrollX":902,"scrollY":1304},
 {"id":53,"expanded":false,"name":"Magasin d'Objets","order":15,"parentId":52,"scrollX":1638,"scrollY":896},
 {"id":54,"expanded":true,"name":"Manoir","order":16,"parentId":52,"scrollX":1622,"scrollY":1024},
-{"id":55,"expanded":false,"name":"Tour 1F","order":17,"parentId":54,"scrollX":1622,"scrollY":896}
+{"id":55,"expanded":false,"name":"Tour 1F","order":17,"parentId":54,"scrollX":1622,"scrollY":896},
+{"id":56,"expanded":false,"name":"Sanctuaire des Sept Noms","order":56,"parentId":0,"scrollX":984,"scrollY":696},
+{"id":57,"expanded":false,"name":"★ Village du Seuil (DÉMO)","order":57,"parentId":0,"scrollX":624,"scrollY":504},
+{"id":58,"expanded":false,"name":"★ Fort de Kragenvar (DÉMO)","order":58,"parentId":0,"scrollX":1622,"scrollY":1064},
+{"id":59,"expanded":false,"name":"★ Château de la Cour Pâle (DÉMO)","order":59,"parentId":0,"scrollX":1622,"scrollY":1024},
+{"id":60,"expanded":false,"name":"★ Route des Ronces (DÉMO)","order":60,"parentId":0,"scrollX":1638,"scrollY":896}
 ]
