@@ -29,6 +29,13 @@
  * @default 2
  * @desc « Plus tu es puissant, plus ton Don résiste » (Codex §6.2).
  *
+ * @param endurParPalier
+ * @text Endurance — gain par palier de l'Objet Spirituel
+ * @type number
+ * @min 0
+ * @default 20
+ * @desc Éclat → Forme → Résonance → Vérité : un Éclat casse vite, une Vérité presque jamais.
+ *
  * @param maluxCasse
  * @text Don brisé — multiplicateur
  * @type number
@@ -138,6 +145,7 @@
     var USURE      = parseInt(P['usureParUsage']  || 1);
     var END_BASE   = parseInt(P['endurBase']      || 40);
     var END_NIV    = parseInt(P['endurParNiveau'] || 2);
+    var END_PAL    = parseInt(P['endurParPalier'] || 20);
     var MALUS      = parseFloat(P['maluxCasse']   || 0.5);
     var OMBRE_MAX  = parseInt(P['ombreMax']       || 100);
     var OMBRE_USE  = parseInt(P['ombreParUsage']  || 12);
@@ -171,9 +179,36 @@
     function acteur(id) {
         try { return $gameActors ? $gameActors.actor(id) : null; } catch (e) { return null; }
     }
+    // L'arme spirituelle réellement portée (chaîne 501-516, notée <Objet Spirituel>).
+    function armeSpirituelle(id) {
+        try {
+            var a = acteur(id);
+            if (!a || !a.weapons) return null;
+            var w = a.weapons();
+            for (var i = 0; i < w.length; i++) {
+                if (w[i] && w[i].meta && w[i].meta['Objet Spirituel']) return w[i];
+            }
+        } catch (e) { }
+        return null;
+    }
+    // Palier atteint : Éclat 1 → Forme 2 → Résonance 3 → Vérité 4.
+    function palierDe(id) {
+        var w = armeSpirituelle(id);
+        var p = w && w.meta ? parseInt(w.meta['Palier']) : 0;
+        return p > 0 ? p : 1;
+    }
+    // Le nom du Don est celui du Codex (le Masque, l'Amulette…) ; l'arme
+    // spirituellement portée en est la forme actuelle, palier après palier.
+    function nomDuDon(id) {
+        return DONS[id] ? DONS[id].nom : '';
+    }
+    function nomArme(id) {
+        var w = armeSpirituelle(id);
+        return (w && w.name) ? w.name : '';
+    }
     function enduranceMax(id) {
         var a = acteur(id);
-        return END_BASE + (a ? a.level : 1) * END_NIV;
+        return END_BASE + (a ? a.level : 1) * END_NIV + (palierDe(id) - 1) * END_PAL;
     }
     function endurance(id) {
         var f = fiche(id);
@@ -215,7 +250,8 @@
         de: function (id) {
             if (!DONS[id]) return null;
             return {
-                type: DONS[id].type, typeNom: TYPE_NOM[DONS[id].type], nom: DONS[id].nom,
+                type: DONS[id].type, typeNom: TYPE_NOM[DONS[id].type], nom: nomDuDon(id),
+                arme: nomArme(id), palier: palierDe(id),
                 endurance: endurance(id), max: enduranceMax(id), casse: estCasse(id)
             };
         },
@@ -229,7 +265,7 @@
             f.end = enduranceMax(id); f.ombre = 0; f.bloc = 0;
             if (etait) {
                 var a = acteur(id);
-                log('\\C[24]' + (a ? a.name() : '') + ' — ' + DONS[id].nom + ' a retrouvé sa forme.\\C[0]');
+                log('\\C[24]' + (a ? a.name() : '') + ' — ' + nomDuDon(id) + ' a retrouvé sa forme.\\C[0]');
             }
         },
         casser: function (id) { var f = fiche(id); if (f) { f.end = 0; annoncerCasse(id); } },
@@ -241,11 +277,11 @@
         var a = acteur(id), d = DONS[id];
         if (!a || !d) return;
         if (d.effet === 'sang') {
-            log('\\C[18]✖ ' + d.nom + ' se fend. Désormais, son sang la blesse aussi.\\C[0]');
+            log('\\C[18]✖ ' + nomDuDon(id) + ' se fend. Désormais, son sang la blesse aussi.\\C[0]');
         } else if (d.type === 'familier') {
-            log('\\C[18]✖ ' + d.nom + ' se disloque. ' + a.name() + ' se retrouve seule.\\C[0]');
+            log('\\C[18]✖ ' + nomDuDon(id) + ' se disloque. ' + a.name() + ' se retrouve seule.\\C[0]');
         } else {
-            log('\\C[18]✖ ' + d.nom + ' est brisé. Il sert encore — mais de moitié.\\C[0]');
+            log('\\C[18]✖ ' + nomDuDon(id) + ' est brisé. Il sert encore — mais de moitié.\\C[0]');
         }
     }
 
@@ -256,7 +292,7 @@
         var f = fiche(id), d = DONS[id], a = acteur(id);
         if (!f || f.apparu || !d || !a) return;
         f.apparu = true;
-        log('\\C[6]✦ ' + a.name() + ' — ' + d.nom + ' apparaît. (' + TYPE_NOM[d.type] + ')\\C[0]');
+        log('\\C[6]✦ ' + a.name() + ' — ' + nomDuDon(id) + ' apparaît. (' + TYPE_NOM[d.type] + ')\\C[0]');
     }
 
     //=========================================================================
@@ -311,7 +347,7 @@
         var f = fiche(id), a = acteur(id);
         f.ombre = 0;
         f.bloc = OMBRE_BLOC;
-        log('\\C[2]✸ ' + DONS[id].nom + " explose — l'ombre reflue.\\C[0]");
+        log('\\C[2]✸ ' + nomDuDon(id) + " explose — l'ombre reflue.\\C[0]");
         if (a) log("\\C[8]" + a.name() + ' ne peut plus manier les ombres, et les âmes lui échappent.\\C[0]');
     }
     // capacités d'ombre bloquées le temps qu'il récupère
@@ -333,7 +369,7 @@
             if (!id) return;
             var f = fiche(id);
             if (f.bloc > 0 && --f.bloc === 0) {
-                log('\\C[24]' + DONS[id].nom + ' se recompose. Les ombres reviennent.\\C[0]');
+                log('\\C[24]' + nomDuDon(id) + ' se recompose. Les ombres reviennent.\\C[0]');
             }
         } catch (e) { }
     };
@@ -430,9 +466,9 @@
             var d = window.Dons.de(a.actorId());
             if (!d) return;
             w.changeTextColor(w.textColor(d.casse ? 18 : 24));
-            w.drawText(a.name() + ' — ' + d.nom, 8, y, 380);
+            w.drawText(a.name() + ' — ' + d.nom + (d.arme ? '  (' + d.arme + ')' : ''), 8, y, 420);
             w.resetTextColor();
-            w.drawText(d.typeNom, 400, y, 200);
+            w.drawText(d.typeNom + '  ·  palier ' + d.palier + '/4', 440, y, 220);
             y += lh;
             var pct = d.max > 0 ? d.endurance / d.max : 0;
             w.drawGauge(24, y, 360, pct, w.textColor(d.casse ? 18 : 24), w.textColor(0));
