@@ -309,7 +309,11 @@
         jauge: function (key) {
             if (!varsReady()) return 0;
             var v = gaugeVarOf(resolveActorId(key));
-            return v ? $gameVariables.value(v) : 0;
+            // Un héros sans variable de jauge (le héros du joueur, un invité…) n'est
+            // pas suivi par la Santé Mentale : il vaut GAUGE_MAX, jamais 0 — sinon il
+            // serait lu en phase 1 (Effondrement) et toutes les Chutes se
+            // déclencheraient sur lui dès le début de la partie.
+            return v ? $gameVariables.value(v) : GAUGE_MAX;
         },
 
         /** Écrit la jauge (clampée). Applique les conséquences immédiates. */

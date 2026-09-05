@@ -23,3 +23,5 @@ img/enemies/1000024844_347x239.png
 #   data/Enemies.json → tes 426 ennemis
 # (retirés d'ici le 2026-07-17 : ils étaient ignorés par erreur, ce qui risquait
 #  de les faire disparaître à un clone propre.)
+data/Actors.json
+data/CommonEvents.json
