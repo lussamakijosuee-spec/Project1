@@ -127,16 +127,96 @@ OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
 
 ---
 
-## 6. L'OBJET SPIRITUEL
+## 6. LE DON SPIRITUEL
 
-L'arme/objet que le joueur reçoit **au début du jeu**.
-- C'est la **manifestation physique de son âme en surface**.
-- Il **évolue avec le joueur** : directement relié à son **niveau** et à son **âme**.
-- Peut être un **objet, une arme ou une armure**.
+Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il n'est pas remis : il **apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme. On ne le choisit pas, on ne le fabrique pas — il *sort*.
 
 **Image de l'âme = une coquille :**
-- **La surface** : ce qui peut être **touché et matérialisé** physiquement → l'Objet Spirituel.
-- **Les profondeurs** : là où résident les **capacités spéciales**, la **nature** de l'âme et ses **traits**.
+- **La surface** : ce qui peut être **touché et matérialisé** → le Don Spirituel.
+- **Les profondeurs** : là où résident le **Trait**, la **nature** de l'âme et ses pouvoirs secrets.
+
+### 6.1 · Les trois formes du Don
+
+| Forme | Fréquence | Ce qu'elle donne |
+|---|---|---|
+| ⚔️ **L'ARME spirituelle** | **80 %** | Rien de plus qu'une arme. Sa seule particularité est sa **résistance**, liée à l'âme. |
+| 🔮 **L'OBJET spirituel** | **18 %** | Peut prendre **n'importe quelle forme** — y compris celle d'une arme — mais confère **un effet ou un talent**. |
+| 👤 **LE FAMILIER** | **2 %** | Une **créature née directement de l'âme**. Peut porter **un Trait à lui**. |
+
+### 6.2 · L'Endurance — commune aux trois formes
+
+Tout Don Spirituel possède une **jauge d'Endurance**. Elle **s'use à l'usage** et se **restaure au repos**.
+
+> ⚠️ **Un Don ne se perd jamais.** Quand l'Endurance tombe à zéro, il **casse** — mais il reste utilisable. Simplement, **tout ce qu'il apporte est divisé par deux** : dégâts, effets, bénéfices. Un Don brisé n'est pas une arme perdue, c'est une arme qui ne tient plus sa promesse.
+
+Plus le porteur est **puissant** — plus il monte en niveau, plus son âme s'affermit — **plus son Don résiste**. La jauge maximale grandit avec lui. Un marqué faible casse son arme en un combat ; un marqué accompli la fait tenir des semaines.
+
+### 6.3 · ⚔️ L'ARME SPIRITUELLE (80 %)
+
+Le cas ordinaire, celui de la grande majorité. **Aucun effet particulier, aucun talent, aucun pouvoir.** C'est une arme, et c'est tout. Sa seule vertu est de **résister** : elle est liée à l'âme, donc elle encaisse ce qu'aucun acier ne encaisserait.
+
+C'est peu, et c'est déjà énorme : une arme qui ne se brise pas au premier choc, qui grandit avec toi et qu'on ne peut pas te voler.
+
+**Aël** porte une arme spirituelle : un **arc et ses flèches**.
+
+### 6.4 · 🔮 L'OBJET SPIRITUEL (18 %)
+
+L'Objet peut avoir **exactement la même apparence qu'une arme** — la différence n'est pas visible. Ce qui le distingue, c'est qu'il **confère un effet ou un talent**.
+
+Un Objet porte **deux jauges** : son **Endurance**, comme tout Don, et une **jauge propre** liée à son effet. Cette seconde jauge est le vrai piège : **en abuser a un prix**, et ce prix est toujours pire que la simple casse.
+
+**⬛ L'AMULETTE DE LUDWING — l'absorption des ombres**
+Elle lui permet d'**absorber les ombres** et de **mieux les manier**. C'est elle qui donne l'impression que Ludwing possède **deux Traits, alors qu'il n'en a qu'un** : son Trait est l'absorption des âmes, l'ombre vient de l'amulette.
+- Elle porte une **jauge d'Ombre** qui se remplit à mesure qu'il absorbe.
+- **En abuser la fait exploser.** L'explosion **bloque temporairement ses capacités d'ombre**, le temps qu'il récupère, et **rend l'absorption d'âmes plus difficile**.
+
+**🩸 LE MASQUE DE VESPER — le sang sans blessure**
+Il lui permet d'**utiliser son sang comme elle l'entend sans se blesser** — son sang se régénère, et son style de combat *Sang* est appris par-dessus.
+- **En abuser le brise.** Une fois le masque cassé, **chaque attaque de sang la blesse pour de bon**, et son style de combat devient plus dur à tenir : **la régénération faiblit**.
+
+### 6.5 · 👤 LE FAMILIER (2 %)
+
+Le cas **vraiment rare**. Le Familier est une **créature issue directement de l'âme** — pas une invocation, pas un pacte : une part de soi qui marche à côté de soi. Sa forme n'a aucune limite.
+
+Ce qui rend les Familiers **redoutables**, c'est qu'un Familier peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est le Familier qui l'a débloqué.
+
+**❄️ LE FAMILIER DE KORRAH**
+Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
+- Trait débloqué : **HIVER** — elle manipule la glace **directement, sans passer par une formule**.
+- ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction.
+
+---
+
+## 6-bis. LES TRAITS
+
+Le **Trait** est le don que l'âme offre à la naissance : une capacité unique, instinctive, qu'on ne contrôle jamais tout à fait. **Il est rare** — il faut une **certaine puissance**, une **volonté forte** et une **âme puissante**. La plupart des gens n'en ont aucun.
+
+| Marqué | Trait | Ce qu'il fait |
+|---|---|---|
+| **Vesper** | **LE SANG** | Contrôle son sang **directement, sans formule**, et le **fusionne avec le mana**. |
+| **Korrah** | **CHANGE** | Échange les places. *(Trait de base.)* |
+| **Korrah** | **HIVER** | Manipule la glace sans formule — **elle en subit les effets aussi**. *(Via son Familier.)* |
+| **Ludwing** | **L'ABSORPTION DES ÂMES** | Absorbe les âmes **directement** et les emploie. *(L'ombre vient de son amulette, pas de son Trait.)* |
+| **Aël** | **MIRACLE** | **Développe de nouvelles techniques en temps réel.** |
+
+### Le Miracle d'Aël — comment il fonctionne
+Face à un ennemi, elle finit par **développer d'elle-même la technique capable de le toucher**, même si elle **ne connaît pas le sort**. Exemple : contre un ennemi faible au mana positif — en particulier au *Crépuscule* — elle développera au fil du combat de quoi l'atteindre.
+
+Deux contraintes, et elles sont dures :
+- **C'est lent.** Le Miracle prend du temps à se former.
+- **Elle doit économiser son mana.** Trop en dépenser lui fait **perdre l'effet en cours de route**.
+
+Ce qu'elle développe se **matérialise en flèches** — d'où les **Flèches Miracle**.
+
+### ⚖️ La règle d'or : le Trait et le Don sont liés
+
+**Le porteur est affecté par son propre Trait et par ses propres effets.** Un Trait de feu te brûle aussi. Le froid d'Hiver gèle Korrah. Le sang de Vesper est *son* sang.
+
+C'est pour cela que **le Don Spirituel arrive presque toujours comme une sécurité adaptée au Trait** :
+
+> Si mon Trait est le feu, mon Don sera très probablement quelque chose **à distance**, ou une pièce **faite pour manier le feu sans me blesser**.
+
+Le Don n'est pas une récompense : c'est la réponse de l'âme au danger que le Trait lui fait courir. **Il faut donc bien jouer** — la puissance et la protection viennent du même endroit, et l'une ne va pas sans l'autre.
 
 ---
 
@@ -340,15 +420,19 @@ Ce monde est **numérique**. Cela a des conséquences concrètes sur les règles
 
 ---
 
-## 17. L'OBJET SPIRITUEL — ÉVOLUTION
+## 17. LE DON SPIRITUEL — ÉVOLUTION
 
-L'Objet Spirituel grandit avec le **niveau** et l'**âme** du porteur. On peut imaginer **quatre paliers** :
+> *Chapitre 6 dit **ce qu'est** un Don et quelles formes il prend. Celui-ci dit **comment il grandit**.*
+
+Le Don grandit avec le **niveau** et l'**âme** du porteur, en **quatre paliers** :
 1. **Éclat** (Niv. 1+) : forme brute, à peine éveillée. Reflète un trait dominant.
-2. **Forme** (Niv. ~15) : l'objet « choisit » sa nature définitive (arme/objet/armure) selon les **décisions** du joueur.
+2. **Forme** (Niv. ~15) : le Don « choisit » sa nature définitive selon les **décisions** du joueur.
 3. **Résonance** (Niv. ~35) : les **profondeurs** de l'âme s'ouvrent — une capacité spéciale unique se débloque.
-4. **Vérité** (Niv. ~60) : l'objet devient l'expression totale de l'âme. Forme « finale », liée à la fin obtenue.
+4. **Vérité** (Niv. ~60) : le Don devient l'expression totale de l'âme. Forme finale, liée à la fin obtenue.
 
-**Surface vs Profondeurs** : la *surface* est ce qu'on touche (stats, apparence) ; les *profondeurs* portent les **traits, la nature et les pouvoirs secrets**. Deux héros avec la même arme n'ont **jamais** le même Objet Spirituel.
+**Ce que chaque palier change concrètement** : l'**Endurance maximale** monte à chaque palier — c'est la traduction directe de « plus tu es puissant, plus ton Don résiste » (§6.2). Un Éclat casse vite ; une Vérité ne casse presque plus.
+
+**Surface vs Profondeurs** : la *surface* est ce qu'on touche (stats, apparence) ; les *profondeurs* portent le **Trait**, la nature et les pouvoirs secrets. Deux héros avec la même arme n'ont **jamais** le même Don Spirituel.
 
 ---
 
