@@ -87,14 +87,16 @@
 
     // Chaînes d'évolution : actorId -> { ids:[4], names:[4] }
     var CHAINS = {
+        // Chaque chaîne suit le Don du Codex : le Masque, le Familier,
+        // l'Amulette, l'Arc (chapitre 6).
         1: { ids: [501, 502, 503, 504],
-             names: ['Éclat de Fureur', 'Brasier Naissant', 'Fureur Résonante', 'Vérité Incandescente'] },
+             names: ['Éclat de Sang', 'Masque Naissant', 'Masque Résonant', 'Vérité du Masque'] },
         2: { ids: [505, 506, 507, 508],
-             names: ['Éclat Lucide', 'Codex Éveillé', 'Théorème Résonant', 'Vérité Stratège'] },
+             names: ['Éclat Lucide', 'Poings Naissants', 'Armure Résonante', "Vérité de l'Armure Volante"] },
         3: { ids: [509, 510, 511, 512],
-             names: ['Éclat des Âmes', 'Faux Naissante', 'Moisson Résonante', 'Vérité Damnée'] },
+             names: ['Éclat des Âmes', 'Amulette Naissante', 'Amulette Résonante', "Vérité de l'Amulette"] },
         4: { ids: [513, 514, 515, 516],
-             names: ['Éclat Stellaire', 'Sceptre Naissant', 'Constellation Résonante', 'Vérité Cosmique'] }
+             names: ['Éclat Stellaire', 'Arc Naissant', 'Arc Résonant', "Vérité de l'Arc"] }
     };
 
     var PALIER = ['Éclat', 'Forme', 'Résonance', 'Vérité'];
