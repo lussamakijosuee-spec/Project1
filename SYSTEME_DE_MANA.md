@@ -129,6 +129,10 @@ OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
 
 ## 6. LE DON SPIRITUEL
 
+> 📦 **Le dossier complet** — toutes les données récupérables (les 16 armes 501-516, les 4 reliques
+> d'âme, les compétences, les états, les animations, les 3 plugins et leurs réglages) :
+> **[`docs/DONS_SPIRITUELS.md`](docs/DONS_SPIRITUELS.md)**.
+
 Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il n'est pas remis : il **apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme. On ne le choisit pas, on ne le fabrique pas — il *sort*.
 
 **Image de l'âme = une coquille :**

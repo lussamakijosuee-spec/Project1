@@ -33,6 +33,7 @@
 | [`PLUGIN_RoyaumeImperial.md`](PLUGIN_RoyaumeImperial.md) | `RoyaumeImperial` — le Domaine de ludwing, invocations libres, arsenal |
 | [`PLUGIN_FusionMana.md`](PLUGIN_FusionMana.md) | `FusionMana` — les 3 Fusions, gains/prix/escalade |
 | [`PLUGIN_DestinsParalleles.md`](PLUGIN_DestinsParalleles.md) | `DestinsParalleles` — les vies parallèles, dérive/chute/recrutement |
+| [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md) | **⚔️🔮👤 Le Don Spirituel & les Traits** — dossier complet : les 16 armes 501-516, les 4 reliques d'âme, toutes les compétences/états/animations, les 3 plugins (`DonsSpirituels` · `TraitsAme` · `ObjetSpirituel`) |
 
 ## Le reste du dossier `docs/`
 | Fichier | Contenu |
@@ -53,7 +54,8 @@
 - **`ATELIER`** → le menu de test (playtest uniquement) pour tout régler en deux clics.
 
 ## Rappels ultra-rapides
-- Héros : **1** Aël · **2** Korrah · **3** ludwing · **4** Vesper. Var mentale = 10 + ID (11-14). Stock d'âmes = **var 15**.
+- Héros : **1** Vesper · **2** Korrah · **3** ludwing · **4** Aël. Var mentale = 10 + ID (11-14). Stock d'âmes = **var 15**.
+- Dons Spirituels : armes **501-516** (4 paliers × 4 héros) · reliques d'âme **68-71** — voir [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md).
 - 3 jauges : 🟣 Corruption (la Bête) · 🔴 Errance (l'Errant) · 🔵 Santé mentale (le Dément).
 - Interrupteurs réservés : 41 Fusion · 42 HUD · 95-98 chutes · 99 le Fond.
 - Compteurs : 826 skills · 426 ennemis · 516 troupes · 1000 états · 460 animations.
