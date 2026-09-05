@@ -67,7 +67,7 @@
     // héros × type → ennemi de la base (matrice des versions chutées)
     var ENNEMI = {
         bete:   { 1: 405, 2: 402, 3: 409, 4: 411 },
-        errant: { 1: 406, 2: 407, 3: 403, 4: 412 },
+        errant: { 1: 406, 2: 418, 3: 403, 4: 412 },
         dement: { 1: 401, 2: 408, 3: 410, 4: 404 }
     };
     var SUFF = { bete: ', la Bête', errant: ', l\'Errant', dement: ', le Dément' };
@@ -96,7 +96,14 @@
     function jCorr(id) { try { return window.Corruption ? Corruption.niveau(id) : 0; } catch (e) { return 0; } }
     function jErr(id) { try { return window.Errance ? Errance.niveau(id) : 0; } catch (e) { return 0; } }
     function phase(id) { try { return window.Ame ? (Ame.phase(id) || 5) : 5; } catch (e) { return 5; } }
+    // Seuls les quatre marqués ont des jauges et une forme chutée : tout autre
+    // héros (dont celui du joueur) n'a pas de jauge, donc une phase de 1 qui le
+    // ferait tomber « Dément » dès le début de la partie.
+    function estMarque(id) {
+        return !!(ENNEMI.bete[id] && ENNEMI.errant[id] && ENNEMI.dement[id]);
+    }
     function typeChute(id) {
+        if (!estMarque(id)) return '';
         if (jCorr(id) >= 100) return 'bete';
         if (jErr(id) >= 100) return 'errant';
         if (phase(id) <= 1) return 'dement';
@@ -186,7 +193,8 @@
     function perdreBeteOuDement(id, type) {
         var a = $gameActors.actor(id); if (!a) return;
         var s = store();
-        var eid = ENNEMI[type][id];
+        var eid = (ENNEMI[type] || {})[id];
+        if (!eid) return;
         s.monstres[eid] = construireMonstre(a, type);
         appliquerMonstres();
         s.perdu[id] = type;
@@ -211,6 +219,7 @@
         var a = $gameActors.actor(id); if (!a) return;
         var s = store();
         var eid = ENNEMI.errant[id];
+        if (!eid) return;
         s.monstres[eid] = construireMonstre(a, 'errant');
         appliquerMonstres();
         poemeActif = true;
