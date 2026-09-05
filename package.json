@@ -1,9 +1,9 @@
 {
-    "name": "",
+    "name": "codex-des-trois-sources",
     "main": "index.html",
     "js-flags": "--expose-gc",
     "window": {
-        "title": "",
+        "title": "Le Codex des Trois Sources",
         "toolbar": false,
         "width": 816,
         "height": 624,
