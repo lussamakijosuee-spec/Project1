@@ -1,12 +1,12 @@
 //=============================================================================
-// DonsSpirituels.js — v1.0  ·  Le Don Spirituel : Arme, Objet ou Familier
+// DonsSpirituels.js — v2.0  ·  Le Don Spirituel : Arme, Objet ou Familier
 // RPG Maker MV   ·   d'après le Codex des Trois Sources, chapitre 6
 //   À charger APRÈS ObjetSpirituel, Errance et JadeEntitePlunging.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Le Don Spirituel : 80% une ARME, 18% un OBJET, 2% un
- * FAMILIER. Jauge d'Endurance qui s'use à l'usage et se répare au repos —
- * une fois brisé, le Don marche encore mais tout ce qu'il apporte est divisé par deux.
+ * @plugindesc v2.0 ■ Le Don Spirituel : 80% une ARME (slot Arme), 18% un OBJET
+ * (slot Accessoire), 2% un FAMILIER (slot Âme). Endurance commune + une jauge
+ * propre à chaque Objet. Brisé, le Don sert encore — mais tout ce qu'il apporte est ÷2.
  * @author JOKO
  *
  * @param usureParUsage
@@ -30,7 +30,7 @@
  * @desc « Plus tu es puissant, plus ton Don résiste » (Codex §6.2).
  *
  * @param endurParPalier
- * @text Endurance — gain par palier de l'Objet Spirituel
+ * @text Endurance — gain par palier
  * @type number
  * @min 0
  * @default 20
@@ -41,89 +41,133 @@
  * @type number
  * @decimals 2
  * @default 0.50
- * @desc Ce que devient tout ce qu'apporte le Don une fois brisé. 0.50 = divisé par deux.
+ * @desc Ce que devient TOUT ce qu'apporte le Don une fois brisé : dégâts, stats, effets, Trait.
  *
  * @param ombreMax
- * @text Amulette de Ludwing — capacité de la jauge d'Ombre
+ * @text OBJET · Amulette de ludwing — capacité de la jauge d'Ombre
  * @type number
  * @min 10
  * @default 100
  *
  * @param ombreParUsage
- * @text Amulette — Ombre gagnée par technique d'ombre
+ * @text OBJET · Amulette — Ombre gagnée par technique d'ombre
  * @type number
  * @min 1
  * @default 12
  *
  * @param ombreBlocage
- * @text Amulette — tours de blocage après l'explosion
+ * @text OBJET · Amulette — tours de blocage après l'explosion
  * @type number
  * @min 1
  * @default 4
  *
+ * @param sangMax
+ * @text OBJET · Masque de Vesper — capacité de la jauge de Sang
+ * @type number
+ * @min 10
+ * @default 100
+ *
+ * @param sangParUsage
+ * @text OBJET · Masque — Sang gagné par technique de sang
+ * @type number
+ * @min 1
+ * @default 10
+ *
  * @param sangCoutPct
- * @text Masque de Vesper brisé — % des PV max payés par attaque de sang
+ * @text OBJET · Masque BRISÉ — % des PV max payés par attaque de sang
  * @type number
  * @min 0
  * @default 8
  *
  * @param familierBonus
- * @text Familier — bonus passif (%)
+ * @text FAMILIER — bonus passif (%)
  * @type number
  * @min 0
  * @default 10
+ *
+ * @param exigerEquipe
+ * @text Exiger que le Don soit équipé ?
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc Si Oui, un Don rangé au sac n'apporte plus rien (et le Familier ne débloque plus son Trait).
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LE DON SPIRITUEL                                    Codex, chapitre 6
  * ═══════════════════════════════════════════════════════════════════════════
  *  Le Don n'est pas remis : il APPARAÎT de lui-même, à la première fois que
- *  le marqué se sert vraiment de son âme. Trois formes :
+ *  le marqué se sert vraiment de son âme. Trois formes — et CHAQUE FORME A
+ *  SA PLACE SUR LE CORPS :
  *
- *    ⚔️  L'ARME (80 %)      — aucun effet. Seulement sa résistance.
- *    🔮  L'OBJET (18 %)     — n'importe quelle forme, mais un effet ou un
- *                             talent, et une seconde jauge qui se paie cher.
- *    👤  LE FAMILIER (2 %)  — une créature née de l'âme, qui peut porter un
- *                             Trait à elle : son porteur en a alors DEUX.
+ *    ⚔️  L'ARME (80 %)      → slot ARME
+ *          Aucun effet, aucun talent. Seulement sa résistance.
+ *          Son avantage caché : elle ne coûte AUCUN autre emplacement.
+ *
+ *    🔮  L'OBJET (18 %)     → slot ACCESSOIRE
+ *          N'importe quelle forme, mais un effet ou un talent — et une
+ *          SECONDE JAUGE qui se paie toujours plus cher que la casse.
+ *          Prix : il occupe l'accessoire. Tu ne portes rien d'autre.
+ *
+ *    👤  LE FAMILIER (2 %)  → slot ÂME
+ *          Une créature née de l'âme, qui peut porter un TRAIT à elle :
+ *          son porteur en a alors DEUX. Prix : il occupe l'Âme.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  L'ENDURANCE — commune aux trois formes
  *  ─────────────────────────────────────────────────────────────────────────
+ *      Endurance max = endurBase + niveau×endurParNiveau + (palier−1)×endurParPalier
+ *
  *  Elle s'use à l'usage et se restaure au repos (auberge, soin complet,
  *  commande DON reparer). À zéro le Don CASSE — mais reste utilisable :
- *  tout ce qu'il apporte est simplement divisé par deux.
- *  Le maximum monte avec le niveau : un Éclat casse vite, une Vérité non.
+ *  TOUT ce qu'il apporte est divisé par deux — dégâts, statistiques de la
+ *  pièce, bonus de forme, et jusqu'au Trait qu'il sécurise.
  *
  *  ─────────────────────────────────────────────────────────────────────────
- *  LES DONS DES QUATRE MARQUÉS
+ *  LA SECONDE JAUGE — le propre des OBJETS
  *  ─────────────────────────────────────────────────────────────────────────
- *  ▶ VESPER — LE MASQUE  (objet)
+ *  Un Objet ne se contente pas de s'user : il se GORGE. Chaque Objet a sa
+ *  jauge, son carburant et sa punition. En abuser coûte toujours plus cher
+ *  que de laisser l'Endurance tomber.
+ *
+ *  ▶ VESPER — LE MASQUE  (objet · accessoire) · jauge de SANG
  *      Tant qu'il tient, elle use de son sang SANS SE BLESSER.
- *      Brisé : chaque attaque de sang lui coûte sangCoutPct % de ses PV max,
- *      et sa régénération faiblit de moitié.
+ *      Chaque technique de sang remplit la jauge. PLEINE → LE MASQUE SE FEND
+ *      d'un coup (Endurance à zéro), sans attendre l'usure. Dès lors chaque
+ *      attaque de sang lui coûte sangCoutPct % de ses PV max, et sa
+ *      régénération faiblit de moitié.
  *
- *  ▶ KORRAH — L'ARMURE VOLANTE  (familier)
+ *  ▶ LUDWING — L'AMULETTE  (objet · accessoire) · jauge d'OMBRE
+ *      Elle absorbe les ombres et les lui rend maniables : c'est elle qui
+ *      donne l'impression qu'il a deux Traits alors qu'il n'en a qu'un.
+ *      Chaque technique d'ombre remplit la jauge. PLEINE → elle EXPLOSE :
+ *      capacités d'ombre bloquées ombreBlocage tours, et absorption d'âmes
+ *      deux fois moins efficace pendant ce temps.
+ *
+ *  ▶ KORRAH — L'ARMURE VOLANTE  (familier · âme)
  *      Des poings et un torse qui flottent sans corps. Il porte le Trait
  *      HIVER : elle manipule la glace sans formule — et le froid l'atteint
  *      elle aussi. Bonus passif permanent tant que le familier est entier.
+ *      ⚠ Familier NON ÉQUIPÉ → le Trait HIVER ne répond plus.
  *
- *  ▶ LUDWING — L'AMULETTE  (objet)
- *      Elle absorbe les ombres et les lui rend maniables : c'est elle qui
- *      donne l'impression qu'il a deux Traits alors qu'il n'en a qu'un.
- *      Sa jauge d'Ombre se remplit à chaque technique d'ombre. Pleine, elle
- *      EXPLOSE : capacités d'ombre bloquées quelques tours, et absorption
- *      d'âmes deux fois moins efficace pendant ce temps.
- *
- *  ▶ AËL — L'ARC ET SES FLÈCHES  (arme)
+ *  ▶ AËL — L'ARC ET SES FLÈCHES  (arme · slot Arme)
  *      Aucun effet. Juste une arme qui ne cède pas — et c'est exactement
  *      la sécurité qu'il faut à MIRACLE, un Trait qui se matérialise en
- *      flèches (règle d'or : le Don répond au danger que le Trait fait courir).
+ *      flèches. En échange : accessoire et Âme LIBRES.
  *
  *  ─────────────────────────────────────────────────────────────────────────
- *  RECONNAISSANCE DES TECHNIQUES
+ *  RECONNAISSANCE — notetags
  *  ─────────────────────────────────────────────────────────────────────────
- *  Les techniques d'ombre  : types de compétence 11 à 18, ou note <Ombre>
- *  Les techniques de sang  : type de compétence 10,      ou note <Sang>
+ *  Sur la pièce du Don (arme OU armure) :
+ *      <Don: cle>            vesper | korrah | ludwing | ael
+ *      <Forme: xxx>          arme | objet | familier
+ *      <Palier: 1-4>         Éclat · Forme · Résonance · Vérité
+ *      <TraitDebloque: cle>  (familier seulement) le Trait qu'il ouvre
+ *  Les anciens tags <Objet Spirituel: thylane|neyssa|lou|tianna> restent lus.
+ *
+ *  Les techniques d'ombre : types de compétence 11 à 18, ou note <Ombre>
+ *  Les techniques de sang : type de compétence 10,      ou note <Sang>
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  COMMANDES DE PLUGIN
@@ -131,11 +175,15 @@
  *    DON reparer            → répare les Dons de tout le groupe
  *    DON reparer 3          → répare celui de l'acteur 3
  *    DON casser 3           → brise celui de l'acteur 3 (scénario)
+ *    DON vider 3            → vide la seconde jauge de l'acteur 3
  *    DON afficher           → écran de lecture des Dons du groupe
  *
- *  SCRIPT :  window.Dons.de(actorId)        → {type, nom, endurance, max, casse}
+ *  SCRIPT :  window.Dons.de(actorId)        → fiche complète
  *            window.Dons.estCasse(actorId)  → true/false
- *            window.Dons.ombre(3)           → jauge d'Ombre de Ludwing
+ *            window.Dons.estPorte(actorId)  → le Don est-il équipé ?
+ *            window.Dons.jauge(actorId)     → {nom, val, max, bloc}
+ *            window.Dons.facteur(actorId)   → 1 ou 0.50
+ *            window.Dons.traitDebloque(2)   → 'hiver' si le familier est là
  * ═══════════════════════════════════════════════════════════════════════════
  */
 (function () {
@@ -150,17 +198,28 @@
     var OMBRE_MAX  = parseInt(P['ombreMax']       || 100);
     var OMBRE_USE  = parseInt(P['ombreParUsage']  || 12);
     var OMBRE_BLOC = parseInt(P['ombreBlocage']   || 4);
+    var SANG_MAX   = parseInt(P['sangMax']        || 100);
+    var SANG_USE   = parseInt(P['sangParUsage']   || 10);
     var SANG_PCT   = parseInt(P['sangCoutPct']    || 8);
     var FAM_BONUS  = parseInt(P['familierBonus']  || 10);
+    var EXIGE_EQ   = String(P['exigerEquipe'] || 'true') === 'true';
 
-    // ── Le registre : qui est né avec quoi (Codex §6.3 à §6.5) ──────────────
+    // ── Le registre : qui est né avec quoi, et OÙ ça se porte (Codex §6.3-6.5)
+    //    slot = etypeId :  1 Arme · 5 Accessoire · 7 Âme
     var DONS = {
-        1: { type: 'objet',    nom: 'le Masque',          effet: 'sang'  },
-        2: { type: 'familier', nom: "l'Armure Volante",   effet: 'hiver' },
-        3: { type: 'objet',    nom: "l'Amulette",         effet: 'ombre' },
-        4: { type: 'arme',     nom: "l'Arc et ses Flèches", effet: ''    }
+        1: { cle: 'vesper',  type: 'objet',    slot: 5, nom: 'le Masque',
+             jauge: { nom: 'Sang',  max: SANG_MAX,  parUsage: SANG_USE,  sur: 'sang',  fin: 'fendre' } },
+        2: { cle: 'korrah',  type: 'familier', slot: 7, nom: "l'Armure Volante",
+             trait: 'hiver' },
+        3: { cle: 'ludwing', type: 'objet',    slot: 5, nom: "l'Amulette",
+             jauge: { nom: 'Ombre', max: OMBRE_MAX, parUsage: OMBRE_USE, sur: 'ombre', fin: 'exploser' } },
+        4: { cle: 'ael',     type: 'arme',     slot: 1, nom: "l'Arc et ses Flèches" }
     };
-    var TYPE_NOM = { arme: 'Arme spirituelle', objet: 'Objet spirituel', familier: 'Familier' };
+    var TYPE_NOM  = { arme: 'Arme spirituelle', objet: 'Objet spirituel', familier: 'Familier' };
+    var SLOT_NOM  = { 1: 'Arme', 5: 'Accessoire', 7: 'Âme' };
+    var PALIER_NOM = ['', 'Éclat', 'Forme', 'Résonance', 'Vérité'];
+    // Anciens noms des personnages, encore présents sur de vieilles pièces.
+    var ALIAS_CLE = { thylane: 'vesper', neyssa: 'korrah', lou: 'ludwing', tianna: 'ael' };
 
     //=========================================================================
     // ÉTAT PERSISTANT
@@ -173,39 +232,45 @@
     function fiche(id) {
         var s = store();
         if (!s || !DONS[id]) return null;
-        if (!s[id]) s[id] = { end: null, ombre: 0, bloc: 0, apparu: false };
+        if (!s[id]) s[id] = { end: null, charge: 0, bloc: 0, apparu: false };
+        // compatibilité v1 : l'ancienne clé « ombre » devient la jauge générique
+        if (s[id].ombre !== undefined) { s[id].charge = s[id].ombre; delete s[id].ombre; }
         return s[id];
     }
     function acteur(id) {
         try { return $gameActors ? $gameActors.actor(id) : null; } catch (e) { return null; }
     }
-    // L'arme spirituelle réellement portée (chaîne 501-516, notée <Objet Spirituel>).
-    function armeSpirituelle(id) {
+
+    // ── La PIÈCE du Don, où qu'elle soit équipée (arme, accessoire ou âme) ──
+    function cleDe(item) {
+        if (!item || !item.meta) return '';
+        var k = item.meta['Don'] || item.meta['DonSpirituel'] || item.meta['Objet Spirituel'];
+        if (!k || k === true) return '';
+        k = String(k).toLowerCase().trim();
+        return ALIAS_CLE[k] || k;
+    }
+    function pieceDuDon(id) {
+        var d = DONS[id], a = acteur(id);
+        if (!d || !a || !a.equips) return null;
         try {
-            var a = acteur(id);
-            if (!a || !a.weapons) return null;
-            var w = a.weapons();
-            for (var i = 0; i < w.length; i++) {
-                if (w[i] && w[i].meta && w[i].meta['Objet Spirituel']) return w[i];
+            var eq = a.equips();
+            for (var i = 0; i < eq.length; i++) {
+                if (eq[i] && cleDe(eq[i]) === d.cle) return eq[i];
             }
         } catch (e) { }
         return null;
     }
+    function estPorte(id) { return !EXIGE_EQ || !!pieceDuDon(id); }
+
     // Palier atteint : Éclat 1 → Forme 2 → Résonance 3 → Vérité 4.
     function palierDe(id) {
-        var w = armeSpirituelle(id);
-        var p = w && w.meta ? parseInt(w.meta['Palier']) : 0;
-        return p > 0 ? p : 1;
+        var p = pieceDuDon(id);
+        var n = p && p.meta ? parseInt(p.meta['Palier']) : 0;
+        return n > 0 ? n : 1;
     }
-    // Le nom du Don est celui du Codex (le Masque, l'Amulette…) ; l'arme
-    // spirituellement portée en est la forme actuelle, palier après palier.
-    function nomDuDon(id) {
-        return DONS[id] ? DONS[id].nom : '';
-    }
-    function nomArme(id) {
-        var w = armeSpirituelle(id);
-        return (w && w.name) ? w.name : '';
-    }
+    function nomDuDon(id)  { return DONS[id] ? DONS[id].nom : ''; }
+    function nomPiece(id)  { var p = pieceDuDon(id); return (p && p.name) ? p.name : ''; }
+
     function enduranceMax(id) {
         var a = acteur(id);
         return END_BASE + (a ? a.level : 1) * END_NIV + (palierDe(id) - 1) * END_PAL;
@@ -216,7 +281,19 @@
         if (f.end === null) f.end = enduranceMax(id);
         return Math.max(0, Math.min(f.end, enduranceMax(id)));
     }
-    function estCasse(id) { return !!DONS[id] && endurance(id) <= 0; }
+    function estCasse(id) { return !!DONS[id] && !!fiche(id) && endurance(id) <= 0; }
+    // Ce que le DON apporte : rien s'il n'est pas porté, la moitié s'il est brisé.
+    function facteur(id) {
+        if (!DONS[id]) return 1;
+        if (!estPorte(id)) return 0;
+        return estCasse(id) ? MALUS : 1;
+    }
+    // Ce que le Don fait au TRAIT qu'il sécurise : le Trait reste celui du porteur,
+    // même sans le Don — mais un Don BRISÉ divise par deux ce qu'il en tire.
+    function facteurTrait(id) {
+        if (!DONS[id]) return 1;
+        return (estPorte(id) && estCasse(id)) ? MALUS : 1;
+    }
 
     function log(t) {
         var w = SceneManager._scene && SceneManager._scene._logWindow;
@@ -237,6 +314,10 @@
         if (item.meta && item.meta.Sang) return true;
         return item.stypeId === 10;
     }
+    function nourrit(jauge, item) {
+        if (!jauge) return false;
+        return jauge.sur === 'ombre' ? estOmbre(item) : jauge.sur === 'sang' ? estSang(item) : false;
+    }
     function porteurDe(battler) {
         if (!battler || !battler.isActor || !battler.isActor()) return 0;
         var id = battler.actorId();
@@ -248,35 +329,57 @@
     //=========================================================================
     window.Dons = {
         de: function (id) {
-            if (!DONS[id]) return null;
+            var d = DONS[id];
+            if (!d) return null;
+            var j = d.jauge, f = fiche(id);
             return {
-                type: DONS[id].type, typeNom: TYPE_NOM[DONS[id].type], nom: nomDuDon(id),
-                arme: nomArme(id), palier: palierDe(id),
-                endurance: endurance(id), max: enduranceMax(id), casse: estCasse(id)
+                cle: d.cle, type: d.type, typeNom: TYPE_NOM[d.type],
+                slot: d.slot, slotNom: SLOT_NOM[d.slot],
+                nom: d.nom, piece: nomPiece(id), porte: estPorte(id),
+                palier: palierDe(id), palierNom: PALIER_NOM[palierDe(id)],
+                endurance: endurance(id), max: enduranceMax(id),
+                casse: estCasse(id), facteur: facteur(id),
+                jauge: j ? { nom: j.nom, val: f ? f.charge : 0, max: j.max, bloc: f ? f.bloc : 0 } : null,
+                trait: d.trait || ''
             };
         },
         estCasse: estCasse,
-        ombre: function (id) { var f = fiche(id); return f ? f.ombre : 0; },
+        estPorte: estPorte,
+        palier: palierDe,
+        facteur: facteur,
+        facteurTrait: facteurTrait,
+        aLaForme: function (id, forme) { return !!DONS[id] && DONS[id].type === forme; },
+        // le Familier ne débloque son Trait que s'il est là, et entier ou brisé (÷2 ailleurs)
+        traitDebloque: function (id) {
+            var d = DONS[id];
+            return (d && d.trait && estPorte(id)) ? d.trait : '';
+        },
+        jauge: function (id) {
+            var d = DONS[id], f = fiche(id);
+            if (!d || !d.jauge || !f) return null;
+            return { nom: d.jauge.nom, val: f.charge, max: d.jauge.max, bloc: f.bloc };
+        },
+        // compat v1 — l'ancienne API « ombre » pointe sur la jauge générique
+        ombre: function (id) { var f = fiche(id); return f ? f.charge : 0; },
         ombreBloquee: function (id) { var f = fiche(id); return !!(f && f.bloc > 0); },
         reparer: function (id) {
             var f = fiche(id);
             if (!f) return;
             var etait = estCasse(id);
-            f.end = enduranceMax(id); f.ombre = 0; f.bloc = 0;
+            f.end = enduranceMax(id); f.charge = 0; f.bloc = 0;
             if (etait) {
                 var a = acteur(id);
                 log('\\C[24]' + (a ? a.name() : '') + ' — ' + nomDuDon(id) + ' a retrouvé sa forme.\\C[0]');
             }
         },
         casser: function (id) { var f = fiche(id); if (f) { f.end = 0; annoncerCasse(id); } },
-        // multiplicateur à appliquer à tout ce qu'apporte le Don
-        facteur: function (id) { return estCasse(id) ? MALUS : 1; }
+        vider:  function (id) { var f = fiche(id); if (f) { f.charge = 0; f.bloc = 0; } }
     };
 
     function annoncerCasse(id) {
         var a = acteur(id), d = DONS[id];
         if (!a || !d) return;
-        if (d.effet === 'sang') {
+        if (d.jauge && d.jauge.sur === 'sang') {
             log('\\C[18]✖ ' + nomDuDon(id) + ' se fend. Désormais, son sang la blesse aussi.\\C[0]');
         } else if (d.type === 'familier') {
             log('\\C[18]✖ ' + nomDuDon(id) + ' se disloque. ' + a.name() + ' se retrouve seule.\\C[0]');
@@ -292,11 +395,12 @@
         var f = fiche(id), d = DONS[id], a = acteur(id);
         if (!f || f.apparu || !d || !a) return;
         f.apparu = true;
-        log('\\C[6]✦ ' + a.name() + ' — ' + nomDuDon(id) + ' apparaît. (' + TYPE_NOM[d.type] + ')\\C[0]');
+        log('\\C[6]✦ ' + a.name() + ' — ' + nomDuDon(id) + ' apparaît. ('
+            + TYPE_NOM[d.type] + ' · ' + SLOT_NOM[d.slot] + ')\\C[0]');
     }
 
     //=========================================================================
-    // USURE — le Don s'use à l'usage
+    // USURE — le Don s'use à l'usage · les jauges se gorgent
     //=========================================================================
     var _apply = Game_Action.prototype.apply;
     Game_Action.prototype.apply = function (target) {
@@ -305,57 +409,82 @@
             if (this._donUse) return;
             var id = porteurDe(this.subject());
             if (!id || !this.isDamage || !this.isDamage()) return;
+            if (!estPorte(id)) return;                 // Don rangé : il ne sert ni ne s'use
             this._donUse = true;
             faireApparaitre(id);
 
-            var f = fiche(id);
+            var d = DONS[id], f = fiche(id);
             var avant = endurance(id);
             if (avant > 0 && USURE > 0) {
                 f.end = avant - USURE;
                 if (f.end <= 0) { f.end = 0; annoncerCasse(id); }
             }
-            // l'amulette de Ludwing se gorge d'ombre
-            if (DONS[id].effet === 'ombre' && estOmbre(this.item())) gorgerOmbre(id);
-            // le masque de Vesper : le prix du sang quand il est brisé
-            if (DONS[id].effet === 'sang' && estSang(this.item())) prixDuSang(id);
+            // la seconde jauge de l'Objet se gorge de ce dont il se nourrit
+            if (d.jauge && nourrit(d.jauge, this.item())) gorger(id);
+            // le masque brisé : le prix du sang, à chaque frappe de sang
+            if (d.jauge && d.jauge.sur === 'sang' && estSang(this.item())) prixDuSang(id);
         } catch (e) { /* ne jamais casser un combat */ }
     };
 
     //=========================================================================
-    // DON BRISÉ — tout ce qu'il apporte est divisé par deux
+    // DON BRISÉ — TOUT ce qu'il apporte est divisé par deux
     //=========================================================================
+    // 1) les dégâts
     var _dmg = Game_Action.prototype.makeDamageValue;
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _dmg.call(this, target, critical);
         try {
             var id = porteurDe(this.subject());
-            if (id && estCasse(id) && v > 0) v = Math.floor(v * MALUS);
+            if (id && estPorte(id) && estCasse(id) && v > 0) v = Math.floor(v * MALUS);
+        } catch (e) { }
+        return v;
+    };
+    // 2) les statistiques que la pièce du Don accorde
+    var _paramPlus = Game_Actor.prototype.paramPlus;
+    Game_Actor.prototype.paramPlus = function (paramId) {
+        var v = _paramPlus.call(this, paramId);
+        try {
+            var id = porteurDe(this);
+            if (id && estCasse(id)) {
+                var p = pieceDuDon(id);
+                if (p && p.params) v -= Math.floor(p.params[paramId] * (1 - MALUS));
+            }
         } catch (e) { }
         return v;
     };
 
     //=========================================================================
-    // 🔮 L'AMULETTE DE LUDWING — la jauge d'Ombre, et l'explosion
+    // 🔮 LES OBJETS — la seconde jauge, et ce qu'elle coûte quand elle déborde
     //=========================================================================
-    function gorgerOmbre(id) {
-        var f = fiche(id);
-        if (f.bloc > 0) return;
-        f.ombre = Math.min(OMBRE_MAX, f.ombre + OMBRE_USE);
-        if (f.ombre >= OMBRE_MAX) exploser(id);
+    function gorger(id) {
+        var d = DONS[id], f = fiche(id);
+        if (f.bloc > 0) return;                        // déjà en pleine punition
+        f.charge = Math.min(d.jauge.max, f.charge + d.jauge.parUsage);
+        if (f.charge >= d.jauge.max) {
+            if (d.jauge.fin === 'exploser') exploser(id);
+            else fendre(id);
+        }
     }
+    // ⬛ l'AMULETTE de ludwing : elle explose, l'ombre reflue, les âmes échappent
     function exploser(id) {
         var f = fiche(id), a = acteur(id);
-        f.ombre = 0;
+        f.charge = 0;
         f.bloc = OMBRE_BLOC;
         log('\\C[2]✸ ' + nomDuDon(id) + " explose — l'ombre reflue.\\C[0]");
-        if (a) log("\\C[8]" + a.name() + ' ne peut plus manier les ombres, et les âmes lui échappent.\\C[0]');
+        if (a) log('\\C[8]' + a.name() + ' ne peut plus manier les ombres, et les âmes lui échappent.\\C[0]');
+    }
+    // 🩸 le MASQUE de Vesper : trop de sang, et il se fend d'un coup
+    function fendre(id) {
+        var f = fiche(id);
+        f.charge = 0;
+        if (!estCasse(id)) { f.end = 0; annoncerCasse(id); }
     }
     // capacités d'ombre bloquées le temps qu'il récupère
     var _sealed = Game_BattlerBase.prototype.isSkillTypeSealed;
     Game_BattlerBase.prototype.isSkillTypeSealed = function (stypeId) {
         try {
-            var id = porteurDe(this);
-            if (id && DONS[id].effet === 'ombre' && fiche(id).bloc > 0
+            var id = porteurDe(this), d = DONS[id];
+            if (id && d && d.jauge && d.jauge.sur === 'ombre' && fiche(id).bloc > 0
                 && stypeId >= 11 && stypeId <= 18) return true;
         } catch (e) { }
         return _sealed.call(this, stypeId);
@@ -369,13 +498,13 @@
             if (!id) return;
             var f = fiche(id);
             if (f.bloc > 0 && --f.bloc === 0) {
-                log('\\C[24]' + nomDuDon(id) + ' se recompose. Les ombres reviennent.\\C[0]');
+                log('\\C[24]' + nomDuDon(id) + ' se recompose.\\C[0]');
             }
         } catch (e) { }
     };
 
     //=========================================================================
-    // 🩸 LE MASQUE DE VESPER — le sang sans blessure, tant qu'il tient
+    // 🩸 LE MASQUE — le sang sans blessure, tant qu'il tient
     //=========================================================================
     function prixDuSang(id) {
         if (!estCasse(id)) return;              // masque intact : aucun prix
@@ -389,8 +518,8 @@
     var _regen = Game_Battler.prototype.regenerateHp;
     Game_Battler.prototype.regenerateHp = function () {
         try {
-            var id = porteurDe(this);
-            if (id && DONS[id].effet === 'sang' && estCasse(id)) {
+            var id = porteurDe(this), d = DONS[id];
+            if (id && d && d.jauge && d.jauge.sur === 'sang' && estPorte(id) && estCasse(id)) {
                 var avant = this.hp;
                 _regen.call(this);
                 var gagne = this.hp - avant;
@@ -402,16 +531,16 @@
     };
 
     //=========================================================================
-    // 👤 LE FAMILIER DE KORRAH — bonus passif tant qu'il est entier
+    // 👤 LE FAMILIER — bonus passif tant qu'il est là (moitié s'il est brisé)
     //=========================================================================
     var _paramRate = Game_Battler.prototype.paramRate;
     Game_Battler.prototype.paramRate = function (paramId) {
         var r = _paramRate.call(this, paramId);
         try {
             var id = porteurDe(this);
-            if (id && DONS[id].type === 'familier' && !estCasse(id)
+            if (id && DONS[id].type === 'familier'
                 && (paramId === 2 || paramId === 3 || paramId === 6)) {   // ATK, DEF, AGI
-                r *= 1 + FAM_BONUS / 100;
+                r *= 1 + FAM_BONUS / 100 * facteur(id);
             }
         } catch (e) { }
         return r;
@@ -440,6 +569,8 @@
             else Object.keys(DONS).forEach(function (k) { window.Dons.reparer(parseInt(k)); });
         } else if (sous === 'casser' && cible) {
             window.Dons.casser(cible);
+        } else if (sous === 'vider' && cible) {
+            window.Dons.vider(cible);
         } else if (sous === 'afficher') {
             SceneManager.push(Scene_Dons);
         }
@@ -458,35 +589,67 @@
         this.dessiner();
     };
     Scene_Dons.prototype.dessiner = function () {
-        var w = this._w, y = 0, lh = w.lineHeight();
+        var w = this._w, y = 0, lh = w.lineHeight(), larg = w.contentsWidth();
         w.changeTextColor(w.textColor(6));
-        w.drawText('LES DONS SPIRITUELS', 0, y, w.contentsWidth(), 'center');
-        w.resetTextColor(); y += lh * 1.5;
+        w.drawText('LES DONS SPIRITUELS', 0, y, larg, 'center');
+        w.resetTextColor(); y += lh * 1.4;
+
         $gameParty.members().forEach(function (a) {
             var d = window.Dons.de(a.actorId());
             if (!d) return;
-            w.changeTextColor(w.textColor(d.casse ? 18 : 24));
-            w.drawText(a.name() + ' — ' + d.nom + (d.arme ? '  (' + d.arme + ')' : ''), 8, y, 420);
+            var coul = !d.porte ? 7 : d.casse ? 18 : 24;
+
+            // ligne 1 — qui, quoi, où
+            w.changeTextColor(w.textColor(coul));
+            w.drawText(a.name() + ' — ' + d.nom, 8, y, 300);
             w.resetTextColor();
-            w.drawText(d.typeNom + '  ·  palier ' + d.palier + '/4', 440, y, 220);
+            w.changeTextColor(w.textColor(6));
+            w.drawText(d.typeNom + '  ·  slot ' + d.slotNom, 316, y, 230);
+            w.resetTextColor();
+            w.drawText('palier ' + d.palier + '/4 · ' + d.palierNom, 556, y, 220);
             y += lh;
+
+            // ligne 2 — la pièce réellement portée
+            w.changeTextColor(w.textColor(8));
+            w.drawText(d.porte ? '    « ' + d.piece + ' »' : "    ✖ le Don n'est pas porté — il n'apporte rien.",
+                       8, y, larg);
+            w.resetTextColor();
+            y += lh;
+
+            // ligne 3 — l'Endurance
             var pct = d.max > 0 ? d.endurance / d.max : 0;
-            w.drawGauge(24, y, 360, pct, w.textColor(d.casse ? 18 : 24), w.textColor(0));
+            w.drawGauge(24, y, 340, pct, w.textColor(coul), w.textColor(0));
             w.drawText('Endurance ' + d.endurance + ' / ' + d.max + (d.casse ? '   ✖ BRISÉ (÷2)' : ''),
-                       400, y, 320);
+                       380, y, 380);
             y += lh;
-            if (window.Dons.ombre(a.actorId()) > 0 || window.Dons.ombreBloquee(a.actorId())) {
+
+            // ligne 4 — la seconde jauge, propre aux Objets
+            if (d.jauge) {
+                var p2 = d.jauge.max > 0 ? d.jauge.val / d.jauge.max : 0;
+                w.drawGauge(24, y, 340, p2, w.textColor(2), w.textColor(0));
                 w.changeTextColor(w.textColor(2));
-                w.drawText('    Ombre ' + window.Dons.ombre(a.actorId()) + ' / ' + OMBRE_MAX
-                           + (window.Dons.ombreBloquee(a.actorId()) ? '   ✸ explosée' : ''), 24, y, 500);
+                w.drawText(d.jauge.nom + ' ' + d.jauge.val + ' / ' + d.jauge.max
+                           + (d.jauge.bloc > 0 ? '   ✸ débordée (' + d.jauge.bloc + ' tours)' : ''),
+                           380, y, 380);
                 w.resetTextColor();
                 y += lh;
             }
-            y += lh * 0.4;
+            // ligne 5 — le Trait que le Familier débloque
+            if (d.trait) {
+                w.changeTextColor(w.textColor(23));
+                w.drawText('    ✦ débloque le Trait ' + d.trait.toUpperCase()
+                           + (d.porte ? '' : ' — indisponible sans le familier'), 24, y, larg);
+                w.resetTextColor();
+                y += lh;
+            }
+            y += lh * 0.35;
         });
+
         w.changeTextColor(w.textColor(8));
+        w.drawText("⚔️ Arme → slot Arme (rien de plus, mais rien à payer)  ·  🔮 Objet → Accessoire  ·  👤 Familier → Âme",
+                   8, Graphics.boxHeight - lh * 4, larg);
         w.drawText('Un Don brisé sert encore — mais de moitié. Le repos le répare.',
-                   8, Graphics.boxHeight - lh * 3, w.contentsWidth());
+                   8, Graphics.boxHeight - lh * 3, larg);
         w.resetTextColor();
     };
     window.Scene_Dons = Scene_Dons;
