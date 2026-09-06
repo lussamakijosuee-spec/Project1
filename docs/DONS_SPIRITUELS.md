@@ -2,10 +2,10 @@
 
 > **Le relevé exhaustif.** Tout ce qui existe dans le jeu à propos du Don Spirituel et des Traits :
 > le canon, les 16 armes, les 13 pièces d'équipement, les compétences, les états, les animations,
-> les trois plugins avec leurs réglages, leurs commandes et leur API — plus ce qui reste à écrire.
+> les quatre plugins avec leurs réglages, leurs commandes et leur API — plus ce qui reste à écrire.
 >
 > Canon : [`../SYSTEME_DE_MANA.md`](../SYSTEME_DE_MANA.md) §6 et §6-bis.
-> Code : `js/plugins/DonsSpirituels.js` · `TraitsAme.js` · `ObjetSpirituel.js`.
+> Code : `js/plugins/DonsSpirituels.js` · `TraitsAme.js` · `FamilierSpirituel.js` · `ObjetSpirituel.js`.
 
 ---
 
@@ -79,6 +79,7 @@ son style de combat *Sang* est appris par-dessus.
 ### 1.2 · ❄️ KORRAH — L'ARMURE VOLANTE *(familier · âme)*
 
 Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
+**Ce n'est pas un objet : c'est quelqu'un.** Il joue son propre tour — voir **§11**.
 
 - Il **débloque le Trait HIVER** — la glace **sans passer par une formule**.
   **Familier retiré du slot Âme → HIVER ne répond plus du tout.**
@@ -556,7 +557,98 @@ var DONS = {
 };
 ```
 
-## 11. `ObjetSpirituel.js` v2.0 — l'évolution en 4 paliers, dans les bons slots
+## 11. `FamilierSpirituel.js` v1.0 — **la créature qui agit seule**
+
+**Ordre de chargement : #162**, après `DonsSpirituels` et `TraitsAme`.
+
+> *« Le Familier est une créature issue directement de l'âme — pas une invocation, pas un pacte :
+> une part de soi qui marche à côté de soi. »* Les 2 % ne reçoivent pas un objet : ils reçoivent
+> **quelqu'un**. Ce plugin lui donne ce qui lui manquait — **un tour à lui**.
+
+### 11.1 · Il joue son propre tour
+
+Quand sa porteuse a fini d'agir, le Familier agit **à son tour**. Ce n'est pas une seconde action
+pour elle : c'est **lui** qui frappe, avec ses compétences, son animation, sa cible. **Elle n'a rien
+à dépenser** — ni PM, ni TP, ni son tour.
+
+**Il choisit seul :**
+
+| Ce qu'il décide | Comment |
+|---|---|
+| **Sa cible** | Celle que sa porteuse vient de frapper *(il finit le travail)* — sinon **l'ennemi le plus bas en PV**. |
+| **Son geste** | Palier **1-2** → il cogne une cible. Palier **3-4** → il alterne et **déferle sur tout le groupe un tour sur deux**. Face à un ennemi isolé, il ne déferle jamais. |
+| **Frapper ou protéger** | Selon sa **posture** (ci-dessous). |
+
+### 11.2 · Il se met devant
+
+Un torse qui flotte sans corps, ça sert à ça. Quand sa porteuse encaisse un coup, le Familier en
+prend une part — et **c'est son Endurance à lui qui la paie** (`−2` par coup encaissé). Protéger
+l'use : un Familier qui a beaucoup gardé finit par **se disloquer**.
+
+### 11.3 · Les trois postures — `FAMILIER posture 2 <mot>`
+
+| Posture | Il frappe ? | Il intercepte | Particularité |
+|---|---|---|---|
+| **`libre`** *(défaut)* | oui | **20 %** | **Bascule tout seul en protection** quand sa porteuse tombe sous **40 % de PV**. |
+| **`agressif`** | toujours | **20 %** | Il frappe quoi qu'il arrive, même si elle est au bord. |
+| **`garde`** | non | **45 %** | Il ne fait plus que se mettre devant. |
+
+### 11.4 · Ce qu'il coûte — la contrepartie des 2 %
+
+- Il occupe le **slot Âme**.
+- **Chacune de ses frappes use l'Endurance du Don**, comme celles de sa porteuse : un Familier actif
+  **brûle sa jauge deux fois plus vite**. C'est le vrai prix d'une action gratuite par tour.
+- Chaque interception coûte **2 d'Endurance** de plus.
+- **Brisé** : il n'agit plus **qu'un tour sur deux**, et tout ce qu'il fait est **÷2** — dégâts comme
+  interception. Il ne meurt pas : il **fatigue**.
+- **Absent du slot Âme** : il n'existe pas, et le Trait qu'il débloquait non plus.
+
+> ⚠️ **Il ne porte pas le Trait à la place de sa porteuse.** Ses frappes sont des frappes de
+> Familier : elles **n'ont pas l'élément GLACE** et **ne déclenchent pas le recul d'HIVER**. Le froid
+> reste le prix que Korrah paie elle-même — sinon le Familier deviendrait la faille qui **annule la
+> règle d'or**.
+
+### 11.5 · Ses trois actions (compétences **469-471**, `stypeId 0`, `occasion 3`)
+
+Jamais sélectionnables par le joueur : **c'est le Familier qui décide.**
+
+| ID | Nom | Anim. | Portée | Élément | Formule |
+|---|---|---|---|---|---|
+| **469** | Frappe des Poings Volants | 21 *Frapper Spécial 1* | 1 ennemi | mana négative | `a.atk * 1.2 - b.def * 0.8` |
+| **470** | Déferlante des Poings | 404 *Vortex · Or* | tous | mana négative | `a.atk * 1.0 - b.def * 0.6` |
+| **471** | Torse Gardien | 440 *Dôme gardien · Or* | lui-même | — | *(aucun dégât — c'est l'image de l'interception)* |
+
+### 11.6 · Réglages, commandes et API
+
+| Paramètre | Défaut | | Paramètre | Défaut |
+|---|---|---|---|---|
+| `postureDefaut` | **libre** | | `usureInterception` | **2** |
+| `seuilDetresse` | **40** % | | `palierDeferlante` | **3** |
+| `interceptLibre` | **20** % | | `brisePause` | **true** |
+| `interceptGarde` | **45** % | | `montrerLog` | **true** |
+
+| Commande | Effet |
+|---|---|
+| `FAMILIER posture 2 garde` | Change la posture du familier de l'acteur 2. |
+| `FAMILIER agir 2` | Le fait agir immédiatement (scénario). |
+| `FAMILIER etat` | Résumé dans le journal de combat. |
+
+```js
+window.Familiers.de(actorId)       // {nom, posture, present, actif, brise, palier, facteur}
+window.Familiers.present(2)        // le familier est-il là ?
+window.Familiers.posture(2,'garde')
+window.Familiers.agir(2)
+```
+
+**Le registre** *(à étendre pour un nouveau familier)* :
+
+```js
+var FAMILIERS = {
+    2: { nom: "l'Armure Volante", frappe: 469, deferlante: 470, garde: 471 }
+};
+```
+
+## 12. `ObjetSpirituel.js` v2.0 — l'évolution en 4 paliers, dans les bons slots
 
 **Ordre de chargement : #34** (avant les deux autres).
 
@@ -574,7 +666,7 @@ Il fait évoluer **deux chaînes par héros, en même temps** : le **Don** dans 
 | `OBJET check` | Réévalue tous les héros (après un événement scénarisé). |
 | `OBJET rendre` | Redonne à chaque héros la pièce de son Don si elle a été perdue, et la rééquipe. |
 
-## 12. `TraitsAme.js` v2.0 — les Traits
+## 13. `TraitsAme.js` v2.0 — les Traits
 
 **Ordre de chargement : #161**, juste après `DonsSpirituels`.
 
@@ -600,7 +692,7 @@ par deux ce que rapporte le Trait — `window.Dons.ombreBloquee(3)` — l'**amul
 l'absorption d'âmes de moitié — et `window.Dons.traitDebloque(2)` — sans le **familier**, HIVER ne
 répond plus.
 
-## 13. Les plugins voisins
+## 14. Les plugins voisins
 
 | Plugin | # | Lien avec le Don |
 |---|---|---|
@@ -612,13 +704,13 @@ répond plus.
 | `MaitriseVoies` | 158 | Les Voies de combat, dont `sang` — le style **appris** de Vesper, par-dessus son Trait. |
 
 **Ordre à respecter** : `ObjetSpirituel` (34) → `Errance` (128) → `MarqueVivante` (133) →
-**`DonsSpirituels` (160)** → **`TraitsAme` (161)** → `ObjetEveille` (183).
+**`DonsSpirituels` (160)** → **`TraitsAme` (161)** → **`FamilierSpirituel` (162)** → `ObjetEveille` (183).
 
 ---
 
-## 14. Recettes
+## 15. Recettes
 
-### 14.1 · Donner un Don à un nouveau personnage
+### 15.1 · Donner un Don à un nouveau personnage
 
 1. **Choisir la forme** — elle décide du slot : `arme` → Arme · `objet` → Accessoire · `familier` → Âme.
 2. **Créer la chaîne de 4 pièces** (armes si `arme`, armures sinon) avec sur chacune :
@@ -631,7 +723,7 @@ répond plus.
 5. **Si le Don n'est pas une arme**, créer aussi la **Manifestation** : 4 armes notées
    `<Manifestation: cle>` + `<Palier: n>`.
 
-### 14.2 · Donner un Trait
+### 15.2 · Donner un Trait
 
 1. **Déclarer** dans `TraitsAme.js` → `TRAITS.macle = { actor: N, nom, don }` — plus
    `parFamilier: true` si c'est un familier qui l'ouvre.
@@ -640,7 +732,7 @@ répond plus.
 4. **Respecter la règle d'or** : le porteur doit **subir** son propre Trait, et son Don doit être la
    **sécurité** qui lui répond.
 
-### 14.3 · Marquer une compétence
+### 15.3 · Marquer une compétence
 
 | Tu veux… | Notetag / condition |
 |---|---|
@@ -651,7 +743,7 @@ répond plus.
 
 ---
 
-## 15. Table de correspondance — anciens noms
+## 16. Table de correspondance — anciens noms
 
 Certains notetags historiques portent encore les anciens noms. Le code lit l'**ID d'acteur**, jamais
 le nom, et les alias sont gérés — mais il faut le savoir en lisant la base.
@@ -667,27 +759,29 @@ Traits : `rupture → sang` · `gel → hiver` · `porte → ames` · `verbe →
 
 ---
 
-## 16. Ce qui reste à écrire
+## 17. Ce qui reste à écrire
 
 1. **Les 80 / 18 / 2 %.** Aucun tirage de population : les quatre marqués ont leur Don écrit en dur,
    les PNJ et ennemis n'en ont pas. Il faudrait un tirage (80/18/2) à leur création.
 2. **L'apparition à la première utilisation** est **narrative** : le message s'affiche, mais rien
    n'empêche d'employer le Don avant.
-3. **Le Familier comme entité qui agit.** L'Armure Volante est un bonus passif + un Trait débloqué,
-   pas une créature qui frappe de son côté. Un vrai familier au sens *stand* reste à écrire.
-4. **Un familier générique.** Le Trait débloqué est déclaré dans le registre du plugin ; le notetag
-   `<TraitDebloque: hiver>` est posé sur les pièces mais pas encore lu comme source de vérité.
+3. **Un familier générique.** Ses actions et le Trait qu'il débloque sont déclarés dans les registres
+   des plugins ; le notetag `<TraitDebloque: hiver>` est posé sur les pièces mais pas encore lu comme
+   source de vérité. Un second familier demande deux lignes de registre, pas du code.
+4. **Le familier n'a pas de sprite propre.** Il agit, il frappe, il se met devant — mais visuellement
+   c'est l'animation de sa compétence qui le représente, pas une figure à l'écran.
 5. **L'Endurance en combat.** Elle n'apparaît qu'à l'écran `DON afficher` ; aucune barre dans
-   l'interface de combat.
+   l'interface de combat — alors que le familier la brûle deux fois plus vite.
 6. **La réparation hors auberge.** Seuls `recoverAll` et `DON reparer` réparent. Pas d'objet
    consommable *(le `80 · Éclat d'Âme` serait le matériau tout trouvé)*.
 
 ---
 
-## 17. Corrections appliquées (v2)
+## 18. Corrections appliquées (v2)
 
 | # | Ce qui n'allait pas | Correction |
 |---|---|---|
+| 0 | Le **Familier** était un simple bonus passif de +10 %. Le canon dit une **créature** — un stand, une part de soi qui marche à côté de soi. | **`FamilierSpirituel.js`** : il joue son propre tour, choisit sa cible et son geste, se met devant sa porteuse en danger, et paie tout ça de sa propre Endurance. Voir **§11**. |
 | 1 | Les trois formes vivaient **toutes** dans le slot Arme : rien ne distinguait un Objet d'un Familier. | **Chaque forme a son slot** : Arme → Arme · Objet → **Accessoire** · Familier → **Âme**. 12 pièces créées (68-79). |
 | 2 | Le nom du Don servait à la fois à l'arme **et** à l'objet (*Masque Résonant* était une arme de type SANG). | Le Don et la **Manifestation** sont séparés : 501-512 renommées (Lame de Sang · Poings Volants · Arme d'Ombre), 68-79 portent les vrais noms du Don. |
 | 3 | Le **Masque n'avait pas de seconde jauge** — il ne cassait que par usure, alors que le canon dit « si elle en abuse, il se casse ». | Jauge de **Sang** (100, +10 par technique) : pleine, **le Masque se fend** d'un coup. |
@@ -703,4 +797,6 @@ Traits : `rupture → sang` · `gel → hiver` · `porte → ames` · `verbe →
 *Compilé depuis la lecture intégrale de `data/Weapons.json`, `Armors.json`, `Skills.json`,
 `States.json`, `Items.json`, `Actors.json`, `Classes.json`, `Animations.json`, `System.json`,
 `js/plugins.js` et des plugins `DonsSpirituels`, `TraitsAme`, `ObjetSpirituel`, `ObjetEveille`.
-Comportement vérifié sur banc d'essai : 24 contrôles sur `DonsSpirituels`, 7 sur `ObjetSpirituel`.*
+Comportement vérifié sur banc d'essai : 24 contrôles sur `DonsSpirituels`, 7 sur `ObjetSpirituel`,
+17 sur `FamilierSpirituel` (tour autonome, choix de cible, déferlante, postures, interception,
+usure, familier brisé, familier retiré).*

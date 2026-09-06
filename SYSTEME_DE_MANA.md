@@ -190,6 +190,10 @@ Il lui permet d'**utiliser son sang comme elle l'entend sans se blesser** — so
 
 Le cas **vraiment rare**. Le Familier est une **créature issue directement de l'âme** — pas une invocation, pas un pacte : une part de soi qui marche à côté de soi. Sa forme n'a aucune limite.
 
+**Et il agit.** Ce n'est pas un objet qu'on porte : c'est **quelqu'un** qui se bat à côté de toi. Il joue **son propre tour**, choisit sa cible, frappe de lui-même — et se met devant toi quand tu es sur le point de tomber. Tu ne le commandes pas ; tu lui indiques une **posture**, et il décide du reste.
+
+Son prix est à la mesure : chacune de ses actions **use l'Endurance du Don**, comme les tiennes. Un Familier qui se bat tout le temps **brûle sa jauge deux fois plus vite** — et protéger l'use encore davantage. Brisé, il ne disparaît pas : il **fatigue**, n'agit plus qu'un tour sur deux, et tout ce qu'il fait vaut moitié moins.
+
 **Le Familier se porte à l'Âme** — c'est son prix : il occupe l'emplacement le plus profond, celui que personne d'autre n'utilise pour ça.
 
 Ce qui rend les Familiers **redoutables**, c'est qu'un Familier peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est le Familier qui l'a débloqué. **Sans le Familier, ce second Trait n'existe plus.**
