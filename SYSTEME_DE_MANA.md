@@ -129,19 +129,28 @@ OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
 
 ## 6. LE DON SPIRITUEL
 
+> 📦 **Le dossier complet** — toutes les données récupérables (les 16 armes 501-516, les 4 reliques
+> d'âme, les compétences, les états, les animations, les 3 plugins et leurs réglages) :
+> **[`docs/DONS_SPIRITUELS.md`](docs/DONS_SPIRITUELS.md)**.
+
 Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il n'est pas remis : il **apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme. On ne le choisit pas, on ne le fabrique pas — il *sort*.
 
 **Image de l'âme = une coquille :**
 - **La surface** : ce qui peut être **touché et matérialisé** → le Don Spirituel.
 - **Les profondeurs** : là où résident le **Trait**, la **nature** de l'âme et ses pouvoirs secrets.
 
-### 6.1 · Les trois formes du Don
+### 6.1 · Les trois formes du Don — **et chacune a sa place sur le corps**
 
-| Forme | Fréquence | Ce qu'elle donne |
-|---|---|---|
-| ⚔️ **L'ARME spirituelle** | **80 %** | Rien de plus qu'une arme. Sa seule particularité est sa **résistance**, liée à l'âme. |
-| 🔮 **L'OBJET spirituel** | **18 %** | Peut prendre **n'importe quelle forme** — y compris celle d'une arme — mais confère **un effet ou un talent**. |
-| 👤 **LE FAMILIER** | **2 %** | Une **créature née directement de l'âme**. Peut porter **un Trait à lui**. |
+| Forme | Fréquence | **Où ça se porte** | Ce qu'elle donne | Ce qu'elle coûte |
+|---|---|---|---|---|
+| ⚔️ **L'ARME spirituelle** | **80 %** | l'**Arme** | Rien de plus qu'une arme. Sa seule particularité est sa **résistance**, liée à l'âme. | **Rien** — l'accessoire et l'Âme restent **libres**. |
+| 🔮 **L'OBJET spirituel** | **18 %** | l'**Accessoire** | Peut prendre **n'importe quelle forme** — y compris celle d'une arme — mais confère **un effet ou un talent**. | **L'accessoire.** On ne porte rien d'autre. |
+| 👤 **LE FAMILIER** | **2 %** | l'**Âme** | Une **créature née directement de l'âme**. Peut porter **un Trait à lui**. | **Le slot d'Âme.** |
+
+> ⚖️ **C'est là tout l'équilibre.** L'arme des 80 % n'a l'air de rien — mais elle est la seule à ne
+> **rien** prendre en échange. Un Objet et un Familier sont plus forts, et plus chers : ils occupent
+> une place que les autres gardent libre. **Un Don qu'on ne porte pas n'apporte plus rien**, et un
+> Familier absent **referme le Trait qu'il débloquait**.
 
 ### 6.2 · L'Endurance — commune aux trois formes
 
@@ -155,15 +164,17 @@ Plus le porteur est **puissant** — plus il monte en niveau, plus son âme s'af
 
 Le cas ordinaire, celui de la grande majorité. **Aucun effet particulier, aucun talent, aucun pouvoir.** C'est une arme, et c'est tout. Sa seule vertu est de **résister** : elle est liée à l'âme, donc elle encaisse ce qu'aucun acier ne encaisserait.
 
-C'est peu, et c'est déjà énorme : une arme qui ne se brise pas au premier choc, qui grandit avec toi et qu'on ne peut pas te voler.
+C'est peu, et c'est déjà énorme : une arme qui ne se brise pas au premier choc, qui grandit avec toi, qu'on ne peut pas te voler — et **qui ne te prend aucun autre emplacement**. Là où un Objet mange l'accessoire et un Familier le slot d'Âme, l'Arme, elle, **ne coûte rien**.
 
-**Aël** porte une arme spirituelle : un **arc et ses flèches**.
+**Aël** porte une arme spirituelle : un **arc et ses flèches**. Son accessoire et son Âme restent libres, et c'est tout son avantage.
 
 ### 6.4 · 🔮 L'OBJET SPIRITUEL (18 %)
 
 L'Objet peut avoir **exactement la même apparence qu'une arme** — la différence n'est pas visible. Ce qui le distingue, c'est qu'il **confère un effet ou un talent**.
 
 Un Objet porte **deux jauges** : son **Endurance**, comme tout Don, et une **jauge propre** liée à son effet. Cette seconde jauge est le vrai piège : **en abuser a un prix**, et ce prix est toujours pire que la simple casse.
+
+**L'Objet se porte à l'accessoire.** C'est son prix permanent : là où un porteur d'arme spirituelle met ce qu'il veut, celui d'un Objet ne met que son Objet.
 
 **⬛ L'AMULETTE DE LUDWING — l'absorption des ombres**
 Elle lui permet d'**absorber les ombres** et de **mieux les manier**. C'est elle qui donne l'impression que Ludwing possède **deux Traits, alors qu'il n'en a qu'un** : son Trait est l'absorption des âmes, l'ombre vient de l'amulette.
@@ -172,18 +183,25 @@ Elle lui permet d'**absorber les ombres** et de **mieux les manier**. C'est elle
 
 **🩸 LE MASQUE DE VESPER — le sang sans blessure**
 Il lui permet d'**utiliser son sang comme elle l'entend sans se blesser** — son sang se régénère, et son style de combat *Sang* est appris par-dessus.
-- **En abuser le brise.** Une fois le masque cassé, **chaque attaque de sang la blesse pour de bon**, et son style de combat devient plus dur à tenir : **la régénération faiblit**.
+- Il porte une **jauge de Sang** qui se remplit à chaque technique de sang.
+- **En abuser le brise.** La jauge pleine, **le masque se fend d'un coup** — sans attendre l'usure. Dès lors, **chaque attaque de sang la blesse pour de bon**, et son style de combat devient plus dur à tenir : **la régénération faiblit**.
 
 ### 6.5 · 👤 LE FAMILIER (2 %)
 
 Le cas **vraiment rare**. Le Familier est une **créature issue directement de l'âme** — pas une invocation, pas un pacte : une part de soi qui marche à côté de soi. Sa forme n'a aucune limite.
 
-Ce qui rend les Familiers **redoutables**, c'est qu'un Familier peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est le Familier qui l'a débloqué.
+**Et il agit.** Ce n'est pas un objet qu'on porte : c'est **quelqu'un** qui se bat à côté de toi. Il joue **son propre tour**, choisit sa cible, frappe de lui-même — et se met devant toi quand tu es sur le point de tomber. Tu ne le commandes pas ; tu lui indiques une **posture**, et il décide du reste.
+
+Son prix est à la mesure : chacune de ses actions **use l'Endurance du Don**, comme les tiennes. Un Familier qui se bat tout le temps **brûle sa jauge deux fois plus vite** — et protéger l'use encore davantage. Brisé, il ne disparaît pas : il **fatigue**, n'agit plus qu'un tour sur deux, et tout ce qu'il fait vaut moitié moins.
+
+**Le Familier se porte à l'Âme** — c'est son prix : il occupe l'emplacement le plus profond, celui que personne d'autre n'utilise pour ça.
+
+Ce qui rend les Familiers **redoutables**, c'est qu'un Familier peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est le Familier qui l'a débloqué. **Sans le Familier, ce second Trait n'existe plus.**
 
 **❄️ LE FAMILIER DE KORRAH**
 Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
 - Trait débloqué : **HIVER** — elle manipule la glace **directement, sans passer par une formule**.
-- ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction.
+- ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction — et le Familier ne lui donne **aucune** résistance à la glace.
 
 ---
 

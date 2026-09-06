@@ -112,6 +112,10 @@
  *      GLACE — et Korrah en subit hiverRecul % en retour : le froid ne fait
  *      pas de distinction. C'est son familier qui débloque ce Trait, mais
  *      c'est bien ELLE qui le possède.
+ *      ⚠ FAMILIER ABSENT DU SLOT ÂME → HIVER ne répond plus du tout (les
+ *        compétences <Trait: hiver> deviennent impayables). Familier BRISÉ →
+ *        il répond encore, mais ce qu'il rapporte est divisé par deux.
+ *        CHANGE, lui, est son Trait de base : il ne dépend de rien.
  *
  *  ▶ LUDWING — L'ABSORPTION DES ÂMES  ·  <Trait: ames>
  *      Il absorbe les âmes directement et les emploie : +amesGain âmes et des
@@ -171,7 +175,9 @@
     var TRAITS = {
         sang:    { actor: 1, nom: 'le Sang',                don: 'le Masque — pour saigner sans se blesser' },
         change:  { actor: 2, nom: 'Change',                 don: "l'Armure Volante" },
-        hiver:   { actor: 2, nom: 'Hiver',                  don: "l'Armure Volante — son familier" },
+        // Trait DÉBLOQUÉ PAR LE FAMILIER : sans lui à l'Âme, il ne répond pas.
+        hiver:   { actor: 2, nom: 'Hiver',                  don: "l'Armure Volante — son familier",
+                   parFamilier: true },
         ames:    { actor: 3, nom: "l'Absorption des Âmes",  don: "l'Amulette — qui, elle, boit les ombres" },
         miracle: { actor: 4, nom: 'Miracle',                don: "l'Arc et ses flèches" }
     };
@@ -193,8 +199,18 @@
         try { return window.Marque && window.Marque.etat(id) === 'creuse'; } catch (e) { return false; }
     }
     // Le Don brisé divise par deux tout ce qu'il apporte — Trait compris.
+    // (Un Don simplement rangé ne supprime pas le Trait : il retire sa sécurité.)
     function facteurDon(id) {
-        try { return window.Dons ? window.Dons.facteur(id) : 1; } catch (e) { return 1; }
+        try {
+            if (!window.Dons) return 1;
+            return window.Dons.facteurTrait ? window.Dons.facteurTrait(id) : window.Dons.facteur(id);
+        } catch (e) { return 1; }
+    }
+    // Un Trait ouvert par le FAMILIER n'existe que tant que le familier est là :
+    // c'est bien ELLE qui le possède, mais c'est LUI qui le débloque (Codex §6.5).
+    function traitDisponible(actorId, k) {
+        if (!TRAITS[k] || !TRAITS[k].parFamilier) return true;
+        try { return !window.Dons || window.Dons.traitDebloque(actorId) === k; } catch (e) { return true; }
     }
 
     var Traits = {
@@ -231,8 +247,11 @@
     //=========================================================================
     var _can = Game_BattlerBase.prototype.canPaySkillCost;
     Game_BattlerBase.prototype.canPaySkillCost = function (skill) {
-        if (traitDuSkill(skill) && this.isActor && this.isActor() && marqueCreuse(this.actorId())) {
-            return false;
+        var k = traitDuSkill(skill);
+        if (k && this.isActor && this.isActor()) {
+            // âme éteinte, ou familier absent pour un Trait qu'il débloque
+            if (marqueCreuse(this.actorId())) return false;
+            if (TRAITS[k].actor === this.actorId() && !traitDisponible(this.actorId(), k)) return false;
         }
         return _can.call(this, skill);
     };
@@ -244,7 +263,8 @@
         var k = traitDuSkill(action.item());
         if (!k) return '';
         var s = action.subject();
-        return (s && s.isActor && s.isActor() && s.actorId() === TRAITS[k].actor) ? k : '';
+        if (!s || !s.isActor || !s.isActor() || s.actorId() !== TRAITS[k].actor) return '';
+        return traitDisponible(s.actorId(), k) ? k : '';
     }
 
     // SANG : le sang obéit, il ne rate pas. MIRACLE prêt : la flèche trouve.
