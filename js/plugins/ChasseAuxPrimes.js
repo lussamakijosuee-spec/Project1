@@ -192,12 +192,23 @@
     //=========================================================================
     var _enCours = null;
     function lancer(entree, estBoss) {
+        if (!entree || !$dataTroops[entree.id]) return;
+        // on ne part pas au combat avec une équipe à terre
+        if (!$gameParty.members().length || $gameParty.isAllDead()) {
+            SoundManager.playBuzzer();
+            return;
+        }
         _enCours = { troop: entree.id, rang: entree.rang, boss: !!estBoss,
                      premiere: !estBattu(entree.id) };
-        BattleManager.setup(entree.id, true, false);
-        BattleManager.setEventCallback(function () { });
-        $gamePlayer.makeEncounterCount();
-        SceneManager.push(Scene_Battle);
+        try {
+            BattleManager.setup(entree.id, true, false);
+            BattleManager.setEventCallback(function () { });
+            $gamePlayer.makeEncounterCount();
+            SceneManager.push(Scene_Battle);
+        } catch (e) {
+            _enCours = null;
+            SoundManager.playBuzzer();
+        }
     }
     var _processVictory = BattleManager.processVictory;
     BattleManager.processVictory = function () {
@@ -240,6 +251,11 @@
     Scene_Primes.prototype.fittingH = function (n) {
         return n * 36 + 36;
     };
+    // au retour d'un combat, le tableau doit montrer le contrat qu'on vient de remplir
+    Scene_Primes.prototype.start = function () {
+        Scene_MenuBase.prototype.start.call(this);
+        if (this._liste) this.rafraichir();
+    };
     Scene_Primes.prototype.rafraichir = function () {
         var m = memoire();
         this._aide.contents.clear();
@@ -280,11 +296,18 @@
     Window_PrimesListe.prototype = Object.create(Window_Selectable.prototype);
     Window_PrimesListe.prototype.constructor = Window_PrimesListe;
     Window_PrimesListe.prototype.initialize = function (x, y, w, h) {
-        Window_Selectable.prototype.initialize.call(this, x, y, w, h);
+        // AVANT l'initialisation parente : MOG_Scrollbar, MOG_CursorBorder et
+        // YEP_X_BattleSysCTB surchargent select(), qui est appelé pendant cette
+        // initialisation. maxItems() serait interrogé sur un _data inexistant.
         this._data = [];
+        Window_Selectable.prototype.initialize.call(this, x, y, w, h);
     };
-    Window_PrimesListe.prototype.maxItems = function () { return this._data.length; };
-    Window_PrimesListe.prototype.item = function () { return this._data[this.index()]; };
+    Window_PrimesListe.prototype.maxItems = function () {
+        return this._data ? this._data.length : 0;
+    };
+    Window_PrimesListe.prototype.item = function () {
+        return this._data ? this._data[this.index()] : null;
+    };
     Window_PrimesListe.prototype.dresser = function (niveau, famille, rang) {
         var b = bestiaire(), d = [];
         if (niveau === 'familles') {
@@ -308,7 +331,8 @@
                                (PRIMES[r] || '?') + ' or  ·  ' + n + '/' + fam[r].length + ' faits' });
             });
         } else {
-            (b.familles[famille][rang] || []).forEach(function (e) {
+            var f2 = b.familles[famille] || {};
+            (f2[rang] || []).forEach(function (e) {
                 d.push({ cle: e.nom, texte: e.nom, entree: e,
                          sous: estBattu(e.id) ? 'déjà remporté' : 'jamais tenté — prime triplée' });
             });
