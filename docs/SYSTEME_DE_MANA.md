@@ -145,12 +145,18 @@ Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il 
 |---|---|---|---|---|
 | ⚔️ **L'ARME spirituelle** | **80 %** | l'**Arme** | Rien de plus qu'une arme. Sa seule particularité est sa **résistance**, liée à l'âme. | **Rien** — l'accessoire et l'Âme restent **libres**. |
 | 🔮 **L'OBJET spirituel** | **18 %** | l'**Accessoire** | Peut prendre **n'importe quelle forme** — y compris celle d'une arme — mais confère **un effet ou un talent**. | **L'accessoire.** On ne porte rien d'autre. |
-| 👤 **LE FAMILIER** | **2 %** | l'**Âme** | Une **créature née directement de l'âme**. Peut porter **un Trait à lui**. | **Le slot d'Âme.** |
+| 👤 **L'AVATAR SPIRITUEL** | **2 %** | l'**Âme** | Une **créature née directement de l'âme**, qui **agit d'elle-même**. Peut porter **un Trait**. | **Le slot d'Âme.** |
 
 > ⚖️ **C'est là tout l'équilibre.** L'arme des 80 % n'a l'air de rien — mais elle est la seule à ne
-> **rien** prendre en échange. Un Objet et un Familier sont plus forts, et plus chers : ils occupent
+> **rien** prendre en échange. Un Objet et un Avatar sont plus forts, et plus chers : ils occupent
 > une place que les autres gardent libre. **Un Don qu'on ne porte pas n'apporte plus rien**, et un
-> Familier absent **referme le Trait qu'il débloquait**.
+> Avatar absent **referme le Trait qu'il débloquait**.
+>
+> 🔒 **ET ON N'EN A QU'UN.** Une arme, OU un objet, OU un avatar — jamais deux, jamais de cumul.
+> C'est ce qui donne son sens à la ligne ci-dessus : si tout le monde avait aussi une arme
+> spirituelle, l'avantage des 80 % ne voudrait plus rien dire. Ce que le porteur tient dans
+> l'autre main est de **l'acier ordinaire** : acheté, trouvé, remplaçable — et qui ne grandit
+> pas tout seul. **Seul le Don fait ça.**
 
 ### 6.2 · L'Endurance — commune aux trois formes
 
@@ -166,7 +172,7 @@ Le cas ordinaire, celui de la grande majorité. **Aucun effet particulier, aucun
 
 C'est peu, et c'est déjà énorme : une arme qui ne se brise pas au premier choc, qui grandit avec toi, qu'on ne peut pas te voler — et **qui ne te prend aucun autre emplacement**. Là où un Objet mange l'accessoire et un Familier le slot d'Âme, l'Arme, elle, **ne coûte rien**.
 
-**Aël** porte une arme spirituelle : un **arc et ses flèches**. Son accessoire et son Âme restent libres, et c'est tout son avantage.
+**Aël** porte une arme spirituelle : un **arc et ses flèches**. Son accessoire et son Âme restent libres, et c'est tout son avantage. Et c'est son **unique** Don : elle n'a rien d'autre.
 
 ### 6.4 · 🔮 L'OBJET SPIRITUEL (18 %)
 
@@ -186,22 +192,22 @@ Il lui permet d'**utiliser son sang comme elle l'entend sans se blesser** — so
 - Il porte une **jauge de Sang** qui se remplit à chaque technique de sang.
 - **En abuser le brise.** La jauge pleine, **le masque se fend d'un coup** — sans attendre l'usure. Dès lors, **chaque attaque de sang la blesse pour de bon**, et son style de combat devient plus dur à tenir : **la régénération faiblit**.
 
-### 6.5 · 👤 LE FAMILIER (2 %)
+### 6.5 · 👤 L'AVATAR SPIRITUEL (2 %)
 
-Le cas **vraiment rare**. Le Familier est une **créature issue directement de l'âme** — pas une invocation, pas un pacte : une part de soi qui marche à côté de soi. Sa forme n'a aucune limite.
+Le cas **vraiment rare**. L'Avatar Spirituel est une **créature issue directement de l'âme** — pas une invocation, pas un pacte : une part de soi qui marche à côté de soi. Sa forme n'a aucune limite.
 
-**Et il agit.** Ce n'est pas un objet qu'on porte : c'est **quelqu'un** qui se bat à côté de toi. Il joue **son propre tour**, choisit sa cible, frappe de lui-même — et se met devant toi quand tu es sur le point de tomber. Tu ne le commandes pas ; tu lui indiques une **posture**, et il décide du reste.
+**Et il agit.** Ce n'est pas un objet qu'on porte : c'est **quelqu'un** qui se bat à côté de toi. Il joue **son propre tour**, choisit sa cible, frappe de lui-même — et se met devant toi quand tu es sur le point de tomber. Tu ne le commandes pas au coup par coup ; tu lui donnes une **posture** — *laisse-le faire*, *assaut*, *devant moi* — et il décide du reste. Ces trois ordres se donnent **en plein combat**, sans coûter de mana.
 
-Son prix est à la mesure : chacune de ses actions **use l'Endurance du Don**, comme les tiennes. Un Familier qui se bat tout le temps **brûle sa jauge deux fois plus vite** — et protéger l'use encore davantage. Brisé, il ne disparaît pas : il **fatigue**, n'agit plus qu'un tour sur deux, et tout ce qu'il fait vaut moitié moins.
+Son prix est à la mesure : chacune de ses actions **use l'Endurance du Don**, comme les tiennes. Un Avatar qui se bat tout le temps **brûle sa jauge deux fois plus vite** — et protéger l'use encore davantage. Brisé, il ne disparaît pas : il **fatigue**, n'agit plus qu'un tour sur deux, et tout ce qu'il fait vaut moitié moins.
 
-**Le Familier se porte à l'Âme** — c'est son prix : il occupe l'emplacement le plus profond, celui que personne d'autre n'utilise pour ça.
+**L'Avatar se porte à l'Âme** — c'est son prix : il occupe l'emplacement le plus profond, celui que personne d'autre n'utilise pour ça.
 
-Ce qui rend les Familiers **redoutables**, c'est qu'un Familier peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est le Familier qui l'a débloqué. **Sans le Familier, ce second Trait n'existe plus.**
+Ce qui rend les Avatars **redoutables**, c'est qu'un Avatar peut **porter un Trait**. Son porteur se retrouve alors avec **deux Traits** — et c'est bien **lui** qui possède le second, même si c'est l'Avatar qui l'a débloqué. **Sans l'Avatar, ce second Trait n'existe plus.**
 
-**❄️ LE FAMILIER DE KORRAH**
+**❄️ L'AVATAR SPIRITUEL DE KORRAH**
 Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
 - Trait débloqué : **HIVER** — elle manipule la glace **directement, sans passer par une formule**.
-- ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction — et le Familier ne lui donne **aucune** résistance à la glace.
+- ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction — et l'Avatar ne lui donne **aucune** résistance à la glace.
 
 ---
 
@@ -213,7 +219,7 @@ Le **Trait** est le don que l'âme offre à la naissance : une capacité unique,
 |---|---|---|
 | **Vesper** | **LE SANG** | Contrôle son sang **directement, sans formule**, et le **fusionne avec le mana**. |
 | **Korrah** | **CHANGE** | Échange les places. *(Trait de base.)* |
-| **Korrah** | **HIVER** | Manipule la glace sans formule — **elle en subit les effets aussi**. *(Via son Familier.)* |
+| **Korrah** | **HIVER** | Manipule la glace sans formule — **elle en subit les effets aussi**. *(Via son Avatar Spirituel.)* |
 | **Ludwing** | **L'ABSORPTION DES ÂMES** | Absorbe les âmes **directement** et les emploie. *(L'ombre vient de son amulette, pas de son Trait.)* |
 | **Aël** | **MIRACLE** | **Développe de nouvelles techniques en temps réel.** |
 

@@ -82,7 +82,7 @@
  *  LES TRAITS D'ÂME                                     Codex, chapitre 6-bis
  * ═══════════════════════════════════════════════════════════════════════════
  *  À la naissance, l'âme offre TOUJOURS deux choses :
- *    • un DON SPIRITUEL — une arme, un objet ou un familier (DonsSpirituels.js) ;
+ *    • un DON SPIRITUEL — une arme, un objet OU un avatar (un seul, jamais deux) (DonsSpirituels.js) ;
  *    • un TRAIT — une capacité unique qui n'appartient qu'à toi.
  *  Le Trait est RARE : il faut une certaine puissance, une volonté forte, une
  *  âme puissante. Tout le reste s'apprend ; le Trait, lui, est là depuis le
@@ -107,13 +107,13 @@
  *      dans l'ordre du groupe ET lui reprend ses états négatifs. Elle prend
  *      sa place, fardeau compris.
  *
- *  ▶ KORRAH — HIVER  ·  <Trait: hiver>            (via son FAMILIER)
+ *  ▶ KORRAH — HIVER  ·  <Trait: hiver>            (via son AVATAR SPIRITUEL)
  *      La glace sans passer par une formule. L'attaque devient de l'élément
  *      GLACE — et Korrah en subit hiverRecul % en retour : le froid ne fait
- *      pas de distinction. C'est son familier qui débloque ce Trait, mais
+ *      pas de distinction. C'est son Avatar Spirituel qui débloque ce Trait, mais
  *      c'est bien ELLE qui le possède.
- *      ⚠ FAMILIER ABSENT DU SLOT ÂME → HIVER ne répond plus du tout (les
- *        compétences <Trait: hiver> deviennent impayables). Familier BRISÉ →
+ *      ⚠ AVATAR ABSENT DU SLOT ÂME → HIVER ne répond plus du tout (les
+ *        compétences <Trait: hiver> deviennent impayables). Avatar BRISÉ →
  *        il répond encore, mais ce qu'il rapporte est divisé par deux.
  *        CHANGE, lui, est son Trait de base : il ne dépend de rien.
  *
@@ -175,9 +175,9 @@
     var TRAITS = {
         sang:    { actor: 1, nom: 'le Sang',                don: 'le Masque — pour saigner sans se blesser' },
         change:  { actor: 2, nom: 'Change',                 don: "l'Armure Volante" },
-        // Trait DÉBLOQUÉ PAR LE FAMILIER : sans lui à l'Âme, il ne répond pas.
-        hiver:   { actor: 2, nom: 'Hiver',                  don: "l'Armure Volante — son familier",
-                   parFamilier: true },
+        // Trait DÉBLOQUÉ PAR L'AVATAR SPIRITUEL : sans lui à l'Âme, il ne répond pas.
+        hiver:   { actor: 2, nom: 'Hiver',                  don: "l'Armure Volante — son Avatar Spirituel",
+                   parAvatar: true },
         ames:    { actor: 3, nom: "l'Absorption des Âmes",  don: "l'Amulette — qui, elle, boit les ombres" },
         miracle: { actor: 4, nom: 'Miracle',                don: "l'Arc et ses flèches" }
     };
@@ -206,10 +206,10 @@
             return window.Dons.facteurTrait ? window.Dons.facteurTrait(id) : window.Dons.facteur(id);
         } catch (e) { return 1; }
     }
-    // Un Trait ouvert par le FAMILIER n'existe que tant que le familier est là :
+    // Un Trait ouvert par l'AVATAR n'existe que tant que l'Avatar est là :
     // c'est bien ELLE qui le possède, mais c'est LUI qui le débloque (Codex §6.5).
     function traitDisponible(actorId, k) {
-        if (!TRAITS[k] || !TRAITS[k].parFamilier) return true;
+        if (!TRAITS[k] || !(TRAITS[k].parAvatar || TRAITS[k].parFamilier)) return true;
         try { return !window.Dons || window.Dons.traitDebloque(actorId) === k; } catch (e) { return true; }
     }
 
@@ -249,7 +249,7 @@
     Game_BattlerBase.prototype.canPaySkillCost = function (skill) {
         var k = traitDuSkill(skill);
         if (k && this.isActor && this.isActor()) {
-            // âme éteinte, ou familier absent pour un Trait qu'il débloque
+            // âme éteinte, ou Avatar absent pour un Trait qu'il débloque
             if (marqueCreuse(this.actorId())) return false;
             if (TRAITS[k].actor === this.actorId() && !traitDisponible(this.actorId(), k)) return false;
         }

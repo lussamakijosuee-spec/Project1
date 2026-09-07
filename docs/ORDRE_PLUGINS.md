@@ -252,7 +252,7 @@
 | 159 | `RoyaumeImperial` | ✅ | InvocationAmes · Errance · JadeEntitePlunging |
 | 160 | `DonsSpirituels` | ✅ | ObjetSpirituel · Errance · JadeEntitePlunging |
 | 161 | `TraitsAme` | ✅ | Errance · JadeEntitePlunging · MarqueVivante · DonsSpirituels |
-| 162 | `FamilierSpirituel` | ✅ | DonsSpirituels · TraitsAme |
+| 162 | `AvatarSpirituel` | ✅ | DonsSpirituels · TraitsAme |
 | 163 | `ClarteUI` | ✅ | — |
 | 164 | `CodexSources` | ✅ | — |
 | 165 | `CanonPlus` | ✅ | CorruptionAme · Errance |

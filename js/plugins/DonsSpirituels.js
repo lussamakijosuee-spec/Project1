@@ -1,12 +1,14 @@
 //=============================================================================
-// DonsSpirituels.js — v2.0  ·  Le Don Spirituel : Arme, Objet ou Familier
+// DonsSpirituels.js — v3.0  ·  UN SEUL Don : Arme, Objet OU Avatar Spirituel
 // RPG Maker MV   ·   d'après le Codex des Trois Sources, chapitre 6
 //   À charger APRÈS ObjetSpirituel, Errance et JadeEntitePlunging.
+//   v3.0 — règle d'or : UN SEUL Don par personne, verrouillé sur son porteur.
+//          « Familier » devient AVATAR SPIRITUEL.
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ Le Don Spirituel : 80% une ARME (slot Arme), 18% un OBJET
- * (slot Accessoire), 2% un FAMILIER (slot Âme). Endurance commune + une jauge
- * propre à chaque Objet. Brisé, le Don sert encore — mais tout ce qu'il apporte est ÷2.
+ * @plugindesc v3.0 ■ UN SEUL Don par personne : 80% une ARME (slot Arme), 18% un
+ * OBJET (slot Accessoire), 2% un AVATAR SPIRITUEL (slot Âme). Jamais deux.
+ * Endurance + une jauge par Objet. Brisé, il sert encore — mais tout est ÷2.
  * @author JOKO
  *
  * @param usureParUsage
@@ -79,11 +81,12 @@
  * @min 0
  * @default 8
  *
- * @param familierBonus
- * @text FAMILIER — bonus passif (%)
+ * @param avatarBonus
+ * @text AVATAR SPIRITUEL — bonus passif (%)
  * @type number
  * @min 0
  * @default 10
+ * @desc ATQ, DÉF et AGI de la porteuse tant que son Avatar est entier (moitié s'il est brisé).
  *
  * @param exigerEquipe
  * @text Exiger que le Don soit équipé ?
@@ -91,15 +94,58 @@
  * @on Oui
  * @off Non
  * @default true
- * @desc Si Oui, un Don rangé au sac n'apporte plus rien (et le Familier ne débloque plus son Trait).
+ * @desc Si Oui, un Don rangé au sac n'apporte plus rien (et l'Avatar ne débloque plus son Trait).
+ *
+ * @param verrouSlot
+ * @text Verrouiller le Don dans son slot ?
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc Le Don est né de cette âme-là : on ne le retire pas, et on ne le prête à personne. Recommandé.
+ *
+ * @param alerteJauge
+ * @text Prévenir quand la seconde jauge approche du débordement (%)
+ * @type number
+ * @min 0
+ * @max 100
+ * @default 70
+ * @desc 0 = jamais. Une jauge qu'on ne voit pas est une jauge qu'on ne gère pas.
+ *
+ * @param alerteEndurance
+ * @text Prévenir quand l'Endurance descend sous (%)
+ * @type number
+ * @min 0
+ * @max 100
+ * @default 25
+ * @desc 0 = jamais.
+ *
+ * @param dansLeMenu
+ * @text Ajouter « LES DONS » au menu principal ?
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ *
+ * @param commandeMenu
+ * @text Nom de la commande de menu
+ * @type string
+ * @default LES DONS SPIRITUELS
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LE DON SPIRITUEL                                    Codex, chapitre 6
  * ═══════════════════════════════════════════════════════════════════════════
  *  Le Don n'est pas remis : il APPARAÎT de lui-même, à la première fois que
- *  le marqué se sert vraiment de son âme. Trois formes — et CHAQUE FORME A
- *  SA PLACE SUR LE CORPS :
+ *  le marqué se sert vraiment de son âme.
+ *
+ *  ╔═══════════════════════════════════════════════════════════════════════╗
+ *  ║  LA RÈGLE D'OR — ON N'EN A QU'UN.                                     ║
+ *  ║  Une ARME, OU un OBJET, OU un AVATAR. Jamais deux, jamais de cumul.   ║
+ *  ║  Ce que le porteur tient dans l'autre main est de l'acier ordinaire.  ║
+ *  ╚═══════════════════════════════════════════════════════════════════════╝
+ *
+ *  Trois formes — et CHAQUE FORME A SA PLACE SUR LE CORPS :
  *
  *    ⚔️  L'ARME (80 %)      → slot ARME
  *          Aucun effet, aucun talent. Seulement sa résistance.
@@ -110,9 +156,20 @@
  *          SECONDE JAUGE qui se paie toujours plus cher que la casse.
  *          Prix : il occupe l'accessoire. Tu ne portes rien d'autre.
  *
- *    👤  LE FAMILIER (2 %)  → slot ÂME
- *          Une créature née de l'âme, qui peut porter un TRAIT à elle :
- *          son porteur en a alors DEUX. Prix : il occupe l'Âme.
+ *    👤  L'AVATAR SPIRITUEL (2 %)  → slot ÂME
+ *          Une créature née directement de l'âme — pas une invocation, pas
+ *          un pacte : une part de soi qui marche à côté de soi, et qui joue
+ *          son propre tour. Il peut porter un TRAIT : son porteur en a alors
+ *          DEUX, même si c'est bien LE PORTEUR qui les tient tous les deux.
+ *          Prix : il occupe l'Âme. (Voir AvatarSpirituel.js.)
+ *
+ *  ─────────────────────────────────────────────────────────────────────────
+ *  LE DON NE SE RETIRE PAS, ET NE SE PRÊTE PAS      (option verrouSlot)
+ *  ─────────────────────────────────────────────────────────────────────────
+ *  Il est né de CETTE âme-là. Le joueur ne peut ni le déséquiper par erreur,
+ *  ni le passer à quelqu'un d'autre. C'est du confort autant que du canon :
+ *  personne ne perd son Trait en rangeant un accessoire sans regarder.
+ *  Notetag de propriété, sur la pièce :   <DonDe: actorId>
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  L'ENDURANCE — commune aux trois formes
@@ -132,39 +189,55 @@
  *  que de laisser l'Endurance tomber.
  *
  *  ▶ VESPER — LE MASQUE  (objet · accessoire) · jauge de SANG
- *      Tant qu'il tient, elle use de son sang SANS SE BLESSER.
+ *      Son UNIQUE Don. Tant qu'il tient, elle use de son sang SANS SE
+ *      BLESSER, et ce sang revient tout seul (régénération de PV : c'est le
+ *      « talent » que tout Objet doit porter).
  *      Chaque technique de sang remplit la jauge. PLEINE → LE MASQUE SE FEND
  *      d'un coup (Endurance à zéro), sans attendre l'usure. Dès lors chaque
  *      attaque de sang lui coûte sangCoutPct % de ses PV max, et sa
  *      régénération faiblit de moitié.
+ *      Dans sa main : une lame d'acier ORDINAIRE. Pas un second Don.
  *
  *  ▶ LUDWING — L'AMULETTE  (objet · accessoire) · jauge d'OMBRE
- *      Elle absorbe les ombres et les lui rend maniables : c'est elle qui
- *      donne l'impression qu'il a deux Traits alors qu'il n'en a qu'un.
+ *      Son UNIQUE Don. Elle absorbe les ombres et les lui rend maniables :
+ *      c'est ELLE qui ouvre les types de compétence d'ombre, deux par palier,
+ *      les huit à la Vérité. Voilà pourquoi il a l'air d'avoir deux Traits
+ *      alors qu'il n'en a qu'un — le second, c'est le bijou.
  *      Chaque technique d'ombre remplit la jauge. PLEINE → elle EXPLOSE :
  *      capacités d'ombre bloquées ombreBlocage tours, et absorption d'âmes
  *      deux fois moins efficace pendant ce temps.
+ *      Dans sa main : une hache ORDINAIRE. Pas un second Don.
  *
- *  ▶ KORRAH — L'ARMURE VOLANTE  (familier · âme)
- *      Des poings et un torse qui flottent sans corps. Il porte le Trait
- *      HIVER : elle manipule la glace sans formule — et le froid l'atteint
- *      elle aussi. Bonus passif permanent tant que le familier est entier.
- *      ⚠ Familier NON ÉQUIPÉ → le Trait HIVER ne répond plus.
+ *  ▶ KORRAH — L'ARMURE VOLANTE  (AVATAR SPIRITUEL · âme)
+ *      Son UNIQUE Don. Des poings et un torse qui flottent sans corps, qui
+ *      agissent d'eux-mêmes. Il débloque le Trait HIVER : elle manipule la
+ *      glace sans formule — et le froid l'atteint elle aussi. Bonus passif
+ *      permanent tant que l'Avatar est entier.
+ *      ⚠ Avatar NON ÉQUIPÉ → le Trait HIVER ne répond plus.
+ *      Dans sa main : des gantelets ORDINAIRES. Pas un second Don.
  *
  *  ▶ AËL — L'ARC ET SES FLÈCHES  (arme · slot Arme)
+ *      Son UNIQUE Don, et le seul des quatre qui soit une ARME.
  *      Aucun effet. Juste une arme qui ne cède pas — et c'est exactement
  *      la sécurité qu'il faut à MIRACLE, un Trait qui se matérialise en
- *      flèches. En échange : accessoire et Âme LIBRES.
+ *      flèches. En échange : accessoire et Âme LIBRES. C'est ça, l'avantage
+ *      des 80 % — le Don ne leur coûte aucun autre emplacement.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  RECONNAISSANCE — notetags
  *  ─────────────────────────────────────────────────────────────────────────
  *  Sur la pièce du Don (arme OU armure) :
  *      <Don: cle>            vesper | korrah | ludwing | ael
- *      <Forme: xxx>          arme | objet | familier
+ *      <Forme: xxx>          arme | objet | avatar     (« familier » lu aussi)
  *      <Palier: 1-4>         Éclat · Forme · Résonance · Vérité
- *      <TraitDebloque: cle>  (familier seulement) le Trait qu'il ouvre
+ *      <TraitDebloque: cle>  (avatar seulement) le Trait qu'il ouvre
+ *      <DonDe: actorId>      verrou : nul autre ne peut porter cette pièce
  *  Les anciens tags <Objet Spirituel: thylane|neyssa|lou|tianna> restent lus.
+ *
+ *  ⚠ Le mot ÉCLAT est réservé au palier 1 d'un Don. Une arme ordinaire ne
+ *    s'appelle jamais « Éclat de… » : ce serait promettre un Don à un objet
+ *    qui n'en est pas un. Les armes 501-512, qui portaient ce nom à tort,
+ *    ont été renommées (aucune n'a été supprimée).
  *
  *  Les techniques d'ombre : types de compétence 11 à 18, ou note <Ombre>
  *  Les techniques de sang : type de compétence 10,      ou note <Sang>
@@ -177,13 +250,14 @@
  *    DON casser 3           → brise celui de l'acteur 3 (scénario)
  *    DON vider 3            → vide la seconde jauge de l'acteur 3
  *    DON afficher           → écran de lecture des Dons du groupe
+ *                             (aussi accessible depuis le MENU PRINCIPAL)
  *
  *  SCRIPT :  window.Dons.de(actorId)        → fiche complète
  *            window.Dons.estCasse(actorId)  → true/false
  *            window.Dons.estPorte(actorId)  → le Don est-il équipé ?
  *            window.Dons.jauge(actorId)     → {nom, val, max, bloc}
  *            window.Dons.facteur(actorId)   → 1 ou 0.50
- *            window.Dons.traitDebloque(2)   → 'hiver' si le familier est là
+ *            window.Dons.traitDebloque(2)   → 'hiver' si l'Avatar est là
  * ═══════════════════════════════════════════════════════════════════════════
  */
 (function () {
@@ -201,21 +275,28 @@
     var SANG_MAX   = parseInt(P['sangMax']        || 100);
     var SANG_USE   = parseInt(P['sangParUsage']   || 10);
     var SANG_PCT   = parseInt(P['sangCoutPct']    || 8);
-    var FAM_BONUS  = parseInt(P['familierBonus']  || 10);
+    // avatarBonus — l'ancienne clé « familierBonus » reste lue (sauvegardes v2).
+    var AV_BONUS   = parseInt(P['avatarBonus'] || P['familierBonus'] || 10);
     var EXIGE_EQ   = String(P['exigerEquipe'] || 'true') === 'true';
+    var VERROU     = String(P['verrouSlot']   || 'true') === 'true';
+    var ALERTE_J   = parseInt(P['alerteJauge']     === undefined ? 70 : P['alerteJauge']);
+    var ALERTE_E   = parseInt(P['alerteEndurance'] === undefined ? 25 : P['alerteEndurance']);
+    var AU_MENU    = String(P['dansLeMenu'] || 'true') === 'true';
+    var CMD_MENU   = String(P['commandeMenu'] || 'LES DONS SPIRITUELS');
 
-    // ── Le registre : qui est né avec quoi, et OÙ ça se porte (Codex §6.3-6.5)
+    // ── Le registre : qui est né avec QUOI — UN SEUL Don chacun (Codex §6.3-6.5)
     //    slot = etypeId :  1 Arme · 5 Accessoire · 7 Âme
     var DONS = {
-        1: { cle: 'vesper',  type: 'objet',    slot: 5, nom: 'le Masque',
+        1: { cle: 'vesper',  type: 'objet',  slot: 5, nom: 'le Masque',
              jauge: { nom: 'Sang',  max: SANG_MAX,  parUsage: SANG_USE,  sur: 'sang',  fin: 'fendre' } },
-        2: { cle: 'korrah',  type: 'familier', slot: 7, nom: "l'Armure Volante",
+        2: { cle: 'korrah',  type: 'avatar', slot: 7, nom: "l'Armure Volante",
              trait: 'hiver' },
-        3: { cle: 'ludwing', type: 'objet',    slot: 5, nom: "l'Amulette",
+        3: { cle: 'ludwing', type: 'objet',  slot: 5, nom: "l'Amulette",
              jauge: { nom: 'Ombre', max: OMBRE_MAX, parUsage: OMBRE_USE, sur: 'ombre', fin: 'exploser' } },
-        4: { cle: 'ael',     type: 'arme',     slot: 1, nom: "l'Arc et ses Flèches" }
+        4: { cle: 'ael',     type: 'arme',   slot: 1, nom: "l'Arc et ses Flèches" }
     };
-    var TYPE_NOM  = { arme: 'Arme spirituelle', objet: 'Objet spirituel', familier: 'Familier' };
+    var TYPE_NOM  = { arme: 'Arme spirituelle', objet: 'Objet spirituel',
+                      avatar: 'Avatar spirituel', familier: 'Avatar spirituel' };
     var SLOT_NOM  = { 1: 'Arme', 5: 'Accessoire', 7: 'Âme' };
     var PALIER_NOM = ['', 'Éclat', 'Forme', 'Résonance', 'Vérité'];
     // Anciens noms des personnages, encore présents sur de vieilles pièces.
@@ -232,7 +313,7 @@
     function fiche(id) {
         var s = store();
         if (!s || !DONS[id]) return null;
-        if (!s[id]) s[id] = { end: null, charge: 0, bloc: 0, apparu: false };
+        if (!s[id]) s[id] = { end: null, charge: 0, bloc: 0, apparu: false, prevenuJ: false, prevenuE: false };
         // compatibilité v1 : l'ancienne clé « ombre » devient la jauge générique
         if (s[id].ombre !== undefined) { s[id].charge = s[id].ombre; delete s[id].ombre; }
         return s[id];
@@ -348,8 +429,19 @@
         palier: palierDe,
         facteur: facteur,
         facteurTrait: facteurTrait,
-        aLaForme: function (id, forme) { return !!DONS[id] && DONS[id].type === forme; },
-        // le Familier ne débloque son Trait que s'il est là, et entier ou brisé (÷2 ailleurs)
+        // « familier » et « avatar » désignent la même forme : le mot a changé,
+        // pas la mécanique. Les deux sont acceptés pour ne rien casser.
+        aLaForme: function (id, forme) {
+            if (!DONS[id]) return false;
+            var a = DONS[id].type, b = String(forme || '');
+            if (a === 'familier') a = 'avatar';
+            if (b === 'familier') b = 'avatar';
+            return a === b;
+        },
+        estAvatar: function (id) {
+            return !!DONS[id] && (DONS[id].type === 'avatar' || DONS[id].type === 'familier');
+        },
+        // l'Avatar ne débloque son Trait que s'il est là, et entier ou brisé (÷2 ailleurs)
         traitDebloque: function (id) {
             var d = DONS[id];
             return (d && d.trait && estPorte(id)) ? d.trait : '';
@@ -367,6 +459,7 @@
             if (!f) return;
             var etait = estCasse(id);
             f.end = enduranceMax(id); f.charge = 0; f.bloc = 0;
+            f.prevenuJ = false; f.prevenuE = false;
             if (etait) {
                 var a = acteur(id);
                 log('\\C[24]' + (a ? a.name() : '') + ' — ' + nomDuDon(id) + ' a retrouvé sa forme.\\C[0]');
@@ -381,7 +474,7 @@
         if (!a || !d) return;
         if (d.jauge && d.jauge.sur === 'sang') {
             log('\\C[18]✖ ' + nomDuDon(id) + ' se fend. Désormais, son sang la blesse aussi.\\C[0]');
-        } else if (d.type === 'familier') {
+        } else if (window.Dons.estAvatar(id)) {
             log('\\C[18]✖ ' + nomDuDon(id) + ' se disloque. ' + a.name() + ' se retrouve seule.\\C[0]');
         } else {
             log('\\C[18]✖ ' + nomDuDon(id) + ' est brisé. Il sert encore — mais de moitié.\\C[0]');
@@ -418,6 +511,7 @@
             if (avant > 0 && USURE > 0) {
                 f.end = avant - USURE;
                 if (f.end <= 0) { f.end = 0; annoncerCasse(id); }
+                else prevenirEndurance(id);
             }
             // la seconde jauge de l'Objet se gorge de ce dont il se nourrit
             if (d.jauge && nourrit(d.jauge, this.item())) gorger(id);
@@ -463,7 +557,41 @@
         if (f.charge >= d.jauge.max) {
             if (d.jauge.fin === 'exploser') exploser(id);
             else fendre(id);
+        } else {
+            prevenirJauge(id);
         }
+    }
+
+    //=========================================================================
+    // ON PRÉVIENT AVANT — une jauge qu'on ne voit pas est une jauge subie
+    //=========================================================================
+    // Les deux jauges du Don ne sont lisibles qu'au menu. En combat, le joueur
+    // découvrait la casse au moment où elle tombait. Maintenant il est averti
+    // une fois, au franchissement du seuil, et il lui reste des tours pour
+    // changer d'avis. Une seule alerte par seuil : pas de spam.
+    function prevenirJauge(id) {
+        if (ALERTE_J <= 0) return;
+        var d = DONS[id], f = fiche(id);
+        if (!d.jauge) return;
+        var pct = Math.floor(f.charge * 100 / d.jauge.max);
+        if (pct < ALERTE_J) { f.prevenuJ = false; return; }
+        if (f.prevenuJ) return;
+        f.prevenuJ = true;
+        var reste = Math.ceil((d.jauge.max - f.charge) / d.jauge.parUsage);
+        log('\\C[2]⚠ ' + nomDuDon(id) + ' — ' + d.jauge.nom + ' à ' + pct + ' %. Encore '
+            + reste + ' technique' + (reste > 1 ? 's' : '') + ' avant qu\'' + (d.jauge.fin === 'exploser'
+            ? 'elle n\'explose.' : 'il ne se fende.') + '\\C[0]');
+    }
+    function prevenirEndurance(id) {
+        if (ALERTE_E <= 0) return;
+        var f = fiche(id), max = enduranceMax(id);
+        if (max <= 0) return;
+        var pct = Math.floor(endurance(id) * 100 / max);
+        if (pct > ALERTE_E) { f.prevenuE = false; return; }
+        if (f.prevenuE) return;
+        f.prevenuE = true;
+        log('\\C[17]⚠ ' + nomDuDon(id) + ' fatigue — Endurance ' + endurance(id) + ' / ' + max
+            + '. Un repos le remettrait d\'aplomb.\\C[0]');
     }
     // ⬛ l'AMULETTE de ludwing : elle explose, l'ombre reflue, les âmes échappent
     function exploser(id) {
@@ -531,19 +659,81 @@
     };
 
     //=========================================================================
-    // 👤 LE FAMILIER — bonus passif tant qu'il est là (moitié s'il est brisé)
+    // 👤 L'AVATAR SPIRITUEL — bonus passif tant qu'il est là (÷2 s'il est brisé)
     //=========================================================================
     var _paramRate = Game_Battler.prototype.paramRate;
     Game_Battler.prototype.paramRate = function (paramId) {
         var r = _paramRate.call(this, paramId);
         try {
             var id = porteurDe(this);
-            if (id && DONS[id].type === 'familier'
+            if (id && window.Dons.estAvatar(id)
                 && (paramId === 2 || paramId === 3 || paramId === 6)) {   // ATK, DEF, AGI
-                r *= 1 + FAM_BONUS / 100 * facteur(id);
+                r *= 1 + AV_BONUS / 100 * facteur(id);
             }
         } catch (e) { }
         return r;
+    };
+
+    //=========================================================================
+    // LE VERROU — le Don ne se retire pas, et ne se prête à personne
+    //=========================================================================
+    // Le Don est né de CETTE âme-là : il n'est ni amovible, ni transmissible.
+    // Sans ce verrou, un joueur pouvait ranger le Masque de Vesper au sac par
+    // inadvertance et perdre en silence tout ce que son Don lui apportait —
+    // y compris le Trait que l'Avatar de Korrah débloque. C'est du canon, mais
+    // c'est surtout du confort : on ne peut plus se saborder sans le savoir.
+
+    /** L'acteur auquel cette pièce appartient : <DonDe: n>, sinon le registre. */
+    function proprietaire(item) {
+        if (!item || !item.meta) return 0;
+        var n = parseInt(item.meta['DonDe']);
+        if (n > 0) return n;
+        var k = cleDe(item);
+        if (!k) return 0;
+        for (var id in DONS) if (DONS[id].cle === k) return parseInt(id);
+        return 0;
+    }
+    function estUnDon(item) { return proprietaire(item) > 0; }
+
+    // 1) On ne retire pas son Don, et on ne met rien d'autre à sa place.
+    //    « Tout retirer » et « Optimiser » passent par ici : ils sont couverts.
+    //    Un événement garde forceChangeEquip() comme porte de service.
+    var _changeEquip = Game_Actor.prototype.changeEquip;
+    Game_Actor.prototype.changeEquip = function (slotId, item) {
+        if (VERROU && !window._DonInterne) {
+            try {
+                var actuel = this.equips()[slotId];
+                // le slot tient déjà MON Don : personne n'y touche
+                if (actuel && proprietaire(actuel) === this.actorId()) { refus(); return; }
+                // ce n'est pas mon Don : je ne peux pas le porter
+                if (item && estUnDon(item) && proprietaire(item) !== this.actorId()) { refus(); return; }
+            } catch (e) { }
+        }
+        _changeEquip.call(this, slotId, item);
+    };
+    // Un refus discret : le menu n'a pas de fenêtre de message, un son suffit.
+    function refus() {
+        try { SoundManager.playBuzzer(); } catch (e) { }
+    }
+
+    // 2) Le Don n'apparaît pas dans la liste d'équipement des autres héros.
+    var _canEquip = Game_BattlerBase.prototype.canEquip;
+    Game_BattlerBase.prototype.canEquip = function (item) {
+        if (VERROU && this.isActor && this.isActor()) {
+            var p = proprietaire(item);
+            if (p > 0 && p !== this.actorId()) return false;
+        }
+        return _canEquip.call(this, item);
+    };
+
+    // 3) Le meilleur équipement automatique ne jette pas le Don non plus.
+    var _bestEquipItem = Game_Actor.prototype.bestEquipItem;
+    Game_Actor.prototype.bestEquipItem = function (slotId) {
+        if (VERROU) {
+            var actuel = this.equips()[slotId];
+            if (actuel && proprietaire(actuel) === this.actorId()) return actuel;
+        }
+        return _bestEquipItem.call(this, slotId);
     };
 
     //=========================================================================
@@ -634,11 +824,20 @@
                 w.resetTextColor();
                 y += lh;
             }
-            // ligne 5 — le Trait que le Familier débloque
+            // ligne 5 — le Trait que l'Avatar débloque
             if (d.trait) {
                 w.changeTextColor(w.textColor(23));
                 w.drawText('    ✦ débloque le Trait ' + d.trait.toUpperCase()
-                           + (d.porte ? '' : ' — indisponible sans le familier'), 24, y, larg);
+                           + (d.porte ? '' : " — indisponible sans l'Avatar"), 24, y, larg);
+                w.resetTextColor();
+                y += lh;
+            }
+            // ligne 6 — ce que la MAIN tient : de l'acier, pas un second Don
+            var main = a.equips()[0];
+            if (d.slot !== 1) {
+                w.changeTextColor(w.textColor(7));
+                w.drawText('    en main : ' + (main ? main.name : '—')
+                           + '  (arme ordinaire — on n\'a qu\'un seul Don)', 24, y, larg);
                 w.resetTextColor();
                 y += lh;
             }
@@ -646,11 +845,43 @@
         });
 
         w.changeTextColor(w.textColor(8));
-        w.drawText("⚔️ Arme → slot Arme (rien de plus, mais rien à payer)  ·  🔮 Objet → Accessoire  ·  👤 Familier → Âme",
+        w.drawText("UN SEUL DON PAR PERSONNE.   ⚔️ Arme → slot Arme (rien de plus, mais rien à payer)  ·  🔮 Objet → Accessoire  ·  👤 Avatar → Âme",
                    8, Graphics.boxHeight - lh * 4, larg);
-        w.drawText('Un Don brisé sert encore — mais de moitié. Le repos le répare.',
+        w.drawText('Un Don brisé sert encore — mais de moitié. Le repos le répare. On ne le retire pas, on ne le prête pas.',
                    8, Graphics.boxHeight - lh * 3, larg);
         w.resetTextColor();
     };
+    // On en SORT. Sans ça, « DON afficher » n'avait aucune touche de retour :
+    // l'écran restait affiché jusqu'à la fermeture du jeu.
+    Scene_Dons.prototype.update = function () {
+        Scene_MenuBase.prototype.update.call(this);
+        if (Input.isTriggered('cancel') || Input.isTriggered('ok') || TouchInput.isCancelled()) {
+            SoundManager.playCancel();
+            this.popScene();
+        }
+    };
     window.Scene_Dons = Scene_Dons;
+
+    //=========================================================================
+    // MANIABLE — l'écran des Dons se lit depuis le MENU, pas depuis un événement
+    //=========================================================================
+    // Trois jauges gouvernent le combat des quatre héros et elles n'étaient
+    // consultables que par une commande d'événement. Elles ont maintenant leur
+    // entrée dans le menu principal.
+    // Garde-fou : si un autre plugin remplace la scène de menu, on n'ajoute
+    // rien plutôt que de casser le chargement. Le reste du Don continue.
+    if (AU_MENU && typeof Window_MenuCommand !== 'undefined' && typeof Scene_Menu !== 'undefined') {
+        var _addOriginal = Window_MenuCommand.prototype.addOriginalCommands;
+        Window_MenuCommand.prototype.addOriginalCommands = function () {
+            _addOriginal.call(this);
+            this.addCommand(CMD_MENU, 'donsSpirituels', true);
+        };
+        var _createCmd = Scene_Menu.prototype.createCommandWindow;
+        Scene_Menu.prototype.createCommandWindow = function () {
+            _createCmd.call(this);
+            this._commandWindow.setHandler('donsSpirituels', function () {
+                SceneManager.push(Scene_Dons);
+            });
+        };
+    }
 })();

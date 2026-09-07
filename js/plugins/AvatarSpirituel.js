@@ -1,12 +1,12 @@
 //=============================================================================
-// FamilierSpirituel.js — v1.0  ·  Le Familier agit de lui-même
+// AvatarSpirituel.js — v2.0  ·  L'Avatar Spirituel agit de lui-même
 // RPG Maker MV   ·   d'après le Codex des Trois Sources, chapitre 6.5
 //   À charger APRÈS DonsSpirituels et TraitsAme.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Le FAMILIER (2 %) n'est pas un bonus : c'est une créature.
+ * @plugindesc v2.0 ■ L'AVATAR SPIRITUEL (2 %) n'est pas un bonus : c'est une créature.
  * Il joue son propre tour, choisit sa cible, et se met devant sa porteuse quand
- * elle est en danger. Une part de soi qui marche à côté de soi.
+ * elle est en danger. Trois ORDRES le pilotent en plein combat.
  * @author JOKO
  *
  * @param postureDefaut
@@ -53,7 +53,7 @@
  * @default 3
  *
  * @param brisePause
- * @text Familier BRISÉ — il ne peut plus agir qu'un tour sur deux ?
+ * @text Avatar BRISÉ — il ne peut plus agir qu'un tour sur deux ?
  * @type boolean
  * @on Oui
  * @off Non
@@ -68,9 +68,9 @@
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
- *  LE FAMILIER QUI AGIT                                Codex, chapitre 6.5
+ *  L'AVATAR SPIRITUEL QUI AGIT                                Codex, chapitre 6.5
  * ═══════════════════════════════════════════════════════════════════════════
- *  « Le Familier est une créature issue directement de l'âme — pas une
+ *  « L'Avatar est une créature issue directement de l'âme — pas une
  *    invocation, pas un pacte : une part de soi qui marche à côté de soi. »
  *
  *  Les 2 % ne reçoivent pas un objet : ils reçoivent QUELQU'UN. Ce plugin lui
@@ -79,7 +79,7 @@
  *  ─────────────────────────────────────────────────────────────────────────
  *  IL JOUE SON PROPRE TOUR
  *  ─────────────────────────────────────────────────────────────────────────
- *  Quand sa porteuse a fini d'agir, le Familier agit à son tour. Ce n'est pas
+ *  Quand sa porteuse a fini d'agir, l'Avatar agit à son tour. Ce n'est pas
  *  une seconde action pour elle : c'est LUI qui frappe, avec ses compétences,
  *  son animation, sa cible. Elle n'a rien à dépenser.
  *
@@ -94,11 +94,11 @@
  *  IL SE MET DEVANT
  *  ─────────────────────────────────────────────────────────────────────────
  *  Un torse qui flotte sans corps, ça sert à ça. Quand sa porteuse encaisse un
- *  coup, le Familier en prend une part — et c'est SON Endurance qui la paie.
- *  Protéger l'use : un Familier qui a beaucoup gardé finit par se disloquer.
+ *  coup, l'Avatar en prend une part — et c'est SON Endurance qui la paie.
+ *  Protéger l'use : un Avatar qui a beaucoup gardé finit par se disloquer.
  *
  *  ─────────────────────────────────────────────────────────────────────────
- *  LES TROIS POSTURES                       (FAMILIER posture <acteur> <mot>)
+ *  LES TROIS POSTURES — ET ON LES DONNE EN PLEIN COMBAT
  *  ─────────────────────────────────────────────────────────────────────────
  *    ▶ LIBRE     (défaut) il frappe, intercepte un peu — et bascule tout seul
  *                en protection quand sa porteuse tombe sous seuilDetresse %.
@@ -106,40 +106,56 @@
  *    ▶ GARDE     il ne frappe plus du tout. Il ne fait que se mettre devant,
  *                et encaisse presque la moitié de ce qui vise sa porteuse.
  *
+ *  La posture ne se réglait que par commande d'événement : le joueur n'avait
+ *  AUCUNE prise sur la seule créature autonome du jeu. Korrah connaît
+ *  maintenant trois ORDRES, dès le niveau 1, sous « Spéciale » :
+ *
+ *      ✦ Avatar — Laisse-le faire   → posture LIBRE
+ *      ✦ Avatar — Assaut            → posture AGRESSIF
+ *      ✦ Avatar — Devant moi        → posture GARDE
+ *
+ *  Ils coûtent 0 mana, et le tour n'est pas perdu : donner l'ordre le fait
+ *  agir DANS LA FOULÉE. On paie une action, on obtient une action.
+ *  Toute compétence notée <AvatarPosture: libre|agressif|garde> fait ça.
+ *
  *  ─────────────────────────────────────────────────────────────────────────
  *  CE QU'IL COÛTE — la contrepartie des 2 %
  *  ─────────────────────────────────────────────────────────────────────────
  *   • Il occupe le slot ÂME (voir DonsSpirituels).
  *   • Chacune de ses frappes USE l'Endurance du Don, comme celles de sa
- *     porteuse : un Familier actif brûle sa jauge DEUX FOIS PLUS VITE.
+ *     porteuse : un Avatar actif brûle sa jauge DEUX FOIS PLUS VITE.
  *   • Chaque interception coûte usureInterception de plus.
  *   • BRISÉ, il agit un tour sur deux et tout ce qu'il fait est divisé par
  *     deux (dégâts comme interception). Il ne meurt pas : il fatigue.
  *   • ABSENT du slot Âme, il n'existe pas — et le Trait qu'il débloquait
  *     non plus.
  *
- *  ⚠️ IL NE PORTE PAS LE TRAIT À LA PLACE DE SA PORTEUSE. Les frappes du
- *     Familier sont des frappes de Familier : elles n'ont pas l'élément
+ *  ⚠️ IL NE PORTE PAS LE TRAIT À LA PLACE DE SA PORTEUSE. Les frappes de
+ *     l'Avatar sont des frappes d'Avatar : elles n'ont pas l'élément
  *     GLACE et ne déclenchent pas le recul d'HIVER. Le froid reste le prix
- *     que Korrah paie elle-même — sinon le Familier deviendrait la faille
+ *     que Korrah paie elle-même — sinon l'Avatar deviendrait la faille
  *     qui annule la règle d'or.
+ *
+ *  ⚠️ ET C'EST SON SEUL DON. Korrah n'a pas d'arme spirituelle en plus :
+ *     ses gantelets sont de l'acier ordinaire. On n'a qu'un Don, jamais deux.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  COMMANDES DE PLUGIN
  *  ─────────────────────────────────────────────────────────────────────────
- *    FAMILIER posture 2 garde   → change la posture du familier de l'acteur 2
- *    FAMILIER agir 2            → le fait agir immédiatement (scénario)
- *    FAMILIER etat              → résumé dans le journal
+ *    AVATAR posture 2 garde   → change la posture de l'Avatar de l'acteur 2
+ *    AVATAR agir 2            → le fait agir immédiatement (scénario)
+ *    AVATAR etat              → résumé dans le journal
+ *    (FAMILIER … reste accepté : les anciens événements continuent de marcher)
  *
- *  SCRIPT :  window.Familiers.de(actorId)      → {nom, posture, actif, palier}
- *            window.Familiers.posture(2,'garde')
- *            window.Familiers.present(2)       → true si le familier est là
+ *  SCRIPT :  window.Avatars.de(actorId)      → {nom, posture, actif, palier}
+ *            window.Avatars.posture(2,'garde')
+ *            window.Avatars.present(2)       → true si l'Avatar est là
  * ═══════════════════════════════════════════════════════════════════════════
  */
 (function () {
     'use strict';
 
-    var P = PluginManager.parameters('FamilierSpirituel');
+    var P = PluginManager.parameters('AvatarSpirituel');
     var POSTURE_DEF = String(P['postureDefaut'] || 'libre');
     var DETRESSE    = parseInt(P['seuilDetresse']     || 40);
     var INT_LIBRE   = parseInt(P['interceptLibre']    || 20);
@@ -149,8 +165,8 @@
     var BRISE_PAUSE = String(P['brisePause'] || 'true') === 'true';
     var LOG_ON      = String(P['montrerLog'] || 'true') === 'true';
 
-    // ── Qui a un familier, et de quoi il est capable ────────────────────────
-    var FAMILIERS = {
+    // ── Qui a un avatar, et de quoi il est capable ────────────────────────
+    var AVATARS = {
         2: { nom: "l'Armure Volante", frappe: 469, deferlante: 470, garde: 471 }
     };
     var POSTURES = ['libre', 'agressif', 'garde'];
@@ -158,14 +174,14 @@
     //=========================================================================
     // OUTILS
     //=========================================================================
-    function conf(id) { return FAMILIERS[id] || null; }
+    function conf(id) { return AVATARS[id] || null; }
     function acteur(id) {
         try { return $gameActors ? $gameActors.actor(id) : null; } catch (e) { return null; }
     }
     function store() {
         if (!$gameSystem) return null;
-        if (!$gameSystem._familiers) $gameSystem._familiers = {};
-        return $gameSystem._familiers;
+        if (!$gameSystem._avatars) $gameSystem._avatars = {};
+        return $gameSystem._avatars;
     }
     function etat(id) {
         var s = store();
@@ -173,15 +189,15 @@
         if (!s[id]) s[id] = { posture: POSTURE_DEF, tours: 0, aAgi: false };
         return s[id];
     }
-    /** Le familier est-il là ? On demande à DonsSpirituels, seule source de vérité. */
+    /** Le avatar est-il là ? On demande à DonsSpirituels, seule source de vérité. */
     function present(id) {
         if (!conf(id)) return false;
         try {
             if (!window.Dons) return true;
-            return window.Dons.aLaForme(id, 'familier') && window.Dons.estPorte(id);
+            return window.Dons.aLaForme(id, 'avatar') && window.Dons.estPorte(id);
         } catch (e) { return false; }
     }
-    /** Ce que vaut le familier en ce moment : 0 absent · 0.5 brisé · 1 entier. */
+    /** Ce que vaut l'Avatar en ce moment : 0 absent · 0.5 brisé · 1 entier. */
     function facteur(id) {
         try { return window.Dons ? window.Dons.facteur(id) : 1; } catch (e) { return 1; }
     }
@@ -206,7 +222,7 @@
     //=========================================================================
     // API
     //=========================================================================
-    window.Familiers = {
+    window.Avatars = {
         de: function (id) {
             var c = conf(id), e = etat(id);
             if (!c || !e) return null;
@@ -229,6 +245,45 @@
             return e.posture;
         },
         agir: function (id) { faireAgir(acteur(id), null); }
+    };
+    // Ancien nom de l'API, conservé pour ne rien casser.
+    window.Familiers = window.Avatars;
+
+    //=========================================================================
+    // MANIABLE — TROIS ORDRES, DONNÉS EN COMBAT
+    //=========================================================================
+    // Une créature autonome que le joueur ne peut pas piloter, ce n'est pas de
+    // la profondeur, c'est du hasard. Toute compétence portant
+    // <AvatarPosture: libre|agressif|garde> change la posture ET fait agir
+    // l'Avatar dans la foulée : le tour dépensé rapporte quand même un coup.
+    function ordreDe(item) {
+        if (!item || !item.meta) return '';
+        var p = item.meta['AvatarPosture'];
+        if (!p || p === true) return '';
+        p = String(p).toLowerCase().trim();
+        if (p === 'assaut') p = 'agressif';          // synonyme toléré
+        return POSTURES.indexOf(p) >= 0 ? p : '';
+    }
+
+    var _applyGlobal = Game_Action.prototype.applyGlobal;
+    Game_Action.prototype.applyGlobal = function () {
+        _applyGlobal.call(this);
+        try {
+            if (this._parAvatar) return;
+            var s = this.subject(), id = porteurDe(s);
+            if (!id) return;
+            var ordre = ordreDe(this.item());
+            if (!ordre) return;
+
+            if (!present(id)) {
+                log("\\C[7]Aucun Avatar ne répond — il n'est pas au slot Âme.\\C[0]");
+                return;
+            }
+            window.Avatars.posture(id, ordre);
+            // L'ordre ne coûte pas le tour : il agit tout de suite.
+            s._avatarAgiCeTour = true;
+            faireAgir(s, null);
+        } catch (e) { /* ne jamais casser un combat */ }
     };
 
     //=========================================================================
@@ -288,7 +343,7 @@
 
         var action = new Game_Action(porteur);
         action.setSkill(choisirGeste(id));
-        action._parFamilier = true;
+        action._parAvatar = true;
         // c'est LUI qui désigne : sans ça, MV taperait au hasard
         try {
             var i = $gameTroop.members().indexOf(cible);
@@ -312,13 +367,13 @@
         if (w && animId > 0) w.push('showAnimation', sujet, cibles.slice(), animId);
     }
 
-    // Après chaque action de sa porteuse, le familier prend la parole.
+    // Après chaque action de sa porteuse, l'Avatar prend la parole.
     var _endAction = BattleManager.endAction;
     BattleManager.endAction = function () {
         try {
             var s = this._subject;
-            if (porteurDe(s) && !s._famAgiCeTour) {
-                s._famAgiCeTour = true;
+            if (porteurDe(s) && !s._avatarAgiCeTour) {
+                s._avatarAgiCeTour = true;
                 var derniere = this._targets && this._targets.length ? this._targets[0] : null;
                 faireAgir(s, derniere);
             }
@@ -330,12 +385,12 @@
     var _turnStart = Game_Battler.prototype.onTurnStart;
     Game_Battler.prototype.onTurnStart = function () {
         if (_turnStart) _turnStart.call(this);
-        this._famAgiCeTour = false;
+        this._avatarAgiCeTour = false;
     };
     var _battleStart = Game_Battler.prototype.onBattleStart;
     Game_Battler.prototype.onBattleStart = function () {
         if (_battleStart) _battleStart.call(this);
-        this._famAgiCeTour = false;
+        this._avatarAgiCeTour = false;
         var id = porteurDe(this), e = id ? etat(id) : null;
         if (e) e.tours = 0;
     };
@@ -354,7 +409,7 @@
         var pris = Math.floor(degats * pct / 100);
         if (pris <= 0) return degats;
 
-        // protéger l'use : le familier prend le coup dans son propre corps
+        // protéger l'use : l'Avatar prend le coup dans son propre corps
         try {
             if (window.Dons && USURE_INT > 0) {
                 var f = window.Dons.de(id);
@@ -382,15 +437,18 @@
     var _pc = Game_Interpreter.prototype.pluginCommand;
     Game_Interpreter.prototype.pluginCommand = function (cmd, args) {
         _pc.call(this, cmd, args);
-        if (String(cmd).toUpperCase() !== 'FAMILIER') return;
+        // FAMILIER reste accepté : les événements écrits avant le renommage
+        // continuent de fonctionner tels quels.
+        var mot = String(cmd).toUpperCase();
+        if (mot !== 'AVATAR' && mot !== 'FAMILIER') return;
         var sous = (args[0] || '').toLowerCase();
         if (sous === 'posture') {
-            window.Familiers.posture(parseInt(args[1] || 0), args[2]);
+            window.Avatars.posture(parseInt(args[1] || 0), args[2]);
         } else if (sous === 'agir') {
-            window.Familiers.agir(parseInt(args[1] || 0));
+            window.Avatars.agir(parseInt(args[1] || 0));
         } else if (sous === 'etat') {
-            Object.keys(FAMILIERS).forEach(function (k) {
-                var f = window.Familiers.de(parseInt(k));
+            Object.keys(AVATARS).forEach(function (k) {
+                var f = window.Avatars.de(parseInt(k));
                 if (!f) return;
                 log(f.nom + ' — ' + (f.present ? 'présent' : 'absent')
                     + ', posture ' + f.posture + ', palier ' + f.palier

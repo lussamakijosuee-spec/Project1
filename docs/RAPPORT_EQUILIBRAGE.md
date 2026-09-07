@@ -186,7 +186,7 @@ faisait déjà en réutilisant `Actor1_6` six fois.
 | Contrôle | Résultat |
 |---|---|
 | Les 8 fichiers de données restent valides | ✅ |
-| Les 4 bancs d'essai (Dons, paliers, Familier, bestiaire) | ✅ 72 contrôles |
+| Les 8 bancs d'essai (Dons, paliers, Avatar, bestiaire, lot, primes, règle d'or, verrou) | ✅ |
 | Les 401 ennemis ont un sprite qui existe | ✅ 0 manquant |
 | Les lignes d'armes et d'armures montent | ✅ toutes |
 | Les boucliers montent | ✅ corrigé |
