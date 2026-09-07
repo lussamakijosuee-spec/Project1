@@ -1,6 +1,6 @@
 # 🧪 Les bancs d'essai
 
-Neuf scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
+Dix scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
 `data/` et rejouent le vrai code de `js/plugins/` sur un moteur RPG Maker MV simulé.
 
 ## Comment on les lance
@@ -29,6 +29,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `4_un_seul_don.js` | **la règle d'or** : un seul Don par personne, 76 contrôles |
 | `5_verrou_et_ordres.js` | le Don ne se retire pas / ne se prête pas · les trois ordres en combat |
 | `6_avatar_niveaux.js` | les 3 niveaux de l'Avatar (25/50/85), le contrôle croissant, l'inséparabilité |
+| `7_courbe_et_acces.js` | **tout le contenu est-il atteignable ?** types de compétence sans porteur, compétences invisibles, trous de niveaux |
 | `audit/6_bestiaire.js` | les 400+ ennemis et les 41 boss |
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
@@ -44,6 +45,12 @@ Deux bugs sont passés à travers des tests écrits trop à la légère :
 2. **`ChasseAuxPrimes` plantait à l'ouverture** parce que le test était écrit contre un
    `Window_Selectable` nu, sans les surcharges de `MOG_Scrollbar`, `MOG_CursorBorder` et
    `YEP_X_BattleSysCTB` qui appellent `select()` pendant l'initialisation.
+
+3. **Un contrôle qui cherchait `b.mhp` dans le texte des formules** accusait à tort deux
+   compétences légitimes, qui s'en servent comme condition d'achèvement (« +80 % si la cible est
+   sous 35 % de PV »). Corrigé en mesurant le **symptôme** — les dégâts suivent-ils les PV max de
+   la cible ? — et vérifié dans les deux sens : le contrôle attrape le vrai coupable et innocente
+   les faux.
 
 D'où la règle : **un banc simule le moteur assez fidèlement pour attraper le bug, ou il ne sert à
 rien.** `5_verrou_et_ordres.js` rejoue par exemple `changeEquip`, `clearEquipments` et
