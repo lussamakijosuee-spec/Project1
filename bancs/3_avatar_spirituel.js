@@ -135,7 +135,9 @@ JOURNAL.length=0;
 tour(null);
 ok(!JOURNAL.some(l=>l.includes('agit de lui-même')), 'en garde, il ne frappe plus');
 Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
-ok(1000-korrah.hp===110, 'il encaisse 45 % (90) au lieu de 20 % (40) — elle ne perd que '+(1000-korrah.hp)+' au lieu de 160');
+// v3.0 — l'interception gagne +5 points par niveau d'Avatar. Korrah est au
+// niveau 35, donc Avatar niveau 1 : la garde vaut 45+5 = 50 %.
+ok(1000-korrah.hp===100, 'en garde au niveau 35, il encaisse 50 % (45 % + 5 du niveau 1) — elle ne perd que '+(1000-korrah.hp)+' sur 200');
 
 console.log('\n=== Brisé : il fatigue, un tour sur deux, et tout ÷2 ===');
 Familiers.posture(2,'libre'); Dons.casser(2); korrah.hp=1000;

@@ -206,6 +206,9 @@ Ce qui rend les Avatars **redoutables**, c'est qu'un Avatar peut **porter un Tra
 
 **❄️ L'AVATAR SPIRITUEL DE KORRAH**
 Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
+- **Il est inséparable d'elle.** Rien ne peut le lui prendre — ni un désarmement, ni un dissipateur, ni la casse. Il ne meurt pas : brisé, il **fatigue**. Deux choses seulement l'éteignent : **elle tombe**, ou **elle perd conscience**. Elle rouvre les yeux, il est là.
+- **Il monte en trois niveaux avec elle** — aux niveaux **25**, **50** et **85**. À chacun il gagne en puissance et **apprend deux techniques**.
+- **Et elle le tient de mieux en mieux** : *automatique* au début (il décide tout), puis *semi-automatique* (elle désigne la cible, puis le geste), puis **contrôle total**. Plus la puissance monte, plus la prise est fine.
 - Trait débloqué : **HIVER** — elle manipule la glace **directement, sans passer par une formule**.
 - ⚠️ **Elle en subit les effets elle aussi.** Le froid ne fait pas de distinction — et l'Avatar ne lui donne **aucune** résistance à la glace.
 

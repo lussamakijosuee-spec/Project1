@@ -832,6 +832,25 @@
                 w.resetTextColor();
                 y += lh;
             }
+            // ligne 5-bis — le niveau de l'Avatar et la prise qu'elle a dessus
+            if (window.Avatars && window.Avatars.de) {
+                var av = window.Avatars.de(a.actorId());
+                if (av) {
+                    w.changeTextColor(w.textColor(av.eteinte ? 8 : 14));
+                    w.drawText('    Avatar niveau ' + av.niveau + '/3 · ' + av.niveauNom
+                               + '  —  ' + av.controle
+                               + (av.prochainSeuil ? '   (niveau suivant : ' + av.prochainSeuil + ')' : '')
+                               + (av.eteinte ? '   ✖ éteint — elle est hors jeu' : ''),
+                               24, y, larg);
+                    w.resetTextColor();
+                    y += lh;
+                    w.changeTextColor(w.textColor(23));
+                    w.drawText('    posture : ' + av.posture + '  ·  ' + av.techniques.length
+                               + ' technique(s)  ·  puissance ×' + av.puissance.toFixed(2), 24, y, larg);
+                    w.resetTextColor();
+                    y += lh;
+                }
+            }
             // ligne 6 — ce que la MAIN tient : de l'acier, pas un second Don
             var main = a.equips()[0];
             if (d.slot !== 1) {

@@ -37,8 +37,11 @@ ok(zero===0,`aucune ne fait 0 dégât, même contre DÉF 600 ou lanceur faible (
 
 console.log('\n═══ LES COMPÉTENCES SONT-ELLES ATTEIGNABLES ? ═══');
 const app=new Set(); C.forEach(c=>{if(c&&c.name)c.learnings.forEach(l=>app.add(l.skillId));});
-const orphelines=NEW.filter(s=>!app.has(s.id));
-ok(orphelines.length===0,`les 180 sont apprises par une classe (${orphelines.length} orphelines)`);
+// Les techniques notées <Avatar> ne sont apprises par PERSONNE, et c'est
+// voulu : c'est l'Avatar Spirituel qui les joue, jamais sa porteuse.
+const orphelines=NEW.filter(s=>!app.has(s.id) && !/<Avatar>/.test(s.note||''));
+const aLAvatar=NEW.filter(s=>/<Avatar>/.test(s.note||''));
+ok(orphelines.length===0,`toutes les compétences de héros sont apprises par une classe (${orphelines.length} orphelines, ${aLAvatar.length} réservées à l'Avatar)`);
 const casse=[...app].filter(i=>!(S[i]&&S[i].name));
 ok(casse.length===0,`aucun apprentissage cassé (${casse.length})`);
 C.filter(c=>c&&c.name).forEach(c=>{

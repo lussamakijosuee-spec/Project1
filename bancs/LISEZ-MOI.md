@@ -1,6 +1,6 @@
 # 🧪 Les bancs d'essai
 
-Huit scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
+Neuf scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
 `data/` et rejouent le vrai code de `js/plugins/` sur un moteur RPG Maker MV simulé.
 
 ## Comment on les lance
@@ -28,6 +28,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `3_avatar_spirituel.js` | l'Avatar : son tour, son ciblage, son interception, ses trois postures |
 | `4_un_seul_don.js` | **la règle d'or** : un seul Don par personne, 76 contrôles |
 | `5_verrou_et_ordres.js` | le Don ne se retire pas / ne se prête pas · les trois ordres en combat |
+| `6_avatar_niveaux.js` | les 3 niveaux de l'Avatar (25/50/85), le contrôle croissant, l'inséparabilité |
 | `audit/6_bestiaire.js` | les 400+ ennemis et les 41 boss |
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |

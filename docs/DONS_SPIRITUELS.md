@@ -131,7 +131,14 @@ Il **agit de lui-même**, à son propre tour (voir §11). Il débloque le Trait 
 manipule la glace sans passer par une formule — **et le froid l'atteint elle aussi**.
 
 > C'est bien **elle** qui porte le Trait, même si c'est **l'Avatar** qui le débloque.
-> ⚠ Avatar retiré du slot Âme → **HIVER ne répond plus**.
+
+**Il est INSÉPARABLE d'elle** — le même lien que Dono et son second œil. Rien ne peut le lui
+prendre : ni un désarmement, ni un dissipateur, ni le joueur. Il ne meurt pas non plus : brisé, il
+**fatigue**, il ne disparaît pas. Deux choses seulement l'éteignent — **elle tombe**, ou **elle perd
+conscience**. Elle rouvre les yeux, il est là.
+
+**Il monte en trois niveaux avec elle** (25 · 50 · 85), et plus il monte, plus elle le tient : de
+l'IA automatique au contrôle total. Détail complet en **§11.3**.
 
 **Dans sa main : de l'acier.** Pas un second Don.
 
@@ -355,16 +362,32 @@ Le Trait de ludwing. Le type 9 est ouvert par la **classe 3** (le Symbole).
 
 *Voir §11.3. Type 2 (Spéciale), 0 mana, 0 TP, en combat uniquement, connues dès le niveau 1.*
 
-### 5.6 · Les gestes de l'Avatar — compétences **469-471**
+### 5.6 · Les gestes de l'Avatar — compétences **469-471** et **1249-1254**
 
-Notés `<Avatar>`. Ce ne sont pas des compétences que Korrah lance : c'est **l'Avatar** qui les joue,
-tout seul, à son tour.
+Notés `<Avatar>`, `occasion 3` (jamais dans un menu). Ce ne sont pas des compétences que Korrah
+lance : c'est **l'Avatar** qui les joue, tout seul, à son tour. **Aucune classe ne les apprend** —
+c'est voulu.
 
-| ID | Nom | Quand |
-|---|---|---|
-| 469 | Frappe des Poings Volants | il cogne une cible |
-| 470 | Déferlante des Poings | palier 3+, un tour sur deux, sur tout le groupe |
-| 471 | Torse Gardien | il se place devant elle |
+| ID | Nom | Avatar niveau | Quand |
+|---|---|---|---|
+| 469 | Frappe des Poings Volants | naissance | il cogne une cible |
+| 470 | Déferlante des Poings | naissance | palier 3+, un tour sur deux, sur le groupe |
+| 471 | Torse Gardien | naissance | il se place devant elle |
+| **1249** | **Poings Enchaînés** | **1** (25) | trois frappes sur la même garde |
+| **1250** | **Saisie de l'Armure** | **1** (25) | le torse se referme — peut étourdir |
+| **1251** | **Étau de l'Armure** | **2** (50) | les deux poings au même endroit — fissure le blindage |
+| **1252** | **Le Torse Se Referme** | **2** (50) | la grande garde : rien ne passe plus |
+| **1253** | **Déferlante d'Unisson** | **3** (85) | le même geste qu'elle, au même instant, sur tout le champ |
+| **1254** | **Ce Que Le Froid Garde** | **3** (85) | il rend le froid qu'elle lui a confié — gèle |
+
+### 5.7 · Les ordres de Korrah — compétences **1246-1248** et **1255-1258**
+
+Deux familles, deux notetags :
+
+- `<AvatarPosture: libre\|agressif\|garde>` → **comment** il se comporte (1246-1248, dès le niveau 1)
+- `<AvatarOrdre: skillId>` → **quoi faire, et sur qui** (1255-1258, débloqués par niveau)
+
+Tous coûtent **0 mana** et **ne perdent pas le tour** : l'Avatar agit dans la foulée.
 
 ---
 
@@ -551,10 +574,54 @@ window.Dons.traitDebloque(2)   'hiver' si l'Avatar est là
 
 ---
 
-## 11. `AvatarSpirituel.js` **v2.0** — la créature qui agit seule
+## 11. `AvatarSpirituel.js` **v3.0** — la créature qui agit seule
 
 > *Anciennement `FamilierSpirituel.js`. Le fichier a été renommé, l'entrée de `plugins.js` aussi,
 > et tous ses réglages ont été conservés.*
+
+### 11.0 · 🔗 IL EST INSÉPARABLE — le lien de Dono
+
+> *« Elle peut pas disparaître tant que l'utilisateur est vivant ou conscient. »*
+
+L'Avatar n'est **pas un équipement**. C'est une part d'elle. Concrètement :
+
+| Ce qui arrive | L'Avatar |
+|---|---|
+| Le joueur essaie de le déséquiper | **refusé** — le verrou du Don (§10.1) |
+| Un autre héros essaie de le porter | **refusé**, et il n'apparaît même pas dans sa liste |
+| « Tout retirer » / « Optimiser » | **il reste** |
+| Son Endurance tombe à zéro (**brisé**) | **il reste** — il fatigue, un tour sur deux, tout ÷2 |
+| **Korrah tombe** (0 PV) | **il s'éteint avec elle** |
+| **Korrah perd conscience** (sommeil, étourdissement, paralysie) | **il s'éteint** le temps qu'elle revienne |
+| Elle rouvre les yeux | **il est là** |
+
+Techniquement : `consciente(a)` = vivante **et** `restriction() !== 4`. Le journal de combat
+l'annonce **au changement d'état seulement**, jamais en boucle. Option `inseparable`.
+
+### 11.0-bis · 📈 IL MONTE EN NIVEAU — et elle le tient de mieux en mieux
+
+> *« Un avatar peut agir tout ou sous, mais c'est souvent indépendant de l'utilisateur. Plus la
+> puissance augmente, plus l'utilisateur peut contrôler l'avatar. »*
+
+**Trois niveaux**, qui montent avec Korrah :
+
+| Avatar | Korrah | Contrôle | Ce qu'elle gagne |
+|---|---|---|---|
+| *(naissance)* | 1 → 24 | **AUTOMATIQUE** | une posture, rien de plus |
+| **niveau 1 · l'Accord** | **25** | **SEMI-AUTOMATIQUE** | elle désigne la **cible** |
+| **niveau 2 · la Conduite** | **50** | **SEMI-AUTO affermi** | elle choisit aussi le **geste** |
+| **niveau 3 · l'Unisson** | **85** | **CONTRÔLE TOTAL** | tout son arsenal, sur tout le champ |
+
+À chaque niveau, l'Avatar gagne :
+
+- **+15 % de puissance** sur ses frappes *(appliqué sur la valeur des dégâts, pas sur les stats de
+  Korrah — c'est son corps à lui qui s'affermit)* ;
+- **+5 points d'interception** ;
+- **deux nouvelles techniques**, qu'il joue tout seul en automatique (§5.6).
+
+Seuils, puissance et interception sont des **paramètres de plugin** (`niveau1`/`2`/`3`,
+`puissanceParNiveau`, `interceptParNiveau`) : si 25/50/85 ne te va pas, ça se change sans toucher
+au code.
 
 ### 11.1 · Il joue son propre tour
 
@@ -592,6 +659,32 @@ foulée. On paie une action, on obtient une action.
 Toute compétence notée `<AvatarPosture: libre|agressif|garde>` se comporte ainsi. *(`assaut` est
 accepté comme synonyme d'`agressif`.)*
 
+### 11.3-bis · 🆕 LES ORDRES DIRIGÉS — la prise qui grandit
+
+Une **posture** dit *comment* il se comporte. Un **ordre dirigé** dit *quoi faire, et sur qui*.
+C'est là que se joue le « plus la puissance augmente, plus elle le contrôle » : chaque ordre n'est
+appris qu'au niveau d'Avatar correspondant.
+
+| ID | Compétence | Avatar niveau | Korrah | Ce qu'elle fait |
+|---|---|---|---|---|
+| **1255** | **Avatar — Vise ça** | 1 | **25** | elle **désigne la cible**, il enchaîne trois frappes |
+| **1256** | **Avatar — Étau** | 2 | **50** | elle choisit la cible **et le geste** |
+| **1257** | **Avatar — Unisson** | 3 | **85** | tout le champ, d'un seul mouvement |
+| **1258** | **Avatar — Rends-le** | 3 | **85** | il rend le froid qu'elle lui a confié |
+
+Notetag : `<AvatarOrdre: skillId>` — l'Avatar exécute **cette** technique sur la cible qu'**elle**
+sélectionne dans le menu de combat. Le geste reste le sien : elle ne fait que le diriger.
+
+Un ordre au-dessus de son niveau est **refusé proprement** (`<AvatarNiveau: n>`) : le jeu le dit,
+et le tour n'est pas gaspillé.
+
+> **Un ordre dirigé passe outre la posture de GARDE.** Même planté devant elle, si elle lui dit de
+> frapper, il frappe. C'est exactement ça, le contrôle.
+
+> **Un bug attrapé par le banc :** l'Avatar joue son action à la main, donc MV n'appliquait pas
+> `numRepeats()` pour lui — « Poings Enchaînés » (3 coups) n'en aurait porté **qu'un seul**. La
+> boucle de répétition est maintenant dans le plugin.
+
 ### 11.4 · Ce qu'il coûte — la contrepartie des 2 %
 
 - Il occupe le **slot Âme**.
@@ -609,10 +702,14 @@ accepté comme synonyme d'`agressif`.)*
 ```
 AVATAR posture 2 garde     change la posture
 AVATAR agir 2              le fait agir (scénario)
-AVATAR etat                résumé dans le journal
+AVATAR etat                résumé : niveau, contrôle, techniques, posture
 FAMILIER …                 toujours accepté : les anciens événements marchent
 
-window.Avatars.de(2)            {nom, posture, present, actif, brise, palier}
+window.Avatars.de(2)        {nom, posture, present, actif, brise, palier,
+                             niveau, niveauNom, controle, prochainSeuil,
+                             puissance, techniques, consciente, eteinte}
+window.Avatars.niveau(2)        0 · 1 · 2 · 3
+window.Avatars.consciente(2)    l'Avatar peut-il exister en ce moment ?
 window.Avatars.posture(2,'garde')
 window.Avatars.present(2)
 window.Familiers                alias de window.Avatars
@@ -658,16 +755,20 @@ hiver: { actor:2, nom:'Hiver', don:"l'Armure Volante — son Avatar Spirituel", 
 
 ## 14. Vérification — 8 bancs d'essai, 0 échec
 
+Ils sont dans **`bancs/`**, lançables avec Node depuis la racine du projet
+(`node bancs/6_avatar_niveaux.js`). Voir [`bancs/LISEZ-MOI.md`](../bancs/LISEZ-MOI.md).
+
 | Banc | Ce qu'il contrôle | |
 |---|---|---|
-| `banc.js` | Dons Spirituels : endurance, jauges, casse, bonus | ✅ |
-| `banc2.js` | évolution des paliers · **l'acier ne monte pas tout seul** | ✅ |
-| `banc3.js` | l'Avatar : tour, ciblage, interception, postures | ✅ |
-| **`banc_don.js`** | **la règle d'or — 76 contrôles** | ✅ |
-| **`banc_verrou.js`** | **le verrou et les trois ordres** | ✅ |
-| `audit/combat.js` | le bestiaire | ✅ |
-| `audit/lot.js` | les compétences du lot | ✅ |
-| `audit/primes.js` | le Tableau de Chasse | ✅ |
+| `1_dons_spirituels.js` | endurance, jauges, casse, ÷2, bonus, repos | ✅ |
+| `2_evolution_paliers.js` | les 4 paliers · **l'acier ne monte pas tout seul** | ✅ |
+| `3_avatar_spirituel.js` | l'Avatar : tour, ciblage, interception, postures | ✅ |
+| `4_un_seul_don.js` | **la règle d'or — 76 contrôles** | ✅ |
+| `5_verrou_et_ordres.js` | **le verrou et les trois postures** | ✅ |
+| **`6_avatar_niveaux.js`** | **les 3 niveaux, le contrôle croissant, l'inséparabilité** | ✅ |
+| `audit/6_bestiaire.js` | le bestiaire | ✅ |
+| `audit/7_nouveau_lot.js` | les compétences du lot | ✅ |
+| `audit/8_tableau_de_chasse.js` | le Tableau de Chasse | ✅ |
 
 Ce que `banc_don.js` vérifie, entre autres :
 
@@ -682,9 +783,22 @@ Ce que `banc_don.js` vérifie, entre autres :
 - les trois ordres sont gratuits, en combat, et connus de Korrah au niveau 1 ;
 - chaque pièce de Don **nomme son porteur** (`<DonDe:>`).
 
-Et `banc_verrou.js` rejoue le vrai code des plugins sur un moteur simulé qui se comporte comme MV
-(`changeEquip`, `clearEquipments`, `optimizeEquipments`) — c'est là que se vérifient le refus de
-retirer, le refus de prêter, le passage de l'évolution, et les trois ordres.
+Et `5_verrou_et_ordres.js` rejoue le vrai code des plugins sur un moteur simulé qui se comporte
+comme MV (`changeEquip`, `clearEquipments`, `optimizeEquipments`) — c'est là que se vérifient le
+refus de retirer, le refus de prêter, le passage de l'évolution, et les trois postures.
+
+`6_avatar_niveaux.js` va plus loin encore : il simule un vrai `Game_Action` (cibles, répétitions,
+dégâts) et vérifie, sur le code réel du plugin :
+
+- les **trois seuils** 25 / 50 / 85, à la borne près (24 → niveau 0, 25 → niveau 1…) ;
+- que le **mode de contrôle** suit le niveau ;
+- qu'il **apprend deux techniques par niveau** (2 → 4 → 6 → 8), sans doublon ;
+- que sa **puissance monte vraiment** — une frappe de référence à 100 en vaut 145 au niveau 3 ;
+- **l'inséparabilité** : brisé il reste, inconsciente il s'éteint, relevée il revient, tombée il
+  s'éteint ;
+- que chaque **ordre dirigé** est refusé sous son niveau et exécuté au-dessus, sur la cible qu'elle
+  désigne — et qu'il **passe outre la posture de garde** ;
+- qu'aucune frappe de l'Avatar ne tombe à **0 dégât contre DÉF 900** (le palier du niveau 85).
 
 ---
 
@@ -734,7 +848,12 @@ Ajouter l'entrée dans `TRAITS` (`TraitsAme.js`). Si c'est un **Avatar** qui l'o
 3. **La ligne d'armes 501-512 n'est vendue nulle part.** Elles ont un prix, plus aucune boutique ne
    les liste. Une ligne à ajouter dans le marchand de ton choix, ou en butin.
 4. **Le Trait `change` de Korrah** est le seul des cinq qui n'a pas de mécanique propre écrite.
+5. **Les seuils 25 / 50 / 85 dépassent la courbe d'apprentissage actuelle**, qui s'arrête au
+   niveau 60. Le niveau 3 de l'Avatar n'est donc atteignable qu'en fin de partie très avancée —
+   c'est cohérent avec « il faut de la puissance », mais si tu veux qu'on y arrive plus tôt, les
+   trois seuils sont des paramètres de plugin.
 
 ---
 
-*Dossier v3.0 — la règle d'or appliquée partout : **on n'a qu'un seul Don**.*
+*Dossier v3.0 — la règle d'or appliquée partout : **on n'a qu'un seul Don**.
+Et pour Korrah, ce Don-là ne la quitte jamais : il s'éteint avec elle, et il revient avec elle.*

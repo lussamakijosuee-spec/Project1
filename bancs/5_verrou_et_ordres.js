@@ -45,6 +45,10 @@ Actor.prototype.equips = function () {
 Actor.prototype.weapons = function () { return this.equips().filter(x => x && x.wtypeId); };
 Actor.prototype.gainHp = function (n) { this.hp = Math.max(1, this.hp + n); };
 Actor.prototype.refresh = function () {};
+// v3.0 — l'Avatar ne vit que tant qu'elle est vivante ET consciente :
+// sans ces deux-là, le plugin le croit éteint et refuse tous les ordres.
+Actor.prototype.isAlive = function () { return this.hp > 0; };
+Actor.prototype.restriction = function () { return this._restr || 0; };
 // MV : changeEquip échange avec le groupe puis pose l'objet si l'etypeId colle
 Actor.prototype.changeEquip = function (slotId, item) {
     if (item && EQUIP_SLOTS[slotId] !== item.etypeId) return;
