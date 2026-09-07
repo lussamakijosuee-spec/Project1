@@ -1,293 +1,340 @@
 # ⚔️🔮👤 LES DONS SPIRITUELS — le dossier complet
 
-> **Le relevé exhaustif.** Tout ce qui existe dans le jeu à propos du Don Spirituel et des Traits :
-> le canon, les 16 armes, les 13 pièces d'équipement, les compétences, les états, les animations,
-> les quatre plugins avec leurs réglages, leurs commandes et leur API — plus ce qui reste à écrire.
+> **v3.0 — la correction.** La version précédente de ce dossier décrivait un système où Vesper,
+> Korrah et ludwing portaient **deux Dons** : leur Objet ou leur Avatar, **plus** une arme
+> spirituelle appelée « Manifestation ». C'était une invention, et elle contredisait la règle
+> centrale du monde. Elle est retirée. Personne n'a deux Dons.
 >
-> Canon : [`../SYSTEME_DE_MANA.md`](../SYSTEME_DE_MANA.md) §6 et §6-bis.
-> Code : `js/plugins/DonsSpirituels.js` · `TraitsAme.js` · `FamilierSpirituel.js` · `ObjetSpirituel.js`.
+> **Rien n'a été supprimé** : les douze armes concernées existent toujours, renommées, décrites,
+> mises en vente. Elles sont juste redevenues ce qu'elles auraient toujours dû être — de l'acier.
+>
+> Le mot **« familier »** a disparu aussi : ce qu'il désignait s'appelle désormais un
+> **AVATAR SPIRITUEL**, et le fichier `FamilierSpirituel.js` est devenu `AvatarSpirituel.js`.
 
 ---
 
 ## 0. La règle, en une page
 
-Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il n'est pas remis : il
-**apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme.
+Le Don n'est pas remis. Il **APPARAÎT**, de lui-même, la première fois qu'un marqué se sert
+vraiment de son âme.
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║   LA RÈGLE D'OR — ON N'EN A QU'UN.                                       ║
+║                                                                          ║
+║   Une ARME, OU un OBJET, OU un AVATAR.                                   ║
+║   Jamais deux. Jamais de cumul. Jamais d'exception.                      ║
+║                                                                          ║
+║   Ce que le porteur tient dans l'autre main est de l'acier ordinaire :   ║
+║   acheté, trouvé, remplaçable — et ça ne grandit PAS tout seul.          ║
+║   Seul le Don fait ça.                                                   ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
 
 ### 🔑 Chaque forme a sa place sur le corps
 
-| | Forme | Population | **Slot** | Ce qu'elle donne | Ce qu'elle coûte |
+| | Forme | Fréquence | Slot occupé | Ce qu'elle donne | Ce qu'elle coûte |
 |---|---|---|---|---|---|
-| ⚔️ | **L'ARME** | **80 %** | **Arme** | Rien de plus qu'une arme. Sa seule vertu : **résister**. | **Rien.** Accessoire et Âme restent **libres**. |
-| 🔮 | **L'OBJET** | **18 %** | **Accessoire** | **Un effet ou un talent**, et une **seconde jauge**. | **Ton accessoire.** Tu ne portes rien d'autre. |
-| 👤 | **LE FAMILIER** | **2 %** | **Âme** | Une **créature née de l'âme**, qui peut **porter un Trait** : son porteur en a alors **deux**. | **Ton slot d'Âme.** |
+| ⚔️ | **ARME** | **80 %** | **Arme** (etypeId 1) | Rien. Juste une résistance liée à l'âme. | Rien d'autre — **Accessoire et Âme restent libres** |
+| 🔮 | **OBJET** | **18 %** | **Accessoire** (etypeId 5) | **Un effet ou un talent** — et une **seconde jauge** | Tout l'accessoire. On ne porte rien d'autre. |
+| 👤 | **AVATAR** | **2 %** | **Âme** (etypeId 7) | Une **créature** qui agit seule, et qui peut porter un **Trait** | Tout le slot Âme. |
 
-> C'est là tout l'équilibre du système. L'arme des 80 % n'a l'air de rien — mais elle est la seule
-> à ne **rien** te prendre. Un Objet et un Familier sont plus forts, et **plus chers**.
-> Un Don **non porté n'apporte plus rien du tout**, et un Familier absent **ferme le Trait
-> qu'il débloquait**.
+L'avantage caché des 80 % est réel : l'arme spirituelle ne coûte **aucun autre emplacement**.
+Aël garde son Accessoire et son Âme libres. Vesper et ludwing paient leur Accessoire, Korrah paie
+son Âme. C'est le prix d'un Don qui fait quelque chose.
 
 ### L'Endurance — commune aux trois formes
 
 ```
-Endurance max = 40 + (niveau × 2) + (palier − 1) × 20
+Endurance max = endurBase + niveau × endurParNiveau + (palier − 1) × endurParPalier
+              =    40     + niveau ×        2       + (palier − 1) ×        20
 ```
 
-Elle s'use à l'usage, se répare au repos. **Un Don ne se perd jamais** : à zéro il **casse**, mais il
-reste utilisable — **tout ce qu'il apporte est divisé par deux** : les dégâts, **les statistiques de
-la pièce**, le bonus de forme, et jusqu'au **Trait** qu'il sécurise.
+Plus le porteur est puissant, plus son Don résiste. Elle s'use à chaque action offensive et se
+restaure au repos (auberge, soin complet, commande `DON reparer`).
 
-**Plus le porteur est puissant, plus le Don résiste** : la jauge monte avec le niveau *et* avec le
-palier. Un **Éclat** casse en un combat ; une **Vérité** presque jamais.
+**À zéro, le Don CASSE — mais reste utilisable.** Tout ce qu'il apporte est **divisé par deux** :
+dégâts, statistiques de la pièce, bonus de forme, et jusqu'à ce que le Trait en tire.
 
 ### La seconde jauge — le propre des OBJETS
 
-Un Objet ne se contente pas de s'user : il **se gorge**. Chaque Objet a sa jauge, son carburant et sa
-punition — et **en abuser coûte toujours plus cher que de laisser l'Endurance tomber**.
+Un Objet ne se contente pas de s'user : il se **gorge**. Chaque Objet a sa jauge, son carburant et
+sa punition — et **en abuser coûte toujours plus cher que de laisser l'Endurance tomber**.
 
-| Objet | Jauge | Carburant | Pleine → |
-|---|---|---|---|
-| 🩸 **le Masque** *(Vesper)* | **Sang** 0→100 | technique de sang **+10** | **le Masque SE FEND** : Endurance à zéro d'un coup, sans attendre l'usure. |
-| ⬛ **l'Amulette** *(ludwing)* | **Ombre** 0→100 | technique d'ombre **+12** | **elle EXPLOSE** : capacités d'ombre scellées **4 tours**, absorption d'âmes **÷2** pendant ce temps. |
+### 🆕 On est prévenu avant
+
+Les deux jauges n'étaient lisibles qu'au menu : en combat, le joueur découvrait la casse au moment
+où elle tombait. Le Don **avertit maintenant une fois** au franchissement du seuil, et il reste des
+tours pour changer d'avis :
+
+```
+⚠ le Masque — Sang à 70 %. Encore 3 techniques avant qu'il ne se fende.
+⚠ l'Amulette fatigue — Endurance 24 / 100. Un repos le remettrait d'aplomb.
+```
+
+Seuils réglables (`alerteJauge` 70 %, `alerteEndurance` 25 %), une seule alerte par seuil, `0` pour
+les couper.
+
+### 🆕 Le Don ne se retire pas, et ne se prête pas
+
+Il est né de **cette** âme-là. Le joueur ne peut ni le déséquiper par erreur, ni le passer à
+quelqu'un d'autre. C'est du canon, mais c'est surtout du **confort** : on ne perd plus son Trait en
+rangeant un accessoire sans regarder.
+
+- Retirer le Don → refusé (buzzer).
+- Le remplacer par autre chose → refusé.
+- **Tout retirer** / **Optimiser** → le Don reste, le reste part.
+- Le Don d'un autre n'apparaît **même pas** dans la liste d'équipement.
+- L'évolution de palier, elle, passe : elle porte un drapeau interne.
+- Un événement garde `forceChangeEquip()` comme porte de service.
+
+Option `verrouSlot`, notetag `<DonDe: actorId>`.
 
 ---
 
 ## 1. Les quatre marqués
 
-| Acteur | Nom | Don | Forme → slot | Trait(s) | Sécurité : pourquoi ce Don-là |
-|---|---|---|---|---|---|
-| **1** | **Vesper** | **le Masque** | 🔮 Objet → **Accessoire** | **LE SANG** | Son sang la blesserait. Le Masque la laisse le manier **sans se blesser**. |
-| **2** | **Korrah** | **l'Armure Volante** | 👤 Familier → **Âme** | **CHANGE** *(de base)* + **HIVER** *(débloqué par le familier)* | Un familier de corps-à-corps pour une âme qui **échange les places**. |
-| **3** | **ludwing** | **l'Amulette** | 🔮 Objet → **Accessoire** | **L'ABSORPTION DES ÂMES** | L'amulette **boit les ombres** — c'est elle, pas son Trait, qui lui donne l'air d'en avoir deux. |
-| **4** | **Aël** | **l'Arc et ses Flèches** | ⚔️ Arme → **Arme** | **MIRACLE** | Miracle **se matérialise en flèches**. Il ne lui faut rien de plus qu'un arc qui ne cède pas. |
+| | Héros | Son **unique** Don | Forme | Slot | Sa main tient | Son Trait |
+|---|---|---|---|---|---|---|
+| 🩸 | **Vesper** | **le Masque** | OBJET | Accessoire | Lame Écarlate de Fer *(acier)* | **sang** |
+| ❄️ | **Korrah** | **l'Armure Volante** | AVATAR | Âme | Gantelet de Fer *(acier)* | **change** + **hiver** *(via l'Avatar)* |
+| ⬛ | **ludwing** | **l'Amulette** | OBJET | Accessoire | Hache Valo *(acier)* | **ames** |
+| ✦ | **Aël** | **l'Arc et ses Flèches** | ARME | **Arme** | *son Don* | **miracle** |
 
-> ⚖️ **La règle d'or.** Le porteur est affecté **par son propre Trait**. Le froid d'Hiver gèle Korrah.
-> Le sang de Vesper est *son* sang. C'est pour cela que le Don arrive presque toujours **comme une
-> sécurité adaptée au Trait** — un Trait de feu appelle une arme de distance. La puissance et la
-> protection viennent du même endroit : **il faut bien jouer.**
+> **Le Trait et le Don sont liés comme une sécurité.** L'utilisateur est affecté par ses propres
+> effets : qui a un Trait de feu reçoit une arme de distance ou quelque chose qui lui permet de
+> l'employer sans se brûler. Ce n'est pas décoratif, c'est ce qui rend le Trait jouable.
 
 ### 1.1 · 🩸 VESPER — LE MASQUE *(objet · accessoire)*
 
-Il lui permet d'utiliser son sang **comme elle l'entend, sans se blesser** — son sang se régénère, et
-son style de combat *Sang* est appris par-dessus.
+Son **unique** Don. Tant qu'il tient, elle taille dans son propre sang **sans se blesser** — et ce
+sang **revient tout seul**. C'est l'effet que tout Objet doit porter : une **régénération de PV**
+(+3 % → +12 % selon le palier).
 
-- **Tant qu'il tient** : aucune blessure, régénération pleine.
-- **Jauge de Sang** : `+10` par technique de sang. **Pleine → le Masque se fend** (Endurance à zéro).
-- **Fendu** : chaque attaque de sang lui coûte **8 % de ses PV max**, sa **régénération tombe de
-  moitié**, et le Masque ne rend plus que la moitié de ses statistiques.
+**Jauge de SANG.** Chaque technique de sang (type 10 ou `<Sang>`) la remplit de 10.
+**Pleine → LE MASQUE SE FEND** d'un coup — Endurance à zéro, sans attendre l'usure.
 
-### 1.2 · ❄️ KORRAH — L'ARMURE VOLANTE *(familier · âme)*
+Dès lors :
+- chaque attaque de sang lui coûte **8 % de ses PV max** ;
+- sa **régénération tombe de moitié** ;
+- tout ce que le Masque apporte est ÷2.
 
-Une **armure volante** : des **poings** et un **torse** qui flottent sans corps.
-**Ce n'est pas un objet : c'est quelqu'un.** Il joue son propre tour — voir **§11**.
+**Dans sa main : de l'acier.** Pas un second Don.
 
-- Il **débloque le Trait HIVER** — la glace **sans passer par une formule**.
-  **Familier retiré du slot Âme → HIVER ne répond plus du tout.**
-- ⚠️ **Elle en subit les effets aussi** : **15 % des dégâts en retour**. Le froid ne fait pas de
-  distinction — et **le familier ne lui donne aucune résistance à la glace**, volontairement.
-- **Bonus passif** : **+10 % ATK / DÉF / AGI** tant qu'il est entier — **+5 %** s'il est brisé.
-- C'est **elle** qui possède le Trait, même si c'est le familier qui l'a débloqué.
+### 1.2 · ❄️ KORRAH — L'ARMURE VOLANTE *(AVATAR SPIRITUEL · âme)*
+
+Son **unique** Don, et le plus rare des trois formes. Des **poings et un torse qui flottent sans
+corps**, nés directement de son âme — pas une invocation, pas un pacte : *une part de soi qui
+marche à côté de soi*. Un Stand.
+
+Il **agit de lui-même**, à son propre tour (voir §11). Il débloque le Trait **HIVER** : elle
+manipule la glace sans passer par une formule — **et le froid l'atteint elle aussi**.
+
+> C'est bien **elle** qui porte le Trait, même si c'est **l'Avatar** qui le débloque.
+
+**Il est INSÉPARABLE d'elle** — le même lien que Dono et son second œil. Rien ne peut le lui
+prendre : ni un désarmement, ni un dissipateur, ni le joueur. Il ne meurt pas non plus : brisé, il
+**fatigue**, il ne disparaît pas. Deux choses seulement l'éteignent — **elle tombe**, ou **elle perd
+conscience**. Elle rouvre les yeux, il est là.
+
+**Il monte en trois niveaux avec elle** (25 · 50 · 85), et plus il monte, plus elle le tient : de
+l'IA automatique au contrôle total. Détail complet en **§11.3**.
+
+**Dans sa main : de l'acier.** Pas un second Don.
 
 ### 1.3 · ⬛ LUDWING — L'AMULETTE *(objet · accessoire)*
 
-Elle lui permet d'**absorber les ombres** et de **mieux les manier**. C'est elle qui donne
-l'impression qu'il possède **deux Traits alors qu'il n'en a qu'un** : son Trait est **l'absorption
-des âmes**, l'**ombre vient de l'amulette**.
+Son **unique** Don. Elle **absorbe les ombres et les lui rend maniables** — c'est elle qui donne
+l'impression qu'il a **deux Traits alors qu'il n'en a qu'un**. Le second, c'est le bijou.
 
-- **Jauge d'Ombre** : `+12` par technique d'ombre (types 11-18 ou note `<Ombre>`).
-- **Pleine → elle EXPLOSE** : types de compétence **11 à 18 scellés 4 tours**, et l'**absorption
-  d'âmes tombe de moitié** pendant ce temps. Puis l'amulette se recompose.
+**🆕 C'est l'Amulette qui ouvre les types de compétence d'ombre**, deux par palier :
+
+| Palier | Ouvre | Cumul |
+|---|---|---|
+| 1 · Éclat | ombre d'**épée** (11), ombre de **dague** (12) | 2 |
+| 2 · Forme | + ombre de **hache** (13), ombre de **katana** (14) | 4 |
+| 3 · Résonance | + ombre de **lance** (15), ombre de **griffe** (16) | 6 |
+| 4 · Vérité | + ombre d'**arc** (17), ombre d'**arme à feu** (18) | **8 — toutes** |
+
+*Avant, quatre types d'ombre étaient posés au hasard sur des **armes**, et quatre types (13, 15, 17,
+18) n'avaient aucune source dans tout le jeu : les compétences existaient, personne ne pouvait les
+atteindre. C'est réglé, et c'est le canon qui le dit — l'amulette absorbe les ombres.*
+
+**Jauge d'OMBRE.** Chaque technique d'ombre la remplit de 12.
+**Pleine → elle EXPLOSE** : capacités d'ombre **bloquées 4 tours**, et l'absorption d'âmes deux fois
+moins efficace pendant ce temps.
+
+**Dans sa main : de l'acier.** Pas un second Don.
 
 ### 1.4 · ✦ AËL — L'ARC ET SES FLÈCHES *(arme · slot Arme)*
 
-Le cas ordinaire — celui des 80 %. **Aucun effet, aucun talent.** Une arme, et c'est tout. Sa seule
-vertu est de **résister**.
+Son **unique** Don, et le seul des quatre qui soit une **arme**. Aucun effet, aucun talent :
+seulement une arme qui ne cède pas.
 
-C'est peu, et c'est déjà énorme : une arme qui ne se brise pas au premier choc, qui grandit avec toi,
-qu'on ne peut pas te voler — et qui **ne te prend aucun autre emplacement**. Là où Vesper et ludwing
-paient leur accessoire et Korrah son Âme, **Aël garde tout**.
+Et c'est exactement la sécurité qu'il faut à **MIRACLE**, un Trait qui se matérialise en flèches.
+En échange, son **Accessoire et son Âme restent libres** — c'est ça, l'avantage des 80 %.
+
+Le **Carquois d'Étoiles** (armure 80) qu'elle porte à l'accessoire **n'est pas un Don** : c'est un
+carquois, et il est là pour rappeler que sa place était libre.
 
 ---
 
 ## 2. LES TRAITS — le don de naissance
 
-Le Trait est **rare** : il faut une **certaine puissance**, une **volonté forte**, une **âme
-puissante**. La plupart des gens n'en ont aucun. C'est la **Marque** qui l'active — une **Marque
-creuse** ne répond plus.
+Un Trait est **rare** : il faut de la puissance, une volonté forte, une âme puissante. Il permet de
+faire directement ce que les autres font par formule.
 
-| Clé | Trait | Porteur | Effet mécanique exact | Condition |
-|---|---|---|---|---|
-| `sang` | **LE SANG** | Vesper (1) | Ses frappes **ne ratent jamais** et lui **rendent 25 % des dégâts** infligés. | — |
-| `change` | **CHANGE** | Korrah (2) | Visée sur un allié : elle **prend sa place** dans l'ordre du groupe **et lui reprend ses états négatifs**. Sa place, fardeau compris. | Trait de base — rien à porter. |
-| `hiver` | **HIVER** | Korrah (2) | L'attaque **devient de l'élément GLACE** quelle que soit la formule — et Korrah **encaisse 15 %** des dégâts en retour. | **Le familier doit être au slot Âme.** |
-| `ames` | **L'ABSORPTION DES ÂMES** | ludwing (3) | **+2 âmes** (variable 15) et **+10 % de ses PM max** par frappe, plus l'état **`l'Envers` (204)**. | **÷2** si l'amulette a explosé. |
-| `miracle` | **MIRACLE** | Aël (4) | Voir ci-dessous. | — |
+| Trait | Qui | Ce qu'il fait |
+|---|---|---|
+| **sang** | Vesper | contrôler son sang directement, et le fusionner avec du mana |
+| **change** | Korrah | son Trait de base |
+| **hiver** | Korrah | manipuler la glace sans formule — **elle reste affectée aussi** · débloqué par l'**Avatar** |
+| **ames** | ludwing | absorber les âmes directement et les utiliser |
+| **miracle** | Aël | développer de nouvelles techniques **en temps réel** |
 
 ### 2.1 · Le Miracle d'Aël
 
-Face à un ennemi, elle finit par **développer d'elle-même la technique capable de le toucher**, même
-si elle **ne connaît pas le sort**. Ce qu'elle développe **se matérialise en flèches** — les
-**Flèches Miracle**.
+Si un ennemi est faible à un mana positif — le **Crépuscule** en particulier — elle finit par
+développer une technique capable de le toucher **même si elle ne connaît pas le sort**.
 
-| Règle | Valeur |
-|---|---|
-| **C'est lent** — un tour économe fait monter la jauge | `+20` / tour |
-| **Il faut économiser** — un tour à plus de 20 PM la fait retomber | `−25` |
-| **À 100** — sa prochaine frappe de Trait **touche par la faiblesse de la cible** (le meilleur taux élémentaire de l'ennemi) et **ne rate pas** | puis retour à `0` |
-
-> *Exemple canon : contre un ennemi faible au **mana positif** — en particulier au **Crépuscule** —
-> elle développera au fil du combat de quoi l'atteindre, même sans connaître le sort.
-> (L'élément **Crépuscule** existe en base : ID **29**.)*
+Mais c'est **lent**, et surtout : elle doit **ne pas trop dépenser de mana** pour conserver l'effet.
+Ça se matérialise en flèches. D'où **la Flèche de Miracle**.
 
 ### 2.2 · Le prix — commun à tous les Traits
 
-| Prix par usage | Marque légitime | Marque étrangère |
-|---|---|---|
-| PM max drainés | **20 %** | **40 %** |
-| TP drainés | **20** | **40** |
-| Errance gagnée | **+2** | **+6** |
-| Bonus du Trait | oui | **aucun** — « le Trait déchire le porteur » |
+L'utilisateur est **affecté par ses propres effets**. Chaque usage d'un Trait prélève, en plus du
+coût affiché : **20 % des PM max**, **20 TP**, **+2 d'Errance**.
 
-**Marque CREUSE → le Trait ne répond plus du tout.**
-**Don BRISÉ → ce que le Trait rapporte est divisé par deux.**
-*(Un Don simplement rangé ne supprime pas le Trait : il lui retire sa sécurité. Seul le **Familier**
-fait exception — absent, le Trait qu'il débloquait n'existe plus.)*
+C'est là que le Don joue son rôle de sécurité — et c'est pour ça qu'il ne se retire pas.
 
 ### 2.3 · Anciennes clés — reprises, pas abandonnées
 
-| Ancienne clé | → Trait actuel | Personnage |
-|---|---|---|
-| `rupture` | `sang` | Vesper |
-| `gel` | `hiver` | Korrah |
-| `porte` | `ames` | ludwing |
-| `verbe` | `miracle` | Aël |
+Les pièces écrites avant le renommage des personnages restent lues :
+`thylane → vesper` · `neyssa → korrah` · `lou → ludwing` · `tianna → ael`.
 
 ---
 
 # 📦 TOUT CE QUI EXISTE EN BASE
 
-## 3. LE DON — les 13 pièces, chacune dans son slot
+## 3. LE DON — les 16 pièces, chacune dans son slot
 
-**Notetags portés par chaque pièce de Don** *(arme ou armure)* :
+**Quatre chaînes, une par héros, quatre paliers chacune.** C'est tout. Il n'y en a pas d'autres.
 
 ```
-<Don: vesper|korrah|ludwing|ael>
-<Forme: arme|objet|familier>
-<Palier: 1-4>
-<TraitDebloque: hiver>        ← familier seulement
+Palier 1 · ÉCLAT      dès le niveau 1
+Palier 2 · FORME      niveau 15
+Palier 3 · RÉSONANCE  niveau 35
+Palier 4 · VÉRITÉ     niveau 60
 ```
 
-Les anciens tags `<Objet Spirituel: thylane|neyssa|lou|tianna>` restent lus par le plugin.
-
-**Paliers :** `1 · ÉCLAT` (niv. 1) → `2 · FORME` (niv. **15**) → `3 · RÉSONANCE` (niv. **35**) →
-`4 · VÉRITÉ` (niv. **60**).
+> **Le mot « Éclat » est réservé au palier 1 d'un Don.** Une arme ordinaire ne s'appelle jamais
+> « Éclat de… » : ce serait promettre un Don à un objet qui n'en est pas un. Les armes 501, 505 et
+> 509 portaient ce nom à tort — elles ont été renommées.
 
 ### 3.1 · 🔮 OBJET → slot **Accessoire** (etypeId 5)
 
-**🩸 le Masque — Vesper** · armures **68-71** · icône 184
+**🩸 Vesper — le Masque · armures 68-71**
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA |
-|---|---|---|---|---|---|---|---|---|---|---|
-| **68** | Éclat de Masque | 1 · Éclat | 20 | 0 | 0 | 3 | 0 | 3 | 2 | 2 |
-| **69** | Masque Naissant | 2 · Forme | 60 | 5 | 0 | 7 | 4 | 7 | 5 | 4 |
-| **70** | Masque Résonant | 3 · Résonance | 120 | 10 | 0 | 12 | 9 | 12 | 9 | 7 |
-| **71** | Vérité du Masque | 4 · Vérité | 220 | 20 | 0 | 20 | 16 | 20 | 14 | 12 |
+| ID | Nom | PV | Régénération |
+|---|---|---|---|
+| 68 | Éclat de Masque | +20 | **+3 %/tour** |
+| 69 | Masque Naissant | +60 | **+5 %/tour** |
+| 70 | Masque Résonant | +120 | **+8 %/tour** |
+| 71 | Vérité du Masque | +220 | **+12 %/tour** |
 
-**⬛ l'Amulette — ludwing** · armures **72-75** · icône 185
+**⬛ ludwing — l'Amulette · armures 72-75**
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA |
-|---|---|---|---|---|---|---|---|---|---|---|
-| **72** | Éclat d'Amulette | 1 · Éclat | 0 | 20 | 0 | 2 | 4 | 3 | 0 | 2 |
-| **73** | Amulette Naissante | 2 · Forme | 10 | 50 | 0 | 5 | 10 | 7 | 2 | 4 |
-| **74** | Amulette Résonante | 3 · Résonance | 25 | 95 | 0 | 9 | 18 | 12 | 4 | 7 |
-| **75** | Vérité de l'Amulette | 4 · Vérité | 45 | 160 | 0 | 15 | 30 | 20 | 7 | 12 |
+| ID | Nom | PM | Types d'ombre ouverts |
+|---|---|---|---|
+| 72 | Éclat d'Amulette | +20 | 11, 12 |
+| 73 | Amulette Naissante | +50 | 11-14 |
+| 74 | Amulette Résonante | +95 | 11-16 |
+| 75 | Vérité de l'Amulette | +160 | **11-18 (les huit)** |
 
-### 3.2 · 👤 FAMILIER → slot **Âme** (etypeId 7)
+### 3.2 · 👤 AVATAR SPIRITUEL → slot **Âme** (etypeId 7)
 
-**❄️ l'Armure Volante — Korrah** · armures **76-79** · icône 186 · `<TraitDebloque: hiver>`
+**❄️ Korrah — l'Armure Volante · armures 76-79** — `<TraitDebloque: hiver>`
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA |
-|---|---|---|---|---|---|---|---|---|---|---|
-| **76** | Éclat Volant | 1 · Éclat | 25 | 0 | 3 | 6 | 0 | 4 | 4 | 0 |
-| **77** | Armure Naissante | 2 · Forme | 70 | 0 | 7 | 14 | 0 | 9 | 9 | 2 |
-| **78** | Armure Résonante | 3 · Résonance | 140 | 5 | 13 | 25 | 4 | 16 | 16 | 4 |
-| **79** | Vérité de l'Armure Volante | 4 · Vérité | 250 | 10 | 22 | 40 | 8 | 26 | 26 | 8 |
+| ID | Nom | PV | DÉF |
+|---|---|---|---|
+| 76 | Éclat Volant | +25 | +6 |
+| 77 | Armure Naissante | +70 | +14 |
+| 78 | Armure Résonante | +140 | +25 |
+| 79 | Vérité de l'Armure Volante | +250 | +40 |
+
+Bonus passif **+10 % ATQ / DÉF / AGI** tant que l'Avatar est entier (**+5 %** s'il est brisé,
+**rien** s'il est retiré).
 
 ### 3.3 · ⚔️ ARME → slot **Arme** (etypeId 1)
 
-**✦ l'Arc et ses Flèches — Aël** · armes **513-516** · type d'arme **7 (Arc)**
-*C'est le Don lui-même : Aël n'a pas de pièce d'accessoire ni d'Âme, et c'est exactement son avantage.*
+**✦ Aël — l'Arc · armes 513-516** *(type d'arme 7 · Arc)*
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA | Anim. | Élément d'attaque |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **513** | Éclat Stellaire | 1 · Éclat | 0 | 5 | 10 | 0 | 14 | 8 | 4 | 2 | 361 | 3 · mana positive |
-| **514** | Arc Naissant | 2 · Forme | 0 | 15 | 14 | 4 | 30 | 16 | 8 | 4 | 361 | 3 · mana positive |
-| **515** | Arc Résonant | 3 · Résonance | 0 | 30 | 19 | 8 | 44 | 30 | 12 | 8 | 363 | 3 · mana positive |
-| **516** | Vérité de l'Arc | 4 · Vérité | 0 | 60 | 25 | 14 | 58 | 52 | 16 | 18 | 364 | 3 · mana positive **+ 14 · LUMIÈRE** |
+| ID | Nom | ATQ | MAT |
+|---|---|---|---|
+| 513 | Éclat Stellaire | 10 | 14 |
+| 514 | Arc Naissant | 14 | 30 |
+| 515 | Arc Résonant | 19 | 44 |
+| 516 | Vérité de l'Arc | 25 | 58 |
 
-### 3.4 · L'accessoire d'Aël — **ce n'est pas un Don**
+### 3.4 · Ce qui **n'est pas** un Don
 
-| ID | Nom | Slot | Stats | Note |
-|---|---|---|---|---|
-| **80** | le Carquois d'Étoiles | Accessoire | AGI +4, CHA +4 | **Aucun tag de Don.** Un carquois, rien de plus. Son slot est libre : elle y met ce qu'elle veut. |
+| ID | Pièce | Pourquoi |
+|---|---|---|
+| **80** | le Carquois d'Étoiles | Un carquois. Il marque la place libre d'Aël, rien de plus. |
+| **501-512** | les douze armes ci-dessous | Elles ont été présentées à tort comme des Dons. |
 
 ---
 
-## 4. LA MANIFESTATION — l'arme que le Don façonne
+## 4. 🔧 LA CORRECTION — les armes 501-512 redeviennent de l'acier
 
-Quand le Don **n'est pas une arme**, le porteur tient quand même quelque chose : c'est ce que son Don
-lui permet de tenir. Ces armes suivent **les mêmes paliers, au même moment**, et portent le notetag
-`<Manifestation: cle>` + `<Palier: n>` — **elles ne sont pas le Don** et le plugin ne les confond pas.
+**Ce qui était écrit avant :** Vesper tenait « la Lame de Sang », Korrah « les Poings Volants »,
+ludwing « l'Arme d'Ombre » — des **Manifestations**, des armes que le Don façonnait, qui montaient
+de palier en même temps que lui.
 
-**Règle d'élément** — *l'élément d'attaque est le **Mana primaire** du porteur ; la **Vérité** ajoute
-l'élément de son Don ou de son Trait.*
+**Pourquoi c'était faux :** ça leur donnait **deux Dons chacun**. Un objet **et** une arme. Le
+système entier repose sur le fait qu'on n'en a qu'un, et que la forme qu'on reçoit **décide de ce
+qu'on peut faire d'autre**. Avec une Manifestation, l'avantage des 80 % — garder ses autres
+emplacements — ne voulait plus rien dire, puisque tout le monde avait aussi une arme.
 
-### 4.1 · 🩸 Vesper — **la Lame de Sang** · armes **501-504** · type d'arme **15 (SANG)**
+**Ce qui a été fait :** les douze armes sont **gardées**, débarrassées de toute note de Don,
+renommées, redécrites et **mises en vente**. Ce sont maintenant les lignes d'armes personnelles de
+chaque héros — de l'acier, qui ne monte pas de palier tout seul.
 
-*« L'arme que le Masque lui permet de tenir : son propre sang, durci. »*
+| ID | Ancien nom | **Nouveau nom** | Type | Prix |
+|---|---|---|---|---|
+| 501 | ~~Éclat de Sang~~ | **Lame de Garde Écarlate** | 15 · SANG | 200 |
+| 502 | ~~Lame de Sang Naissante~~ | **Lame Écarlate Fendue** | 15 · SANG | 900 |
+| 503 | ~~Lame de Sang Résonante~~ | **Lame Écarlate Jumelée** | 15 · SANG | 1 800 |
+| 504 | ~~Vérité de la Lame de Sang~~ | **Écarlate de Serment** | 15 · SANG | 3 300 |
+| 505 | ~~Éclat Lucide~~ | **Gantelets Lucides** | 11 · Gant | 150 |
+| 506 | ~~Poings Naissants~~ | **Gantelets Renforcés** | 11 · Gant | 600 |
+| 507 | ~~Poings Résonants~~ | **Gantelets de Maîtrise** | 11 · Gant | 1 700 |
+| 508 | ~~Vérité des Poings Volants~~ | **Gantelets de Contre-Prise** | 11 · Gant | 3 100 |
+| 509 | ~~Éclat des Âmes~~ | **Faux d'Ossuaire** | 14 · OMBRE | 300 |
+| 510 | ~~Ombre Naissante~~ | **Faux d'Ossuaire Noircie** | 14 · OMBRE | 2 100 |
+| 511 | ~~Ombre Résonante~~ | **Faux d'Ossuaire Veillante** | 14 · OMBRE | 2 800 |
+| 512 | ~~Vérité de l'Ombre~~ | **Faux d'Ossuaire Dernière** | 14 · OMBRE | 3 600 |
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA | Anim. | Élément |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **501** | Éclat de Sang | 1 | 0 | 0 | 10 | 0 | 0 | 0 | 3 | 0 | 361 | 2 · mana spirituelle |
-| **502** | Lame de Sang Naissante | 2 | 0 | 0 | 18 | 5 | 6 | 0 | 7 | 2 | 361 | 2 · mana spirituelle |
-| **503** | Lame de Sang Résonante | 3 | 0 | 0 | 28 | 10 | 14 | 6 | 12 | 4 | 367 | 2 · mana spirituelle |
-| **504** | Vérité de la Lame de Sang | 4 | 30 | 0 | 42 | 18 | 26 | 14 | 18 | 8 | 364 | 2 · spirituelle **+ 4 · mana négative** |
+Les types d'arme **15 (SANG)** et **14 (OMBRE)** restent réservés à leur classe : ces armes restent
+personnelles à Vesper et à ludwing. Elles ne sont juste plus spirituelles.
 
-### 4.2 · ❄️ Korrah — **les Poings Volants** · armes **505-508** · type d'arme **11 (Gant)**
+Les **types de compétence d'ombre** qu'elles ouvraient sont partis là où le canon les met :
+**sur l'Amulette** (§1.3).
 
-*« Les poings que l'Armure Volante lui prête — son familier frappe pour elle. »*
+### 4.1 · L'équipement de départ
 
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA | Anim. | Élément |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **505** | Éclat Lucide | 1 | 0 | 0 | 7 | 4 | 8 | 8 | 0 | 0 | 361 | 4 · mana négative |
-| **506** | Poings Naissants | 2 | 0 | 5 | 14 | 10 | 18 | 20 | 2 | 2 | 361 | 4 · mana négative |
-| **507** | Poings Résonants | 3 | 0 | 10 | 23 | 18 | 26 | 30 | 5 | 4 | 363 | 4 · mana négative |
-| **508** | Vérité des Poings Volants | 4 | 0 | 20 | 34 | 28 | 36 | 42 | 9 | 8 | 364 | 4 · négative **+ 13 · GLACE** |
-
-### 4.3 · ⬛ ludwing — **l'Arme d'Ombre** · armes **509-512** · type d'arme **14 (OMBRE)**
-
-*« L'arme que l'Amulette tire de l'ombre qu'elle a bue. »*
-⚠️ **C'est ce type d'arme (14) qui ouvre les types de compétence 11-18** — l'arsenal d'ombre.
-
-| ID | Nom | Palier | HP | MP | ATK | DÉF | MAT | MDF | AGI | CHA | Anim. | Élément |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **509** | Éclat des Âmes | 1 | 0 | 0 | 13 | 0 | 10 | 0 | 0 | 2 | 361 | 2 · mana spirituelle |
-| **510** | Ombre Naissante | 2 | 10 | 5 | 30 | 6 | 24 | 8 | 4 | 6 | 361 | 2 · mana spirituelle |
-| **511** | Ombre Résonante | 3 | 20 | 12 | 36 | 13 | 33 | 17 | 8 | 12 | 363 | 2 · mana spirituelle |
-| **512** | Vérité de l'Ombre | 4 | 35 | 24 | 44 | 22 | 46 | 28 | 14 | 20 | 364 | 2 · spirituelle **+ 15 · OMBRE** |
-
-> 🎨 **Convention d'animation des paliers** : `1-2 → 361 Éclat` · `3 → 363 Éclat · Rose`
-> (Vesper : `367 Onde de choc · Rose`) · `4 → 364 Éclat · Or`.
-> **Évolution de palier** : animation **51 · Augmenter la puissance 1**, son **`Saint5`**.
-
-### 4.4 · L'équipement de départ
-
-| Acteur | Arme | Accessoire | Âme |
+| Héros | Arme | Accessoire | Âme |
 |---|---|---|---|
-| **1 · Vesper** | 501 *Éclat de Sang* | **68 le Masque** 🔮 | *(libre)* |
-| **2 · Korrah** | 505 *Éclat Lucide* | *(libre)* | **76 l'Armure Volante** 👤 |
-| **3 · ludwing** | 509 *Éclat des Âmes* | **72 l'Amulette** 🔮 | *(libre)* |
-| **4 · Aël** | **513 l'Arc** ⚔️ | 80 *le Carquois* (ordinaire) | *(libre)* |
+| **Vesper** | #160 Lame Écarlate de Fer *(acier)* | **#68 Éclat de Masque — son Don** | libre |
+| **Korrah** | #139 Gantelet de Fer *(acier)* | libre | **#76 Éclat Volant — son Don** |
+| **ludwing** | #2 Hache Valo *(acier)* | **#72 Éclat d'Amulette — son Don** | libre |
+| **Aël** | **#513 Éclat Stellaire — son Don** | #80 le Carquois d'Étoiles | **libre** |
+
+**Chacun démarre avec exactement un Don.** Vérifié par banc d'essai.
+
+> **Sauvegardes existantes :** rien n'est cassé. Une partie où Vesper portait « l'Éclat de Sang »
+> la voit maintenant porter la « Lame de Garde Écarlate » — même arme, mêmes statistiques, même
+> emplacement. Elle ne montera simplement plus de palier toute seule.
 
 ---
 
@@ -295,78 +342,52 @@ l'élément de son Don ou de son Trait.*
 
 ### 5.1 · Les compétences de **Trait** — notetag `<Trait: …>`
 
-| ID | Nom | `<Trait:>` | Type | Anim. | Élément | PM | TP |
-|---|---|---|---|---|---|---|---|
-| **465** | Cercle Écarlate | `sang` | sang | 415 *Cercle de runes · Rose* | mana spirituelle | 24 | 0 |
-| **438** | Change | `change` | ult | — | (aucun) | 20 | 20 |
-| **97** | Valse des Positions | `change` | ult | 404 *Vortex · Or* | mana positive | 10 | 0 |
-| **24** | le Monde Gelé | `gel` → hiver | ult | 232 *Glace · Cataclysme* | GLACE | 100 | 50 |
-| **89** | Armure de Givre | `gel` → hiver | ult | 312 *Givre · Bénédiction* | GLACE | 12 | 0 |
-| **90** | Instant Gelé | `gel` → hiver | Spéciale | 223 *Glace · Impact* | GLACE | 12 | 0 |
-| **91** | Zéro Absolu | `gel` → hiver | capacité | 231 *Glace · Explosion* | GLACE | 12 | 0 |
-| **468** | Dette d'Âme | `ames` | ame | 458 *Mains de l'ombre · Violet* | mana spirituelle | 18 | 0 |
-| **69** | Porte de l'Envers | `porte` → ames | Spéciale | 253 *Ombre · Projection* | OMBRE | 12 | 0 |
-| **110** | Abri de l'Envers | `porte` → ames | Spéciale | 260 *Ombre · Bénédiction* | AME | 12 | 0 |
-| **101** | « Viens. » — l'Attraction | `verbe` → miracle | Spéciale | 333 *Crépuscule · Parole I* | mana positive | 27 | 20 |
-| **102** | « Pars. » — la Répulsion | `verbe` → miracle | Spéciale | 334 *Crépuscule · Parole II* | mana positive | 15 | 20 |
-| **11** | Éclat Noir | `rupture` → sang | ult | 64 *Paralyser* | Mana Sombre | 15 | 20 |
-| **130** | Éclat Noir Concentré | `rupture` → sang | Arts Sereins | 64 *Paralyser* | Mana Originel | 15 | 20 |
+Elles prélèvent leur dîme (§2.2) en plus de leur coût. Celles marquées `<Trait: hiver>` deviennent
+**impayables** si l'Avatar n'est pas au slot Âme.
 
-> ⚠️ Les quatre compétences `gel` → **hiver** deviennent **impayables** si l'Armure Volante n'est pas
-> équipée au slot Âme. C'est voulu : *c'est le familier qui débloque le Trait.*
+### 5.2 · 🩸 Les techniques de **SANG** — type **10**
 
-### 5.2 · 🩸 Les techniques de **SANG** — type **10** *(remplissent la jauge du Masque)*
-
-| ID | Nom | Anim. | Élément | Formule | PM |
-|---|---|---|---|---|---|
-| **463** | Saignée | 423 *Griffes · Rose* | Physique | `a.atk * 2.5 - b.def` | 8 |
-| **464** | Fouet de Sang | 379 *Pluie perçante · Rose* | mana spirituelle | `a.atk * 3 - b.def * 1.5` | 14 |
-| **465** | Cercle Écarlate | 415 *Cercle de runes · Rose* | mana spirituelle | `(a.atk + a.mat) * 2 - b.def` | 24 |
-
-**Autres compétences notées `<Sang>`** (reconnues aussi) : `53` Lame de Sang · `55` Pluie de Flèches
-Sanglantes · `56` Paon Hémorragique · `57` Frappe Écarlate · `58` Rafale de Coups Écarlates ·
-`59` Dragon de la Nuit Sanglante · `113` Armure de Sang · `138` Disque Sanglant · `146` Sang pour
-Sang · `434` Fleur Écarlate · `826` ◈ Rune de Saignée.
+Elles remplissent la jauge du Masque. Le type 10 est ouvert par la **classe 1** (l'Équilibre).
 
 ### 5.3 · 👁 Les techniques d'**ÂME** — type **9**
 
-| ID | Nom | Anim. | Élément | Formule | PM | Appris |
-|---|---|---|---|---|---|---|
-| **466** | Aspiration d'Âme | 434 *Drain de vie · Violet* | mana spirituelle | `a.mat * 2.5 - b.mdf` | 12 | niv. 1 |
-| **467** | Chaîne d'Âmes | 450 *Volutes d'âme · Violet* | mana spirituelle | `a.mat * 2 - b.mdf` | 22 | niv. 10 |
-| **468** | Dette d'Âme | 458 *Mains de l'ombre · Violet* | mana spirituelle | `a.mat * 3.5 - b.mdf * 1.5` | 18 | niv. 22 |
+Le Trait de ludwing. Le type 9 est ouvert par la **classe 3** (le Symbole).
 
 ### 5.4 · ⬛ Les techniques d'**OMBRE** — types **11 à 18**
 
-**Elles remplissent la jauge d'Ombre (+12) et ce sont exactement celles qui sont scellées 4 tours
-quand l'amulette explose.**
+**Ouvertes par l'Amulette**, deux par palier (§1.3). Elles remplissent la jauge d'Ombre et sont
+**scellées** pendant les 4 tours qui suivent l'explosion.
 
-| Type | Nom du type | ID | Compétence | Anim. | Élément | Formule | PM/TP |
-|---|---|---|---|---|---|---|---|
-| 11 | ombre d'épée | **115** | Frappe Aveuglante | *animation de l'arme* | LUMIÈRE | `a.atk * 3 - b.def * 2` | 10 / 0 |
-| 12 | ombre de dague | **116** | Rafale d'Ombre | 17 *Griffer Effet* | OMBRE | `a.atk * 1.5 - b.def` | 10 / 0 |
-| 13 | ombre de hache | **118** | Fendoir Obscur | 250 *Ombre · Lame* | OMBRE | `a.atk * 3.5 - b.def * 2` | 22 / 20 |
-| 14 | ombre de katana | **122** | Danse Macabre | 7 *Trancher Effet* | mana spirituelle | `a.atk * 2.5 - b.def` | 15 / 0 |
-| 15 | ombre de lance | **121** | Geyser Abyssal | 84 *Eau Tous 2* | OMBRE | `(a.atk + a.mat) * 2.5 - b.def * 2` | 22 / 20 |
-| 16 | ombre de griffe | **120** | Déchirure d'Âme | 252 *Ombre · Griffe* | mana spirituelle | `a.atk * 3 - b.def * 1.5` | 15 / 0 |
-| 17 | ombre de arc | **117** | Tir d'Ombre | 29 *Flèche Spéciale* | OMBRE | `a.atk * 2.5` | 10 / 0 |
-| 18 | ombre de arme à feu | **119** | Balle Corrompue | 253 *Ombre · Projection* | Mana Sombre | `a.atk * 4 - b.def * 2` | 15 / 0 |
+### 5.5 · 🆕 Les trois **ORDRES** à l'Avatar — compétences **1246-1248**
 
-**Les deux ouvreuses** (notées `<Ombre>`) : **111** Arme d'Ombre · **112** Âme d'Ombre.
-**Autres `<Ombre>`** : `44` · `66` · `67` · `68` · `159` · `164` · `187` · `188` · `195` · `196` · `210`.
+*Voir §11.3. Type 2 (Spéciale), 0 mana, 0 TP, en combat uniquement, connues dès le niveau 1.*
 
-### 5.5 · Les **Ultimes** des quatre marqués
+### 5.6 · Les gestes de l'Avatar — compétences **469-471** et **1249-1254**
 
-| ID | Ultime | Porteur | Anim. | Prix PV | État de contre-coup |
-|---|---|---|---|---|---|
-| **445** | Tranche-Néant | Aël | 22 | 25 % | **190** Épuisement de l'Âme |
-| **446** | Jugement de Soi | Aël | 35 | 33 % | **190** Épuisement de l'Âme |
-| **449** | Instant Absolu | Korrah | 178 | 15 % | **191** Brûlure Mentale |
-| **450** | Point Zéro | Korrah | 40 | 25 % | **191** Brûlure Mentale |
-| **453** | Dévoreur d'Âmes | ludwing | 66 | 30 % | **192** Folie du Joueur |
-| **454** | Tout ou Rien | ludwing | 84 | 35 % | **192** Folie du Joueur |
-| **457** | Éclat de Conviction | Vesper | 31 | 20 % | **193** Doute Paralysant |
-| **458** | Certitude Absolue | Vesper | 31 | 28 % | **193** Doute Paralysant |
+Notés `<Avatar>`, `occasion 3` (jamais dans un menu). Ce ne sont pas des compétences que Korrah
+lance : c'est **l'Avatar** qui les joue, tout seul, à son tour. **Aucune classe ne les apprend** —
+c'est voulu.
+
+| ID | Nom | Avatar niveau | Quand |
+|---|---|---|---|
+| 469 | Frappe des Poings Volants | naissance | il cogne une cible |
+| 470 | Déferlante des Poings | naissance | palier 3+, un tour sur deux, sur le groupe |
+| 471 | Torse Gardien | naissance | il se place devant elle |
+| **1249** | **Poings Enchaînés** | **1** (25) | trois frappes sur la même garde |
+| **1250** | **Saisie de l'Armure** | **1** (25) | le torse se referme — peut étourdir |
+| **1251** | **Étau de l'Armure** | **2** (50) | les deux poings au même endroit — fissure le blindage |
+| **1252** | **Le Torse Se Referme** | **2** (50) | la grande garde : rien ne passe plus |
+| **1253** | **Déferlante d'Unisson** | **3** (85) | le même geste qu'elle, au même instant, sur tout le champ |
+| **1254** | **Ce Que Le Froid Garde** | **3** (85) | il rend le froid qu'elle lui a confié — gèle |
+
+### 5.7 · Les ordres de Korrah — compétences **1246-1248** et **1255-1258**
+
+Deux familles, deux notetags :
+
+- `<AvatarPosture: libre\|agressif\|garde>` → **comment** il se comporte (1246-1248, dès le niveau 1)
+- `<AvatarOrdre: skillId>` → **quoi faire, et sur qui** (1255-1258, débloqués par niveau)
+
+Tous coûtent **0 mana** et **ne perdent pas le tour** : l'Avatar agit dans la foulée.
 
 ---
 
@@ -445,18 +466,20 @@ Chaque famille existe en **4 teintes**, dans cet ordre : **base (`n`) · Violet 
 
 | ID | Nom | Où |
 |---|---|---|
-| **361** | Éclat | paliers 1 et 2 des quatre chaînes d'arme |
+| **361** | Éclat | paliers 1 et 2 des chaînes de Don |
 | **363** | Éclat · Rose | palier 3 (Korrah, ludwing, Aël) |
 | **367** | Onde de choc · Rose | palier 3 (Vesper) |
 | **364** | Éclat · Or | palier 4 · *Vérité* |
 | **51** | Augmenter la puissance 1 | **évolution de palier**, SE `Saint5` |
 | **429** | Éclats brisés | compétence 462 *Attaque* — l'animation toute trouvée pour un Don brisé |
+| **21** | *(geste de l'Avatar)* | compétence 469, et les ordres 1246 / 1247 |
+| **404** | Vortex · Or | compétence 470 · Déferlante · Trait Change |
+| **440** | Dôme gardien · Or | compétence 471, et l'ordre 1248 |
 | **423 / 379 / 415** | Griffes · Pluie perçante · Cercle de runes (Rose) | les trois techniques de sang |
 | **434 / 450 / 458** | Drain de vie · Volutes d'âme · Mains de l'ombre (Violet) | les trois techniques d'âme |
 | **250 / 252 / 253 / 260** | Ombre · Lame / Griffe / Projection / Bénédiction | techniques d'ombre |
 | **223 / 231 / 232 / 312** | Glace · Impact / Explosion / Cataclysme, Givre · Bénédiction | Trait Hiver |
 | **333 / 334** | Crépuscule · Parole I & II | Trait Miracle |
-| **404** | Vortex · Or | Trait Change |
 | **64** | Paralyser | Éclat Noir |
 
 ---
@@ -464,7 +487,7 @@ Chaque famille existe en **4 teintes**, dans cet ordre : **base (`n`) · Violet 
 ## 9. Types & éléments de référence (`System.json`)
 
 **Slots d'équipement** — `1` Arme *(⚔️ le Don-arme)* · `2` Bouclier · `3` Tête · `4` Corps ·
-**`5` Accessoire** *(🔮 le Don-objet)* · `6` talisement · **`7` Ame** *(👤 le Don-familier)*.
+**`5` Accessoire** *(🔮 le Don-objet)* · `6` talisement · **`7` Ame** *(👤 l'Avatar Spirituel)*.
 
 **Types de compétence** — `1` capacité · `2` Spéciale · `3` ult · `4` JACKPOT · `5` BERSEK · `6` TIME ·
 `7` MANA semi-parfait · `8` invocation · **`9` ame** · **`10` sang** ·
@@ -484,227 +507,298 @@ Chaque famille existe en **4 teintes**, dans cet ordre : **base (`n`) · Violet 
 
 # 🔧 LE CODE
 
-## 10. `DonsSpirituels.js` v2.0 — l'Endurance, les jauges, les trois formes
+## 10. `DonsSpirituels.js` **v3.0** — l'Endurance, les jauges, le verrou
 
-**Ordre de chargement : #160**, après `ObjetSpirituel` (#34), `Errance` (#128), `MarqueVivante` (#133).
-
-| Paramètre | Défaut | Ce que ça fait |
-|---|---|---|
-| `usureParUsage` | **1** | Endurance perdue par action offensive employant le Don. |
-| `endurBase` | **40** | Base de la jauge. |
-| `endurParNiveau` | **2** | *« Plus tu es puissant, plus ton Don résiste »*. |
-| `endurParPalier` | **20** | Gain par palier : un **Éclat** casse vite, une **Vérité** presque jamais. |
-| `maluxCasse` | **0.50** | Don brisé : **tout** ÷2 — dégâts, stats de la pièce, bonus de forme, Trait. |
-| `ombreMax` | **100** | 🔮 Amulette — capacité de la jauge d'Ombre. |
-| `ombreParUsage` | **12** | 🔮 Amulette — Ombre par technique d'ombre. |
-| `ombreBlocage` | **4** | 🔮 Amulette — tours de blocage après l'explosion. |
-| `sangMax` | **100** | 🔮 Masque — capacité de la jauge de Sang. |
-| `sangParUsage` | **10** | 🔮 Masque — Sang par technique de sang. |
-| `sangCoutPct` | **8** | 🔮 Masque **fendu** — % des PV max payés par attaque de sang. |
-| `familierBonus` | **10** | 👤 Familier — bonus passif % (ATK/DÉF/AGI), ÷2 s'il est brisé. |
-| `exigerEquipe` | **true** | Un Don rangé au sac n'apporte **rien** — et le Familier ne débloque plus son Trait. |
-
-**Commandes**
-
-| Commande | Effet |
-|---|---|
-| `DON reparer` | Répare les Dons de **tout le groupe**. |
-| `DON reparer 3` | Répare celui de l'acteur 3. |
-| `DON casser 3` | **Brise** celui de l'acteur 3 (scénario). |
-| `DON vider 3` | Vide la **seconde jauge** de l'acteur 3. |
-| `DON afficher` | Ouvre l'écran de lecture (`Scene_Dons`). |
-
-**API script**
-
-```js
-window.Dons.de(actorId)          // {cle,type,typeNom,slot,slotNom,nom,piece,porte,
-                                 //  palier,palierNom,endurance,max,casse,facteur,jauge,trait}
-window.Dons.estCasse(actorId)    // brisé ?
-window.Dons.estPorte(actorId)    // le Don est-il équipé ?
-window.Dons.palier(actorId)      // 1-4
-window.Dons.jauge(actorId)       // {nom, val, max, bloc} — null pour arme et familier
-window.Dons.aLaForme(id,'objet') // 'arme' | 'objet' | 'familier'
-window.Dons.traitDebloque(2)     // 'hiver' si le familier est porté, '' sinon
-window.Dons.facteur(id)          // ce que le DON apporte : 0 non porté · 0.5 brisé · 1
-window.Dons.facteurTrait(id)     // ce que le Don fait au TRAIT : 0.5 brisé · 1 sinon
-window.Dons.reparer(id) / .casser(id) / .vider(id)
-// compat v1 : .ombre(id) et .ombreBloquee(id) pointent sur la jauge générique
-```
-
-**Les hooks posés**
-
-| Hook | Rôle |
-|---|---|
-| `Game_Action.apply` | usure, apparition, remplissage de la jauge, prix du sang |
-| `Game_Action.makeDamageValue` | Don brisé → dégâts ÷2 |
-| `Game_Actor.paramPlus` | Don brisé → **la moitié des stats de la pièce est retirée** |
-| `Game_BattlerBase.isSkillTypeSealed` | amulette explosée → types 11-18 scellés |
-| `Game_Battler.onTurnEnd` | décompte des tours de blocage |
-| `Game_Battler.regenerateHp` | Masque fendu → régénération ÷2 |
-| `Game_Battler.paramRate` | Familier → +10 % ATK/DÉF/AGI (+5 % s'il est brisé, 0 s'il est absent) |
-| `Game_Actor.recoverAll` | **le repos répare** (auberge, soin complet) |
-
-**Le registre en dur** *(à éditer pour ajouter un porteur)* :
+Le registre est la **seule source de vérité** sur qui a quoi :
 
 ```js
 var DONS = {
-    1: { cle:'vesper',  type:'objet',    slot:5, nom:'le Masque',
-         jauge:{ nom:'Sang',  max:SANG_MAX,  parUsage:SANG_USE,  sur:'sang',  fin:'fendre' } },
-    2: { cle:'korrah',  type:'familier', slot:7, nom:"l'Armure Volante", trait:'hiver' },
-    3: { cle:'ludwing', type:'objet',    slot:5, nom:"l'Amulette",
-         jauge:{ nom:'Ombre', max:OMBRE_MAX, parUsage:OMBRE_USE, sur:'ombre', fin:'exploser' } },
-    4: { cle:'ael',     type:'arme',     slot:1, nom:"l'Arc et ses Flèches" }
+    1: { cle:'vesper',  type:'objet',  slot:5, nom:'le Masque',
+         jauge:{ nom:'Sang',  max:100, parUsage:10, sur:'sang',  fin:'fendre' } },
+    2: { cle:'korrah',  type:'avatar', slot:7, nom:"l'Armure Volante",
+         trait:'hiver' },
+    3: { cle:'ludwing', type:'objet',  slot:5, nom:"l'Amulette",
+         jauge:{ nom:'Ombre', max:100, parUsage:12, sur:'ombre', fin:'exploser' } },
+    4: { cle:'ael',     type:'arme',   slot:1, nom:"l'Arc et ses Flèches" }
 };
 ```
 
-## 11. `FamilierSpirituel.js` v1.0 — **la créature qui agit seule**
+**Une entrée par héros. Un `type`. Un `slot`.** Il n'y a nulle part où mettre un second Don.
 
-**Ordre de chargement : #162**, après `DonsSpirituels` et `TraitsAme`.
+### 10.1 · Ce que la v3.0 change
 
-> *« Le Familier est une créature issue directement de l'âme — pas une invocation, pas un pacte :
-> une part de soi qui marche à côté de soi. »* Les 2 % ne reçoivent pas un objet : ils reçoivent
-> **quelqu'un**. Ce plugin lui donne ce qui lui manquait — **un tour à lui**.
+| | v2.0 | **v3.0** |
+|---|---|---|
+| Formes | arme · objet · **familier** | arme · objet · **avatar** |
+| Dons par personne | 1 **+ une « Manifestation »** pour 3 héros sur 4 | **1. Point.** |
+| Retirer son Don | possible, en silence | **refusé** (`verrouSlot`) |
+| Porter le Don d'un autre | possible | **refusé**, et invisible dans la liste |
+| Jauges | lisibles au menu seulement | **alerte en combat** au seuil |
+| Écran `DON afficher` | aucune touche de sortie — **l'écran restait bloqué** | Annuler/OK ferment |
+| Accès à l'écran | commande d'événement seulement | **entrée dans le menu principal** |
+
+### 10.2 · Réglages
+
+| Paramètre | Défaut | Rôle |
+|---|---|---|
+| `usureParUsage` | 1 | Endurance perdue par action offensive |
+| `endurBase` / `endurParNiveau` / `endurParPalier` | 40 / 2 / 20 | la formule d'Endurance |
+| `maluxCasse` | 0.50 | ce que devient **tout** ce qu'apporte un Don brisé |
+| `ombreMax` / `ombreParUsage` / `ombreBlocage` | 100 / 12 / 4 | l'Amulette |
+| `sangMax` / `sangParUsage` / `sangCoutPct` | 100 / 10 / 8 | le Masque |
+| `avatarBonus` | 10 | % d'ATQ/DÉF/AGI de l'Avatar *(ex-`familierBonus`, encore lu)* |
+| `exigerEquipe` | Oui | un Don rangé au sac n'apporte plus rien |
+| **`verrouSlot`** | **Oui** | le Don ne se retire pas, ne se prête pas |
+| **`alerteJauge`** | **70** | % de la seconde jauge qui déclenche l'avertissement (0 = jamais) |
+| **`alerteEndurance`** | **25** | % d'Endurance qui déclenche l'avertissement (0 = jamais) |
+| **`dansLeMenu`** | **Oui** | ajoute « LES DONS SPIRITUELS » au menu principal |
+
+### 10.3 · Commandes et API
+
+```
+DON reparer          répare les Dons de tout le groupe
+DON reparer 3        répare celui de l'acteur 3
+DON casser 3         le brise (scénario)
+DON vider 3          vide sa seconde jauge
+DON afficher         ouvre l'écran de lecture
+
+window.Dons.de(id)             fiche complète
+window.Dons.estCasse(id)       true / false
+window.Dons.estPorte(id)       le Don est-il équipé ?
+window.Dons.jauge(id)          {nom, val, max, bloc}
+window.Dons.facteur(id)        1 · 0.50 · 0
+window.Dons.aLaForme(id,'avatar')   ('familier' accepté aussi)
+window.Dons.estAvatar(id)      raccourci
+window.Dons.traitDebloque(2)   'hiver' si l'Avatar est là
+```
+
+---
+
+## 11. `AvatarSpirituel.js` **v3.0** — la créature qui agit seule
+
+> *Anciennement `FamilierSpirituel.js`. Le fichier a été renommé, l'entrée de `plugins.js` aussi,
+> et tous ses réglages ont été conservés.*
+
+### 11.0 · 🔗 IL EST INSÉPARABLE — le lien de Dono
+
+> *« Elle peut pas disparaître tant que l'utilisateur est vivant ou conscient. »*
+
+L'Avatar n'est **pas un équipement**. C'est une part d'elle. Concrètement :
+
+| Ce qui arrive | L'Avatar |
+|---|---|
+| Le joueur essaie de le déséquiper | **refusé** — le verrou du Don (§10.1) |
+| Un autre héros essaie de le porter | **refusé**, et il n'apparaît même pas dans sa liste |
+| « Tout retirer » / « Optimiser » | **il reste** |
+| Son Endurance tombe à zéro (**brisé**) | **il reste** — il fatigue, un tour sur deux, tout ÷2 |
+| **Korrah tombe** (0 PV) | **il s'éteint avec elle** |
+| **Korrah perd conscience** (sommeil, étourdissement, paralysie) | **il s'éteint** le temps qu'elle revienne |
+| Elle rouvre les yeux | **il est là** |
+
+Techniquement : `consciente(a)` = vivante **et** `restriction() !== 4`. Le journal de combat
+l'annonce **au changement d'état seulement**, jamais en boucle. Option `inseparable`.
+
+### 11.0-bis · 📈 IL MONTE EN NIVEAU — et elle le tient de mieux en mieux
+
+> *« Un avatar peut agir tout ou sous, mais c'est souvent indépendant de l'utilisateur. Plus la
+> puissance augmente, plus l'utilisateur peut contrôler l'avatar. »*
+
+**Trois niveaux**, qui montent avec Korrah :
+
+| Avatar | Korrah | Contrôle | Ce qu'elle gagne |
+|---|---|---|---|
+| *(naissance)* | 1 → 24 | **AUTOMATIQUE** | une posture, rien de plus |
+| **niveau 1 · l'Accord** | **25** | **SEMI-AUTOMATIQUE** | elle désigne la **cible** |
+| **niveau 2 · la Conduite** | **50** | **SEMI-AUTO affermi** | elle choisit aussi le **geste** |
+| **niveau 3 · l'Unisson** | **85** | **CONTRÔLE TOTAL** | tout son arsenal, sur tout le champ |
+
+À chaque niveau, l'Avatar gagne :
+
+- **+15 % de puissance** sur ses frappes *(appliqué sur la valeur des dégâts, pas sur les stats de
+  Korrah — c'est son corps à lui qui s'affermit)* ;
+- **+5 points d'interception** ;
+- **deux nouvelles techniques**, qu'il joue tout seul en automatique (§5.6).
+
+Seuils, puissance et interception sont des **paramètres de plugin** (`niveau1`/`2`/`3`,
+`puissanceParNiveau`, `interceptParNiveau`) : si 25/50/85 ne te va pas, ça se change sans toucher
+au code.
 
 ### 11.1 · Il joue son propre tour
 
-Quand sa porteuse a fini d'agir, le Familier agit **à son tour**. Ce n'est pas une seconde action
-pour elle : c'est **lui** qui frappe, avec ses compétences, son animation, sa cible. **Elle n'a rien
-à dépenser** — ni PM, ni TP, ni son tour.
+Quand sa porteuse a fini d'agir, **l'Avatar agit**. Ce n'est pas une seconde action pour elle : c'est
+**lui** qui frappe, avec ses compétences, son animation, sa cible. Elle ne dépense rien.
 
-**Il choisit seul :**
+- palier 1-2 → il frappe une cible ;
+- palier 3-4 → il alterne, et **déferle sur tout le groupe un tour sur deux** ;
+- un seul ennemi → il ne déferle jamais, il cogne.
 
-| Ce qu'il décide | Comment |
-|---|---|
-| **Sa cible** | Celle que sa porteuse vient de frapper *(il finit le travail)* — sinon **l'ennemi le plus bas en PV**. |
-| **Son geste** | Palier **1-2** → il cogne une cible. Palier **3-4** → il alterne et **déferle sur tout le groupe un tour sur deux**. Face à un ennemi isolé, il ne déferle jamais. |
-| **Frapper ou protéger** | Selon sa **posture** (ci-dessous). |
+Sa cible : **celle que sa porteuse vient de frapper** (il finit le travail), sinon l'ennemi le plus
+bas en PV.
 
 ### 11.2 · Il se met devant
 
-Un torse qui flotte sans corps, ça sert à ça. Quand sa porteuse encaisse un coup, le Familier en
-prend une part — et **c'est son Endurance à lui qui la paie** (`−2` par coup encaissé). Protéger
-l'use : un Familier qui a beaucoup gardé finit par **se disloquer**.
+Quand sa porteuse encaisse un coup, l'Avatar en prend une part — et c'est **son Endurance** qui la
+paie. Protéger l'use : un Avatar qui a beaucoup gardé finit par se disloquer.
 
-### 11.3 · Les trois postures — `FAMILIER posture 2 <mot>`
+### 11.3 · 🆕 LES TROIS ORDRES — et on les donne **en plein combat**
 
-| Posture | Il frappe ? | Il intercepte | Particularité |
+La posture ne se réglait que par **commande d'événement**. Le joueur n'avait **aucune prise** sur la
+seule créature autonome du jeu — c'était le trou de maniabilité le plus net du système.
+
+Korrah connaît maintenant trois ordres, **dès le niveau 1**, sous **Spéciale** :
+
+| ID | Compétence | Posture | Ce qu'il fait |
 |---|---|---|---|
-| **`libre`** *(défaut)* | oui | **20 %** | **Bascule tout seul en protection** quand sa porteuse tombe sous **40 % de PV**. |
-| **`agressif`** | toujours | **20 %** | Il frappe quoi qu'il arrive, même si elle est au bord. |
-| **`garde`** | non | **45 %** | Il ne fait plus que se mettre devant. |
+| **1246** | **Avatar — Laisse-le faire** | LIBRE | il frappe, intercepte 20 %, et bascule **tout seul** en protection sous 40 % de PV |
+| **1247** | **Avatar — Assaut** | AGRESSIF | il frappe **toujours**, même si elle est au bord. Intercepte peu. |
+| **1248** | **Avatar — Devant moi** | GARDE | il ne frappe plus du tout, et encaisse **45 %** de ce qui la vise |
+
+**0 mana, 0 TP.** Et surtout : **le tour n'est pas perdu** — donner l'ordre le fait agir dans la
+foulée. On paie une action, on obtient une action.
+
+Toute compétence notée `<AvatarPosture: libre|agressif|garde>` se comporte ainsi. *(`assaut` est
+accepté comme synonyme d'`agressif`.)*
+
+### 11.3-bis · 🆕 LES ORDRES DIRIGÉS — la prise qui grandit
+
+Une **posture** dit *comment* il se comporte. Un **ordre dirigé** dit *quoi faire, et sur qui*.
+C'est là que se joue le « plus la puissance augmente, plus elle le contrôle » : chaque ordre n'est
+appris qu'au niveau d'Avatar correspondant.
+
+| ID | Compétence | Avatar niveau | Korrah | Ce qu'elle fait |
+|---|---|---|---|---|
+| **1255** | **Avatar — Vise ça** | 1 | **25** | elle **désigne la cible**, il enchaîne trois frappes |
+| **1256** | **Avatar — Étau** | 2 | **50** | elle choisit la cible **et le geste** |
+| **1257** | **Avatar — Unisson** | 3 | **85** | tout le champ, d'un seul mouvement |
+| **1258** | **Avatar — Rends-le** | 3 | **85** | il rend le froid qu'elle lui a confié |
+
+Notetag : `<AvatarOrdre: skillId>` — l'Avatar exécute **cette** technique sur la cible qu'**elle**
+sélectionne dans le menu de combat. Le geste reste le sien : elle ne fait que le diriger.
+
+Un ordre au-dessus de son niveau est **refusé proprement** (`<AvatarNiveau: n>`) : le jeu le dit,
+et le tour n'est pas gaspillé.
+
+> **Un ordre dirigé passe outre la posture de GARDE.** Même planté devant elle, si elle lui dit de
+> frapper, il frappe. C'est exactement ça, le contrôle.
+
+> **Un bug attrapé par le banc :** l'Avatar joue son action à la main, donc MV n'appliquait pas
+> `numRepeats()` pour lui — « Poings Enchaînés » (3 coups) n'en aurait porté **qu'un seul**. La
+> boucle de répétition est maintenant dans le plugin.
 
 ### 11.4 · Ce qu'il coûte — la contrepartie des 2 %
 
 - Il occupe le **slot Âme**.
-- **Chacune de ses frappes use l'Endurance du Don**, comme celles de sa porteuse : un Familier actif
-  **brûle sa jauge deux fois plus vite**. C'est le vrai prix d'une action gratuite par tour.
-- Chaque interception coûte **2 d'Endurance** de plus.
-- **Brisé** : il n'agit plus **qu'un tour sur deux**, et tout ce qu'il fait est **÷2** — dégâts comme
-  interception. Il ne meurt pas : il **fatigue**.
-- **Absent du slot Âme** : il n'existe pas, et le Trait qu'il débloquait non plus.
+- Chacune de ses frappes **use l'Endurance du Don** : un Avatar actif brûle sa jauge **deux fois plus vite**.
+- Chaque interception coûte **2** de plus.
+- **Brisé**, il agit un tour sur deux et tout ce qu'il fait est ÷2. Il ne meurt pas : il fatigue.
+- **Absent** du slot Âme, il n'existe pas — et le Trait HIVER non plus.
 
-> ⚠️ **Il ne porte pas le Trait à la place de sa porteuse.** Ses frappes sont des frappes de
-> Familier : elles **n'ont pas l'élément GLACE** et **ne déclenchent pas le recul d'HIVER**. Le froid
-> reste le prix que Korrah paie elle-même — sinon le Familier deviendrait la faille qui **annule la
-> règle d'or**.
+> ⚠️ **Il ne porte pas le Trait à la place de sa porteuse.** Les frappes de l'Avatar sont des frappes
+> d'Avatar : elles n'ont pas l'élément GLACE et ne déclenchent pas le recul d'HIVER. Le froid reste
+> le prix que Korrah paie elle-même — sinon l'Avatar serait la faille qui annule la règle d'or.
 
-### 11.5 · Ses trois actions (compétences **469-471**, `stypeId 0`, `occasion 3`)
+### 11.5 · Commandes et API
 
-Jamais sélectionnables par le joueur : **c'est le Familier qui décide.**
+```
+AVATAR posture 2 garde     change la posture
+AVATAR agir 2              le fait agir (scénario)
+AVATAR etat                résumé : niveau, contrôle, techniques, posture
+FAMILIER …                 toujours accepté : les anciens événements marchent
 
-| ID | Nom | Anim. | Portée | Élément | Formule |
-|---|---|---|---|---|---|
-| **469** | Frappe des Poings Volants | 21 *Frapper Spécial 1* | 1 ennemi | mana négative | `a.atk * 1.2 - b.def * 0.8` |
-| **470** | Déferlante des Poings | 404 *Vortex · Or* | tous | mana négative | `a.atk * 1.0 - b.def * 0.6` |
-| **471** | Torse Gardien | 440 *Dôme gardien · Or* | lui-même | — | *(aucun dégât — c'est l'image de l'interception)* |
-
-### 11.6 · Réglages, commandes et API
-
-| Paramètre | Défaut | | Paramètre | Défaut |
-|---|---|---|---|---|
-| `postureDefaut` | **libre** | | `usureInterception` | **2** |
-| `seuilDetresse` | **40** % | | `palierDeferlante` | **3** |
-| `interceptLibre` | **20** % | | `brisePause` | **true** |
-| `interceptGarde` | **45** % | | `montrerLog` | **true** |
-
-| Commande | Effet |
-|---|---|
-| `FAMILIER posture 2 garde` | Change la posture du familier de l'acteur 2. |
-| `FAMILIER agir 2` | Le fait agir immédiatement (scénario). |
-| `FAMILIER etat` | Résumé dans le journal de combat. |
-
-```js
-window.Familiers.de(actorId)       // {nom, posture, present, actif, brise, palier, facteur}
-window.Familiers.present(2)        // le familier est-il là ?
-window.Familiers.posture(2,'garde')
-window.Familiers.agir(2)
+window.Avatars.de(2)        {nom, posture, present, actif, brise, palier,
+                             niveau, niveauNom, controle, prochainSeuil,
+                             puissance, techniques, consciente, eteinte}
+window.Avatars.niveau(2)        0 · 1 · 2 · 3
+window.Avatars.consciente(2)    l'Avatar peut-il exister en ce moment ?
+window.Avatars.posture(2,'garde')
+window.Avatars.present(2)
+window.Familiers                alias de window.Avatars
 ```
 
-**Le registre** *(à étendre pour un nouveau familier)* :
+---
+
+## 12. `ObjetSpirituel.js` **v3.0** — l'évolution en 4 paliers
+
+Une chaîne par héros. **Plus de `manif`.**
 
 ```js
-var FAMILIERS = {
-    2: { nom: "l'Armure Volante", frappe: 469, deferlante: 470, garde: 471 }
+var CHAINS = {
+    1: { don:{ forme:'objet',  slot:5, type:'armure', ids:[68,69,70,71] } },
+    2: { don:{ forme:'avatar', slot:7, type:'armure', ids:[76,77,78,79] } },
+    3: { don:{ forme:'objet',  slot:5, type:'armure', ids:[72,73,74,75] } },
+    4: { don:{ forme:'arme',   slot:1, type:'arme',   ids:[513,514,515,516] } }
 };
 ```
 
-## 12. `ObjetSpirituel.js` v2.0 — l'évolution en 4 paliers, dans les bons slots
+À la montée de niveau, la pièce du palier atteint est donnée et équipée, et **toutes les versions
+inférieures sont purgées du sac**. L'évolution pose `window._DonInterne = true` le temps du
+`changeEquip` — c'est ce qui lui permet de passer le verrou.
 
-**Ordre de chargement : #34** (avant les deux autres).
-
-| Paramètre | Défaut |
-|---|---|
-| `lvForme` / `lvResonance` / `lvVerite` | **15** / **35** / **60** |
-| `soulBonus` | **true** — le Don gagne/perd ATK & MAT selon la santé mentale du porteur |
-| `evoAnim` / `evoSE` | **51** / **Saint5** |
-
-Il fait évoluer **deux chaînes par héros, en même temps** : le **Don** dans son slot, et la
-**Manifestation** dans la main. Une seule annonce — celle du Don.
-
-| Commande | Effet |
-|---|---|
-| `OBJET check` | Réévalue tous les héros (après un événement scénarisé). |
-| `OBJET rendre` | Redonne à chaque héros la pièce de son Don si elle a été perdue, et la rééquipe. |
-
-## 13. `TraitsAme.js` v2.0 — les Traits
-
-**Ordre de chargement : #161**, juste après `DonsSpirituels`.
-
-| Paramètre | Défaut | | Paramètre | Défaut |
-|---|---|---|---|---|
-| `drainPM` | **20** | | `amesGain` | **2** |
-| `drainTP` | **20** | | `amesVar` | **15** |
-| `errancePar` | **2** | | `miracleSeuil` | **20** |
-| `erranceForce` | **6** | | `miracleGain` | **20** |
-| `etatEnvers` | **204** | | `miraclePerte` | **25** |
-| `sangDrain` | **25** | | `hiverRecul` | **15** |
-| `hiverElement` | **13** | | | |
-
-```js
-window.Traits.de(actorId)              // {cle, nom, don}
-window.Traits.tous(actorId)            // tous ses Traits (Korrah en a deux)
-window.Traits.possede(actorId,'hiver')
-window.Traits.miracle(4)               // progression 0-100 d'Aël
+```
+OBJET check     réévalue tout le groupe
+OBJET rendre    restitue et rééquipe un Don perdu
 ```
 
-**Interaction avec le Don** : `TraitsAme` lit `window.Dons.facteurTrait(id)` — un **Don brisé** divise
-par deux ce que rapporte le Trait — `window.Dons.ombreBloquee(3)` — l'**amulette explosée** réduit
-l'absorption d'âmes de moitié — et `window.Dons.traitDebloque(2)` — sans le **familier**, HIVER ne
-répond plus.
+---
 
-## 14. Les plugins voisins
+## 13. `TraitsAme.js` — les Traits
 
-| Plugin | # | Lien avec le Don |
+Le registre gate `hiver` sur la présence de l'Avatar :
+
+```js
+hiver: { actor:2, nom:'Hiver', don:"l'Armure Volante — son Avatar Spirituel", parAvatar:true }
+```
+
+*(L'ancienne clé `parFamilier` est toujours reconnue.)*
+
+---
+
+## 14. Vérification — 8 bancs d'essai, 0 échec
+
+Ils sont dans **`bancs/`**, lançables avec Node depuis la racine du projet
+(`node bancs/6_avatar_niveaux.js`). Voir [`bancs/LISEZ-MOI.md`](../bancs/LISEZ-MOI.md).
+
+| Banc | Ce qu'il contrôle | |
 |---|---|---|
-| `ObjetEveille` | 183 | **L'arme parle** : répliques en combat selon la Chute, + l'**Ancre** (corruption ≥ 85 → −20, 1×/combat). |
-| `AuraPaliers` | 131 | L'aura visible, couleur lue sur `<Mana:>` / `<Mana2:>`, palier par niveau. |
-| `Errance` | 128 | Reçoit l'Errance payée par chaque usage de Trait. |
-| `MarqueVivante` | 133 | `window.Marque.etat(id)` — une **marque creuse** coupe les Traits. |
-| `AmeSouls` | 36 | Le stock d'âmes (variable 15) qu'alimente l'Absorption. |
-| `MaitriseVoies` | 158 | Les Voies de combat, dont `sang` — le style **appris** de Vesper, par-dessus son Trait. |
+| `1_dons_spirituels.js` | endurance, jauges, casse, ÷2, bonus, repos | ✅ |
+| `2_evolution_paliers.js` | les 4 paliers · **l'acier ne monte pas tout seul** | ✅ |
+| `3_avatar_spirituel.js` | l'Avatar : tour, ciblage, interception, postures | ✅ |
+| `4_un_seul_don.js` | **la règle d'or — 76 contrôles** | ✅ |
+| `5_verrou_et_ordres.js` | **le verrou et les trois postures** | ✅ |
+| **`6_avatar_niveaux.js`** | **les 3 niveaux, le contrôle croissant, l'inséparabilité** | ✅ |
+| `audit/6_bestiaire.js` | le bestiaire | ✅ |
+| `audit/7_nouveau_lot.js` | les compétences du lot | ✅ |
+| `audit/8_tableau_de_chasse.js` | le Tableau de Chasse | ✅ |
 
-**Ordre à respecter** : `ObjetSpirituel` (34) → `Errance` (128) → `MarqueVivante` (133) →
-**`DonsSpirituels` (160)** → **`TraitsAme` (161)** → **`FamilierSpirituel` (162)** → `ObjetEveille` (183).
+Ce que `banc_don.js` vérifie, entre autres :
+
+- **chacun des quatre héros n'a qu'UNE forme de Don** ;
+- plus aucune pièce ne porte `<Manifestation>` ;
+- chacun **démarre avec exactement un Don équipé** ;
+- Vesper, Korrah et ludwing tiennent une arme **ordinaire** ;
+- **aucune pièce ordinaire ne s'appelle « Éclat … »** ;
+- les 12 armes 501-512 existent toujours, ont un prix, et n'ouvrent plus de type de compétence ;
+- les **huit** types d'ombre ont une source (c'était 4 sur 8 avant) ;
+- le Masque porte un effet à chaque palier, croissant ;
+- les trois ordres sont gratuits, en combat, et connus de Korrah au niveau 1 ;
+- chaque pièce de Don **nomme son porteur** (`<DonDe:>`).
+
+Et `5_verrou_et_ordres.js` rejoue le vrai code des plugins sur un moteur simulé qui se comporte
+comme MV (`changeEquip`, `clearEquipments`, `optimizeEquipments`) — c'est là que se vérifient le
+refus de retirer, le refus de prêter, le passage de l'évolution, et les trois postures.
+
+`6_avatar_niveaux.js` va plus loin encore : il simule un vrai `Game_Action` (cibles, répétitions,
+dégâts) et vérifie, sur le code réel du plugin :
+
+- les **trois seuils** 25 / 50 / 85, à la borne près (24 → niveau 0, 25 → niveau 1…) ;
+- que le **mode de contrôle** suit le niveau ;
+- qu'il **apprend deux techniques par niveau** (2 → 4 → 6 → 8), sans doublon ;
+- que sa **puissance monte vraiment** — une frappe de référence à 100 en vaut 145 au niveau 3 ;
+- **l'inséparabilité** : brisé il reste, inconsciente il s'éteint, relevée il revient, tombée il
+  s'éteint ;
+- que chaque **ordre dirigé** est refusé sous son niveau et exécuté au-dessus, sur la cible qu'elle
+  désigne — et qu'il **passe outre la posture de garde** ;
+- qu'aucune frappe de l'Avatar ne tombe à **0 dégât contre DÉF 900** (le palier du niveau 85).
 
 ---
 
@@ -712,91 +806,55 @@ répond plus.
 
 ### 15.1 · Donner un Don à un nouveau personnage
 
-1. **Choisir la forme** — elle décide du slot : `arme` → Arme · `objet` → Accessoire · `familier` → Âme.
-2. **Créer la chaîne de 4 pièces** (armes si `arme`, armures sinon) avec sur chacune :
-   `<Don: cle>`, `<Forme: xxx>`, `<Palier: 1>` … `<Palier: 4>`.
-3. **Déclarer la chaîne** dans `ObjetSpirituel.js` → `CHAINS[actorId] = { don:{…}, manif:{…}|null }`.
-4. **Déclarer le Don** dans `DonsSpirituels.js` → `DONS[actorId] = { cle, type, slot, nom, … }`.
-   - Pour un **objet**, ajouter sa `jauge : { nom, max, parUsage, sur, fin }`
-     (`sur` : `'sang'` ou `'ombre'` · `fin` : `'fendre'` ou `'exploser'`).
-   - Pour un **familier**, ajouter `trait: 'cle'` — c'est ce qui le rend redoutable.
-5. **Si le Don n'est pas une arme**, créer aussi la **Manifestation** : 4 armes notées
-   `<Manifestation: cle>` + `<Palier: n>`.
+1. Créer **4 pièces** (armes ou armures) dans le slot de la forme choisie.
+2. Sur chacune : `<Don: cle>` · `<Forme: arme|objet|avatar>` · `<Palier: 1-4>` · `<DonDe: actorId>`.
+3. Ajouter l'entrée dans `DONS` (`DonsSpirituels.js`) et dans `CHAINS` (`ObjetSpirituel.js`).
+4. **Ne pas lui en donner un second.** C'est tout l'enjeu.
 
 ### 15.2 · Donner un Trait
 
-1. **Déclarer** dans `TraitsAme.js` → `TRAITS.macle = { actor: N, nom, don }` — plus
-   `parFamilier: true` si c'est un familier qui l'ouvre.
-2. **Noter les compétences** : `<Trait: macle>`.
-3. Coder l'effet dans `Game_Action.apply`, en multipliant toujours par `facteurDon(id)`.
-4. **Respecter la règle d'or** : le porteur doit **subir** son propre Trait, et son Don doit être la
-   **sécurité** qui lui répond.
+Ajouter l'entrée dans `TRAITS` (`TraitsAme.js`). Si c'est un **Avatar** qui l'ouvre :
+`parAvatar: true` côté plugin, `<TraitDebloque: cle>` sur les 4 pièces.
 
 ### 15.3 · Marquer une compétence
 
-| Tu veux… | Notetag / condition |
+`<Trait: cle>` · `<Sang>` · `<Ombre>` · `<Avatar>` · `<AvatarPosture: libre|agressif|garde>`.
+
+---
+
+## 16. Table de correspondance — ce qui a changé de nom
+
+| Avant | Maintenant |
 |---|---|
-| Qu'elle remplisse la jauge d'Ombre | type **11-18**, ou `<Ombre>` |
-| Qu'elle remplisse la jauge de Sang, et coûte des PV si le Masque est fendu | type **10**, ou `<Sang>` |
-| Qu'elle déclenche le prix et l'effet d'un Trait | `<Trait: sang\|change\|hiver\|ames\|miracle>` |
-| Qu'elle use l'Endurance | rien à faire — **toute action de dégâts** du porteur l'use |
+| famille · familier | **AVATAR SPIRITUEL** |
+| `FamilierSpirituel.js` | `AvatarSpirituel.js` |
+| `window.Familiers` | `window.Avatars` *(l'alias reste)* |
+| `FAMILIER posture …` | `AVATAR posture …` *(l'ancienne reste comprise)* |
+| `<Forme: familier>` | `<Forme: avatar>` *(l'ancienne reste lue)* |
+| `parFamilier: true` | `parAvatar: true` *(l'ancienne reste lue)* |
+| `familierBonus` | `avatarBonus` *(l'ancien reste lu)* |
+| `<Familier>` sur 469-471 | `<Avatar>` |
+| « la Manifestation » | **rien — le concept est retiré** |
+| thylane · neyssa · lou · tianna | vesper · korrah · ludwing · ael *(alias conservés)* |
 
 ---
 
-## 16. Table de correspondance — anciens noms
+## 17. Ce qui reste ouvert
 
-Certains notetags historiques portent encore les anciens noms. Le code lit l'**ID d'acteur**, jamais
-le nom, et les alias sont gérés — mais il faut le savoir en lisant la base.
-
-| ID | Nom actuel | Ancien nom | Classe | Mana | Voie par défaut | Camp |
-|---|---|---|---|---|---|---|
-| **1** | **Vesper** | `thylane` | 1 · l'Équilibre | spirituelle + négatif | `sang` | ombre |
-| **2** | **Korrah** | `neyssa` | 2 · la Maîtrise | négatif + positif | `flash` | lumière |
-| **3** | **ludwing** | `lou` | 3 · le Symbole | spirituelle + positif | `source` | ombre |
-| **4** | **Aël** | `tianna` | 4 · la Parole | positif | `miroir` | lumière |
-
-Traits : `rupture → sang` · `gel → hiver` · `porte → ames` · `verbe → miracle`.
-
----
-
-## 17. Ce qui reste à écrire
-
-1. **Les 80 / 18 / 2 %.** Aucun tirage de population : les quatre marqués ont leur Don écrit en dur,
-   les PNJ et ennemis n'en ont pas. Il faudrait un tirage (80/18/2) à leur création.
-2. **L'apparition à la première utilisation** est **narrative** : le message s'affiche, mais rien
-   n'empêche d'employer le Don avant.
-3. **Un familier générique.** Ses actions et le Trait qu'il débloque sont déclarés dans les registres
-   des plugins ; le notetag `<TraitDebloque: hiver>` est posé sur les pièces mais pas encore lu comme
-   source de vérité. Un second familier demande deux lignes de registre, pas du code.
-4. **Le familier n'a pas de sprite propre.** Il agit, il frappe, il se met devant — mais visuellement
-   c'est l'animation de sa compétence qui le représente, pas une figure à l'écran.
-5. **L'Endurance en combat.** Elle n'apparaît qu'à l'écran `DON afficher` ; aucune barre dans
-   l'interface de combat — alors que le familier la brûle deux fois plus vite.
-6. **La réparation hors auberge.** Seuls `recoverAll` et `DON reparer` réparent. Pas d'objet
-   consommable *(le `80 · Éclat d'Âme` serait le matériau tout trouvé)*.
+1. **Les autres marqués du monde.** Le système gère les quatre héros ; les PNJ marqués n'ont pas
+   encore de Don en base. Le registre est prêt à les recevoir (§15.1).
+2. **L'apparition du Don n'est pas encore une scène.** Le code l'annonce dans le journal de combat
+   la première fois — mais le canon dit que c'est un moment. Il mériterait son événement.
+3. **La ligne d'armes 501-512 n'est vendue nulle part.** Elles ont un prix, plus aucune boutique ne
+   les liste. Une ligne à ajouter dans le marchand de ton choix, ou en butin.
+4. **Le Trait `change` de Korrah** est le seul des cinq qui n'a pas de mécanique propre écrite.
+5. ~~Les seuils 25 / 50 / 85 dépassent la courbe d'apprentissage~~ — **réglé.** Le `maxLevel` des
+   quatre héros est 99, donc 85 était bien atteignable ; ce qui manquait, c'était du contenu entre
+   61 et 99. Les niveaux 61-99 sont maintenant remplis pour les quatre héros, et quatre systèmes de
+   compétence qu'aucune classe n'ouvrait ont été ouverts. Voir
+   [`RAPPORT_ACCESSIBILITE.md`](RAPPORT_ACCESSIBILITE.md).
 
 ---
 
-## 18. Corrections appliquées (v2)
-
-| # | Ce qui n'allait pas | Correction |
-|---|---|---|
-| 0 | Le **Familier** était un simple bonus passif de +10 %. Le canon dit une **créature** — un stand, une part de soi qui marche à côté de soi. | **`FamilierSpirituel.js`** : il joue son propre tour, choisit sa cible et son geste, se met devant sa porteuse en danger, et paie tout ça de sa propre Endurance. Voir **§11**. |
-| 1 | Les trois formes vivaient **toutes** dans le slot Arme : rien ne distinguait un Objet d'un Familier. | **Chaque forme a son slot** : Arme → Arme · Objet → **Accessoire** · Familier → **Âme**. 12 pièces créées (68-79). |
-| 2 | Le nom du Don servait à la fois à l'arme **et** à l'objet (*Masque Résonant* était une arme de type SANG). | Le Don et la **Manifestation** sont séparés : 501-512 renommées (Lame de Sang · Poings Volants · Arme d'Ombre), 68-79 portent les vrais noms du Don. |
-| 3 | Le **Masque n'avait pas de seconde jauge** — il ne cassait que par usure, alors que le canon dit « si elle en abuse, il se casse ». | Jauge de **Sang** (100, +10 par technique) : pleine, **le Masque se fend** d'un coup. |
-| 4 | « Tout ce qu'il apporte ÷2 » ne s'appliquait qu'aux **dégâts**. | Le Don brisé retire aussi **la moitié des statistiques de sa pièce**, et le bonus du Familier tombe à +5 %. |
-| 5 | HIVER répondait **même sans le familier**, alors que c'est lui qui le débloque. | Familier absent du slot Âme → les compétences `<Trait: hiver>` deviennent **impayables**. |
-| 6 | La *Vérité du Masque* attaquait en **FEU**, sans rapport avec le sang. | Règle uniforme : **élément = Mana primaire du porteur**, la **Vérité** ajoute l'élément de son Don/Trait (Vesper → mana négative · Korrah → GLACE · ludwing → OMBRE · Aël → LUMIÈRE). |
-| 7 | L'*Amulette Résonante* **perdait** 2 d'ATK par rapport au palier précédent, et la *Vérité de l'Amulette* avait **−9 MP**. | Courbes rendues **monotones** sur les quatre chaînes. Idem pour le pic de MAT de l'*Arc Résonant* (56 → 44, puis 58 à la Vérité). |
-| 8 | Le Don d'Aël avait **deux noms** (« le Carquois d'Étoiles » côté armure, « l'Arc » côté plugin). | Son Don est **l'arc**, un seul nom. Le Carquois (armure **80**) devient un accessoire **ordinaire**, sans mécanique — la preuve que ses slots sont libres. |
-| 9 | `plugins.js` n'exposait pas tous les paramètres. | Les 13 paramètres de `DonsSpirituels` et les 13 de `TraitsAme` sont déclarés. |
-
----
-
-*Compilé depuis la lecture intégrale de `data/Weapons.json`, `Armors.json`, `Skills.json`,
-`States.json`, `Items.json`, `Actors.json`, `Classes.json`, `Animations.json`, `System.json`,
-`js/plugins.js` et des plugins `DonsSpirituels`, `TraitsAme`, `ObjetSpirituel`, `ObjetEveille`.
-Comportement vérifié sur banc d'essai : 24 contrôles sur `DonsSpirituels`, 7 sur `ObjetSpirituel`,
-17 sur `FamilierSpirituel` (tour autonome, choix de cible, déferlante, postures, interception,
-usure, familier brisé, familier retiré).*
+*Dossier v3.0 — la règle d'or appliquée partout : **on n'a qu'un seul Don**.
+Et pour Korrah, ce Don-là ne la quitte jamais : il s'éteint avec elle, et il revient avec elle.*

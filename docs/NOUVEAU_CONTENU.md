@@ -205,8 +205,9 @@ Un cinquième banc d'essai (`lot.js`, 24 contrôles) s'ajoute aux quatre existan
 | 270 contrats atteignables | ✅ |
 | La compétence payante médiane dépasse la meilleure gratuite | ✅ |
 
-**Les cinq bancs passent** : Dons Spirituels (24), évolution des paliers (7), Familier (17),
-bestiaire (24), nouveau lot (24) — **96 contrôles automatisés**.
+**Les huit bancs passent** : Dons Spirituels (24), évolution des paliers (10), Avatar Spirituel (17),
+bestiaire (24), nouveau lot (24), Tableau de Chasse (15), **règle d'un seul Don (76)**,
+**verrou & ordres (28)** — voir [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md) §14.
 
 ---
 

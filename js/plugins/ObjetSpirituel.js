@@ -1,13 +1,15 @@
 //=============================================================================
-// ObjetSpirituel.js — v2.0
+// ObjetSpirituel.js — v3.0
 // Le DON SPIRITUEL évolutif — RPG Maker MV
 // by JOKO
+//   v3.0 — UN SEUL DON PAR PERSONNE. La « Manifestation » est supprimée :
+//          personne ne porte deux Dons. « Familier » devient AVATAR SPIRITUEL.
 //=============================================================================
 
 /*:
- * @plugindesc v2.0 ■ Le Don Spirituel évolue en 4 paliers (Éclat→Forme→Résonance
- * →Vérité) DANS SON PROPRE SLOT : l'Arme au slot Arme, l'Objet à l'Accessoire,
- * le Familier à l'Âme. La Manifestation (l'arme que le Don façonne) suit.
+ * @plugindesc v3.0 ■ UN SEUL Don par personne, qui évolue en 4 paliers (Éclat→
+ * Forme→Résonance→Vérité) dans SON slot : l'Arme au slot Arme, l'Objet à
+ * l'Accessoire, l'Avatar Spirituel à l'Âme. L'autre main tient de l'acier.
  * @author JOKO
  *
  * @param lvForme
@@ -58,18 +60,26 @@
  *     Palier 3 · RÉSONANCE  (niveau lvResonance)
  *     Palier 4 · VÉRITÉ     (niveau lvVerite)
  *
- *  ▶ CHAQUE FORME A SA PLACE (Codex §6.1)
- *      ⚔️  ARME     → slot ARME        (Aël : l'arc 513-516)
- *      🔮  OBJET    → slot ACCESSOIRE  (Vesper : le Masque 68-71 ·
- *                                       ludwing : l'Amulette 72-75)
- *      👤  FAMILIER → slot ÂME         (Korrah : l'Armure Volante 76-79)
+ *  ▶ LA RÈGLE D'OR : UN SEUL DON PAR PERSONNE
+ *    Une arme, OU un objet, OU un avatar. Jamais deux. Ce que le porteur
+ *    tient dans l'autre main est de l'acier ordinaire — acheté, trouvé,
+ *    remplaçable — et ça ne grandit PAS tout seul. Seul le Don fait ça.
  *
- *  ▶ LA MANIFESTATION — l'arme que le Don façonne
- *    Quand le Don n'est PAS une arme, le porteur tient quand même quelque
- *    chose : le sang durci de Vesper (501-504), les poings que le familier
- *    de Korrah lui prête (505-508), l'ombre que l'amulette de ludwing a bue
- *    (509-512). Cette arme suit les MÊMES paliers, en même temps.
- *    Aël n'en a pas : son Don EST son arme.
+ *  ▶ CHAQUE FORME A SA PLACE (Codex §6.1)
+ *      ⚔️  ARME    (80 %) → slot ARME        Aël : l'Arc 513-516
+ *      🔮  OBJET   (18 %) → slot ACCESSOIRE  Vesper : le Masque 68-71
+ *                                            ludwing : l'Amulette 72-75
+ *      👤  AVATAR   (2 %) → slot ÂME         Korrah : l'Armure Volante 76-79
+ *
+ *    Les armes 501-512 étaient présentées comme des « Manifestations » qui
+ *    doublaient le Don de Vesper, Korrah et ludwing. C'était une erreur :
+ *    elles sont redevenues des ARMES ORDINAIRES, gardées, renommées et
+ *    mises en vente. Aucune n'a été supprimée.
+ *
+ *  ▶ LE DON NE SE RETIRE PAS, ET NE SE PRÊTE PAS
+ *    Il est né de cette âme-là. Le joueur ne peut ni le déséquiper ni le
+ *    passer à quelqu'un d'autre : le slot est verrouillé sur son porteur.
+ *    (Voir DonsSpirituels.js, qui tient le verrou.)
  *
  *  ▶ BONUS D'ÂME (option)
  *    Tant que le Don est équipé, il gagne de l'ATK & MAT si la santé mentale
@@ -81,9 +91,12 @@
  *    OBJET rendre    Redonne à chaque héros la pièce de son Don, si elle a
  *                    été perdue, et la rééquipe.
  *
- *  Pré-requis : armes 501-516 et armures 68-79 présentes (déjà créées).
+ *  Pré-requis : armes 513-516 et armures 68-79 présentes (déjà créées).
  *  Compatible saves : un héros déjà au-dessus du palier est mis à niveau au
- *  prochain chargement de carte.
+ *  prochain chargement de carte. Une sauvegarde d'avant la v3.0 où Vesper ou
+ *  Korrah portait une « Manifestation » n'est pas cassée : l'arme est devenue
+ *  une arme ordinaire, elle reste équipée et parfaitement utilisable — elle
+ *  ne montera simplement plus de palier toute seule.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -100,31 +113,25 @@
 
     var PALIER = ['Éclat', 'Forme', 'Résonance', 'Vérité'];
 
-    // ── Les chaînes : le DON dans son slot, et la MANIFESTATION dans la main ──
+    // ── Les chaînes : UN SEUL DON PAR PERSONNE, dans son slot à lui ─────────
     //    slot = etypeId (1 Arme · 5 Accessoire · 7 Âme) · type = 'arme' | 'armure'
+    //    Il n'y a plus de « manif » : personne ne porte deux Dons.
     var CHAINS = {
-        1: { // Vesper — OBJET : le Masque (accessoire) + la Lame de Sang (arme)
-            don:  { forme: 'objet', slot: 5, type: 'armure', ids: [68, 69, 70, 71],
-                    names: ['Éclat de Masque', 'Masque Naissant', 'Masque Résonant', 'Vérité du Masque'] },
-            manif:{ slot: 1, type: 'arme', ids: [501, 502, 503, 504],
-                    names: ['Éclat de Sang', 'Lame de Sang Naissante', 'Lame de Sang Résonante', 'Vérité de la Lame de Sang'] }
+        1: { // Vesper — OBJET : le Masque (accessoire). Sa main tient de l'acier.
+            don: { forme: 'objet', slot: 5, type: 'armure', ids: [68, 69, 70, 71],
+                   names: ['Éclat de Masque', 'Masque Naissant', 'Masque Résonant', 'Vérité du Masque'] }
         },
-        2: { // Korrah — FAMILIER : l'Armure Volante (âme) + les Poings (arme)
-            don:  { forme: 'familier', slot: 7, type: 'armure', ids: [76, 77, 78, 79],
-                    names: ['Éclat Volant', 'Armure Naissante', 'Armure Résonante', "Vérité de l'Armure Volante"] },
-            manif:{ slot: 1, type: 'arme', ids: [505, 506, 507, 508],
-                    names: ['Éclat Lucide', 'Poings Naissants', 'Poings Résonants', 'Vérité des Poings Volants'] }
+        2: { // Korrah — AVATAR SPIRITUEL : l'Armure Volante (âme). Idem.
+            don: { forme: 'avatar', slot: 7, type: 'armure', ids: [76, 77, 78, 79],
+                   names: ['Éclat Volant', 'Armure Naissante', 'Armure Résonante', "Vérité de l'Armure Volante"] }
         },
-        3: { // ludwing — OBJET : l'Amulette (accessoire) + l'arme d'Ombre (arme)
-            don:  { forme: 'objet', slot: 5, type: 'armure', ids: [72, 73, 74, 75],
-                    names: ["Éclat d'Amulette", 'Amulette Naissante', 'Amulette Résonante', "Vérité de l'Amulette"] },
-            manif:{ slot: 1, type: 'arme', ids: [509, 510, 511, 512],
-                    names: ['Éclat des Âmes', 'Ombre Naissante', 'Ombre Résonante', "Vérité de l'Ombre"] }
+        3: { // ludwing — OBJET : l'Amulette (accessoire). Sa hache est ordinaire.
+            don: { forme: 'objet', slot: 5, type: 'armure', ids: [72, 73, 74, 75],
+                   names: ["Éclat d'Amulette", 'Amulette Naissante', 'Amulette Résonante', "Vérité de l'Amulette"] }
         },
         4: { // Aël — ARME : l'arc EST le Don. Accessoire et Âme restent libres.
-            don:  { forme: 'arme', slot: 1, type: 'arme', ids: [513, 514, 515, 516],
-                    names: ['Éclat Stellaire', 'Arc Naissant', 'Arc Résonant', "Vérité de l'Arc"] },
-            manif: null
+            don: { forme: 'arme', slot: 1, type: 'arme', ids: [513, 514, 515, 516],
+                   names: ['Éclat Stellaire', 'Arc Naissant', 'Arc Résonant', "Vérité de l'Arc"] }
         }
     };
 
@@ -144,8 +151,7 @@
 
     function chainsOf(actorId) {
         var c = CHAINS[actorId];
-        if (!c) return [];
-        return c.manif ? [c.don, c.manif] : [c.don];
+        return c ? [c.don] : [];
     }
 
     function dataOf(chain, id) {
@@ -190,8 +196,14 @@
         var etaitEquipe = !!equippedPiece(actor, chain);
 
         // 1) on donne la nouvelle pièce, on l'équipe si l'ancienne l'était
+        //    Le Don est verrouillé dans son slot (DonsSpirituels) : ce drapeau
+        //    dit au verrou que c'est l'évolution qui parle, pas le joueur.
         $gameParty.gainItem(neuf, 1);
-        if (etaitEquipe) actor.changeEquip(slotIndex(actor, chain.slot), neuf);
+        if (etaitEquipe) {
+            window._DonInterne = true;
+            try { actor.changeEquip(slotIndex(actor, chain.slot), neuf); }
+            finally { window._DonInterne = false; }
+        }
 
         // 2) on purge toutes les versions inférieures (dont celle rendue par changeEquip)
         for (var s = 0; s < target; s++) {
@@ -207,12 +219,11 @@
         return true;
     }
 
-    /** Fait évoluer le Don ET sa manifestation. Une seule annonce, celle du Don. */
+    /** Fait évoluer LE Don — il n'y en a qu'un. */
     function evolveActor(actor) {
         var c = CHAINS[actor.actorId()];
         if (!c) return;
         evolveChain(actor, c.don, true);
-        if (c.manif) evolveChain(actor, c.manif, false);
     }
 
     function checkAllParty() {
@@ -221,14 +232,14 @@
 
     /** Redonne au héros la pièce de son Don si elle a disparu, et la rééquipe. */
     function rendreDon(actor) {
-        var c = CHAINS[actor.actorId()];
-        if (!c) return;
         chainsOf(actor.actorId()).forEach(function (chain) {
             if (ownedStage(actor, chain) >= 0) return;             // il l'a encore
             var data = dataOf(chain, chain.ids[stageForLevel(actor.level)]);
             if (!data) return;
             $gameParty.gainItem(data, 1);
-            actor.changeEquip(slotIndex(actor, chain.slot), data);
+            window._DonInterne = true;
+            try { actor.changeEquip(slotIndex(actor, chain.slot), data); }
+            finally { window._DonInterne = false; }
         });
     }
 
