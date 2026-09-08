@@ -848,11 +848,10 @@ Ajouter l'entrée dans `TRAITS` (`TraitsAme.js`). Si c'est un **Avatar** qui l'o
 3. **La ligne d'armes 501-512 n'est vendue nulle part.** Elles ont un prix, plus aucune boutique ne
    les liste. Une ligne à ajouter dans le marchand de ton choix, ou en butin.
 4. **Le Trait `change` de Korrah** est le seul des cinq qui n'a pas de mécanique propre écrite.
-5. ~~Les seuils 25 / 50 / 85 dépassent la courbe d'apprentissage~~ — **réglé.** Le `maxLevel` des
-   quatre héros est 99, donc 85 était bien atteignable ; ce qui manquait, c'était du contenu entre
-   61 et 99. Les niveaux 61-99 sont maintenant remplis pour les quatre héros, et quatre systèmes de
-   compétence qu'aucune classe n'ouvrait ont été ouverts. Voir
-   [`RAPPORT_ACCESSIBILITE.md`](RAPPORT_ACCESSIBILITE.md).
+5. **Les seuils 25 / 50 / 85 dépassent la courbe d'apprentissage actuelle**, qui s'arrête au
+   niveau 60. Le niveau 3 de l'Avatar n'est donc atteignable qu'en fin de partie très avancée —
+   c'est cohérent avec « il faut de la puissance », mais si tu veux qu'on y arrive plus tôt, les
+   trois seuils sont des paramètres de plugin.
 
 ---
 
