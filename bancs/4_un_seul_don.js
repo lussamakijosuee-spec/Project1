@@ -125,19 +125,24 @@ const orphelins = [11,12,13,14,15,16,17,18].filter(t => !sources41[t]);
 T('Les 8 types d\'ombre ont tous une source', orphelins.length === 0,
   'sans source : ' + orphelins.join(','));
 
-console.log('\n─── 7 · LE MASQUE PORTE ENFIN UN EFFET (tout OBJET doit en avoir un) ───');
+console.log('\n─── 7 · LE MASQUE FAIT CE QUE LE LORE DIT, ET RIEN DE PLUS ───');
+// JOKO : « un masque qui lui permet d'utiliser son sang comme elle veut sans
+// se blesser ». C'est TOUT son talent d'Objet. La régénération citée entre
+// parenthèses (« car son sang se régénère ») décrit SON sang à elle — la
+// raison pour laquelle le Masque fonctionne, pas un bonus qu'il accorde.
+// J'avais inventé un trait de régénération de PV : il est retiré.
 [68,69,70,71].forEach((i,k) => {
-    const t = A[i].traits.find(x => x.code === 23 && x.dataId === 7);
-    T('Masque palier ' + (k+1) + ' : régénération de PV', !!t && t.value > 0,
-      t ? '' : 'aucun trait HRG');
+    const hrg = A[i].traits.find(x => x.code === 23 && x.dataId === 7);
+    T('Masque palier ' + (k+1) + ' : aucun bonus de régénération inventé',
+      !hrg, hrg ? 'trait HRG ' + hrg.value + ' encore présent' : '');
 });
-let croissant = true;
-for (let k = 1; k < 4; k++) {
-    const a = A[67+k].traits.find(x => x.code===23 && x.dataId===7);
-    const b = A[68+k].traits.find(x => x.code===23 && x.dataId===7);
-    if (!a || !b || b.value <= a.value) croissant = false;
-}
-T('La régénération monte à chaque palier', croissant);
+// Son talent réel — « son sang ne la blesse pas tant que le Masque tient » —
+// est une mécanique de plugin, pas une donnée : elle se vérifie en jouant le
+// code, pas en relisant le texte du fichier. C'est le banc 1 qui s'en charge
+// (« Abuser du sang FEND le masque » et le prix du sang une fois fendu).
+T('Le Masque garde une jauge de Sang, et rien d\'autre en dur',
+  [68,69,70,71].every(i => !A[i].traits.some(t => t.code === 23)),
+  'un trait de statistique spéciale traîne encore sur le Masque');
 
 console.log('\n─── 8 · TROIS ORDRES À L\'AVATAR, JOUABLES EN COMBAT ───');
 const ORD = [1246, 1247, 1248];

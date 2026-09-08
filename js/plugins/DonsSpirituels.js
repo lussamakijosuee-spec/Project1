@@ -190,8 +190,8 @@
  *
  *  ▶ VESPER — LE MASQUE  (objet · accessoire) · jauge de SANG
  *      Son UNIQUE Don. Tant qu'il tient, elle use de son sang SANS SE
- *      BLESSER, et ce sang revient tout seul (régénération de PV : c'est le
- *      « talent » que tout Objet doit porter).
+ *      BLESSER. C'est là tout son talent d'Objet, et il suffit : sans le
+ *      Masque, chacun de ses gestes la couperait.
  *      Chaque technique de sang remplit la jauge. PLEINE → LE MASQUE SE FEND
  *      d'un coup (Endurance à zéro), sans attendre l'usure. Dès lors chaque
  *      attaque de sang lui coûte sangCoutPct % de ses PV max, et sa

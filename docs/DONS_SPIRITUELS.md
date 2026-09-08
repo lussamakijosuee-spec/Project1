@@ -107,9 +107,11 @@ Option `verrouSlot`, notetag `<DonDe: actorId>`.
 
 ### 1.1 · 🩸 VESPER — LE MASQUE *(objet · accessoire)*
 
-Son **unique** Don. Tant qu'il tient, elle taille dans son propre sang **sans se blesser** — et ce
-sang **revient tout seul**. C'est l'effet que tout Objet doit porter : une **régénération de PV**
-(+3 % → +12 % selon le palier).
+Son **unique** Don. Tant qu'il tient, elle taille dans son propre sang **sans se blesser**.
+
+C'est là **tout son talent d'Objet, et il suffit** : sans le Masque, chacun de ses gestes de sang la
+couperait pour de bon. Si son sang revient, c'est le sien qui revient — pas un bonus que le Masque
+lui donne.
 
 **Jauge de SANG.** Chaque technique de sang (type 10 ou `<Sang>`) la remplit de 10.
 **Pleine → LE MASQUE SE FEND** d'un coup — Endurance à zéro, sans attendre l'usure.
@@ -235,12 +237,12 @@ Palier 4 · VÉRITÉ     niveau 60
 
 **🩸 Vesper — le Masque · armures 68-71**
 
-| ID | Nom | PV | Régénération |
+| ID | Nom | PV | Ce qu'il fait |
 |---|---|---|---|
-| 68 | Éclat de Masque | +20 | **+3 %/tour** |
-| 69 | Masque Naissant | +60 | **+5 %/tour** |
-| 70 | Masque Résonant | +120 | **+8 %/tour** |
-| 71 | Vérité du Masque | +220 | **+12 %/tour** |
+| 68 | Éclat de Masque | +20 | son sang ne la blesse pas |
+| 69 | Masque Naissant | +60 | *idem — il tient plus longtemps* |
+| 70 | Masque Résonant | +120 | *idem* |
+| 71 | Vérité du Masque | +220 | *idem — il ne se fend presque plus* |
 
 **⬛ ludwing — l'Amulette · armures 72-75**
 

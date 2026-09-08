@@ -78,11 +78,28 @@ ok(Dons.de(3).jauge && Dons.de(3).jauge.nom === 'Ombre', 'ludwing a une jauge d\
 ok(Dons.de(2).jauge === null, 'le FAMILIER n\'a pas de seconde jauge');
 ok(Dons.de(4).jauge === null, 'l\'ARME n\'a pas de seconde jauge');
 
+console.log('\n=== Le MASQUE : son sang ne la blesse pas tant qu\'il tient ===');
+// JOKO : « un masque qui lui permet d'utiliser son sang comme elle veut sans
+// se blesser ». C'est TOUT son talent d'Objet — il n'accorde aucune
+// statistique, aucun bonus. Ce qui se vérifie, c'est l'absence de prix.
+const sang = () => {
+  const a = { subject: () => ACTORS[1], item: () => ({ stypeId: 10, meta: {} }),
+              isDamage: () => true, _donUse: false };
+  const avant = ACTORS[1].hp;
+  Game_Action.prototype.apply.call(a, {});
+  return avant - ACTORS[1].hp;
+};
+Dons.reparer(1); ACTORS[1].hp = 500;
+ok(sang() === 0, 'masque INTACT → une attaque de sang ne lui coûte aucun PV');
+
 console.log('\n=== Abuser du sang FEND le masque (canon) ===');
-const act = { subject: () => ACTORS[1], item: () => ({ stypeId: 10, meta: {} }),
-              isDamage: () => true };
-for (let t = 0; t < 10; t++) { act._donUse = false; Game_Action.prototype.apply.call(act, {}); }
+for (let t = 0; t < 9; t++) sang();          // la 1re est déjà passée ci-dessus
 ok(Dons.jauge(1).val === 0 && Dons.estCasse(1), '10 techniques de sang → jauge pleine → masque FENDU');
+
+ACTORS[1].hp = 500;
+const prix = sang();
+ok(prix > 0, 'masque FENDU → dès lors son sang la blesse (−' + prix + ' PV)');
+ok(prix === Math.floor(ACTORS[1].mhp * 8 / 100), '…et il lui coûte 8 % de ses PV max');
 
 console.log('\n=== Abuser de l\'ombre fait EXPLOSER l\'amulette ===');
 const act3 = { subject: () => ACTORS[3], item: () => ({ stypeId: 12, meta: {} }), isDamage: () => true };
