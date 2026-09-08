@@ -58,7 +58,7 @@ plus gentille que le moteur.** Les neuf bancs ont été corrigés pour porter `_
 
 ---
 
-## 🔴 2. KORRAH NE PEUT PAS AGIR. DEPUIS LE PREMIER COMBAT.
+## ✅ 2. KORRAH NE POUVAIT PAS AGIR — CORRIGÉ
 
 Une fois le jeu démarré, j'ai regardé le groupe. Et là :
 
@@ -96,24 +96,60 @@ vrai. L'état s'installe et ne part jamais.
 Résultat : le système mental complet est incohérent au lancement. Deux héros ont un état extrême,
 deux n'en ont aucun.
 
-### La correction ne m'appartient pas
+### La correction appliquée
 
-Deux façons, et c'est ton choix :
+Nouveau plugin **`EtatMental.js`** (dans les CORRECTIFS, juste avant SafetyNet). Il pose les
+variables 11 à 14 à **7** au démarrage — la valeur qui place chacun dans sa bande « normale ».
+`Neyssa_Concentration.js` le dit lui-même : *« Valeur entière de 1 à 10 »*. Zéro était hors échelle.
 
-1. **Initialiser les variables 11 à 14** à une valeur « normale » au début de la partie (7 mettrait
-   chacun dans sa bande normale : *NORMALTHY* 6-8 pour Vesper, *normal* 6-8 pour Korrah).
-2. **Corriger les conditions** pour ignorer la valeur 0 (`> 0 && <= 2`).
+Il répare aussi les **sauvegardes existantes** : au chargement, une variable restée hors de 1-10
+est remise à 7. Les parties déjà en cours sont donc débloquées elles aussi.
 
-La première est plus propre : elle fait exister l'échelle mentale dès le départ. **Dis-moi laquelle
-et je l'applique** — je n'y touche pas sans toi.
+> **Un second piège, trouvé en testant la correction.** Poser les variables n'a d'abord rien changé :
+> Korrah restait paralysée. `YEP_AutoPassiveStates` met les états passifs **en cache**
+> (`_passiveStatesRaw`), calculé une seule fois et vidé uniquement par `refresh()`. Or les acteurs
+> sont créés *avant* que les variables soient posées : ils gardaient les états calculés à 0. Le
+> plugin rafraîchit donc les acteurs après avoir posé les valeurs.
 
-### Deux coquilles trouvées au passage, dans les mêmes conditions
+**Vérifié en lançant le jeu :**
 
-- **#23 « Distraite »** (Korrah) lit `value(12) >= 4 && value(11) <= 6` — la seconde est la variable
-  de **Vesper**.
-- **#63 « normal »** (Aël) lit `value(13)` — la variable de **ludwing**.
-- **#34 « Maître Serein »** et **#37 « Souffre-Douleur »** (ludwing) ont la **même** condition
-  (`>= 9`) : ils s'appliquent toujours ensemble.
+```
+variables mentales : var11=7 · var12=7 · var13=7 · var14=7
+   Vesper    peut agir : ✅ OUI   états : NORMALTHY, Traqueur de Coups
+   ludwing   peut agir : ✅ OUI
+   Aël       peut agir : ✅ OUI   états : normal
+   Korrah    peut agir : ✅ OUI   états : normal
+   Avatar de Korrah : présent ✅ — sa frappe inflige 42 dégâts
+   erreurs JavaScript : 0
+```
+
+**L'Avatar Spirituel agit enfin.** C'est la première fois qu'il frappe dans ce projet.
+
+### Les coquilles trouvées dans les mêmes conditions
+
+| État | Défaut | Fait |
+|---|---|---|
+| **#23 « Distraite »** (Korrah) | lisait `value(11)` — la variable de **Vesper** | ✅ corrigé en `value(12)` |
+| **#63 « normal »** (Aël) | lisait `value(13)` — la variable de **ludwing** | ✅ corrigé en `value(14)` |
+| **#34 « Maître Serein »** et **#37 « Souffre-Douleur »** (ludwing) | **même** condition `>= 9` | ⚠️ **à toi de trancher** |
+
+**Le seul point qui reste ouvert, et il est pour toi.** Les bandes de ludwing sont :
+
+```
+#36 Insupportable    2-3
+#35 Agaçant          4-6
+#34 Maître Serein    9+
+#37 Souffre-Douleur  9+   ← même condition que #34
+```
+
+Rien ne couvre **7-8**, la bande « normale ». C'est pour ça que ludwing est le seul héros sans
+aucun état mental à 7. Deux lectures possibles, et je ne veux pas deviner une troisième fois :
+
+- soit **#37 Souffre-Douleur** était sa bande basse (`<= 1`) — le nom le suggère, et ses traits
+  (ATQ ×2, TGR ×3, esquive −30 %) décrivent un aimant à coups ;
+- soit il lui manque simplement un état « normal » pour 7-8, comme ses trois camarades.
+
+Dis-moi laquelle et c'est réglé en une ligne.
 
 ---
 
@@ -157,7 +193,7 @@ erreurs JavaScript   : 0
 
 ---
 
-## 🟠 4. UN CINQUIÈME HÉROS SANS NOM DANS LE GROUPE DE DÉPART
+## ✅ 4. LE CINQUIÈME HÉROS SANS NOM — RETIRÉ DU GROUPE
 
 ```
 #1 Vesper    (l'Équilibre) 470PV · 36 comp. · Lame Écarlate de Fer, Éclat de Masque
@@ -169,8 +205,14 @@ erreurs JavaScript   : 0
 
 `System.partyMembers` vaut `[1, 3, 4, 2, 5]`. L'acteur **5 a un nom vide et aucun équipement**.
 
-Je n'y touche pas : c'est peut-être une place réservée pour un personnage à venir. Mais tel quel, le
-joueur commence avec un cinquième membre anonyme et nu.
+Vérification faite, l'acteur 5 est **entièrement vide** : pas de nom, pas de visage, pas de sprite,
+pas de portrait de combat, aucune note, aucun équipement. Ce n'est pas un personnage oublié, c'est
+une case jamais remplie, entrée par erreur dans le groupe de départ.
+
+**Retiré de `System.partyMembers`** : `[1,3,4,2,5]` → `[1,3,4,2]`.
+
+**L'acteur 5 reste dans `Actors.json`** — rien n'est supprimé. Si tu veux en faire un personnage un
+jour, il t'attend ; il ne démarre simplement plus la partie avec toi.
 
 ---
 
@@ -213,8 +255,8 @@ le menu principal et s'ouvrent.
 
 - **Le scénario et les cartes.** J'ai démarré une partie et lancé des combats, mais je n'ai pas
   parcouru tes 66 cartes ni joué tes événements — il faudrait piloter le personnage.
-- **L'Avatar en action.** Bloqué par le bug n°2 : tant que Korrah est paralysée, son Avatar est
-  considéré absent. À retester une fois les variables mentales réglées.
+- **L'Avatar sur la durée.** Il frappe maintenant (42 dégâts vérifiés), mais je n'ai pas joué de
+  combat entier pour voir ses postures, ses interceptions et ses ordres dirigés en situation.
 - **Le son.** Coupé dans mon navigateur.
 - **Le rendu graphique.** Mon navigateur tourne sans carte graphique (PixiJS en mode Canvas). Ton
   jeu, lui, tourne en WebGL sur ta machine — l'affichage peut différer.
@@ -227,20 +269,24 @@ le menu principal et s'ouvrent.
 |---|---|
 | `js/plugins/DonsSpirituels.js` | la récursion qui figeait le démarrage — **corrigée** |
 | `js/plugins/MaitriseVoies.js` | les 7 déclarations manquantes — **ajoutées** |
+| **`js/plugins/EtatMental.js`** | **nouveau** — pose les variables mentales à 7, répare les saves |
+| `js/plugins.js` | `EtatMental` inséré dans les CORRECTIFS, avant SafetyNet |
+| `data/States.json` | 2 conditions qui lisaient la variable d'un autre héros — **corrigées** |
+| `data/System.json` | la case vide retirée du groupe de départ (l'acteur reste en base) |
 | `bancs/*.js` (5 fichiers) | `$gameActors` porte maintenant `_data`, comme le vrai MV |
 | `docs/A_TRIER.md` | tes 6 décisions « jette » enregistrées |
 
-**Aucune donnée du jeu (`data/*.json`) n'a été modifiée.** Les 9 bancs passent.
+Les 9 bancs passent, les 10 fichiers `data/*.json` restent valides.
 
 ---
 
-## 8. Ce qui t'attend, par ordre d'urgence
+## 8. Ce qui reste
 
-1. **Les variables mentales 11-14.** Korrah ne peut pas jouer. C'est le point bloquant, et il te
-   faut trancher entre les deux corrections proposées au §2.
-2. **Les trois coquilles de conditions** (#23, #63, #34/#37).
-3. **Le cinquième héros sans nom** — tu gardes, tu nommes, ou tu retires du groupe de départ ?
-4. **Retester l'Avatar** une fois Korrah libérée.
+**Une seule chose, et elle demande ton oreille :** les bandes mentales de ludwing (§2). Il est le
+seul héros sans état à 7, parce que #34 et #37 partagent la même condition et que rien ne couvre
+7-8.
+
+Tout le reste est fait et vérifié en jeu.
 
 ---
 
