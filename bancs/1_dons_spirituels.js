@@ -34,7 +34,9 @@ Actor.prototype.weapons = function () { return this.equips().filter(x => x && x.
 Actor.prototype.gainHp = function (n) { this.hp = Math.max(1, this.hp + n); };
 
 const ACTORS = {}; [1,2,3,4].forEach(i => ACTORS[i] = new Actor(i));
-global.$gameActors = { actor: i => ACTORS[i] };
+// Comme MV : actor() construit à la demande, _data contient les acteurs déjà créés.
+// DonsSpirituels lit _data pour ne JAMAIS déclencher de construction (récursion).
+global.$gameActors = { _data: ACTORS, actor: i => ACTORS[i] };
 global.$gameParty = { members: () => Object.values(ACTORS) };
 global.$gameMessage = { isBusy: () => true, add: () => {} };
 global.SceneManager = { _scene: {} };

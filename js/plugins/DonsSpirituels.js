@@ -318,8 +318,17 @@
         if (s[id].ombre !== undefined) { s[id].charge = s[id].ombre; delete s[id].ombre; }
         return s[id];
     }
+    // ⚠ NE JAMAIS appeler $gameActors.actor(id) ici.
+    //   actor() CONSTRUIT l'acteur s'il n'existe pas encore. Or on est appelé
+    //   depuis paramPlus(), que Game_Actor.refresh() déclenche pendant cette
+    //   construction même : actor() → new Game_Actor → refresh → paramPlus →
+    //   acteur() → actor() → … Récursion sans fin, sans aucune erreur à
+    //   l'écran : le jeu se fige au démarrage sur un écran noir.
+    //   On lit donc la table directement, sans jamais rien créer.
     function acteur(id) {
-        try { return $gameActors ? $gameActors.actor(id) : null; } catch (e) { return null; }
+        try {
+            return ($gameActors && $gameActors._data) ? ($gameActors._data[id] || null) : null;
+        } catch (e) { return null; }
     }
 
     // ── La PIÈCE du Don, où qu'elle soit équipée (arme, accessoire ou âme) ──
@@ -535,8 +544,11 @@
     };
     // 2) les statistiques que la pièce du Don accorde
     var _paramPlus = Game_Actor.prototype.paramPlus;
+    var _dansParamPlus = false;                 // garde-fou anti-réentrance
     Game_Actor.prototype.paramPlus = function (paramId) {
         var v = _paramPlus.call(this, paramId);
+        if (_dansParamPlus) return v;           // on ne se rappelle jamais soi-même
+        _dansParamPlus = true;
         try {
             var id = porteurDe(this);
             if (id && estCasse(id)) {
@@ -544,6 +556,7 @@
                 if (p && p.params) v -= Math.floor(p.params[paramId] * (1 - MALUS));
             }
         } catch (e) { }
+        finally { _dansParamPlus = false; }
         return v;
     };
 

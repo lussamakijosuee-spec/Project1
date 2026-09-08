@@ -306,6 +306,23 @@
     var FLASH_MULT   = N('flashMult', 2.50);          // × dégâts sur Éclat Noir
     var SANG_STEAL   = N('sangSteal', 45) / 100;      // % des dégâts volés en PV
 
+    // ── LES PRIX DES VOIES ──────────────────────────────────────────────────
+    //  Ces sept lignes MANQUAIENT. Les paramètres étaient déclarés en tête de
+    //  plugin et employés plus bas, mais aucun n'était lu : chaque usage levait
+    //  « … is not defined » en plein calcul de dégâts. Le filet de sécurité
+    //  rattrapait l'erreur, donc rien ne s'affichait à l'écran — mais TOUT le
+    //  système « chaque Voie a un prix » était mort, et avec lui le drain de la
+    //  Voie du Sang, qui remplit la jauge du Masque de Vesper.
+    //  Pourcentages ÷100 (comme sangSteal) ; Errance et Corruption à plat
+    //  (comme videCorruption et domaineCorruption).
+    var FORGE_RECUL  = N('forgeRecul', 5)       / 100; // élan brûlé, % des dégâts
+    var ONDE_EXPO    = N('ondeExpo', 20)        / 100; // exposition, % de dégâts subis en plus
+    var MIR_RETOUR   = N('miroirRetour', 20)    / 100; // éclats, % des dégâts renvoyés
+    var ECL_RECUL    = N('eclairRecul', 8)      / 100; // brûlure, % des dégâts
+    var FLASH_CC     = N('flashContrecoup', 10) / 100; // contrecoup, % des PV max
+    var SRC_ERR      = N('sourceErrance', 1);          // prix en Errance (à plat)
+    var SANG_CORR    = N('sangCorruption', 2);         // le sang appelle le sang (à plat)
+
     // 5 voies canoniques + 4 voies anime.
     var VOIES = ['forge', 'onde', 'source', 'miroir', 'vide',
                  'eclair', 'domaine', 'flash', 'sang'];

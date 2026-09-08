@@ -31,7 +31,9 @@ Enemy.prototype.gainHp=function(v){this.hp=Math.max(0,this.hp+v);};
 
 const korrah=new Actor(2);
 const ennemis=[new Enemy('Gobelin',400),new Enemy('Spectre',250),new Enemy('Golem',900)];
-global.$gameActors={actor:i=>i===2?korrah:null};
+// Comme MV : actor() construit à la demande, _data contient les acteurs déjà créés.
+// DonsSpirituels lit _data pour ne JAMAIS déclencher de construction (récursion).
+global.$gameActors={_data:{2:korrah}, actor:i=>i===2?korrah:null};
 global.$gameTroop={members:()=>ennemis,aliveMembers:()=>ennemis.filter(e=>e.isAlive())};
 global.$gameMessage={isBusy:()=>true,add:()=>{}};
 

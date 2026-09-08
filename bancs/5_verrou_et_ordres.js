@@ -65,7 +65,9 @@ Actor.prototype.optimizeEquipments = function () {
 };
 
 const ACTORS = {}; [1, 2, 3, 4].forEach(i => ACTORS[i] = new Actor(i));
-global.$gameActors = { actor: i => ACTORS[i] };
+// Comme MV : actor() construit à la demande, _data contient les acteurs déjà créés.
+// DonsSpirituels lit _data pour ne JAMAIS déclencher de construction (récursion).
+global.$gameActors = { _data: ACTORS, actor: i => ACTORS[i] };
 global.$gameParty = { members: () => Object.values(ACTORS), gainItem: () => {}, numItems: () => 0 };
 global.SceneManager = { _scene: {} };
 

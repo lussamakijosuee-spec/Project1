@@ -23,7 +23,9 @@ Actor.prototype.changeEquip=function(slot,item){
   if(item){sac[key(item)]=(sac[key(item)]||0)-1;}
 };
 const ACTORS={};[1,2,3,4].forEach(i=>ACTORS[i]=new Actor(i));
-global.$gameActors={actor:i=>ACTORS[i]};
+// Comme MV : actor() construit à la demande, _data contient les acteurs déjà créés.
+// DonsSpirituels lit _data pour ne JAMAIS déclencher de construction (récursion).
+global.$gameActors={_data:ACTORS, actor:i=>ACTORS[i]};
 global.$gameParty={members:()=>Object.values(ACTORS),
   gainItem:(it,n)=>{sac[key(it)]=(sac[key(it)]||0)+n;},
   loseItem:(it,n)=>{sac[key(it)]=(sac[key(it)]||0)-n;},

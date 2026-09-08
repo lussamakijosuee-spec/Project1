@@ -9,7 +9,7 @@
 > l'apprend, si un ennemi l'emploie, si un combat est posé sur une carte, ou si le Tableau de
 > Chasse l'ouvre. Le reste dort.
 
-**33 décisions à prendre, pour 527 éléments.**
+**33 décisions à prendre, pour 527 éléments.**  —  *3 réglées le 2026-09-08 : voir « jette » ci-dessous.*
 
 ---
 
@@ -61,7 +61,7 @@
 - **À quoi ça servait :** une technique signature par Voie de combat
 - **Ce qui pointe dessus aujourd'hui :** AUCUNE classe n'ouvre le type 19
 - **Exemples :** Aura Recueillie
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Les invocations  —  1
 
@@ -69,7 +69,7 @@
 - **À quoi ça servait :** ludwing qui rappelle les âmes qu'il a prises
 - **Ce qui pointe dessus aujourd'hui :** AUCUNE classe n'ouvre le type 8
 - **Exemples :** Déchaînement Copié
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Les Transformations  —  3
 
@@ -77,7 +77,7 @@
 - **À quoi ça servait :** une montée en puissance en trois temps
 - **Ce qui pointe dessus aujourd'hui :** rien ne les donne
 - **Exemples :** Transformation · Transformation — Second Stade · Transformation — Stade Final
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Le sang et l'ombre restants  —  6
 
@@ -109,21 +109,21 @@
 - **Ce que c'est :** combats montés mais posés sur aucune carte
 - **Ce qui pointe dessus aujourd'hui :** rien : ni carte, ni Tableau de Chasse
 - **Exemples :** Archange Déchu · Archange Déchu
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Troupes « JADE prime »  —  2
 
 - **Ce que c'est :** combats montés mais posés sur aucune carte
 - **Ce qui pointe dessus aujourd'hui :** rien : ni carte, ni Tableau de Chasse
 - **Exemples :** JADE prime  · JADE prime 
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Troupes « dragon abuse »  —  2
 
 - **Ce que c'est :** combats montés mais posés sur aucune carte
 - **Ce qui pointe dessus aujourd'hui :** rien : ni carte, ni Tableau de Chasse
 - **Exemples :** dragon abuse  · dragon abuse 
-- **Tu gardes ?** `                    `
+- **Tu gardes ?** `jette               `
 
 ### Troupes « Muta »  —  2
 
