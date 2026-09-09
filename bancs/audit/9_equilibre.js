@@ -56,6 +56,27 @@ const CIBLE = {};
 ['D', 'C', 'B', 'A', 'S'].forEach(r => { if (RANGS[r]) CIBLE[r] = profil(RANGS[r]); });
 if (BOSS.length) CIBLE.BOSS = profil(BOSS);
 
+// ── LA DIFFICULTÉ — SoulsDifficulty.js multiplie tout, et il est ACTIF ─────
+//  Mesurer à « Normal » quand le jeu démarre à « elden » (PV ennemis ×2,2,
+//  attaque ×1,6, dégâts subis ×1,6) donne des chiffres qui ne sont ceux de
+//  personne. On lit donc les paliers et le palier par défaut dans les vraies
+//  sources, pour que le banc reste d'accord avec le plugin si JOKO le règle.
+const J = require('path').join(__dirname, '../../js/');
+function lireTiers() {
+    const src = fs.readFileSync(J + 'plugins/SoulsDifficulty.js', 'utf8');
+    const m = src.match(/var\s+TIERS\s*=\s*(\{[\s\S]*?\n\s*\});/);
+    return m ? eval('(' + m[1] + ')') : { normal: { name: 'Normal', hp: 1, atk: 1, dmg: 1, heal: 1 } };
+}
+function lireDefaut() {
+    // js/plugins.js déclare « var $plugins = [...] ». On l'évalue tel quel,
+    // comme le fait le moteur, et on relit la globale.
+    eval(fs.readFileSync(J + 'plugins.js', 'utf8'));
+    const liste = (typeof $plugins !== 'undefined') ? $plugins : global.$plugins || [];
+    const p = liste.find(x => x.name === 'SoulsDifficulty');
+    return { actif: !!(p && p.status), tier: p ? String(p.parameters['defaultTier'] || 'elden') : null };
+}
+const TIERS = lireTiers(), DEF = lireDefaut();
+
 // ── Un héros à un niveau donné, avec sa vraie courbe de classe ─────────────
 const NOMS = { 1: 'Vesper', 2: 'Korrah', 3: 'ludwing', 4: 'Aël' };
 function heros(actorId, lv) {
@@ -111,12 +132,26 @@ Object.keys(CIBLE).forEach(r => {
         + String(c.def).padStart(8) + String(c.mat).padStart(8) + String(c.mdf).padStart(8));
 });
 
-console.log('\n=== LE COMBAT, À CHAQUE PALIER ===');
+console.log('\n=== LA DIFFICULTÉ (SoulsDifficulty.js) ===');
+console.log('  plugin ' + (DEF.actif ? 'ACTIF' : 'inactif') + ' · palier de départ : « ' + DEF.tier + ' »');
+Object.keys(TIERS).forEach(k => {
+    const t = TIERS[k];
+    console.log('  ' + (k === DEF.tier ? '★ ' : '  ') + t.name.padEnd(11)
+        + 'PV ennemis ×' + t.hp + '   attaque ×' + t.atk + '   dégâts subis ×' + t.dmg + '   soin ×' + t.heal);
+});
+
+function mesurer(tier) {
+const T = TIERS[tier] || { hp: 1, atk: 1, dmg: 1 };
+console.log('\n=== LE COMBAT, À CHAQUE PALIER — difficulté « ' + (TIERS[tier] ? TIERS[tier].name : tier) + ' » ===');
 console.log('  niv  rang     PV   ATQ   nb  dégâts méd.     TTK      TTD');
 const releve = [];
 PALIERS.forEach(([lv, rang]) => {
-    const c = CIBLE[rang];
-    if (!c) return;
+    const c0 = CIBLE[rang];
+    if (!c0) return;
+    // SoulsDifficulty passe par Game_Enemy.paramBase : PV ×hp, ATQ et MAT ×atk
+    const c = Object.assign({}, c0, { hp: Math.round(c0.hp * T.hp),
+        atk: Math.min(CAP_PARAM, Math.round(c0.atk * T.atk)),
+        mat: Math.min(CAP_PARAM, Math.round(c0.mat * T.atk)) });
     const b = Object.assign({}, c, { level: lv });
     poserLeGroupe(lv);
     const degats = [];
@@ -136,8 +171,9 @@ PALIERS.forEach(([lv, rang]) => {
     const dm = med(degats);
     // TTK : les QUATRE héros frappent dans le même tour
     const ttk = dm > 0 ? c.hp / (4 * dm) : 999;
-    // TTD : l'attaque de base du moteur, a.atk * 4 - b.def * 2
-    const recu = Math.max(1, Math.floor(c.atk * 4 - def * 2));
+    // TTD : l'attaque de base du moteur, a.atk * 4 - b.def * 2,
+    //       puis le multiplicateur de dégâts subis du palier de difficulté
+    const recu = Math.max(1, Math.round(Math.max(1, Math.floor(c.atk * 4 - def * 2)) * T.dmg));
     const ttd = pv / recu;
     releve.push({ lv, rang, pv, dm, ttk, ttd, n: degats.length });
 });
@@ -150,7 +186,7 @@ releve.forEach(r => {
         + f(r.ttk).padStart(8) + f(r.ttd).padStart(9));
 });
 
-console.log('\n=== VERDICT — cible « dur mais juste » ===');
+console.log('\n--- verdict — cible « dur mais juste » ---');
 console.log('  TTK ' + CIBLE_TTK[0] + '-' + CIBLE_TTK[1] + ' tours de groupe (boss '
     + CIBLE_TTK_BOSS[0] + '-' + CIBLE_TTK_BOSS[1] + ')   ·   TTD ' + CIBLE_TTD[0] + '-' + CIBLE_TTD[1] + ' tours');
 releve.forEach(r => {
@@ -162,6 +198,9 @@ releve.forEach(r => {
         + (kOK ? '✔' : '·') + ' TTK ' + dit(r.ttk, kOK, lo, hi).padEnd(14)
         + (dOK ? '✔' : '·') + ' TTD ' + dit(r.ttd, dOK, CIBLE_TTD[0], CIBLE_TTD[1]));
 });
+return releve;
+}
+Object.keys(TIERS).forEach(mesurer);
 
 // ── LES CONTRÔLES DURS ─────────────────────────────────────────────────────
 //  Un banc doit attraper le vrai coupable ET innocenter les faux. Ici on ne
