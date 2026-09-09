@@ -452,15 +452,46 @@
     // INITIALISATION — « tout le monde normal » au lancement
     //=========================================================================
 
-    var _DataManager_setupNewGame = DataManager.setupNewGame;
-    DataManager.setupNewGame = function () {
-        _DataManager_setupNewGame.call(this);
+    /**
+     * YEP_AutoPassiveStates met les états passifs EN CACHE (_passiveStatesRaw),
+     * calculé une fois et vidé uniquement par refresh(). Les acteurs sont créés
+     * AVANT que les jauges soient posées ci-dessous : sans ce rafraîchissement,
+     * ils gardent les états calculés quand les jauges valaient encore 0, donc en
+     * phase 1 (EFFONDREMENT). Korrah héritait ainsi de « Méditation Profonde »
+     * (restriction 4) et NE POUVAIT AGIR DANS AUCUN COMBAT, alors même que sa
+     * variable valait bien 7. Deux lignes, et tout le système mental repart.
+     */
+    function rafraichirAmes() {
+        try {
+            if ($gameActors && $gameActors._data) {
+                $gameActors._data.forEach(function (a) { if (a && a.refresh) a.refresh(); });
+            }
+        } catch (e) { }
+    }
+
+    function poserJaugesParDefaut() {
         Object.keys(VAR_BY_ACTOR).forEach(function (actorId) {
             var v = VAR_BY_ACTOR[actorId];
+            // 0 = jamais initialisée (l'échelle va de GAUGE_MIN à GAUGE_MAX)
             if (v && $gameVariables.value(v) === 0) {
                 $gameVariables.setValue(v, GAUGE_DEF);
             }
         });
+        rafraichirAmes();
+    }
+
+    var _DataManager_setupNewGame = DataManager.setupNewGame;
+    DataManager.setupNewGame = function () {
+        _DataManager_setupNewGame.call(this);
+        poserJaugesParDefaut();
+    };
+
+    // Une sauvegarde faite avant cette correction porte des états passifs figés
+    // sur une jauge à 0 : on les recalcule au chargement.
+    var _DataManager_extractSaveContents = DataManager.extractSaveContents;
+    DataManager.extractSaveContents = function (contents) {
+        _DataManager_extractSaveContents.call(this, contents);
+        try { poserJaugesParDefaut(); } catch (e) { }
     };
 
     //=========================================================================

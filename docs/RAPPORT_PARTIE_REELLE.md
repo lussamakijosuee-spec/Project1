@@ -73,7 +73,12 @@ Korrah       peut agir : ❌ NON   (restriction 4)
 **Korrah est paralysée dès la nouvelle partie.** Le personnage qui porte l'Avatar Spirituel —
 ton système le plus original — ne peut pas jouer un seul tour.
 
-### La cause : les variables mentales démarrent à 0
+### La cause : un cache d'états passifs jamais vidé
+
+> **Correction d'un diagnostic que j'avais donné faux.** J'ai d'abord écrit que les variables
+> mentales démarraient à 0. **C'est inexact.** Vérifié en désactivant ma correction : elles valent
+> déjà `[7, 7, 7, 7]` au lancement — `JadeEntitePlunging` les pose lui-même. Le problème était
+> ailleurs.
 
 L'état #25 s'applique sur cette condition, que tu as écrite :
 
@@ -81,35 +86,45 @@ L'état #25 s'applique sur cette condition, que tu as écrite :
 condition = $gameVariables.value(12) <= 2;   // variable 12 = « concentration » de Korrah
 ```
 
-C'est juste. Mais **au démarrage d'une partie, toutes les variables valent 0**, et `0 <= 2` est
-vrai. L'état s'installe et ne part jamais.
+Elle est juste, et la variable vaut bien 7. Le vrai coupable est **`YEP_AutoPassiveStates`**, qui
+met les états passifs **en cache** (`_passiveStatesRaw`) — calculé une seule fois, et vidé
+uniquement par `refresh()`.
+
+L'enchaînement :
+
+```
+1. les acteurs sont créés          → jauges encore à 0 → phase 1 (EFFONDREMENT)
+2. YEP calcule les états passifs   → #25 Méditation Profonde, mis en CACHE
+3. JadeEntitePlunging pose 7       → mais personne ne vide le cache
+4. la partie démarre               → Korrah traîne un état calculé sur une valeur périmée
+```
+
+Deux lignes séparaient ton jeu de son système mental complet.
 
 ### Ce n'est pas isolé — les quatre héros sont touchés
 
-| Héros | variable | état déclenché à 0 | conséquence |
-|---|---|---|---|
-| **Korrah** | 12 · concentration | **#25 Méditation Profonde** | ⛔ **ne peut pas agir** |
-| **Vesper** | 11 · maîtrise de soi | **#28 Folie Destructrice** | subie dès le départ |
-| **ludwing** | 13 · LOU | *aucun* (ses conditions demandent ≥ 2) | il n'a **aucun** état mental |
-| **Aël** | 14 · tianaa | *aucun* (#43 exige `<=1 && >0`) | idem |
+| Héros | état figé sur la valeur périmée | conséquence |
+|---|---|---|
+| **Korrah** | **#25 Méditation Profonde** | ⛔ **ne peut pas agir** |
+| **Vesper** | **#28 Folie Destructrice** | subie dès le départ |
+| **ludwing** | *aucun* | il n'a **aucun** état mental |
+| **Aël** | *aucun* | idem |
 
-Résultat : le système mental complet est incohérent au lancement. Deux héros ont un état extrême,
-deux n'en ont aucun.
+Tout le système est resté bloqué en **phase 1 · EFFONDREMENT**, alors que les jauges disaient
+**phase 4 · STABLE**.
 
-### La correction appliquée
+### La correction appliquée — dans le plugin qui possède déjà ces variables
 
-Nouveau plugin **`EtatMental.js`** (dans les CORRECTIFS, juste avant SafetyNet). Il pose les
-variables 11 à 14 à **7** au démarrage — la valeur qui place chacun dans sa bande « normale ».
-`Neyssa_Concentration.js` le dit lui-même : *« Valeur entière de 1 à 10 »*. Zéro était hors échelle.
+**Aucun plugin ajouté.** J'en avais d'abord écrit un (`EtatMental.js`) pour initialiser les
+variables — puis j'ai vérifié, et il était **redondant** : `JadeEntitePlunging` les pose déjà. Je
+l'ai retiré. Ton projet n'a pas besoin d'une couche de plus.
 
-Il répare aussi les **sauvegardes existantes** : au chargement, une variable restée hors de 1-10
-est remise à 7. Les parties déjà en cours sont donc débloquées elles aussi.
+La correction tient en deux lignes, ajoutées dans **`JadeEntitePlunging.js`**, juste après qu'il
+pose les jauges : **rafraîchir les acteurs**, ce qui vide le cache de YEP et recalcule les états
+sur la bonne valeur.
 
-> **Un second piège, trouvé en testant la correction.** Poser les variables n'a d'abord rien changé :
-> Korrah restait paralysée. `YEP_AutoPassiveStates` met les états passifs **en cache**
-> (`_passiveStatesRaw`), calculé une seule fois et vidé uniquement par `refresh()`. Or les acteurs
-> sont créés *avant* que les variables soient posées : ils gardaient les états calculés à 0. Le
-> plugin rafraîchit donc les acteurs après avoir posé les valeurs.
+Le même rafraîchissement s'applique **au chargement d'une sauvegarde** : une partie enregistrée
+avant cette correction porte des états figés sur une jauge à 0. Elle repart droite.
 
 **Vérifié en lançant le jeu :**
 
@@ -269,8 +284,7 @@ le menu principal et s'ouvrent.
 |---|---|
 | `js/plugins/DonsSpirituels.js` | la récursion qui figeait le démarrage — **corrigée** |
 | `js/plugins/MaitriseVoies.js` | les 7 déclarations manquantes — **ajoutées** |
-| **`js/plugins/EtatMental.js`** | **nouveau** — pose les variables mentales à 7, répare les saves |
-| `js/plugins.js` | `EtatMental` inséré dans les CORRECTIFS, avant SafetyNet |
+| **`js/plugins/JadeEntitePlunging.js`** | le cache d'états passifs est vidé après la pose des jauges — **au démarrage et au chargement d'une save** |
 | `data/States.json` | 2 conditions qui lisaient la variable d'un autre héros — **corrigées** |
 | `data/System.json` | la case vide retirée du groupe de départ (l'acteur reste en base) |
 | `bancs/*.js` (5 fichiers) | `$gameActors` porte maintenant `_data`, comme le vrai MV |
