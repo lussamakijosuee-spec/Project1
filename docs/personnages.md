@@ -5,6 +5,22 @@
 > ajuster. Les **rôles de combat** des anciens héros sont **conservés** ; seules
 > l'identité et l'appartenance au monde changent.
 
+> ⚠️ **CE FICHIER A PRIS DU RETARD SUR LE CANON. À ne pas suivre en l'état.**
+> Trois écarts connus, non corrigés ici parce que JOKO n'a pas encore redicté ce
+> casting :
+> 1. **Vesper** n'est pas une Mage des Étoiles. Elle est **chasseuse de monstres de
+>    l'Empire du Corps**, et la **sœur jumelle de Ludwig** ; son masque est son
+>    **Ancre**. *(→ `docs/EMPIRE_DU_CORPS.md`)*
+> 2. **« Sieran »** n'existe pas dans le jeu — l'acteur 3 s'appelle **ludwing**, et
+>    il est lui aussi chasseur de monstres. Ses Ancres sont **des gens** : sa sœur
+>    Vesper, son meilleur pote **Lior**.
+> 3. **Il n'y a pas de protagoniste unique.** *« Ils sont tous des protagonistes et
+>    personne n'est le vrai protagoniste »* — JOKO. Aël n'est donc pas « le
+>    protagoniste » comme écrit plus bas.
+>
+> Le fichier est **conservé tel quel** : rien ne se supprime, et il reste la seule
+> trace écrite de plusieurs personnages secondaires.
+
 ---
 
 ## ⚖️ Le parti — un héros par source + l'équilibre

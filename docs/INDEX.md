@@ -39,7 +39,8 @@
 | Fichier | Contenu |
 |---|---|
 | [`lore.md`](lore.md) | le lore du monde |
-| [`personnages.md`](personnages.md) | les personnages |
+| [`EMPIRE_DU_CORPS.md`](EMPIRE_DU_CORPS.md) | **canon de l'Empire du Corps** — l'Arbre de sang, la faim, les quatre stades, l'Ancre, les chasseurs, Éthon, Kevératus. Fait foi sur `lore.md` et le codex |
+| [`personnages.md`](personnages.md) | les personnages — ⚠️ en retard sur le canon, voir son bandeau |
 | [`scenario.md`](scenario.md) | le scénario |
 | [`bestiaire.md`](bestiaire.md) | le bestiaire |
 | [`PLUGINS_LORE.md`](PLUGINS_LORE.md) | le rôle « lore » de chaque plugin |

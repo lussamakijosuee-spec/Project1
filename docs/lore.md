@@ -89,10 +89,18 @@ vénérèrent comme un dieu.
 - **Les 5 Voies** : **Forge** (puissance brute), **Onde** (épouser/retourner),
   **Source** (réparer les chairs), **Miroir** (renvoyer), **Vide** (l'interne —
   l'aura disparaît, c'est le plus mauvais signe). + Maîtrises **interdites**.
+- **La Voie du Sang** — la plus utilisée, surtout des chasseurs de monstres : faire
+  saigner l'adversaire pour lui absorber son mana sombre et réparer sa chair, au
+  prix d'avoir de plus en plus faim. *(Sixième Voie ou Maîtrise interdite : à
+  trancher — voir `EMPIRE_DU_CORPS.md`.)*
 - **Progresse par le combat** (leçon volée). **Le visage du sang** : peau sombre,
   crocs, tatouages rampants, sourire trop fixe — la route de la Bête, lisible.
 - **Maîtriser la Mue** = devenir une *forme de vie ultime* → prétendre au titre
-  de **Divinité du Corps**. *(Voir Kevératus.)*
+  de **Divinité du Corps**. **Une seule personne y est parvenue : Éthon Ferus.**
+  *(Kevératus, lui, a succombé — voir `EMPIRE_DU_CORPS.md`.)*
+- 🩸 **Tout ce qui touche à l'Empire du Corps — l'Arbre de sang, la faim, les
+  quatre stades, l'Ancre, les chasseurs, Éthon, Kevératus — a son canon propre :
+  `docs/EMPIRE_DU_CORPS.md`. En cas de désaccord, c'est lui qui fait foi.**
 ### Le Symbole *(Âme)* — 4 opérations + 1 interdite :
 1. **Matérialisation** (sentiment + désir + croyance ; natures d'âme).
 2. **Résonance** (accorder deux âmes).
@@ -121,7 +129,7 @@ jusqu'au Fond). Centre = **Mana Semi-Parfait** (état Surpassé).
 | **C** | l'Adepte | une source tenue en main |
 | **B** | le Maître | un art complet |
 | **A** | le Champion | renverse une bataille seul |
-| **S** | la Légende | le sommet mortel — Donovano, Kevératus, Sève |
+| **S** | la Légende | le sommet mortel — Donovano, **Éthon**, Sève *(Kevératus l'était, avant sa chute)* |
 | — | **l'Astre** | hors échelle : Mana Pur, le Premier, la Reine. « Fuyez. » |
 
 ---
@@ -131,7 +139,7 @@ jusqu'au Fond). Centre = **Mana Semi-Parfait** (état Surpassé).
 | Royaume | Voie | Champion | Gloire / Faute |
 |---------|------|----------|----------------|
 | **Ordre d'Or** *(Aurelune, bleu & or)* | l'équilibre, la foi du dieu absent | **Donovano « le Second »** | a donné le mana à l'humanité / le **génocide** des races |
-| **Empire Vultric** *(Kragenvar, rouge-noir-or, lion)* | le Corps, la force & la fraternité | **l'Empereur Kevératus** | a brisé les chaînes de l'Ordre / résout tout par la guerre |
+| **L'Empire du Corps** — *l'Empire aux trois têtes* *(dit aussi **Empire Vultric** ; Kragenvar, rouge-noir-or, lion)* | le Corps, la chasse & la faim | **l'Empereur Éthon Ferus** | il nourrit son peuple / il nourrit l'Arbre de la douleur d'autrui |
 | **Mages des Étoiles** *(Stellaria, bleu glace)* | l'Esprit, le savoir | **Jade, la Sorcière de l'Avidité** | garde le savoir du monde / **a vu ce qu'il ne fallait pas voir** |
 | **Empire Uni de l'Est** *(Eshkar)* | l'Âme, les clans, les morts | **Sève, la Liseuse des Sangs** | a sauvé les races anciennes / la vengeance, les arts interdits |
 
@@ -140,10 +148,16 @@ jusqu'au Fond). Centre = **Mana Semi-Parfait** (état Surpassé).
   doigt du Mana Semi-Parfait. Don : les **Yeux Absolus** (accès direct aux
   sources, amorçage Semi-Parfait quelques minutes). Familier d'âme : **Emy**.
   *(Inspi : Reinhard, Re:Zero.)*
-- **Kevératus Vultric** — le plus grand manieur de mana sombre. A **maîtrisé la
-  Mue** : transformation à volonté, esprit intact, corps qui se remodèle et
-  survit à tout — la *forme de vie ultime*. Candidat unique à la **Divinité du
-  Corps**. *(Inspi : Kars, JoJo.)*
+- **Éthon Ferus** — empereur, le plus grand manieur de mana sombre. Libéraliste qui
+  a **mangé le fruit de l'Arbre de sang** : sa faim a disparu, et avec elle toute
+  sensation — tout perd goût et valeur. A **maîtrisé la Mue** : transformation à
+  volonté, esprit intact, corps qui se remodèle et survit à tout — la *forme de vie
+  ultime*. Seul à y être parvenu. *(Inspi : Kars, JoJo.)*
+- **Kevératus Vultric** — l'ancien chef des chasseurs, le plus fort d'entre eux. Sa
+  soif de sang a dépassé tout équipement : il s'est mué **sans prévenir**. 23 jours
+  pour le contenir. Officiellement mort ; en vérité scellé sous terre depuis 30 ans,
+  **pompe vivante** qui nourrit l'Arbre. On le croit immortel — c'est son **trait
+  d'adaptation**. *(Voir `EMPIRE_DU_CORPS.md`.)*
 - **Jade, la Sorcière de l'Avidité** — la plus profonde des lucides. Avide de
   **savoir** avant la pitié, avant les vies. **Ne ment jamais** — ne dit jamais
   tout. Une part d'elle est restée au fond du Lac. Porte le **Livre pâle**
