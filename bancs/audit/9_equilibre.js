@@ -98,7 +98,10 @@ function evalue(f, a, b) {
 // ── LA MESURE ──────────────────────────────────────────────────────────────
 //  niveau ↔ rang : les chiffres de JOKO (ChasseAuxPrimes, niveauxConseilles)
 const PALIERS = [[1, 'D'], [12, 'C'], [28, 'B'], [45, 'A'], [60, 'S'], [85, 'BOSS'], [99, 'BOSS']];
-const CIBLE_TTK = [2, 3], CIBLE_TTK_BOSS = [12, 18], CIBLE_TTD = [5, 6];
+// La cible, telle que JOKO l'a arrêtée : « dur mais juste », et il a ajouté
+// « faut pas que le jeu soit trop dur ». D'où un TTD de 6 à 9 tours plutôt
+// que 5-6, et des boss à 9-14 tours plutôt que 12-18.
+const CIBLE_TTK = [2, 3], CIBLE_TTK_BOSS = [9, 14], CIBLE_TTD = [6, 9];
 
 console.log('\n=== LE BESTIAIRE — la référence fixe (règle 4 : on n\'y touche pas) ===');
 console.log('  rang         PV     ATQ     DÉF     MAT     MDF');
