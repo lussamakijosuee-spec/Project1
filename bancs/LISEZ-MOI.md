@@ -1,6 +1,6 @@
 # 🧪 Les bancs d'essai
 
-Neuf scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
+Dix scripts qui vérifient le système **sans lancer le jeu**. Ils lisent les vrais fichiers de
 `data/` et rejouent le vrai code de `js/plugins/` sur un moteur RPG Maker MV simulé.
 
 ## Comment on les lance
@@ -32,6 +32,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/6_bestiaire.js` | les 400+ ennemis et les 41 boss |
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
+| `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
 
 ## Pourquoi ils existent
 
