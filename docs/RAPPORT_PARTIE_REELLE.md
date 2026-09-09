@@ -146,25 +146,39 @@ variables mentales : var11=7 · var12=7 · var13=7 · var14=7
 |---|---|---|
 | **#23 « Distraite »** (Korrah) | lisait `value(11)` — la variable de **Vesper** | ✅ corrigé en `value(12)` |
 | **#63 « normal »** (Aël) | lisait `value(13)` — la variable de **ludwing** | ✅ corrigé en `value(14)` |
-| **#34 « Maître Serein »** et **#37 « Souffre-Douleur »** (ludwing) | **même** condition `>= 9` | ⚠️ **à toi de trancher** |
+| **#37 « Souffre-Douleur »** (ludwing) | condition `>= 9`, en doublon de #34 | ✅ descendu à sa bande basse |
+| **#64 « normal »** (ludwing) | lisait `value(14)` — la variable d'**Aël**, et n'était branché à personne | ✅ corrigé en `value(13)` et donné à ludwing |
 
-**Le seul point qui reste ouvert, et il est pour toi.** Les bandes de ludwing sont :
+### L'échelle de ludwing était incomplète — elle est recollée
+
+Chaque héros a **cinq bandes** : basse · 2-3 · 4-6 · 6-8 normale · 9+. ludwing en avait deux
+manquantes, et `#37` occupait la mauvaise.
+
+Ses traits ne laissaient aucun doute : **cible ×3 · esquive −30 % · ATQ ×2** — un aimant à coups qui
+frappe fort et ne peut plus esquiver. C'est un effondrement, pas une maîtrise. Descendu à `<= 1`
+(le motif d'Aël, sans recouvrement avec son #36 à 2).
+
+Et **rien n'a été inventé** pour la bande normale : l'état **#64 « normal »** existait déjà, sans
+traits, exactement comme #61, #62 et #63. Tu en avais fait **quatre — un par héros** — et seuls
+trois avaient été branchés. Le quatrième portait la variable d'Aël au lieu de celle de ludwing.
+Corrigé, et ajouté à ses états passifs.
+
+**Vérifié en balayant toute l'échelle de 1 à 10, dans le jeu :**
 
 ```
-#36 Insupportable    2-3
-#35 Agaçant          4-6
-#34 Maître Serein    9+
-#37 Souffre-Douleur  9+   ← même condition que #34
+Vesper    1 Folie Destructrice · 2-3 Agressivité · 4-6 Tension · 6-8 NORMALTHY · 9-10 Sérénité
+Korrah    1-2 Méditation ⛔    · 2-3 Maladresse · 4-6 Distraite · 6-8 normal  · 9-10 Éveil du Génie
+ludwing   1 Souffre-Douleur    · 2-3 Insupportable · 4-5 Agaçant · 6-8 normal · 9-10 Maître Serein
+Aël       1 Blocage            · 2-3 Complexe   · 4-5 Hésitation · 6-8 normal · 9-10 Confiance
+                                                                        0 erreur JavaScript
 ```
 
-Rien ne couvre **7-8**, la bande « normale ». C'est pour ça que ludwing est le seul héros sans
-aucun état mental à 7. Deux lectures possibles, et je ne veux pas deviner une troisième fois :
+ludwing a désormais **l'échelle la plus propre des quatre**.
 
-- soit **#37 Souffre-Douleur** était sa bande basse (`<= 1`) — le nom le suggère, et ses traits
-  (ATQ ×2, TGR ×3, esquive −30 %) décrivent un aimant à coups ;
-- soit il lui manque simplement un état « normal » pour 7-8, comme ses trois camarades.
-
-Dis-moi laquelle et c'est réglé en une ligne.
+> **Un détail que je signale sans y toucher :** Vesper et Korrah ont de légers recouvrements aux
+> bornes — à 2 et à 6, deux états s'appliquent en même temps (`<= 2` et `>= 2`, `<= 6` et `>= 6`).
+> ludwing et Aël, eux, sont nets. Ça ne casse rien, les deux états se cumulent simplement. Si tu
+> veux resserrer, c'est deux conditions à ajuster.
 
 ---
 
@@ -296,11 +310,14 @@ Les 9 bancs passent, les 10 fichiers `data/*.json` restent valides.
 
 ## 8. Ce qui reste
 
-**Une seule chose, et elle demande ton oreille :** les bandes mentales de ludwing (§2). Il est le
-seul héros sans état à 7, parce que #34 et #37 partagent la même condition et que rien ne couvre
-7-8.
+**Rien de bloquant.** Tout est fait et vérifié en lançant le jeu.
 
-Tout le reste est fait et vérifié en jeu.
+Deux points signalés, sans urgence et sans que j'y touche :
+
+1. les **recouvrements de bornes** chez Vesper et Korrah (§2) — deux états qui se cumulent à 2 et
+   à 6. Cosmétique.
+2. le **cinquième acteur** reste dans `Actors.json`, vide, retiré du groupe de départ. Il attend
+   qu'on en fasse quelqu'un — ou pas.
 
 ---
 
