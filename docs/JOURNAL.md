@@ -74,20 +74,40 @@ jauges, les consommables, et **26 systèmes à coder avec leur graphe de dépend
 - **Le titre n'a pas été changé** dans `package.json` / `index.html` : ce sont des noms qui
   apparaissent à l'écran, donc une décision de JOKO (`CLAUDE.md` §2).
 
+### Décisions de JOKO — prises le jour même
+
+Quatre questions posées, quatre réponses. Elles sont inscrites dans `GAME_DESIGN.md`, et les
+lectures écartées y restent conservées, jamais supprimées.
+
+| Question | Décision |
+|---|---|
+| **data/** | **une base MV vierge.** JOKO crée un projet MV neuf de son côté et en copie les `.json` vides. Je n'écris rien dans `data/`. L'ancienne base reste dans `_ancien_projet/01_base_de_donnees/`. |
+| **§1 · Don + Trait** | **`DONS_SPIRITUELS.md` v3.0 fait foi.** Vesper le Masque *(objet)* / **sang** · Korrah l'Armure Volante *(avatar)* / **change** + **hiver** · ludwing l'Amulette *(objet)* / **ames** · Aël l'Arc *(arme)* / **miracle**. La lecture du codex v10 est écartée, **conservée** en §1.3-1.4 (lignes **B**) — elle reste la seule trace des quatre ultimes. |
+| **§4 · cycle & roue** | **les deux sont VIVANTS.** Cycle des trois branches ×1,5 / ×0,5 et roue des huit éléments. Détail chiffré et réglage MV en §2.4. ⚠️ `lore.md` et le codex v10 écrivent le contraire : **sur ce point ils sont caducs**, et ils restent intacts dans l'archive. |
+| **§5 · lucidité** | **échelle 1 → 10, une variable par héros, et elle MONTE quand on va bien.** 10 = Maîtrise, 1 = Effondrement, cinq phases. Les échelles 0-100 et 0-4 sont écartées comme unité de mesure. |
+
 ### En attente de JOKO
 
-**9 questions** en fin de `GAME_DESIGN.md`, section **À TRANCHER**. Les trois qui bloquent le
-plus de travail :
+**6 questions restent ouvertes, et les réponses en ont ouvert 2 nouvelles** — le tableau de
+suivi est en tête de la section **À TRANCHER** de `GAME_DESIGN.md`.
 
-1. **§1 — quelle attribution Don + Trait fait foi ?** `DONS_SPIRITUELS.md` et le codex v10
-   donnent aux quatre héros des Dons **et** des Traits entièrement différents. Tant que ce n'est
-   pas tranché, on ne peut coder ni `ETT_Don`, ni `ETT_Trait`, ni `ETT_Avatar`.
-2. **§4 — le cycle des branches (×1,5 / ×0,5) et la roue des éléments sont-ils retirés ?**
-   `SYSTEME_DE_MANA.md` les décrit ; `lore.md` et le codex v10 disent qu'ils ont été supprimés.
-   Ça décide de tout le combat.
-3. **§8 — le Culte, les cristaux, les « manifestations ».** Trois plages de variables réservées
+Les trois qui bloquent le plus de travail :
+
+1. **§8 — le Culte, les cristaux, les « manifestations ».** Trois plages de variables réservées
    à des systèmes dont **aucune mécanique n'est écrite** dans le lore. Je n'invente pas : je
    demande.
+2. **§3 — qui est acteur 1, et qui porte quel art ?** Trois versions dans les sources, et
+   `EMPIRE_DU_CORPS.md` fait de Vesper et Ludwig des **jumeaux chasseurs**, ce qui sort Vesper
+   de l'Esprit et ludwing de l'Âme. JOKO avait déjà posé la question lui-même dans ce fichier.
+3. **§9 — équipe de quatre, ou un marqué et trois Destins parallèles ?** Ça décide de la
+   création de partie, de `Actors.json`, et du poids du système `ETT_Destins`.
+
+Deux petites, nées des réponses : **§10** (où tombent les 5 seuils du Lac sur l'échelle 1-10) et
+**§11** (la table « lucidité requise » des Paroles, à convertir en 1-10 — 4+ / 6+ / 8+ est la
+conversion évidente, mais c'est un choix d'équilibrage, pas une division).
+
+Et une petite derrière le §1 : 🟩 le Trait **`change`** de Korrah est **nommé sans aucune
+mécanique écrite**, nulle part.
 
 ---
 

@@ -68,13 +68,17 @@ brûle la vitalité, et force la marque (→ Errance). 🟩 **Une marque creuse 
 Trait s'éteint avec elle.**
 🟨 Tarif chiffré par usage, en plus du coût affiché : **−20 % PM max · −20 TP · +2 Errance**.
 
-### 1.3 · Les quatre marqués — **deux attributions concurrentes**
+### 1.3 · Les quatre marqués
 
-⚠️ **Les sources ne disent pas la même chose.** Les deux tableaux ci-dessous sont incompatibles
-sur le Don *et* sur le Trait de chaque héros. Ils sont donnés tels quels ; l'arbitrage est en
-[À TRANCHER §1](#1--quelle-attribution-don--trait-fait-foi-).
+✅ **TRANCHÉ par JOKO le 2026-09-14 : c'est la lecture A — `DONS_SPIRITUELS.md` v3.0 — qui fait
+foi.** C'est elle qu'on implémente.
 
-**Lecture A — `DONS_SPIRITUELS.md` v3.0** *(le dossier le plus détaillé ; c'est aussi celle que reprend `CLAUDE.md`)*
+La **lecture B** (codex v10) est **conservée** plus bas : rien ne se supprime, et elle reste la
+seule trace écrite des quatre ultimes (la Convergence, la Mue Souveraine, le Royaume Impérial
+des Ténèbres, la Parole Originelle) et des Traits *Point de Rupture · Instant Gelé · Porte
+d'Ombre · Verbe Vrai*. Elle ne s'implémente pas en l'état, mais elle n'est pas perdue.
+
+**Lecture A — `DONS_SPIRITUELS.md` v3.0 — ✅ CANON**
 
 | Héros | Don unique | Forme | Slot | Sa main tient | Trait |
 |---|---|---|---|---|---|
@@ -83,7 +87,7 @@ sur le Don *et* sur le Trait de chaque héros. Ils sont donnés tels quels ; l'a
 | ⬛ **ludwing** | l'**Amulette** | Objet | 5 · Accessoire | acier | **ames** |
 | ✦ **Aël** | l'**Arc et ses Flèches** | Arme | 1 · Arme | *son Don* | **miracle** |
 
-**Lecture B — `codex-trois-sources-v10.html`, « Les héritiers du prix »**
+**Lecture B — `codex-trois-sources-v10.html`, « Les héritiers du prix » — 📦 écartée, conservée**
 
 | Héros | Don | Trait | Source | Chute | Carte finale |
 |---|---|---|---|---|---|
@@ -92,7 +96,10 @@ sur le Don *et* sur le Trait de chaque héros. Ils sont donnés tels quels ; l'a
 | ⬛ **ludwing** — le Symbole | ses **familiers** | la **Porte d'Ombre** — passage par l'Envers ; quasi intouchable un souffle | Âme | l'**Errant** | le **Royaume Impérial des Ténèbres** |
 | 🩸 **Vesper** — la Parole | le **Premier Mot** | le **Verbe Vrai** — nommer, et le monde obéit ; ne rate jamais | Esprit | le **Dément** | la **Parole Originelle** |
 
-### 1.4 · Effets mécaniques par héros — ce qui est écrit dans les deux lectures
+### 1.4 · Effets mécaniques par héros
+
+> Les lignes marquées **A** sont **à implémenter**. Les lignes marquées **B** sont conservées
+> pour mémoire — elles ne se codent pas tant que JOKO ne les réintègre pas.
 
 #### 🩸 VESPER
 
@@ -202,17 +209,59 @@ fondamentaux restent intacts. *(`codex v10`, « Créer des éléments »)*
 | **23** | Métal | Terre (11) + Foudre (12) |
 | **29** | **Crépuscule** | Lumière (14) + Ombre (15) — 🟩 *la faiblesse que **Miracle** apprend à toucher* |
 
-### 2.4 · Les avantages
+### 2.4 · Les avantages — ✅ **TRANCHÉ le 2026-09-14 : le cycle ET la roue sont VIVANTS**
 
-🟩 **Seuls Lumière ⇄ Ombre s'opposent** — faibles l'un à l'autre.
-🟩 **Le Mana Pur perce toute résistance élémentaire.**
-🟩 **Un élément n'a pas de valeur morale** : l'Ombre n'est pas le mal, la Lumière n'est pas le
-bien. C'est la main qui décide.
+> JOKO a tranché : on garde les deux mécaniques de `SYSTEME_DE_MANA.md` §3 et §4.
+> ⚠️ **Conséquence à connaître :** `lore.md` et `codex-trois-sources-v10.html` écrivent
+> l'inverse (« pas de cycle entre branches ni roue élémentaire », « deux mécaniques retirées »).
+> **Ces deux passages sont caducs.** Ils restent dans l'archive tels quels, mais sur ce point
+> précis, c'est `SYSTEME_DE_MANA.md` qui fait foi.
 
-⚠️ `SYSTEME_DE_MANA.md` §3 et §4 décrivent en plus un **cycle pierre-feuille-ciseaux entre
-branches (×1,5 / ×0,5)** et une **roue élémentaire** (Feu→Eau→Foudre→Terre→Vent→Glace→Feu).
-`lore.md` et `codex v10` disent explicitement que **ces deux mécaniques ont été retirées**.
-→ [À TRANCHER §4](#4--le-cycle-des-branches-et-la-roue-des-éléments--retirés-ou-pas-).
+**A · Le cycle des trois branches** — pierre-feuille-ciseaux :
+
+```
+   MANA NÉGATIF ──bat──► ÂME / SPIRITUELLE ──bat──► MANA POSITIF ──bat──► MANA NÉGATIF
+     (Corps, 4)             (Âme, 2)                  (Esprit, 3)            (retour)
+```
+
+| Frappe | Multiplicateur | Lecture |
+|---|---|---|
+| branche **avantagée** | **×1,5** | la fureur du corps brise les âmes fragiles · l'essence pure transperce les barrières de l'esprit · la lumière de l'esprit apaise la rage du corps |
+| branche **désavantagée** | **×0,5** | |
+| **Mana Pur (7)** et **Semi-Parfait (16)** | **×1,0 partout** | 🟩 jamais réduits, jamais augmentés — **ils percent toute résistance** |
+
+**Réglage MV** — le cycle se pose en **taux de résistance élémentaire** sur les cibles (traits
+d'ennemi / d'armure / de classe), pas en code : avantagé = **200 %**, désavantagé = **50 %**,
+Mana Pur = **100 %** forcé. Les trois taux sont des `@param` (voir [`CONVENTIONS.md`](CONVENTIONS.md) §6).
+
+**B · La roue des huit éléments** — chaque élément est faible contre le suivant :
+
+```
+FEU ─► EAU ─► FOUDRE ─► TERRE ─► VENT ─► GLACE ─► FEU
+```
+
+| Élément | Faible contre |
+|---|---|
+| **FEU** (8) | EAU (9) |
+| **EAU** (9) | FOUDRE (12) |
+| **FOUDRE** (12) | TERRE (11) |
+| **TERRE** (11) | VENT (10) |
+| **VENT** (10) | GLACE (13) |
+| **GLACE** (13) | FEU (8) |
+| **LUMIÈRE** (14) ⇄ **OMBRE** (15) | 🟩 s'opposent **mutuellement** — hors roue |
+
+**C · Ce qui ne change pas :**
+
+- 🟩 **Le Mana Pur transcende tout** : ni le cycle des branches, ni la roue, ni les résistances.
+- 🟩 **Un élément n'a pas de valeur morale** : l'Ombre n'est pas le mal, la Lumière n'est pas le
+  bien. *C'est la main qui décide.*
+- 🟩 **La roue est une couche tactique indépendante du cycle** : un sort porte une branche **et**
+  un élément, et les deux avantages se calculent séparément.
+
+> ⚠️ **Un cumul à surveiller au chiffrage.** Un sort avantagé sur les deux axes fait
+> ×1,5 × ×1,5 = **×2,25**, et ×0,5 × ×0,5 = **×0,25** dans l'autre sens — un écart de 1 à 9
+> entre deux coups. Les deux multiplicateurs seront des `@param` pour pouvoir écraser la courbe
+> sans toucher au code. **Je ne change aucun chiffre de ma propre initiative.**
 
 ---
 
@@ -318,18 +367,22 @@ cible · briser la garde · ralentir · faire douter · sceller la voix.
 
 ### 4.3 · 🔵 Lucidité — le Dément *(Esprit)*
 
-⚠️ **Trois échelles concurrentes dans les sources** → [À TRANCHER §5](#5--la-lucidité--quelle-échelle-).
+✅ **TRANCHÉ le 2026-09-14 : échelle 1 → 10, une variable par héros, et elle MONTE quand on va
+bien.** 10 = sain, 1 = effondrement. *(Les deux autres échelles trouvées dans les sources — 0-100
+et les 5 seuils 0-4 — sont écartées comme unité de mesure.)*
 
-| Échelle | Source |
-|---|---|
-| **1 → 10**, une variable par héros, 5 phases | 🟨 `GUIDE_DEVELOPPEUR.md` A6 |
-| **0 → 100** | 🟩 `codex v10`, « La lucidité — tenir & voir » |
-| **5 seuils, 0 → 4** | 🟩 `codex v10` + `lore.md` |
+| Jauge | Phase | Nom | Effet |
+|---|---|---|---|
+| **9-10** | 5 | **Maîtrise** | 🟩 les Paroles à pleine puissance |
+| **6-8** | 4 | Stable | — |
+| **4-5** | 3 | Tension | 🟨 mana positif ×0,85 |
+| **2-3** | 2 | Instable | 🟨 mana positif ×0,70 · 🟩 Marque **Fêlée** |
+| **1** | 1 | **Effondrement** | 🟨 mana positif ×0,55 · 🟩 **NOYADE** |
 
 | | |
 |---|---|
-| **Les 5 seuils du Lac** | 🟩 **0 · la Surface** (le monde ordinaire) → **1 · le Voile** (âmes errantes, sang sous la peau, marques : on voit qui manie le mana ; PNJ cachés) → **2 · la Trame** (le code sous les choses : nombres, secrets lisibles) → **3 · le Mur** (*ce qui regarde du dehors* : présences, vies reprises, oubliés — l'horreur méta) → **4 · le Fond** (tout d'un coup : **la folie**, game over « Dément ») |
-| **Monte** *(= on remonte vers la surface)* | 🟩 le **repos**, les **bons choix**, une **zone sûre** où marcher restaure · 🟩 le **Feu d'Âme** |
+| **Les 5 seuils du Lac** | 🟩 ce que le porteur **voit** en descendant : **la Surface** (le monde ordinaire) → **le Voile** (âmes errantes, sang sous la peau, marques : on voit qui manie le mana ; PNJ cachés) → **la Trame** (le code sous les choses : nombres, secrets lisibles) → **le Mur** (*ce qui regarde du dehors* : présences, vies reprises, oubliés — l'horreur méta) → **le Fond** (tout d'un coup : **la folie**, game over « Dément ») |
+| **Monte** *(= on va mieux)* | 🟩 le **repos**, les **bons choix**, une **zone sûre** où marcher restaure · 🟩 le **Feu d'Âme** |
 | **Descend** *(= on plonge)* | 🟩 une **Parole brisée** · 🟩 le **Pacte de la Reine** · 🟩 **chaque âme absorbée** · 🟩 les mauvais choix · 🟩 un sort de **mana spirituel** (risque de trauma) |
 | **Ce qu'elle sert** | 🟩 deux choses : **tenir les longues Paroles**, et **voir le caché** |
 | **Le paradoxe** | 🟩 **trop basse → les grands sorts ratent ; trop haute → on touche le Mur et on glisse vers le Dément** |
@@ -449,7 +502,7 @@ C'est la jauge que réserve la plage **variables 50-69**.
 
 | # | Système | Ce qu'il produit | Dépend de |
 |---|---|---|---|
-| **S10** | **`ETT_Parole`** *(Esprit)* | 🟩 la Parole = **mot de passe (mana) + élément + n° de sort**, additionnés. 🟩 Longueur 1→5 mots : **puissance qui monte, fiabilité qui descend**. 🟩 La **lucidité requise** pour tenir. 🟩 La **Parole brisée** (aucun effet + contrecoup). 🟩 Les **runes** : Paroles gravées en chiffres, qui **agissent sans être récitées** et **ne ratent jamais**. | S6 · S3 |
+| **S10** | **`ETT_Parole`** *(Esprit)* | 🟩 la Parole = **mot de passe (mana) + élément + n° de sort**, additionnés. 🟩 Longueur 1→5 mots : **puissance qui monte, fiabilité qui descend**. 🟩 La **lucidité requise** pour tenir *(⚠️ table à convertir en 1-10 — [À TRANCHER §11](#11--🆕-la-table--lucidité-requise--des-paroles-convertie-comment-))*. 🟩 La **Parole brisée** (aucun effet + contrecoup). 🟩 Les **runes** : Paroles gravées en chiffres, qui **agissent sans être récitées** et **ne ratent jamais**. | S6 · S3 |
 | **S11** | **`ETT_Maitrise`** *(Corps)* | 🟩 **instantané, pas d'incantation.** 🟩 **Renforcer** (mana négatif dans les membres) et **Projeter** (ondes, lames sombres). 🟩 Les **cinq Voies** : Forge · Onde · Source · Miroir · **Vide** *(l'aura disparaît — le plus mauvais signe)*. 🟩 **Progresse par le combat.** 🟩 **La Loi du Prix : la maîtrise amplifie les bonus ET les malus.** | S4 · S3 |
 | **S12** | **`ETT_Symbole`** *(Âme)* | 🟩 les **4 opérations** : **Matérialisation** (sentiment + désir + croyance) · **Résonance** (accorder deux âmes) · **Lecture** (le Regard) · **Frappe d'âme** (*traverse chair, armure et mana sombre* ; sonne, paralyse ou brise). 🟩 **✕ la Consommation** — interdite, **et elle fonctionne**. | S5 · S3 |
 
@@ -514,10 +567,42 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 
 ## À TRANCHER
 
-> Neuf points. Aucun n'est décidé ici. Tant qu'une question reste ouverte, **rien ne s'écrit
-> dans `data/` ni dans un plugin** sur ce point.
+> **Tant qu'une question reste ouverte, rien ne s'écrit dans `data/` ni dans un plugin** sur ce
+> point.
+>
+> **État au 2026-09-14 : 3 tranchées ✅ · 6 ouvertes ❓ · 2 nouvelles nées des réponses.**
+> Les entrées tranchées restent en place, barrées de leur décision — on ne supprime pas une
+> question résolue, on note la réponse à côté.
 
-### 1 · Quelle attribution Don + Trait fait foi ?
+| # | Question | État |
+|---|---|---|
+| **1** | attribution Don + Trait | ✅ **`DONS_SPIRITUELS.md` v3.0** |
+| **2** | quel codex fait foi | ❓ ouverte |
+| **3** | qui est acteur 1, qui porte quel art | ❓ ouverte |
+| **4** | cycle des branches & roue des éléments | ✅ **les deux vivants** |
+| **5** | échelle de lucidité | ✅ **1 → 10, monte = on va bien** |
+| **6** | le code élément 7 : AME ou Mana Parfait | ❓ ouverte |
+| **7** | la Voie du Sang, et combien de Voies | ❓ ouverte |
+| **8** | Culte · cristaux · manifestations | ❓ ouverte |
+| **9** | combien de héros joue-t-on à la fois | ❓ ouverte |
+| **10** | 🆕 les 5 seuils du Lac sur l'échelle 1-10 | ❓ **née de la réponse §5** |
+| **11** | 🆕 la table « lucidité requise » des Paroles | ❓ **née de la réponse §5** |
+
+---
+
+### 1 · Quelle attribution Don + Trait fait foi ? — ✅ TRANCHÉ
+
+> **Réponse de JOKO, 2026-09-14 : `DONS_SPIRITUELS.md` v3.0.**
+> Vesper = le **Masque** *(objet)* / Trait **sang** · Korrah = l'**Armure Volante** *(avatar)* /
+> Traits **change** + **hiver** · ludwing = l'**Amulette** *(objet)* / Trait **ames** ·
+> Aël = l'**Arc** *(arme)* / Trait **miracle**.
+> La lecture du codex v10 est **écartée, pas supprimée** : elle reste en §1.3 et en §1.4 (lignes
+> marquées **B**), avec les quatre ultimes qu'elle est seule à décrire.
+>
+> *Reste ouvert derrière :* 🟩 le Trait **`change`** de Korrah n'a **aucune mécanique écrite**
+> nulle part — juste le nom. Dis-moi ce qu'il fait, ou il restera un nom sans effet.
+
+<details><summary>La question, telle qu'elle se posait</summary>
 
 Les deux sources sont **entièrement incompatibles**, et ce n'est pas un détail : elles changent
 les quatre personnages, leurs slots d'équipement, leurs types de compétence et leurs jauges.
@@ -532,7 +617,9 @@ les quatre personnages, leurs slots d'équipement, leurs types de compétence et
 **Trois lectures possibles :** le codex v10 est plus récent et remplace le dossier ; le dossier
 v3.0 est plus récent et remplace le codex ; ou bien ce sont **deux couches** (le Don *visible* et
 le Trait *profond*) qui coexistent — ce que la phrase du codex *« deux dons, une seule âme »*
-pourrait autoriser. **Je n'ai pas tranché.**
+pourrait autoriser.
+
+</details>
 
 ### 2 · Quel codex est le canon ?
 
@@ -556,7 +643,21 @@ Ludwig**, tous deux de l'Empire du Corps — ce qui sort Vesper de l'Esprit **et
 l'Âme. JOKO avait déjà posé la question lui-même dans ce fichier (*« Dis-moi si les classes du
 jeu doivent suivre »*) ; elle est restée sans réponse.
 
-### 4 · Le cycle des branches et la roue des éléments : retirés ou pas ?
+### 4 · Le cycle des branches et la roue des éléments : retirés ou pas ? — ✅ TRANCHÉ
+
+> **Réponse de JOKO, 2026-09-14 : les deux sont VIVANTS.** Le cycle des trois branches
+> (**×1,5 / ×0,5**) et la roue des huit éléments s'appliquent. Détail chiffré et réglage MV en
+> **[§2.4](#24--les-avantages--️-tranché-le-2026-09-14--le-cycle-et-la-roue-sont-vivants)**.
+>
+> ⚠️ **À savoir :** `lore.md` et `codex-trois-sources-v10.html` écrivent explicitement le
+> contraire. Sur ce point, **ils sont caducs** ; ils restent intacts dans l'archive.
+>
+> *Reste ouvert derrière :* le **cumul des deux axes** (avantagé sur la branche *et* sur
+> l'élément = **×2,25** ; désavantagé sur les deux = **×0,25**, soit un écart de 1 à 9). Les
+> multiplicateurs seront des `@param` pour que tu puisses écraser la courbe — mais **je ne les
+> change pas de moi-même**.
+
+<details><summary>La question, telle qu'elle se posait</summary>
 
 | Source | Ce qu'elle dit |
 |---|---|
@@ -568,17 +669,28 @@ jeu doivent suivre »*) ; elle est restée sans réponse.
 C'est **la contradiction la plus lourde du lot** : elle décide de tout le combat. Deux des
 quatre sources disent explicitement que ces règles sont mortes, une les décrit encore en détail.
 
-### 5 · La lucidité : quelle échelle ?
+</details>
+
+### 5 · La lucidité : quelle échelle ? — ✅ TRANCHÉ
+
+> **Réponse de JOKO, 2026-09-14 : 1 → 10, une variable par héros, et elle MONTE quand on va
+> bien.** 10 = Maîtrise, 1 = Effondrement. Les cinq phases sont en
+> **[§4.3](#43--🔵-lucidité--le-dément-esprit)**.
+>
+> *Restent ouvertes derrière :* **§10** et **§11** ci-dessous — la réponse en ouvre deux.
+
+<details><summary>La question, telle qu'elle se posait</summary>
 
 **1→10** *(une variable par héros, 5 phases)*, **0→100** *(codex v10, avec des seuils requis à
 40 / 60 / 80 pour tenir une Parole de 3 / 4 / 5 mots)*, ou **5 seuils 0→4** *(la Surface, le
 Voile, la Trame, le Mur, le Fond)* ?
 
 Les trois se retrouvent dans les sources, et elles ne se convertissent pas entre elles sans
-perte : la table « lucidité requise » du codex v10 est écrite en 0-100 et n'a pas d'équivalent
-en 1-10. **Et une question de sens la double :** la jauge monte-t-elle quand on *va bien*
+perte. **Et une question de sens la double :** la jauge monte-t-elle quand on *va bien*
 (santé mentale) ou quand on *voit loin* (profondeur dans le Lac) ? Les deux lectures existent
 dans les textes, et elles sont **inverses l'une de l'autre**.
+
+</details>
 
 ### 6 · Le code 7 : « AME » ou « Mana Parfait » ?
 
@@ -627,6 +739,32 @@ me dises ce que ce mot désigne ici : l'**apparition** du Don (le moment où il 
 Équipe de quatre dès le départ, ou **un** marqué choisi et trois **Destins parallèles** qui
 dérivent ? La réponse change l'écran-titre, la création de partie, `Actors.json`, et si le
 système S24 est central ou secondaire.
+
+### 10 · 🆕 Où tombent les 5 seuils du Lac sur l'échelle 1-10 ?
+
+**Née de ta réponse au §5.** L'échelle est fixée (1-10, monte = on va bien), mais les **cinq
+seuils du Lac** — la Surface, le Voile, la Trame, le Mur, le Fond — sont *ce que le héros voit*,
+et le lore les place **en descendant**.
+
+Deux lectures, et elles ne donnent pas le même jeu :
+
+| Lecture | Ce que ça veut dire |
+|---|---|
+| **les seuils suivent la jauge vers le bas** | plus la lucidité tombe, plus on voit loin : 10-9 = la Surface … 1 = le Fond. *« Voir trop, et se briser »* — une seule jauge, et **voir est un symptôme**. Mais alors un héros au sommet de sa forme **ne voit rien du caché**. |
+| **les seuils sont une seconde mesure** | la jauge 1-10 dit la **santé** ; une profondeur séparée dit **ce qu'on perçoit**. Deux nombres, deux systèmes — mais on peut être lucide **et** voyant. |
+
+Le lore dit les deux : *« plus on s'ouvre à l'Esprit, plus on voit ce que les autres ne voient
+pas »* **et** *« trop basse, les grands sorts ratent ; trop haute, on touche le Mur »*. **Je ne
+tranche pas.**
+
+### 11 · 🆕 La table « lucidité requise » des Paroles, convertie comment ?
+
+**Née de ta réponse au §5.** Le codex v10 chiffre, en 0-100 : Parole de **3 mots → 40+**,
+**4 mots → 60+**, **5 mots → 80+** (1 à 2 mots : n'importe quelle lucidité).
+
+En 1-10, la conversion évidente serait **4+ / 6+ / 8+**. Elle est *évidente*, pas *écrite* — et
+elle place l'exigence des Paroles de 5 mots au seuil de la phase **Maîtrise**, ce qui est une
+décision d'équilibrage, pas une division par dix. **Je la propose, je ne l'applique pas.**
 
 ---
 
