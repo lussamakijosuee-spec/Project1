@@ -82,6 +82,12 @@ cp _ancien_projet/02_plugins/plugins.js.ancien js/plugins.js
 > L'ordre de chargement est documenté dans
 > `04_documentation_technique/ORDRE_PLUGINS.md` — **producteurs de jauges d'abord**.
 
+> ℹ️ **Quatre intrus dans `systemes_du_jeu/`**, qui traînaient dans l'ancien `js/plugins/` sans
+> être des plugins. Ils sont gardés là où ils étaient, mais **ne les recopie pas bêtement** :
+> `plugins.js` *(un doublon égaré — le vrai est `plugins.js.ancien`)* · `rpg_sprites.js` *(une
+> copie d'un fichier du moteur)* · `quete_iris_events.json` et `scene_donovano_events.json`
+> *(des événements exportés, dont les jumeaux sont dans `11_divers/`)*.
+
 ---
 
 ## 03_lore_canon
