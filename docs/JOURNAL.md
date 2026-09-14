@@ -7,6 +7,73 @@
 
 ---
 
+## 2026-09-14 (5) — Le système de faim
+
+### Ce qui a été fait
+
+**`js/plugins/ETT_Faim.js`** — le premier plugin du projet. Inscrit dans `js/plugins.js`, actif,
+**32 paramètres**, aucun chiffre en dur.
+
+**Le modèle tient en deux nombres, et c'est là qu'est tout le système.**
+
+| | |
+|---|---|
+| **la faim** | ce qu'on ressent maintenant. Monte avec le temps, descend quand on mange. |
+| **le socle** | le **plancher** de la faim. Aucun repas ne descend en dessous, **et il ne redescend jamais**. |
+
+C'est la traduction directe de 🟩 *« une faim de mana constante, une faim qui **ne peut pas être
+comblée** (…) et elle **grandit de plus en plus** si tu te nourris mal »*. Une jauge unique
+n'aurait rendu que la première moitié de la phrase.
+
+**Ce qui fait monter la faim** — la marche *(tous les 40 pas)*, **deux fois plus vite la nuit**,
+la fin d'un combat, et toute compétence notée `<faim: n>` *(« plus on puise profond, plus on
+réveille la faim »)*.
+
+**Ce qui fait monter le socle** — les **trois causes écrites dans le canon**, et elles seules :
+se nourrir **mal** *(`<mauvais>`)* · se nourrir **trop** *(le surplus au-delà de ce qui
+manquait)* · **boire à la branche** *(la terreur des Libéralistes)*.
+
+**La pureté décide de ce qui tient.** 🟩 *« Le sang des racines comble la faim pendant quelques
+heures »* : à la racine, **30 % seulement** du repas est durable, le reste **revient au fil des
+pas**. Au tronc 75 %, à la branche 100 % — mais la branche coûte du socle.
+
+**L'Annone** ramène à 35, jamais sous le socle. 🟩 *« Calibrée pour maintenir un porteur au Calme
+sans effort. »* Le seuil du Frémissement est à 40 : la marge est de cinq points, volontairement.
+
+**Le banc.** `bancs/2_faim.js` — il **charge le vrai fichier du plugin** dans un moteur MV
+reconstruit *(`PluginManager`, `DataManager`, `Game_Action`, `Game_Interpreter`…)*, avec
+`extractMetadata` reproduit **à l'identique, espace après le `:` compris**, et un
+`Game_Actor.refresh()` qui rappelle le plugin — de quoi faire déborder la pile si la garde
+anti-récursion lâchait. **25 contrôles · 18 contre-épreuves · 7 invariants déclarés.**
+
+### Une règle de banc ajoutée
+
+Le banc listait 13 contrôles sans contre-épreuve et **passait quand même**. C'est exactement ce
+que `CLAUDE.md` §6 interdit. Désormais : **un contrôle est saboté, ou déclaré invariant avec sa
+raison — jamais ni l'un ni l'autre.** Un contrôle orphelin fait **échouer** le banc. Cinq
+sabotages de **donnée** ont été ajoutés au passage *(retirer un notetag, enlever l'espace après
+le `:`)*, en plus des sabotages de réglage.
+
+### Ce que j'ai dû choisir, faute de consigne
+
+Tous les chiffres : 40 pas pour +1, ×2 la nuit, seuils 40 et 70, socle +2/+1/+3, les quatre
+puretés, l'Annone à 35. Le lore ne chiffre **rien** de tout ça. Ce sont des `@param` : un mot
+suffit à les changer, sans toucher au code.
+
+### Ce qui manque, et qui n'est pas de mon ressort
+
+- **Le stade 4, la Mue, n'a pas d'état en base** — tu ne l'avais pas demandé. Le plugin lève
+  l'**interrupteur 21** et s'arrête là.
+- **La faim ne monte pas sur l'élément « mana sombre »** : cet élément **n'a pas de code** dans
+  `System.json` *(2 à 7 réservés vides)*. On passe par `<faim: n>` en attendant. C'est la
+  question **§12**.
+- **L'Article I** *(« nul ne boit au-dessus de son rang »)* vient du document de travail non
+  validé : il est **à Non par défaut**.
+- **Aucun objet créé** — tu avais dit de ne pas en créer. Le plugin lit `<nourrit:>`,
+  `<purete:>`, `<mauvais>`, `<boost:>` : les aliments marcheront le jour où tu les poseras.
+
+---
+
 ## 2026-09-14 (4) — Le Corps Artificiel
 
 ### Ce qui a été fait

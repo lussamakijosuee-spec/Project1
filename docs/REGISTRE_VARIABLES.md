@@ -5,7 +5,8 @@
 > case remplie est **prise**, même si le système qui la prend n'est pas encore codé.
 >
 > **État au 2026-09-14 :**
-> — **variables et interrupteurs** : plages réservées, **aucune case attribuée** ;
+> — **variables 50-53 et 60-63**, **interrupteurs 20 et 21** : attribués à **`ETT_Faim.js`** ;
+> — les autres plages : réservées, **aucune case attribuée** ;
 > — **états et acteurs** : ID définitifs, [renseignés plus bas](#les-id-de-base-de-données).
 
 ---
@@ -16,10 +17,10 @@
 |---|---|---|
 | **Variables 1 – 19** | **libre** — usage courant, scénario, événements ponctuels | vide |
 | **Variables 20 – 49** | **manifestations** | vide |
-| **Variables 50 – 69** | **faim** | vide |
+| **Variables 50 – 69** | **faim** — *50-53 faim · 60-63 socle, pris par `ETT_Faim.js`* | **en service** |
 | **Variables 70 – 89** | **Parole et cristaux** — *définis depuis le 2026-09-14 : voir [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md)* | vide |
 | **Variables 90 – 99** | **Culte** | vide |
-| **Interrupteurs 20 – 49** | **systèmes** | vide |
+| **Interrupteurs 20 – 49** | **systèmes** — *20 la nuit · 21 la Mue, pris par `ETT_Faim.js`* | **en service** |
 
 **Hors plage :** variables 100+ et interrupteurs 1-19 / 50+ ne sont pas réservés. Ils
 s'inscrivent quand même ici, dans la dernière section.
@@ -45,9 +46,33 @@ s'inscrivent quand même ici, dans la dernière section.
 
 ## Variables 50 – 69 · faim
 
-| Id | Nom | Plage de valeurs | Qui l'écrit | Qui la lit |
+> Écrites par **`ETT_Faim.js`** *(paramètres `varFaim` = 50 et `varSocle` = 60)*. Le plugin les
+> **recopie**, il ne les lit pas : la vérité vit sur `$gameSystem._ettFaim`, conformément à
+> [`CONVENTIONS.md`](CONVENTIONS.md) §4. Y écrire à la main ne change donc rien — pour agir,
+> passer par `FAIM ajouter` / `FAIM nourrir`.
+
+| Id | Nom | Plage | Qui l'écrit | Qui la lit |
 |---|---|---|---|---|
-| — | *(réservé, non attribué)* | | | |
+| **50** | faim de **Vesper** *(acteur 1)* | 0 – 100 | `ETT_Faim` | événements, conditions de page |
+| **51** | faim de **Ludwig** *(acteur 2)* | 0 – 100 | `ETT_Faim` | idem |
+| **52** | faim d'**Aël** *(acteur 3)* | 0 – 100 | `ETT_Faim` | idem |
+| **53** | faim de **Korrah** *(acteur 4)* | 0 – 100 | `ETT_Faim` | idem |
+| 54-59 | *(libre — pour les acteurs 5+)* | | | |
+| **60** | socle de **Vesper** | 0 – 70 | `ETT_Faim` | événements |
+| **61** | socle de **Ludwig** | 0 – 70 | `ETT_Faim` | idem |
+| **62** | socle d'**Aël** | 0 – 70 | `ETT_Faim` | idem |
+| **63** | socle de **Korrah** | 0 – 70 | `ETT_Faim` | idem |
+| 64-69 | *(libre — pour les acteurs 5+)* | | | |
+
+**La faim et le socle sont deux nombres distincts, et c'est le cœur du système :**
+
+- la **faim** est ce qu'on ressent maintenant — elle monte avec le temps, descend quand on mange ;
+- le **socle** est le plancher de la faim. **Aucun repas ne descend en dessous, et il ne
+  redescend jamais.** C'est 🟩 *« une faim qui ne peut pas être comblée »*, et 🟩 *« elle grandit
+  de plus en plus si tu te nourris mal »*.
+
+En fin de partie, un socle au-dessus de 40 laisse le porteur **en permanence au Frémissement**,
+sans qu'il ait rien fait ce jour-là.
 
 ## Variables 70 – 89 · Parole et cristaux
 
@@ -65,7 +90,14 @@ s'inscrivent quand même ici, dans la dernière section.
 
 | Id | Nom | Ce que ON veut dire | Qui l'écrit | Qui le lit |
 |---|---|---|---|---|
-| — | *(réservé, non attribué)* | | | |
+| **20** | **il fait nuit** | la nuit est tombée → la faim monte **deux fois plus vite** | **toi**, en événement *(aucun système de jour/nuit n'existe encore)* | `ETT_Faim` |
+| **21** | **la Mue** | un porteur a atteint le maximum : **stade 4** | `ETT_Faim` | **toi**, en événement |
+| 22-49 | *(libre)* | | | |
+
+> ⚠️ **L'interrupteur 21 est une sortie de secours, pas une fin.** L'état du **stade 4 · la Mue**
+> **n'existe pas en base** — tu ne l'avais pas demandé. Le plugin lève donc cet interrupteur et
+> s'arrête là : c'est à un événement de décider ce qui arrive. Le jour où l'état existera, il
+> suffira de renseigner le paramètre `etatMue`.
 
 ## Hors plage réservée
 

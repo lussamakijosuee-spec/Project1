@@ -13,6 +13,7 @@
 | Banc | Ce qu'il contrôle |
 |---|---|
 | `1_base_de_donnees.js` | `System.json` · `States.json` · `Classes.json` · `Actors.json` — 23 contrôles |
+| `2_faim.js` | **`js/plugins/ETT_Faim.js`**, rejoué sur un moteur MV simulé — 25 contrôles |
 
 ---
 
@@ -39,7 +40,28 @@ base cassée ne mesure rien — le banc le dénonce lui-même, et sort en erreur
    ✓ les notetags <manifestation> se lisent comme MV les lira
 ```
 
+**4 · Un contrôle est saboté, ou déclaré invariant. Jamais ni l'un ni l'autre.**
+Certains contrôles n'ont aucun levier extérieur : ils gardent un invariant du code lui-même
+*(une borne, un drapeau anti-récursion, une initialisation défensive)*. Aucun réglage ne peut les
+faire tomber — c'est justement ce qui en fait des garde-fous. Ils doivent alors être **déclarés
+un par un, avec leur raison**. Un contrôle qui n'est ni saboté ni déclaré est un contrôle dont
+personne n'a vérifié qu'il mesure quoi que ce soit : `2_faim.js` **sort en erreur** dans ce cas.
+
 Un banc simule le moteur assez fidèlement pour attraper le bug, ou il ne sert à rien.
+
+## `2_faim.js` — comment il simule MV
+
+Il ne teste pas une copie de la logique : il **charge le vrai fichier du plugin** dans un bac à
+sable (`vm`) qui contient un moteur MV reconstruit — `PluginManager`, `DataManager`,
+`Game_System`, `Game_Party`, `Game_Actor`, `Game_Action`, `Game_Interpreter`, `BattleManager`,
+et les globales d'une partie.
+
+Deux détails de la simulation font tout son intérêt :
+
+- **`extractMetadata` est reproduit à l'identique**, espace après le `:` compris. Le plugin
+  affronte donc le vrai piège, et non une version propre qui l'aurait masqué.
+- **`Game_Actor.refresh()` rappelle la mise à jour du plugin**, comme MV le fait. Sans la garde
+  anti-récursion, la pile déborde — le banc le vérifie en comptant les appels.
 
 ## Ce que celui-ci attrape en particulier
 

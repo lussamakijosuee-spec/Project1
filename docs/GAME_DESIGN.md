@@ -455,8 +455,23 @@ et les 5 seuils 0-4 — sont écartées comme unité de mesure.)*
 
 ### 4.4 · 🍖 La Faim — *l'Empire du Corps*
 
-🟩 Décrite en détail dans `EMPIRE_DU_CORPS.md`, ⬜ **jamais chiffrée**, ⬜ **jamais implémentée**.
-C'est la jauge que réserve la plage **variables 50-69**.
+> ✅ **IMPLÉMENTÉE le 2026-09-14 — `js/plugins/ETT_Faim.js`.** Tous les chiffres sont des
+> `@param` ; les ID sont dans [`REGISTRE_VARIABLES.md`](REGISTRE_VARIABLES.md).
+>
+> **Le modèle, en deux nombres et pas un seul** — c'est ce qui rend la phrase du canon jouable :
+> *« une faim de mana constante, une faim qui ne peut pas être comblée (…) et elle grandit de
+> plus en plus si tu te nourris mal »*.
+>
+> | | |
+> |---|---|
+> | **la faim** | ce qu'on ressent maintenant. Monte avec le temps, descend quand on mange. `0-100` |
+> | **le socle** | le **plancher** de la faim. Aucun repas ne descend en dessous, et **il ne redescend jamais**. C'est la faim qui ne se comble pas. `0-70` |
+>
+> En fin de partie, un socle au-dessus du seuil du Frémissement laisse le porteur **en permanence
+> au stade 2**, sans qu'il ait rien fait ce jour-là. C'est le drame de l'Empire, rendu mécanique.
+
+🟩 Décrite en détail dans `EMPIRE_DU_CORPS.md`. C'est la jauge que réserve la plage
+**variables 50-69**.
 
 | | |
 |---|---|
@@ -577,7 +592,7 @@ C'est la jauge que réserve la plage **variables 50-69**.
 
 | # | Système | Ce qu'il produit | Dépend de |
 |---|---|---|---|
-| **S8** | **`ETT_Faim`** | la jauge 🍖, sa **montée permanente**, le fait qu'elle **grandit si on se nourrit mal**, les consommables qui la comblent et pour combien de temps | S4 *(🟩 se nourrir mal fait succomber → la faim pilote la Corruption)* |
+| **S8** | ✅ **`ETT_Faim`** — **ÉCRIT** | la jauge 🍖 et son **socle** *(le plancher qu'aucun repas ne comble et qui ne redescend jamais)* · la montée à la marche, **deux fois plus vite la nuit** · les **trois causes écrites** de la montée du socle · la **pureté** des aliments, qui décide de ce qui tient · l'**Annone** · les **trois stades**, posés sur les états 9-11. Vérifié par `node bancs/2_faim.js`. | états 9-11 · *(S4 quand la Corruption existera)* |
 | **S9** | **`ETT_Chasse`** | le **cycle de la chasse** : contrats, familles de monstres, primes, **le couvre-feu de 20 h**, l'exécution des porteurs en Fièvre | S8 · S4 |
 
 ### 6.4 · Les trois arts
