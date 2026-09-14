@@ -7,6 +7,55 @@
 
 ---
 
+## 2026-09-14 (3) — Le canon de la Parole
+
+### Ce qui a été fait
+
+JOKO a dicté **le système de la Parole de bout en bout** : le cristal, les quatre formes de sort,
+la règle des fusions, le prix du mage, le paradoxe du lac, les runes et les hôtels.
+
+- **`docs/CANON_LA_PAROLE.md`** — la dictée, transcrite **verbatim**. C'est elle qu'on cite.
+- **`docs/GAME_DESIGN.md`** — l'extrait implémentable : §2.5 *la composition d'un sort* (les
+  quatre formes, chiffrées) · §4.3 *le paradoxe du lac* et *le prix du mage* · §5.5 *le cristal*
+  comme ressource · §6.7 trois systèmes neufs — **`ETT_Cristal`**, **`ETT_Runes`**,
+  **`ETT_Hotels`**.
+
+**Rien n'a été écrit dans `data/`** : ce canon ouvre deux trous qu'il faut trancher avant de
+toucher aux éléments. Le banc passe toujours (23/23).
+
+### Ce que la mesure a trouvé
+
+La règle des fusions a été **rejouée contre `data/System.json`**, pas crue sur parole :
+
+| | |
+|---|---|
+| sommes atteignables | **15**, de 16 (Feu+Feu) à 30 (Ombre+Ombre) |
+| collision fusions ⇄ concaténations | **aucune** ✅ — les concaténations vont de 808 à 1515, le canon a raison |
+| 🔴 **Ombre + Ombre = 30** | et **30 porte « Mana positif »** |
+| 🔴 **8 sommes sur 15 sans élément** | 16 · 18 · 21 · 24 · 25 · 26 · 27 · 28 — dont *Feu+Vent*, *Vent+Terre*, *Glace+Ombre* |
+
+### Une conséquence d'interface à ne pas rater
+
+🟩 *« Pas de vertige, pas de palier, pas de signal. »* Le seuil fatal de la lucidité **ne doit pas
+être annoncé** — pas de jauge qui clignote, pas de message. C'est l'inverse exact de l'alerte
+avant la casse des Dons (§4.5), qui, elle, prévient. Ici, **prévenir casserait la mécanique**.
+
+### En attente de JOKO
+
+Quatre questions neuves, **§13 à §16** de `GAME_DESIGN.md`. Les deux rouges :
+
+1. **§13 — Ombre + Ombre = 30**, et les huit sommes qui ne mènent à rien.
+2. **§15 — Aël est « Mage stellaire » et porte `<manifestation: type=arme, nom=L'Arc>`.** Ce
+   canon dit qu'un mage **n'a pas de manifestation**, le cristal ayant fermé son canal spirituel.
+   Les deux ne tiennent pas ensemble. Même question pour **Ludwig**, classe Écrivain, qui porte
+   l'Amulette et dont le Trait est l'absorption des âmes.
+
+Et deux plus légères : **§14** (les concaténations sont-elles de vrais éléments MV, ou un calcul
+de plugin — 1 516 entrées contre une poignée) et **§16** (le facteur d'amplification, et
+*Démocratie Stellaire* comme quatrième nom de la faction).
+
+---
+
 ## 2026-09-14 (2) — Première écriture dans `data/`
 
 ### Ce qui a été fait

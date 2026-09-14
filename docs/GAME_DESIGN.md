@@ -8,6 +8,10 @@
 > là où une règle est ambiguë, **rien n'est tranché** : la question part en fin de page, section
 > [**À TRANCHER**](#à-trancher).
 >
+> **Canon le plus récent :** [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md) — la Parole, le cristal
+> et les hôtels, dicté par JOKO le 2026-09-14. **Il fait foi** sur la composition des sorts, le
+> prix du mage et la logistique stellaire.
+>
 > **Sources lues** *(toutes archivées dans `_ancien_projet/03_lore_canon/`)* :
 > `lore.md` · `EMPIRE_DU_CORPS.md` · `SYSTEME_DE_MANA.md` · `DONS_SPIRITUELS.md` ·
 > `personnages.md` · `scenario.md` · `bestiaire.md` · `perso-iris-et-joah.md` ·
@@ -277,6 +281,47 @@ FEU ─► EAU ─► FOUDRE ─► TERRE ─► VENT ─► GLACE ─► FEU
 
 ---
 
+### 2.5 · La composition d'un sort — 🟩 **chiffrée** *(`CANON_LA_PAROLE.md`, 2026-09-14)*
+
+🟩 Un sort se compose comme une phrase codée : **mot de passe + élément + sort**. Le mot de passe
+**ouvre les canaux un instant, puis ils se referment**. 🟩 **L'exactitude fait tout : une syllabe
+fausse et rien ne vient.**
+
+**Les quatre formes :**
+
+| Forme | Règle | Exemple du canon |
+|---|---|---|
+| **Simple** | un élément, un sort | *parole n°1, boule de feu* |
+| **Fusion** | les codes **s'additionnent** → un élément **nouveau** | Feu (8) + Eau (9) = **17 Vapeur** |
+| **Double élément** | les codes **se concatènent** → les deux effets **coexistent** | Vent (10) + Feu (08) → **1008**, *bourrasque de feu* |
+| **Amplifiée** | un mot spécial **multiplie la puissance** | *parole n°8, amplification, bulle d'eau* — ⬜ **facteur non chiffré** |
+
+**La règle des fusions :** 🟩 le total doit atteindre **16 minimum**. En dessous, **échec** —
+c'est ce qui protège les huit fondamentaux.
+
+**La règle de concaténation :** 🟩 les codes s'écrivent **sur deux chiffres**. Sans ça, `108` se
+lit `10|8` ou `1|08`. Vent = `10`, Feu = `08` → **`1008`**.
+
+> ⚙️ **Mesuré sur `data/System.json`** *(et non supposé)* :
+>
+> | | |
+> |---|---|
+> | sommes atteignables | **15**, de **16** à **30** |
+> | sommes qui ont un élément | 7 — 17 · 19 · 20 · 22 · 23 · 29, et **30** |
+> | sommes **sans élément** | **8** — 16 · 18 · 21 · 24 · 25 · 26 · 27 · 28 |
+> | concaténation, plage réelle | **808** (`08|08`) à **1515** (`15|15`) |
+> | collision fusions ⇄ concaténations | **aucune** ✅ — 30 < 808, le canon a raison |
+>
+> 🔴 **Mais deux trous, tous deux à trancher :** **Ombre + Ombre = 30**, et 30 porte déjà
+> « Mana positif » ; et **huit sommes sur quinze ne mènent à rien**.
+> → [À TRANCHER §13](#13--🆕-ombre--ombre--30--et-huit-sommes-qui-ne-mènent-nulle-part) ·
+> [§14](#14--🆕-les-concaténations-sont-elles-de-vrais-éléments-mv-).
+>
+> 🟩 Plusieurs paires tombent sur la **même** somme (Feu+Foudre et Eau+Terre font toutes deux 20,
+> donc Plante). Ce n'est pas un défaut : **la somme *est* l'élément**, c'est la règle même.
+
+---
+
 ## 3 · LES ÉTATS NÉCESSAIRES
 
 > Liste des états à créer dans `data/States.json`. **Aucun id n'est attribué ici** : la base est
@@ -400,6 +445,8 @@ et les 5 seuils 0-4 — sont écartées comme unité de mesure.)*
 | **Le paradoxe** | 🟩 **trop basse → les grands sorts ratent ; trop haute → on touche le Mur et on glisse vers le Dément** |
 | **Effet sur le mana positif** | 🟩 *un esprit brisé soigne mal* : la puissance du Positif **décroît** avec la lucidité · 🟨 ×0,85 / ×0,70 / ×0,55 |
 | **Loi de la Noyade** | 🟩 passé une certaine profondeur, **la descente devient irréversible** — on paie en raison, puis **en âme** · 🟨 chaque passage au plancher : **plafond mental −1 pour toujours** (plancher 4) + **+5 Errance** |
+| 🆕 **Le paradoxe du lac sans fond** | 🟩 *« Il existe une profondeur au-delà de laquelle comprendre est pire que mourir. Personne ne sait où elle est avant de l'avoir dépassée. Pas de vertige, pas de palier, pas de signal. »* → **conséquence d'interface : le jeu ne doit donner AUCUN avertissement avant ce seuil.** Pas de jauge qui clignote, pas de message, pas de couleur qui change. 🟩 *« On descend, on comprend mieux, on est promu — et un jour on comprend une chose de plus. »* ⚠️ Ça contredit le confort habituel (et l'alerte avant la casse des Dons, §4.5, qui prévient, elle) : ici **prévenir casserait la mécanique**. |
+| 🆕 **Le prix du mage** | 🟩 la Parole **ne coûte ni humanité ni chair**. À court de mana, le mage **ne se transforme pas** : il **s'épuise, ou tombe dans le coma**. De la fatigue. 🟩 Il **ne gagne rien en corps** — il gagne un esprit plus clair. 🟩 *« Le chasseur risque de devenir un monstre. Le mage risque de devenir lucide. »* |
 | **Ce qu'on gagne / perd** | 🟩 **voir toute vérité** / la **raison** |
 
 ### 4.4 · 🍖 La Faim — *l'Empire du Corps*
@@ -480,6 +527,25 @@ C'est la jauge que réserve la plage **variables 50-69**.
 
 ---
 
+### 5.5 · 🆕 Le cristal — *la ressource du mage* *(`CANON_LA_PAROLE.md`)*
+
+| | |
+|---|---|
+| **Ce que c'est** | 🟩 un **filtre qui filtre par ressemblance**. Chargé de **mana positif**, donc **seul le positif passe**. |
+| **Le négatif et le spirituel** | 🟩 **ne sont pas interdits — ils sont sans correspondance.** *« Il n'y a rien dans la pierre à quoi ils puissent s'accorder. »* ⚠️ Mécaniquement ce n'est **pas une résistance à 0 %** : c'est une **absence de canal**. Le sort ne passe pas, il n'est pas atténué. |
+| **Ce qu'il ne fait pas** | 🟩 *« Un cristal ne fabrique rien. Il prête. Et ce qu'il prête, il l'avait déjà. »* → **le cristal est un réservoir, pas un générateur.** |
+| **Ce qu'il coûte une fois pour toutes** | 🟩 il **ferme le canal spirituel au premier contact, définitivement**. 🟩 **Un mage n'a donc pas de manifestation spirituelle.** |
+| **Il se vide** | 🟩 il faut le **changer** ou le **recharger** |
+| **Où** | 🟩 aux **hôtels** — relais qui font **point de repos, de sauvegarde et de recharge** |
+| **La conséquence stratégique** | 🟩 *« le mage a un coût logistique et le chasseur non »* · 🟩 un chasseur tient **trois semaines sous terre** avec lui-même, un mage **ne va nulle part sans réseau** · 🟩 **couper les hôtels désarme une armée sans la combattre** |
+| ⬜ Non chiffré | la capacité du cristal, ce qu'une Parole y consomme, le prix d'une recharge |
+
+> 🎮 **Ce que ça donne en jeu :** la carte des hôtels **est** la carte de la portée réelle de la
+> Démocratie Stellaire. Un point de sauvegarde n'est plus un confort d'interface : c'est une
+> **infrastructure militaire**, et une cible.
+
+---
+
 ## 6 · LES SYSTÈMES À CODER
 
 > Ordre de lecture = **ordre de chargement**. Un système ne peut pas dépendre d'un système placé
@@ -514,7 +580,7 @@ C'est la jauge que réserve la plage **variables 50-69**.
 
 | # | Système | Ce qu'il produit | Dépend de |
 |---|---|---|---|
-| **S10** | **`ETT_Parole`** *(Esprit)* | 🟩 la Parole = **mot de passe (mana) + élément + n° de sort**, additionnés. 🟩 Longueur 1→5 mots : **puissance qui monte, fiabilité qui descend**. 🟩 La **lucidité requise** pour tenir *(⚠️ table à convertir en 1-10 — [À TRANCHER §11](#11--🆕-la-table--lucidité-requise--des-paroles-convertie-comment-))*. 🟩 La **Parole brisée** (aucun effet + contrecoup). 🟩 Les **runes** : Paroles gravées en chiffres, qui **agissent sans être récitées** et **ne ratent jamais**. | S6 · S3 |
+| **S10** | **`ETT_Parole`** *(Esprit)* | 🟩 **mot de passe + élément + sort**, et le mot de passe **ouvre les canaux un instant**. 🟩 Les **quatre formes** (§2.5) : Simple · **Fusion** *(somme, ≥ 16)* · **Double élément** *(concaténation sur deux chiffres)* · **Amplifiée**. 🟩 Longueur : **puissance qui monte, fiabilité qui descend** — *« dire court et juste bat presque toujours dire long et tremblant »*. 🟩 La **lucidité requise** pour tenir *(⚠️ table à convertir en 1-10 — [À TRANCHER §11](#11--🆕-la-table--lucidité-requise--des-paroles-convertie-comment-))*. 🟩 La **Parole brisée** : *une syllabe fausse et rien ne vient*. | S6 · S3 · **S27** |
 | **S11** | **`ETT_Maitrise`** *(Corps)* | 🟩 **instantané, pas d'incantation.** 🟩 **Renforcer** (mana négatif dans les membres) et **Projeter** (ondes, lames sombres). 🟩 Les **cinq Voies** : Forge · Onde · Source · Miroir · **Vide** *(l'aura disparaît — le plus mauvais signe)*. 🟩 **Progresse par le combat.** 🟩 **La Loi du Prix : la maîtrise amplifie les bonus ET les malus.** | S4 · S3 |
 | **S12** | **`ETT_Symbole`** *(Âme)* | 🟩 les **4 opérations** : **Matérialisation** (sentiment + désir + croyance) · **Résonance** (accorder deux âmes) · **Lecture** (le Regard) · **Frappe d'âme** (*traverse chair, armure et mana sombre* ; sonne, paralyse ou brise). 🟩 **✕ la Consommation** — interdite, **et elle fonctionne**. | S5 · S3 |
 
@@ -542,7 +608,19 @@ C'est la jauge que réserve la plage **variables 50-69**.
 | **S25** | **`ETT_Culte`** | ⬜ **rien d'écrit.** Les cultes existent dans le lore (du Premier, du trône vide, d'une Bête, d'une vérité du Lac) mais **aucune mécanique n'est écrite**. La plage variables 90-99 leur est réservée. → [À TRANCHER §8](#8--le-culte-les-cristaux--aucune-mécanique-écrite) | — |
 | **S26** | **`ETT_Cristaux`** | ⬜ **rien d'écrit.** Le mot n'apparaît dans aucun fichier de lore. Plage 70-89 partagée avec la Parole. → [À TRANCHER §8](#8--le-culte-les-cristaux--aucune-mécanique-écrite) | — |
 
-### 6.7 · Graphe de dépendances — les chemins critiques
+### 6.7 · 🆕 La voie du cristal — *ce qui fait tenir la Parole*
+
+| # | Système | Ce qu'il produit | Dépend de |
+|---|---|---|---|
+| **S27** | **`ETT_Cristal`** | le **réservoir** du mage : il se vide à l'usage, se change ou se recharge. 🟩 **Filtre par ressemblance** : le positif passe, le négatif et le spirituel **n'ont pas de canal** — ce n'est pas une résistance, c'est une absence. 🟩 *« Il prête, et ce qu'il prête, il l'avait déjà. »* 🟩 Il **ferme le canal spirituel** de son porteur, définitivement → **pas de manifestation**. | S2 · S3 |
+| **S28** | **`ETT_Runes`** | les Paroles **gravées en chiffres** sur parchemin ou sur arme : elles **agissent sans être récitées**. 🟩 C'est **l'essentiel de l'armement stellaire** — *« un soldat qui n'a pas le temps de réciter porte la phrase sur sa lame »*. Une rune ne dépend donc **ni de la lucidité, ni du temps de récitation**. | **S10** · S3 |
+| **S29** | **`ETT_Hotels`** | les **relais** : un même lieu fait **repos**, **sauvegarde** et **recharge de cristal**. 🟩 Le mage a un **coût logistique**, le chasseur non. 🟩 La carte des hôtels **est** la carte de la portée de la Démocratie Stellaire — 🟩 **les couper désarme une armée sans la combattre**. | **S27** |
+
+> ⚠️ **S29 touche à la sauvegarde**, donc au moteur MV lui-même : c'est le seul système de la
+> liste qui change quelque chose hors du combat et hors de la carte. À poser avant que le level
+> design ne s'appuie sur des points de sauvegarde libres.
+
+### 6.8 · Graphe de dépendances — les chemins critiques
 
 ```
 S1 Marque ─┬─► S4 Corruption ─┬─► S7 Équilibre ◄─┬─ S5 Errance ─┬─► S18 Âmes
@@ -582,7 +660,7 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 > **Tant qu'une question reste ouverte, rien ne s'écrit dans `data/` ni dans un plugin** sur ce
 > point.
 >
-> **État au 2026-09-14 : 5 tranchées ✅ · 5 ouvertes ❓ · 3 nées en chemin.**
+> **État au 2026-09-14 : 5 tranchées ✅ · 9 ouvertes ❓ · 7 nées en chemin.**
 > Les entrées tranchées restent en place, barrées de leur décision — on ne supprime pas une
 > question résolue, on note la réponse à côté.
 
@@ -600,6 +678,10 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 | **10** | 🆕 les 5 seuils du Lac sur l'échelle 1-10 | ❓ **née de la réponse §5** |
 | **11** | 🆕 la table « lucidité requise » des Paroles | ❓ **née de la réponse §5** |
 | **12** | 🆕 le cycle des branches, avec deux branches seulement | ❓ **née de la table d'éléments** |
+| **13** | 🆕 Ombre + Ombre = 30, et huit sommes sans élément | 🔴 **née du canon de la Parole** |
+| **14** | 🆕 les concaténations : vrais éléments MV, ou calcul en plugin | ❓ née du canon de la Parole |
+| **15** | 🆕 Aël, « Mage stellaire » **et** porteur d'une manifestation | 🔴 née du canon de la Parole |
+| **16** | 🆕 le facteur d'amplification · le nom de la faction | ❓ née du canon de la Parole |
 
 ---
 
@@ -798,6 +880,59 @@ tranche pas.**
 En 1-10, la conversion évidente serait **4+ / 6+ / 8+**. Elle est *évidente*, pas *écrite* — et
 elle place l'exigence des Paroles de 5 mots au seuil de la phase **Maîtrise**, ce qui est une
 décision d'équilibrage, pas une division par dix. **Je la propose, je ne l'applique pas.**
+
+### 13 · 🆕 Ombre + Ombre = 30, et huit sommes qui ne mènent nulle part
+
+**Mesuré sur `data/System.json`, pas supposé.** La règle est « le total doit atteindre 16
+minimum ». Les sommes de deux fondamentaux vont donc de **16** (Feu+Feu) à **30** (Ombre+Ombre).
+
+| Problème | Détail |
+|---|---|
+| 🔴 **Ombre + Ombre = 30** | et **30 porte déjà « Mana positif »**. La fusion la plus sombre du jeu donne la branche de la lumière. |
+| 🔴 **8 sommes sur 15 n'ont aucun élément** | **16 · 18 · 21 · 24 · 25 · 26 · 27 · 28**. La règle dit qu'elles réussissent ; la base ne leur donne rien. Ça couvre des paires très jouables : *Feu+Vent* (18), *Vent+Terre* (21), *Glace+Ombre* (28), *Foudre+Lumière* (26). |
+
+Pistes, aucune choisie : **nommer les huit manquantes** (et déplacer Mana positif / spirituel
+au-dessus de 30) · **interdire les paires identiques**, ce qui règle 30 mais laisse 18, 21, 24-28
+vides · **plafonner la fusion à 29** et faire échouer au-delà.
+
+### 14 · 🆕 Les concaténations sont-elles de vrais éléments MV ?
+
+La plage réelle mesurée va de **808** (`08|08`) à **1515** (`15|15`). **Aucune collision** avec les
+fusions ni avec 30/31 — sur ce point le canon est exact, je l'ai vérifié.
+
+Mais si ces codes doivent être de **vrais éléments** de `System.json`, le tableau passe à
+**1 516 entrées**, dont ~1 500 vides. MV les lira, mais l'éditeur devient impraticable.
+
+L'alternative : la concaténation n'existe **que dans le plugin**, qui applique les deux éléments
+fondamentaux l'un après l'autre. Le double élément est d'ailleurs défini comme *« les deux effets
+coexistent »*, pas comme un élément neuf — contrairement à la fusion. **Dis-moi laquelle.**
+
+### 15 · 🆕 Aël est « Mage stellaire » et porte une manifestation
+
+Ce canon dit : *« Un mage n'a pas de manifestation spirituelle. Le cristal ferme son canal
+spirituel au premier contact, définitivement. »*
+
+Or, dans `data/Actors.json` — que tu as dicté toi-même :
+
+```
+Aël  classe 4 · Mage stellaire
+     <manifestation: type=arme, nom=L'Arc, endurance=110>
+```
+
+Les deux ne tiennent pas ensemble. Trois issues : Aël **n'est pas** un mage au sens du cristal ·
+Aël **perd** sa manifestation et gagne un cristal · ou la règle admet une **exception** dont
+c'est justement l'enjeu. **Rien n'est touché dans `data/` avant ta réponse.**
+
+*Et la même question pour Ludwig, classe **Écrivain** : un écrivain porte-t-il un cristal ?
+Il porte **L'Amulette**, et son Trait est l'absorption des âmes — ce que le cristal ferme.*
+
+### 16 · 🆕 Deux petites
+
+- **L'amplification** — *« un mot spécial multiplie la puissance du sort »*. Multiplie **de
+  combien** ? C'est le seul chiffre manquant des quatre formes.
+- **Démocratie Stellaire** — quatrième nom pour la même faction. Les anciens textes disent
+  **Mages des Étoiles**, **Stellaria** et **République des étoiles**. Un seul nom sur les
+  écrans, ou plusieurs selon qui parle ?
 
 ---
 

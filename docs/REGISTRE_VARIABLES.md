@@ -17,7 +17,7 @@
 | **Variables 1 – 19** | **libre** — usage courant, scénario, événements ponctuels | vide |
 | **Variables 20 – 49** | **manifestations** | vide |
 | **Variables 50 – 69** | **faim** | vide |
-| **Variables 70 – 89** | **Parole et cristaux** | vide |
+| **Variables 70 – 89** | **Parole et cristaux** — *définis depuis le 2026-09-14 : voir [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md)* | vide |
 | **Variables 90 – 99** | **Culte** | vide |
 | **Interrupteurs 20 – 49** | **systèmes** | vide |
 
