@@ -12,6 +12,10 @@
 > et les hôtels, dicté par JOKO le 2026-09-14. **Il fait foi** sur la composition des sorts, le
 > prix du mage et la logistique stellaire.
 >
+> **Document de travail, pas encore canon :** [`CANON_LE_CORPS_ARTIFICIEL.md`](CANON_LE_CORPS_ARTIFICIEL.md)
+> — les institutions de l'Empire. Extrait implémentable en **§7**, statut discuté en
+> **[À TRANCHER §18](#18--🆕-ce-document-est-il-canon-ou-une-proposition-)**.
+>
 > **Sources lues** *(toutes archivées dans `_ancien_projet/03_lore_canon/`)* :
 > `lore.md` · `EMPIRE_DU_CORPS.md` · `SYSTEME_DE_MANA.md` · `DONS_SPIRITUELS.md` ·
 > `personnages.md` · `scenario.md` · `bestiaire.md` · `perso-iris-et-joah.md` ·
@@ -620,7 +624,21 @@ C'est la jauge que réserve la plage **variables 50-69**.
 > liste qui change quelque chose hors du combat et hors de la carte. À poser avant que le level
 > design ne s'appuie sur des points de sauvegarde libres.
 
-### 6.8 · Graphe de dépendances — les chemins critiques
+### 6.8 · 🆕 L'Empire — *les institutions qui se codent*
+
+| # | Système | Ce qu'il produit | Dépend de |
+|---|---|---|---|
+| **S30** | **`ETT_Code`** | les **Six Articles** comme infractions mesurables : boire au-dessus de son rang, la viande hors registre, le **couvre-feu de 20 h**, l'**Article IV** *(l'homme tuable — §7.2)*, la violence hors mandat, et l'**Article VI** *(livres d'âme, objets froids, mana spirituel)*. Chaque article a un **état d'infraction**, pas un dialogue. | S4 · **états 9-11** |
+| **S31** | **`ETT_Annone`** | la **ration mensuelle**, gratuite et **calibrée pour être insuffisante** ; le **cercle** du joueur, qui monte par service et descend par amende ou dénonciation ; le plafond de consommation par cercle. | **S8 (Faim)** · S30 |
+| **S32** | **`ETT_Registre`** | la **provenance** de chaque viande — `N` natif *(rare, cher)* ou `M` muté *(moins cher, plus riche en mana)* —, le marché, et la **viande grise** tolérée à un huitième du volume. | S8 · S31 |
+| **S33** | **`ETT_Gueules`** | la **dénonciation** : anonyme contre un fonctionnaire, **signée** contre un particulier ; **une sur neuf** instruite, **aucune détruite**. Une dénonciation retenue **fait descendre d'un cercle**. | S31 · S30 |
+
+> ⚠️ **S30 touche des données déjà écrites.** L'Article IV donne sa conséquence juridique à
+> l'**état 11 · Stade 3 — La Fièvre**, qui existe déjà en base. Et l'Article VI met **deux des
+> quatre marqués hors la loi** dans l'Empire : ludwing absorbe les âmes, Korrah manie le froid.
+> Ce n'est pas du décor — c'est une contrainte permanente sur le groupe jouable.
+
+### 6.9 · Graphe de dépendances — les chemins critiques
 
 ```
 S1 Marque ─┬─► S4 Corruption ─┬─► S7 Équilibre ◄─┬─ S5 Errance ─┬─► S18 Âmes
@@ -655,12 +673,193 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 
 ---
 
+## 7 · L'EMPIRE — CE QUI SE CODE
+
+> Source : [`CANON_LE_CORPS_ARTIFICIEL.md`](CANON_LE_CORPS_ARTIFICIEL.md), **document de travail**
+> et non canon arrêté *(il se déclare lui-même « proposé » par endroits et se termine sur sept
+> chantiers ouverts)*. **Rien de cette section ne part en base avant validation.**
+> Seul l'implémentable est repris ici : la politique, les portraits et les inspirations restent
+> dans le document source.
+
+### 7.1 · Le Code des Six Articles — 🟩 six lois, six mécaniques
+
+| Article | Ce qu'il interdit | Ce que ça donne en jeu |
+|---|---|---|
+| **I · Du Sang** | 🟩 boire au-dessus de son rang ; la distribution appartient à l'Empire | le **cercle** du joueur plafonne ce qu'il peut consommer → gate d'objet, pas de dialogue |
+| **II · De la Chair** | 🟩 viande hors contrôle, abattage hors mandat, commerce hors registre | chaque viande porte une **provenance** (§7.4) ; en vendre ou en porter hors registre est une infraction |
+| **III · De la Nuit** | 🟩 circuler après la **vingtième heure** | **couvre-feu** : au-delà de 20 h, être dehors est une infraction — sauf pour un chasseur. 🟩 *« La nuit appartient aux chasseurs. »* Et 🟩 **la nuit accélère la chute** *(déjà noté §4.1)* : sortir la nuit monte la Corruption plus vite |
+| **IV · De la Fièvre** | 🟩 exister au **troisième stade** | voir §7.2 — c'est l'article qui touche directement une donnée déjà en base |
+| **V · De la Violence** | 🟩 verser le sang d'un citoyen hors mandat | frapper un PNJ non mandaté = infraction ; le **mandat** est un drapeau, pas une morale |
+| **VI · Du Silence** | 🟩 *« Nul n'écoute ce qui ne parle pas. Nul ne répond à ce qui n'a pas de bouche. Nul ne garde de livre qui refroidit. »* Concrètement : **livres d'âme**, **le Rappel**, tout rassemblement autour d'un **objet froid**, et **toute recherche sur le mana spirituel**. Peine de mort, procédure sans audience. | 🔴 **l'article touche les héros** : ludwing absorbe les âmes, Korrah manie le froid. Porter l'Amulette dans l'Empire est un **délit capital** |
+
+> 🎮 **Ce que l'Article VI fait au groupe, et c'est du gameplay, pas du décor :** deux des quatre
+> marqués sont hors-la-loi par nature dans l'Empire. Un système d'**infraction / suspicion**
+> mesurable, pas un texte d'ambiance.
+>
+> 🟩 **Ce que l'Article VI ne prohibe PAS : l'Ancre.** *« Le mot n'apparaît pas dans l'article. »*
+> Un avis de trois pages rendu il y a soixante ans conclut qu'elle ne produit **aucun effet
+> mesurable** — 🟩 et personne n'a vérifié depuis, parce que vérifier serait une recherche sur le
+> mana spirituel, prohibée par le même article. *(Le Masque de Vesper est son Ancre ;
+> `EMPIRE_DU_CORPS.md` le dit.)*
+
+### 7.2 · L'Article IV — 🟩 l'homme tuable *(touche l'état 11, déjà en base)*
+
+🟩 Quiconque atteint le **troisième stade** est exécuté **sur-le-champ, par quiconque le
+constate. Nul recours, nul délai, nulle grâce.**
+
+L'état **11 · Stade 3 — La Fièvre** existe déjà dans `data/States.json`. Ce canon lui donne sa
+conséquence juridique, et elle est précise :
+
+| Ce qui est vrai de lui | Ce qui reste vrai |
+|---|---|
+| 🟩 tuable **par n'importe qui**, sans mandat, sans constat, sans procédure | 🟩 on ne peut **pas le voler** |
+| 🟩 celui qui le tue **ne commet rien** — aucun acte juridique n'a eu lieu | 🟩 on ne peut **pas prendre sa maison** ; sa famille **hérite normalement** |
+| 🟩 **sa chair ne peut pas être offerte à l'Arbre** — les rites de dépôt aux racines lui sont interdits | 🟩 ses dettes s'éteignent comme celles d'un mort naturel |
+
+🟩 **« Il peut être mangé. Il ne peut pas être rendu. »**
+
+> ⚙️ **Traduction jouable :** porter l'état 11 change le **comportement des PNJ** et ouvre une
+> **attaque sans conséquence** contre le porteur. Un allié qui passe au stade 3 devient
+> légalement tuable **par le groupe lui-même**.
+>
+> 🟩 **La faille, et elle est exploitable par le joueur comme contre lui :** l'article
+> **n'exige aucun constat, donc aucune preuve**. *« Un chasseur qui abat un rival et déclare une
+> Fièvre n'a rien à justifier. »* Il n'existe **aucune procédure de contestation**.
+
+### 7.3 · L'Annone et les neuf cercles — 🟩 la faim, côté institution
+
+🟩 Distribution **mensuelle** de sang filtré. **Gratuite, de droit, sans condition.** Jamais
+suspendue en soixante-quinze ans.
+
+🟩 **Et elle ne suffit jamais.** Calibrée pour tenir un porteur **au Calme sans effort physique
+intense**. Un travailleur, un chasseur, une femme enceinte, un adolescent : **tous en déficit**.
+🟩 *« Le complément vient du marché de la viande. »*
+
+> ⚙️ C'est la **boucle économique du jeu**, et elle branche directement la jauge de **Faim**
+> (§4.4, variables 50-69) : l'Annone remplit une part fixe, le reste s'achète, se chasse, ou
+> manque. **Un joueur qui ne chasse pas a faim.**
+
+**Les neuf cercles** — 🟩 anneaux concentriques autour de la plaine de l'Arbre, chacun = un droit
+de boisson :
+
+| Cercle | Droit | Qui |
+|---|---|---|
+| **1** | branche et tronc, **sans plafond** | le Conseil, la maison impériale |
+| **2-3** | tronc, plafonné | maisons libéralistes, hauts fonctionnaires |
+| **4-5** | puits proches, filtré supérieur | officiers, marchands, **chasseurs de rang A** |
+| **6-7** | racine filtrée standard | artisans, garnisons, chasseurs |
+| **8-9** | racine filtrée basse, **complément viande obligatoire** | la majorité |
+
+🟩 On **monte** par service *(trente ans de chasse, une découverte de puits, un acte signalé)*,
+on **descend** par amende, déclassement, ou **une dénonciation retenue**.
+🟩 Le seuil **8 → 7** est le plus fréquent, et c'est celui où le complément de viande cesse
+d'être obligatoire — 🟩 *« c'est-à-dire le seuil où l'on cesse de manger des chasseurs »*.
+
+> ⚙️ Le **cercle est une progression**, au même titre qu'un niveau : il ouvre des zones, des
+> boutiques et des dialogues, et il **redescend**. C'est aussi un gate d'accès : 🟩 le premier
+> cercle n'est **pas accessible sans laissez-passer**, et 🟩 **il n'existe aucune représentation
+> autorisée de l'Arbre** — les cercles bas ne savent pas à quoi il ressemble.
+
+### 7.4 · Le Registre — 🟩 **N** ou **M**
+
+🟩 Chaque carcasse légale est enregistrée : poids, provenance, terrain, compagnie, date, et
+**une lettre**. La colonne origine n'accepte que **deux valeurs** :
+
+- **N — natif.** 🟩 Créature réelle, faune ancienne, **rare, chère**.
+- **M — muté.** 🟩 *« Le sens de M n'est écrit nulle part. »*
+
+🟩 Les bouchers savent que le **M se vend moins cher**. Les acheteurs savent que le **M est plus
+riche en mana**. Les chasseurs, eux, **savent ce qu'ils ont abattu**.
+
+> ⚙️ **C'est une donnée d'objet, pas une scène.** Chaque viande porte `<origine: N>` ou
+> `<origine: M>` ; le M est **moins cher et nourrit mieux** (§4.4 : *« certains monstres
+> boostent, parce qu'ils portent une grosse quantité de mana »*). Le joueur peut jouer cent
+> heures sans jamais demander ce que veut dire M — **c'est exactement le dispositif**.
+> La révélation n'est pas une cinématique : c'est **une colonne de registre consultable depuis
+> le début**.
+
+### 7.5 · Les Gueules — 🟩 la dénonciation
+
+🟩 Des gueules de pierre, ouvertes, à hauteur d'homme, dans chaque cercle et chaque bourg de plus
+de quatre cents feux. On y glisse un papier plié.
+
+| Règle | 🟩 Le texte |
+|---|---|
+| contre un **fonctionnaire** | la dénonciation **peut être anonyme** |
+| contre un **particulier** | elle **doit être signée** |
+| taux d'instruction | 🟩 environ **une sur neuf** |
+| conservation | 🟩 **aucune n'est détruite** |
+
+🟩 Ce qu'on y dénonce : *« un voisin qui se gratte trop. Un frère qui voit dans le noir. Une odeur
+de viande non enregistrée. Un livre qui refroidit une pièce. Un homme qui ne dort plus. »*
+
+> ⚙️ **Chaque ligne de cette phrase est un symptôme mesurable en jeu** : le Frémissement
+> *(stade 2 → sens surdéveloppés)*, la viande hors registre *(§7.4)*, un livre d'âme
+> *(Article VI)*. Le joueur **est dénonçable** sur des états qu'il porte réellement.
+> Et une dénonciation retenue **fait descendre d'un cercle** *(§7.3)*.
+
+### 7.6 · 🔴 Le mana positif affame un porteur de Graine — *mécanique neuve et lourde*
+
+🟩 *« Le mana positif affame un porteur de Graine. »* Et 🟩 les **cristaux** de la Démocratie
+Stellaire sont **chargés de mana positif** *(`CANON_LA_PAROLE.md`)*.
+
+Conséquence écrite noir sur blanc dans le document : 🟩 *« le premier partenaire commercial de
+l'Empire produit en série la seule arme capable de le détruire »*.
+
+| Ce que ça implique | |
+|---|---|
+| **en combat** | l'élément **30 · Mana positif** ne fait pas que des dégâts à un buveur de sang : **il monte sa Faim** (§4.4), donc le pousse vers les stades et la Mue |
+| **en économie** | les cristaux sont **une arme vendue à l'ennemi**, et **ils ne reviennent pas** |
+| **pour le groupe** | 🟩 Aël, **Mage stellaire**, porte l'élément qui affame ses propres compagnons buveurs |
+
+> 🔴 **Deux choses à trancher avant d'y toucher :** le mot **« Graine »** n'existe **nulle part**
+> ailleurs dans le canon — le reste du monde dit *« boire le sang de l'Arbre »*. Et le facteur
+> n'est pas chiffré. → [À TRANCHER §17](#17--🆕-six-collisions-avec-le-canon-déjà-en-place).
+
+### 7.7 · Le Conseil des Masques — 🟩 neuf charges, pas neuf personnes
+
+🟩 **La règle mécanique, et c'est elle qui compte :** *« Le masque est permanent. Le porteur ne
+l'est pas. »* Un masque a une mémoire, une réputation, des dettes et des engagements **qui
+survivent à son porteur**. 🟩 Dans les archives on ne lit jamais *« Kaelen Vultric a décidé »*,
+on lit *« le Sourd a décidé »*.
+
+| Masque | Portefeuille | Porteur actuel *(proposé)* |
+|---|---|---|
+| **le Sourd** | sang, rations, puits, distribution | Kaelen Vultric |
+| **l'Écaille** | guerre, frontières, Terres Brisées | Aurelia Draconis |
+| **le Corbeau** | renseignement, Gueules, surveillance | Thana Corvus |
+| **la Veilleuse** | nuit, couvre-feu, Article III | Morrigan Noctis |
+| **la Coupe** | abattage, viande, registres | Cassian Sanguis |
+| **le Loquet** | Fosses, détention | Isolde Von Kark |
+| **l'Éteignoir** | Article VI, cultes, livres d'âme | Gideon Tenebris |
+| **la Balance** | commerce, Démocratie Stellaire, cristaux | Lyra Malakor |
+| **la Faux** | exécutions, Article IV, purges | Sylas Grim |
+
+⚠️ 🟩 *« Attribution proposée à partir de tes noms — tout est permutable. »* Les neuf noms
+viennent bien de `EMPIRE_DU_CORPS.md`, où ils n'avaient **aucun rôle** ; l'appariement, lui, est
+une proposition.
+
+> ⚙️ **En base, un masque n'est pas un acteur : c'est une variable.** L'entité persistante est la
+> charge ; le porteur est une valeur qu'on change. Un PNJ « le Sourd » qui interroge *qui* le
+> porte en ce moment, et non l'inverse.
+
+### 7.8 · Ce que ce canon N'apporte PAS en mécanique
+
+Pour éviter qu'on les cherche : le Traité du Corps Artificiel, le Dieu Mortel, l'Épreuve de la
+Sève Première, la Réduction, le jugement du règne, la chambre close, la paralysie du Sénat
+stellaire, les quatre crises et les secrets du Livre IX sont de la **matière narrative**. Ils se
+jouent en événements et en dialogues, pas en systèmes — sauf si JOKO veut que la **succession**
+devienne une vraie procédure jouable, auquel cas elle est entièrement spécifiée dans le document
+source *(neuf tirages, 30→9→40→12→25→9→45→11→7)*.
+
+---
+
 ## À TRANCHER
 
 > **Tant qu'une question reste ouverte, rien ne s'écrit dans `data/` ni dans un plugin** sur ce
 > point.
 >
-> **État au 2026-09-14 : 5 tranchées ✅ · 9 ouvertes ❓ · 7 nées en chemin.**
+> **État au 2026-09-14 : 5 tranchées ✅ · 11 ouvertes ❓ · 9 nées en chemin.**
 > Les entrées tranchées restent en place, barrées de leur décision — on ne supprime pas une
 > question résolue, on note la réponse à côté.
 
@@ -682,6 +881,8 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 | **14** | 🆕 les concaténations : vrais éléments MV, ou calcul en plugin | ❓ née du canon de la Parole |
 | **15** | 🆕 Aël, « Mage stellaire » **et** porteur d'une manifestation | 🔴 née du canon de la Parole |
 | **16** | 🆕 le facteur d'amplification · le nom de la faction | ❓ née du canon de la Parole |
+| **17** | 🆕 six collisions avec le canon en place *(Sève · la capitale · l'Ordre d'Or · la Graine · le Culte des Neiges · l'Empire de la Main)* | 🔴 **née du Corps Artificiel** |
+| **18** | 🆕 le Corps Artificiel : canon arrêté, ou proposition ? *(+ ses 7 chantiers)* | ❓ née du Corps Artificiel |
 
 ---
 
@@ -933,6 +1134,47 @@ Il porte **L'Amulette**, et son Trait est l'absorption des âmes — ce que le c
 - **Démocratie Stellaire** — quatrième nom pour la même faction. Les anciens textes disent
   **Mages des Étoiles**, **Stellaria** et **République des étoiles**. Un seul nom sur les
   écrans, ou plusieurs selon qui parle ?
+
+### 17 · 🆕 Six collisions avec le canon déjà en place
+
+Le *Corps Artificiel* heurte le canon sur six points. **Vérifié fichier par fichier** contre
+`_ancien_projet/03_lore_canon/`, rien n'a été modifié nulle part.
+
+| | Collision | Le canon en place | Le Corps Artificiel |
+|---|---|---|---|
+| **A** | 🔴 **« Sève »** | **Sève, la Liseuse des Sangs** — championne de l'**Empire Uni de l'Est**, rang S, d'une race ancienne de l'âme | **la Sève** = la **capitale de l'Empire du Corps** : Palais de Sève, les neuf cercles, les juristes de la Sève |
+| **B** | 🔴 **la capitale** | **Kragenvar** — et Iris est *« la Fournaise de Kragenvar »* | la Sève |
+| **C** | 🔴 **l'Ordre d'Or** | l'un des **Quatre Royaumes** — Aurelune, bleu & or, champion **Donovano**, celui à qui Vultric a imposé le Traité des Cendres | un **corps de répression interne à l'Empire**, commandé par l'Éteignoir |
+| **D** | 🟠 **« porteur de Graine »** | terme **absent de tout le canon** ; on dit *« boire le sang de l'Arbre »* | le mana positif **affame un porteur de Graine** — et c'est une mécanique de combat neuve (§7.6) |
+| **E** | 🟡 **« Culte des Neiges »** | terme **absent** ; le canon a des cultes génériques *(du Premier, du trône vide, d'une Bête, d'une vérité du Lac)* | l'Église spirituelle contre laquelle l'Article VI est écrit |
+| **F** | 🟡 **« l'Empire de la Main »** | terme **absent** | l'ancien propriétaire des Fosses des Pierres Brisées |
+
+**A, B et C sont les vraies.** Une capitale qui porte le nom de la championne d'un royaume rival,
+et un des Quatre Royaumes transformé en police intérieure de son propre ennemi — ce ne sont pas
+des détails de nommage, ce sont deux pièces de la carte politique qui changent de place.
+
+Trois issues possibles pour chacune, et je n'en choisis aucune : **c'est le nouveau texte qui
+gagne** *(et il faut corriger le canon en place)* · **c'est l'ancien qui gagne** *(et il faut
+renommer dans le nouveau)* · **les deux coexistent** *(homonymie assumée — ça se défend pour
+« Sève », beaucoup moins pour l'Ordre d'Or)*.
+
+### 18 · 🆕 Ce document est-il canon, ou une proposition ?
+
+Il se déclare lui-même proposition par endroits — *« Attribution proposée à partir de tes noms —
+tout est permutable »* —, commente ses propres choix de conception, énumère ses sources en
+Livre X, et se termine sur **sept chantiers ouverts** en Livre XI :
+
+1. **Qui est V. ?**
+2. **La Serrata** — le Conseil se ferme-t-il héréditairement pendant le jeu ?
+3. **Le dixième masque** — celui des chasseurs. *« Il ne coûte qu'une signature. »*
+4. **Ce qu'Éthon a répondu à l'Éteignoir.**
+5. **Le nom de Béhémoth** — ce que l'Empire appelle l'état où le Corps se défait.
+6. **Le différentiel de nutrition** — il lui faut un chiffre.
+7. **Les onze détenus des Puits** — dix sont encore vides.
+
+**Tant que tu n'as pas dit ce que tu gardes, `data/` ne bouge pas.** Les neuf masques, les Six
+Articles, les neuf cercles et le Registre sont prêts à devenir des données — ils ne le deviennent
+pas d'eux-mêmes.
 
 ---
 

@@ -7,6 +7,68 @@
 
 ---
 
+## 2026-09-14 (4) — Le Corps Artificiel
+
+### Ce qui a été fait
+
+Un traité politique complet de l'Empire — onze livres : la doctrine, le souverain, le Conseil des
+Masques, les partis, le droit, l'économie du sang, la Démocratie Stellaire, les crises, les
+secrets, les inspirations, les chantiers.
+
+- **`docs/CANON_LE_CORPS_ARTIFICIEL.md`** — le texte, **intégral et sans retouche**.
+- **`docs/GAME_DESIGN.md` §7** — l'extrait implémentable : les Six Articles, l'Article IV et
+  l'homme tuable, l'Annone et les neuf cercles, le Registre N/M, les Gueules, le mana positif
+  contre le porteur de Graine, le Conseil des Masques.
+- **`docs/GAME_DESIGN.md` §6.8** — quatre systèmes : **`ETT_Code`**, **`ETT_Annone`**,
+  **`ETT_Registre`**, **`ETT_Gueules`**.
+
+**Rien écrit dans `data/`.** Le banc passe toujours (23/23).
+
+### ⚠️ Ce document n'a pas le même statut que le précédent
+
+`CANON_LA_PAROLE.md` était une dictée. Celui-ci **se déclare lui-même proposition** par endroits
+— *« Attribution proposée à partir de tes noms — tout est permutable »* —, commente ses propres
+choix de conception, énumère ses sources d'inspiration en Livre X, et se termine sur **sept
+chantiers ouverts** en Livre XI.
+
+Il est donc enregistré comme **document de travail**, et c'est écrit en tête du fichier. La règle
+du projet est de pouvoir citer JOKO ; ici, une partie du texte ne le cite pas, elle lui propose.
+
+### Ce que la vérification a trouvé
+
+Six collisions avec le canon déjà en place, vérifiées fichier par fichier. Les trois sérieuses :
+
+| | Le canon en place | Le Corps Artificiel |
+|---|---|---|
+| **Sève** | la **Liseuse des Sangs**, championne de l'Empire Uni de l'**Est**, rang S | la **capitale** de l'Empire du Corps |
+| **la capitale** | **Kragenvar** *(Iris est « la Fournaise de Kragenvar »)* | la Sève |
+| **l'Ordre d'Or** | l'un des **Quatre Royaumes**, celui de **Donovano** | la **police intérieure** de l'Empire |
+
+Plus trois termes neufs, absents partout ailleurs : **« porteur de Graine »**, **« Culte des
+Neiges »**, **« l'Empire de la Main »**.
+
+### Deux choses qui touchent le jeu, pas le décor
+
+1. **L'Article VI met deux des quatre marqués hors la loi.** Il interdit les livres d'âme, le
+   Rappel, tout rassemblement autour d'un objet froid, et toute recherche sur le mana spirituel —
+   peine de mort. Or **ludwing absorbe les âmes** et **Korrah manie le froid**. Porter l'Amulette
+   dans l'Empire est un délit capital. C'est une contrainte permanente sur le groupe jouable.
+2. **Le mana positif affame un porteur de Graine.** Les cristaux stellaires en sont chargés.
+   L'élément **30** ne fait donc pas que des dégâts à un buveur de sang : **il le pousse vers la
+   Mue**. Et Aël, Mage stellaire, porte l'élément qui affame ses propres compagnons.
+
+### En attente de JOKO
+
+- **§17** — les six collisions. Les trois premières déplacent des pièces de la carte politique,
+  pas des noms.
+- **§18** — ce document est-il canon arrêté ou proposition ? Et ses sept chantiers : qui est V. ·
+  la Serrata · le dixième masque · ce qu'Éthon a répondu à l'Éteignoir · le nom de Béhémoth · le
+  chiffre du différentiel · les onze détenus des Puits.
+
+Le suivi passe à **5 tranchées, 11 ouvertes**.
+
+---
+
 ## 2026-09-14 (3) — Le canon de la Parole
 
 ### Ce qui a été fait
