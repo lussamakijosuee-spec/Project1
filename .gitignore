@@ -1,27 +1,70 @@
-# Sauvegardes de test (Crucial pour RPG Maker !)
-save/
+# ─────────────────────────────────────────────────────────────────────────────
+#  L'Empire aux Trois Têtes — .gitignore (RPG Maker MV 1.6.1)
+#
+#  Règle de base : tout ce que l'éditeur MV produit et qui FAIT le jeu est
+#  versionné (data/, js/, img/, audio/). Seuls les fichiers de test, de
+#  déploiement et les crasses de l'OS sont ignorés.
+# ─────────────────────────────────────────────────────────────────────────────
 
-# Fichiers système invisibles Windows et Mac
-.DS_Store
-Thumbs.db
-Desktop.ini
+# ── Sauvegardes de test ──────────────────────────────────────────────────────
+# Écrites par le jeu au playtest. Elles ne décrivent pas le jeu : elles décrivent
+# une partie. Le dossier reste, son contenu ne se versionne pas.
+save/*
+!save/.gitkeep
 
-# Fichiers de log et d'erreurs
-*.log
-npm-debug.log*
-
-# Fichiers de déploiement (dossiers où tu exporteras ton jeu fini)
+# ── Déploiement / export ─────────────────────────────────────────────────────
 /export/
 /out/
 /dist/
+/deploy/
+/build/
+*.exe
+*.zip
+*.rar
+*.7z
 
-# Image parasite (capture accidentelle) — pas un asset du jeu
-img/enemies/1000024844_347x239.png
+# ── Temporaires de l'éditeur & sauvegardes automatiques ──────────────────────
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+*.rpgsave.bak
+Game.rpgproject.bak
+/backup/
+/databackup/
 
-# ⚠️ NE JAMAIS ignorer ces fichiers de jeu essentiels — ils DOIVENT être versionnés :
-#   js/plugins.js    → toute la config des plugins (ordre de chargement, activés, réglages)
-#   data/Enemies.json → tes 426 ennemis
-# (retirés d'ici le 2026-07-17 : ils étaient ignorés par erreur, ce qui risquait
-#  de les faire disparaître à un clone propre.)
-data/Actors.json
-data/CommonEvents.json
+# ── Logs & rapports de plantage ──────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ── Node / outillage ─────────────────────────────────────────────────────────
+node_modules/
+.npm/
+
+# ── Crasses système & éditeurs de texte ──────────────────────────────────────
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  ⚠️ CE QUI NE DOIT JAMAIS ÊTRE IGNORÉ
+#
+#  data/         la base de données entière (Actors, Skills, States, Maps…).
+#                C'est le jeu. Un data/ ignoré = un jeu perdu à chaque clone.
+#  js/           le moteur, js/plugins.js (ordre de chargement + réglages de
+#                TOUS les plugins) et js/plugins/.
+#  img/ audio/   les assets du projet.
+#  fonts/ icon/  index.html · package.json · Game.rpgproject
+#
+#  Si une ligne ci-dessus se met un jour à ignorer un de ces chemins, c'est un
+#  bug : corrige la ligne, ne « débogue » pas en supprimant le fichier.
+# ─────────────────────────────────────────────────────────────────────────────

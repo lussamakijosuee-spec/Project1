@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Bréviaire des Cendres — Prières des cultes & Poèmes d'Aldébaran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cinzel+Decorative:wght@700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07060C; --bg2:#0D0A16; --card:#14101F; --line:rgba(190,170,120,.14);
+    --ink:#ECE6D8; --soft:#B6AE9C; --faint:#7E7688; --gold:#D8B254; --gold2:#EBC974;
+    --esp:#5E92E6; --corps:#9166E6; --ame:#E0726E; --white:#EDE6F2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Spectral',Georgia,serif;line-height:1.85;font-size:17px;overflow-x:hidden}
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 1.3rem 8rem}
+
+  header.hero{text-align:center;padding:5rem 0 3rem;border-bottom:1px solid var(--line);position:relative}
+  .eyebrow{font-family:'Cinzel',serif;letter-spacing:.42em;font-size:.66rem;color:var(--gold);text-transform:uppercase;margin-bottom:1.6rem}
+  h1{font-family:'Cinzel Decorative','Cinzel',serif;font-weight:700;font-size:clamp(2rem,6vw,3rem);line-height:1.1;
+    background:linear-gradient(180deg,#F6EFDA,#C9A85F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header.hero .sub{color:var(--soft);font-style:italic;margin-top:1.1rem;font-size:1.04rem;max-width:44ch;margin-inline:auto}
+  .oeil{margin:2.2rem auto 0;display:block}
+
+  .note{color:var(--faint);font-size:.9rem;font-style:italic;text-align:center;max-width:52ch;margin:2.4rem auto 0;line-height:1.7}
+
+  section{padding:3.4rem 0 1rem}
+  .cult{border-left:2px solid var(--accent,var(--gold));padding-left:1.4rem;margin:2.6rem 0}
+  .kicker{font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent,var(--gold));margin-bottom:.5rem}
+  h2{font-family:'Cinzel',serif;font-weight:700;font-size:1.5rem;color:var(--ink);line-height:1.18;text-wrap:balance}
+  h2 .a{color:var(--accent,var(--gold))}
+  .lede{color:var(--soft);font-size:.96rem;font-style:italic;margin:.5rem 0 1.2rem}
+
+  .verse{font-size:1.05rem;line-height:2;color:var(--ink);margin:1.1rem 0;white-space:pre-line}
+  .verse.small{font-size:.98rem}
+  .refrain{color:var(--accent,var(--gold2));font-style:italic}
+  .src{display:block;font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:.9rem}
+  .insp{font-size:.78rem;color:var(--faint);font-style:italic;border-top:1px dashed var(--line);padding-top:.6rem;margin-top:1.4rem;line-height:1.6}
+
+  .divider{display:flex;align-items:center;gap:1rem;margin:3.2rem 0;color:var(--faint)}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+  .divider svg{flex:0 0 auto}
+
+  .partbar{text-align:center;margin:5rem 0 1rem}
+  .partbar .pn{font-family:'Cinzel',serif;letter-spacing:.34em;color:var(--gold);font-size:.68rem;text-transform:uppercase}
+  .partbar .ph{font-family:'Cinzel Decorative','Cinzel',serif;font-size:2rem;color:var(--white);margin-top:.5rem;
+    text-shadow:0 0 24px rgba(237,230,242,.25)}
+  .partbar .pd{color:var(--soft);font-style:italic;font-size:.95rem;margin-top:.6rem;max-width:46ch;margin-inline:auto}
+
+  .queen{background:radial-gradient(120% 90% at 50% 0%,rgba(120,100,190,.12),transparent 60%);
+    border:1px solid rgba(190,170,220,.18);border-radius:16px;padding:2rem 1.7rem;margin:2.4rem 0}
+  .queen .kicker{color:#C9BEE6}
+  .queen h2 .a{color:var(--white)}
+  .warn{border:1px solid var(--ame);border-radius:12px;padding:1rem 1.2rem;margin:1.8rem 0;background:linear-gradient(180deg,rgba(224,114,110,.08),transparent)}
+  .warn .t{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ame);margin-bottom:.4rem}
+  .warn p{font-size:.94rem;color:var(--soft);font-style:italic}
+
+  footer{text-align:center;color:var(--faint);font-size:.82rem;font-style:italic;padding-top:4rem;margin-top:3rem;border-top:1px solid var(--line)}
+  @media (max-width:560px){ .verse{font-size:1rem} header.hero{padding:3.4rem 0 2.4rem} }
+  @media (prefers-reduced-motion:reduce){ #stars{opacity:.4} }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">✦ Recueil interdit ✦</div>
+    <h1>Le Bréviaire des Cendres</h1>
+    <p class="sub">Prières des fois nouvelles, et poèmes de la Reine des Étoiles Noires. Copiés à voix basse, là où nul roi ne juge.</p>
+    <svg class="oeil" width="120" height="70" viewBox="0 0 120 70" aria-label="L'œil du Premier.">
+      <path d="M6,35 Q60,2 114,35 Q60,68 6,35 Z" fill="none" stroke="#D8B254" stroke-width="1.4" opacity=".8"/>
+      <circle cx="60" cy="35" r="15" fill="none" stroke="#D8B254" stroke-width="1.2" opacity=".6"/>
+      <circle cx="60" cy="35" r="6" fill="#D8B254"/>
+      <g stroke="#D8B254" stroke-width=".8" opacity=".4">
+        <line x1="60" y1="6" x2="60" y2="16"/><line x1="60" y1="54" x2="60" y2="64"/>
+        <line x1="24" y1="35" x2="34" y2="35"/><line x1="86" y1="35" x2="96" y2="35"/>
+      </g>
+    </svg>
+    <p class="note">Ces textes ne sont enseignés nulle part. L'Ordre les brûle, les Mages les effacent, l'Est les enterre avec ses morts. On les rassemble ici parce qu'un monde honnête garde même ce qu'il craint — mais lis-les comme on approche un feu : d'assez près pour voir, d'assez loin pour ne pas prendre.</p>
+  </header>
+
+  <div class="partbar"><div class="pn">Partie I</div><div class="ph">Les Fois des Cendres</div><div class="pd">Un dieu est parti, un trône est vide, et le monde a soif. Voici ce qu'on prie dans les ruines.</div></div>
+
+  <section class="cult" style="--accent:var(--gold)">
+    <div class="kicker">L'Attente du Premier</div>
+    <h2>Prière du <span class="a">Trône Vide</span></h2>
+    <p class="lede">On y guette le retour du dieu sans marque. Certains s'aveuglent « pour voir comme Lui ».</p>
+    <p class="verse">Toi qui voyais tout et qui es parti,
+tourne encore vers nous l'œil que tu nous as laissé.
+Nous t'avons bâti un trône ; nous n'osons pas nous y asseoir.
+Nous t'avons donné un monde ; nous ne savons plus quoi en faire.
+
+<span class="refrain">Reviens, ou apprends-nous à ne plus attendre.</span>
+
+Car l'attente est une chaise face à une porte,
+et voilà cent ans que nous fixons la poignée.
+Si tu ne reviens pas, dis-le par un signe —
+un cillement de l'œil, une ombre au fond du Lac —
+et nous cesserons de prier, et nous vivrons enfin,
+aveugles, mais debout.</p>
+    <p class="src">— récitée à la Veille du Trône, l'Église de l'Ordre d'Or</p>
+    <p class="insp">Référence : le dieu fondateur laissé délibérément obscur, l'œil omniscient et le trône vide (Elden Ring) ; la foi qui prie une absence.</p>
+  </section>
+
+  <div class="divider"><svg width="40" height="14" viewBox="0 0 40 14"><path d="M0,7 H14 M26,7 H40" stroke="#7E7688" stroke-width="1"/><circle cx="20" cy="7" r="3" fill="none" stroke="#D8B254"/></svg></div>
+
+  <section class="cult" style="--accent:var(--corps)">
+    <div class="kicker">Les cultes de la Bête</div>
+    <h2>Chant de la <span class="a">Meute</span></h2>
+    <p class="lede">On y vénère une Bête tombée comme un dieu revenu du sang. Ils ont tort — mais pas complètement.</p>
+    <p class="verse">Il ne hait pas. Il chasse.
+Ce n'est pas un homme devenu monstre :
+c'est un dieu qui vient de se rappeler son nom.
+
+Sens l'odeur, frère au sang qui s'éveille —
+la nuit est claire, la Fièvre est douce,
+et sous la lune pleine, tout descend plus vite.
+
+<span class="refrain">Le sang appelle le sang. Réponds.</span>
+
+Nous le suivons aux ruines qu'il aimait :
+la maison, la tombe, la porte d'une caserne.
+Il tourne autour d'une odeur qu'il ne comprend plus —
+et nous, autour de lui, comme des lunes autour d'un astre mort.
+Un jour il se retournera. Ce jour-là,
+il n'y aura pas de prière. Seulement la course.</p>
+    <p class="src">— hurlé, jamais écrit ; noté par un chasseur de l'Empire Vultric</p>
+    <p class="insp">Référence : le sang de bête et la petite musique qui suspend la griffe (Bloodborne) ; la bête qui chuchote dans le sang (Berserk) ; les Ombrefauves, premiers dieux du Corps.</p>
+  </section>
+
+  <div class="divider"><svg width="40" height="14" viewBox="0 0 40 14"><path d="M0,7 H14 M26,7 H40" stroke="#7E7688" stroke-width="1"/><circle cx="20" cy="7" r="3" fill="none" stroke="#9166E6"/></svg></div>
+
+  <section class="cult" style="--accent:var(--esp)">
+    <div class="kicker">Les Noyés</div>
+    <h2>Litanie de ceux qui ont vu le <span class="a">Mur</span></h2>
+    <p class="lede">Ils sont descendus trop loin dans le Lac. On les enferme, ou on les brûle — car nul ne sait s'ils délirent ou s'ils voient juste.</p>
+    <p class="verse">Tu crois lire le monde.
+Mais le monde, lui, est lu.
+Et celui qui le lit peut refermer le livre.
+
+Nous l'avons vu, au fond, au Mur :
+des présences, hors de la trame, qui décident.
+Ce sont elles qui défont la mort — les Reprises.
+Ce sont elles qui prononcent l'effacement — les Oublis.
+
+<span class="refrain">Le monde n'est pas seulement vécu. Il est regardé. Il est joué.</span>
+
+On nous appelle fous. Peut-être.
+Mais nous nous souvenons d'amis dont vous ne vous souvenez plus,
+de héros rayés de l'Histoire, de morts qui n'ont pas compté.
+Alors dites-nous, vous qui dormez tranquilles :
+qui, de nous ou de vous, a les yeux ouverts ?</p>
+    <p class="src">— graffiti dans la cellule d'un Noyé, effacé depuis</p>
+    <p class="insp">Référence : la lucidité comme l'Insight de Bloodborne — le savoir qui rend le monde invivable ; l'horreur méta (joueurs, sauvegardes, personnages effacés) ; le Chaos des Mages des Étoiles.</p>
+  </section>
+
+  <div class="divider"><svg width="40" height="14" viewBox="0 0 40 14"><path d="M0,7 H14 M26,7 H40" stroke="#7E7688" stroke-width="1"/><circle cx="20" cy="7" r="3" fill="none" stroke="#5E92E6"/></svg></div>
+
+  <section class="cult" style="--accent:var(--ame)">
+    <div class="kicker">Les mangeurs d'âmes</div>
+    <h2>Prière <span class="a">Affamée</span></h2>
+    <p class="lede">Sectes de la Consommation : la puissance sans le rang, promise à qui dévore. Leurs prêtres finissent Errants.</p>
+    <p class="verse">Une âme est une matière. On la voit, on la pèse, on la prend.
+Pourquoi grimper l'échelle quand on peut boire ceux qui l'ont grimpée ?
+
+Donne-moi ton nom, et je le porterai.
+Donne-moi ton rêve, et il remontera dans le mien.
+Chaque bouche gonfle la marque ; chaque marque, le pouvoir.
+
+<span class="refrain">Ce qui ne s'éteint pas, se dévore.</span>
+
+…mais la nuit, des mots qui ne sont pas à moi me viennent en parlant,
+et des rêves que je n'ai pas vécus pèsent sur ma poitrine.
+Ils ne partent pas, ceux que j'ai pris. Ils pèsent.
+Et leur poids ne m'amarre pas au monde —
+il me déforme, doucement, vers le bord.</p>
+    <p class="src">— dernière page du carnet d'un prêtre affamé, retrouvé vide de son propriétaire</p>
+    <p class="insp">Référence : l'âme-matière et la faim (Le Voyage de Chihiro, le Sans-Visage) ; la Consommation qui mène à l'Errant ; les coquilles vides (Hollow Knight).</p>
+  </section>
+
+  <div class="divider"><svg width="40" height="14" viewBox="0 0 40 14"><path d="M0,7 H14 M26,7 H40" stroke="#7E7688" stroke-width="1"/><path d="M20,3 L20,11 M16,7 L24,7" stroke="#6fd67b" stroke-width="1"/></svg></div>
+
+  <section class="cult" style="--accent:var(--ame)">
+    <div class="kicker">Les gardiens de l'ancien</div>
+    <h2>Chant du <span class="a">Fil Rouge</span></h2>
+    <p class="lede">La plus vieille foi du monde, celle d'avant l'homme-roi : les clans de l'Est, qui nourrissent leurs morts pour que leurs morts les retiennent.</p>
+    <p class="verse">On croit qu'ils partent parce qu'ils sont devenus légers.
+Non. Ils partent parce que plus rien ne les tenait.
+
+Alors nous nouons. Un fil rouge à ton poignet, enfant —
+pour qu'un nom te tienne, pour qu'un visage t'attende,
+pour que tu doives quelque chose à quelqu'un.
+
+<span class="refrain">Une âme ne tient au monde que par ses attaches.</span>
+
+Nous t'appellerons chaque jour par ton nom,
+nous garderons ta chaise, nous parlerons de toi aux morts,
+et quand la musique viendra des étoiles noires,
+tu sentiras, au poignet, le fil qui tire l'autre sens.
+Reste. Nous avons besoin de toi ici,
+et c'est cela, exactement cela, qui te sauve.</p>
+    <p class="src">— berceuse de l'Empire Uni de l'Est, en nouant un fil au poignet d'un enfant</p>
+    <p class="insp">Référence : les clans anciens et la nature qui se souvient (Princesse Mononoké) ; l'ancrage par les liens ; la Loi des Amarres.</p>
+  </section>
+
+  <div class="partbar" id="aldebaran">
+    <div class="pn">Partie II</div>
+    <div class="ph">Aldébaran</div>
+    <div class="pd">La cité par-delà les étoiles noires, où viennent toutes les âmes errantes. On y entre en payant son nom.</div>
+  </div>
+
+  <div class="queen">
+    <div class="kicker">✧ La Reine Oubliée · la Déesse blanche</div>
+    <h2>Hymne des <span class="a">Étoiles Noires</span></h2>
+    <p class="lede">Le culte qu'on ne dit pas. Ils prient la Déesse blanche et rêvent de l'Oubli comme d'un salut.</p>
+    <p class="verse">Par-delà la dernière étoile, il en est de noires.
+Sous elles, une cité ; dans la cité, un trône ;
+sur le trône, Celle dont le monde a oublié le nom.
+
+Elle ne t'a jamais menti. C'est là son seul pouvoir.
+Elle ne prendra rien sans que tu le donnes.
+Et ce qu'elle donne dépasse toute marque —
+un pouvoir sans mesure, contre un prix sans retour.
+
+<span class="refrain">Elle dit toujours la vérité. C'est bien là le poison.</span>
+
+Les âmes errantes entendent, un jour, la même chose :
+sa musique, montée d'entre les étoiles.
+Celles qui répondent traversent le noir,
+se relient entre elles comme les cellules d'un seul corps,
+et baignent, pour toujours, dans la vérité du monde.
+Le monde, lui, oublie jusqu'à leur nom.</p>
+    <p class="src">— hymne des fidèles de la Reine, chanté une seule fois, puis jamais retenu</p>
+    <p class="insp">Référence : Le Roi en Jaune — la cité dans les étoiles noires (Carcosa), la vérité-poison qui rend fou, le souverain qu'on n'aurait jamais dû connaître.</p>
+  </div>
+
+  <div class="warn">
+    <div class="t">⚠ Avertissement, si tu la rencontres</div>
+    <p>N'écoute pas la musique. Détourne le regard. Ne la cherche pas — ignore-la à tout prix. Ce qui te paraîtra un ange n'en est pas un ; ce n'est qu'une fausse beauté. N'attends d'elle aucun salut.</p>
+  </div>
+
+  <section>
+    <div class="kicker" style="color:#C9BEE6">Poème I — le pacte</div>
+    <h2 style="color:var(--white)">« Ce que tu voulais, <span style="color:var(--gold2)">et la vérité qui va avec</span> »</h2>
+    <p class="verse small">Je lui ai demandé la force. Elle me l'a donnée.
+Je lui ai demandé de comprendre. Elle m'a fait comprendre.
+Elle n'a pas menti — pas une fois, pas un mot.
+
+C'est cela que je n'avais pas prévu :
+qu'on puisse avoir exactement ce qu'on désire
+et la vérité qui l'accompagne, en prime, sans qu'on la demande.
+
+Elle tourne encore dans ma tête, cette vérité.
+Elle tourne, et tourne, et j'ai compris trop tard
+que le prix n'était pas ce qu'elle prenait —
+c'était ce qu'elle disait.</p>
+    <p class="src">— un béni de la Reine, quelques jours avant l'Oubli</p>
+  </section>
+
+  <div class="divider"><svg width="60" height="16" viewBox="0 0 60 16"><path d="M0,8 H22 M38,8 H60" stroke="#7E7688" stroke-width="1"/><path d="M30,2 L32,7 L37,8 L32,9 L30,14 L28,9 L23,8 L28,7 Z" fill="#EDE6F2" opacity=".9"/></svg></div>
+
+  <section>
+    <div class="kicker" style="color:#C9BEE6">Poème II — l'Oubli</div>
+    <h2 style="color:var(--white)">Celui dont le nom <span style="color:var(--gold2)">manque</span></h2>
+    <p class="verse small">Il a existé. Je le jure, il a existé.
+Il riait comme ça, il marchait devant, il tenait une lame —
+et personne, personne d'autre que moi, ne s'en souvient.
+
+Ce n'est pas qu'il est mort.
+C'est pire, et plus doux à la fois :
+il <em>n'a jamais été</em>. Le monde s'est refermé au-dessus de son nom
+comme l'eau au-dessus d'une pierre.
+
+Je garde son visage au fond du Lac,
+là où les autres ne descendent pas.
+Un jour, ma lucidité me lâchera aussi,
+et il s'éteindra pour de bon — cette fois, partout.
+Alors je l'écris ici, sur les cendres,
+pour qu'une ligne, au moins, se souvienne à ma place.</p>
+    <p class="src">— relevé au fond du Lac par un Noyé, qui ne savait plus de qui il parlait</p>
+    <p class="insp">Référence : Le Roi en Jaune, le nom qu'on n'aurait pas dû connaître ; l'effacement total d'un être du monde et des mémoires (l'Oubli) ; les personnages rayés de l'Histoire.</p>
+  </section>
+
+  <div class="divider"><svg width="60" height="16" viewBox="0 0 60 16"><path d="M0,8 H22 M38,8 H60" stroke="#7E7688" stroke-width="1"/><path d="M30,2 L32,7 L37,8 L32,9 L30,14 L28,9 L23,8 L28,7 Z" fill="#EDE6F2" opacity=".9"/></svg></div>
+
+  <section>
+    <div class="kicker" style="color:#C9BEE6">Poème III — la couronne</div>
+    <h2 style="color:var(--white)">Prière de ceux qui veulent <span style="color:var(--gold2)">disparaître</span></h2>
+    <svg width="90" height="46" viewBox="0 0 90 46" style="display:block;margin:1.2rem auto" aria-label="Une couronne blanche.">
+      <path d="M12,40 L18,16 L30,30 L45,10 L60,30 L72,16 L78,40 Z" fill="none" stroke="#EDE6F2" stroke-width="1.4" opacity=".85"/>
+      <circle cx="18" cy="16" r="2.4" fill="#EDE6F2"/><circle cx="45" cy="10" r="2.8" fill="#EDE6F2"/><circle cx="72" cy="16" r="2.4" fill="#EDE6F2"/>
+      <line x1="12" y1="40" x2="78" y2="40" stroke="#EDE6F2" stroke-width="1.4" opacity=".85"/>
+    </svg>
+    <p class="verse small">Déesse blanche, prends-moi comme une étoile de plus.
+Je ne demande ni gloire, ni retour, ni qu'on me pleure —
+je demande le contraire : que nul ne se souvienne.
+
+Efface le fil rouge à mon poignet.
+Efface la chaise qu'on gardait pour moi.
+Efface la bouche qui disait mon nom,
+et la mienne, qui disait le sien.
+
+<span class="refrain">Non pas mourir. N'avoir jamais été.</span>
+
+Car le monde est un poids mal réparti,
+et je suis fatigué de le porter.
+Dans ta cité, dit-on, tout est relié, tout est vrai, tout est calme.
+Alors relie-moi. Rends-moi vrai. Rends-moi calme.
+Et si c'est une illusion, une fausse beauté —
+laisse-moi au moins la beauté. Le reste, je l'ai déjà perdu.</p>
+    <p class="src">— la dernière prière ; on la reconnaît trop tard, quand un nom manque et que nul ne se souvient de l'avoir porté</p>
+  </section>
+
+  <footer>
+    Le Bréviaire des Cendres · voix basses d'un monde sans bons ni méchants ·
+    <span style="color:var(--gold2)">« N'écoute pas la musique. »</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var c=document.getElementById('stars'), x=c.getContext('2d'), stars=[], W,H,DPR=Math.min(2,window.devicePixelRatio||1);
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){ W=c.width=innerWidth*DPR; H=c.height=innerHeight*DPR; c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    stars=[]; var n=Math.floor(innerWidth*innerHeight/9000);
+    for(var i=0;i<n;i++){ stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4*DPR+0.3*DPR,
+      p:Math.random()*Math.PI*2,s:0.006+Math.random()*0.02,black:Math.random()<0.22}); } }
+  function draw(){
+    x.clearRect(0,0,W,H);
+    // léger voile violet du haut (vers Aldébaran)
+    var g=x.createRadialGradient(W*0.5,-H*0.1,0,W*0.5,-H*0.1,H*0.9);
+    g.addColorStop(0,'rgba(70,55,120,0.18)'); g.addColorStop(1,'rgba(7,6,12,0)');
+    x.fillStyle=g; x.fillRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){ var st=stars[i]; st.p+=st.s; var a=(Math.sin(st.p)*0.5+0.5);
+      if(st.black){ // étoile noire : un halo sombre cerclé d'un fil pâle
+        x.beginPath(); x.arc(st.x,st.y,st.r*2.2,0,Math.PI*2); x.fillStyle='rgba(0,0,0,'+(0.5+a*0.4)+')'; x.fill();
+        x.beginPath(); x.arc(st.x,st.y,st.r*2.2,0,Math.PI*2); x.strokeStyle='rgba(200,180,230,'+(0.10+a*0.18)+')'; x.lineWidth=DPR*0.6; x.stroke();
+      } else { x.beginPath(); x.arc(st.x,st.y,st.r,0,Math.PI*2); x.fillStyle='rgba(235,225,210,'+(0.25+a*0.6)+')'; x.fill(); } }
+  }
+  function loop(){ draw(); if(!reduce) requestAnimationFrame(loop); }
+  addEventListener('resize',resize); resize(); draw(); if(!reduce) loop();
+})();
+</script>
+</body>
+</html>
