@@ -1,0 +1,7 @@
+[
+null,
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"","classId":1,"equips":[0,0,0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Vesper","nickname":"","note":"<manifestation: type=objet, nom=Le Masque, endurance=140>\n<jaugePropre: nom=Saturation, max=100, seuil=100, rupture=brisure>","profile":""},
+{"id":2,"battlerName":"","characterIndex":0,"characterName":"","classId":3,"equips":[0,0,0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Ludwig","nickname":"","note":"<manifestation: type=objet, nom=L'Amulette, endurance=90>\n<jaugePropre: nom=Ombre, max=100, seuil=100, rupture=explosion>","profile":""},
+{"id":3,"battlerName":"","characterIndex":0,"characterName":"","classId":4,"equips":[0,0,0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Aël","nickname":"","note":"<manifestation: type=arme, nom=L'Arc, endurance=110>","profile":""},
+{"id":4,"battlerName":"","characterIndex":0,"characterName":"","classId":2,"equips":[0,0,0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Korrah","nickname":"","note":"<manifestation: type=avatar, nom=Les Poings, endurance=160>","profile":""}
+]

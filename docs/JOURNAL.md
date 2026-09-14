@@ -7,6 +7,68 @@
 
 ---
 
+## 2026-09-14 (2) — Première écriture dans `data/`
+
+### Ce qui a été fait
+
+`data/` était **vide** : ces quatre fichiers ont été **créés**, pas modifiés. Leur structure
+reprend celle d'un `System.json` / `States.json` / `Classes.json` / `Actors.json` MV **1.6.1**
+valide ; leur contenu est neuf.
+
+| Fichier | Contenu |
+|---|---|
+| `System.json` | la table d'**éléments** dictée par JOKO, index par index, **trous compris** — ils servent à composer les sorts par addition. Plus les slots d'équipement, les types de compétence, d'arme et d'armure. Titre : *L'Empire aux Trois Têtes*. |
+| `States.json` | **14 états** — les 12 demandés (ID 3 à 14), précédés de **Mort (1)** et **Garde (2)**, imposés par le moteur. |
+| `Classes.json` | **4 classes** à courbes différenciées sur 99 niveaux. |
+| `Actors.json` | **4 acteurs**, avec les notetags `<manifestation>` et `<jaugePropre>` **recopiés mot pour mot**. |
+
+**Le banc.** `bancs/1_base_de_donnees.js` — **23 contrôles**, tous verts, et **23
+contre-épreuves** : chaque contrôle est rejoué sur une base sabotée exprès et doit y **échouer**.
+Un contrôle qui passerait sur une base cassée serait dénoncé par le banc lui-même.
+
+**Point de retour :** tag git `avant-data` → `2550ed6`.
+
+### Décisions de JOKO
+
+| Question | Décision |
+|---|---|
+| **classes des héros** | une classe chacun : **Vesper** Chasseur de monstres · **Korrah** Chasseur d'insectes · **Ludwig** Écrivain · **Aël** Mage stellaire. *(Écarté : la lecture d'`EMPIRE_DU_CORPS.md`, qui fait de Vesper et Ludwig deux chasseurs de monstres jumeaux — ça reste écrit dans l'archive.)* |
+
+### Ce que j'ai dû choisir, faute de consigne — à corriger d'un mot
+
+- **Les chiffres qualitatifs.** « Léger bonus de force » → ATQ ×1.05 · « bonus d'agilité » →
+  AGI ×1.15 · « gros bonus offensif, gros malus défensif » → ATQ/ATQm ×1.40, DÉF/DÉFm ×0.60 ·
+  vœux → ×1.20 / ×1.50 / ×2.00. Tous listés dans `REGISTRE_VARIABLES.md`.
+- **Les tables que le fichier n'avait pas.** `System.json` n'existait pas : slots
+  d'équipement, types de compétence, d'arme et d'armure ont dû être posés. Ils suivent
+  `GAME_DESIGN.md` avec la même numérotation à trous. Le type **11 · Ombre** existe parce que
+  l'état « Amulette explosée » doit sceller **quelque chose** — sceller un type vide ne produit
+  aucune erreur en jeu, juste un sceau sur du vide.
+- **Les icônes** sont des repères provisoires, à choisir à l'œil dans l'éditeur.
+- **`partyMembers` = [1]** seulement, parce que la question « équipe de quatre ou un seul
+  marqué » (§9) est toujours ouverte.
+
+### Deux effets que MV ne sait pas exprimer
+
+Le **retour de dégâts** du Masque brisé (MV n'a aucun trait de recul) et le **multiplicateur de
+dégâts** des vœux (MV n'a que des taux d'ATQ / ATQm). Le trait posé n'en est que l'approximation
+visible ; la règle exacte est dans le notetag, pour le plugin qui viendra.
+
+### En attente de JOKO
+
+- 🔴 **§12, nouveau et bloquant pour le combat** — la décision « le cycle des branches
+  ×1,5 / ×0,5 est vivant » oppose **trois** branches : Négatif → Spirituel → Positif. La table
+  dictée n'en porte que **deux** (30 Mana positif, 31 Mana spirituel) : **le mana négatif n'a
+  pas de code**. Trois issues possibles, aucune choisie.
+- **§8** — « manifestation » est réglé (c'est le Don, `type=objet|arme|avatar`). Le **Culte** et
+  les **cristaux** restent sans aucune mécanique écrite.
+- La classe **Chasseur de monstres** n'a plus qu'un porteur (Vesper) alors que le canon en
+  donnait deux. Et **le stade 4, la Mue**, n'a pas été demandé : il n'existe pas.
+- `GAME_DESIGN.md` §2.1 est **périmé** et porte maintenant un bandeau : c'est `data/System.json`
+  qui fait foi sur les éléments.
+
+---
+
 ## 2026-09-14 — Remise à zéro et fondations
 
 ### Ce qui a été fait

@@ -1,10 +1,12 @@
 # REGISTRE DES VARIABLES & INTERRUPTEURS — *L'Empire aux Trois Têtes*
 
-> **Le registre fait foi.** Avant d'employer une variable ou un interrupteur — en plugin comme
-> en événement —, on l'inscrit ici. Une case vide est **libre** ; une case remplie est **prise**,
-> même si le système qui la prend n'est pas encore codé.
+> **Le registre fait foi.** Avant d'employer une variable, un interrupteur ou un ID de base de
+> données — en plugin comme en événement —, on l'inscrit ici. Une case vide est **libre** ; une
+> case remplie est **prise**, même si le système qui la prend n'est pas encore codé.
 >
-> **État : registre vide.** Les plages sont réservées, aucune case n'est encore attribuée.
+> **État au 2026-09-14 :**
+> — **variables et interrupteurs** : plages réservées, **aucune case attribuée** ;
+> — **états et acteurs** : ID définitifs, [renseignés plus bas](#les-id-de-base-de-données).
 
 ---
 
@@ -70,6 +72,79 @@ s'inscrivent quand même ici, dans la dernière section.
 | Type | Id | Nom | Rôle | Qui l'écrit |
 |---|---|---|---|---|
 | — | — | *(rien)* | | |
+
+---
+
+# LES ID DE BASE DE DONNÉES
+
+> Écrits dans `data/` le **2026-09-14**. Ce sont les ID **définitifs** : un plugin peut les
+> mettre en `@param` et compter dessus. Vérifiés par `node bancs/1_base_de_donnees.js`.
+
+## ÉTATS — `data/States.json`
+
+| Id | Nom | Effet MV | Dissipation | Notetags pour les plugins |
+|---|---|---|---|---|
+| **1** | Mort | restriction 4 · EXR ×0 | aucune | ⚠️ **imposé par le moteur** : MV code `deathStateId = 1` en dur. Ne jamais déplacer. |
+| **2** | Garde | drapeau de garde | fin de tour, fin de combat | état de la commande Garde du moteur |
+| **3** | Manifestation brisée | ATQ ×0.5 · DÉF ×0.5 | **aucune — ne part pas seule** | `<manifestationBrisee>` `<facteurDon: 0.5>` |
+| **4** | Masque brisé | ATQ ×0.5 · DÉF ×0.5 · HRG −2 %/tour | **aucune** | `<manifestationBrisee: porteur=Vesper>` `<retourDegats: pourcentPvMax=8, surType=sang>` `<regeneration: ratio=0.5>` |
+| **5** | Amulette explosée | ATQ ×0.5 · DÉF ×0.5 · **scelle le type de compétence 11 (Ombre)** | **aucune** | `<manifestationBrisee: porteur=Ludwig>` `<scelleType: 11>` `<blocage: tours=4>` |
+| **6** | En creuset | *(aucun trait)* | **à la prochaine attaque subie** (100 %) | `<creuset>` |
+| **7** | Gelé | AGI ×0.5 · HRG −5 %/tour | 2 à 4 tours, fin de combat | `<gele>` `<degatsParTour: pourcentPvMax=5>` |
+| **8** | En fuite | *(aucun trait — marqueur pur)* | **aucune** | `<marqueur: fuite>` — **porté en même temps qu'un vœu = vœu violé** |
+| **9** | Stade 1 — Le Calme | ATQ ×1.05 | **aucune** | `<stade: rang=1, nom=Le Calme>` |
+| **10** | Stade 2 — Le Frémissement | AGI ×1.15 | **aucune** | `<stade: rang=2, nom=Le Fremissement>` |
+| **11** | Stade 3 — La Fièvre | ATQ ×1.40 · ATQm ×1.40 · DÉF ×0.60 · DÉFm ×0.60 | **aucune** | `<stade: rang=3, nom=La Fievre>` |
+| **12** | Vœu mineur | ATQ ×1.20 · ATQm ×1.20 | **aucune** | `<voeu: rang=mineur, degats=1.20>` |
+| **13** | Vœu majeur | ATQ ×1.50 · ATQm ×1.50 | **aucune** | `<voeu: rang=majeur, degats=1.50>` |
+| **14** | Vœu absolu | ATQ ×2.00 · ATQm ×2.00 | **aucune** | `<voeu: rang=absolu, degats=2.00>` |
+
+**Prochain id d'état libre : 15.**
+
+> ⚠️ **Deux effets ne sont pas exprimables en traits MV** et attendent leur plugin — le trait
+> posé n'en est que l'approximation visible, le notetag porte la règle exacte :
+> le **retour de dégâts** du Masque brisé (MV n'a pas de trait « recul »), et le
+> **multiplicateur de dégâts** des vœux (MV n'a que des taux d'ATQ / ATQm, pas de
+> « dégâts infligés ×N »).
+>
+> ℹ️ Les **icônes** (`iconIndex` 1, 128, puis 4 à 15) sont des **repères provisoires** : elles
+> pointent vers la rangée d'icônes d'état de l'IconSet. À choisir à l'œil dans l'éditeur.
+
+## ACTEURS — `data/Actors.json`
+
+| Id | Nom | Classe | Manifestation | Seconde jauge |
+|---|---|---|---|---|
+| **1** | **Vesper** | 1 · Chasseur de monstres | **Le Masque** — `objet`, endurance **140** | **Saturation** 0-100, rupture à 100 → `brisure` |
+| **2** | **Ludwig** | 3 · Écrivain | **L'Amulette** — `objet`, endurance **90** | **Ombre** 0-100, rupture à 100 → `explosion` |
+| **3** | **Aël** | 4 · Mage stellaire | **L'Arc** — `arme`, endurance **110** | — *(le propre d'une arme : aucune)* |
+| **4** | **Korrah** | 2 · Chasseur d'insectes | **Les Poings** — `avatar`, endurance **160** | — *(le propre d'un avatar : aucune)* |
+
+Les notetags, tels qu'ils sont dans le champ **Note** de chaque acteur :
+
+```
+Vesper  <manifestation: type=objet, nom=Le Masque, endurance=140>
+        <jaugePropre: nom=Saturation, max=100, seuil=100, rupture=brisure>
+Ludwig  <manifestation: type=objet, nom=L'Amulette, endurance=90>
+        <jaugePropre: nom=Ombre, max=100, seuil=100, rupture=explosion>
+Aël     <manifestation: type=arme, nom=L'Arc, endurance=110>
+Korrah  <manifestation: type=avatar, nom=Les Poings, endurance=160>
+```
+
+> ⚠️ **Piège MV, à ne pas oublier en lisant ces notetags :** la métadonnée **garde l'espace
+> après le `:`**. `<manifestation: type=objet…>` donne `" type=objet…"`. **`trim()` sur chaque
+> valeur**, toujours. Le banc contrôle que l'espace est bien là.
+
+**Prochain id d'acteur libre : 5.**
+
+## Pour mémoire — classes et types
+
+| | Id | Nom |
+|---|---|---|
+| **Classes** | 1 · 2 · 3 · 4 | Chasseur de monstres · Chasseur d'insectes · **Écrivain** *(mauvais combattant, voulu)* · Mage stellaire |
+| **Slots d'équipement** | 1-7 | Arme · Bouclier · Tête · Corps · **Accessoire** · Talisman · **Âme** |
+| **Types de compétence** | 1 · 2 · 9 · 10 · **11** | Capacité · Spéciale · Âme · Sang · **Ombre** *(celui que scelle l'état 5)* — 3 à 8 réservés |
+| **Types d'arme** | 1,2,4,6,**7**,10,11,12,14,15 | Dague · Épée · Hache · Canne · **Arc** *(le Don d'Aël)* · Griffe · Gant · Lance · Ombre · Sang |
+| **Éléments** | voir `docs/GAME_DESIGN.md` §2 | 1 Physique · 8-15 les huit · 17/19/20/22/23/29 les dérivés · 30 Mana positif · 31 Mana spirituel — **les trous sont volontaires** |
 
 ---
 

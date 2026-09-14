@@ -168,6 +168,18 @@ mana. *(`codex v10` · `SYSTEME_DE_MANA.md` §4)*
 
 ### 2.1 · Les sources et les branches
 
+> ⚠️ **PÉRIMÉ DEPUIS LE 2026-09-14 — voir `data/System.json`, qui fait foi.**
+> JOKO a dicté une **autre numérotation**, déjà écrite dans la base :
+> les codes **2 à 7 sont réservés et vides**, **30 = Mana positif**, **31 = Mana spirituel**,
+> et il n'y a **pas de code pour le mana négatif**. Les trous sont volontaires : ils servent à
+> composer les sorts par addition et concaténation.
+> Le tableau ci-dessous est conservé comme trace de l'ancienne lecture. Les ID à jour sont dans
+> [`REGISTRE_VARIABLES.md`](REGISTRE_VARIABLES.md).
+>
+> 🔴 **Conséquence à trancher :** la décision du §2.4 (le cycle des branches **×1,5 / ×0,5** est
+> vivant) suppose **trois** branches opposables — Négatif, Spirituel, Positif. La nouvelle table
+> n'en porte que **deux**. → [À TRANCHER §12](#12--🆕-le-cycle-des-branches-avec-deux-branches-seulement-).
+
 | Code | Nom | Rôle | Chiffres attachés |
 |---|---|---|---|
 | **1** | Physique | arme / Don | — |
@@ -570,7 +582,7 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 > **Tant qu'une question reste ouverte, rien ne s'écrit dans `data/` ni dans un plugin** sur ce
 > point.
 >
-> **État au 2026-09-14 : 3 tranchées ✅ · 6 ouvertes ❓ · 2 nouvelles nées des réponses.**
+> **État au 2026-09-14 : 5 tranchées ✅ · 5 ouvertes ❓ · 3 nées en chemin.**
 > Les entrées tranchées restent en place, barrées de leur décision — on ne supprime pas une
 > question résolue, on note la réponse à côté.
 
@@ -578,15 +590,16 @@ S4 + S5 + S6 ──► S21 Fusion · S24 Destins parallèles
 |---|---|---|
 | **1** | attribution Don + Trait | ✅ **`DONS_SPIRITUELS.md` v3.0** |
 | **2** | quel codex fait foi | ❓ ouverte |
-| **3** | qui est acteur 1, qui porte quel art | ❓ ouverte |
-| **4** | cycle des branches & roue des éléments | ✅ **les deux vivants** |
+| **3** | qui est acteur 1, qui porte quel art | ✅ **acteurs 1-4 = Vesper · Ludwig · Aël · Korrah**, classes assignées *(voir `REGISTRE_VARIABLES.md`)*. Reste ouvert : **quel art** chacun porte. |
+| **4** | cycle des branches & roue des éléments | ✅ **les deux vivants** — mais voir **§12** |
 | **5** | échelle de lucidité | ✅ **1 → 10, monte = on va bien** |
-| **6** | le code élément 7 : AME ou Mana Parfait | ❓ ouverte |
+| **6** | le code élément 7 : AME ou Mana Parfait | ✅ **sans objet** : le code 7 est désormais **réservé et vide** |
 | **7** | la Voie du Sang, et combien de Voies | ❓ ouverte |
-| **8** | Culte · cristaux · manifestations | ❓ ouverte |
+| **8** | Culte · cristaux · manifestations | ❓ ouverte — **« manifestation » est réglé** *(c'est le Don : `type=objet\|arme\|avatar`)*, le **Culte** et les **cristaux** restent sans mécanique |
 | **9** | combien de héros joue-t-on à la fois | ❓ ouverte |
 | **10** | 🆕 les 5 seuils du Lac sur l'échelle 1-10 | ❓ **née de la réponse §5** |
 | **11** | 🆕 la table « lucidité requise » des Paroles | ❓ **née de la réponse §5** |
+| **12** | 🆕 le cycle des branches, avec deux branches seulement | ❓ **née de la table d'éléments** |
 
 ---
 
@@ -739,6 +752,26 @@ me dises ce que ce mot désigne ici : l'**apparition** du Don (le moment où il 
 Équipe de quatre dès le départ, ou **un** marqué choisi et trois **Destins parallèles** qui
 dérivent ? La réponse change l'écran-titre, la création de partie, `Actors.json`, et si le
 système S24 est central ou secondaire.
+
+### 12 · 🆕 Le cycle des branches, avec deux branches seulement ?
+
+**Née de la table d'éléments dictée le 2026-09-14.** Le §4 a tranché que le **cycle
+pierre-feuille-ciseaux ×1,5 / ×0,5 est vivant**. Il oppose **Négatif → Spirituel → Positif →
+Négatif** : trois branches, un cycle qui se referme.
+
+Or `data/System.json` ne porte que **Mana positif (30)** et **Mana spirituel (31)**. **Le mana
+négatif n'a pas de code** — et c'est la branche du Corps, celle des chasseurs, celle de tout
+l'Empire.
+
+Trois issues, je n'en choisis aucune :
+
+| Issue | Ce que ça donne |
+|---|---|
+| **ajouter `32 Mana négatif`** | le cycle à trois se referme comme décidé au §4 |
+| **le cycle devient une opposition à deux** | Positif ⇄ Spirituel, comme Lumière ⇄ Ombre. Simple — mais ce n'est plus le cycle du §4 |
+| **le négatif se compose** | il n'a pas de code propre parce qu'il s'obtient par addition, comme les dérivés. Dis-moi lequel. |
+
+**Rien du cycle ne se code avant ta réponse.**
 
 ### 10 · 🆕 Où tombent les 5 seuils du Lac sur l'échelle 1-10 ?
 
