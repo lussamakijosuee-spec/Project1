@@ -1,5 +1,19 @@
 # REGISTRE DES VARIABLES & INTERRUPTEURS — *L'Empire aux Trois Têtes*
 
+> ## ⚠️ Ce registre décrit le **socle neuf**, qui n'est plus la base en place
+>
+> Le **2026-09-15**, JOKO a demandé de remettre l'ancien jeu : `data/` contient à nouveau la
+> base d'origine — **1 258 compétences, 2 000 ennemis, 65 cartes**, et ses propres ID d'états et
+> d'acteurs, qui ne sont **pas** ceux listés plus bas.
+>
+> - Les ID de la **base en place** sont dans **`docs/GUIDE_DEVELOPPEUR.md`**.
+> - Les ID listés ici sont ceux du socle neuf, rangé dans **`_socle_neuf/`**.
+>
+> Le reste du document — les **plages réservées** et les **pièges MV** — vaut toujours : ce sont
+> des conventions de projet, pas des données.
+
+---
+
 > **Le registre fait foi.** Avant d'employer une variable, un interrupteur ou un ID de base de
 > données — en plugin comme en événement —, on l'inscrit ici. Une case vide est **libre** ; une
 > case remplie est **prise**, même si le système qui la prend n'est pas encore codé.

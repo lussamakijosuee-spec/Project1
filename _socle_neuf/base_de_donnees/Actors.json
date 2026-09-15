@@ -1,0 +1,7 @@
+[
+null,
+{"id":1,"battlerName":"","characterIndex":4,"characterName":"Actor1","classId":1,"equips":[1,1,2,3,7,5,0],"faceIndex":4,"faceName":"Actor1","traits":[],"initialLevel":1,"maxLevel":99,"name":"Vesper","nickname":"","note":"<manifestation: type=objet, nom=Le Masque, endurance=140>\n<jaugePropre: nom=Saturation, max=100, seuil=100, rupture=brisure>","profile":"Chasseuse de monstres. Le Masque est son Don, et son Ancre."},
+{"id":2,"battlerName":"","characterIndex":0,"characterName":"Actor1","classId":3,"equips":[6,0,2,4,8,5,0],"faceIndex":0,"faceName":"Actor1","traits":[],"initialLevel":1,"maxLevel":99,"name":"Ludwig","nickname":"","note":"<manifestation: type=objet, nom=L'Amulette, endurance=90>\n<jaugePropre: nom=Ombre, max=100, seuil=100, rupture=explosion>","profile":"Écrivain. L'Amulette ouvre l'ombre — lui n'ouvre que les âmes."},
+{"id":3,"battlerName":"","characterIndex":0,"characterName":"Actor2","classId":4,"equips":[8,0,2,4,6,5,0],"faceIndex":0,"faceName":"Actor2","traits":[],"initialLevel":1,"maxLevel":99,"name":"Aël","nickname":"","note":"<manifestation: type=arme, nom=L'Arc, endurance=110>","profile":"Mage stellaire. Son cristal ne laisse passer que le positif."},
+{"id":4,"battlerName":"","characterIndex":6,"characterName":"Actor1","classId":2,"equips":[3,1,2,3,0,5,9],"faceIndex":6,"faceName":"Actor1","traits":[],"initialLevel":1,"maxLevel":99,"name":"Korrah","nickname":"","note":"<manifestation: type=avatar, nom=Les Poings, endurance=160>","profile":"Chasseuse d'insectes. Les Poings agissent d'eux-mêmes."}
+]

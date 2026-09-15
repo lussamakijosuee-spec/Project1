@@ -418,4 +418,74 @@ mécanique écrite**, nulle part.
 
 ---
 
+## 2026-09-15 — L'ancien jeu est remis en place, sans nos plugins
+
+**Demande de JOKO :** *« remets le jeu comme il était, mais les plugins faits par nous… juste
+les MOG et YEP fonctionnent, avec leur plein potentiel, et tout le reste — data, maps,
+événements, vraiment tout — sauf les plugins que j'ai ou que tu as faits. »*
+
+C'est un demi-tour sur les deux sessions précédentes, et il est assumé : la base neuve n'est pas
+jetée, elle est **mise de côté**.
+
+### Ce qui est revenu à sa place
+
+| | |
+|---|---|
+| `data/` | **82 fichiers** : 1 258 compétences, 2 000 ennemis, 1 000 états, 2 000 troupes, 1 000 animations, **65 cartes**, `CommonEvents`, `BASE MAP`, `FULL MAP` |
+| `js/plugins/` | **89 plugins tiers** — 38 YEP, 28 MOG, 23 autres bibliothèques |
+| `docs/` | le lore entier *(16)* + la doc technique *(14)* + `docs/rapports/` *(8)* |
+| `bancs/` · `menus/` · `tools/` · `save/` · `databackup/` | 11 · 76 · 3 · 9 · 648 |
+
+### Ce qui reste dehors, et c'est la seule exception
+
+**135 plugins écrits par JOKO ou par Claude** — 110 `systemes_du_jeu/`, 29 `systemes_lore/` — et
+`ETT_Faim.js`. Ils sont dans `_ancien_projet/02_plugins/`, classés, avec leur mode d'emploi de
+réinstallation. Le socle neuf *(base de 17 fichiers, plugin de la faim, quatre bancs)* est dans
+`_socle_neuf/`. **0 fichier supprimé** — vérifié : chaque blob de `HEAD` est encore dans l'arbre.
+
+### Le point délicat : `js/plugins.js`
+
+L'ancien manifeste comptait **194 entrées**. Le recopier tel quel aurait désigné 135 fichiers
+absents. Il a donc été **reconstruit** : les 42 entrées tierces, **dans leur ordre d'origine et
+avec tous leurs paramètres**, repris un par un de `plugins.js.ancien`. 41 sont actives
+*(`MadeWithMv` était déjà décochée)*.
+
+> **Une entrée qui désigne un fichier absent ne lève aucune erreur : MV se tait.** C'est
+> exactement le genre de panne qu'aucune lecture de fichier n'attrape. D'où le contrôle qui
+> compare, dans le moteur en marche, les entrées actives de `$plugins` à `PluginManager._scripts`.
+
+### La vérification — `bancs/navigateur/jouer.js`, **18 contrôles, 0 échec**
+
+Le jeu ouvert dans Chromium et joué à la touche : l'écran-titre *(« Le Codex des Trois
+Sources »)*, les 41 plugins effectivement chargés, `Yanfly` et 22 `MOG_*` déclarés, une
+nouvelle partie, **Vesper · ludwing · Aël · Korrah** au niveau 89, la marche, le menu, l'écran
+des compétences *(94 sur le porteur)*, l'équipement *(7 emplacements)*, et **un combat mené
+jusqu'à son terme** contre la troupe 1. **Aucune erreur JavaScript, aucune ressource manquante.**
+
+C'était le vrai risque : le combat repose entièrement sur `YEP_BattleEngineCore`, les trois
+`ActSeqPack`, le CTB et `AnimatedSVEnemies`, **sans un seul plugin du projet pour les épauler**.
+Il tient.
+
+### Les bancs restaurés : 4 mesurent, 7 ne démarrent pas
+
+`4_un_seul_don.js` **76 contrôles passés**, `audit/6_bestiaire.js` et `audit/7_nouveau_lot.js`
+tout passe, `navigateur/jouer.js` 18 contrôles. Les sept autres chargent le fichier d'un plugin
+du projet et s'arrêtent sur un `ENOENT` : ils **ne mesurent rien**, ils ne sont pas en échec. Le
+tableau et la commande pour les réveiller sont en tête de `bancs/LISEZ-MOI.md`.
+
+### Deux choses à trancher, JOKO
+
+1. **Les 9 plugins tiers qui ne sont ni MOG ni YEP** ont été gardés : `Community_Basic`
+   *(la résolution d'écran)*, `Aries001L_ShakeEffects`, `Aries002_SystemCustomiser`,
+   `Irina_AntiAudioDelay`, `Olivia_AntiPlayerStress`, `Olivia_MapDisplayNameCore`,
+   `Olivia_MetaControls`, `TSR_EquipSlots` *(les 7 emplacements d'équipement)*, `MadeWithMv`
+   *(décochée)*. Ta phrase disait deux choses : *« juste les MOG et YEP »*, et *« sauf les
+   plugins que j'ai ou que tu as faits »*. J'ai suivi la seconde, qui est la règle : aucun de
+   ces neuf n'est de nous. **Si tu voulais strictement MOG + YEP, dis-le : c'est une ligne.**
+2. **Le titre à l'écran** est resté *« Le Codex des Trois Sources »* — dans `System.json`,
+   `index.html` et `package.json`. C'est du texte à l'écran : `CLAUDE.md` §2 dit que c'est ta
+   décision, pas la mienne.
+
+---
+
 *Prochaine entrée : à la prochaine session.*

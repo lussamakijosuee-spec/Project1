@@ -33,7 +33,8 @@ save/*
 *.rpgsave.bak
 Game.rpgproject.bak
 /backup/
-/databackup/
+# /databackup/ — NE PAS ignorer : c'est la sauvegarde complète de l'ancienne base,
+# elle était versionnée avant la remise à zéro et elle l'est restée. 648 fichiers.
 
 # ── Logs & rapports de plantage ──────────────────────────────────────────────
 *.log

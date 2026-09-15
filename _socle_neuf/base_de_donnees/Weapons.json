@@ -1,0 +1,13 @@
+[
+null,
+{"id":1,"animationId":0,"description":"De l'acier. Il ne monte pas de palier tout seul.","etypeId":1,"traits":[],"iconIndex":96,"name":"Lame de garde écarlate","note":"","params":[0,0,12,2,0,0,1,0],"price":200,"wtypeId":2},
+{"id":2,"animationId":0,"description":"Ébréchée à force de servir.","etypeId":1,"traits":[],"iconIndex":96,"name":"Lame écarlate fendue","note":"","params":[0,0,22,3,0,0,2,0],"price":900,"wtypeId":2},
+{"id":3,"animationId":0,"description":"On frappe avec le corps, pas avec la lame.","etypeId":1,"traits":[],"iconIndex":112,"name":"Gantelets lucides","note":"","params":[0,0,10,3,0,0,4,0],"price":150,"wtypeId":11},
+{"id":4,"animationId":0,"description":"Usés aux jointures, exactement là où il faut.","etypeId":1,"traits":[],"iconIndex":112,"name":"Gantelets de maîtrise","note":"","params":[0,0,19,5,0,0,7,0],"price":1700,"wtypeId":11},
+{"id":5,"animationId":0,"description":"Lourde, et elle porte loin.","etypeId":1,"traits":[],"iconIndex":104,"name":"Faux d'ossuaire","note":"","params":[0,0,14,1,4,0,0,0],"price":300,"wtypeId":4},
+{"id":6,"animationId":0,"description":"L'Écrivain ne gagne pas un échange. Il écrit ce qui le remplace.","etypeId":1,"traits":[],"iconIndex":144,"name":"Plume de fer","note":"","params":[0,0,4,1,14,2,0,2],"price":180,"wtypeId":6},
+{"id":7,"animationId":0,"description":"Le cristal est serti au pommeau.","etypeId":1,"traits":[],"iconIndex":144,"name":"Canne stellaire","note":"","params":[0,0,5,2,22,5,0,3],"price":800,"wtypeId":6},
+{"id":8,"animationId":0,"description":"Aucun effet, aucun talent : une arme qui ne cède pas.","etypeId":1,"traits":[],"iconIndex":128,"name":"L'Arc","note":"<DonDe: 3>","params":[0,0,11,0,6,0,3,2],"price":260,"wtypeId":7},
+{"id":9,"animationId":0,"description":"L'outil du chasseur, avant d'être une arme.","etypeId":1,"traits":[],"iconIndex":96,"name":"Dague de dépeçage","note":"","params":[0,0,7,0,0,0,5,1],"price":90,"wtypeId":1},
+{"id":10,"animationId":0,"description":"Réglementaire. Elle tient les rangs.","etypeId":1,"traits":[],"iconIndex":120,"name":"Lance de garnison","note":"","params":[0,0,15,4,0,0,0,0],"price":340,"wtypeId":12}
+]
