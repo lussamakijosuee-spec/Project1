@@ -583,4 +583,158 @@ Les 9 images de `img/system` écrasées par la démo, les 4 événements communs
 
 ---
 
+## 2026-09-15 (nuit) — Les 26 YEP restants, branchés et francisés
+
+> *« Les YEP la même, mais plein potentiel de tous si possible, vraiment complètement,
+> améliore le jeu au max. »*
+
+**10 YEP chargés → 36.** 26 ajoutés en quatre vagues, chacune vérifiée dans le navigateur avant
+la suivante. **70 plugins actifs · 2 420 réglages.**
+
+### Le piège d'entrée : Yanfly n'a pas de valeur de repli
+
+MOG écrit `Number(Moghunter.parameters['X'] || 633)`. Yanfly écrit
+`String(Yanfly.Parameters['X'])` — **sans repli**. Une entrée de `plugins.js` avec
+`"parameters":{}` ne donne donc pas les valeurs par défaut au plugin : elle lui donne la chaîne
+**« undefined »**, et il s'exécute avec, sans se plaindre.
+
+D'où `bancs/outils/reglages_yep.js`, qui relit les couples `@param` / `@default` de l'en-tête et
+reconstruit ce que l'éditeur MV aurait écrit. **Validé dans les deux sens** sur les 10 YEP déjà
+en place : il retrouve exactement leurs **320 paramètres**, sans en inventer ni en oublier un
+seul, et isole les **4 que JOKO avait réglés à la main** *(ils sont conservés tels quels)*.
+
+### Ce qui est branché
+
+| Vague | Plugins |
+|---|---|
+| ① noyau et affichage | `X_CoreUpdatesOpt` · `MessageCore` · `ElementCore` · `BuffsStatesCore` · `X_SkillCooldowns` |
+| ② objets et combat | `ItemCore` · `X_ItemUpgradeSlots` · `EquipCore` · `VictoryAftermath` · `BaseTroopEvents` · `LevelUpGrowthEffects` |
+| ③ carte et déplacement | `MoveRouteCore` · `X_ExtMovePack1` · `RegionRestrictions` · `RegionEvents` · `EventChasePlayer` · `SaveEventLocations` · `PictureSpritesheets` · `ScriptCallPluginCmd` |
+| ④ menus et options | `MainMenuManager` · `QuestJournal` · `SaveCore` · `KeyboardConfig` · `AnimateTilesOption` · `FpsSynchOption` · `PatchNotes` |
+
+La zone YEP de `js/plugins.js` est reconstruite **dans l'ordre officiel de Yanfly** à chaque
+vague — noyau, puis modules, puis extensions `X_` après leur parent. Tout le reste *(Aries,
+Olivia, TSR, Community_Basic, les 26 MOG, le temps)* n'a pas bougé d'une ligne.
+
+### Les quatre pannes, toutes muettes
+
+1. **Le combat ne se terminait plus.** Mon extracteur collait un saut de ligne aux valeurs :
+   MV demandait `audio/bgm/Ship3\n.ogg`, 404, et la fin de combat attendait un son qui
+   n'arrivait jamais. *(La ligne vide qui suit un `@default` le termine, elle ne le prolonge pas.)*
+2. **Six commandes de menu en double.** `YEP_MainMenuManager` livre ses créneaux 50, 55, 90, 95
+   et 100 **déjà remplis** en exemple. Le second créneau `formation` rappelle
+   `addOriginalCommands` — d'où le Music Book deux fois. Les 92 créneaux d'exemple vidés, nos 8
+   gardés.
+3. **La fenêtre du temps recouvrait le menu.** Avec 11 commandes, la liste descendait jusqu'à
+   `y=360` ; la fenêtre du temps est posée à `y=324`. `Command Rows = 8` ramène la liste à 288 :
+   le temps se glisse entre elle et la bourse, pile.
+4. **Mon détecteur de dépendances accusait à tort.** Il ramassait tout `YEP_*.js` cité dans
+   l'en-tête — `YEP_MoveRouteCore` *mentionne* `YEP_SelfSwVar` sans en dépendre. Il ne lit plus
+   que la parenthèse `(Requires …)` du `@plugindesc`.
+
+Et **un contrôle qui accusait un innocent** : « aucun libellé en anglais » listait `Options` et
+`Formation`, qui sont les **termes français de JOKO** dans `System.json`. Il vise maintenant
+nommément les libellés livrés par les plugins.
+
+### Le français
+
+**45 libellés traduits** sur 8 plugins — l'écran de fin de combat *(« NIVEAU SUPÉRIEUR ! »,
+« Butin », « EXP gagnée »)*, la sauvegarde *(« Charger cette sauvegarde ? »)*, la configuration
+du clavier, l'équipement *(« Retirer », « Terminer »)*, et le menu *(« Quêtes », « Notes de
+version », « Musiques »)*. Chaque remplacement **vérifie la valeur d'origine avant d'écrire** :
+si elle n'est pas celle attendue, le script s'arrête plutôt que d'écraser un réglage de JOKO.
+
+### Un défaut trouvé au passage
+
+`MOG_GoldHud · Initial Visible` valait **`"true "`** — avec une espace. Le plugin teste
+`String(x) === "true"`, qui est **faux** : la bourse démarrait cachée. Cinq autres réglages MOG
+traînaient la même espace. Nettoyés.
+
+### Écarté, et pourquoi
+
+**`YEP_X_BattleSysATB` et `YEP_X_BattleSysSTB`** : ce sont des **alternatives** au CTB, pas des
+compléments. `BattleSysATB` réécrit 13 méthodes que `BattleSysCTB` réécrit aussi ; les deux
+ensemble, c'est le dernier chargé qui gagne. Le CTB est réglé, il tourne — on ne le remplace pas
+sans que JOKO le demande. Ce sont les **deux seuls** YEP non chargés.
+
+`YEP_EquipCore`, lui, **est** chargé : il écrase bien `Game_Actor.equipSlots`, mais sans notetag
+il retombe sur `$dataSystem.equipTypes` — donc exactement les **7 emplacements** de JOKO. Il
+charge avant `TSR_EquipSlots`, qui garde donc la main sur l'affichage. Vérifié à l'écran.
+
+### Le banc
+
+De 26 à **30 contrôles, 0 échec** : la liste des commandes du menu, le non-recouvrement des
+fenêtres, les libellés français, et l'écran de fin de combat de Yanfly.
+
+---
+
+## 2026-09-15 (tard) — Les quatre points en attente, corrigés ou rendus à JOKO
+
+« **corrige** » — `CLAUDE.md` §2 dit qu'un mot bref ne donne pas mandat pour un chantier. Je m'en
+suis donc tenu aux **quatre points signalés la veille**, et j'ai mesuré chacun avant d'y toucher.
+
+### Deux ne sont pas des défauts : c'est du level design
+
+| | |
+|---|---|
+| **`Map001`** | **3 tuiles** changées, couche 0. |
+| **`Map004`** | un arbre déplacé : l'événement 5 retiré, l'événement 11 posé en (5,7), l'événement 7 retouché. |
+
+C'est JOKO qui a fait ça, et `CLAUDE.md` §4 est clair : **les cartes et les événements lui
+appartiennent**. Rien touché.
+
+### Les images : mesurées avant de trancher
+
+Sur les 9 fichiers de `img/system` écrasés par la démo, **cinq des versions « d'avant » étaient
+des gabarits vides de 96 octets** — la même signature que les images du chrono. La démo n'a donc
+rien détruit sur celles-là : elle a rempli du vide.
+
+| Rendu à JOKO *(vrai dessin)* | Gardé de la démo *(remplissait un gabarit vide)* |
+|---|---|
+| `Compass_A` 140×140 · 10 Ko | `CursorBorderB` — 96 o avant |
+| `Compass_B` 28×84 · **58 pixels visibles**, c'est l'aiguille du cadran | `Gold_A` — 96 o avant |
+| `Damage` 240×160 · 12,9 Ko | `Gold_B` — 96 o avant |
+| `Destination_Shadow` 36×16 | `ScrollBarA` — 96 o avant |
+| `DustTrail` 28×28 · 1,4 Ko | |
+
+Dans les deux sens, **l'autre version est conservée** : `*_demo.png` d'un côté, `*_vide.png` de
+l'autre. Rien n'est supprimé.
+
+### La carte de départ
+
+`startMapId` était passé à **67 « Time System »**, la carte de démo. Remis sur **1 « Plaine de
+Départ »**, en (6,8), comme avant le commit `0ca3015`. `editMapId` avec.
+
+### Les quatre événements de saison : pire que morts
+
+Précision sur mon propre rapport de la veille : les événements communs 60-63 étaient **vides**
+avant — la démo n'a rien écrasé, elle a apporté quatre événements de météo saisonnière. Mais
+tels qu'installés :
+
+- ils guettaient les interrupteurs **116-119**, ceux du système de temps de la démo. Le nôtre
+  lève **215-218** → ils ne partaient jamais ;
+- et leur **verrou maître** tombait sur l'**interrupteur 4**, qui dans cette base s'appelle
+  **« combat boss1 »**. Le jour où ils auraient fonctionné, **les feuilles d'automne seraient
+  tombées pendant un combat de boss.**
+
+Repointés sur 215-218, verrou déplacé sur le **231 `TS · Météo des saisons`** *(case vide,
+vérifiée avant écriture)*. L'interrupteur 4 est intact.
+
+> 🔴 **Le 231 est baissé.** Lève-le quand tu veux la météo des saisons : les feuilles au
+> printemps, les nuages en été, les feuilles rousses à l'automne, la neige en hiver.
+
+### Le banc, corrigé lui aussi
+
+Mon premier contrôle de la météo passait sur `weatherMode(0) !== 0` — et il valait `-1`, donc il
+**passait sans rien prouver**. Il lève maintenant le verrou et lit le résultat : `-1 → 1`, avec
+la contre-épreuve qui vérifie qu'avant la levée, rien ne partait. **30 → 34 contrôles, 0 échec.**
+
+### Un défaut visible de plus, qui est encore une image
+
+La bourse affiche maintenant son vrai cadre — et il porte le mot **« Gold »**, peint dans
+`img/system/Gold_A.png`. Comme pour « Year / Month / Day » sur le cadran de l'horloge : c'est du
+dessin, donc ta main. Ton ancien `Gold_A` était vide, je ne peux pas le rendre.
+
+---
+
 *Prochaine entrée : à la prochaine session.*
