@@ -482,9 +482,32 @@ tableau et la commande pour les réveiller sont en tête de `bancs/LISEZ-MOI.md`
    *(décochée)*. Ta phrase disait deux choses : *« juste les MOG et YEP »*, et *« sauf les
    plugins que j'ai ou que tu as faits »*. J'ai suivi la seconde, qui est la règle : aucun de
    ces neuf n'est de nous. **Si tu voulais strictement MOG + YEP, dis-le : c'est une ligne.**
-2. **Le titre à l'écran** est resté *« Le Codex des Trois Sources »* — dans `System.json`,
-   `index.html` et `package.json`. C'est du texte à l'écran : `CLAUDE.md` §2 dit que c'est ta
-   décision, pas la mienne.
+2. **Le titre à l'écran est désormais coupé en deux.** Pendant la restauration, tu as poussé le
+   commit `71b7399` : il renomme le titre de la fenêtre en **« L'Empire aux Trois Têtes »** dans
+   `index.html`. Ton changement est **gardé**. Mais la base restaurée, elle, porte toujours
+   `gameTitle` = **« Le Codex des Trois Sources »** dans `data/System.json` — c'est ce qui
+   s'affiche sur l'**écran-titre**.
+
+   | Où | Ce qui s'affiche |
+   |---|---|
+   | la barre de la fenêtre | **L'Empire aux Trois Têtes** *(ton commit)* |
+   | l'écran-titre du jeu | **Le Codex des Trois Sources** *(la base restaurée)* |
+   | `package.json` | Le Codex des Trois Sources |
+
+   Je ne tranche pas : `CLAUDE.md` §2 dit qu'un renommage visible à l'écran est ta décision.
+   **Dis le titre, je l'aligne partout en une passe.**
+
+### Ton commit `71b7399` — ce qu'il devient
+
+Tu as ouvert l'éditeur MV sur le **socle neuf** et sauvegardé : `index.html`, `System.json`
+*(versionId)*, `Classes.json` *(traits des trois premières classes)* et `MapInfos.json`. Comme
+`data/` a été rendu à l'ancienne base, tes retouches ont été **reportées dans
+`_socle_neuf/base_de_donnees/`**, là où elles s'appliquent. Seul `index.html` vaut pour les deux
+et reste tel que tu l'as écrit. **Rien de ce commit n'est perdu.**
+
+> ⚠️ Et si l'éditeur MV est **encore ouvert** sur le projet : ferme-le avant de recharger, sinon
+> il réécrira `data/` avec la base qu'il a en mémoire — le socle neuf — et effacera la
+> restauration.
 
 ---
 
