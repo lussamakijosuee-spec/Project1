@@ -21,7 +21,7 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 > | `4_un_seul_don.js` | ✅ **76 contrôles passés** | rien : il lit `data/` seul |
 > | `audit/6_bestiaire.js` | ✅ **tout passe** | rien : il lit `data/` seul |
 > | `audit/7_nouveau_lot.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `navigateur/jouer.js` | ✅ **26 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
+> | `navigateur/jouer.js` | ✅ **30 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
 > | `1_dons_spirituels.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `3_avatar_spirituel.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `6_avatar_niveaux.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
@@ -74,7 +74,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
-| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 26 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 30 contrôles |
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
@@ -88,15 +88,24 @@ C'est le seul qui puisse dire si `js/plugins.js`, reconstruit à la main le 2026
 debout : une entrée qui désignerait un fichier absent ne lève **aucune erreur visible**, MV se
 tait.
 
-**Deux pannes qu'il a attrapées et que rien d'autre n'aurait vues :**
+**Cinq pannes qu'il a attrapées et que rien d'autre n'aurait vues :**
 
 | Ce qu'on voyait | Ce que c'était |
 |---|---|
 | l'écran-titre s'affichait, et **« Nouvelle Partie » ne répondait plus** | 99 trous `null` dans `$dataSystem.variables`, créés en nommant la variable 200 d'un tableau long de 101. `Olivia_MetaControls` appelle `.match()` sur chaque nom au démarrage d'une partie |
-| l'horloge s'affichait, mais mesurée sur la mauvaise case | le contrôle lisait `$gameVariables.value(200)` **choisi d'avance**. Il demande maintenant au plugin **quelles cases il emploie** (`$gameSystem._hour_variableId`) et lit celles-là. Un ID mal recopié se verrait aussitôt |
+| **le combat ne se terminait plus** | un saut de ligne collé à une valeur de réglage : MV demandait `audio/bgm/Ship3\n.ogg`. Un 404 muet, et la fin de combat reste en attente d'un son qui n'arrive jamais |
+| **six commandes de menu en double** | `YEP_MainMenuManager` livre ses créneaux 50, 55, 90, 95 et 100 déjà remplis en exemple. Le second créneau `formation` rappelle `addOriginalCommands` — d'où le Music Book deux fois |
+| la fenêtre du temps **recouvrait le menu** | deux fenêtres qui se superposent ne lèvent rien : elles se dessinent l'une sur l'autre |
+| l'horloge s'affichait, mais mesurée sur la mauvaise case | le contrôle lisait `$gameVariables.value(200)` **choisi d'avance**. Il demande maintenant au plugin **quelles cases il emploie** (`$gameSystem._hour_variableId`) et lit celles-là |
 
-> Le deuxième est la règle n°2 appliquée au réglage d'un plugin : **on ne vérifie pas ce qu'on
+> Le dernier est la règle n°2 appliquée au réglage d'un plugin : **on ne vérifie pas ce qu'on
 > croit avoir écrit, on vérifie ce que le moteur emploie vraiment.**
+
+**Et un contrôle qui accusait un innocent.** Le contrôle « aucun libellé en anglais » listait
+`Options` et `Formation` comme suspects — ce sont les **termes français de JOKO**, écrits dans
+`System.json`. Il vise désormais nommément les libellés que les plugins posent par défaut
+*(`Quest`, `Patch Notes`, `Music Book`…)*. Règle n°3 : un contrôle doit **innocenter les faux**
+autant qu'attraper le vrai.
 
 Il n'est **pas automatique** — il lui faut Playwright et un serveur :
 

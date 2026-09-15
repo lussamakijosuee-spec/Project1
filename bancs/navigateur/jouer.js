@@ -98,8 +98,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         };
     });
     var pasCharges = plugins.declares.filter(function (n) { return plugins.charges.indexOf(n) < 0; });
-    verifie('les 41 plugins tiers actifs sont tous charges', pasCharges.length === 0,
-        plugins.charges.length + ' charges' + (pasCharges.length ? ' - MANQUENT : ' + pasCharges.join(', ') : ''));
+    verifie('tous les plugins actifs sont charges', pasCharges.length === 0,
+        plugins.declares.length + ' declares - ' + plugins.charges.length + ' charges' +
+        (pasCharges.length ? ' - MANQUENT : ' + pasCharges.join(', ') : ''));
     verifie('Yanfly a pose son espace de noms', plugins.yep === true);
     verifie('les MOG se sont declares dans Imported', plugins.mog >= 20, plugins.mog + ' MOG_*');
 
@@ -149,6 +150,39 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await touche('Escape', 250);
     await page.waitForTimeout(900);
     verifie('le menu s ouvre', (await scene()) === 'Scene_Menu');
+    // Chaque plugin qui ajoute une commande allonge la liste, et la fenêtre du
+    // temps est posée à une hauteur fixe. Deux fenêtres qui se recouvrent ne
+    // lèvent aucune erreur : elles se dessinent l'une sur l'autre, en silence.
+    var menu = await ev(function () {
+        var s = SceneManager._scene, c = s._commandWindow, t = null;
+        for (var k in s) {
+            if (s[k] && s[k].constructor && /Time/.test(s[k].constructor.name) && s[k].width !== undefined && s[k].visible) {
+                t = { x: s[k].x, y: s[k].y, w: s[k].width, h: s[k].height };
+            }
+        }
+        return { cmds: c._list.map(function (x) { return x.name; }),
+                 cmd: { x: c.x, y: c.y, w: c.width, h: c.height },
+                 or: s._goldWindow ? { x: s._goldWindow.x, y: s._goldWindow.y, w: s._goldWindow.width, h: s._goldWindow.height } : null,
+                 temps: t, ecran: [Graphics.boxWidth, Graphics.boxHeight] };
+    });
+    function chevauche(a, b) {
+        if (!a || !b) { return false; }
+        return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    }
+    verifie('les commandes du menu tiennent a l ecran',
+        menu.cmd.y + menu.cmd.h <= menu.ecran[1],
+        menu.cmds.length + ' commandes : ' + menu.cmds.join(' · '));
+    verifie('aucune fenetre du menu n en recouvre une autre',
+        !chevauche(menu.cmd, menu.temps) && !chevauche(menu.cmd, menu.or) && !chevauche(menu.temps, menu.or),
+        'commandes ' + JSON.stringify(menu.cmd) + ' · temps ' + JSON.stringify(menu.temps) + ' · or ' + JSON.stringify(menu.or));
+    // On ne devine pas ce qui « a l'air anglais » : « Options » et « Formation »
+    // sont les termes français que JOKO a lui-même écrits dans System.json, et
+    // un contrôle qui les accuse ne mesure rien. On vise nommément les libellés
+    // que les plugins posent par défaut, et qu'il faut avoir traduits.
+    var ANGLAIS = ['Quest', 'Patch Notes', 'Music Book', 'Debug', 'Common Event 1', 'Item', 'Skill', 'Equip', 'Status', 'Save', 'Game End'];
+    var restes = menu.cmds.filter(function (n) { return ANGLAIS.indexOf(n) >= 0; });
+    verifie('aucun libelle par defaut de plugin n est reste en anglais', restes.length === 0,
+        restes.length ? 'reste : ' + restes.join(' · ') : menu.cmds.join(' · '));
     await photo('04_menu');
     await touche('Escape', 250);
     await page.waitForTimeout(700);
@@ -193,10 +227,16 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         'troupe ' + troupe.id + ' « ' + troupe.nom + ' » - ' + troupe.membres + ' ennemi(s)');
     await photo('07_combat');
     // Marteler Entree : attaquer, encaisser, jusqu a la victoire ou la defaite.
-    var tours = 0;
+    // On s arrete une fois sur l ecran de fin de combat de YEP_VictoryAftermath :
+    // c est la qu on verifie que ses libelles sont bien en francais.
+    var tours = 0, vu = false;
     while (tours < 120 && (await scene()) === 'Scene_Battle') {
+        if (!vu && (await ev(function () { return !!BattleManager._victoryPhase; }))) {
+            vu = true; await page.waitForTimeout(1200); await photo('07b_victoire');
+        }
         await touche('Enter', 70); tours++;
     }
+    verifie('l ecran de fin de combat de Yanfly s affiche', vu === true);
     await page.waitForTimeout(1200);
     var issue = await ev(function () {
         return { scene: SceneManager._scene.constructor.name, tour: $gameTroop ? $gameTroop.turnCount() : -1 };

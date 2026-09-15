@@ -583,4 +583,89 @@ Les 9 images de `img/system` écrasées par la démo, les 4 événements communs
 
 ---
 
+## 2026-09-15 (nuit) — Les 26 YEP restants, branchés et francisés
+
+> *« Les YEP la même, mais plein potentiel de tous si possible, vraiment complètement,
+> améliore le jeu au max. »*
+
+**10 YEP chargés → 36.** 26 ajoutés en quatre vagues, chacune vérifiée dans le navigateur avant
+la suivante. **70 plugins actifs · 2 420 réglages.**
+
+### Le piège d'entrée : Yanfly n'a pas de valeur de repli
+
+MOG écrit `Number(Moghunter.parameters['X'] || 633)`. Yanfly écrit
+`String(Yanfly.Parameters['X'])` — **sans repli**. Une entrée de `plugins.js` avec
+`"parameters":{}` ne donne donc pas les valeurs par défaut au plugin : elle lui donne la chaîne
+**« undefined »**, et il s'exécute avec, sans se plaindre.
+
+D'où `bancs/outils/reglages_yep.js`, qui relit les couples `@param` / `@default` de l'en-tête et
+reconstruit ce que l'éditeur MV aurait écrit. **Validé dans les deux sens** sur les 10 YEP déjà
+en place : il retrouve exactement leurs **320 paramètres**, sans en inventer ni en oublier un
+seul, et isole les **4 que JOKO avait réglés à la main** *(ils sont conservés tels quels)*.
+
+### Ce qui est branché
+
+| Vague | Plugins |
+|---|---|
+| ① noyau et affichage | `X_CoreUpdatesOpt` · `MessageCore` · `ElementCore` · `BuffsStatesCore` · `X_SkillCooldowns` |
+| ② objets et combat | `ItemCore` · `X_ItemUpgradeSlots` · `EquipCore` · `VictoryAftermath` · `BaseTroopEvents` · `LevelUpGrowthEffects` |
+| ③ carte et déplacement | `MoveRouteCore` · `X_ExtMovePack1` · `RegionRestrictions` · `RegionEvents` · `EventChasePlayer` · `SaveEventLocations` · `PictureSpritesheets` · `ScriptCallPluginCmd` |
+| ④ menus et options | `MainMenuManager` · `QuestJournal` · `SaveCore` · `KeyboardConfig` · `AnimateTilesOption` · `FpsSynchOption` · `PatchNotes` |
+
+La zone YEP de `js/plugins.js` est reconstruite **dans l'ordre officiel de Yanfly** à chaque
+vague — noyau, puis modules, puis extensions `X_` après leur parent. Tout le reste *(Aries,
+Olivia, TSR, Community_Basic, les 26 MOG, le temps)* n'a pas bougé d'une ligne.
+
+### Les quatre pannes, toutes muettes
+
+1. **Le combat ne se terminait plus.** Mon extracteur collait un saut de ligne aux valeurs :
+   MV demandait `audio/bgm/Ship3\n.ogg`, 404, et la fin de combat attendait un son qui
+   n'arrivait jamais. *(La ligne vide qui suit un `@default` le termine, elle ne le prolonge pas.)*
+2. **Six commandes de menu en double.** `YEP_MainMenuManager` livre ses créneaux 50, 55, 90, 95
+   et 100 **déjà remplis** en exemple. Le second créneau `formation` rappelle
+   `addOriginalCommands` — d'où le Music Book deux fois. Les 92 créneaux d'exemple vidés, nos 8
+   gardés.
+3. **La fenêtre du temps recouvrait le menu.** Avec 11 commandes, la liste descendait jusqu'à
+   `y=360` ; la fenêtre du temps est posée à `y=324`. `Command Rows = 8` ramène la liste à 288 :
+   le temps se glisse entre elle et la bourse, pile.
+4. **Mon détecteur de dépendances accusait à tort.** Il ramassait tout `YEP_*.js` cité dans
+   l'en-tête — `YEP_MoveRouteCore` *mentionne* `YEP_SelfSwVar` sans en dépendre. Il ne lit plus
+   que la parenthèse `(Requires …)` du `@plugindesc`.
+
+Et **un contrôle qui accusait un innocent** : « aucun libellé en anglais » listait `Options` et
+`Formation`, qui sont les **termes français de JOKO** dans `System.json`. Il vise maintenant
+nommément les libellés livrés par les plugins.
+
+### Le français
+
+**45 libellés traduits** sur 8 plugins — l'écran de fin de combat *(« NIVEAU SUPÉRIEUR ! »,
+« Butin », « EXP gagnée »)*, la sauvegarde *(« Charger cette sauvegarde ? »)*, la configuration
+du clavier, l'équipement *(« Retirer », « Terminer »)*, et le menu *(« Quêtes », « Notes de
+version », « Musiques »)*. Chaque remplacement **vérifie la valeur d'origine avant d'écrire** :
+si elle n'est pas celle attendue, le script s'arrête plutôt que d'écraser un réglage de JOKO.
+
+### Un défaut trouvé au passage
+
+`MOG_GoldHud · Initial Visible` valait **`"true "`** — avec une espace. Le plugin teste
+`String(x) === "true"`, qui est **faux** : la bourse démarrait cachée. Cinq autres réglages MOG
+traînaient la même espace. Nettoyés.
+
+### Écarté, et pourquoi
+
+**`YEP_X_BattleSysATB` et `YEP_X_BattleSysSTB`** : ce sont des **alternatives** au CTB, pas des
+compléments. `BattleSysATB` réécrit 13 méthodes que `BattleSysCTB` réécrit aussi ; les deux
+ensemble, c'est le dernier chargé qui gagne. Le CTB est réglé, il tourne — on ne le remplace pas
+sans que JOKO le demande. Ce sont les **deux seuls** YEP non chargés.
+
+`YEP_EquipCore`, lui, **est** chargé : il écrase bien `Game_Actor.equipSlots`, mais sans notetag
+il retombe sur `$dataSystem.equipTypes` — donc exactement les **7 emplacements** de JOKO. Il
+charge avant `TSR_EquipSlots`, qui garde donc la main sur l'affichage. Vérifié à l'écran.
+
+### Le banc
+
+De 26 à **30 contrôles, 0 échec** : la liste des commandes du menu, le non-recouvrement des
+fenêtres, les libellés français, et l'écran de fin de combat de Yanfly.
+
+---
+
 *Prochaine entrée : à la prochaine session.*
