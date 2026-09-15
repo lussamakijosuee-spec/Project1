@@ -737,4 +737,59 @@ dessin, donc ta main. Ton ancien `Gold_A` était vide, je ne peux pas le rendre.
 
 ---
 
+## 2026-09-15 (fin) — L'écran des compétences
+
+> *« il faut juste le visuel des compétences si tu peux avec YEP ou MOG ? un meilleur visuel »*
+
+### La route MOG est fermée, et voici pourquoi
+
+`MOG_SceneSkill` refait entièrement l'écran, avec de vraies images de fond. Et **elles sont déjà
+là** : `menus/skill/` contient `Layout`, `ListLayout`, `TypeLayout` et les jauges — **identiques
+octet pour octet** à celles de la démo. Elles étaient simplement rangées dans `menus/` au lieu de
+`img/menus/`, c'est pourquoi aucun plugin ne les lisait.
+
+Mais l'essai a sorti **une chaîne de trois dépendances**, chacune trouvée en lançant le jeu :
+
+| Ce que le jeu a dit | Ce qui manquait |
+|---|---|
+| `ReferenceError: PartyWindowData is not defined` | `MOG_SceneItem` |
+| `TypeError: this.updateScrollRoll is not a function` | `MOG_MenuCursor` *(ou `MOG_SceneMenu`)* |
+| `TypeError: ImageManager.loadMenusFaces2 is not a function` | **`MOG_SceneMenu`** |
+
+Autrement dit, l'écran de compétences de MOG est **inséparable du menu principal de MOG** — le
+paquet que tu avais refusé, et qui écraserait `YEP_MainMenuManager`, la fenêtre du temps, et les
+commandes Quêtes / Notes de version / Musiques. **J'ai fait marche arrière.**
+
+> Les trois fichiers restent dans `js/plugins/`, **non inscrits**, et `img/menus/` est en place.
+> Le jour où tu veux le paquet MOG, il manque juste `MOG_SceneMenu` et quatre lignes dans le
+> gestionnaire. Je l'ai aussi mesuré : la liste de MOG n'affiche **que le TP ou le MP**, jamais
+> les deux, et ignore le coût en PV de Yanfly — **114 compétences sur 1 258** y montreraient un
+> coût incomplet.
+
+### Ce qui est fait, par les réglages
+
+| | |
+|---|---|
+| **`YEP_SkillCore · Window Columns` 2 → 1** | **170 noms dépassent 18 caractères**, le plus long en fait 31 *(« Communion des Quatre (Escouade) »)*. Sur deux colonnes, le coût venait buter dans le nom : *« Technique d'I**30MP**ersion »*. Une colonne pleine largeur les sépare. |
+| **`Cost Padding` 4 → 12** | de l'air entre le nom et le coût. |
+| **`Aries002 · Windowskin Background Opacity` 192 → 240** | les fenêtres laissaient passer la carte. |
+
+### Le piège du jour : deux plugins pour un seul réglage
+
+J'ai d'abord monté `YEP_CoreEngine · Window Opacity` à 240. **Aucun effet.**
+`Aries002_SystemCustomiser` charge **après** Yanfly et réécrit `standardBackOpacity` avec son
+propre paramètre — c'est le sien qui décide. Le réglage Yanfly était mort-né, et rien ne le
+disait.
+
+Le banc lit donc maintenant l'opacité **que la fenêtre porte vraiment**, pas celle qu'on croit
+avoir réglée : si un plugin ajouté plus tard l'écrase, le contrôle tombe. **34 → 36 contrôles.**
+
+### Ce qui reste, et qui est ta décision
+
+La fenêtre laisse encore voir la carte : ça vient du **`windowTone` de `System.json`**, réglé à
+`[0,0,0,0]` — neutre. Un ton plus sombre irait mieux à un jeu noir, mais ça change **toutes** les
+fenêtres du jeu : `CLAUDE.md` §2, c'est toi qui décides.
+
+---
+
 *Prochaine entrée : à la prochaine session.*

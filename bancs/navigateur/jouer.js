@@ -197,6 +197,18 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await page.waitForTimeout(1400);
     verifie('l ecran des competences s ouvre', (await scene()) === 'Scene_Skill',
         await ev(function () { return $gameParty.leader().skills().length + ' competences sur le porteur'; }));
+    // Deux plugins reglent l opacite des fenetres, et Aries002 charge APRES
+    // YEP_CoreEngine : c est le sien qui gagne. On lit donc la valeur que la
+    // fenetre porte vraiment, pas celle qu on croit avoir reglee.
+    var fen = await ev(function () {
+        var w = SceneManager._scene._itemWindow;
+        return { opacite: w.backOpacity, colonnes: w.maxCols(), largeur: w.width,
+                 nomLePlusLong: $gameParty.leader().skills().reduce(function (a, s) { return s.name.length > a.length ? s.name : a; }, '') };
+    });
+    verifie('les fenetres sont bien a l opacite voulue', fen.opacite === 240,
+        'backOpacity = ' + fen.opacite + ' (si ce n est pas 240, un plugin charge plus tard l a ecrase)');
+    verifie('la liste des competences tient sur une colonne', fen.colonnes === 1,
+        fen.colonnes + ' colonne(s) sur ' + fen.largeur + 'px · nom le plus long : « ' + fen.nomLePlusLong + ' »');
     await photo('05_competences');
     await ev(function () { SceneManager.goto(Scene_Equip); });
     await page.waitForTimeout(1400);
