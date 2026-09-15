@@ -9,8 +9,8 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 > ## ⚠️ Depuis la restauration du 2026-09-15 : six bancs sur onze ne peuvent plus tourner
 >
 > JOKO a demandé de remettre le jeu comme il était, **mais sans les plugins écrits par lui ou
-> par Claude** : seuls les 42 plugins **tiers** (MOG, YEP, Aries, Olivia, Irina, TSR,
-> Community_Basic) sont chargés. Les 135 plugins du projet sont rangés dans
+> par Claude** : seuls les plugins **tiers** sont chargés — **70 aujourd'hui** (36 YEP, 26 MOG,
+> 8 autres bibliothèques). Les 135 plugins du projet sont rangés dans
 > `_ancien_projet/02_plugins/`.
 >
 > Or six bancs **chargent le fichier d'un plugin du projet** pour le rejouer. Sans ce fichier,
@@ -21,7 +21,7 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 > | `4_un_seul_don.js` | ✅ **76 contrôles passés** | rien : il lit `data/` seul |
 > | `audit/6_bestiaire.js` | ✅ **tout passe** | rien : il lit `data/` seul |
 > | `audit/7_nouveau_lot.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `navigateur/jouer.js` | ✅ **30 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
+> | `navigateur/jouer.js` | ✅ **34 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
 > | `1_dons_spirituels.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `3_avatar_spirituel.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `6_avatar_niveaux.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
@@ -74,7 +74,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
-| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 30 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 34 contrôles |
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
@@ -88,10 +88,11 @@ C'est le seul qui puisse dire si `js/plugins.js`, reconstruit à la main le 2026
 debout : une entrée qui désignerait un fichier absent ne lève **aucune erreur visible**, MV se
 tait.
 
-**Cinq pannes qu'il a attrapées et que rien d'autre n'aurait vues :**
+**Six pannes qu'il a attrapées et que rien d'autre n'aurait vues :**
 
 | Ce qu'on voyait | Ce que c'était |
 |---|---|
+| la météo des saisons **ne partait jamais** — et serait partie **en plein combat de boss** | les 4 événements communs venus de la démo guettaient ses interrupteurs à elle *(116-119)*, et leur verrou maître tombait sur l'**interrupteur 4**, qui ici s'appelle **« combat boss1 »** |
 | l'écran-titre s'affichait, et **« Nouvelle Partie » ne répondait plus** | 99 trous `null` dans `$dataSystem.variables`, créés en nommant la variable 200 d'un tableau long de 101. `Olivia_MetaControls` appelle `.match()` sur chaque nom au démarrage d'une partie |
 | **le combat ne se terminait plus** | un saut de ligne collé à une valeur de réglage : MV demandait `audio/bgm/Ship3\n.ogg`. Un 404 muet, et la fin de combat reste en attente d'un son qui n'arrive jamais |
 | **six commandes de menu en double** | `YEP_MainMenuManager` livre ses créneaux 50, 55, 90, 95 et 100 déjà remplis en exemple. Le second créneau `formation` rappelle `addOriginalCommands` — d'où le Music Book deux fois |

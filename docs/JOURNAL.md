@@ -668,4 +668,73 @@ fenêtres, les libellés français, et l'écran de fin de combat de Yanfly.
 
 ---
 
+## 2026-09-15 (tard) — Les quatre points en attente, corrigés ou rendus à JOKO
+
+« **corrige** » — `CLAUDE.md` §2 dit qu'un mot bref ne donne pas mandat pour un chantier. Je m'en
+suis donc tenu aux **quatre points signalés la veille**, et j'ai mesuré chacun avant d'y toucher.
+
+### Deux ne sont pas des défauts : c'est du level design
+
+| | |
+|---|---|
+| **`Map001`** | **3 tuiles** changées, couche 0. |
+| **`Map004`** | un arbre déplacé : l'événement 5 retiré, l'événement 11 posé en (5,7), l'événement 7 retouché. |
+
+C'est JOKO qui a fait ça, et `CLAUDE.md` §4 est clair : **les cartes et les événements lui
+appartiennent**. Rien touché.
+
+### Les images : mesurées avant de trancher
+
+Sur les 9 fichiers de `img/system` écrasés par la démo, **cinq des versions « d'avant » étaient
+des gabarits vides de 96 octets** — la même signature que les images du chrono. La démo n'a donc
+rien détruit sur celles-là : elle a rempli du vide.
+
+| Rendu à JOKO *(vrai dessin)* | Gardé de la démo *(remplissait un gabarit vide)* |
+|---|---|
+| `Compass_A` 140×140 · 10 Ko | `CursorBorderB` — 96 o avant |
+| `Compass_B` 28×84 · **58 pixels visibles**, c'est l'aiguille du cadran | `Gold_A` — 96 o avant |
+| `Damage` 240×160 · 12,9 Ko | `Gold_B` — 96 o avant |
+| `Destination_Shadow` 36×16 | `ScrollBarA` — 96 o avant |
+| `DustTrail` 28×28 · 1,4 Ko | |
+
+Dans les deux sens, **l'autre version est conservée** : `*_demo.png` d'un côté, `*_vide.png` de
+l'autre. Rien n'est supprimé.
+
+### La carte de départ
+
+`startMapId` était passé à **67 « Time System »**, la carte de démo. Remis sur **1 « Plaine de
+Départ »**, en (6,8), comme avant le commit `0ca3015`. `editMapId` avec.
+
+### Les quatre événements de saison : pire que morts
+
+Précision sur mon propre rapport de la veille : les événements communs 60-63 étaient **vides**
+avant — la démo n'a rien écrasé, elle a apporté quatre événements de météo saisonnière. Mais
+tels qu'installés :
+
+- ils guettaient les interrupteurs **116-119**, ceux du système de temps de la démo. Le nôtre
+  lève **215-218** → ils ne partaient jamais ;
+- et leur **verrou maître** tombait sur l'**interrupteur 4**, qui dans cette base s'appelle
+  **« combat boss1 »**. Le jour où ils auraient fonctionné, **les feuilles d'automne seraient
+  tombées pendant un combat de boss.**
+
+Repointés sur 215-218, verrou déplacé sur le **231 `TS · Météo des saisons`** *(case vide,
+vérifiée avant écriture)*. L'interrupteur 4 est intact.
+
+> 🔴 **Le 231 est baissé.** Lève-le quand tu veux la météo des saisons : les feuilles au
+> printemps, les nuages en été, les feuilles rousses à l'automne, la neige en hiver.
+
+### Le banc, corrigé lui aussi
+
+Mon premier contrôle de la météo passait sur `weatherMode(0) !== 0` — et il valait `-1`, donc il
+**passait sans rien prouver**. Il lève maintenant le verrou et lit le résultat : `-1 → 1`, avec
+la contre-épreuve qui vérifie qu'avant la levée, rien ne partait. **30 → 34 contrôles, 0 échec.**
+
+### Un défaut visible de plus, qui est encore une image
+
+La bourse affiche maintenant son vrai cadre — et il porte le mot **« Gold »**, peint dans
+`img/system/Gold_A.png`. Comme pour « Year / Month / Day » sur le cadran de l'horloge : c'est du
+dessin, donc ta main. Ton ancien `Gold_A` était vide, je ne peux pas le rendre.
+
+---
+
 *Prochaine entrée : à la prochaine session.*

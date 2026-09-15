@@ -35,7 +35,7 @@
 | **Variables 70 – 89** | **Parole et cristaux** — *définis depuis le 2026-09-14 : voir [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md)* | vide |
 | **Variables 90 – 99** | **Culte** | vide |
 | **Interrupteurs 20 – 49** | **systèmes** — *20 la nuit · 21 la Mue, pris par `ETT_Faim.js`* | **en service** |
-| **Interrupteurs 200 – 230** | **`MOG_TimeSystem`** — phases, jours, saisons, mois | **en service** |
+| **Interrupteurs 200 – 231** | **`MOG_TimeSystem`** — phases, jours, saisons, mois, + le verrou météo | **en service** |
 | **Variables 200 – 202** | **`MOG_TimeSystem`** — heure, jour du mois, année | **en service** |
 
 **Hors plage :** variables 100+ et interrupteurs 1-19 / 50+ ne sont pas réservés. Ils
@@ -55,6 +55,12 @@ s'inscrivent quand même ici, dans la dernière section.
 | 208 – 214 | `TS · Dimanche` … `TS · Samedi` | le jour de la semaine |
 | 215 – 218 | `TS · Printemps` · `Été` · `Automne` · `Hiver` | la saison *(change tous les 3 mois)* |
 | 219 – 230 | `TS · Janvier` … `TS · Décembre` | le mois |
+| **231** | **`TS · Météo des saisons`** | **à lever à la main** — c'est le verrou maître des 4 événements communs de saison *(60 Spring · 61 Summer · 62 Fall · 63 Winter)*. Baissé, aucune météo saisonnière ne part. |
+
+> ⚠️ **Ces quatre événements venaient de la démo MOG, et leur verrou tombait sur l'interrupteur
+> 4** — qui est, dans cette base, **« combat boss1 »**. Tels quels, les feuilles d'automne
+> seraient parties pendant un combat de boss. Le verrou a été déplacé sur le 231 ; le 4 est
+> intact.
 
 | Variable | Nom | Plage |
 |---|---|---|

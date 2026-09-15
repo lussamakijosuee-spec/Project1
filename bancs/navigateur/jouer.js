@@ -303,6 +303,47 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         nuit.h + 'h · teinte ' + nuit.teinte.join(',') + ' · interrupteur « TS · Nuit » ' + (nuit.nuit ? 'levé' : 'baissé'));
     await photo('11_nuit');
 
+    // Les 4 événements communs de saison guettaient les interrupteurs de la démo
+    // (116-119). Repointés sur les nôtres (215-218), ils doivent réellement
+    // partir : on lit la météo que MOG_Weather_EX a mise en route, pas le
+    // numéro qu'on croit avoir écrit.
+    var saison = await ev(function () {
+        var s = {};
+        for (var i = 215; i <= 218; i++) { s[i] = { nom: $dataSystem.switches[i], leve: $gameSwitches.value(i) }; }
+        var gardiens = [60, 61, 62, 63].map(function (i) {
+            return $dataCommonEvents[i] ? $dataCommonEvents[i].name + '->' + $dataCommonEvents[i].switchId : '?';
+        });
+        return { s: s, gardiens: gardiens, meteo: $gameSystem.weatherMode ? $gameSystem.weatherMode(0) : null };
+    });
+    verifie('les evenements de saison guettent bien nos interrupteurs',
+        saison.gardiens.every(function (g) { var n = Number(g.split('->')[1]); return n >= 215 && n <= 218; }),
+        saison.gardiens.join(' · '));
+    // Et leur verrou maitre ne doit plus tomber sur un interrupteur de JOKO :
+    // celui de la demo etait le 4, qui ici s appelle « combat boss1 ».
+    var verrou = await ev(function () {
+        var v = [];
+        [60, 61, 62, 63].forEach(function (i) {
+            var e = $dataCommonEvents[i]; if (!e) { return; }
+            e.list.forEach(function (c) { if (c.code === 111 && c.parameters[0] === 0) { v.push(c.parameters[1]); } });
+        });
+        return { ids: v, nom: $dataSystem.switches[v[0]] };
+    });
+    verifie('le verrou maitre des saisons est sur une case a nous',
+        verrou.ids.every(function (i) { return i >= 200; }),
+        'interrupteur ' + verrou.ids.join('/') + ' « ' + verrou.nom + ' »');
+    // La vraie preuve : on leve le verrou et on regarde si la meteo demarre.
+    // Avant, weatherMode vaut -1 (aucune couche) ; apres, le mode de la saison.
+    var avantMeteo = await ev(function () { return $gameSystem.weatherMode(0); });
+    await ev(function (id) { $gameSwitches.setValue(id, true); }, verrou.ids[0]);
+    await page.waitForTimeout(2500);
+    var apresMeteo = await ev(function () { return $gameSystem.weatherMode(0); });
+    verifie('le verrou leve, la saison lance vraiment sa meteo', apresMeteo > 0 && apresMeteo !== avantMeteo,
+        'weatherMode(0) : ' + avantMeteo + ' -> ' + apresMeteo + ' · saison levee : ' +
+        Object.keys(saison.s).filter(function (k) { return saison.s[k].leve; }).map(function (k) { return saison.s[k].nom; }).join(', '));
+    verifie('verrou baisse, rien ne partait (contre-epreuve)', avantMeteo <= 0,
+        'avant la levee, weatherMode(0) valait ' + avantMeteo);
+    await photo('12_saison');
+
     console.log('\n9) Le bilan du moteur');
     verifie('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 6).join(' | ') || 'rien');
     verifie('aucune ressource manquante', absents.length === 0,
