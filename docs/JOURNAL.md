@@ -7,6 +7,73 @@
 
 ---
 
+## 2026-09-15 — Le jeu se lance, et se joue
+
+### Ce qui a été fait
+
+`data/` n'avait que quatre fichiers ; il en manquait onze et toutes les cartes. **Le jeu démarre
+maintenant, et on y joue.**
+
+| Écrit | |
+|---|---|
+| `Skills.json` **25** | 1 Attaquer · 2 Se garder *(le moteur les code en dur)* · le sang de Vesper · l'ombre et l'âme de Ludwig · la Parole d'Aël · la Maîtrise de Korrah · 3 techniques d'ennemi |
+| `Items.json` **12** | **sept nourritures**, lues par `ETT_Faim` : chair de monstre `<origine: M>`, charogne `<mauvais>`, bouteille de racines, verre de sang, sang de branche… |
+| `Weapons.json` **10** · `Armors.json` **10** | dont **Le Masque**, **L'Amulette** *(elle ouvre le type Ombre — c'est le canon, et ça marche)*, **Les Poings** au slot Âme, **L'Arc** |
+| `Enemies.json` **8** · `Troops.json` **7** | tous `<origine: M>` : ils lâchent la viande que mange le peuple |
+| `CommonEvents.json` **3** | l'**Annone**, la **Mue**, le repos |
+| `Tilesets.json` **3** · **3 cartes** | Quartier des chasseurs *(départ)* · Terrain de chasse · Souterrain au sang pourri |
+| `Animations.json` | **vide** — tous les `animationId` à 0, à poser dans l'éditeur |
+
+**Aucun asset extérieur** : tout est remappé sur le RTP déjà présent dans `img/` et `audio/`.
+
+### Comment ça a été vérifié — en y jouant
+
+`bancs/navigateur/jouer.js` **ouvre le jeu dans Chromium et appuie sur les touches** : titre,
+nouvelle partie, l'intro, marcher, les murs, la faim, le menu, un combat mené jusqu'à la victoire,
+les trois cartes, sauvegarder/recharger, et la Mue. **17 contrôles, 0 échec, aucune erreur
+JavaScript, aucune ressource manquante.**
+
+### Quatre bugs que seul le fait de jouer a trouvés
+
+Le jeu se lançait **sans une seule erreur** dans les quatre cas.
+
+1. **`flags[0]`.** La tuile `0` veut dire « pas de tuile », et MV la lit sur **toutes** les couches
+   vides. À `15`, le héros démarrait sur une case infranchissable. Corrigé à `0`, plus **aucun**
+   mur ne bloquait. La bonne valeur est **16** — le bit « sans effet sur le passage », qui fait
+   sauter la case vide. Vérifié contre un vrai tileset du projet, pas déduit.
+2. **L'autorun sans seconde page.** L'introduction se relançait à chaque frame : le joueur ne
+   pouvait plus **jamais** bouger. Il faut une page 2 conditionnée à l'interrupteur local.
+3. **Personne ne touchait.** *« Manqué ! »* à chaque coup, des deux côtés, indéfiniment. En MV,
+   `hit` vaut **0** sans le trait xparam 0 : je n'en avais donné ni aux classes ni aux ennemis.
+   Le combat tournait, les tours passaient, et rien n'arrivait jamais.
+4. **Le héros était invisible.** Les acteurs n'avaient ni sprite ni portrait.
+
+Un cinquième, attrapé par le banc : deux compétences d'âme employaient l'élément **2**, réservé et
+**vide** dans ta table. Le mana spirituel est au **31**.
+
+### Le banc qui les retient
+
+`bancs/3_base_complete.js` — **15 contrôles, 14 contre-épreuves**. Les six pièges ci-dessus y sont
+chacun un contrôle nommé, plus les références croisées et la présence **réelle sur le disque** de
+chaque image, musique et son cité. Les trois bancs passent.
+
+### Ce que c'est, et ce que ce n'est pas
+
+**C'est une tranche jouable**, pas un jeu fini : trois cartes, une boucle complète — parler,
+manger, marcher, chasser, se battre, mourir de faim. `CLAUDE.md` §4 dit que **le level design
+t'appartient** : les cartes sont volontairement nues, une pièce et des murs, faites pour être
+remplacées et non pour rester.
+
+### Deux choses à savoir
+
+- **La Mue tue la partie.** Faim au maximum → stade 4 → l'événement commun 2 mène au **game
+  over**. C'est l'Article IV traduit à la lettre. L'Annone est gratuite et illimitée, donc c'est
+  évitable — mais si tu le trouves trop sec, c'est une ligne à changer.
+- **Aucune animation de combat.** Les coups sont muets à l'écran. C'est le plus visible des
+  manques, et ça se répare dans l'éditeur.
+
+---
+
 ## 2026-09-14 (5) — Le système de faim
 
 ### Ce qui a été fait

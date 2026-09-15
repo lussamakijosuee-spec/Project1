@@ -168,6 +168,29 @@ Korrah  <manifestation: type=avatar, nom=Les Poings, endurance=160>
 
 **Prochain id d'acteur libre : 5.**
 
+## LE RESTE DE LA BASE — écrit le 2026-09-15
+
+> Vérifié par `node bancs/3_base_complete.js`, et **joué** par
+> `node bancs/navigateur/jouer.js`.
+
+| Fichier | Contenu | Repères |
+|---|---|---|
+| `Skills.json` | **25** | **1 Attaquer · 2 Se garder** *(imposés par le moteur)* · 3-6 communes · 7-9 sang *(Vesper)* · 10-13 ombre et âme *(Ludwig)* · 14-18 Parole *(Aël)* · 19-22 Maîtrise *(Korrah)* · 23-25 ennemis |
+| `Items.json` | **12** | **1-7 la nourriture** *(lue par `ETT_Faim`)* · 8-11 soins · 12 laissez-passer |
+| `Weapons.json` | **10** | **8 = L'Arc**, le Don d'Aël *(`<DonDe: 3>`)* |
+| `Armors.json` | **10** | **7 Le Masque** *(Vesper)* · **8 L'Amulette** *(Ludwig — elle ouvre le type Ombre)* · **9 Les Poings** *(Korrah, slot Âme)* |
+| `Enemies.json` | **8** | tous marqués `<origine: M>` — ils lâchent de la viande |
+| `Troops.json` | **7** | **7 = la Bête de la Fièvre**, le combat de fin de tranche |
+| `CommonEvents.json` | **3** | **1 Annone** · **2 La Mue** *(autorun sur l'interrupteur 21 → game over)* · 3 Repos |
+| `Tilesets.json` | **3** | 1 Extérieur · 2 Intérieur · 3 Souterrain |
+| `Map001-003` | **3 cartes** | 1 Quartier des chasseurs *(départ, 9·8)* · 2 Terrain de chasse · 3 Souterrain au sang pourri |
+| `Animations.json` | **0** | aucune : tous les `animationId` sont à 0. À poser dans l'éditeur. |
+
+> ⚠️ **Le drapeau qui casse tout en silence :** dans chaque tileset, **`flags[0]` doit valoir 16**.
+> La tuile `0` signifie « pas de tuile », et MV la lit sur toutes les couches vides. À `0`, plus
+> aucun mur ne bloque ; à `15`, la carte entière devient infranchissable. Le jeu se lance
+> normalement dans les deux cas. `bancs/3_base_complete.js` le contrôle.
+
 ## Pour mémoire — classes et types
 
 | | Id | Nom |

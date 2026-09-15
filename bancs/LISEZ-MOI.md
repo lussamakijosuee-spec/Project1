@@ -14,6 +14,8 @@
 |---|---|
 | `1_base_de_donnees.js` | `System.json` · `States.json` · `Classes.json` · `Actors.json` — 23 contrôles |
 | `2_faim.js` | **`js/plugins/ETT_Faim.js`**, rejoué sur un moteur MV simulé — 25 contrôles |
+| `3_base_complete.js` | **toute la base** : références croisées, assets présents sur le disque, et les **six pièges MV** qui ont cassé le jeu pour de vrai — 15 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 17 contrôles. *Pas automatique : demande Playwright et un serveur.* |
 
 ---
 
@@ -48,6 +50,34 @@ un par un, avec leur raison**. Un contrôle qui n'est ni saboté ni déclaré es
 personne n'a vérifié qu'il mesure quoi que ce soit : `2_faim.js` **sort en erreur** dans ce cas.
 
 Un banc simule le moteur assez fidèlement pour attraper le bug, ou il ne sert à rien.
+
+## `navigateur/jouer.js` — celui qui a trouvé ce que les autres ne voyaient pas
+
+Les trois premiers bancs **lisent des fichiers**. Celui-là **ouvre le jeu**, appuie sur les
+touches et regarde. En une session il a sorti quatre bugs qu'aucune lecture de données n'aurait
+attrapés — et que le jeu ne signalait pas : il se lançait, sans une seule erreur JavaScript.
+
+| Ce qu'on voyait | Ce que c'était |
+|---|---|
+| le héros démarrait sur une case infranchissable | `flags[0]` mal réglé — la tuile `0` veut dire « pas de tuile », MV la lit sur **toutes** les couches vides |
+| puis, corrigé à l'envers, **plus rien ne bloquait** | même drapeau, valeur opposée. Les deux cassent en silence |
+| le joueur ne pouvait plus jamais bouger | un autorun **sans seconde page** : il se relance à chaque frame |
+| *« Manqué ! »* à chaque coup, des deux côtés, pour toujours | aucune **précision** sur les classes ni les ennemis — en MV, `hit` vaut **0** par défaut |
+| le personnage était **invisible** sur sa propre carte | acteurs sans `characterName` |
+
+Chacun est désormais un contrôle de `3_base_complete.js`, avec sa contre-épreuve.
+
+**Il n'est pas automatique** — il lui faut Playwright et un serveur :
+
+```bash
+npm i -D playwright && npx playwright install chromium
+npx http-server -p 8899 -c-1 .        # dans un autre terminal, à la racine
+node bancs/navigateur/jouer.js
+```
+
+Ce qu'il joue, dans l'ordre : l'écran-titre · nouvelle partie · l'intro en autorun · marcher au
+clavier · les murs · la faim qui creuse et qui se comble · le menu · un combat mené jusqu'à la
+victoire · les trois cartes · sauvegarder et recharger · et la Mue, qui termine la partie.
 
 ## `2_faim.js` — comment il simule MV
 

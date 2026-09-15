@@ -1,0 +1,13 @@
+[
+null,
+{"id":1,"atypeId":1,"description":"Du bois cerclé de fer.","etypeId":2,"traits":[],"iconIndex":128,"name":"Bouclier de garnison","note":"","params":[30,0,0,8,0,4,-1,0],"price":200},
+{"id":2,"atypeId":3,"description":"Elle cache le visage, et c'est souvent l'essentiel.","etypeId":3,"traits":[],"iconIndex":135,"name":"Capuche de chasse","note":"","params":[20,0,0,4,0,3,1,0],"price":120},
+{"id":3,"atypeId":3,"description":"Trois semaines sous terre, avec ça sur le dos.","etypeId":4,"traits":[],"iconIndex":130,"name":"Cuir de terrain","note":"","params":[70,0,0,10,0,5,0,0],"price":260},
+{"id":4,"atypeId":2,"description":"On y range plus d'encre que de lames.","etypeId":4,"traits":[],"iconIndex":132,"name":"Robe de lettré","note":"","params":[30,40,0,4,0,12,0,2],"price":240},
+{"id":5,"atypeId":1,"description":"Il dit à quel cercle on appartient. Il ne protège de rien.","etypeId":6,"traits":[],"iconIndex":79,"name":"Talisman de cercle","note":"","params":[0,20,0,2,4,4,0,3],"price":300},
+{"id":6,"atypeId":1,"description":"Un carquois. Il est là pour rappeler que la place était libre.","etypeId":5,"traits":[],"iconIndex":128,"name":"Carquois d'étoiles","note":"","params":[0,10,2,0,6,0,2,2],"price":400},
+{"id":7,"atypeId":1,"description":"Tant qu'il tient, son sang ne la blesse pas. C'est tout son talent, et il suffit.","etypeId":5,"traits":[],"iconIndex":83,"name":"Le Masque","note":"<DonDe: 1>","params":[20,0,0,2,0,2,0,0],"price":0},
+{"id":8,"atypeId":1,"description":"Elle absorbe les ombres et les lui rend maniables. C'est elle qui ouvre l'ombre, pas lui.","etypeId":5,"traits":[{"code":41,"dataId":11,"value":0}],"iconIndex":89,"name":"L'Amulette","note":"<DonDe: 2>","params":[0,20,0,0,4,2,0,0],"price":0},
+{"id":9,"atypeId":1,"description":"Des poings et un torse qui flottent sans corps. Il agit de lui-même.","etypeId":7,"traits":[],"iconIndex":112,"name":"Les Poings","note":"<DonDe: 4>","params":[25,0,3,6,0,2,2,0],"price":0},
+{"id":10,"atypeId":1,"description":"Rien. La place est libre — c'est l'avantage des quatre-vingts pour cent.","etypeId":7,"traits":[],"iconIndex":79,"name":"Âme nue","note":"","params":[0,0,0,0,0,0,0,0],"price":0}
+]
