@@ -35,9 +35,48 @@
 | **Variables 70 – 89** | **Parole et cristaux** — *définis depuis le 2026-09-14 : voir [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md)* | vide |
 | **Variables 90 – 99** | **Culte** | vide |
 | **Interrupteurs 20 – 49** | **systèmes** — *20 la nuit · 21 la Mue, pris par `ETT_Faim.js`* | **en service** |
+| **Interrupteurs 200 – 230** | **`MOG_TimeSystem`** — phases, jours, saisons, mois | **en service** |
+| **Variables 200 – 202** | **`MOG_TimeSystem`** — heure, jour du mois, année | **en service** |
 
 **Hors plage :** variables 100+ et interrupteurs 1-19 / 50+ ne sont pas réservés. Ils
 s'inscrivent quand même ici, dans la dernière section.
+
+---
+
+## Interrupteurs 200 – 230 · le cycle du temps *(base restaurée)*
+
+> Posés le **2026-09-15** en branchant `MOG_TimeSystem`. Les 31 cases étaient **vides**, et
+> **aucune** n'était employée par un événement — mesuré sur les 67 cartes et les 1 000
+> événements communs avant d'écrire. Elles portent toutes le préfixe **`TS ·`** dans l'éditeur.
+
+| Id | Nom | Levé quand |
+|---|---|---|
+| 200 – 207 | `TS · Aube` · `Lever du jour` · `Jour` · `Coucher du soleil` · `Crépuscule` · `Nuit` · `Service de jour` · `Service de nuit` | la phase du jour en cours |
+| 208 – 214 | `TS · Dimanche` … `TS · Samedi` | le jour de la semaine |
+| 215 – 218 | `TS · Printemps` · `Été` · `Automne` · `Hiver` | la saison *(change tous les 3 mois)* |
+| 219 – 230 | `TS · Janvier` … `TS · Décembre` | le mois |
+
+| Variable | Nom | Plage |
+|---|---|---|
+| 200 | `TS · Heure` | 0 – 23 |
+| 201 | `TS · Jour du mois` | 1 – 30 |
+| 202 | `TS · Année` | 1 et plus |
+
+> ⚠️ **La démo MOG plaçait tout ça sur les interrupteurs 21-51 et les variables 10-12.** Sur
+> cette base, ces cases sont prises : `ZK Âme 1-7` et `ZK Résultat` occupent 44-51,
+> « maitrise de soi » sert **21 fois** et « concentration » **9 fois**. Recopier la démo telle
+> quelle aurait fait basculer les interrupteurs de JOKO toutes les quelques secondes, sans
+> un message d'erreur. **Ne jamais reprendre les ID d'une démo sans les mesurer d'abord.**
+
+> ℹ️ Les **minutes et les secondes** vivent sur les variables **10101** et **10102** — hors de
+> la portée de l'éditeur, c'est le choix par défaut de MOG pour ne pas consommer une vraie case.
+> Ce n'est pas une erreur : ne pas les « corriger ».
+
+> 🕳️ **Un trou dans un tableau de `System.json` fait planter le jeu.** Écrire l'index 200 d'un
+> tableau long de 101 crée 99 cases vides ; `JSON.stringify` les écrit `null`, et
+> `Olivia_MetaControls` appelle `.match()` dessus au démarrage d'une partie : l'écran-titre ne
+> répond plus, **sans une erreur visible**. Après toute écriture dans `switches` ou `variables`,
+> **combler les trous avec `""`**.
 
 > ℹ️ Le mot **« manifestations »** est repris tel que JOKO l'a écrit en réservant la plage. Il
 > n'est pas défini dans le lore lu à ce jour — voir la question ouverte correspondante dans

@@ -205,7 +205,65 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         issue.tour + ' tour(s) - retour sur ' + issue.scene);
     await photo('08_apres_combat');
 
-    console.log('\n8) Le bilan du moteur');
+    console.log('\n8) Le temps : MOG_TimeSystem, son horloge et le chrono');
+    // Un plugin peut se charger sans rien faire. On ne regarde pas s'il est là :
+    // on fait tourner l'horloge et on lit ce qu'elle a changé dans la partie.
+    // On ne demande pas au plugin s'il est chargé : on lui demande QUELLES cases il
+    // emploie, puis on lit ces cases-là. Un ID mal recopié se verrait aussitôt.
+    var avant = await ev(function () {
+        $gameSystem._time_sys_active = true;
+        return { idMin: $gameSystem._min_variableId, idH: $gameSystem._hour_variableId,
+                 min: $gameVariables._data[$gameSystem._min_variableId],
+                 h: $gameVariables._data[$gameSystem._hour_variableId],
+                 hud: !!SceneManager._scene.sprite_time_engine };
+    });
+    verifie('l horloge est dessinee sur la carte', avant.hud === true,
+        'variables employées : minute ' + avant.idMin + ' · heure ' + avant.idH);
+    verifie('le plugin emploie bien la plage libre 200+', avant.idH >= 200,
+        'heure sur la variable ' + avant.idH);
+    // Le temps n'avance pas pendant un événement ni un message : on laisse courir.
+    await page.waitForTimeout(6000);
+    var apres = await ev(function () {
+        var s = [];
+        for (var i = 200; i <= 230; i++) { if ($gameSwitches.value(i)) { s.push(i + ' ' + $dataSystem.switches[i]); } }
+        return { min: $gameVariables._data[$gameSystem._min_variableId],
+                 h: $gameVariables._data[$gameSystem._hour_variableId],
+                 jour: $gameVariables.value(201), annee: $gameVariables.value(202),
+                 phases: s, teinte: $gameScreen.tone().join(',') };
+    });
+    verifie('le temps avance tout seul', apres.min !== avant.min || apres.h !== avant.h,
+        avant.h + 'h' + avant.min + '  ->  ' + apres.h + 'h' + apres.min);
+    verifie('les interrupteurs de phase, de jour et de saison basculent', apres.phases.length >= 3,
+        apres.phases.join(' · '));
+    verifie('la date est posee dans les variables 201 et 202', apres.jour >= 1 && apres.annee >= 1,
+        'jour ' + apres.jour + ' · année ' + apres.annee + ' · teinte ' + apres.teinte);
+    await photo('09_horloge');
+    // Le chrono : MOG_VisualTimer ne lance rien, il DESSINE le minuteur de MV.
+    // On le lance donc comme un événement le fait, puis on regarde s'il s'affiche.
+    var chrono = await ev(function () {
+        $gameTimer.start(30 * 60);
+        return { actif: $gameTimer.isWorking(), reste: $gameTimer.seconds(),
+                 dessine: !!$gameSystem._timerGauge && $gameSystem._timerGauge.enabled === true };
+    });
+    verifie('le minuteur de MV tourne', chrono.actif === true, chrono.reste + ' secondes');
+    verifie('MOG_VisualTimer le prend en charge', chrono.dessine === true);
+    await page.waitForTimeout(1500);
+    await photo('10_chrono');
+    await ev(function () { $gameTimer.stop(); });
+
+    // La moitié visible du système : la nuit doit assombrir l'écran.
+    // On pousse l'heure à 22h et on lit la teinte que le moteur applique.
+    await ev(function () { $gameSystem.set_hour(22); });
+    await page.waitForTimeout(3500);
+    var nuit = await ev(function () {
+        return { teinte: $gameScreen.tone(), nuit: $gameSwitches.value(205),
+                 h: $gameVariables._data[$gameSystem._hour_variableId] };
+    });
+    verifie('la nuit assombrit l ecran', nuit.teinte[0] < -20,
+        nuit.h + 'h · teinte ' + nuit.teinte.join(',') + ' · interrupteur « TS · Nuit » ' + (nuit.nuit ? 'levé' : 'baissé'));
+    await photo('11_nuit');
+
+    console.log('\n9) Le bilan du moteur');
     verifie('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 6).join(' | ') || 'rien');
     verifie('aucune ressource manquante', absents.length === 0,
         absents.length ? absents.length + ' : ' + absents.slice(0, 6).join(' | ') : 'rien');

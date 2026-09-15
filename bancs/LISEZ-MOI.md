@@ -21,7 +21,7 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 > | `4_un_seul_don.js` | ✅ **76 contrôles passés** | rien : il lit `data/` seul |
 > | `audit/6_bestiaire.js` | ✅ **tout passe** | rien : il lit `data/` seul |
 > | `audit/7_nouveau_lot.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `navigateur/jouer.js` | ✅ **18 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
+> | `navigateur/jouer.js` | ✅ **26 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
 > | `1_dons_spirituels.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `3_avatar_spirituel.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `6_avatar_niveaux.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
@@ -74,19 +74,29 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
-| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 18 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 26 contrôles |
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
 Les dix autres **lisent des fichiers**. Celui-là lance le jeu, appuie sur les touches et
-regarde : l'écran-titre, les 41 plugins tiers effectivement chargés, la base entière relue par
+regarde : l'écran-titre, les plugins tiers effectivement chargés, la base entière relue par
 le moteur, une nouvelle partie, la marche au clavier, le menu, l'écran des compétences, celui
-de l'équipement, **un combat mené jusqu'à son terme** — puis il compte les erreurs JavaScript
-et les ressources manquantes.
+de l'équipement, **un combat mené jusqu'à son terme**, **l'horloge qui tourne et la nuit qui
+tombe**, **le chrono** — puis il compte les erreurs JavaScript et les ressources manquantes.
 
 C'est le seul qui puisse dire si `js/plugins.js`, reconstruit à la main le 2026-09-15, tient
 debout : une entrée qui désignerait un fichier absent ne lève **aucune erreur visible**, MV se
 tait.
+
+**Deux pannes qu'il a attrapées et que rien d'autre n'aurait vues :**
+
+| Ce qu'on voyait | Ce que c'était |
+|---|---|
+| l'écran-titre s'affichait, et **« Nouvelle Partie » ne répondait plus** | 99 trous `null` dans `$dataSystem.variables`, créés en nommant la variable 200 d'un tableau long de 101. `Olivia_MetaControls` appelle `.match()` sur chaque nom au démarrage d'une partie |
+| l'horloge s'affichait, mais mesurée sur la mauvaise case | le contrôle lisait `$gameVariables.value(200)` **choisi d'avance**. Il demande maintenant au plugin **quelles cases il emploie** (`$gameSystem._hour_variableId`) et lit celles-là. Un ID mal recopié se verrait aussitôt |
+
+> Le deuxième est la règle n°2 appliquée au réglage d'un plugin : **on ne vérifie pas ce qu'on
+> croit avoir écrit, on vérifie ce que le moteur emploie vraiment.**
 
 Il n'est **pas automatique** — il lui faut Playwright et un serveur :
 

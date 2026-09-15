@@ -511,4 +511,76 @@ et reste tel que tu l'as écrit. **Rien de ce commit n'est perdu.**
 
 ---
 
+## 2026-09-15 (soir) — Les MOG au travail : le temps, la nuit, le chrono
+
+Deux pannes silencieuses du commit `0ca3015` réparées, puis la première passe MOG.
+
+### Les deux réparations
+
+| | |
+|---|---|
+| **`img/parallaxes/`** | les 44 images avaient glissé dans `img/weather/parallaxes/`. MV code `img/parallaxes/` en dur (`rpg_managers.js:828`) : **9 cartes** n'avaient plus de fond. Remis. 0 carte en défaut. |
+| **`YEP_X_ActSeqPack1`** | son entrée avait sauté du gestionnaire. `se` ×15, `eval` ×5, `bgm` ×1 tombaient dans le vide sur **11 compétences**. Les dégâts passaient — `action effect` est dans le Core — mais les 5 `eval` portaient de la **mécanique** : « Dragon de la Nuit Sanglante » ne faisait plus rien du tout. Remis ligne 6 avec ses réglages d'origine. |
+
+### Ce que JOKO a tranché
+
+> *« touche seulement ce que j'ai, et pas les visuels de personnage — plutôt les choses de jeu
+> comme le temps, l'animation, le visuel »* · menus MOG **non** · TimeSystem **oui, sur une
+> plage libre** · HUD **VisualTimer seul**.
+
+### Branché
+
+**`MOG_TimeSystem` + `MOG_TimeSystem_Hud` + `MOG_VisualTimer`.** Les réglages viennent de la
+démo ; trois choses ont changé :
+
+1. **les ID** — la démo prend les interrupteurs 21-51 et les variables 10-12. Sur cette base,
+   `ZK Âme 1-7` et `ZK Résultat` occupent 44-51, « maitrise de soi » sert **21 fois**,
+   « concentration » **9 fois**. Recopier la démo aurait fait basculer les interrupteurs de JOKO
+   toutes les quelques secondes, **sans un message**. Déplacé sur **interrupteurs 200-230** et
+   **variables 200-202**, mesurés vides sur les 67 cartes et les 1 000 événements communs avant
+   d'écrire, et nommés `TS · …` dans l'éditeur ;
+2. **les termes** — Dimanche…Samedi, Printemps/Été/Automne/Hiver, Janvier…Décembre. Ils
+   s'affichent à l'écran, et le jeu est en français ;
+3. **la fenêtre d'horloge de `MOG_TimeSystem`** éteinte : le HUD la dessine déjà, les deux se
+   superposaient.
+
+Mesuré dans le jeu : le temps avance seul *(12h17 → 12h31 en six secondes)*, les interrupteurs
+de phase, de jour de semaine, de saison et de mois basculent, **la nuit assombrit l'écran**
+*(teinte −128 à 22h)*, le chrono s'affiche et décompte.
+
+### La panne que j'ai créée, et qui n'apparaissait nulle part
+
+Nommer la variable 200 d'un tableau long de **101** crée **99 trous**. `JSON.stringify` les
+écrit `null`, et `Olivia_MetaControls` appelle `.match()` sur chaque nom au démarrage d'une
+partie. Résultat : **l'écran-titre s'affichait, et « Nouvelle Partie » ne répondait plus**.
+Aucune erreur à l'écran, aucune ressource manquante. Seul le banc navigateur l'a vue. Trous
+comblés, et la règle est inscrite dans `docs/REGISTRE_VARIABLES.md`.
+
+Le banc a aussi corrigé **sa propre** façon de mesurer : il lisait `$gameVariables.value(200)`,
+une case choisie d'avance. Il demande maintenant au plugin *quelles* cases il emploie
+(`$gameSystem._hour_variableId`) et lit celles-là. Il est passé de 18 à **26 contrôles, 0 échec**.
+
+### Écarté, et pourquoi
+
+| | |
+|---|---|
+| **`MOG_TitleSplashScreen`** | le fichier et les images sont là — mais `Splash_0.png` est le **logo « Rpg Maker MV »**. Ça collerait la marque du moteur avant ton titre. |
+| **`MOG_TitlePictureCom`** | pareil : `Command_0.png` dit **« New Game »** en anglais, et `Title.png` est le logo **« Master Demo MV — Atelier Rgss »**. Il faudrait 4 images de commande en français et un logo à toi. |
+| **les 5 écrans de menu MOG** | ta décision. `TSR_EquipSlots` et `YEP_SkillCore` gardent la main. |
+| **`MOG_MapNameHud`** | ferait doublon avec `Olivia_MapDisplayNameCore`, déjà chargé. |
+| **`MOG_CharDustTrail · Terrain ID 2 = 999`** | valeur morte, mais la corriger ne donnerait rien : **un seul tuile** de tous les tilesets porte un terrain tag. Laissé tel quel. |
+
+### Un défaut visible, qui est une image et pas un réglage
+
+L'horloge affiche **« Year », « Month », « Day » en anglais**. Ces mots sont **peints dans
+`img/system/TimeHud_A.png`**, le cadran lui-même — le plugin ne dessine que les chiffres. Les
+changer veut dire redessiner l'image : c'est du dessin, donc ta main.
+
+### Toujours en attente
+
+Les 9 images de `img/system` écrasées par la démo, les 4 événements communs de saison,
+`Map001`, `Map004`, et `startMapId = 67`.
+
+---
+
 *Prochaine entrée : à la prochaine session.*
