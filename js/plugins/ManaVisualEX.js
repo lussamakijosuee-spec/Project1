@@ -201,11 +201,27 @@
             drawAffinityPanel.call(this, a, x, y, lh, r);
         };
 
-        // Panneau de droite : affinité de Mana + faiblesses/résistances
+        /*
+         * Panneau d'affinité — DANS LA BANDE DU MILIEU, pas à droite.
+         *
+         * Il était posé à la moitié de la largeur (x ≈ 438). Or MV dessine la
+         * liste d'équipement à x = 432 dans la même bande verticale : les deux
+         * s'écrivaient l'un sur l'autre, et on lisait « Af<Lame Écarlate>de Fer ».
+         * Aucune erreur, aucun avertissement — juste un écran illisible.
+         *
+         * Les paramètres occupent la gauche jusqu'à x+190 environ, l'équipement
+         * prend tout à partir de 432. Il reste une colonne au milieu : c'est là
+         * que le panneau va, en corps plus petit pour y tenir.
+         */
+        var EQUIP_X = 432;       // là où Window_Status.drawEquipments commence
+        var CORPS_PANNEAU = 20;  // le corps 28 ne tient pas dans la bande du milieu
+
         function drawAffinityPanel(a, x, y, lh, r) {
-            var x2 = x + Math.floor(this.contentsWidth() * 0.50);
-            var w2 = this.contentsWidth() - x2 - 4;
-            if (w2 < 120) return; // pas la place : on s'abstient
+            var x2 = x + 200;
+            var w2 = EQUIP_X - x2 - 12;
+            if (w2 < 120) { return; }                  // pas la place : on s'abstient
+            var corpsAvant = this.contents.fontSize;
+            this.contents.fontSize = CORPS_PANNEAU;
 
             this.changeTextColor(this.systemColor());
             this.drawText('Affinité de Mana', x2, y, w2);
@@ -221,7 +237,7 @@
             }
             this.resetTextColor();
 
-            if (!SHOW_RESIST) return;
+            if (!SHOW_RESIST) { this.contents.fontSize = corpsAvant; return; }
             this.changeTextColor(this.systemColor());
             this.drawText('Éléments', x2, y + Math.floor(lh * 2.4), w2);
             this.resetTextColor();
@@ -244,6 +260,7 @@
                 this.drawText('(aucune notable)', x2, y + Math.floor(lh * 3.4), w2);
                 this.resetTextColor();
             }
+            this.contents.fontSize = corpsAvant;
         }
     }
 

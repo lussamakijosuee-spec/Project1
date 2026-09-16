@@ -77,6 +77,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
 | `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source — 16 contrôles |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
+| `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
