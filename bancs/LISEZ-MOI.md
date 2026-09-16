@@ -21,7 +21,7 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 > | `4_un_seul_don.js` | ✅ **76 contrôles passés** | rien : il lit `data/` seul |
 > | `audit/6_bestiaire.js` | ✅ **tout passe** | rien : il lit `data/` seul |
 > | `audit/7_nouveau_lot.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `navigateur/jouer.js` | ✅ **38 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
+> | `navigateur/jouer.js` | ✅ **42 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
 > | `1_dons_spirituels.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `3_avatar_spirituel.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
 > | `6_avatar_niveaux.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
@@ -74,7 +74,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
-| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 38 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 

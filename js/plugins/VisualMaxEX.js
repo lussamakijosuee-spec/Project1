@@ -51,13 +51,25 @@ var Scene_MvxElements = Scene_MvxElements || null;
     function elemName(id) {
         return ($dataSystem && $dataSystem.elements[id] ? $dataSystem.elements[id].trim() : '');
     }
+    /**
+     * Ce que le joueur paie, et non plus un cycle d'avantages.
+     *
+     * ManaAffinity v2.0 a SUPPRIMÉ le pierre-feuille-ciseaux entre branches
+     * (« l'avantage de combat vient désormais des ARTS et des CHUTES ») ainsi
+     * que la roue élémentaire. Cet écran annonçait encore « fort vs … ·
+     * faible vs … » : il enseignait au joueur une règle qui n'existe plus.
+     * Il dit maintenant le seul vrai coût de chaque source — le prix.
+     */
     function cycleHint(el) {
         switch (el) {
-            case 4: return 'fort vs ' + elemName(2) + ' · faible vs ' + elemName(3);
-            case 2: return 'fort vs ' + elemName(3) + ' · faible vs ' + elemName(4);
-            case 3: return 'fort vs ' + elemName(4) + ' · faible vs ' + elemName(2);
-            case 5: return 'ronge le corps (recul PV)';
+            case 2: return 'le prix se paie sur la vie';
+            case 3: return "coûte des PM · faiblit si l'esprit va mal";
+            case 4: return 'recul PV — la forme projetée';
+            case 5: return 'recul PV plus lourd — on puise la source';
             case 7: return 'Mana Pur : transperce les résistances';
+            case 16: return 'semi-parfait : transperce les résistances';
+            case 14: return 'seule opposition qui subsiste : ⇄ ' + elemName(15);
+            case 15: return 'seule opposition qui subsiste : ⇄ ' + elemName(14);
             default: return '—';
         }
     }
@@ -150,7 +162,7 @@ var Scene_MvxElements = Scene_MvxElements || null;
         Scene_MenuBase.prototype.create.call(this);
         var hh = this.calcHelpHeight ? this.calcHelpHeight() : 72;
         this._help = new Window_Help(1);
-        this._help.setText('ÉLÉMENTS & CYCLE DE MANA   —   Négatif ▸ Âme ▸ Positif ▸ Négatif');
+        this._help.setText('LES SOURCES ET LES ÉLÉMENTS   —   chaque source a son prix');
         this.addWindow(this._help);
         var y = this._help.height;
         this._win = new Window_MvxElements(0, y, Graphics.boxWidth, Graphics.boxHeight - y);
