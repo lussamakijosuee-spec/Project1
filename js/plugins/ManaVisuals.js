@@ -90,4 +90,47 @@
             }
         };
     }
+
+    // ══════════════════════════════════════════════════════════════════════
+    //  LE PROFIL QUI NE TENAIT PAS
+    // ══════════════════════════════════════════════════════════════════════
+    //  MV dessine le profil avec drawTextEx, qui ne revient PAS à la ligne
+    //  tout seul : il écrit jusqu'au bord et le reste disparaît. Les fiches
+    //  des héros font 426 à 467 caractères sur deux lignes — environ 350
+    //  caractères invisibles chacun, sans le moindre avertissement.
+    //
+    //  On découpe donc le texte aux espaces, à la largeur réelle de la
+    //  fenêtre, en corps plus petit et en lignes plus serrées : la bande du
+    //  bas fait 120 px, ce qui donne cinq lignes de ~85 signes. Tout rentre.
+    //
+    //  Le texte de JOKO n'est pas touché : on change la façon de le dessiner,
+    //  pas ce qu'il dit.
+    var CORPS_PROFIL = 20;
+    var INTERLIGNE_PROFIL = 24;
+
+    Window_Status.prototype.drawProfile = function (x, y) {
+        var texte = this._actor ? String(this._actor.profile() || '') : '';
+        if (!texte) { return; }
+        var corpsAvant = this.contents.fontSize;
+        this.contents.fontSize = CORPS_PROFIL;
+        var largeur = this.contentsWidth() - x * 2;
+        var dispo = Math.max(1, Math.floor((this.contentsHeight() - y) / INTERLIGNE_PROFIL));
+
+        var lignes = [];
+        texte.split('\n').forEach(function (para) {
+            var courante = '';
+            para.split(' ').forEach(function (mot) {
+                var essai = courante ? courante + ' ' + mot : mot;
+                if (this.textWidth(essai) > largeur && courante) { lignes.push(courante); courante = mot; }
+                else { courante = essai; }
+            }, this);
+            if (courante) { lignes.push(courante); }
+        }, this);
+
+        // S'il en reste malgré tout, on le dit plutôt que de le faire disparaître.
+        var coupe = lignes.length > dispo;
+        if (coupe) { lignes = lignes.slice(0, dispo); lignes[dispo - 1] += ' …'; }
+        lignes.forEach(function (l, i) { this.drawText(l, x, y + i * INTERLIGNE_PROFIL, largeur); }, this);
+        this.contents.fontSize = corpsAvant;
+    };
 })();
