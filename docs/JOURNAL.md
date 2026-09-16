@@ -792,4 +792,88 @@ fenêtres du jeu : `CLAUDE.md` §2, c'est toi qui décides.
 
 ---
 
+## 2026-09-16 — Le mana, les Trois Sources, et les images vides
+
+> *« essaye de voir pour le système de mana et élément des plugins en stock, puis les trois
+> sources, et certains menus tous regrouper pour plus simple à lire… et d'ailleurs regarde pour
+> les images système aussi »*
+
+### Le mana et les éléments : rien à ajouter, tout est déjà là
+
+J'ai comparé `SYSTEME_DE_MANA.md` §11 avec `data/System.json`. **Ils concordent :**
+
+| ID | Base | Canon |
+|---|---|---|
+| 1 | Physique | Physique ✅ |
+| 2 · 3 · 4 | mana spirituelle · positive · négative | les trois **branches** ✅ |
+| 5 · 6 | Mana Sombre · Mana Originel | les **sources** Corps et Esprit ✅ |
+| **7** | **`AME`** | **`Mana Parfait`** ❓ |
+| 8 – 15 | FEU … OMBRE | les 8 éléments ✅ |
+| 16 | mana semi parfait | *(le canon en fait un **type de compétence**, pas un élément)* ❓ |
+
+Et le système **tourne déjà** :
+
+- **691 compétences** portent un élément — 60 en mana spirituelle, 55 en positive, 48 en
+  négative, 49 en Mana Sombre, 95 en Mana Originel ;
+- les ennemis portent **2 130 traits de taux d'élément**, dont 397 sur la spirituelle et 502 sur
+  la positive. **C'est le cycle du canon, déjà réglé à la main.**
+
+> **Il n'y a donc rien à brancher.** Aucun plugin tiers en stock n'apporterait quoi que ce soit :
+> le cycle vit dans les traits, là où MV l'attend. Ce qui manque, c'est de le **voir** — et les
+> plugins qui l'affichaient *(`ManaVisuals`, `ManaVisualEX`, `TriangleAffinites`,
+> `Lore_RoueElements`, `Lore_FlashElement`, `CodexSources`)* sont **les nôtres**, écartés par ta
+> règle. Aucun tiers ne les remplace.
+
+**Deux questions, que je ne tranche pas** *(`CLAUDE.md` §1)* : l'élément **7** s'appelle `AME`
+en base et `Mana Parfait` au canon ; et l'élément **16 `mana semi parfait`** n'existe pas dans
+la table du canon, qui en fait le **type de compétence 7**. Les deux sont **employés** (36 et 11
+compétences), donc rien n'est cassé — mais le canon et la base ne disent pas la même chose.
+
+### Les Trois Sources sont maintenant **dans le jeu**
+
+`YEP_PatchNotes` — que j'avais chargé hier pour des notes de version — sait ouvrir **un fichier
+HTML** depuis l'écran-titre *et* depuis le menu. Il est désormais pointé sur
+**`docs/codex-trois-sources.html`**, et la commande s'appelle **« Codex des Trois Sources »**.
+
+Le choix de la version cite `lore.md` ligne 3 : *« Canon unique : `docs/codex-trois-sources.html`
+(v5) »*. La v10 est plus complète *(37 sections contre 26)* — **un seul paramètre à changer** si
+tu la préfères.
+
+> Le codex s'ouvre dans une **fenêtre à part**, avec sa vraie mise en forme : bien mieux qu'une
+> fenêtre de texte MV. Seules les polices Google ne se chargent pas hors ligne ; le reste tient.
+
+Le banc demande maintenant au plugin **l'URL qu'il construirait** et va la chercher : si le
+chemin se casse un jour, le contrôle tombe au lieu de laisser un bouton mort.
+
+### Le menu, regroupé
+
+**Les 11 commandes tiennent maintenant d'un seul coup** *(`Command Rows` 8 → 12)*, groupées :
+les cinq de jeu, puis les trois de lecture — **Quêtes · Codex des Trois Sources · Musiques** —
+puis les trois de système. La fenêtre du temps du menu est éteinte : elle occupait la place, et
+le HUD de la carte donne déjà l'heure, le jour et la saison.
+
+Le banc ne se contente plus de vérifier que la fenêtre « tient à l'écran » — elle tenait déjà en
+n'en montrant que huit sur onze. Il compte les **rangées réellement offertes**.
+
+### Les images système : 25 fichiers entièrement transparents
+
+| Rempli depuis la démo | Ce que ça rallume |
+|---|---|
+| `ScrollBarB` 64×64 vide → **20×6** | le curseur des barres de défilement de `MOG_Scrollbar` |
+| `Treasure` 64×64 vide → **286×81** | le cadre des trouvailles de `MOG_TreasureHud` |
+
+Ces deux plugins tournaient depuis le début **en dessinant du vide**.
+
+Écarté : **`CreditsB`** — la version de la démo est sa propre page de crédits, *« Memories of
+Mana VII »*, Moghunter, captures d'un autre jeu. La tienne est transparente, donc **la commande
+« Crédits » ne fait défiler rien du tout** : il te faut ta propre image de 816×1058.
+
+Le reste des transparentes est **cohérent** : `img/titles1/Layer5-10` et `img/titles2/MCircle3`
+sont vides, et les réglages de `MOG_TitleLayers` et `MOG_TitleMagicCircles` les déclarent déjà
+invisibles. Rien à corriger.
+
+Et **« Credits » → « Crédits »** sur l'écran-titre.
+
+---
+
 *Prochaine entrée : à la prochaine session.*

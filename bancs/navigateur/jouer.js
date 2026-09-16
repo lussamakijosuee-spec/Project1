@@ -172,6 +172,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     verifie('les commandes du menu tiennent a l ecran',
         menu.cmd.y + menu.cmd.h <= menu.ecran[1],
         menu.cmds.length + ' commandes : ' + menu.cmds.join(' · '));
+    // « tenir a l ecran » ne suffit pas : la fenetre peut etre a l ecran et
+    // n en montrer que huit sur onze. On compte les rangees reellement offertes.
+    var rangees = await ev(function () { var c = SceneManager._scene._commandWindow; return { vues: c.maxPageItems(), total: c.maxItems() }; });
+    verifie('toutes les commandes se voient sans faire defiler', rangees.vues >= rangees.total,
+        rangees.vues + ' rangees offertes pour ' + rangees.total + ' commandes');
     verifie('aucune fenetre du menu n en recouvre une autre',
         !chevauche(menu.cmd, menu.temps) && !chevauche(menu.cmd, menu.or) && !chevauche(menu.temps, menu.or),
         'commandes ' + JSON.stringify(menu.cmd) + ' · temps ' + JSON.stringify(menu.temps) + ' · or ' + JSON.stringify(menu.or));
@@ -183,6 +188,17 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var restes = menu.cmds.filter(function (n) { return ANGLAIS.indexOf(n) >= 0; });
     verifie('aucun libelle par defaut de plugin n est reste en anglais', restes.length === 0,
         restes.length ? 'reste : ' + restes.join(' · ') : menu.cmds.join(' · '));
+    // Le Codex est un fichier ouvert par YEP_PatchNotes. Le plugin ne verifie
+    // rien : si le chemin est faux, le joueur clique et rien ne s ouvre.
+    // On demande donc au plugin l URL qu il construirait, et on la va chercher.
+    var codex = await ev(function () {
+        return { fichier: Yanfly.Param.PatchNotesFilename, url: Yanfly.getPatchFileUrl(),
+                 commande: Yanfly.Param.PatchCmd };
+    });
+    var rep = await page.request.get(BASE + '/' + codex.fichier).catch(function () { return null; });
+    verifie('le Codex des Trois Sources est bien la ou le menu l envoie',
+        !!rep && rep.status() === 200,
+        '« ' + codex.commande +' » -> ' + codex.fichier + ' (HTTP ' + (rep ? rep.status() : 'injoignable') + ')');
     await photo('04_menu');
     await touche('Escape', 250);
     await page.waitForTimeout(700);
