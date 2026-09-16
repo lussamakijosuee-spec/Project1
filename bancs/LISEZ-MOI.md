@@ -78,6 +78,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source — 16 contrôles |
 | `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
 | `10_troupes.js` | **les phases deux et les renforts** des 270 troupes de famille — 18 contrôles |
+| `11_degats_et_voies.js` | **la forme des formules** et **les neuf Voies** — 17 contrôles |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
