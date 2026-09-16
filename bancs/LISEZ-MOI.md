@@ -76,8 +76,39 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
 | `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source — 16 contrôles |
+| `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
+| `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
+
+## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
+
+`YEP_BattleAICore` était chargé et ne faisait **rien** : aucun des 547 ennemis ne portait de bloc
+`<AI Priority>`. Ils en portent un maintenant. Mais **tout ce qui rate là-dedans rate en silence** —
+Yanfly abandonne la ligne et l'ennemi retombe sur l'IA ordinaire de MV, sans une erreur :
+
+| Ce qu'on écrit | Ce que Yanfly en fait |
+|---|---|
+| une condition qu'il ne sait pas lire | `passAIConditions` finit par `return false` — la ligne ne part **jamais** |
+| `ALWAYS:Attaque` *(sans l'espace)* | aucun des 4 motifs ne mord — ligne ignorée |
+| un nom de compétence inconnu | `initialCheck` rend `false` — ligne ignorée |
+| une compétence trop chère | `meetsSkillConditions` rend `false` — ligne ignorée |
+| **un nom porté par DEUX compétences** | `Yanfly.SkillIdRef` garde **la dernière** |
+
+Le dernier est le plus vicieux : il ne tue pas la ligne, il la **détourne**. Cinq ennemis écrivaient
+« Éclat Noir » en possédant l'id 11 *(×14 ATK)* — Yanfly leur rendait l'id 1124 *(×29 ATK)*. La
+compétence partait, **au double des dégâts prévus**, sans une ligne de journal. Quatorze lignes
+étaient dans ce cas. Elles sont désormais épinglées par identifiant (`Skill 11`), que Yanfly lit
+avant le nom.
+
+D'où la règle appliquée ici : le banc ne rejoue pas la logique qui a **écrit** les doctrines, il
+rejoue **les expressions régulières de `YEP_BattleAICore.js` lui-même**, relues dans le fichier du
+plugin. On mesure ce que le moteur fera, pas ce qu'on croit lui avoir dit.
+
+> **Seize noms de compétence sont portés par deux compétences** *(« Requiem », « Bris Total »,
+> « Il Abat le Bras »…)*. Épingler les doctrines par identifiant met l'IA à l'abri, mais le joueur,
+> lui, voit toujours deux lignes identiques dans ses menus. **Les renommer est une décision de
+> JOKO** *(§2 : on ne renomme pas ce qui s'affiche à l'écran)*.
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
