@@ -6,33 +6,31 @@ Plus un onzième, `navigateur/jouer.js`, qui **ouvre le jeu pour de vrai**.
 
 ---
 
-> ## ⚠️ Depuis la restauration du 2026-09-15 : six bancs sur onze ne peuvent plus tourner
+> ## ⚠️ Sept bancs ne démarrent pas — et pourquoi ce n'est pas un échec
 >
-> JOKO a demandé de remettre le jeu comme il était, **mais sans les plugins écrits par lui ou
-> par Claude** : seuls les plugins **tiers** sont chargés — **70 aujourd'hui** (36 YEP, 26 MOG,
-> 8 autres bibliothèques). Les 135 plugins du projet sont rangés dans
-> `_ancien_projet/02_plugins/`.
+> La restauration du 2026-09-15 ne gardait que les plugins **tiers**. JOKO a ensuite rajouté
+> lui-même ses **13 plugins du mana**, puis on a dû remonter les **7 socles** dont ils
+> dépendaient — `LoreCanon`, `JadeEntitePlunging`, `Lore_SanteMentale`, `Errance`,
+> `CorruptionAme`, `Surpassement`, `RangsPuissance` — sans quoi tout le système « chaque Voie
+> a un prix » tournait à vide *(voir `navigateur/ponts_du_mana.js`)*.
 >
-> Or six bancs **chargent le fichier d'un plugin du projet** pour le rejouer. Sans ce fichier,
-> ils s'arrêtent sur un `ENOENT` — ils ne mesurent rien, ils ne sont pas en échec.
+> Il reste **quatre** plugins du projet dans `_ancien_projet/02_plugins/`, et sept bancs les
+> chargent pour les rejouer. Sans le fichier, ils s'arrêtent sur un `ENOENT` : ils ne mesurent
+> rien, ils ne sont pas en échec.
 >
-> | Banc | État | Ce qui lui manque |
-> |---|---|---|
-> | `4_un_seul_don.js` | ✅ **76 contrôles passés** | rien : il lit `data/` seul |
-> | `audit/6_bestiaire.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `audit/7_nouveau_lot.js` | ✅ **tout passe** | rien : il lit `data/` seul |
-> | `7_trois_sources.js` | ✅ **16 contrôles passés** | rien : il lit `data/` seul |
-> | `navigateur/jouer.js` | ✅ **42 contrôles passés** | rien : il ouvre le jeu tel qu'il tourne |
-> | `1_dons_spirituels.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
-> | `3_avatar_spirituel.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
-> | `6_avatar_niveaux.js` | ⛔ ne démarre pas | `DonsSpirituels.js` |
-> | `2_evolution_paliers.js` | ⛔ ne démarre pas | `ObjetSpirituel.js` |
-> | `5_verrou_et_ordres.js` | ⛔ ne démarre pas | `ObjetSpirituel.js` |
-> | `audit/8_tableau_de_chasse.js` | ⛔ ne démarre pas | `ChasseAuxPrimes.js` |
-> | `audit/9_equilibre.js` | ⛔ ne démarre pas | `SoulsDifficulty.js` |
+> | Banc | Ce qui lui manque |
+> |---|---|
+> | `1_dons_spirituels.js` · `3_avatar_spirituel.js` · `6_avatar_niveaux.js` | `DonsSpirituels.js` |
+> | `2_evolution_paliers.js` · `5_verrou_et_ordres.js` | `ObjetSpirituel.js` |
+> | `audit/8_tableau_de_chasse.js` | `ChasseAuxPrimes.js` |
+> | `audit/9_equilibre.js` | `SoulsDifficulty.js` |
 >
-> **Rien n'est cassé et rien n'est perdu.** Le jour où un de ces plugins revient dans
-> `js/plugins/`, son banc se remet à mesurer tout seul, sans modification :
+> **Aucun plugin chargé ne dépend de ces quatre-là** — on l'a vérifié : rien ne lit
+> `window.Dons`, `window.Primes` ni `window.Scene_Difficulty`. Les remonter n'est donc pas une
+> réparation mais un **choix de jeu**, et le choix appartient à JOKO *(§2)*.
+>
+> **Rien n'est cassé et rien n'est perdu.** Le jour où l'un d'eux revient dans `js/plugins/`,
+> son banc se remet à mesurer tout seul, sans modification :
 >
 > ```bash
 > mv _ancien_projet/02_plugins/systemes_du_jeu/DonsSpirituels.js js/plugins/
@@ -81,6 +79,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `11_degats_et_voies.js` | **la forme des formules** et **les neuf Voies** — 17 contrôles |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
+| `navigateur/ponts_du_mana.js` | **les ponts entre les 13 plugins du mana et leurs cinq socles** — 8 contrôles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines

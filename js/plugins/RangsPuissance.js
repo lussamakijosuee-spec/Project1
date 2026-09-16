@@ -53,7 +53,10 @@
 (function () {
     'use strict';
     var P = PluginManager.parameters('RangsPuissance');
-    var MENU = String(P['menuCommand'] || 'Rangs');
+    var MENU = (P['menuCommand'] === undefined ? 'Rangs' : String(P['menuCommand']));
+    // ⚠ Corrigé : « String(P[x] || defaut) » retombe sur le défaut quand le
+    // réglage est VIDE — le bouton de menu ne pouvait donc pas s'éteindre.
+    // On distingue maintenant « absent » (→ défaut) de « vidé » (→ pas de commande).
     var ANNONCE = String(P['annonceEnnemis'] || 'true') === 'true';
 
     var LETTRES = ['D', 'C', 'B', 'A', 'S'];

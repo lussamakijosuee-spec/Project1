@@ -88,7 +88,10 @@
     var SOUL_VAR   = parseInt(P['soulVar'] || 15);
     var GAIN_SOUL  = parseInt(P['gainPerSoul'] || 2);
     var SOUL_ACTOR = parseInt(P['soulActorId'] || 3);
-    var MENU      = String(P['menuCommand'] || 'Errance');
+    var MENU      = (P['menuCommand'] === undefined ? 'Errance' : String(P['menuCommand']));
+    // ⚠ Corrigé : « String(P[x] || defaut) » retombe sur le défaut quand le
+    // réglage est VIDE — le bouton de menu ne pouvait donc pas s'éteindre.
+    // On distingue maintenant « absent » (→ défaut) de « vidé » (→ pas de commande).
 
     var KEY = { thylane: 1, neyssa: 2, lou: 3, tianna: 4 };
     function resolve(k) { if (typeof k === 'number') return k; var s = String(k).toLowerCase().trim(); return KEY[s] || parseInt(s) || 0; }

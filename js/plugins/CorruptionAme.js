@@ -38,7 +38,10 @@
     var P = PluginManager.parameters('CorruptionAme');
     var EL_NEG = parseInt(P['elNegatif'] || 4);
     var EL_SOM = parseInt(P['elSombre'] || 5);
-    var MENU = String(P['menuCommand'] || 'Corruption');
+    var MENU = (P['menuCommand'] === undefined ? 'Corruption' : String(P['menuCommand']));
+    // ⚠ Corrigé : « String(P[x] || defaut) » retombe sur le défaut quand le
+    // réglage est VIDE — le bouton de menu ne pouvait donc pas s'éteindre.
+    // On distingue maintenant « absent » (→ défaut) de « vidé » (→ pas de commande).
     var KEY = { thylane: 1, neyssa: 2, lou: 3, tianna: 4 };
     var TIERS = [[100, 183], [70, 182], [40, 181]];   // seuil -> stateId
 
