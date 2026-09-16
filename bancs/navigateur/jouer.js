@@ -234,6 +234,53 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await ev(function () { SceneManager.goto(Scene_Map); });
     await page.waitForTimeout(1200);
 
+    console.log('\n6b) Les ecrans du systeme de mana');
+    // Un plugin peut se charger sans rien faire. Ces deux ecrans sont la preuve
+    // que le systeme de mana tourne : on les ouvre et on lit ce qu ils affichent.
+    var mana = await ev(function () {
+        return { elements: typeof Scene_MvxElements !== 'undefined',
+                 triangle: typeof Scene_Triangle !== 'undefined',
+                 paroles: typeof Paroles !== 'undefined' && typeof Paroles.tenue === 'function',
+                 voies: typeof window.Voies !== 'undefined',
+                 fusion: typeof window.Fusion !== 'undefined' };
+    });
+    verifie('les espaces de noms du systeme de mana sont poses',
+        mana.elements && mana.triangle && mana.paroles && mana.voies && mana.fusion,
+        'Scene_MvxElements ' + mana.elements + ' · Scene_Triangle ' + mana.triangle +
+        ' · Paroles.tenue ' + mana.paroles + ' · Voies ' + mana.voies + ' · Fusion ' + mana.fusion);
+    // On compare la scene a la CLASSE, pas a son nom : VisualMaxEX declare
+    // « Scene_MvxElementsClass » en interne, et un controle qui attend
+    // « Scene_MvxElements » accuse un ecran qui marche tres bien.
+    await ev(function () { SceneManager.goto(Scene_MvxElements); });
+    await page.waitForTimeout(1600);
+    verifie('l ecran des Elements s ouvre',
+        await ev(function () { return SceneManager._scene instanceof Scene_MvxElements; }),
+        await scene());
+    await photo('13_elements');
+    // Le cycle pierre-feuille-ciseaux a ete SUPPRIME par ManaAffinity v2.0
+    // (« l avantage vient des ARTS et des CHUTES, pas d un cycle entre
+    // branches »). L ecran ne doit plus l annoncer : sinon il enseigne au
+    // joueur une regle qui n existe plus. On lit le bandeau d aide LA, sur
+    // l ecran des Elements — pas apres en avoir change.
+    var bandeau = await ev(function () {
+        var s = SceneManager._scene;
+        var t = (s._help && s._help._text) ? String(s._help._text) : '';
+        var lignes = [];
+        if (s._list && s._list._data) { lignes = s._list._data.slice(0, 8).map(function (x) { return String(x && x.desc || ''); }); }
+        return t + ' ‖ ' + lignes.join(' / ');
+    });
+    verifie('l ecran des Elements n annonce plus le cycle supprime',
+        !/cycle de mana|fort vs|faible vs/i.test(bandeau),
+        bandeau.slice(0, 110));
+    await ev(function () { SceneManager.goto(Scene_Triangle); });
+    await page.waitForTimeout(1600);
+    verifie('l ecran du Triangle s ouvre',
+        await ev(function () { return SceneManager._scene instanceof Scene_Triangle; }),
+        await scene());
+    await photo('14_triangle');
+    await ev(function () { SceneManager.goto(Scene_Map); });
+    await page.waitForTimeout(1400);
+
     console.log('\n7) Un combat, mene jusqu au bout');
     // Le coeur du risque : BattleEngineCore + les trois ActSeqPack + le CTB +
     // AnimatedSVEnemies, sans un seul plugin du projet pour les epauler.

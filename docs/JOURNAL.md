@@ -876,4 +876,80 @@ Et **« Credits » → « Crédits »** sur l'écran-titre.
 
 ---
 
+## 2026-09-16 (suite) — Les 13 plugins du mana, branchés pour de vrai
+
+JOKO a remonté **13 plugins** de `_ancien_projet/` vers `js/plugins/` : `ManaAffinity`,
+`ManaVisuals`, `ManaVisualEX`, `VisualMaxEX`, `VisualMaxEX2`, `UltiCinematics`,
+`ParolesSysteme`, `TriangleAffinites`, `FusionElements`, `ElementsVivants`, `VisualOverhaul`,
+`FusionMana`, `MaitriseVoies`.
+
+### Aucun des 13 n'était chargé
+
+Les fichiers étaient posés, **mais pas inscrits dans `js/plugins.js`** — le piège documenté dans
+`_ancien_projet/LISEZ-MOI.md` : *« Un plugin remis dans `js/plugins/` ne se charge pas tout
+seul. »* Le jeu n'en voyait aucun.
+
+Ils sont inscrits avec **leur ordre et leurs réglages d'origine**, repris un par un de
+`plugins.js.ancien` — c'est le réglage de JOKO, pas une valeur par défaut. **83 plugins actifs,
+0 erreur JavaScript.**
+
+### Pas besoin d'en remonter cinq de plus
+
+Les 13 appellent cinq espaces de noms absents — `window.Ame` *(JadeEntitePlunging)*,
+`Errance`, `Corruption`, `Rangs`, `LoreCanon`. **Tous les appels sont protégés** : sans ces
+plugins, les fonctions concernées rendent une valeur neutre et le reste tourne.
+
+> Mon premier contrôle en dénonçait deux comme « non protégés ». Les deux étaient des
+> **innocents** : l'un se trouve dans un bloc qui teste déjà `typeof window.Ame`, l'autre est
+> **dans un commentaire d'aide**. Règle n°3 des bancs.
+
+C'est la réponse à *« moins compliqué »* : **13 plugins suffisent, pas 18.**
+
+### L'écran mentait au joueur
+
+`ManaAffinity v2.0` déclare noir sur blanc, dans son propre en-tête :
+
+> *« Le CYCLE pierre-feuille-ciseaux des branches (Négatif>Âme>Positif, ×1.5 / ×0.5) :
+> **SUPPRIMÉ**. L'avantage de combat vient désormais des ARTS et des CHUTES. »*
+
+Mais `VisualMaxEX v1.0` affichait toujours **« ÉLÉMENTS & CYCLE DE MANA — Négatif ▸ Âme ▸
+Positif »** et, pour chaque branche, **« fort vs … · faible vs … »**. L'écran enseignait au
+joueur une règle qui n'existe plus dans le moteur.
+
+L'écran dit maintenant **« LES SOURCES ET LES ÉLÉMENTS — chaque source a son prix »**, et
+chaque ligne donne le vrai coût, repris de `ManaAffinity` :
+
+| | |
+|---|---|
+| mana spirituelle | le prix se paie **sur la vie** |
+| mana positive | **coûte des PM** · faiblit si l'esprit va mal |
+| mana négative | recul PV — la forme projetée |
+| Mana Sombre | recul PV plus lourd — on puise la source |
+| AME · semi-parfait | transperce les résistances |
+| Lumière ⇄ Ombre | la seule opposition qui subsiste |
+
+Le banc a été écrit **à l'envers d'abord** : il devait tomber sur l'ancien texte, il est tombé,
+puis il est passé. Un contrôle qu'on n'a pas vu échouer ne mesure rien.
+
+### Deux écrans de plus dans le menu
+
+**« Éléments »** *(VisualMaxEX)* et **« Le Triangle »** *(TriangleAffinites)*, groupés avec les
+autres écrans de lecture. **42 contrôles, 0 échec.**
+
+### Ce que je n'ai PAS fait, et pourquoi
+
+JOKO demande aussi de **refaire les 1 258 compétences** dans un bon ordre de mana et de dégâts,
+et de passer à **trois sources** avec le positif sur les PM, le sombre sur sa propre barre et
+l'âme sur la vie.
+
+`CLAUDE.md` §2 : *« Avant toute modification en masse, je propose et j'attends »* — et l'exemple
+cité dans le contrat est exactement celui-ci : **244 compétences injectées sur un mot bref, tout
+a dû être annulé.** 1 258, c'est cinq fois pire.
+
+Et §1 : la phrase *« il y a que trois sources, plus de mana sombre ou originel »* se lit de deux
+façons opposées, dans la même phrase où le Mana Sombre reçoit **sa propre barre**. Je ne
+tranche pas seul. Les deux lectures sont posées à JOKO.
+
+---
+
 *Prochaine entrée : à la prochaine session.*

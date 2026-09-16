@@ -97,9 +97,14 @@ const P={1:1,2:3,3:1,4:2,5:3,6:4,7:1,8:4,11:1,0:0};
 function dmg(s){try{const v=eval(`(function(a,b){return ${s.damage.formula};})`)(B(),B());
   const r=Math.max(0,v)*(s.repeats||1)*(P[s.scope]||1);
   return Number.isFinite(r)?r:null;}catch(e){return null;}}   // les NaN cassaient le tri
-const payantes=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&(s.mpCost||0)+(s.tpCost||0)>0)
+// Depuis le passage aux trois sources, l'Âme ne se paie NI en PM NI en PT :
+// elle se paie sur la vie, par le notetag <HP Cost: n%> de YEP_SkillCore.
+// Compter ces compétences comme « gratuites » les faisait passer pour des
+// attaques sans prix — 46 d'un coup, dont une à 8 508 de dégâts.
+const coute=s=>(s.mpCost||0)+(s.tpCost||0)>0||/<HP Cost:/i.test(s.note||'');
+const payantes=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&coute(s))
   .map(dmg).filter(v=>v!==null).sort((a,b)=>a-b);
-const gratuites=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&(s.mpCost||0)+(s.tpCost||0)===0)
+const gratuites=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&!coute(s))
   .map(dmg).filter(v=>v!==null);
 const medP=payantes[Math.floor(payantes.length/2)], maxG=Math.max(...gratuites);
 console.log(`      payante médiane : ${Math.round(medP)}   ·   meilleure gratuite : ${Math.round(maxG)}`);
