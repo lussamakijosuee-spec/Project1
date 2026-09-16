@@ -155,6 +155,67 @@ function verdict(titre, passe, detail) {
             auComplet + ' fois sur 200 · ' + JSON.stringify(r.plein));
     }
 
+    // ── La phase deux d'une troupe, jouée par l'interpréteur de MV ───────────
+    // `Game_Troop.setupBattleEvent` ne monte QU'UNE page par appel (il fait
+    // `break`), et `YEP_BaseTroopEvents` ajoute encore les 4 pages de la troupe
+    // de base à la fin. Un seul appel ne prouve donc rien : on rappelle tant
+    // qu'une page peut partir, comme le moteur le fait tour après tour.
+    var p2 = await page.evaluate(function () {
+        var o = { pagesJouees: [] };
+        var cible = null;
+        for (var i = 1; i < $dataTroops.length; i++) {
+            var t = $dataTroops[i];
+            if (!t || !t.name) { continue; }
+            var a = (t.pages || []).some(function (p) {
+                return (p.list || []).some(function (x) { return x.code === 108 && /^PHASE2/.test(String(x.parameters[0])); });
+            });
+            if (a && (t.members || []).some(function (m) { return m.hidden; })) { cible = { id: i, nom: t.name }; break; }
+        }
+        if (!cible) { o.erreur = 'aucune troupe à renfort'; return o; }
+        o.troupe = cible.nom;
+
+        BattleManager.setup(cible.id, false, true);
+        BattleManager.startBattle();
+        var chef = $gameTroop.members()[0];
+        chef.setHp(Math.floor(chef.mhp * 0.4));              // on l'entame : la phase deux guette 50 %
+        o.avantApparus = $gameTroop.members().filter(function (e) { return e.isAppeared(); }).length;
+        o.total = $gameTroop.members().length;
+        o.avantEtats = $gameTroop.members().map(function (e) { return e.states().length; });
+
+        for (var tour = 0; tour < 40; tour++) {
+            $gameTroop.setupBattleEvent();
+            if (!$gameTroop.isEventRunning()) { break; }
+            var liste = $gameTroop._interpreter._list || [];
+            var sig = liste.filter(function (x) { return x.code === 108; }).map(function (x) { return String(x.parameters[0]); })[0];
+            if (sig) { o.pagesJouees.push(sig); }
+            for (var k = 0; k < 300 && $gameTroop.isEventRunning(); k++) {
+                if ($gameMessage.isBusy()) { $gameMessage.clear(); }
+                $gameTroop.updateInterpreter();
+            }
+        }
+        o.apresApparus = $gameTroop.members().filter(function (e) { return e.isAppeared(); }).length;
+        o.apresEtats = $gameTroop.members().map(function (e) { return e.states().map(function (s) { return s.name; }); });
+        return o;
+    });
+
+    console.log('\n   ── la phase deux d\'une troupe, jouée par l\'interpréteur');
+    if (p2.erreur) { verdict('une troupe à renfort existe', false, p2.erreur); }
+    else {
+        console.log('        troupe : ' + p2.troupe);
+        console.log('        pages montées : ' + (p2.pagesJouees.join(' · ') || 'aucune signée'));
+        console.log('        apparus ' + p2.avantApparus + '/' + p2.total + ' → ' + p2.apresApparus + '/' + p2.total);
+        console.log('        états : ' + JSON.stringify(p2.apresEtats));
+        verdict('la page de phase deux est bien montée par le moteur',
+            p2.pagesJouees.some(function (s) { return /^PHASE2/.test(s); }),
+            p2.pagesJouees.length + ' page(s) signée(s) jouée(s)');
+        verdict('le renfort caché entre vraiment en jeu',
+            p2.apresApparus > p2.avantApparus,
+            p2.avantApparus + ' → ' + p2.apresApparus + ' combattants visibles');
+        verdict('l\'état de famille est posé sur tous les ennemis',
+            p2.apresEtats.every(function (l, i) { return l.length > p2.avantEtats[i]; }),
+            p2.apresEtats.map(function (l) { return l.length; }).join('/') + ' états après, ' + p2.avantEtats.join('/') + ' avant');
+    }
+
     if (erreurs.length) { console.log('\n   ⚠ ' + erreurs.length + ' erreur(s) JavaScript : ' + erreurs.slice(0, 3).join(' | ')); }
     console.log('\n' + '='.repeat(70));
     console.log('  ' + ok + ' contrôles passés · ' + ko + ' échec(s)');

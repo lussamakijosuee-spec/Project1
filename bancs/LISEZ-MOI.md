@@ -77,6 +77,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
 | `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source — 16 contrôles |
 | `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
+| `10_troupes.js` | **les phases deux et les renforts** des 270 troupes de famille — 18 contrôles |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
@@ -109,6 +110,24 @@ plugin. On mesure ce que le moteur fera, pas ce qu'on croit lui avoir dit.
 > « Il Abat le Bras »…)*. Épingler les doctrines par identifiant met l'IA à l'abri, mais le joueur,
 > lui, voit toujours deux lignes identiques dans ses menus. **Les renommer est une décision de
 > JOKO** *(§2 : on ne renomme pas ce qui s'affiche à l'écran)*.
+
+## `8_visages_ennemis.js` — le banc qui s'est trompé, et ce qu'il a coûté
+
+Il contrôlait qu'un `battlerName` désigne **un sprite** : couche alpha, pas plus de 900×900. Tout
+passait. Sauf que la bande visible du combat ne fait que **444 px de haut** — en dessous, c'est
+l'interface. Un sprite de 780 px posé à `y=300` a **478 px au-dessus de l'écran**, et le joueur n'en
+voit que les pieds qui pendent.
+
+**298 placements sur 1 057 étaient dans ce cas**, sur 223 troupes, et le banc disait que tout allait
+bien. Il mesurait le **motif** — « ça ressemble à un sprite » — au lieu du **symptôme** — « on le
+voit en entier ». C'est très exactement l'erreur que §6 décrit.
+
+Il mesure maintenant ce que le joueur voit : à la place la plus haute où une troupe pose l'ennemi,
+le sprite **mis à l'échelle par son `<Scale Sprite: n%>`** doit tenir dans les 816×444 visibles.
+201 ennemis portent désormais cette échelle ; les 346 autres tenaient déjà et n'ont rien reçu.
+
+> `Sprite_Enemy` s'ancre aux **pieds** (ancre 0.5, 1) : `y` est le bas du sprite, jamais son haut.
+> C'est ce qui rend l'erreur invisible à la lecture des données.
 
 ## `navigateur/jouer.js` — celui qui ouvre vraiment le jeu
 
