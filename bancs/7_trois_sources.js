@@ -89,8 +89,12 @@ function controles(base) {
     // 5 · les êtres de Mana Pur transcendent toujours le triangle
     var TRIANGLE = [2, 3, 4];
     var purs = E.filter(function (x) { return x && x.note && /<\s*Mana\s*:\s*pur\s*>/i.test(x.note); });
+    // On mesure le SYMPTÔME, pas le motif (§6) : un taux d'élément à 1.0 est
+    // inerte — il ne plie pas le triangle. Seule une valeur ≠ 1 le fait.
     var tombes = purs.filter(function (x) {
-        return (x.traits || []).some(function (t) { return t.code === 11 && TRIANGLE.indexOf(t.dataId) >= 0; });
+        return (x.traits || []).some(function (t) {
+            return t.code === 11 && TRIANGLE.indexOf(t.dataId) >= 0 && t.value !== 1;
+        });
     });
     r.push(['les êtres de Mana Pur échappent au triangle (canon §4)', tombes.length === 0,
         purs.length + ' êtres · ' + tombes.length + ' pris dans le cycle']);
