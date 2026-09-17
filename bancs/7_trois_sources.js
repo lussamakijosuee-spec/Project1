@@ -82,9 +82,13 @@ function controles(base) {
     //     Un contrôle qui les dénonce accuse ses propres réglages. Ce qu'on
     //     mesure, c'est que la passe ne les a pas VIDÉS de leurs compétences.
     var compte = PUR.map(function (e) { return deLaSource(e).length; });
+    // ⚠ Un PLANCHER, pas une égalité. Ce qu'on garde, c'est « la passe ne les a
+    // pas vidés » — or une égalité stricte tombe aussi quand on AJOUTE une
+    // compétence de Mana Pur, ce qui n'est pas un défaut. On mesure le
+    // symptôme (on en a perdu), pas le nombre (il a bougé).
     r.push(['le Mana Pur (7, 16) garde ses compétences et son prix libre',
-        compte[0] === 36 && compte[1] === 11,
-        'élém 7 : ' + compte[0] + '/36 · élém 16 : ' + compte[1] + '/11']);
+        compte[0] >= 36 && compte[1] >= 11,
+        'élém 7 : ' + compte[0] + ' (plancher 36) · élém 16 : ' + compte[1] + ' (plancher 11)']);
 
     // 5 · les êtres de Mana Pur transcendent toujours le triangle
     var TRIANGLE = [2, 3, 4];

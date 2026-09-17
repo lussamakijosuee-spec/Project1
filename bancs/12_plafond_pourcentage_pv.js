@@ -151,9 +151,24 @@ function controles(monde) {
 
     // — sur la VRAIE base : plus aucune compétence ne tue un boss en un tour
     var S = monde.Skills, E = monde.Enemies, T = monde.Troops;
-    var bossIds = {};
+    // ⚠ On repère les boss par le notetag <Boss>, PAS par l'appartenance à une
+    // troupe ◈. Le plugin, lui, lit <Boss> : mesurer autre chose, c'est mesurer
+    // autre chose que le jeu (§6). Une troupe de boss contient aussi ses
+    // sbires — les deux Esprits Vengeurs de Donovano, par exemple — et ceux-là
+    // ne sont pas plafonnés, c'est voulu.
+    // … et seulement les boss qu'on peut RENCONTRER, c'est-à-dire posés dans
+    // une troupe. « le dieu sans visage » (101) porte <Boss> mais garde les
+    // valeurs par défaut d'une ligne neuve (100 PV, 10 partout) et aucune
+    // troupe ne l'emploie : c'est une ébauche de JOKO, pas un combat. La
+    // mesurer ferait dire n'importe quoi au contrôle — une attaque ordinaire
+    // retire 1560 % de ses PV.
+    var posesEnTroupe = {};
     T.forEach(function (t) {
-        if (t && /◈/.test(t.name || '')) (t.members || []).forEach(function (m) { bossIds[m.enemyId] = 1; });
+        if (t) (t.members || []).forEach(function (m) { posesEnTroupe[m.enemyId] = 1; });
+    });
+    var bossIds = {};
+    E.forEach(function (e) {
+        if (e && e.name && /<\s*Boss\s*>/i.test(e.note || '') && posesEnTroupe[e.id]) bossIds[e.id] = 1;
     });
     var pires = [];
     Object.keys(bossIds).forEach(function (id) {
@@ -193,11 +208,17 @@ var SABOTAGES = [
         function (b) { b.noteBoss = '<Rang: S>'; }, /plafonnée contre un boss/],
     ['un ennemi ordinaire promu <Boss>',
         function (b) { b.noteMob = '<Boss>'; }, /garde ses 80 %/],
-    ['une compétence en % de PV glissée sur un boss de la vraie base',
+    // ⚠ Ce sabotage ne doit PAS retirer <Boss> : le contrôle repère ses boss
+    // par ce notetag, et les lui enlever viderait la liste — il passerait à
+    // vide au lieu de tomber. On laisse donc le boss être un boss, et on lui
+    // desserre son plafond : c'est le vrai coupable qu'on veut voir attraper.
+    ['un boss dont le plafond a été desserré',
         function (b) {
             var s = b.Skills.filter(function (x) { return x && x.damage && x.damage.formula; })[0];
             s.damage.formula = 'b.mhp * 0.90'; s.damage.type = 1;
-            b.Enemies.forEach(function (e) { if (e && e.note) { e.note = e.note.replace(/<\s*Boss\s*>/gi, ''); } });
+            b.Enemies.forEach(function (e) {
+                if (e && e.name && /<\s*Boss\s*>/i.test(e.note || '')) e.note += '\n<PlafondPV: aucun>';
+            });
         }, /plus du quart d'un boss/]
 ];
 
