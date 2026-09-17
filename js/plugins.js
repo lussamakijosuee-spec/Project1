@@ -114,6 +114,7 @@ var $plugins =
 {"name":"▬▬▬ ⑨ ÉQUILIBRE · plafonds et garde-fous de combat ▬▬▬","status":false,"description":"⑨ ÉQUILIBRE","parameters":{}},
 {"name":"PlafondPourcentagePV","status":true,"description":"v1.0 ■ Les compétences en pourcentage de PV max gardent leur caractère sur les ennemis ordinaires, mais sont plafonnées contre les boss.","parameters":{"plafondDefaut":"10","marqueurBoss":"Boss"}},
 {"name":"BossTelegraphe","status":true,"description":"v1.0 ■ La mise en garde et la riposte : <Telegraphe> charge le boss, <Apres: surcharge> le laisse à découvert — sur LUI, pas sur le groupe.","parameters":{"etatCharge":"207","etatSurcharge":"218","corrigerCible":"true"}},
+{"name":"MecaniquesDeBoss","status":true,"description":"v1.0 ■ Douze mécaniques de boss, déclarées par notetag. Chacune rend littéral un nom de compétence déjà écrit.","parameters":{"journal":"true","etatCharge":"207","etatSurcharge":"218"}},
 {"name":"▬▬▬ ⑩ DONO · le génie progressif, ses phases et son Kamui ▬▬▬","status":false,"description":"⑩ DONO","parameters":{}},
 {"name":"DonoBoss","status":true,"description":"v1.0 ■ Dono : boss duo (lui + son Esprit Vengeur). Génie qui évolue avec le combat — empathie → sérieux → synchronisation → Mana Parfait.","parameters":{"empathieState":"176","serieuxState":"177","eveilState":"178","syncReduc":"0.70"}},
 {"name":"DonoKamui","status":true,"description":"v1.0 ■ Dono devient intangible (Kamui) : les attaques le traversent. Se porte par <DonoKamui>, séparément de <DonoBoss>.","parameters":{"kamuiState":"184","overloadState":"185"}}
