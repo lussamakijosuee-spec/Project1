@@ -146,14 +146,19 @@ var Paroles = Paroles || {};
     //========================================================================
     function sanity(b) {
         if (!b || !b.isActor || !b.isActor()) return 1; // ennemis : pleine lucidité
+        // ── LA SANTÉ MENTALE EST RETIRÉE DU JEU (décision de JOKO) ───────────
+        // Sans elle, tout le monde récite à pleine lucidité : une Parole ne
+        // rate plus « parce que le lanceur va mal », seulement parce qu'elle
+        // est trop longue pour la fenêtre de combat — ça, c'est du mana.
+        //
+        // ⚠ L'ancien repli était traître : faute de window.Ame il lisait la
+        // variable (acteurId + 10), la trouvait à 0, et retombait sur g = 7 —
+        // soit 70 % de lucidité. Les Paroles auraient continué de rater pour
+        // une raison mentale qui n'existe plus.
+        if (!window.Ame || typeof window.Ame.jauge !== 'function') { return 1; }
         var g = 0;
-        if (window.Ame && typeof window.Ame.jauge === 'function') {
-            try { g = window.Ame.jauge(b.actorId()); } catch (e) {}
-        }
-        if (!g && typeof $gameVariables !== 'undefined' && $gameVariables) {
-            g = $gameVariables.value(b.actorId() + 10);
-        }
-        if (!g) g = 7;
+        try { g = window.Ame.jauge(b.actorId()); } catch (e) {}
+        if (!g) { return 1; }
         return Math.max(0.15, Math.min(1, g / 10));
     }
     function talentOf(b) {

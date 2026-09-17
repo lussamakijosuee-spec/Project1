@@ -77,9 +77,9 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
 | `10_troupes.js` | **les phases deux et les renforts** des 270 troupes de famille — 18 contrôles |
 | `11_degats_et_voies.js` | **la forme des formules** et **les neuf Voies** — 17 contrôles |
-| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 42 contrôles |
+| `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 43 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
-| `navigateur/ponts_du_mana.js` | **les ponts entre les 13 plugins du mana et leurs cinq socles** — 8 contrôles |
+| `navigateur/ponts_du_mana.js` | **le mana sans l'ancien lore** : les Chutes parties, les Voies qui tiennent — 9 contrôles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
