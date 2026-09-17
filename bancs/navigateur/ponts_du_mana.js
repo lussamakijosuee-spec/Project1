@@ -1,26 +1,26 @@
 /*
- * BANC — LES PONTS DU MANA, DANS LE MOTEUR QUI TOURNE
+ * BANC — LE MANA SANS L'ANCIEN LORE
  * ---------------------------------------------------------------------------
- * Les 13 plugins du mana de JOKO s'appuient sur cinq systèmes voisins :
+ * JOKO a retiré du jeu la SANTÉ MENTALE, les CHUTES (Corruption, Errance) et
+ * l'histoire du Codex. Il ne reste que les manières d'employer le mana, et
+ * le prix, ce sont les TROIS SOURCES :
  *
- *     window.Ame · window.Corruption · window.Errance · window.LoreCanon
- *     window.Rangs   (+ window.Equilibre, window.Voies)
+ *     Âme → PV        Esprit → PM        Corps → PT
  *
- * et CHAQUE appel est enveloppé d'un `try { … } catch (e) {}` :
+ * Les sept plugins-socles sont DÉBRANCHÉS, pas effacés (§3) : leurs fichiers
+ * restent dans js/plugins/, leur entrée est à `status:false`.
  *
- *     try { if (corr && window.Corruption) window.Corruption.add(id, corr); } catch (e) {}
+ * CE QUI POURRAIT RATER EN SILENCE, ET QUE CE BANC GUETTE :
  *
- * Si le pont n'aboutit pas, il ne se passe **rien**. Pas d'erreur, pas de
- * ligne de journal, pas de dégât manquant à l'écran : juste tout le système
- * « chaque Voie a un prix » qui ne s'exécute jamais. C'est exactement la panne
- * que MaitriseVoies avait déjà connue, pour une autre raison.
- *
- * Aucune lecture de fichier ne peut le voir. Il faut demander au moteur.
- *
- * Et savoir que `window.Corruption` EXISTE ne suffit pas non plus : le plugin
- * pouvait très bien ne jamais l'appeler. On lance donc une compétence de
- * chaque Voie dans un vrai combat, et on regarde les jauges bouger — puis on
- * coupe le pont et on vérifie qu'elles cessent de bouger.
+ *   · un plugin du mana qui appellerait window.Corruption sans garde →
+ *     « Cannot read properties of undefined » en plein calcul de dégâts. Les
+ *     appels sont censés être gardés ; ce banc le vérifie en jouant, pas en
+ *     lisant ;
+ *   · une Voie qui prélèverait encore une jauge disparue ;
+ *   · une Parole qui raterait « parce que le lanceur va mal » alors que la
+ *     santé mentale n'existe plus. Le repli était traître : faute de
+ *     window.Ame, `sanity()` lisait une variable vide et retombait sur 70 %
+ *     de lucidité.
  *
  *   npx http-server -p 8899 -c-1 .
  *   node bancs/navigateur/ponts_du_mana.js
@@ -29,21 +29,11 @@
 var { chromium } = require('playwright');
 var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
-// Ce que chaque pont doit offrir : sa présence ne suffit pas, il lui faut
-// les fonctions que les plugins du mana appellent vraiment.
-var PONTS = {
-    Ame: ['jauge', 'gain', 'mauvais'],
-    Corruption: ['niveau', 'add'],
-    Errance: ['niveau', 'add'],
-    LoreCanon: ['errance', 'corruption'],
-    Rangs: ['rang'],
-    Equilibre: ['etat'],
-    Voies: ['mastery', 'gain'],
-    Fusion: ['actif', 'entrer'],
-    Paroles: ['tenue']
-};
-var REMONTES = ['LoreCanon', 'JadeEntitePlunging', 'Lore_SanteMentale', 'Errance',
+// Débranchés à dessein — ils ne doivent PLUS être chargés.
+var SOCLES = ['LoreCanon', 'JadeEntitePlunging', 'Lore_SanteMentale', 'Errance',
     'CorruptionAme', 'Surpassement', 'RangsPuissance'];
+// Ce qui reste du mana, et qui doit tourner sans eux.
+var RESTENT = ['Voies', 'Fusion', 'Paroles'];
 
 var ok = 0, ko = 0;
 function verdict(t, passe, detail) {
@@ -68,42 +58,35 @@ function verdict(t, passe, detail) {
     }
     await page.waitForTimeout(2500);
 
-    console.log('LES PONTS DU MANA, DANS LE MOTEUR QUI TOURNE\n');
-    console.log('1) Les plugins dont le mana dépend sont-ils là ?');
+    console.log('LE MANA SANS L\'ANCIEN LORE\n');
+    console.log('1) L\'ancien lore est-il bien parti ?');
 
-    var base = await page.evaluate(function (a) {
-        var o = { remontes: [], ponts: {}, scripts: PluginManager._scripts.length };
-        a.REMONTES.forEach(function (n) { o.remontes.push([n, PluginManager._scripts.indexOf(n) >= 0]); });
-        Object.keys(a.PONTS).forEach(function (k) {
-            var v = window[k];
-            o.ponts[k] = !v ? null : a.PONTS[k].filter(function (f) { return typeof v[f] !== 'function'; });
+    var etat = await page.evaluate(function (a) {
+        var o = { charges: [], vivants: {}, restent: {} };
+        a.SOCLES.forEach(function (n) { if (PluginManager._scripts.indexOf(n) >= 0) { o.charges.push(n); } });
+        ['Ame', 'AmeSysteme', 'Corruption', 'Errance', 'LoreCanon', 'Rangs', 'Equilibre'].forEach(function (k) {
+            if (window[k]) { o.vivants[k] = true; }
         });
+        a.RESTENT.forEach(function (k) { o.restent[k] = !!window[k]; });
+        o.total = PluginManager._scripts.length;
         return o;
-    }, { PONTS: PONTS, REMONTES: REMONTES });
+    }, { SOCLES: SOCLES, RESTENT: RESTENT });
 
-    var absents = base.remontes.filter(function (x) { return !x[1]; });
-    verdict('les sept plugins-socles sont chargés', absents.length === 0,
-        absents.length ? 'manquent : ' + absents.map(function (x) { return x[0]; }).join(', ')
-            : REMONTES.join(', ') + '  (' + base.scripts + ' plugins au total)');
+    verdict('les sept socles de l\'ancien lore ne sont plus chargés', etat.charges.length === 0,
+        etat.charges.length ? 'encore là : ' + etat.charges.join(', ') : SOCLES.join(', ') + '  (' + etat.total + ' plugins actifs)');
+    verdict('aucune jauge de Chute ni de santé mentale ne subsiste', Object.keys(etat.vivants).length === 0,
+        Object.keys(etat.vivants).length ? 'encore définies : ' + Object.keys(etat.vivants).map(function (k) { return 'window.' + k; }).join(', ')
+            : 'ni window.Ame, ni Corruption, ni Errance, ni LoreCanon, ni Rangs, ni Equilibre');
+    var manquants = RESTENT.filter(function (k) { return !etat.restent[k]; });
+    verdict('le mana lui-même tourne toujours', manquants.length === 0,
+        manquants.length ? 'perdus : ' + manquants.join(', ') : RESTENT.map(function (k) { return 'window.' + k; }).join(' · '));
 
-    var casses = Object.keys(PONTS).filter(function (k) { return base.ponts[k] === null; });
-    var incomplets = Object.keys(PONTS).filter(function (k) { return base.ponts[k] && base.ponts[k].length; });
-    verdict('chaque window.X que le mana lit existe', casses.length === 0,
-        casses.length ? 'absents : ' + casses.map(function (k) { return 'window.' + k; }).join(', ')
-            : Object.keys(PONTS).map(function (k) { return 'window.' + k; }).join(' · '));
-    verdict('chacun offre les fonctions que les plugins appellent', incomplets.length === 0,
-        incomplets.length ? incomplets.map(function (k) { return 'window.' + k + ' sans ' + base.ponts[k].join('/'); }).join(' · ')
-            : 'toutes les méthodes attendues répondent');
-
-    // ── 2. Le prix se paie-t-il vraiment ? ──────────────────────────────────
+    // ── 2. Les Voies gardent leurs effets, et ne prélèvent plus rien ─────────
     await page.evaluate(function () { BattleManager.setup(1, false, true); SceneManager.goto(Scene_Battle); });
     await page.waitForTimeout(5000);
 
-    // ⚠ `_damagePopup` est un TABLEAU chez Yanfly, rempli par le spriteset.
-    // Monter le combat sans passer par Scene_Battle fait échouer `apply` sur
-    // « push is not a function » — le banc casse, pas le jeu.
-    var prix = await page.evaluate(function () {
-        var o = { essais: [], sansPont: [] };
+    var essai = await page.evaluate(function () {
+        var o = { lignes: [], erreurs: [] };
         BattleManager._phase = 'turn';
         var heros = $gameParty.battleMembers()[0];
         var cible = $gameTroop.members()[0];
@@ -117,56 +100,64 @@ function verdict(t, passe, detail) {
             var v = String(s.meta.Voie).toLowerCase().trim();
             if (!parVoie[v] && s.damage && s.damage.type === 1) { parVoie[v] = s; }
         }
-
-        function lance(v, s) {
+        Object.keys(parVoie).forEach(function (v) {
+            var s = parVoie[v];
             cible.recoverAll(); heros.recoverAll();
-            var av = [window.Corruption.niveau(id), window.Errance.niveau(id), heros.hp, window.Voies.mastery(id, v)];
+            var avantPv = heros.hp, avantPm = heros.mp;
+            var avantM = window.Voies ? window.Voies.mastery(id, v) : 0;
+            var degat = 0;
             var a = new Game_Action(heros);
             a.setSkill(s.id); a.setTarget(0);
-            try { a.apply(cible); } catch (e) { return 'ERREUR ' + e.message; }
-            var ap = [window.Corruption.niveau(id), window.Errance.niveau(id), heros.hp, window.Voies.mastery(id, v)];
-            var b = [];
-            if (ap[0] !== av[0]) { b.push('Corruption ' + av[0] + '→' + ap[0]); }
-            if (ap[1] !== av[1]) { b.push('Errance ' + av[1] + '→' + ap[1]); }
-            if (ap[2] !== av[2]) { b.push('PV ' + av[2] + '→' + ap[2]); }
-            if (ap[3] !== av[3]) { b.push('maîtrise ' + av[3] + '→' + ap[3]); }
-            return b.length ? b.join(' · ') : '';
-        }
-
-        Object.keys(parVoie).forEach(function (v) { o.essais.push([v, parVoie[v].name, lance(v, parVoie[v])]); });
-
-        // ── CONTRE-ÉPREUVE : on coupe les ponts, le prix doit cesser d'être payé.
-        var vraiC = window.Corruption, vraiE = window.Errance;
-        var faux = { niveau: function () { return 0; }, add: function () {}, purge: function () {}, factor: function () { return 1; }, applyStates: function () {} };
-        window.Corruption = faux; window.Errance = faux;
-        Object.keys(parVoie).forEach(function (v) {
-            var r = lance(v, parVoie[v]);
-            if (/Corruption|Errance/.test(r)) { o.sansPont.push(v + ' bouge encore : ' + r); }
+            try { a.apply(cible); degat = cible.mhp - cible.hp; }
+            catch (e) { o.erreurs.push(v + ' : ' + e.message); return; }
+            var apresM = window.Voies ? window.Voies.mastery(id, v) : 0;
+            o.lignes.push({ voie: v, nom: s.name, degat: degat,
+                pv: avantPv - heros.hp, pm: avantPm - heros.mp,
+                maitrise: apresM - avantM });
         });
-        window.Corruption = vraiC; window.Errance = vraiE;
+
+        // Une Parole rate-t-elle encore pour une raison mentale ?
+        o.paroles = [];
+        if (window.Paroles && typeof window.Paroles.tenue === 'function') {
+            var sorts = [];
+            for (var i = 1; i < $dataSkills.length && sorts.length < 6; i++) {
+                var sk = $dataSkills[i];
+                if (sk && sk.name && /^Parole n°/.test(sk.name)) { sorts.push(sk); }
+            }
+            sorts.forEach(function (sk) {
+                var t = 0;
+                try { t = window.Paroles.tenue(heros, sk); } catch (e) { t = 'ERREUR ' + e.message; }
+                o.paroles.push([sk.name, t]);
+            });
+        }
         return o;
     });
 
-    console.log('\n2) Le prix de chaque Voie, payé dans un vrai combat  (lanceur : ' + prix.heros + ')');
-    prix.essais.forEach(function (e) {
-        console.log('     ' + e[0].padEnd(9) + '« ' + e[1].slice(0, 24).padEnd(26) + ' »  ' + (e[2] || '— rien —'));
+    console.log('\n2) Les Voies, dans un vrai combat  (lanceur : ' + essai.heros + ')');
+    console.log('   (un recul en PV ici n\'est PAS un prix de Voie : c\'est le canon du');
+    console.log('    Mana Négatif — « la forme projetée » — appliqué par ManaAffinity.)');
+    essai.lignes.forEach(function (l) {
+        console.log('     ' + l.voie.padEnd(9) + '« ' + l.nom.slice(0, 22).padEnd(24) + ' »  ' +
+            String(l.degat).padStart(5) + ' dégâts · PV −' + l.pv + ' · PM −' + l.pm + ' · maîtrise +' + l.maitrise);
     });
 
-    var erreurs = prix.essais.filter(function (e) { return /^ERREUR/.test(e[2]); });
-    verdict('aucune Voie ne plante en s\'exécutant', erreurs.length === 0,
-        erreurs.length ? erreurs.map(function (e) { return e[0]; }).join(', ') : prix.essais.length + ' Voies lancées sans erreur');
+    verdict('aucune Voie ne plante sans les jauges disparues', essai.erreurs.length === 0,
+        essai.erreurs.length ? essai.erreurs.slice(0, 2).join(' · ') : essai.lignes.length + ' Voies lancées, aucune exception');
+    verdict('les Voies font toujours des dégâts', essai.lignes.every(function (l) { return l.degat > 0; }),
+        essai.lignes.filter(function (l) { return !(l.degat > 0); }).map(function (l) { return l.voie; }).join(', ') ||
+        'de ' + Math.min.apply(null, essai.lignes.map(function (l) { return l.degat; })) +
+        ' à ' + Math.max.apply(null, essai.lignes.map(function (l) { return l.degat; })) + ' dégâts');
+    verdict('la maîtrise des Voies progresse encore', essai.lignes.every(function (l) { return l.maitrise > 0; }),
+        essai.lignes.filter(function (l) { return !(l.maitrise > 0); }).map(function (l) { return l.voie; }).join(', ') || 'les ' + essai.lignes.length + ' Voies gagnent un point');
 
-    // `onde` et `miroir` posent une dette payée au COUP SUIVANT : leur prix ne
-    // se lit pas sur le tour où on les lance. On ne les compte donc pas ici.
-    var DIFFERE = { onde: 1, miroir: 1 };
-    var muettes = prix.essais.filter(function (e) { return !e[2] && !DIFFERE[e[0]]; });
-    verdict('chaque Voie à prix immédiat prélève quelque chose', muettes.length === 0,
-        muettes.length ? muettes.map(function (e) { return e[0]; }).join(', ')
-            : (prix.essais.length - 2) + ' Voies prélèvent · onde et miroir paient au coup suivant (voulu)');
-
-    verdict('les ponts coupés, plus rien n\'est prélevé (contre-épreuve)', prix.sansPont.length === 0,
-        prix.sansPont.length ? prix.sansPont.slice(0, 2).join(' · ')
-            : 'Corruption et Errance remplacées par des coquilles : aucune jauge ne bouge');
+    if (essai.paroles.length) {
+        console.log('\n3) La tenue d\'une Parole, sans santé mentale');
+        essai.paroles.forEach(function (p) { console.log('     ' + String(p[1]) + '   ' + p[0]); });
+        verdict('une Parole tient à 100 % : plus aucun ratage « mental »',
+            essai.paroles.every(function (p) { return p[1] === 1; }),
+            essai.paroles.filter(function (p) { return p[1] !== 1; }).map(function (p) { return p[0] + '=' + p[1]; }).slice(0, 3).join(' · ') ||
+            essai.paroles.length + ' Paroles à tenue 1');
+    }
 
     verdict('aucune erreur JavaScript', err.length === 0, err.length ? err.slice(0, 2).join(' | ') : 'rien');
     verdict('aucune ressource manquante', quatreCents.length === 0, quatreCents.length ? quatreCents.slice(0, 3).join(', ') : 'rien');

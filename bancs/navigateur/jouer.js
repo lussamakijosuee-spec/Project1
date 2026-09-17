@@ -191,14 +191,23 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     // Le Codex est un fichier ouvert par YEP_PatchNotes. Le plugin ne verifie
     // rien : si le chemin est faux, le joueur clique et rien ne s ouvre.
     // On demande donc au plugin l URL qu il construirait, et on la va chercher.
+    // ⚠ Depuis que JOKO a retire l histoire du Codex, YEP_PatchNotes est
+    // debranche : le plugin n existe plus et l appel levait une exception qui
+    // faisait tomber tout le banc. On regarde d abord s il est la.
     var codex = await ev(function () {
+        if (typeof Yanfly.getPatchFileUrl !== 'function') { return null; }
         return { fichier: Yanfly.Param.PatchNotesFilename, url: Yanfly.getPatchFileUrl(),
                  commande: Yanfly.Param.PatchCmd };
     });
-    var rep = await page.request.get(BASE + '/' + codex.fichier).catch(function () { return null; });
-    verifie('le Codex des Trois Sources est bien la ou le menu l envoie',
-        !!rep && rep.status() === 200,
-        '« ' + codex.commande +' » -> ' + codex.fichier + ' (HTTP ' + (rep ? rep.status() : 'injoignable') + ')');
+    if (!codex) {
+        verifie('le Codex est bien retire du jeu', true,
+            'YEP_PatchNotes debranche : plus de commande de menu ni de page a ouvrir');
+    } else {
+        var rep = await page.request.get(BASE + '/' + codex.fichier).catch(function () { return null; });
+        verifie('le Codex des Trois Sources est bien la ou le menu l envoie',
+            !!rep && rep.status() === 200,
+            '« ' + codex.commande + ' » -> ' + codex.fichier + ' (HTTP ' + (rep ? rep.status() : 'injoignable') + ')');
+    }
     await photo('04_menu');
     await touche('Escape', 250);
     await page.waitForTimeout(700);
@@ -244,10 +253,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
                  voies: typeof window.Voies !== 'undefined',
                  fusion: typeof window.Fusion !== 'undefined' };
     });
+    // ⚠ Scene_Triangle n est PLUS attendu : c etait l ecran des trois Chutes,
+    // que JOKO a retirees du jeu. L exiger, c est accuser un ecran qu on a
+    // debranche expres. On verifie au contraire qu il a bien disparu.
     verifie('les espaces de noms du systeme de mana sont poses',
-        mana.elements && mana.triangle && mana.paroles && mana.voies && mana.fusion,
-        'Scene_MvxElements ' + mana.elements + ' · Scene_Triangle ' + mana.triangle +
+        mana.elements && mana.paroles && mana.voies && mana.fusion,
+        'Scene_MvxElements ' + mana.elements +
         ' · Paroles.tenue ' + mana.paroles + ' · Voies ' + mana.voies + ' · Fusion ' + mana.fusion);
+    verifie('l ecran des Chutes a bien disparu avec l ancien lore', !mana.triangle,
+        mana.triangle ? 'Scene_Triangle repond encore' : 'Scene_Triangle absent, comme voulu');
     // On compare la scene a la CLASSE, pas a son nom : VisualMaxEX declare
     // « Scene_MvxElementsClass » en interne, et un controle qui attend
     // « Scene_MvxElements » accuse un ecran qui marche tres bien.
@@ -272,12 +286,25 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     verifie('l ecran des Elements n annonce plus le cycle supprime',
         !/cycle de mana|fort vs|faible vs/i.test(bandeau),
         bandeau.slice(0, 110));
-    await ev(function () { SceneManager.goto(Scene_Triangle); });
-    await page.waitForTimeout(1600);
-    verifie('l ecran du Triangle s ouvre',
-        await ev(function () { return SceneManager._scene instanceof Scene_Triangle; }),
-        await scene());
-    await photo('14_triangle');
+    // ⚠ L ecran du Triangle montrait les trois jauges de CHUTE. JOKO les a
+    // retirees du jeu, TriangleAffinites est debranche, et Scene_Triangle
+    // n existe plus : l appel levait une ReferenceError qui faisait tomber
+    // tout le banc. On regarde d abord s il est la.
+    var triangle = await ev(function () { return typeof Scene_Triangle !== 'undefined'; });
+    if (!triangle) {
+        verifie('l ecran des Chutes est bien retire du jeu', true,
+            'TriangleAffinites debranche : plus de Scene_Triangle ni de commande de menu');
+    } else {
+        await ev(function () { SceneManager.goto(Scene_Triangle); });
+        await page.waitForTimeout(1600);
+        verifie('l ecran du Triangle s ouvre',
+            await ev(function () { return SceneManager._scene instanceof Scene_Triangle; }),
+            await scene());
+        await photo('14_triangle');
+    }
+    // ⚠ HORS du bloc : la suite mesure l horloge, la nuit et la meteo, et tout
+    // cela ne vit que sur la CARTE. Laisser la scene des Elements ouverte
+    // faisait echouer trois controles du temps — et c etait le banc, pas le jeu.
     await ev(function () { SceneManager.goto(Scene_Map); });
     await page.waitForTimeout(1400);
 

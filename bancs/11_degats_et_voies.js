@@ -132,10 +132,18 @@ function controles(base) {
     // (« ouvrir, fermer ou réattribuer un type de compétence … je le signale,
     // JOKO décide »). On l'inscrit nommément plutôt que d'y toucher — et tout
     // AUTRE cas continue de faire tomber le contrôle.
-    var CONNUS = { '✶ la Convergence': 1, 'Tranche des Trois Sources': 1 };
+    // ⚠ Repérées par IDENTIFIANT, pas par nom : le passage « Parole n°X » a
+    // renommé « Tranche des Trois Sources » et l'exception ne mordait plus.
+    var CONNUS = {};
+    reels.forEach(function (s) {
+        if (/^(✶ la Convergence|Tranche des Trois Sources)$/.test(s.name) ||
+            /<\s*NomOrigine\s*:\s*(✶ la Convergence|Tranche des Trois Sources)\s*>/i.test(s.note || '')) {
+            CONNUS[s.id] = 1;
+        }
+    });
 
-    var invisibles = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && !CONNUS[s.name]; });
-    var enAttente = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && CONNUS[s.name]; });
+    var invisibles = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && !CONNUS[s.id]; });
+    var enAttente = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && CONNUS[s.id]; });
     var parType = {};
     invisibles.forEach(function (s) { (parType[s.stypeId] = parType[s.stypeId] || []).push(s.name); });
     r.push(['aucune compétence n\'est enfermée dans un type que rien n\'ouvre', invisibles.length === 0,
