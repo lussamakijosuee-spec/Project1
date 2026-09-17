@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "context-engineering-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "muratcankoylan/Agent-Skills-for-Context-Engineering"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "context-engineering@context-engineering-marketplace": true
+  }
+}
