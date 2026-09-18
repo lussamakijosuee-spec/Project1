@@ -388,6 +388,16 @@ Spriteset_Base.prototype.reloadWeatherEX = function() {
 // * create Weather EX
 //==============================
 Spriteset_Base.prototype.createWeatherEX = function(id) {
+	// [projet] Une scene qui n'est ni la carte ni le combat (la peche) n'a pas
+	// de couches de meteo : sans cette garde, la premiere averse la faisait
+	// tomber sur « _weatherField_1 undefined ». Meme garde que le plugin pose
+	// deja lui-meme a la creation des decors de carte et de combat.
+	if (!this._weatherField_1) {
+		if (!this._baseSprite) { return; };
+		this.createWeatherField_1(0);
+		this.createWeatherField_2(0);
+		this.createWeatherField_3(0);
+	};
     this._weatherEXSprites[id] = new SpriteWeatherEX(id);
 	this._weatherEXSprites[id].z = id + 10;	
 	if ($gameSystem._weatherEX_Data[id].z === 0) {
@@ -434,6 +444,8 @@ Spriteset_Base.prototype.canCreateWeatherEX = function(i) {
 Spriteset_Base.prototype.removeWeatherEXRefresh = function() {
 	for (var i = 0; i < $gameSystem._weatherEX_Data.length; i++) {
 		if ($gameSystem._weatherEX_Data[i].needRefresh && this._weatherEXSprites[i]) {
+		   // [projet] idem : pas de couches, rien a retirer.
+		   if (!this._weatherField_1) { this._weatherEXSprites[i] = null; continue; };
            this._weatherField_1.removeChild(this._weatherEXSprites[i]);
     	   this._weatherField_2.removeChild(this._weatherEXSprites[i]);
    		   this._weatherEXSprites[i].clear();
