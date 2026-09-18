@@ -172,10 +172,30 @@ function controles(monde) {
     // ——— D · la boucle, jouée sur trois tours
     var boss = new Game_Battler();
     var journal = [];
-    var e0 = E[ids[0]];
-    var own0 = (e0.actions || []).map(function (a) { return a.skillId; });
-    var t0 = own0.filter(function (i) { return estTele(S[i]); })[0];
-    var p0 = own0.filter(function (i) { return estFrappe(S[i]); })[0];
+    /*
+     * ⚠ Ce bloc prenait ids[0] tel quel — le premier boss d'une troupe « ◈ ».
+     * Tant que ce premier-là portait la boucle, tout allait bien ; le jour où le
+     * ◈ a été rendu à la troupe 539, ids[0] est devenu un boss SANS mise en
+     * garde, et le banc a planté au lieu d'accuser quoi que ce soit. La section C
+     * juste au-dessus écartait pourtant déjà ce cas (`if (!tId || !pId) return`).
+     * On choisit donc explicitement un boss qui porte la boucle entière.
+     */
+    var e0 = null, t0, p0;
+    for (var iB = 0; iB < ids.length && !e0; iB++) {
+        var cand = E[ids[iB]];
+        if (!cand || !cand.actions) { continue; }
+        var ownC = cand.actions.map(function (a) { return a.skillId; });
+        var tC = ownC.filter(function (i) { return estTele(S[i]); })[0];
+        var pC = ownC.filter(function (i) { return estFrappe(S[i]); })[0];
+        if (tC && pC) { e0 = cand; t0 = tC; p0 = pC; }
+    }
+    if (!e0) {
+        r.push(['la boucle se joue : élan → frappe → à découvert', false,
+            'aucun boss « ◈ » ne porte à la fois une mise en garde et une frappe — ' +
+            'il n\'y a plus rien à jouer']);
+        return r;
+    }
+    var own0 = e0.actions.map(function (a) { return a.skillId; });
 
     // tour N — il prend son élan (portée soi-même)
     var a1 = new Game_Action(); a1._item = S[t0]; a1._sujet = boss;
