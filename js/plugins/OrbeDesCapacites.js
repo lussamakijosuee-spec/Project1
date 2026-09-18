@@ -141,6 +141,11 @@
         return out;
     }
 
+    /** Un niveau retenu par GALV_ManualLevel attend-il ce héros ? */
+    function niveauEnAttente(acteur) {
+        return !!(acteur && typeof acteur.readyForNextLevel === 'function' && acteur.readyForNextLevel());
+    }
+
     //=========================================================================
     // Le dessin de l'orbe
     //=========================================================================
@@ -426,9 +431,17 @@
         this.resetTextColor();
         this.contents.fontSize = 18;
 
-        var etat = appris
-            ? (this._acteur.canUse(s) ? 'employable maintenant' : 'apprise — pas maintenant')
-            : (this._noeud.niveau > 0 ? 'elle vient au niveau ' + this._noeud.niveau : 'pas encore apprise');
+        var etat;
+        if (appris) {
+            etat = this._acteur.canUse(s) ? 'employable maintenant' : 'apprise — pas maintenant';
+        } else if (this._noeud.niveau > 0) {
+            var reste = this._noeud.niveau - this._acteur.level;
+            if (reste <= 1 && niveauEnAttente(this._acteur)) { etat = 'le niveau qui t\'attend l\'ouvre'; }
+            else if (reste <= 0) { etat = 'apprise au niveau ' + this._noeud.niveau + ' — oubliée depuis'; }
+            else { etat = reste + ' niveau' + (reste > 1 ? 'x' : '') + ' avant qu\'elle s\'ouvre'; }
+        } else {
+            etat = 'pas encore apprise';
+        }
         this.changeTextColor(this.textColor(appris ? 24 : 7));
         this.drawText(etat, this.contentsWidth() - 240, 0, 240, 'right');
         this.resetTextColor();
@@ -447,6 +460,7 @@
         if (this._branche && !this._branche.ouverte) {
             pied += '  —  aucun trait n\'ouvre ce type : invisible en combat';
         }
+        if (niveauEnAttente(this._acteur)) { pied += '        [Maj] monter de niveau'; }
         this.drawText(pied, 0, l * 3, this.contentsWidth());
         this.resetTextColor();
         this.contents.fontSize = this.standardFontSize();
@@ -475,14 +489,20 @@
         if (!this._acteur) { return; }
         this.contents.fontSize = 22;
         this.changeTextColor(this.textColor(14));
-        this.drawText(TITRE, 0, 0, 340);
+        this.drawText(TITRE, 0, 0, 300);
         this.resetTextColor();
         this.contents.fontSize = this.standardFontSize();
         var t = this._acteur.name() + '   ' + this._acteur.currentClass().name + '   Nv' + this._acteur.level;
-        this.drawText(t, 340, 0, this.contentsWidth() - 340 - 120, 'left');
+        this.drawText(t, 300, 0, 320, 'left');
+        // GALV_ManualLevel retient la montée de niveau jusqu'à ce que le joueur
+        // la prenne en main : quand elle attend, l'orbe le dit et la propose.
         this.contents.fontSize = 18;
+        if (niveauEnAttente(this._acteur)) {
+            this.changeTextColor(this.textColor(17));
+            this.drawText('⬆ MAJ (un niveau t\'attend)', this.contentsWidth() - 300, 0, 240, 'right');
+        }
         this.changeTextColor(this.textColor(7));
-        this.drawText((this._i + 1) + '/' + this._n, this.contentsWidth() - 120, 0, 120, 'right');
+        this.drawText((this._i + 1) + '/' + this._n, this.contentsWidth() - 56, 0, 56, 'right');
         this.resetTextColor();
         this.contents.fontSize = this.standardFontSize();
     };
@@ -535,7 +555,10 @@
 
     Scene_OrbeCapacites.prototype.start = function () {
         Scene_ItemBase.prototype.start.call(this);
+        // au retour d'un autre écran (la montée de niveau), les branches sont
+        // relues : un nœud appris entre-temps s'allume tout seul.
         this.refreshActor();
+        this._itemWindow.refresh();
         this._itemWindow.activate();
         this._itemWindow.select(0);
     };
@@ -571,8 +594,19 @@
         if (this._itemWindow.active) {
             if (Input.isRepeated('right')) { this.changerBranche(1); }
             else if (Input.isRepeated('left')) { this.changerBranche(-1); }
+            else if (Input.isTriggered('shift')) { this.monterDeNiveau(); }
         }
         this.rafraichir();
+    };
+
+    // Maj ouvre la montée de niveau du héros affiché, sans quitter l'orbe :
+    // on revient dessus, et les nœuds que le niveau vient d'ouvrir sont allumés.
+    Scene_OrbeCapacites.prototype.monterDeNiveau = function () {
+        var a = this.actor();
+        if (!a || !niveauEnAttente(a)) { SoundManager.playBuzzer(); return; }
+        if (!window.Galv || !Galv.MLEVEL || typeof Galv.MLEVEL.levelUp !== 'function') { SoundManager.playBuzzer(); return; }
+        SoundManager.playOk();
+        Galv.MLEVEL.levelUp(a.actorId());
     };
 
     Scene_OrbeCapacites.prototype.changerBranche = function (sens) {
