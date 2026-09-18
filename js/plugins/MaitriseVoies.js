@@ -581,8 +581,11 @@
             _executeDamage.call(this, target, reduced);
             if (attacker.isAlive()) {
                 attacker.gainHp(-back); attacker.startDamagePopup(); attacker.clearResult();
-                log((target.name ? target.name() : 'La cible') + ' renvoie l\'attaque : ' +
-                    (attacker.name ? attacker.name() : 'l\'agresseur') + ' frappe sa propre image (-' + back + ' PV).');
+                // Deux noms dans une seule ligne débordent du journal (816 px de
+                // large) : on lisait « Korrah renvoie l'attaque : Gargal, le
+                // Premier Croc frapp ». Mêmes mots, deux lignes, rien de coupé.
+                log((target.name ? target.name() : 'La cible') + ' renvoie l\'attaque.');
+                log((attacker.name ? attacker.name() : 'l\'agresseur') + ' frappe sa propre image (-' + back + ' PV).');
                 if (attacker.isDead()) attacker.performCollapse();
             }
             // le prix : le miroir se fêle dans la main du porteur
@@ -616,8 +619,9 @@
             target._voieReflux = null;
             var counter = Math.max(1, Math.floor(value * reflux));
             attacker.gainHp(-counter); attacker.startDamagePopup(); attacker.clearResult();
-            log((target.name ? target.name() : 'La cible') + ' retourne la force : Reflux ! ' +
-                (attacker.name ? attacker.name() : 'l\'agresseur') + ' encaisse -' + counter + ' PV.');
+            // Même raison qu'au Renvoi : deux noms ne tiennent pas sur une ligne.
+            log((target.name ? target.name() : 'La cible') + ' retourne la force : Reflux !');
+            log((attacker.name ? attacker.name() : 'l\'agresseur') + ' encaisse -' + counter + ' PV.');
             if (attacker.isDead()) attacker.performCollapse();
         }
     };
