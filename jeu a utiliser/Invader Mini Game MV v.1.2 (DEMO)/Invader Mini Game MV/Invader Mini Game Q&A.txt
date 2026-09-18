@@ -1,0 +1,6 @@
+Can I have multiple levels?
+Yes, each level is determined by an ID number when using the level building script call. This stores data for each level individually including records on how well players did on them.
+
+How do I control the length of a level?
+Each 'Phase' has it's own length. For each level you choose a list of Phases it will run through and this will determine the level's length.
+
