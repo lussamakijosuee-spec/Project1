@@ -52,15 +52,24 @@ ok([1,2,3,4].every(i=>C[i]&&C[i].learnings.length>=79),'chacun des 4 héros a au
 
 console.log('\n═══ LE BUTIN DES 41 BOSS ═══');
 const BOSS=E.filter(e=>e&&e.name&&meta(e.note).Boss);
+// Un BROUILLON, c'est mesurable : les statistiques que MV pose par défaut,
+// aucune expérience, aucun or, aucun butin. JOKO : « le dieu sans visage
+// c'est un brouillon, laisse-le ». On ne lui réclame donc pas d'arme — mais
+// un boss réglé qui n'en lâcherait pas, lui, tombe toujours.
+const DEFAUT_MV=[100,0,10,10,10,10,10,10];
+const estBrouillon=e=>JSON.stringify(e.params)===JSON.stringify(DEFAUT_MV)
+  && e.exp===0 && e.gold===0 && e.dropItems.every(d=>!d.kind);
+const BROUILLONS=BOSS.filter(estBrouillon);
+if(BROUILLONS.length)console.log('      brouillons laissés de côté : '+BROUILLONS.map(e=>e.id+' « '+e.name.trim()+' »').join(' · '));
 let dropKo=0,sansArme=0;
-BOSS.forEach(b=>{ let arme=false;
+BOSS.filter(e=>!estBrouillon(e)).forEach(b=>{ let arme=false;
   b.dropItems.forEach(d=>{ if(d.kind===0)return;
     const tab={1:I,2:W,3:A}[d.kind];
     if(!tab||!tab[d.dataId]||!tab[d.dataId].name)dropKo++;
     if(d.kind===2)arme=true; });
   if(!arme)sansArme++; });
 ok(dropKo===0,`tous les butins pointent sur du réel (${dropKo} cassés)`);
-ok(sansArme===0,`les ${BOSS.length} boss lâchent une arme unique (${sansArme} sans)`);
+ok(sansArme===0,`les ${BOSS.length-BROUILLONS.length} boss réglés lâchent une arme unique (${sansArme} sans)`);
 const armesBoss=W.filter(w=>w&&w.name&&(w.note||'').includes('<ButinBoss:'));
 const reliques=A.filter(a=>a&&a.name&&(a.note||'').includes('<ButinBoss:'));
 ok(armesBoss.length===43,`43 armes de boss (${armesBoss.length})`);
