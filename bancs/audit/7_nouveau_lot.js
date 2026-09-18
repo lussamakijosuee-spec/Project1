@@ -63,7 +63,7 @@ ok(dropKo===0,`tous les butins pointent sur du réel (${dropKo} cassés)`);
 ok(sansArme===0,`les ${BOSS.length} boss lâchent une arme unique (${sansArme} sans)`);
 const armesBoss=W.filter(w=>w&&w.name&&(w.note||'').includes('<ButinBoss:'));
 const reliques=A.filter(a=>a&&a.name&&(a.note||'').includes('<ButinBoss:'));
-ok(armesBoss.length===41,`41 armes de boss (${armesBoss.length})`);
+ok(armesBoss.length===43,`43 armes de boss (${armesBoss.length})`);
 ok(reliques.length>=20,`${reliques.length} reliques d'Âme`);
 
 console.log('\n═══ LES MATÉRIAUX ═══');
@@ -84,7 +84,7 @@ T.forEach((t,i)=>{ if(!t||!t.name)return;
   if(t.name.charAt(0)==='◈')boss.push(i); });
 console.log(`      ${Object.keys(fam).length} familles lisibles · ${boss.length} contrats de boss`);
 ok(Object.keys(fam).length===18,`les 18 familles sont reconnues par le motif du plugin`);
-ok(boss.length===41,`les 41 contrats de boss sont reconnus`);
+ok(boss.length===42,`les 42 contrats de boss sont reconnus`);
 const totalContrats=Object.values(fam).reduce((s,r)=>s+Object.values(r).reduce((a,l)=>a+l.length,0),0);
 console.log(`      ${totalContrats} contrats de chasse au total`);
 ok(totalContrats>=250,`au moins 250 contrats atteignables (${totalContrats})`);

@@ -88,9 +88,18 @@ function controles(T) {
             });
         });
 
+        // ⚠ On mesure le SYMPTÔME — « ce membre peut-il apparaître ? » — et non
+        // le motif « y a-t-il une commande Appear ». Une troupe dont un membre
+        // porte <MecaPonte> fait éclore ses cachés par plugin, sans événement :
+        // les compter comme dormeurs accuserait un innocent (§6).
+        var ponte = (t.members || []).some(function (x) {
+            var e = E[x.enemyId];
+            return e && /<\s*MecaPonte\s*[:>]/i.test(e.note || '');
+        });
+
         (t.members || []).forEach(function (m, i) {
             // ── un dormeur que personne ne réveille
-            if (m.hidden && !reveilles[i]) { dormeurs.push(t.name + ' : membre ' + i + ' (' + (E[m.enemyId] && E[m.enemyId].name) + ')'); }
+            if (m.hidden && !reveilles[i] && !ponte) { dormeurs.push(t.name + ' : membre ' + i + ' (' + (E[m.enemyId] && E[m.enemyId].name) + ')'); }
             // ── et il doit tenir dans l'écran comme les autres
             var e = E[m.enemyId];
             var d = e && dim(e.battlerName);

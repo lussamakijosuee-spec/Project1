@@ -83,7 +83,9 @@ const TB=T.filter(t=>t&&t.name&&t.name.startsWith('◈'));
 ok(TB.length===BOSS.length,`${TB.length} troupes de boss`);
 let pagesOk=0,condOk=0;
 for(const t of TB){
-  if(t.pages.length===4) pagesOk++;
+  // au MOINS 4 pages : entrée, phase II, phase III, rappel. Les gros boss en
+  // ont 5 ou 6 (bascule de musique, renforts) — c'est voulu, pas un défaut.
+  if(t.pages.length>=4) pagesOk++;
   const seuils=t.pages.filter(p=>p.conditions.enemyValid).map(p=>p.conditions.enemyHp);
   if(seuils.includes(60)&&seuils.includes(25)) condOk++;
 }
@@ -92,7 +94,9 @@ ok(condOk===TB.length,'les phases se déclenchent bien à 60 % et 25 % de PV');
 // les commandes d'événement doivent être valides
 let cmdKo=0;
 for(const t of TB) for(const p of t.pages) for(const c of p.list){
-  if(![0,101,401,333,337].includes(c.code)) cmdKo++;
+  // 241/242 = jouer / arrêter le BGM : les boss basculent leur musique en
+  // changeant de phase. Ce sont des commandes valides, pas des casses (§6).
+  if(![0,101,401,333,337,241,242].includes(c.code)) cmdKo++;
   if(c.code===333&&(!ST[c.parameters[2]]||!ST[c.parameters[2]].name)) cmdKo++;
   if(c.code===337&&!AN[c.parameters[1]]) cmdKo++;
 }
@@ -107,7 +111,8 @@ ok(sansRes.length===0,`plus aucun ennemi hors-cycle sans résistance (${sansRes.
 // « transcender le cycle » = aucune résistance sur le TRIANGLE (2 spirituelle, 3 positive,
 // 4 négative). Un profil élémentaire propre (feu, ombre…) reste permis, et sain en jeu.
 const CYCLE=[2,3,4];
-const horsCycle=purs.filter(e=>!e.traits.some(t=>t.code===11&&CYCLE.includes(t.dataId)));
+// On mesure le symptôme : un taux à 1.0 est inerte, il ne plie pas le triangle.
+const horsCycle=purs.filter(e=>!e.traits.some(t=>t.code===11&&CYCLE.includes(t.dataId)&&t.value!==1));
 ok(horsCycle.length===purs.length,`les ${purs.length} êtres de Mana Pur échappent au triangle du cycle (${horsCycle.length})`);
 const sansMana=tous.filter(e=>!e._m.Mana);
 ok(sansMana.length===0,`plus aucun ennemi sans <Mana:> déclaré (${sansMana.length})`);

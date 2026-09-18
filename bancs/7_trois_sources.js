@@ -82,15 +82,32 @@ function controles(base) {
     //     Un contrôle qui les dénonce accuse ses propres réglages. Ce qu'on
     //     mesure, c'est que la passe ne les a pas VIDÉS de leurs compétences.
     var compte = PUR.map(function (e) { return deLaSource(e).length; });
+    // ⚠ Un PLANCHER, pas une égalité. Ce qu'on garde, c'est « la passe ne les a
+    // pas vidés » — or une égalité stricte tombe aussi quand on AJOUTE une
+    // compétence de Mana Pur, ce qui n'est pas un défaut. On mesure le
+    // symptôme (on en a perdu), pas le nombre (il a bougé).
+    //
+    // ⚠ Et ce plancher était trop BAS : 36 quand il y en a 37. Le jeu pouvait
+    // donc en perdre une sans que rien ne tombe — et c'est exactement ce qui se
+    // passait : le sabotage « une compétence de Mana Pur repointée ailleurs »
+    // ne faisait tomber aucun contrôle. Un contrôle avec du mou n'est pas un
+    // contrôle. Le plancher vaut le compte RÉEL : §3 interdit de supprimer, donc
+    // ce nombre ne peut que monter, et toute perte se voit immédiatement.
+    var PLANCHER = [37, 11];
     r.push(['le Mana Pur (7, 16) garde ses compétences et son prix libre',
-        compte[0] === 36 && compte[1] === 11,
-        'élém 7 : ' + compte[0] + '/36 · élém 16 : ' + compte[1] + '/11']);
+        compte[0] >= PLANCHER[0] && compte[1] >= PLANCHER[1],
+        'élém 7 : ' + compte[0] + ' (plancher ' + PLANCHER[0] + ') · élém 16 : ' +
+        compte[1] + ' (plancher ' + PLANCHER[1] + ')']);
 
     // 5 · les êtres de Mana Pur transcendent toujours le triangle
     var TRIANGLE = [2, 3, 4];
     var purs = E.filter(function (x) { return x && x.note && /<\s*Mana\s*:\s*pur\s*>/i.test(x.note); });
+    // On mesure le SYMPTÔME, pas le motif (§6) : un taux d'élément à 1.0 est
+    // inerte — il ne plie pas le triangle. Seule une valeur ≠ 1 le fait.
     var tombes = purs.filter(function (x) {
-        return (x.traits || []).some(function (t) { return t.code === 11 && TRIANGLE.indexOf(t.dataId) >= 0; });
+        return (x.traits || []).some(function (t) {
+            return t.code === 11 && TRIANGLE.indexOf(t.dataId) >= 0 && t.value !== 1;
+        });
     });
     r.push(['les êtres de Mana Pur échappent au triangle (canon §4)', tombes.length === 0,
         purs.length + ' êtres · ' + tombes.length + ' pris dans le cycle']);

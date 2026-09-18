@@ -47,6 +47,21 @@ function echelle(e) {
     return m ? parseInt(m[1], 10) / 100 : 1;
 }
 
+/**
+ * De combien `<Floating>` SOULÈVE le sprite au-dessus de sa pose.
+ * ⚠ Sans ça, le contrôle est aveugle à la moitié du problème : un ennemi qui
+ * tient à l'arrêt peut sortir de l'écran dès qu'il se met à léviter, et rien
+ * ne le signale — c'est exactement ce qui est arrivé en posant le vol sur 113
+ * ennemis. On mesure la position la plus HAUTE que le sprite occupera, pas sa
+ * position au repos.
+ */
+function vol(e) {
+    if (!/<\s*Floating\s*>/i.test(e.note || '')) return 0;
+    var h = /<\s*Floating Height\s*:\s*(\d+)\s*>/i.exec(e.note || '');
+    var base = h ? parseInt(h[1], 10) : 50;      // défaut du plugin
+    return base + 15;                            // marge pour l'oscillation
+}
+
 /** Où les troupes posent chaque ennemi, au plus contraignant. */
 function placements() {
     var T = JSON.parse(fs.readFileSync(path.join(RACINE, 'data/Troops.json'), 'utf8'));
@@ -89,9 +104,11 @@ function controles(E, POSE) {
         var p = POSE[e.id];
         if (!p) { return; }                 // aucune troupe ne l'emploie encore
         var k = echelle(e);
-        var haut = p.y - d.h * k;
+        var lift = vol(e);
+        var haut = p.y - d.h * k - lift;
         if (haut < 0) {
-            coupes.push(e.name + ' (' + d.w + 'x' + d.h + ' à ' + Math.round(k * 100) + '% posé à y=' + p.y + ' → ' + Math.round(-haut) + 'px hors écran)');
+            coupes.push(e.name + ' (' + d.w + 'x' + d.h + ' à ' + Math.round(k * 100) + '% posé à y=' + p.y +
+                (lift ? ', +' + lift + 'px de vol' : '') + ' → ' + Math.round(-haut) + 'px hors écran)');
         }
         if (d.w * k / 2 > p.demi) {
             deborde.push(e.name + ' (' + Math.round(d.w * k / 2 - p.demi) + 'px hors du bord)');
@@ -127,6 +144,20 @@ var SABOTAGES = [
             return d && d.h > POSE[e.id].y;
         })[0];
         if (g) { g.note = (g.note || '').replace(/<Scale Sprite:[^>]*>/gi, ''); }
+    }, /tête coupée/],
+    ['un vol trop haut posé sur un ennemi qui tenait pourtant', function (b) {
+        // Le cas réel : l'ennemi tient parfaitement à l'arrêt, et sort de
+        // l'écran dès qu'il se met à léviter. Sans la prise en compte du vol,
+        // le contrôle ne voyait rien.
+        var g = b.filter(function (e) {
+            if (!e || !e.name || !POSE[e.id]) { return false; }
+            var d = dim(e.battlerName);
+            return d && d.h * echelle(e) < POSE[e.id].y;   // il tient au sol
+        })[0];
+        if (g) {
+            g.note = (g.note || '').replace(/<\s*Floating[^>]*>/gi, '') +
+                '\n<Floating>\n<Floating Height: 400>';
+        }
     }, /tête coupée/],
     ['un ennemi large repoussé contre le bord', function (b) {
         var g = b.filter(function (e) {
