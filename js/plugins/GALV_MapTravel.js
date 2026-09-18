@@ -311,6 +311,9 @@ Scene_MapTravel.prototype.initialize = function() {
 };
 
 Scene_MapTravel.prototype.createVars = function() {
+	// [projet] même garde qu'à la création : sans carte de voyage, on ne
+	// touche à rien (la scène est déjà en train de se refermer).
+	if (!this.data()) { return; };
 	this._currentMousePos = {x:TouchInput.x,y:TouchInput.y};
 	if ($gameSystem._travelMaps.current && this.data().locations[$gameSystem._travelMaps.current]) {
 		Galv.MAPT.active = $gameSystem._travelMaps.current;
@@ -330,6 +333,15 @@ Scene_MapTravel.prototype.start = function() {
 
 Scene_MapTravel.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
+	// [projet] Tant qu'aucune carte de voyage n'a été créée (script :
+	// Galv.MAPT.createMap(...)), this.data() rend undefined et la scène
+	// s'effondrait sur « Cannot read properties of undefined ». On ressort
+	// proprement : l'écran se referme au lieu de casser la partie.
+	if (!this.data()) {
+		console.warn('GALV_MapTravel : aucune carte de voyage définie — écran refermé.');
+		this.popScene();
+		return;
+	};
 	this._needRefresh = true; // need refresh to refresh sizes once map image loads
 	this.createBackgrounds();
 	this.createMap();
@@ -480,6 +492,8 @@ Scene_MapTravel.prototype.doExitScene = function() {
 };
 
 Scene_MapTravel.prototype.update = function() {
+	// [projet] idem : pas de carte de voyage, pas de mise à jour.
+	if (!this.data()) { Scene_MenuBase.prototype.update.call(this); return; };
 	this.updateControls();
 	this.updateLayers();
 	Scene_MenuBase.prototype.update.call(this);
