@@ -152,10 +152,36 @@ parcourir(function (list, ou) {
         }
     });
 });
+// Un interrupteur peut aussi être levé depuis un PLUGIN, et une lecture des
+// seuls événements accuse alors une branche qui s'ouvre très bien. On va donc
+// lire js/plugins : les appels setValue(<n>, true) écrits en clair, et ceux qui
+// passent par un paramètre, de la forme « var X = Number(params['…'] || <n>) ».
+var allumeParPlugin = {};
+(function () {
+    var dossier = path.join(RACINE, 'js', 'plugins');
+    if (!fs.existsSync(dossier)) { return; }
+    fs.readdirSync(dossier).filter(function (f) { return /\.js$/.test(f); }).forEach(function (f) {
+        var src;
+        try { src = fs.readFileSync(path.join(dossier, f), 'utf8'); } catch (e) { return; }
+        var m;
+        var litteral = /setValue\s*\(\s*(\d+)\s*,\s*true\s*\)/g;
+        while ((m = litteral.exec(src))) { (allumeParPlugin[m[1]] = allumeParPlugin[m[1]] || []).push(f); }
+        // via une constante tirée d'un paramètre de plugin
+        var parVariable = /setValue\s*\(\s*([A-Za-z_$][\w$]*)\s*,\s*true\s*\)/g;
+        while ((m = parVariable.exec(src))) {
+            var nom = m[1];
+            var def = new RegExp('var\\s+' + nom + '\\s*=\\s*Number\\s*\\([^)]*\\|\\|\\s*(\\d+)\\s*\\)');
+            var d = src.match(def);
+            if (d) { (allumeParPlugin[d[1]] = allumeParPlugin[d[1]] || []).push(f); }
+        }
+    });
+})();
+
 Object.keys(testes).map(Number).forEach(function (s) {
     if (allume[s]) { return; }
-    // Les interrupteurs pilotés depuis un plugin ou la console sont hors de portée
-    // d'une lecture statique : on ne conclut que s'ils ne sont NULLE PART allumés.
+    // Un plugin qui le lève suffit : la branche s'ouvre, le contrôle doit
+    // innocenter ce cas au lieu de le compter comme une panne.
+    if (allumeParPlugin[s]) { return; }
     noter('branche qui ne s\'ouvrira jamais',
         testes[s].slice(0, 2).join(' · ') + (testes[s].length > 2 ? ' (+' + (testes[s].length - 2) + ')' : ''),
         'teste l\'interrupteur ' + s + ' « ' + (SYS.switches[s] || '?') +

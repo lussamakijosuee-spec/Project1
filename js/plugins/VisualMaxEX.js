@@ -155,13 +155,37 @@ var Scene_MvxElements = Scene_MvxElements || null;
         this.resetTextColor();
     };
 
+    // Le bandeau du haut. Window_Help écrit avec drawTextEx, qui ne borne
+    // rien : la phrase demandait 812 px pour 768 px de place et la fenêtre la
+    // coupait en silence — on lisait « chaque source a son pr ». On ne
+    // raccourcit pas la phrase : c'est la taille de la police qui cède,
+    // jusqu'à ce que tout entre.
+    function Window_MvxBandeau() { this.initialize.apply(this, arguments); }
+    Window_MvxBandeau.prototype = Object.create(Window_Help.prototype);
+    Window_MvxBandeau.prototype.constructor = Window_MvxBandeau;
+    Window_MvxBandeau.prototype.refresh = function () {
+        this.contents.clear();
+        var dispo = this.contents.width - this.textPadding() * 2;
+        var texte = String(this._text || '');
+        this.contents.fontSize = this.standardFontSize();
+        while (this.contents.fontSize > 14 && this.textWidth(texte) > dispo) {
+            this.contents.fontSize -= 1;
+        }
+        // la taille réellement employée au dessin, pour qu'un contrôle puisse
+        // mesurer ce que le joueur voit et non ce qu'on croit avoir écrit
+        this._tailleEmployee = this.contents.fontSize;
+        this._largeurEmployee = this.textWidth(texte);
+        this.drawText(texte, this.textPadding(), 0, dispo, 'left');
+        this.contents.fontSize = this.standardFontSize();
+    };
+
     function Scene_MvxElementsClass() { this.initialize.apply(this, arguments); }
     Scene_MvxElementsClass.prototype = Object.create(Scene_MenuBase.prototype);
     Scene_MvxElementsClass.prototype.constructor = Scene_MvxElementsClass;
     Scene_MvxElementsClass.prototype.create = function () {
         Scene_MenuBase.prototype.create.call(this);
         var hh = this.calcHelpHeight ? this.calcHelpHeight() : 72;
-        this._help = new Window_Help(1);
+        this._help = new Window_MvxBandeau(1);
         this._help.setText('LES SOURCES ET LES ÉLÉMENTS   —   chaque source a son prix');
         this.addWindow(this._help);
         var y = this._help.height;

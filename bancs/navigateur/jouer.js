@@ -433,17 +433,26 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     verifie('le verrou maitre des saisons est sur une case a nous',
         verrou.ids.every(function (i) { return i >= 200; }),
         'interrupteur ' + verrou.ids.join('/') + ' « ' + verrou.nom + ' »');
-    // La vraie preuve : on leve le verrou et on regarde si la meteo demarre.
-    // Avant, weatherMode vaut -1 (aucune couche) ; apres, le mode de la saison.
-    var avantMeteo = await ev(function () { return $gameSystem.weatherMode(0); });
+    // ⚠ Le verrou ne demarre plus baisse : VerrouDesSaisons.js le leve a la
+    // creation d une partie — sans quoi RIEN dans le projet ne le levait et la
+    // meteo des saisons ne pouvait pas partir une seule fois. Le banc mesure
+    // donc l inverse de ce qu il mesurait : la meteo tourne deja, on BAISSE le
+    // verrou pour prouver qu il commande, puis on le releve.
+    var meteoDepart = await ev(function () { return $gameSystem.weatherMode(0); });
+    verifie('une partie neuve part avec sa meteo de saison', meteoDepart > 0,
+        'weatherMode(0) = ' + meteoDepart + ' · saison levee : ' +
+        Object.keys(saison.s).filter(function (k) { return saison.s[k].leve; }).map(function (k) { return saison.s[k].nom; }).join(', '));
+    // On baisse et on efface : si la saison relancait quelque chose, on le verrait.
+    await ev(function (id) { $gameSwitches.setValue(id, false); $gameSystem.clearWeatherEX(0, true); }, verrou.ids[0]);
+    await page.waitForTimeout(2500);
+    var meteoCoupee = await ev(function () { return $gameSystem.weatherMode(0); });
+    verifie('verrou baisse, la saison ne relance rien (contre-epreuve)', meteoCoupee <= 0,
+        'weatherMode(0) = ' + meteoCoupee);
     await ev(function (id) { $gameSwitches.setValue(id, true); }, verrou.ids[0]);
     await page.waitForTimeout(2500);
-    var apresMeteo = await ev(function () { return $gameSystem.weatherMode(0); });
-    verifie('le verrou leve, la saison lance vraiment sa meteo', apresMeteo > 0 && apresMeteo !== avantMeteo,
-        'weatherMode(0) : ' + avantMeteo + ' -> ' + apresMeteo + ' · saison levee : ' +
-        Object.keys(saison.s).filter(function (k) { return saison.s[k].leve; }).map(function (k) { return saison.s[k].nom; }).join(', '));
-    verifie('verrou baisse, rien ne partait (contre-epreuve)', avantMeteo <= 0,
-        'avant la levee, weatherMode(0) valait ' + avantMeteo);
+    var meteoRevenue = await ev(function () { return $gameSystem.weatherMode(0); });
+    verifie('verrou releve, la saison repart : c est bien lui qui commande', meteoRevenue > 0,
+        'weatherMode(0) : ' + meteoCoupee + ' -> ' + meteoRevenue);
     await photo('12_saison');
 
     console.log('\n9) Le bilan du moteur');
