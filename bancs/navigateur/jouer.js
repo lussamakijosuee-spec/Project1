@@ -220,8 +220,13 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await touche('Escape', 250); await page.waitForTimeout(700);
     await ev(function () { SceneManager.push(Scene_Skill); });
     await page.waitForTimeout(1400);
-    verifie('l ecran des competences s ouvre', (await scene()) === 'Scene_Skill',
-        await ev(function () { return $gameParty.leader().skills().length + ' competences sur le porteur'; }));
+    // ⚠ On compare la scene a la CLASSE, pas a son nom : OrbeDesCapacites
+    // prend la place de Scene_Skill, et un controle qui attend le nom
+    // « Scene_Skill » accuse un ecran qui marche tres bien. Meme lecon que
+    // pour Scene_MvxElements plus haut.
+    verifie('l ecran des competences s ouvre',
+        await ev(function () { return SceneManager._scene instanceof Scene_Skill; }),
+        (await scene()) + ' — ' + await ev(function () { return $gameParty.leader().skills().length + ' competences sur le porteur'; }));
     // Deux plugins reglent l opacite des fenetres, et Aries002 charge APRES
     // YEP_CoreEngine : c est le sien qui gagne. On lit donc la valeur que la
     // fenetre porte vraiment, pas celle qu on croit avoir reglee.
