@@ -291,16 +291,16 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 420 | Posture de Parade | 10 PM | pose « Posture de Parade » 100% | 1 | — |
 | 1 | 451 | Parole n°3 Focalisation | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 2 | `<ParoleL: 4>` `<NomOrigine: Focalisation>` ⚠ |
 | 1 | 452 | Parole n°2 Onde Concentrée | 12% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 3 * 200 / (200 + b.mdf))` | 7 | `<ParoleL: 5>` `<NomOrigine: Onde Concentrée>` ⚠ |
-| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` ⚠ |
-| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` ⚠ |
-| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` ⚠ |
+| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` |
+| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` |
+| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` |
 | 20 | 816 | Carnage des Neuf Voies | 25 PT | dégâts PV *Physique* `Math.floor(a.atk * 4.9 * 200 / (200 + b.def))` | 450 | `<Invocation: 3>` `<ParoleL: 4>` |
-| 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` ⚠ `<AvatarNiveau: 1>` ⚠ |
+| 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` `<AvatarNiveau: 1>` |
 | 30 | 817 | Étreinte de la Bête | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 451 | `<ReculVital: 20>` |
 | 45 | 815 | ⚔ la Mue Souveraine | 40 PT | **coquille** — rien | 449 | `<Ultime: mue>` |
-| 50 | 1256 | Avatar — Étau | — | **coquille** — rien | 404 | `<AvatarOrdre: 1251>` ⚠ `<AvatarNiveau: 2>` ⚠ |
-| 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` ⚠ `<AvatarNiveau: 3>` ⚠ |
-| 85 | 1258 | Avatar — Rends-le | — | **coquille** — rien | 232 | `<AvatarOrdre: 1254>` ⚠ `<AvatarNiveau: 3>` ⚠ |
+| 50 | 1256 | Avatar — Étau | — | **coquille** — rien | 404 | `<AvatarOrdre: 1251>` `<AvatarNiveau: 2>` |
+| 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` `<AvatarNiveau: 3>` |
+| 85 | 1258 | Avatar — Rends-le | — | **coquille** — rien | 232 | `<AvatarOrdre: 1254>` `<AvatarNiveau: 3>` |
 
 ### Type 3 — ult
 
@@ -345,21 +345,21 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | | Type | Compétences | État |
 |---|---|---|---|
 | ✔ | 1 · capacité | 44 | ouvert |
-| ✔ | 2 · Spéciale | 11 | ouvert |
-| ✔ | 3 · ult | 7 | ouvert |
+| ✔ | 2 · Spéciale | 17 | ouvert |
+| ✔ | 3 · ult | 1 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 8 · invocation | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✔ | 8 · invocation | 2 | ouvert |
 | ✔ | 9 · ame | 9 | ouvert |
-| ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 14 · ombre de katana | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 15 · ombre de lance | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✔ | 11 · ombre d'épeé | 1 | ouvert |
+| ✔ | 12 · ombre de dague | 1 | ouvert |
+| ✔ | 13 · ombre de hache | 1 | ouvert |
+| ✔ | 14 · ombre de katana | 1 | ouvert |
+| ✔ | 15 · ombre de lance | 1 | ouvert |
+| ✔ | 16 · ombre de griffe | 1 | ouvert |
+| ✔ | 17 · ombre de arc | 1 | ouvert |
+| ✔ | 18 · ombre de arme a feu | 1 | ouvert |
 
-> **15 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **5 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
 
 ### Type 1 — capacité
 
@@ -414,29 +414,29 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
+| 1 | 11 | Éclat Noir | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 64 | `<Parole>` `<Trait: rupture>` `<Interdit>` |
 | 1 | 13 | Vannes | 10 PM | pose « Enragé » 30% · malus MDF 2t | 36 | — |
 | 1 | 66 | Lotus des Ténèbres | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 100% | 257 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 68 | Parole n°15 Annihilation des Ténèbres | 10 PM + 20 PT | dégâts PV *OMBRE* `a.mat * 10` · pose « Muet » 100% | 258 | `<ParoleL: 3>` `<SceauMagie>` `<Ombre>` `<NomOrigine: Annihilation des Ténèbres>` ⚠ |
 | 1 | 69 | Porte de l'Envers | 12 PM | pose « Contre Total » 100% | 253 | `<ParoleL: 3>` `<Trait: porte>` |
 | 1 | 70 | Aspiration des Âmes Damnées | 8% PV | soin PV *mana spirituelle * `a.mhp * 0.50` · pose « Déstabilisé » 100% · script commun 16 | 434 | `<ParoleL: 4>` `<AspirationDamnees>` |
+| 1 | 71 | Royaume Impérial | 12 PM | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
 | 1 | 110 | Abri de l'Envers | 12 PM | pose « dimension d'ombre » 100% | 260 | `<Parole: origine>` `<Trait: porte>` |
 | 1 | 123 | Décharge Infinie | 15 PM | dégâts PV *AME * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 364 | `<Parole: origine>` |
 | 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 1 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
+| 1 | 453 | Parole n°7 Dévoreur d'Âmes | 50 PM + 30% PV | drain PV *AME * `a.atk*4 + a.mat*3 - b.mdf` | 66 | `<Ulti>` `<UltiColor: #9b5cff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Dévoreur d'Âmes>` ⚠ |
+| 1 | 454 | Tout ou Rien | 40 PT | dégâts PV *mana négative * `((Math.random()<0.5)?(a.atk*12):(a.atk*2)) - b.def` | 84 | `<Ulti>` `<UltiColor: #c800ff>` `<After Eval>` `<Parole: origine>` |
 | 35 | 811 | Parole n°15 Pluie de Lance du Styx | 26 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 4.1 * 200 / (200 + b.mdf))` | 377 | `<Invocation: 3>` `<ParoleL: 4>` `<NomOrigine: Pluie de Lance du Styx>` ⚠ |
 | 35 | 812 | Contre Totale | 22 PM | **coquille** — rien | 429 | `<ContreTotale>` |
+| 43 | 1170 | Parole n°2 Le Symbole | 15% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 26 * 200 / (200 + b.mdf))` · pose « ✨ Grâce Volée » 60% | 417 | `<NomOrigine: Le Symbole>` ⚠ |
+| 58 | 1173 | Parole n°7 Ce Qu'il A Gardé | 68 PM | dégâts PV *AME * `Math.floor(a.mat * 36 * 200 / (200 + b.mdf))` | 447 | `<NomOrigine: Ce Qu'il A Gardé>` ⚠ `<Cooldown: 2>` |
 
 ### Type 3 — ult
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 11 | Éclat Noir | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 64 | `<Parole>` `<Trait: rupture>` `<Interdit>` |
-| 1 | 71 | Royaume Impérial | 12 PM | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
-| 1 | 453 | Parole n°7 Dévoreur d'Âmes | 50 PM + 30% PV | drain PV *AME * `a.atk*4 + a.mat*3 - b.mdf` | 66 | `<Ulti>` `<UltiColor: #9b5cff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Dévoreur d'Âmes>` ⚠ |
-| 1 | 454 | Tout ou Rien | 40 PT | dégâts PV *mana négative * `((Math.random()<0.5)?(a.atk*12):(a.atk*2)) - b.def` | 84 | `<Ulti>` `<UltiColor: #c800ff>` `<After Eval>` `<Parole: origine>` |
-| 43 | 1170 | Parole n°2 Le Symbole | 15% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 26 * 200 / (200 + b.mdf))` · pose « ✨ Grâce Volée » 60% | 417 | `<NomOrigine: Le Symbole>` ⚠ |
 | 45 | 810 | ☠ Royaume Impérial des Ténèbres | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
-| 58 | 1173 | Parole n°7 Ce Qu'il A Gardé | 68 PM | dégâts PV *AME * `Math.floor(a.mat * 36 * 200 / (200 + b.mdf))` | 447 | `<NomOrigine: Ce Qu'il A Gardé>` ⚠ `<Cooldown: 2>` |
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
 
@@ -448,7 +448,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 84 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
-### ✘ Type 8 — invocation  *(INVISIBLE)*
+### Type 8 — invocation
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -469,49 +469,49 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 38 | 1169 | Parole n°7 Rappel | 42 PM | dégâts PV *AME * `Math.floor(a.mat * 23 * 200 / (200 + b.mdf))` | 449 | `<NomOrigine: Rappel>` ⚠ |
 | 48 | 1171 | Parole n°7 Dette Ancienne | 56 PM | dégâts PV *AME * `Math.floor(a.mat * 33 * 200 / (200 + b.mdf))` · pose « 🫀 Ravage » 70% | 460 | `<NomOrigine: Dette Ancienne>` ⚠ `<Cooldown: 2>` |
 
-### ✘ Type 11 — ombre d'épeé  *(INVISIBLE)*
+### Type 11 — ombre d'épeé
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
 
-### ✘ Type 12 — ombre de dague  *(INVISIBLE)*
+### Type 12 — ombre de dague
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
 
-### ✘ Type 13 — ombre de hache  *(INVISIBLE)*
+### Type 13 — ombre de hache
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 118 | Fendoir Obscur | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(a.atk * 5.2 * 200 / (200 + b.def))` | 250 | `<Voie: forge>` |
 
-### ✘ Type 14 — ombre de katana  *(INVISIBLE)*
+### Type 14 — ombre de katana
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
 
-### ✘ Type 15 — ombre de lance  *(INVISIBLE)*
+### Type 15 — ombre de lance
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 121 | Parole n°15 Geyser Abyssal | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(((a.atk + a.mat) * 2.5) * 1.173 * 200 / (200 + b.def))` | 84 | `<Voie: onde>` `<NomOrigine: Geyser Abyssal>` ⚠ |
 
-### ✘ Type 16 — ombre de griffe  *(INVISIBLE)*
+### Type 16 — ombre de griffe
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 252 | `<FrappeAme>` ⚠ |
 
-### ✘ Type 17 — ombre de arc  *(INVISIBLE)*
+### Type 17 — ombre de arc
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
 
-### ✘ Type 18 — ombre de arme a feu  *(INVISIBLE)*
+### Type 18 — ombre de arme a feu
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -703,9 +703,6 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 |---|---|---|---|
 | `<NomOrigine>` | 114 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<ComboLien>` | 8 | dort dans `ComboLiens` | Vesper #413 Fureur Spectrale (Duo) · Vesper #417 Trinité d'Âmes (Trio) … |
-| `<AvatarOrdre>` | 4 | dort dans `AvatarSpirituel` | Korrah #1255 Avatar — Vise ça · Korrah #1256 Avatar — Étau … |
-| `<AvatarNiveau>` | 4 | dort dans `AvatarSpirituel` | Korrah #1255 Avatar — Vise ça · Korrah #1256 Avatar — Étau … |
-| `<AvatarPosture>` | 3 | dort dans `AvatarSpirituel` | Korrah #1246 Avatar — Laisse-le faire · Korrah #1247 Avatar — Assaut … |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
 
 ---
@@ -725,21 +722,21 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 | # | État | Traits | Condition |
 |---|---|---|---|
 | 22 | Éveil du Génie | 2 | `$gameVariables.value(12) >= 9;` |
-| 23 | Distraite | 1 | `$gameVariables.value(12) >= 4 && $gameVariables.value(12) <= 6;` |
+| 23 | Distraite | 1 | `$gameVariables.value(12) >= 4 && $gameVariables.value(12) <= 5;` |
 | 24 | Maladresse | 1 | `$gameVariables.value(12) === 2 \|\| $gameVariables.value(12) === 3;` |
-| 25 | Méditation Profonde | 1 | `$gameVariables.value(12) <= 2;` |
-| 28 | Folie Destructrice | 1 | `$gameVariables.value(11) <= 2;` |
+| 25 | Méditation Profonde | 1 | `$gameVariables.value(12) <= 1;` |
+| 28 | Folie Destructrice | 1 | `$gameVariables.value(11) <= 1;` |
 | 29 | Agressivité Nocive | 2 | `$gameVariables.value(11) >= 2 && $gameVariables.value(11) <= 3;` |
 | 30 | Sérénité Absolue | 2 | `$gameVariables.value(11) >= 9;` |
-| 31 | Tension Latente | 2 | `$gameVariables.value(11) >= 4 && $gameVariables.value(11) <= 6;` |
+| 31 | Tension Latente | 2 | `$gameVariables.value(11) >= 4 && $gameVariables.value(11) <= 5;` |
 | 34 | Maître Serein | 2 | `$gameVariables.value(13) >= 9;` |
-| 35 | Agaçant | 2 | `$gameVariables.value(13) >= 4 && $gameVariables.value(13) <= 6;` |
+| 35 | Agaçant | 2 | `$gameVariables.value(13) >= 4 && $gameVariables.value(13) <= 5;` |
 | 36 | Insupportable | 2 | `$gameVariables.value(13) >= 2 && $gameVariables.value(13) <= 3;` |
-| 37 | Souffre-Douleur | 4 | `$gameVariables.value(13) <= 1 && $gameVariables.value(13) > 0;` |
+| 37 | Souffre-Douleur | 4 | `$gameVariables.value(13) <= 1;` |
 | 40 | Confiance Absolue | 4 | `$gameVariables.value(14) >= 9;` |
 | 41 | Hésitation | 3 | `$gameVariables.value(14) === 4  \|\| $gameVariables.value(14) === 5;` |
 | 42 | Complexe d'Infériorité | 3 | `$gameVariables.value(14) === 2 \|\| $gameVariables.value(14) === 3;` |
-| 43 | Blocage Psychologique | 2 | `$gameVariables.value(14) <= 1 && $gameVariables.value(14) > 0;` |
+| 43 | Blocage Psychologique | 2 | `$gameVariables.value(14) <= 1;` |
 | 46 | Surcharge d'Âme | 3 | `$gameVariables.value(15) >= 1 && $gameVariables.value(15) <= 3;` |
 | 47 | Surcharge d'Âme (2) | 3 | `$gameVariables.value(15) >= 4 && $gameVariables.value(15) <= 7;` |
 | 48 | Surcharge d'Âme (MAX) | 1 | `$gameVariables.value(15) >= 8;` |
@@ -754,7 +751,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **354** entrées d'apprentissage sur les quatre héros ;
-- **24** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
+- **14** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
 - **22** ne font rien du tout (ni dégâts, ni effet) ;
-- **6** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
-  dont **5** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).
+- **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
+  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).

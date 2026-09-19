@@ -46,6 +46,14 @@ function etat(a){
 console.log('\n=== Départ (niveau 1) ===');
 [1,2,3,4].forEach(i=>console.log('  '+ACTORS[i].name().padEnd(8)+' '+etat(ACTORS[i])));
 
+// On relève l'arme de départ AVANT de monter les niveaux. Le contrôle porte sur
+// l'invariant — « le Don monte, l'acier ne bouge pas » — et non sur un nom d'arme
+// en dur : JOKO change l'équipement de départ de ses héros quand il veut, et le
+// banc n'a pas à lui dire quelle arme il doit leur donner.
+const ARME_DEPART = {};
+[1,2,3,4].forEach(i=>{ ARME_DEPART[i] = ACTORS[i]._equips[0]; });
+const nomArme = id => id ? ((W[id] && W[id].name) || ('arme ' + id)) : 'les mains nues';
+
 console.log('\n=== Montée aux paliers 2 (niv.15), 3 (niv.35), 4 (niv.60) ===');
 [[15,'Naissant/Forme'],[35,'Résonance'],[60,'Vérité']].forEach(([lv,nom])=>{
   console.log('  — niveau '+lv+' ('+nom+') —');
@@ -57,11 +65,11 @@ console.log('\n=== Vérifications ===');
 // v3.0 — UN SEUL Don par personne : le Don monte de palier, l'arme de main NON.
 // L'arme ordinaire équipée au départ doit être encore là, inchangée, au niveau 60.
 ok(ACTORS[1]._equips[4]===71, 'Vesper : Masque p4 à l\'Accessoire (son seul Don)');
-ok(ACTORS[1]._equips[0]===160, 'Vesper : son arme est restée la Lame Écarlate de Fer — l\'acier ne monte pas tout seul');
+ok(ACTORS[1]._equips[0]===ARME_DEPART[1], 'Vesper : son arme de départ est intacte (' + nomArme(ARME_DEPART[1]) + ') — l\'acier ne monte pas tout seul');
 ok(ACTORS[2]._equips[6]===79, 'Korrah : Armure Volante p4 à l\'Âme (son seul Don)');
-ok(ACTORS[2]._equips[0]===139, 'Korrah : son arme est restée le Gantelet de Fer — l\'acier ne monte pas tout seul');
+ok(ACTORS[2]._equips[0]===ARME_DEPART[2], 'Korrah : son arme de départ est intacte (' + nomArme(ARME_DEPART[2]) + ') — l\'acier ne monte pas tout seul');
 ok(ACTORS[3]._equips[4]===75, 'ludwing : Amulette p4 à l\'Accessoire (son seul Don)');
-ok(ACTORS[3]._equips[0]===2,  'ludwing : sa hache est restée la Hache Valo — l\'acier ne monte pas tout seul');
+ok(ACTORS[3]._equips[0]===ARME_DEPART[3], 'ludwing : son arme de départ est intacte (' + nomArme(ARME_DEPART[3]) + ') — l\'acier ne monte pas tout seul');
 ok(ACTORS[4]._equips[0]===516, 'Aël : l\'Arc p4 à l\'Arme (son Don EST son arme)');
 ok(ACTORS[4]._equips[6]===0, 'Aël : slot Âme resté LIBRE — l\'avantage des 80 %');
 const restes=Object.entries(sac).filter(([k,n])=>n>0);

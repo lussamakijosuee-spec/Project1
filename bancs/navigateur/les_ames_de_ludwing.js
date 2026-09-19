@@ -292,6 +292,38 @@ function V(libelle, condition, detail) {
     V('le MAT est brisé par-dessus', !sceau.saute && sceau.matDebuff < 0,
         sceau.saute ? '—' : 'malus MAT = ' + sceau.matDebuff);
 
+    // ── ⑧ ses branches, telles que le menu les voit ─────────────────────────
+    console.log('\n── ⑧ les branches de ludwing, vues par le menu ──');
+    var branches = await ev(function () {
+        var lud = $gameActors.actor(3);
+        var ouverts = lud.addedSkillTypes().filter(function (t, i, a) { return a.indexOf(t) === i; }).sort(function (x, y) { return x - y; });
+        // ce que le joueur verrait vraiment, branche par branche
+        var parType = {};
+        lud.skills().forEach(function (s) {
+            if (ouverts.indexOf(s.stypeId) < 0) { return; }
+            (parType[s.stypeId] = parType[s.stypeId] || []).push(s.name.trim());
+        });
+        return {
+            ouverts: ouverts.map(function (t) { return t + ' ' + ($dataSystem.skillTypes[t] || '?').trim(); }),
+            ombres: [11, 12, 13, 14, 15, 16, 17, 18].filter(function (t) { return ouverts.indexOf(t) >= 0; }).length,
+            invocation: ouverts.indexOf(8) >= 0,
+            jackpot: ouverts.indexOf(4) >= 0,
+            ults: (parType[3] || []),
+            speciales: (parType[2] || []).length
+        };
+    });
+    V('les 8 branches d\'ombre sont ouvertes', branches.ombres === 8, branches.ombres + '/8');
+    V('« invocation » est ouverte', branches.invocation === true, 'Jugement des Défunts · Rappel des Âmes');
+    V('CONTRE-TEST — « JACKPOT » est resté fermé', branches.jackpot === false,
+        'comme demandé : on n\'a ouvert que ce qui sert les âmes');
+    V('ludwing n\'a plus qu\'UN seul ultime', branches.ults.length === 1,
+        branches.ults.join(' · ') || 'aucun');
+    V('c\'est bien le Royaume Impérial des Ténèbres', /Royaume Impérial des Ténèbres/.test(branches.ults[0] || ''),
+        branches.ults[0] || '—');
+    V('les 6 autres sont retombées dans « Spéciale »', branches.speciales >= 6,
+        branches.speciales + ' compétences dans Spéciale — rien n\'a été supprimé');
+    console.log('    branches : ' + branches.ouverts.join(' · '));
+
     // ── le bilan ────────────────────────────────────────────────────────────
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript de bout en bout', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
