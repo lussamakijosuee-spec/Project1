@@ -16,7 +16,8 @@
  *   cette variation, et on ne retient un écart que s'il la dépasse.
  *
  *   npx http-server -p 8899 -c-1 .
- *   node bancs/outils/qui_ralentit.js SRD_PreloaderCore SRD_SuperToolsEngine …
+ *   node bancs/outils/qui_ralentit.js                    (tous les allumés)
+ *   node bancs/outils/qui_ralentit.js MOG_Weather_EX YEP_MessageCore …
  */
 'use strict';
 var { chromium } = require('playwright');
@@ -41,7 +42,11 @@ function poser(sansCes) {
 
 var suspects = process.argv.slice(2).filter(function (a) { return !/^--/.test(a); });
 if (!suspects.length) {
-    suspects = base.filter(function (p) { return /^SRD_/.test(p.name) && p.status; }).map(function (p) { return p.name; });
+    // sans argument : TOUS les plugins allumés. Compter une famille en
+    // particulier était une commodité du jour où on en branchait une ;
+    // ça n'a plus de sens, et ça cacherait le vrai coupable.
+    suspects = base.filter(function (p) { return p.status && !/^▬/.test(p.name); })
+        .map(function (p) { return p.name; });
 }
 
 async function mesure(nav) {

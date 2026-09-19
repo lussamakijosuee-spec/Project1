@@ -13,8 +13,8 @@
  * arrive — y compris si on l'interrompt.
  *
  *   npx http-server -p 8899 -c-1 .
- *   node bancs/outils/qui_casse.js SRD_MasterVolume SRD_PreloaderCore …
- *   node bancs/outils/qui_casse.js --tout-le-lot     (tous les SRD inscrits)
+ *   node bancs/outils/qui_casse.js MOG_Compass YEP_ItemCore …
+ *   node bancs/outils/qui_casse.js --tout-le-lot     (tous les plugins allumés)
  */
 'use strict';
 var { chromium } = require('playwright');
@@ -43,7 +43,9 @@ var args = process.argv.slice(2);
 var base = lire();
 var suspects;
 if (args.indexOf('--tout-le-lot') >= 0) {
-    suspects = base.filter(function (p) { return /^SRD_/.test(p.name) && p.status; }).map(function (p) { return p.name; });
+    // tous les plugins allumés, sans distinction de famille
+    suspects = base.filter(function (p) { return p.status && !/^▬/.test(p.name); })
+        .map(function (p) { return p.name; });
 } else {
     suspects = args.filter(function (a) { return !/^--/.test(a); });
 }

@@ -7,9 +7,9 @@
  *
  *   1. Un fichier posé dans js/plugins/ SANS être inscrit dans js/plugins.js
  *      ne coûte RIEN. Il n'est pas chargé, pas exécuté, il ne ralentit rien.
- *      Les 82 SRD non branchés ne pèsent pas une milliseconde. Les effacer
- *      ne rendrait pas le jeu plus rapide d'un cheveu — ça ne ferait que
- *      désencombrer la liste du gestionnaire de plugins de l'éditeur.
+ *      Un lot de fichiers déposés sans être inscrits ne pèse pas une seule
+ *      milliseconde : les effacer ne rend pas le jeu plus rapide d'un cheveu.
+ *      Ça ne fait que désencombrer la liste du gestionnaire de plugins.
  *
  *   2. Ce qui coûte, c'est ce qui est ALLUMÉ. Et un plugin allumé peut être
  *      inutile de trois façons différentes, qui ne se soignent pas pareil :
@@ -19,9 +19,8 @@
  *        · il COÛTE du temps de démarrage sans rien rendre.
  *
  * Ce banc mesure les trois. Il ne décide rien et ne touche à rien : il liste,
- * avec la preuve à côté. Pour agir :
- *     node bancs/outils/brancher_plugins.js --retirer
- *     (ou éteindre à la main dans js/plugins.js)
+ * avec la preuve à côté. Pour agir, on éteint à la main dans js/plugins.js —
+ * et on mesure ce que ça change avec bancs/outils/qui_ralentit.js.
  *
  *   node bancs/audit/18_plugins_qui_ne_servent_a_rien.js
  *   node bancs/audit/18_plugins_qui_ne_servent_a_rien.js --tout
