@@ -93,7 +93,13 @@
     // réglage est VIDE — le bouton de menu ne pouvait donc pas s'éteindre.
     // On distingue maintenant « absent » (→ défaut) de « vidé » (→ pas de commande).
 
-    var KEY = { thylane: 1, neyssa: 2, lou: 3, tianna: 4 };
+    var KEY = {
+        // Les noms d'aujourd'hui…
+        vesper: 1, korrah: 2, ludwing: 3, ael: 4, aël: 4,
+        // …et ceux d'avant, gardés pour que les 26 commandes déjà posées
+        // dans les événements continuent de marcher (règle 3 : on n'enlève rien).
+        thylane: 1, neyssa: 2, lou: 3, tianna: 4
+    };
     function resolve(k) { if (typeof k === 'number') return k; var s = String(k).toLowerCase().trim(); return KEY[s] || parseInt(s) || 0; }
     function store() { if (!$gameSystem) return {}; if (!$gameSystem._errance) $gameSystem._errance = {}; return $gameSystem._errance; }
     function stageName(lv) { return lv >= 100 ? 'l\'Errant' : lv >= 70 ? 'Gonflé d\'âmes' : lv >= 40 ? 'Décharné' : 'Ancré'; }

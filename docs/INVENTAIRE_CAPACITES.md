@@ -350,16 +350,16 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✔ | 8 · invocation | 2 | ouvert |
 | ✔ | 9 · ame | 9 | ouvert |
-| ✔ | 11 · ombre d'épeé | 1 | ouvert |
-| ✔ | 12 · ombre de dague | 1 | ouvert |
-| ✔ | 13 · ombre de hache | 1 | ouvert |
-| ✔ | 14 · ombre de katana | 1 | ouvert |
-| ✔ | 15 · ombre de lance | 1 | ouvert |
-| ✔ | 16 · ombre de griffe | 1 | ouvert |
-| ✔ | 17 · ombre de arc | 1 | ouvert |
-| ✔ | 18 · ombre de arme a feu | 1 | ouvert |
+| ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 14 · ombre de katana | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 15 · ombre de lance | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 
-> **5 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **13 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
 
 ### Type 1 — capacité
 
@@ -469,49 +469,49 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 38 | 1169 | Parole n°7 Rappel | 42 PM | dégâts PV *AME * `Math.floor(a.mat * 23 * 200 / (200 + b.mdf))` | 449 | `<NomOrigine: Rappel>` ⚠ |
 | 48 | 1171 | Parole n°7 Dette Ancienne | 56 PM | dégâts PV *AME * `Math.floor(a.mat * 33 * 200 / (200 + b.mdf))` · pose « 🫀 Ravage » 70% | 460 | `<NomOrigine: Dette Ancienne>` ⚠ `<Cooldown: 2>` |
 
-### Type 11 — ombre d'épeé
+### ✘ Type 11 — ombre d'épeé  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
 
-### Type 12 — ombre de dague
+### ✘ Type 12 — ombre de dague  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
 
-### Type 13 — ombre de hache
+### ✘ Type 13 — ombre de hache  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 118 | Fendoir Obscur | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(a.atk * 5.2 * 200 / (200 + b.def))` | 250 | `<Voie: forge>` |
 
-### Type 14 — ombre de katana
+### ✘ Type 14 — ombre de katana  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
 
-### Type 15 — ombre de lance
+### ✘ Type 15 — ombre de lance  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 121 | Parole n°15 Geyser Abyssal | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(((a.atk + a.mat) * 2.5) * 1.173 * 200 / (200 + b.def))` | 84 | `<Voie: onde>` `<NomOrigine: Geyser Abyssal>` ⚠ |
 
-### Type 16 — ombre de griffe
+### ✘ Type 16 — ombre de griffe  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 252 | `<FrappeAme>` ⚠ |
 
-### Type 17 — ombre de arc
+### ✘ Type 17 — ombre de arc  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
 
-### Type 18 — ombre de arme a feu
+### ✘ Type 18 — ombre de arme a feu  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -751,7 +751,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **354** entrées d'apprentissage sur les quatre héros ;
-- **14** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
+- **22** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
 - **22** ne font rien du tout (ni dégâts, ni effet) ;
 - **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).
