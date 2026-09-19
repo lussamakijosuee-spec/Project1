@@ -4,6 +4,10 @@
 > Les systèmes écrits par JOKO sont restés dans `_ancien_projet/` — mais **leurs marqueurs sont toujours posés
 > dans `data/`**. Chaque ligne ci-dessous est un plugin absent dont au moins un notetag est employé par le jeu.
 
+> **Réveillés depuis.** Le 2026-09-19, trois d'entre eux sont remontés dans `js/plugins/` et actifs :
+> `InvocationAmes`, `PorteurDAmes` (v1.1) et `RoyaumeImperial` — les âmes de ludwing. Mesurés par
+> `bancs/navigateur/les_ames_de_ludwing.js`. Le tableau ci-dessous les décrit donc au passé.
+
 Le « poids » est le nombre total d'entrées de `data/` qui portent un de ses marqueurs.
 
 | poids | plugin | dossier | lignes | marqueurs posés | ce qu'il fait |

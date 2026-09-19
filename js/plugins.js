@@ -136,5 +136,9 @@ var $plugins =
 {"name":"GALV_VisualNovelChoices","status":true,"description":"(v.1.6) Changes how the \"Choice\" message boxes display to appear more like visual novels.","parameters":{"Command Width":"700","Command Height":"48","Always Middle":"true","Message Gap":"0","Disabled Button":"3"}},
 {"name":"ToucheDuSaut","status":true,"description":"v1.0 ■ Rend sa touche au saut de GALV_JumpAbility, que YEP_KeyboardConfig efface sans le vouloir.","parameters":{}},
 {"name":"OrbeDesCapacites","status":true,"description":"v1.0 ■ Remplace l'écran des compétences par un ORBE : le héros au centre, ses voies en branches, ses compétences en nœuds.","parameters":{"Rayon de l'orbe":"74","Rayon des branches":"148","Titre":"L'ORBE DES CAPACITÉS"}},
-{"name":"ChampDeTir","status":true,"description":"v1.0 ■ Monte un niveau jouable pour GALV_InvaderMiniGame et l'ouvre d'un seul appel : ChampDeTir.lancer();","parameters":{}}
+{"name":"ChampDeTir","status":true,"description":"v1.0 ■ Monte un niveau jouable pour GALV_InvaderMiniGame et l'ouvre d'un seul appel : ChampDeTir.lancer();","parameters":{}},
+{"name":"▬▬▬ ⑬ LES ÂMES DE LUDWING · remontés de _ancien_projet ▬▬▬","status":false,"description":"⑬ LES ÂMES DE LUDWING","parameters":{}},
+{"name":"InvocationAmes","status":true,"description":"v1.0 ■ <Invocation: n> dépense n âmes (variable 15) et reste grisée si le stock est insuffisant.","parameters":{"soulVar":"15"}},
+{"name":"PorteurDAmes","status":true,"description":"v1.1 ■ Tuer récolte l'âme du mort (var 15) et pèse sur le tueur. Option : réserver la dépense au porteur.","parameters":{"porteurId":"3","soulVar":"15","amesParMort":"1","recolteToutLeMonde":"true","errParMort":"1","porteurExclusif":"false"}},
+{"name":"RoyaumeImperial","status":true,"description":"v1.0 ■ Le Domaine de ludwing : les âmes reviennent, les invocations sont libres, les stats montent — et l'arsenal des Ténèbres s'arme.","parameters":{"etatDomaine":"198","etatContre":"199","etatTrauma":"200","soulVar":"15","surgeDomaine":"30","aspirationParAme":"6"}}
 ];
