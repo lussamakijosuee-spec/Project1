@@ -46,6 +46,14 @@ var LISTE = args.indexOf('--liste') >= 0;
 var FORMULE = args.indexOf('--formule') >= 0;
 var facon = (args.filter(function (a) { return /^--facon=/.test(a); })[0] || '').split('=')[1];
 var esquive = (args.filter(function (a) { return /^--esquive=/.test(a); })[0] || '').split('=')[1];
+var TYPE = (args.filter(function (a) { return /^--type=/.test(a); })[0] || '').split('=')[1];
+/* --par-portee : au lieu d'une seule façon pour tout le lot, la forme de la
+ * compétence choisit son jeu d'adresse. Une compétence qui vise UN ennemi
+ * demande de viser juste ; une qui les frappe TOUS demande de tout donner. */
+var PAR_PORTEE = args.indexOf('--par-portee') >= 0;
+/* --seulement-degats : laisse de côté les compétences dont la formule ne fait
+ * aucun dégât. Le minutage n'y changerait rien, autant ne pas les toucher. */
+var SEULEMENT_DEGATS = args.indexOf('--seulement-degats') >= 0;
 var noms = args.filter(function (a) { return !/^--/.test(a); });
 
 var FACONS = {
@@ -121,10 +129,6 @@ if (RETIRER) {
     process.exit(0);
 }
 
-if (!facon && !esquive) {
-    console.error('  dis quoi poser : --facon=wheel  ou  --esquive=jump  (ou --liste)');
-    process.exit(1);
-}
 if (facon && !FACONS[facon]) {
     console.error('  façon inconnue : « ' + facon +' ». Les six sont : ' + Object.keys(FACONS).join(', '));
     process.exit(1);
@@ -133,16 +137,37 @@ if (esquive && !ESQUIVES[esquive]) {
     console.error('  esquive inconnue : « ' + esquive + ' ». Les deux sont : ' + Object.keys(ESQUIVES).join(', '));
     process.exit(1);
 }
-if (!noms.length) {
-    console.error('  donne au moins un nom de compétence, entre guillemets.');
+if (!noms.length && !TYPE) {
+    console.error('  donne au moins un nom de compétence entre guillemets, ou --type=3 pour tout un onglet.');
     process.exit(1);
+}
+if (facon && PAR_PORTEE) {
+    console.error('  choisis : --facon=… OU --par-portee, pas les deux.');
+    process.exit(1);
+}
+if (!facon && !esquive && !PAR_PORTEE) {
+    console.error('  dis quoi poser : --facon=wheel, --par-portee, ou --esquive=jump.');
+    process.exit(1);
+}
+
+/** La forme de la compétence choisit son jeu d'adresse.
+ *  (portées de MV : 1 = un ennemi · 2 = tous · 3-6 = aléatoires · 7+ = alliés) */
+function faconPourPortee(s) {
+    if (s.scope === 1) { return 'circle'; }      // une cible : viser juste
+    if (s.scope === 2) { return 'mash'; }        // tous : tout donner
+    if (s.scope >= 3 && s.scope <= 6) { return 'arrows'; }  // plusieurs coups : une suite
+    return 'wheel';                              // le reste : l'anneau
 }
 
 /* ── trouver les compétences nommées ── */
 var parNom = {};
 skills.forEach(function (s) { if (s && s.name) { (parNom[s.name] = parNom[s.name] || []).push(s); } });
 
-var cibles = [], introuvables = [], ambigus = [];
+var cibles = [], introuvables = [], ambigus = [], sansDegats = [];
+if (TYPE) {
+    var t = Number(TYPE);
+    skills.forEach(function (s) { if (s && s.stypeId === t) { cibles.push(s); } });
+}
 noms.forEach(function (n) {
     var t = parNom[n];
     if (!t) {
@@ -156,12 +181,39 @@ noms.forEach(function (n) {
     t.forEach(function (s) { cibles.push(s); });
 });
 
+/* ⚠ Une compétence dont la formule ne fait aucun dégât ne tirera RIEN du
+ *   minutage : la multiplier par la puissance donne toujours zéro. On la met
+ *   de côté au lieu de la toucher pour rien — et on dit lesquelles. */
+if (SEULEMENT_DEGATS) {
+    cibles = cibles.filter(function (s) {
+        var f = String(s.damage.formula).trim();
+        var inerte = (s.damage.type === 0) || f === '' || f === '0';
+        if (inerte) { sansDegats.push(s); }
+        return !inerte;
+    });
+}
+
 console.log('═'.repeat(74));
-console.log('  ATTACHER ' + (facon ? 'LE MINUTAGE « ' + facon + ' »' : 'L\'ESQUIVE « ' + esquive + ' »'));
+console.log('  ATTACHER ' + (PAR_PORTEE ? 'UN MINUTAGE CHOISI PAR LA PORTÉE'
+    : facon ? 'LE MINUTAGE « ' + facon + ' »' : 'L\'ESQUIVE « ' + esquive + ' »'));
 console.log('═'.repeat(74));
 if (facon) { console.log('  ' + FACONS[facon]); }
 if (esquive) { console.log('  ' + ESQUIVES[esquive]); }
+if (PAR_PORTEE) {
+    console.log('  un ennemi → circle (viser juste) · tous → mash (tout donner)');
+    console.log('  plusieurs coups → arrows (une suite) · le reste → wheel (l\'anneau)');
+}
+if (TYPE) {
+    var nomType = (require(path.join(RACINE, 'data', 'System.json')).skillTypes || [])[Number(TYPE)];
+    console.log('  onglet visé : n°' + TYPE + ' « ' + nomType + ' »');
+}
 console.log('');
+if (sansDegats.length) {
+    console.log('  ' + sansDegats.length + ' laissée(s) de côté, elles ne font aucun dégât :');
+    sansDegats.forEach(function (s) { console.log('       n°' + String(s.id).padStart(4) + '  ' + s.name); });
+    console.log('     Pour celles-là, le minutage devrait agir autrement qu\'en multipliant');
+    console.log('     des dégâts — dis-moi ce qu\'il doit faire.\n');
+}
 
 if (introuvables.length) {
     console.log('  ✘ ' + introuvables.length + ' nom(s) introuvable(s) — rien ne sera posé pour eux :');
@@ -187,11 +239,12 @@ cibles.forEach(function (s) {
     }
     var noteAvant = s.note;
     var formuleAvant;
+    var saFacon = PAR_PORTEE ? faconPourPortee(s) : facon;
     var nouvelleNote = (s.note ? s.note.replace(/\s*$/, '') + '\n' : '') +
-        (facon ? BALISE_MIN(facon) : BALISE_ESQ(esquive));
+        (saFacon ? BALISE_MIN(saFacon) : BALISE_ESQ(esquive));
     var nouvelleFormule;
     var formuleInerte = false;
-    if (FORMULE && facon) {
+    if (FORMULE && saFacon) {
         if (s.damage.formula.indexOf(MARQUE) >= 0) {
             nouvelleFormule = s.damage.formula;    // déjà fait, on n'empile pas
         } else {
@@ -206,7 +259,7 @@ cibles.forEach(function (s) {
         }
     }
     poses.push({
-        id: s.id, nom: s.name, s: s,
+        id: s.id, nom: s.name, s: s, facon: saFacon,
         noteAvant: noteAvant, nouvelleNote: nouvelleNote,
         formuleAvant: formuleAvant, nouvelleFormule: nouvelleFormule,
         formuleInerte: formuleInerte
@@ -219,7 +272,7 @@ if (deja.length) {
 }
 console.log('  ' + poses.length + ' compétence(s) à toucher :\n');
 poses.forEach(function (p) {
-    console.log('   n°' + String(p.id).padStart(4) + '  ' + p.nom);
+    console.log('   n°' + String(p.id).padStart(4) + '  ' + p.nom.padEnd(34) + (p.facon ? '→ ' + p.facon : '→ esquive ' + esquive));
     if (p.nouvelleFormule) {
         console.log('            formule : ' + p.formuleAvant);
         console.log('                   →  ' + p.nouvelleFormule);
