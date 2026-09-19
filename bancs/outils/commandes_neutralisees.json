@@ -1,0 +1,2095 @@
+{
+ "fait": "2026-09-19T09:52:20",
+ "refait_depuis_le_jeu": true,
+ "prefixe": "[commande sans répondant] ",
+ "entrees": [
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE27 « Feu d'Ame - Rituel »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "CORRUPTION purge thylane 20",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE27 « Feu d'Ame - Rituel »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "CORRUPTION purge neyssa 20",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE27 « Feu d'Ame - Rituel »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "CORRUPTION purge lou 20",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE27 « Feu d'Ame - Rituel »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "CORRUPTION purge tianna 20",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE27 « Feu d'Ame - Rituel »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "PENSEE",
+   "commande": "PENSEE"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE28 « Recrue - Culte des Ames »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "FACTION join culte",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE29 « Recrue - Empire Vultric »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "FACTION join vultric",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE30 « Recrue - Royaume des Etoiles »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "FACTION join etoiles",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE31 « Recrue - Les Affranchis »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "FACTION join libre",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE45 « Meditation »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "CORRUPTION purge thylane 10",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE45 « Meditation »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "CORRUPTION purge neyssa 10",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE45 « Meditation »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "CORRUPTION purge lou 10",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE45 « Meditation »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "CORRUPTION purge tianna 10",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "CommonEvents.json",
+   "ou": "CE46 « Lien +1 (Mira) »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "LIEN up mira 1",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev11 « Regisseur des Liens »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "LIEN set thylane 10",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev11 « Regisseur des Liens »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "LIEN set neyssa 10",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev11 « Regisseur des Liens »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "LIEN set lou 10",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev11 « Regisseur des Liens »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "LIEN set tianna 10",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev11 « Regisseur des Liens »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "LIEN ecran",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev12 « Liens a Zero »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "LIEN set thylane 0",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev12 « Liens a Zero »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "LIEN set neyssa 0",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev12 « Liens a Zero »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "LIEN set lou 0",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev12 « Liens a Zero »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "LIEN set tianna 0",
+   "commande": "LIEN"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev16 « Feu d'Ame »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "REVE",
+   "commande": "REVE"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev17 « Autel des Factions »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "FACTION join etoiles",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev17 « Autel des Factions »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "FACTION join vultric",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev17 « Autel des Factions »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "FACTION join voix",
+   "commande": "FACTION"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev21 « PNJ Test - Garde »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev30 « EV030 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "LOU copies ",
+   "commande": "LOU"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev38 « EV038 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "CORRUPTION ecran",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev39 « EV039 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PORTES ecran",
+   "commande": "PORTES"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev44 « EV044 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "DESTINS ecran ",
+   "commande": "DESTINS"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev51 « EV051 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PACTE oubli ",
+   "commande": "PACTE"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev52 « EV052 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "REGARD",
+   "commande": "REGARD"
+  },
+  {
+   "fichier": "Map002.json",
+   "ou": "ev52 « EV052 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "<Ame: colère>",
+   "commande": "<Ame:"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "enable_picture : 1",
+   "commande": "enable_picture"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "enable_picture : 2",
+   "commande": "enable_picture"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "enable_picture : 4",
+   "commande": "enable_picture"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 20,
+   "texte": "bb_ex_clear",
+   "commande": "bb_ex_clear"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 21,
+   "texte": "bb_ex : 1 : Forest1 : Lower : 0 : 0 : 0 : 5",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 22,
+   "texte": "bb_ex : 2 : Fog1 : Lower : 0.5 : 0 : 0 : 10",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 23,
+   "texte": "bb_ex : 3 : Forest2 : Lower : 0 : 0 : 0 : 0",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 24,
+   "texte": "bb_ex : 4 : Fog2 : Upper : 0.5 : 0 : 0 : -10",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev13 « EV013 »",
+   "page": 1,
+   "ligne": 25,
+   "texte": "bb_ex : 5 : Wood2 : Upper : 0 : 0 : 0 : -30",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "show_actor_hud",
+   "commande": "show_actor_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "show_s_hud",
+   "commande": "show_s_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "show_variable_hud : 1",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "show_variable_hud : 2",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "show_variable_hud : 3",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "show_variable_hud : 4",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "show_variable_hud : 5",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 14,
+   "texte": "show_variable_hud : 6",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 15,
+   "texte": "show_party_hud",
+   "commande": "show_party_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 18,
+   "texte": "hide_actor_hud",
+   "commande": "hide_actor_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 21,
+   "texte": "hide_s_hud",
+   "commande": "hide_s_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 24,
+   "texte": "hide_variable_hud : 1",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 25,
+   "texte": "hide_variable_hud : 2",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 26,
+   "texte": "hide_variable_hud : 3",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 27,
+   "texte": "hide_variable_hud : 4",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 28,
+   "texte": "hide_variable_hud : 5",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 29,
+   "texte": "hide_variable_hud : 6",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map003.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 30,
+   "texte": "hide_party_hud",
+   "commande": "hide_party_hud"
+  },
+  {
+   "fichier": "Map004.json",
+   "ou": "ev18 « Enemy »",
+   "page": 2,
+   "ligne": 1,
+   "texte": "boss_hp_position : 270 : 80",
+   "commande": "boss_hp_position"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "GRIMOIRE",
+   "commande": "GRIMOIRE"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "ATELIER",
+   "commande": "ATELIER"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "GUIDEVP",
+   "commande": "GUIDEVP"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "TRIANGLE",
+   "commande": "TRIANGLE"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev8 « Alchimiste »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "ALCHIMIE",
+   "commande": "ALCHIMIE"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev10 « EV010 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "RANGS ecran ",
+   "commande": "RANGS"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev11 « Autel du Sanctuaire »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "SANCTUAIRE",
+   "commande": "SANCTUAIRE"
+  },
+  {
+   "fichier": "Map005.json",
+   "ou": "ev13 « Stele des Succes »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "SUCCES ecran",
+   "commande": "SUCCES"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "bb_ex_clear",
+   "commande": "bb_ex_clear"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "bb_ex : 1 : Forest1 : Lower : 0 : 0 : 0 : 10",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "bb_ex : 2 : Fog1 : Lower : 1 : 0 : 0 : 30",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "bb_ex : 3 : Forest2 : Lower : 0 : 0 : 0 : 0",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "bb_ex : 4 : Fog2 : Upper : 0.5 : 0 : 0 : -10",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "bb_ex : 5 : Wood2 : Upper : 0 : 0 : 0 : -30",
+   "commande": "bb_ex"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "bb_ex_clear",
+   "commande": "bb_ex_clear"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev6 « EV006 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "consecutive_battles : 9,10",
+   "commande": "consecutive_battles"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "atb_mode : 0",
+   "commande": "atb_mode"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "atb_mode : 1",
+   "commande": "atb_mode"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "atb_mode : 2",
+   "commande": "atb_mode"
+  },
+  {
+   "fichier": "Map008.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "atb_mode : 3",
+   "commande": "atb_mode"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 3 : 2 : 250 : 270 : 32 : 60 : 10 : 2 : 0 : Hello World!",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 1 : 4 : 200 : 200 : 40 : 160 : 10 : 5 : 0 : ゴ ゴ ゴ ゴ ゴ !",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 2 : 0 : 200 : 400 : 20 : 0 : 7 : 0 : 0 : After a storm comes a calm.",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 5 : 1 : 170 : 450 : 100 : 50 : 10 : 0 : 0 : Atelier Rgss",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev6 « EV006 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 4 : 3 : 300 : 330 : 50 : 70 : 10 : 1 : 0 : Game Over!",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "clearinfotext : 1",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "clearinfotext : 2",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "clearinfotext : 3",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "clearinfotext : 4",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "clearinfotext : 5",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "clearinfotext : 6",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "clearinfotext : 7",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "clearinfotext : 8",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "clearinfotext : 9",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "clearinfotext : 10",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "clearinfotext : 7",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "clearinfotext : 8",
+   "commande": "clearinfotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "infotext : 8 : 5 : 240 : 200 : 60 : 270 : 0 : 2 : 1 : 必殺技",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "infotext : 7 : 5 : 300 : 150 : 40 : 90 : 10 : 1 : 1 : 完全なる墨染の桜",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 6 : 7 : 150 : 200 : 24 : 90 : 10 : 0 : 1 : よろしくお願いします",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev10 « EV010 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 9 : 6 : 350 : 150 : 30 : 160 : 10 : 0 : 0 : Beautiful World",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map009.json",
+   "ou": "ev11 « EV011 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "infotext : 10 : 8 : 350 : 200 : 24 : 90 : 10 : 15 : 0 : Next History",
+   "commande": "infotext"
+  },
+  {
+   "fichier": "Map014.json",
+   "ou": "ev6 « EV006 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "enable_footsteps",
+   "commande": "enable_footsteps"
+  },
+  {
+   "fichier": "Map014.json",
+   "ou": "ev6 « EV006 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "disable_footsteps",
+   "commande": "disable_footsteps"
+  },
+  {
+   "fichier": "Map017.json",
+   "ou": "ev1 « Pickup and Throw »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "dizzy_clear",
+   "commande": "dizzy_clear"
+  },
+  {
+   "fichier": "Map017.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "dizzy_effect : 2 : 160 : 0 : 255 : true",
+   "commande": "dizzy_effect"
+  },
+  {
+   "fichier": "Map017.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "dizzy_clear",
+   "commande": "dizzy_clear"
+  },
+  {
+   "fichier": "Map017.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "dizzy_effect : 10 : 120 : 0 : 255 : false",
+   "commande": "dizzy_effect"
+  },
+  {
+   "fichier": "Map018.json",
+   "ou": "ev8 « Event »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "pickup_enable",
+   "commande": "pickup_enable"
+  },
+  {
+   "fichier": "Map018.json",
+   "ou": "ev8 « Event »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "pickup_disable",
+   "commande": "pickup_disable"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ destin marc 5",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ lire marc",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ graveur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ fond",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev6 « EV006 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev7 « EV007 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "player_face_clear : 0",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "player_face_clear : 1",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "player_face_clear : 2",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev8 « EV008 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "player_face_clear : 3",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "player_face_clear : 0",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "player_face_clear : 1",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "player_face_clear : 2",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "player_face_clear : 3",
+   "commande": "player_face_clear"
+  },
+  {
+   "fichier": "Map021.json",
+   "ou": "ev10 « EV010 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "<Envers>",
+   "commande": "<Envers>"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "CHUTEMURMURE off",
+   "commande": "CHUTEMURMURE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "CHUTEPOEME",
+   "commande": "CHUTEPOEME"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "CHUTEMURMURE on",
+   "commande": "CHUTEMURMURE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "MUR forcer",
+   "commande": "MUR"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 14,
+   "texte": "REGARD glitch",
+   "commande": "REGARD"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev2 « EV002 »",
+   "page": 1,
+   "ligne": 17,
+   "texte": "CHUTEPOEME",
+   "commande": "CHUTEPOEME"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "CORRUPTION purge 20",
+   "commande": "CORRUPTION"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev3 « EV003 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "ERRANCE purge 20",
+   "commande": "ERRANCE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "GRAVER entrave",
+   "commande": "GRAVER"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "GRAVER renvoi",
+   "commande": "GRAVER"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev4 « EV004 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "GRAVER saignee",
+   "commande": "GRAVER"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PACTE",
+   "commande": "PACTE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "REINE oubli 3",
+   "commande": "REINE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "REINE pacte 2",
+   "commande": "REINE"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "OBJET check",
+   "commande": "OBJET"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "REPRISES dire ",
+   "commande": "REPRISES"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react  ",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "REMONTER",
+   "commande": "REMONTER"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "PLONGER",
+   "commande": "PLONGER"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "REGARD glitch",
+   "commande": "REGARD"
+  },
+  {
+   "fichier": "Map023.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 14,
+   "texte": "REGARD error",
+   "commande": "REGARD"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "hide_actor_hud",
+   "commande": "hide_actor_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "hide_s_hud",
+   "commande": "hide_s_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "hide_party_hud",
+   "commande": "hide_party_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "hide_variable_hud : 1",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "hide_variable_hud : 2",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "hide_variable_hud : 3",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "hide_variable_hud : 4",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "hide_variable_hud : 5",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "hide_variable_hud : 6",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 94,
+   "texte": "show_actor_hud",
+   "commande": "show_actor_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 97,
+   "texte": "show_s_hud",
+   "commande": "show_s_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 100,
+   "texte": "show_party_hud",
+   "commande": "show_party_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 101,
+   "texte": "show_variable_hud : 1",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 102,
+   "texte": "show_variable_hud : 2",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 103,
+   "texte": "show_variable_hud : 3",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 104,
+   "texte": "show_variable_hud : 4",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 105,
+   "texte": "show_variable_hud : 5",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map024.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 106,
+   "texte": "show_variable_hud : 6",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev8 « Feu d'Ame »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "REVE",
+   "commande": "REVE"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev27 « EV027 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev30 « EV030 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev31 « EV031 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev32 « EV032 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev37 « EV037 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev38 « EV038 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev40 « EV040 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map029.json",
+   "ou": "ev41 « EV041 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map030.json",
+   "ou": "ev18 « EV018 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map030.json",
+   "ou": "ev19 « EV019 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev17 « EV017 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "<NPC: orin>",
+   "commande": "<NPC:"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev18 « EV018 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev22 « EV022 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev24 « EV024 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev25 « EV025 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev26 « EV026 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev27 « EV027 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev28 « EV028 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev29 « EV029 »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map033.json",
+   "ou": "ev30 « EV030 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "QUEST step rumeurs next",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map034.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "DEBUT choisir",
+   "commande": "DEBUT"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev9 « EV009 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev10 « EV010 »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "PNJ react",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev11 « Vieille Sarielle »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "QUEST add side rumeurs \"Les trois rumeurs\" \"Sarielle veut savoir ce qui se murmure au Village du Seuil.\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev11 « Vieille Sarielle »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "QUEST obj rumeurs \"Écouter le barde\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev11 « Vieille Sarielle »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "QUEST obj rumeurs \"Faire parler l'ivrogne\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev11 « Vieille Sarielle »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "QUEST obj rumeurs \"Interroger le fossoyeur\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev11 « Vieille Sarielle »",
+   "page": 2,
+   "ligne": 7,
+   "texte": "QUEST done rumeurs",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev25 « EV025 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "PNJ rumeur",
+   "commande": "PNJ"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev29 « EV029 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "QUEST step rumeurs next",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map036.json",
+   "ou": "ev35 « EV035 »",
+   "page": 1,
+   "ligne": 0,
+   "texte": "<NPC: sora>",
+   "commande": "<NPC:"
+  },
+  {
+   "fichier": "Map044.json",
+   "ou": "ev5 « EV005 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "REVE",
+   "commande": "REVE"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev12 « barde »",
+   "page": 2,
+   "ligne": 10,
+   "texte": "QUEST step rumeurs next",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev34 « Tobin le pêcheur »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "QUEST add side couteau \"Le couteau de Tobin\" \"Tobin a perdu son vieux couteau de pêche quelque part dans le village.\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev34 « Tobin le pêcheur »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "QUEST obj couteau \"Fouiller le village (un coffre oublié ?)\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev34 « Tobin le pêcheur »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "QUEST obj couteau \"Rapporter le couteau à Tobin\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev34 « Tobin le pêcheur »",
+   "page": 2,
+   "ligne": 8,
+   "texte": "QUEST step couteau 2",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev34 « Tobin le pêcheur »",
+   "page": 2,
+   "ligne": 9,
+   "texte": "QUEST done couteau",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map046.json",
+   "ou": "ev35 « Coffre oublié »",
+   "page": 1,
+   "ligne": 2,
+   "texte": "QUEST step couteau 1",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map047.json",
+   "ou": "ev29 « EV029 »",
+   "page": 2,
+   "ligne": 3,
+   "texte": "ALCHIMIE",
+   "commande": "ALCHIMIE"
+  },
+  {
+   "fichier": "Map055.json",
+   "ou": "ev1 « EV001 »",
+   "page": 1,
+   "ligne": 17,
+   "texte": "REGARD glitch",
+   "commande": "REGARD"
+  },
+  {
+   "fichier": "Map055.json",
+   "ou": "ev3 « Autel des Sept Noms »",
+   "page": 2,
+   "ligne": 4,
+   "texte": "Zikhrael ClearName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map055.json",
+   "ou": "ev3 « Autel des Sept Noms »",
+   "page": 2,
+   "ligne": 6,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map055.json",
+   "ou": "ev6 « Le Scribe Gris »",
+   "page": 1,
+   "ligne": 15,
+   "texte": "Zikhrael GlobalOn scribe_vu",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev1 « Autel des Sept Noms »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "Zikhrael ClearName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev1 « Autel des Sept Noms »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev10 « Le Scribe Gris »",
+   "page": 1,
+   "ligne": 15,
+   "texte": "Zikhrael GlobalOn scribe_vu",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 1,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map056.json",
+   "ou": "ev13 « DEV nommer les sept »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "Zikhrael CheckName 5",
+   "commande": "Zikhrael"
+  },
+  {
+   "fichier": "Map057.json",
+   "ou": "ev6 « Grod l'ivrogne »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "QUEST step rumeurs next",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map057.json",
+   "ou": "ev7 « Marn le fossoyeur »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "QUEST step rumeurs next",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev1 « Iris, la Fournaise »",
+   "page": 1,
+   "ligne": 32,
+   "texte": "QUEST add side date_iris Un_rendez-vous_pour_Iris Aider_Iris_a_(ne_pas)_avouer.",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev1 « Iris, la Fournaise »",
+   "page": 1,
+   "ligne": 33,
+   "texte": "QUEST obj date_iris Sonder_Joah_sans_le_griller",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev1 « Iris, la Fournaise »",
+   "page": 1,
+   "ligne": 34,
+   "texte": "QUEST track date_iris",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev1 « Iris, la Fournaise »",
+   "page": 2,
+   "ligne": 15,
+   "texte": "QUEST step date_iris",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev1 « Iris, la Fournaise »",
+   "page": 2,
+   "ligne": 16,
+   "texte": "QUEST obj date_iris Rendez-vous_—_toit_de_la_forge,_crepuscule",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev2 « Joah »",
+   "page": 1,
+   "ligne": 24,
+   "texte": "QUEST step date_iris",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev2 « Joah »",
+   "page": 1,
+   "ligne": 25,
+   "texte": "QUEST obj date_iris Preparer_le_terrain_(retourne_voir_Iris)",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev3 « RendezVous (rempart) »",
+   "page": 1,
+   "ligne": 51,
+   "texte": "QUEST done date_iris",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map058.json",
+   "ou": "ev3 « RendezVous (rempart) »",
+   "page": 1,
+   "ligne": 52,
+   "texte": "CHRONIQUE note Iris_et_Joah,_sur_le_toit_de_la_forge._Le_monde_a_continue,_pour_une_fois_en_mieux.",
+   "commande": "CHRONIQUE"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "QUEST add side gouter \"Le goûter du roi\" \"Le cuisinier royal a besoin d'un Plat Douteux pour satisfaire un caprice du roi.\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "QUEST obj gouter \"Acheter un Plat Douteux (marchande du village)\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "QUEST obj gouter \"L'apporter au cuisinier royal\"",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 2,
+   "ligne": 8,
+   "texte": "QUEST step gouter 1",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 2,
+   "ligne": 9,
+   "texte": "QUEST step gouter 2",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map059.json",
+   "ou": "ev1 « Cuisinier royal »",
+   "page": 2,
+   "ligne": 10,
+   "texte": "QUEST done gouter",
+   "commande": "QUEST"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "show_variable_hud : 1",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "show_variable_hud : 2",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "show_variable_hud : 3",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 6,
+   "texte": "show_variable_hud : 4",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 7,
+   "texte": "show_variable_hud : 5",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "show_variable_hud : 6",
+   "commande": "show_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 11,
+   "texte": "hide_variable_hud : 1",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 12,
+   "texte": "hide_variable_hud : 2",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "hide_variable_hud : 3",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 14,
+   "texte": "hide_variable_hud : 4",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 15,
+   "texte": "hide_variable_hud : 5",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev14 « EV014 »",
+   "page": 1,
+   "ligne": 16,
+   "texte": "hide_variable_hud : 6",
+   "commande": "hide_variable_hud"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 3,
+   "texte": "set_variable_max : 30 : 10",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 4,
+   "texte": "set_variable_max : 31 : 10",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 5,
+   "texte": "set_variable_max : 32 : 10",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 8,
+   "texte": "set_variable_max : 30 : 100",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 9,
+   "texte": "set_variable_max : 31 : 100",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 10,
+   "texte": "set_variable_max : 32 : 100",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 13,
+   "texte": "set_variable_max : 30 : 999",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 14,
+   "texte": "set_variable_max : 31 : 999",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map066.json",
+   "ou": "ev15 « EV015 »",
+   "page": 1,
+   "ligne": 15,
+   "texte": "set_variable_max : 32 : 999",
+   "commande": "set_variable_max"
+  },
+  {
+   "fichier": "Map067.json",
+   "ou": "ev18 « Enemy »",
+   "page": 2,
+   "ligne": 1,
+   "texte": "boss_hp_position : 270 : 80",
+   "commande": "boss_hp_position"
+  }
+ ]
+}

@@ -104,26 +104,58 @@ T('Aucune ne porte plus de note de Don',
   ![501,502,503,504,505,506,507,508,509,510,511,512].some(i => (W[i].note || '').indexOf('<Don') >= 0
       || (W[i].note || '').indexOf('Manifestation') >= 0));
 
-console.log('\n─── 6 · L\'AMULETTE OUVRE LES OMBRES (canon), PAS UNE ARME ───');
-const attendu = [2, 4, 6, 8];
-for (let k = 0; k < 4; k++) {
-    const t = A[72 + k].traits.filter(x => x.code === 41);
-    T('Amulette palier ' + (k + 1) + ' ouvre ' + attendu[k] + ' type(s) d\'ombre',
-      t.length === attendu[k], 'trouvé ' + t.length);
-}
-const p4 = A[75].traits.filter(t => t.code === 41).map(t => t.dataId).sort((a, b) => a - b);
-T('À la Vérité, les HUIT ombres (11→18) sont ouvertes',
-  JSON.stringify(p4) === JSON.stringify([11,12,13,14,15,16,17,18]), p4.join(','));
-// aucune n'était atteignable pour 13,15,17,18 avant : on le vérifie côté sources
+// ─────────────────────────────────────────────────────────────────────────
+// 2026-09-20 — CE CONTRÔLE A CHANGÉ DE CAMP.
+// Il gardait l'ancienne règle : « l'Amulette ouvre progressivement les huit
+// branches d'arme d'ombre ». JOKO l'a retirée :
+//   « pour Ludwig, toutes les armes, à la base, c'était parce que j'avais fait
+//     un événement où il y avait une sorte de roulette gacha […] je vais
+//     enlever ça. Parce que ça sert à rien finalement. »
+// Le banc garde donc la règle d'AUJOURD'HUI : plus aucune source n'ouvre une
+// branche d'arme d'ombre — ni la classe, ni l'Amulette, ni rien d'autre — et
+// les huit compétences restent en base, intactes (règle 3).
+// ─────────────────────────────────────────────────────────────────────────
+console.log('\n─── 6 · AUCUNE BRANCHE D\'OMBRE N\'EST OUVERTE EN PERMANENCE ───');
+// La distinction qui compte : une branche ouverte EN PERMANENCE (par la classe,
+// l'acteur, un état passif ou une pièce de Don) encombre le menu à chaque
+// combat. Une branche ouverte par une ARME qu'on choisit d'équiper est le
+// contraire d'un encombrement : c'est une décision, et elle s'annule en
+// changeant d'arme. Les cinq armes d'ombre (« Épée d'Ombre », « Dague
+// d'Ombre », « Hache des Ténèbres », « Lance des Abysses », « Fusil à Pompe
+// Éternel ») ouvrent chacune SA branche et donnent SA compétence : on les
+// garde. Mesurer « toute source » au lieu de « source permanente » accuserait
+// une mécanique propre.
 const sources41 = {};
-pieces.concat(C.filter(Boolean).map((c,i)=>({k:'classe',i,o:c,m:{}})))
-      .forEach(p => (p.o.traits || []).forEach(t => {
-          if (t.code === 41 && t.dataId >= 11 && t.dataId <= 18)
-              (sources41[t.dataId] = sources41[t.dataId] || []).push(p.k + '#' + p.i);
-      }));
-const orphelins = [11,12,13,14,15,16,17,18].filter(t => !sources41[t]);
-T('Les 8 types d\'ombre ont tous une source', orphelins.length === 0,
-  'sans source : ' + orphelins.join(','));
+C.filter(Boolean).forEach((c, i) => (c.traits || []).forEach(t => {
+    if (t.code === 41 && t.dataId >= 11 && t.dataId <= 18)
+        (sources41[t.dataId] = sources41[t.dataId] || []).push('classe#' + i);
+}));
+[72, 73, 74, 75].forEach(i => (A[i] && A[i].traits || []).forEach(t => {
+    if (t.code === 41 && t.dataId >= 11 && t.dataId <= 18)
+        (sources41[t.dataId] = sources41[t.dataId] || []).push('Amulette#' + i);
+}));
+const encoreOuverts = Object.keys(sources41);
+T('aucune source PERMANENTE n\'ouvre un type d\'ombre (11→18)', encoreOuverts.length === 0,
+  encoreOuverts.length ? encoreOuverts.map(t => t + ' par ' + sources41[t].join(',')).join(' · ')
+                       : 'le gacha est bien parti');
+// CONTRE-ÉPREUVE : les armes d'ombre, elles, doivent toujours ouvrir la leur.
+const armesOmbre = W.filter(w => w && (w.traits || []).some(
+    t => t.code === 41 && t.dataId >= 11 && t.dataId <= 18));
+T('les armes d\'ombre ouvrent toujours la leur quand on les équipe',
+  armesOmbre.length >= 5, armesOmbre.map(w => w.name).join(' · '));
+for (let k = 0; k < 4; k++) {
+    const t = A[72 + k].traits.filter(x => x.code === 41 && x.dataId >= 11 && x.dataId <= 18);
+    T('Amulette palier ' + (k + 1) + ' n\'ouvre plus d\'ombre', t.length === 0, 'trouvé ' + t.length);
+}
+// CONTRE-ÉPREUVE : on n'a RIEN supprimé. Les huit compétences d'ombre doivent
+// toujours exister et rester apprises par la classe de ludwing.
+const ombresEnBase = S.filter(s => s && s.name && s.stypeId >= 11 && s.stypeId <= 18);
+T('les compétences d\'ombre sont toujours en base', ombresEnBase.length >= 8,
+  ombresEnBase.length + ' trouvée(s) — on ferme la porte, on ne brûle pas la pièce');
+const apprisesOmbre = (C[3].learnings || []).filter(l => {
+    const s = S[l.skillId]; return s && s.stypeId >= 11 && s.stypeId <= 18;
+});
+T('ludwing les apprend toujours', apprisesOmbre.length >= 8, apprisesOmbre.length + ' apprentissage(s)');
 
 console.log('\n─── 7 · LE MASQUE FAIT CE QUE LE LORE DIT, ET RIEN DE PLUS ───');
 // JOKO : « un masque qui lui permet d'utiliser son sang comme elle veut sans
