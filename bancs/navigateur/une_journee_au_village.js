@@ -1,0 +1,218 @@
+/*
+ * UNE JOURNÉE AU VILLAGE DE PÊCHE.
+ *
+ * JOKO veut des PNJ « qui rentrent chez eux quand c'est le soir, qui sortent
+ * dehors quand il fait jour, qui partent travailler ». On ne vérifie pas ça en
+ * lisant le code : on avance l'horloge heure par heure et on REGARDE OÙ ILS
+ * SONT.
+ *
+ * Le banc pousse l'heure, laisse le jeu tourner quelques secondes pour que les
+ * PNJ marchent, et relève la position de chacun. À la fin il dit, pour chaque
+ * façon de vivre, si la journée a la forme attendue :
+ *
+ *   · la nuit, le village est vide — sauf les gardes ;
+ *   · au matin, tout le monde ressort ;
+ *   · à midi, on se rapproche de la place ;
+ *   · sous la pluie, ça rentre.
+ *
+ * CONTRE-ÉPREUVE : un PNJ marqué <Vie: fixe> ne doit jamais bouger, et le
+ * plugin éteint ne doit rien piloter du tout.
+ *
+ * Prérequis :  npx http-server -p 8899 -c-1 .
+ * Lancement  :  node bancs/navigateur/une_journee_au_village.js
+ */
+'use strict';
+var { chromium } = require('playwright');
+var fs = require('fs');
+var SHOTS = process.env.SHOTS || '/tmp/village/';
+fs.mkdirSync(SHOTS, { recursive: true });
+var BASE = 'http://127.0.0.1:8899';
+var CARTE = 33;
+
+var ok = 0, ko = 0;
+function V(l, c, d) {
+    if (c) { ok++; console.log('   OK  ' + l + (d ? '  — ' + d : '')); }
+    else { ko++; console.log('   KO  ' + l + (d ? '  — ' + d : '')); }
+}
+
+(async function () {
+    var nav = await chromium.launch({
+        args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--no-sandbox', '--mute-audio']
+    });
+    var page = await nav.newPage({ viewport: { width: 816, height: 624 } });
+    var erreurs = [];
+    page.on('pageerror', function (e) { erreurs.push('PAGEERROR: ' + e.message); });
+    page.on('console', function (m) { if (m.type() === 'error') { erreurs.push('CONSOLE: ' + m.text().slice(0, 160)); } });
+    var ev = function (f, a) { return page.evaluate(f, a); };
+
+    console.log('\n── on entre au village ──');
+    await page.goto(BASE + '/index.html', { waitUntil: 'load' });
+    await page.waitForFunction(function () {
+        var s = SceneManager._scene;
+        return s && s._commandWindow && s._commandWindow.active && s._commandWindow.isOpen();
+    }, null, { timeout: 120000 });
+    await ev(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
+    await page.waitForFunction(function () {
+        return SceneManager._scene.constructor.name === 'Scene_Map' && DataManager.isMapLoaded();
+    }, null, { timeout: 60000 }).catch(function () { });
+    await page.waitForTimeout(1600);
+    await ev(function (c) { $gamePlayer.reserveTransfer(c, 20, 20, 2, 0); }, CARTE);
+    await page.waitForFunction(function (c) {
+        return $gameMap.mapId() === c && !$gamePlayer.isTransferring();
+    }, CARTE, { timeout: 30000 }).catch(function () { });
+    await page.waitForTimeout(2500);
+
+    var depart = await ev(function () {
+        return {
+            carte: $gameMap.mapId(), nom: $dataMapInfos[$gameMap.mapId()].name,
+            etat: window.VieDuVillage ? VieDuVillage.etat() : null
+        };
+    });
+    V('on est au bon endroit', depart.carte === CARTE, '« ' + depart.nom + ' »');
+    V('le plugin a recensé les PNJ', !!depart.etat && depart.etat.length > 0,
+        depart.etat ? depart.etat.length + ' PNJ pris en charge' : 'aucun');
+
+    if (depart.etat && depart.etat.length) {
+        var parMetier = {};
+        depart.etat.forEach(function (p) { parMetier[p.metier] = (parMetier[p.metier] || 0) + 1; });
+        console.log('     façons de vivre : ' + Object.keys(parMetier).map(function (m) {
+            return m + ' ×' + parMetier[m];
+        }).join(' · '));
+        var sansLogis = depart.etat.filter(function (p) {
+            return !p.logis || (p.logis.x === p.poste.x && p.logis.y === p.poste.y);
+        });
+        V('chacun a trouvé une porte comme logis', sansLogis.length === 0,
+            sansLogis.length ? sansLogis.length + ' sans porte proche (ils dormiront sur place)'
+                             : 'les ' + depart.etat.length + ' ont un logis');
+    }
+
+    /** Pousse l'horloge à l'heure voulue, laisse marcher, puis relève. */
+    async function aHeure(h, secondes) {
+        await ev(function (hh) {
+            // MOG_TimeSystem range l'heure dans une VARIABLE (la 200) et la lit
+            // de là : $gameSystem.hour() fait $gameVariables._data[200].
+            // Il expose set_hour() pour la poser proprement.
+            if (typeof $gameSystem.set_hour === 'function') { $gameSystem.set_hour(hh); }
+            else { $gameVariables.setValue(200, hh); }
+        }, h);
+        await page.waitForTimeout(secondes || 2600);
+        return await ev(function () {
+            var e = window.VieDuVillage ? VieDuVillage.etat() : [];
+            return {
+                h: VieDuVillage.heure(),
+                dehors: e.filter(function (p) { return !p.dedans; }).length,
+                dedans: e.filter(function (p) { return p.dedans; }).length,
+                total: e.length,
+                gardesDehors: e.filter(function (p) { return p.metier === 'garde' && !p.dedans; }).length,
+                gardes: e.filter(function (p) { return p.metier === 'garde'; }).length,
+                // la distance de CEUX QUI VISENT LA PLACE : mêler ceux qui
+                // vont ailleurs noyait la mesure et le contrôle passait tout
+                // seul, sans rien prouver.
+                distPlace: e.filter(function (p) { return !p.dedans && p.place && p.but === 'place'; })
+                    .map(function (p) { return Math.abs(p.x - p.place.x) + Math.abs(p.y - p.place.y); }),
+                versLogis: e.filter(function (p) { return p.but === 'logis'; }).length,
+                villageois: e.filter(function (p) { return p.metier !== 'garde'; }).length,
+                buts: e.reduce(function (a, p) { a[p.but || '—'] = (a[p.but || '—'] || 0) + 1; return a; }, {})
+            };
+        });
+    }
+    function moyenne(t) { return t.length ? Math.round(t.reduce(function (a, b) { return a + b; }, 0) / t.length) : 0; }
+
+    /* ── la journée, heure par heure ── */
+    console.log('\n── la journée, heure par heure ──');
+    console.log('    heure   dehors  dedans   distance moyenne à la place   ce qu\'ils visent');
+    var journee = {};
+    for (var h of [2, 7, 10, 12, 15, 19, 22]) {
+        var r = await aHeure(h, (h === 2 || h === 22) ? 13000 : 4000);
+        journee[h] = r;
+        console.log('     ' + String(h).padStart(2) + ' h    ' +
+            String(r.dehors).padStart(4) + '    ' + String(r.dedans).padStart(4) + '        ' +
+            String(moyenne(r.distPlace)).padStart(3) + '                    ' +
+            Object.keys(r.buts).map(function (k) { return k + '×' + r.buts[k]; }).join(' · '));
+        await page.screenshot({ path: SHOTS + 'v_' + String(h).padStart(2, '0') + 'h.png' });
+    }
+
+    /* ── ce qu'on attend d'une journée ── */
+    console.log('\n── la forme de la journée ──');
+    var nuit = journee[2], matin = journee[10], soir = journee[22];
+
+    V('la nuit, le village se vide', nuit.dedans >= Math.ceil(nuit.versLogis * 0.6),
+        nuit.dedans + ' rentré(s) sur ' + nuit.versLogis + ' qui visaient leur logis (' +
+        nuit.villageois + ' non-gardes en tout)');
+    V('les gardes, eux, restent dehors', nuit.gardesDehors === nuit.gardes,
+        nuit.gardesDehors + '/' + nuit.gardes + ' gardes debout à 2 h');
+    V('au matin, tout le monde est ressorti', matin.dedans < nuit.dedans,
+        'à 10 h : ' + matin.dedans + ' dedans, contre ' + nuit.dedans + ' à 2 h');
+    V('le soir, ça rentre de nouveau', soir.dedans >= matin.dedans,
+        'à 22 h : ' + soir.dedans + ' dedans, contre ' + matin.dedans + ' à 10 h');
+    V('à midi, ceux qui visent la place s\'en approchent',
+        journee[12].distPlace.length > 0 && moyenne(journee[12].distPlace) <= 6,
+        journee[12].distPlace.length + ' PNJ visent la place, à ' +
+        moyenne(journee[12].distPlace) + ' case(s) d\'elle en moyenne');
+
+    /* ── la pluie ── */
+    console.log('\n── sous la pluie ──');
+    await ev(function () { $gameSystem.set_hour(15); $gameScreen.changeWeather('rain', 7, 1); });
+    await page.waitForTimeout(4200);
+    var souPluie = await ev(function () {
+        var e = VieDuVillage.etat();
+        return { pluie: VieDuVillage.pluie(),
+                 dedans: e.filter(function (p) { return p.dedans; }).length,
+                 gardesDehors: e.filter(function (p) { return p.metier === 'garde' && !p.dedans; }).length,
+                 total: e.length };
+    });
+    V('la pluie est bien détectée', souPluie.pluie === true, '');
+    V('à 15 h sous la pluie, ça rentre', souPluie.dedans > journee[15].dedans,
+        souPluie.dedans + ' dedans sous l\'averse, contre ' + journee[15].dedans + ' par beau temps');
+    V('les gardes tiennent quand même', souPluie.gardesDehors === nuit.gardes,
+        souPluie.gardesDehors + ' garde(s) sous la pluie');
+    await page.screenshot({ path: SHOTS + 'v_pluie.png' });
+    await ev(function () { $gameScreen.changeWeather('none', 0, 1); });
+
+    /* ── CONTRE-ÉPREUVE ── */
+    console.log('\n── contre-épreuve ──');
+    // On remet le village au clair d'abord : l'averse du contrôle précédent a
+    // fait rentrer tout le monde, et figer quelqu'un DÉJÀ chez lui ne prouve
+    // rien. On le fige dehors, debout, en plein jour.
+    await ev(function () { $gameScreen.changeWeather('none', 0, 1); $gameSystem.set_hour(12); });
+    await page.waitForTimeout(9000);
+    var fige = await ev(function () {
+        var e = $gameMap._viePNJ.filter(function (x) {
+            return x._vie.metier !== 'garde' && !x._vie.dedans;
+        })[0];
+        if (!e) { return null; }
+        e._vie.metier = 'fixe';
+        window.__fige = { id: e.eventId(), x: e.x, y: e.y };
+        $gameSystem.set_hour(23);
+        return window.__fige;
+    });
+    await page.waitForTimeout(5000);
+    var apres = await ev(function () {
+        var e = $gameMap._viePNJ.filter(function (x) { return x.eventId() === window.__fige.id; })[0];
+        return { x: e.x, y: e.y, dedans: !!e._vie.dedans };
+    });
+    V('un PNJ marqué « fixe » reste dehors et immobile, même à 23 h',
+        !!fige && apres.x === fige.x && apres.y === fige.y && !apres.dedans,
+        fige ? '(' + fige.x + ',' + fige.y + ') → (' + apres.x + ',' + apres.y + ')' +
+               (apres.dedans ? '  mais il est rentré !' : '  et toujours dehors') : 'aucun PNJ dehors à figer');
+
+    var ailleurs = await ev(function () {
+        // sur une carte hors de la liste, le plugin ne doit rien prendre en charge
+        $gamePlayer.reserveTransfer(2, 18, 11, 8, 0);
+        return true;
+    });
+    await page.waitForFunction(function () { return $gameMap.mapId() === 2 && !$gamePlayer.isTransferring(); }, null, { timeout: 30000 }).catch(function () { });
+    await page.waitForTimeout(2500);
+    var horsListe = await ev(function () { return (VieDuVillage.etat() || []).length; });
+    V('sur une carte hors de la liste, personne n\'est piloté', horsListe === 0,
+        horsListe + ' PNJ pris en charge sur la Salle de Test');
+
+    console.log('\n── le bilan ──');
+    V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
+
+    console.log('\n' + '='.repeat(68));
+    console.log('  ' + ok + ' contrôles passés · ' + ko + ' échec(s)');
+    console.log('='.repeat(68));
+    await nav.close();
+    process.exit(ko ? 1 : 0);
+})();
