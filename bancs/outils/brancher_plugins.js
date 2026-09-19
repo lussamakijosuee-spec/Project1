@@ -223,7 +223,60 @@ var SECTIONS = [
             {}],
     ]],
 
-    ['▬▬▬ ⑲ SRD · les outils de JOKO (pas du joueur) ▬▬▬', [
+    /* ─────────────────────────────────────────────────────────────────────
+     * JOKO, sur les attaques chronométrées et la défense active :
+     * « oui avec plaisir ».
+     *
+     * L'ORDRE EST OBLIGATOIRE ICI. Les extensions portent un garde de
+     * version : si le socle n'est pas déjà chargé en 1.20 ou plus, elles
+     * remplacent DataManager.setupNewGame et loadMapData par une fausse
+     * carte « mets ton plugin à jour » — ce qui tuerait net le lever de
+     * saison et l'horloge de MOG sur une partie neuve. Notre socle est en
+     * 1.21, donc la branche ne s'exécute jamais… tant qu'il passe AVANT.
+     *
+     * ⚠ Branchés, ils ne se déclenchent encore sur AUCUNE compétence : il
+     *   faut une balise dans la note de la compétence, et les notes des
+     *   compétences appartiennent à JOKO. Rien n'est écrit dans data/.
+     * ───────────────────────────────────────────────────────────────────── */
+    ['▬▬▬ ⑲ SRD · frapper au bon moment, esquiver au bon moment ▬▬▬', [
+        ['SRD_TimedAttackCore',
+            'Le socle : une compétence peut demander d\'appuyer au bon moment, et sa puissance dépend de la précision. DOIT rester au-dessus des cinq façons qui suivent.',
+            {
+                'Enable Touch?': 'true',
+                // pas d'image de fond : img/SumRndmDde/tas/ n'existe pas et
+                // on n'importe aucun asset extérieur (règle du projet).
+                'Default Source': 'None'
+            }],
+        ['SRD_TimedAttack_Wheel',
+            'Un anneau où des commandes défilent ; il faut appuyer au bon passage. Réclame trois images (anneau, cible, touches) qui n\'existent pas encore.',
+            {}],
+        ['SRD_TimedAttack_Circle',
+            'Un cercle qui rétrécit ; il faut l\'arrêter quand il touche la cible. N\'a besoin d\'aucune image.',
+            {}],
+        ['SRD_TimedAttack_Clock',
+            'Une aiguille qui tourne ; il faut l\'arrêter dans la zone. N\'a besoin d\'aucune image.',
+            {}],
+        ['SRD_TimedAttack_Mash',
+            'Marteler une touche le plus vite possible. N\'a besoin d\'aucune image.',
+            {}],
+        ['SRD_TimedAttack_Arrows',
+            'Taper une suite de flèches dans l\'ordre et dans le temps. Réclame une image « Arrows ».',
+            {}],
+        ['SRD_TimedAttack_Results',
+            'La bulle qui annonce le résultat du minutage. Doit venir après les cinq façons.',
+            {}],
+        ['SRD_TimedAttack_ActionSequences',
+            'Permet d\'appeler un minutage depuis une séquence d\'action Yanfly — c\'est ce qui le fera entrer dans les ultimes déjà écrites.',
+            {}],
+        ['SRD_ActiveDefenseCore',
+            'Esquiver l\'attaque d\'un ennemi en sautant au bon moment. Ne marche qu\'en vue de côté — c\'est le cas ici (optSideView = true).',
+            {}],
+        ['SRD_ActiveDefense_Charge',
+            'Une esquive qu\'il faut CHARGER avant de pouvoir la déclencher. C\'est la forme la plus proche d\'une parade : on se prépare, puis on encaisse ou on contre.',
+            {}],
+    ]],
+
+    ['▬▬▬ ⑳ SRD · les outils de JOKO (pas du joueur) ▬▬▬', [
         ['SRD_SuperToolsEngine',
             'Un éditeur dans le jeu, en mode test. C\'est aussi le socle du HUD Maker. Ne fait rien dans le jeu livré.',
             {}],

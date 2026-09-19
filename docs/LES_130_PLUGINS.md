@@ -9,9 +9,9 @@ mesurées ; le verdict est un avis, et JOKO tranche. Aucun plugin n'est allumé,
 | | |
 |---|---:|
 | fichiers SRD sur le disque | 130 |
-| **branchés et mesurés** | **38** |
+| **branchés et mesurés** | **48** |
 | inscrits mais éteints | 0 |
-| jamais inscrits (donc invisibles pour le jeu) | 92 |
+| jamais inscrits (donc invisibles pour le jeu) | 82 |
 
 > Un fichier posé dans `js/plugins/` ne fait **rien**. RPG Maker ne charge que
 > ce qui est inscrit dans `js/plugins.js`, et dans cet ordre-là.
@@ -93,14 +93,14 @@ au tour par tour CTB aujourd'hui. Gros potentiel pour les boss ; à décider.
 
 | plugin | état | écrase | ce qu'il fait |
 |---|---|---:|---|
-| `TimedAttackCore` | pas inscrit | — | Le socle : frapper plus fort en appuyant au bon moment. |
-| `TimedAttack_ActionSequences` | pas inscrit | — | Permet d'appeler une attaque chronométrée depuis une séquence d'action Yanfly. |
-| `TimedAttack_Arrows` | pas inscrit | ⚠ 2 | Il faut taper une suite de flèches, dans l'ordre et dans le temps. |
-| `TimedAttack_Circle` | pas inscrit | ⚠ 2 | Un cercle rétrécit ; il faut l'arrêter quand il touche la cible. |
-| `TimedAttack_Clock` | pas inscrit | ⚠ 2 | Une aiguille tourne ; il faut l'arrêter dans la zone verte. |
-| `TimedAttack_Mash` | pas inscrit | ⚠ 2 | Il faut marteler une touche le plus vite possible. |
-| `TimedAttack_Results` | pas inscrit | — | Une bulle qui annonce le résultat du minutage : raté, bien, parfait. |
-| `TimedAttack_Wheel` | pas inscrit | — | Des commandes tournent autour d'un anneau ; il faut appuyer au bon passage. |
+| `TimedAttackCore` | **branché** | ⚠ 5 | Le socle : frapper plus fort en appuyant au bon moment. |
+| `TimedAttack_ActionSequences` | **branché** | ⚠ 1 | Permet d'appeler une attaque chronométrée depuis une séquence d'action Yanfly. |
+| `TimedAttack_Arrows` | **branché** | ⚠ 2 | Il faut taper une suite de flèches, dans l'ordre et dans le temps. |
+| `TimedAttack_Circle` | **branché** | ⚠ 2 | Un cercle rétrécit ; il faut l'arrêter quand il touche la cible. |
+| `TimedAttack_Clock` | **branché** | ⚠ 2 | Une aiguille tourne ; il faut l'arrêter dans la zone verte. |
+| `TimedAttack_Mash` | **branché** | ⚠ 2 | Il faut marteler une touche le plus vite possible. |
+| `TimedAttack_Results` | **branché** | ⚠ 12 | Une bulle qui annonce le résultat du minutage : raté, bien, parfait. |
+| `TimedAttack_Wheel` | **branché** | — | Des commandes tournent autour d'un anneau ; il faut appuyer au bon passage. |
 
 ---
 
@@ -112,8 +112,8 @@ de la laisser passive. Même remarque : ça change la nature des combats.
 
 | plugin | état | écrase | ce qu'il fait |
 |---|---|---:|---|
-| `ActiveDefenseCore` | pas inscrit | — | Esquiver ou contrer l'attaque d'un ennemi en appuyant au bon moment. |
-| `ActiveDefense_Charge` | pas inscrit | — | Une défense qu'il faut CHARGER avant de pouvoir esquiver. |
+| `ActiveDefenseCore` | **branché** | ⚠ 18 | Esquiver ou contrer l'attaque d'un ennemi en appuyant au bon moment. |
+| `ActiveDefense_Charge` | **branché** | ⚠ 2 | Une défense qu'il faut CHARGER avant de pouvoir esquiver. |
 
 ---
 
