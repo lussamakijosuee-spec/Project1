@@ -791,11 +791,47 @@
         this.addWindow(this._w);
         this.dessiner();
     };
+    // ── Le dessin se fait en DEUX passes ────────────────────────────────────
+    // À quatre héros, dont une porteuse d'Avatar qui prend sept lignes à elle
+    // seule, la page dépasse la hauteur de l'écran : le bas de page, cloué à
+    // « Graphics.boxHeight - lh*4 », se dessinait PAR-DESSUS les derniers.
+    // On mesure donc d'abord la place qu'il faut, puis on rétrécit la ligne et
+    // la police juste ce qu'il faut pour que tout tienne — le même geste que le
+    // journal de combat et le bandeau des Éléments.
     Scene_Dons.prototype.dessiner = function () {
-        var w = this._w, y = 0, lh = w.lineHeight(), larg = w.contentsWidth();
-        w.changeTextColor(w.textColor(6));
-        w.drawText('LES DONS SPIRITUELS', 0, y, larg, 'center');
-        w.resetTextColor(); y += lh * 1.4;
+        var w = this._w;
+        var lhNormal = Window_Base.prototype.lineHeight.call(w);
+        var policeNormale = w.standardFontSize();
+
+        delete w.lineHeight;                       // on repart de la taille normale
+        w.contents.fontSize = policeNormale;
+        var besoin = this.poser(lhNormal, false);  // combien de pixels il faudrait
+        var place = w.contentsHeight();
+
+        var facteur = besoin > place ? Math.max(0.55, place / besoin) : 1;
+        var lh = Math.max(16, Math.floor(lhNormal * facteur));
+        w.contents.clear();
+        w.contents.fontSize = Math.max(14, Math.floor(policeNormale * facteur));
+        w.lineHeight = function () { return lh; };  // drawGauge s'aligne dessus
+        this.poser(lh, true);
+
+        // de quoi permettre à un banc de mesurer le résultat DESSINÉ
+        this._mesure = { besoin: besoin, place: place, facteur: facteur,
+                         ligne: lh, police: w.contents.fontSize };
+    };
+
+    /** Pose la page à la hauteur de ligne donnée. Sans dessiner, sert à mesurer. */
+    Scene_Dons.prototype.poser = function (lh, dessine) {
+        var w = this._w, y = 0, larg = w.contentsWidth();
+        // en passe de mesure, on ne touche pas au bitmap
+        var ecrire = dessine ? function (t, x, yy, la, al) { w.drawText(t, x, yy, Math.max(0, la), al); } : function () { };
+        var jauge = dessine ? function (x, yy, la, r, c1, c2) { w.drawGauge(x, yy, la, r, c1, c2); } : function () { };
+        var coulEcrit = dessine ? function (c) { w.changeTextColor(w.textColor(c)); } : function () { };
+        var coulRaz = dessine ? function () { w.resetTextColor(); } : function () { };
+
+        coulEcrit(6);
+        ecrire('LES DONS SPIRITUELS', 0, y, larg, 'center');
+        coulRaz(); y += lh * 1.4;
 
         $gameParty.members().forEach(function (a) {
             var d = window.Dons.de(a.actorId());
@@ -803,85 +839,91 @@
             var coul = !d.porte ? 7 : d.casse ? 18 : 24;
 
             // ligne 1 — qui, quoi, où
-            w.changeTextColor(w.textColor(coul));
-            w.drawText(a.name() + ' — ' + d.nom, 8, y, 300);
-            w.resetTextColor();
-            w.changeTextColor(w.textColor(6));
-            w.drawText(d.typeNom + '  ·  slot ' + d.slotNom, 316, y, 230);
-            w.resetTextColor();
-            w.drawText('palier ' + d.palier + '/4 · ' + d.palierNom, 556, y, 220);
+            coulEcrit(coul);
+            ecrire(a.name() + ' — ' + d.nom, 8, y, 300);
+            coulRaz();
+            coulEcrit(6);
+            ecrire(d.typeNom + '  ·  slot ' + d.slotNom, 316, y, 230);
+            coulRaz();
+            ecrire('palier ' + d.palier + '/4 · ' + d.palierNom, 556, y, larg - 556);
             y += lh;
 
             // ligne 2 — la pièce réellement portée
-            w.changeTextColor(w.textColor(8));
-            w.drawText(d.porte ? '    « ' + d.piece + ' »' : "    ✖ le Don n'est pas porté — il n'apporte rien.",
-                       8, y, larg);
-            w.resetTextColor();
+            coulEcrit(8);
+            ecrire(d.porte ? '    « ' + d.piece + ' »' : "    ✖ le Don n'est pas porté — il n'apporte rien.",
+                   8, y, larg - 8);
+            coulRaz();
             y += lh;
 
             // ligne 3 — l'Endurance
             var pct = d.max > 0 ? d.endurance / d.max : 0;
-            w.drawGauge(24, y, 340, pct, w.textColor(coul), w.textColor(0));
-            w.drawText('Endurance ' + d.endurance + ' / ' + d.max + (d.casse ? '   ✖ BRISÉ (÷2)' : ''),
-                       380, y, 380);
+            jauge(24, y, 340, pct, w.textColor(coul), w.textColor(0));
+            ecrire('Endurance ' + d.endurance + ' / ' + d.max + (d.casse ? '   ✖ BRISÉ (÷2)' : ''),
+                   380, y, larg - 380);
             y += lh;
 
             // ligne 4 — la seconde jauge, propre aux Objets
             if (d.jauge) {
                 var p2 = d.jauge.max > 0 ? d.jauge.val / d.jauge.max : 0;
-                w.drawGauge(24, y, 340, p2, w.textColor(2), w.textColor(0));
-                w.changeTextColor(w.textColor(2));
-                w.drawText(d.jauge.nom + ' ' + d.jauge.val + ' / ' + d.jauge.max
-                           + (d.jauge.bloc > 0 ? '   ✸ débordée (' + d.jauge.bloc + ' tours)' : ''),
-                           380, y, 380);
-                w.resetTextColor();
+                jauge(24, y, 340, p2, w.textColor(2), w.textColor(0));
+                coulEcrit(2);
+                ecrire(d.jauge.nom + ' ' + d.jauge.val + ' / ' + d.jauge.max
+                       + (d.jauge.bloc > 0 ? '   ✸ débordée (' + d.jauge.bloc + ' tours)' : ''),
+                       380, y, larg - 380);
+                coulRaz();
                 y += lh;
             }
             // ligne 5 — le Trait que l'Avatar débloque
             if (d.trait) {
-                w.changeTextColor(w.textColor(23));
-                w.drawText('    ✦ débloque le Trait ' + d.trait.toUpperCase()
-                           + (d.porte ? '' : " — indisponible sans l'Avatar"), 24, y, larg);
-                w.resetTextColor();
+                coulEcrit(23);
+                ecrire('    ✦ débloque le Trait ' + d.trait.toUpperCase()
+                       + (d.porte ? '' : " — indisponible sans l'Avatar"), 24, y, larg - 24);
+                coulRaz();
                 y += lh;
             }
             // ligne 5-bis — le niveau de l'Avatar et la prise qu'elle a dessus
             if (window.Avatars && window.Avatars.de) {
                 var av = window.Avatars.de(a.actorId());
                 if (av) {
-                    w.changeTextColor(w.textColor(av.eteinte ? 8 : 14));
-                    w.drawText('    Avatar niveau ' + av.niveau + '/3 · ' + av.niveauNom
-                               + '  —  ' + av.controle
-                               + (av.prochainSeuil ? '   (niveau suivant : ' + av.prochainSeuil + ')' : '')
-                               + (av.eteinte ? '   ✖ éteint — elle est hors jeu' : ''),
-                               24, y, larg);
-                    w.resetTextColor();
+                    coulEcrit(av.eteinte ? 8 : 14);
+                    ecrire('    Avatar niveau ' + av.niveau + '/3 · ' + av.niveauNom
+                           + '  —  ' + av.controle
+                           + (av.prochainSeuil ? '   (niveau suivant : ' + av.prochainSeuil + ')' : '')
+                           + (av.eteinte ? '   ✖ éteint — elle est hors jeu' : ''),
+                           24, y, larg - 24);
+                    coulRaz();
                     y += lh;
-                    w.changeTextColor(w.textColor(23));
-                    w.drawText('    posture : ' + av.posture + '  ·  ' + av.techniques.length
-                               + ' technique(s)  ·  puissance ×' + av.puissance.toFixed(2), 24, y, larg);
-                    w.resetTextColor();
+                    coulEcrit(23);
+                    ecrire('    posture : ' + av.posture + '  ·  ' + av.techniques.length
+                           + ' technique(s)  ·  puissance ×' + av.puissance.toFixed(2), 24, y, larg - 24);
+                    coulRaz();
                     y += lh;
                 }
             }
             // ligne 6 — ce que la MAIN tient : de l'acier, pas un second Don
             var main = a.equips()[0];
             if (d.slot !== 1) {
-                w.changeTextColor(w.textColor(7));
-                w.drawText('    en main : ' + (main ? main.name : '—')
-                           + '  (arme ordinaire — on n\'a qu\'un seul Don)', 24, y, larg);
-                w.resetTextColor();
+                coulEcrit(7);
+                ecrire('    en main : ' + (main ? main.name : '—')
+                       + '  (arme ordinaire — on n\'a qu\'un seul Don)', 24, y, larg - 24);
+                coulRaz();
                 y += lh;
             }
             y += lh * 0.35;
         });
 
-        w.changeTextColor(w.textColor(8));
-        w.drawText("UN SEUL DON PAR PERSONNE.   ⚔️ Arme → slot Arme (rien de plus, mais rien à payer)  ·  🔮 Objet → Accessoire  ·  👤 Avatar → Âme",
-                   8, Graphics.boxHeight - lh * 4, larg);
-        w.drawText('Un Don brisé sert encore — mais de moitié. Le repos le répare. On ne le retire pas, on ne le prête pas.',
-                   8, Graphics.boxHeight - lh * 3, larg);
-        w.resetTextColor();
+        // Le bas de page SUIT la liste au lieu d'être cloué en bas de l'écran :
+        // c'est ce clouage qui l'écrivait par-dessus les derniers héros.
+        y += lh * 0.3;
+        coulEcrit(8);
+        ecrire("UN SEUL DON PAR PERSONNE.   ⚔️ Arme → slot Arme (rien de plus, mais rien à payer)  ·  🔮 Objet → Accessoire  ·  👤 Avatar → Âme",
+               8, y, larg - 8);
+        y += lh;
+        ecrire('Un Don brisé sert encore — mais de moitié. Le repos le répare. On ne le retire pas, on ne le prête pas.',
+               8, y, larg - 8);
+        y += lh;
+        coulRaz();
+        return y;      // la hauteur qu'il a fallu : c'est elle qu'on mesure
     };
     // On en SORT. Sans ça, « DON afficher » n'avait aucune touche de retour :
     // l'écran restait affiché jusqu'à la fermeture du jeu.
