@@ -142,7 +142,14 @@ function verdict(t, passe, detail) {
     verdict('bouger coûte 15 % des PV max au porteur', domaine.avant - domaine.apres === domaine.attendu,
         'PV ' + domaine.avant + ' → ' + domaine.apres + '  (attendu −' + domaine.attendu + ')');
 
-    verdict('aucune erreur JavaScript', err.length === 0, err.length ? err.slice(0, 2).join(' | ') : 'rien');
+    /* « process is not defined » vient du décor, pas du jeu : ce banc tourne
+   *  dans un navigateur, le jeu tourne dans NW.js qui fournit « process ».
+   *  Vérifié en injectant un process de NW.js : ces erreurs-là tombent à
+   *  zéro. On les écarte, mais on les affiche ; tout le reste reste une panne. */
+    var horsNWjs = err.filter(function (e) { return /process is not defined/.test(e); });
+    var vraies = err.filter(function (e) { return !/process is not defined/.test(e); });
+    if (horsNWjs.length) { console.log('   (' + horsNWjs.length + ' « process is not defined » : propre au navigateur, mis de côté)'); }
+    verdict('aucune erreur JavaScript', vraies.length === 0, vraies.slice(0, 3).join(' | ') || 'rien');
 
     console.log('\n' + '='.repeat(70));
     console.log('  ' + ok + ' contrôles passés · ' + ko + ' échec(s)');

@@ -461,7 +461,21 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await photo('12_saison');
 
     console.log('\n9) Le bilan du moteur');
-    verifie('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 6).join(' | ') || 'rien');
+    /* ⚠ Ce banc tourne dans un NAVIGATEUR ; le jeu, lui, tourne dans NW.js.
+     *   NW.js fournit une variable « process » que le navigateur n'a pas, et
+     *   les plugins qui pilotent la fenêtre du bureau s'en servent. Compter
+     *   « process is not defined » comme une panne du jeu, c'est accuser le
+     *   banc de son propre décor. Vérifié en injectant un « process » de
+     *   NW.js : ces erreurs-là tombent à zéro, les autres restent.
+     *   On les met donc de côté — mais on les AFFICHE, pour ne pas les
+     *   oublier, et tout ce qui n'est pas ça reste une panne. */
+    var horsNWjs = erreurs.filter(function (e) { return /process is not defined/.test(e); });
+    var vraies = erreurs.filter(function (e) { return !/process is not defined/.test(e); });
+    if (horsNWjs.length) {
+        console.log('   (' + horsNWjs.length + ' erreur(s) « process is not defined » : propre au navigateur, ' +
+            'absente dans le jeu NW.js — mise de côté)');
+    }
+    verifie('aucune erreur JavaScript', vraies.length === 0, vraies.slice(0, 6).join(' | ') || 'rien');
     verifie('aucune ressource manquante', absents.length === 0,
         absents.length ? absents.length + ' : ' + absents.slice(0, 6).join(' | ') : 'rien');
 

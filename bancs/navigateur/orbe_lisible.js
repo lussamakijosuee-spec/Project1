@@ -178,7 +178,14 @@ function V(l, c, d) {
         'pas de faux positif');
 
     console.log('\n── le bilan ──');
-    V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
+    /* « process is not defined » vient du décor, pas du jeu : ce banc tourne
+   *  dans un navigateur, le jeu tourne dans NW.js qui fournit « process ».
+   *  Vérifié en injectant un process de NW.js : ces erreurs-là tombent à
+   *  zéro. On les écarte, mais on les affiche ; tout le reste reste une panne. */
+    var horsNWjs = erreurs.filter(function (e) { return /process is not defined/.test(e); });
+    var vraies = erreurs.filter(function (e) { return !/process is not defined/.test(e); });
+    if (horsNWjs.length) { console.log('   (' + horsNWjs.length + ' « process is not defined » : propre au navigateur, mis de côté)'); }
+    V('aucune erreur JavaScript', vraies.length === 0, vraies.slice(0, 3).join(' | ') || 'rien');
 
     console.log('\n' + '='.repeat(64));
     console.log('  ' + ok + ' contrôles passés · ' + ko + ' échec(s)');
