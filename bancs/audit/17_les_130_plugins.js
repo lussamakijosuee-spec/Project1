@@ -70,6 +70,31 @@ surDisque.filter(function (n) { return inscrits[n] && inscrits[n].status; })
  * et on garde l'anglaise en repli pour qu'aucune ligne ne soit vide. */
 var FRANCAIS = require('./17_a_quoi_ils_servent.js');
 var sansTraduction = [];
+
+/* Les fichiers retirés du disque à la demande de JOKO. Leur phrase française
+ * reste dans le dictionnaire — c'est voulu : le document doit dire ce qui est
+ * parti et pourquoi, sinon la suppression ressemble à une disparition. */
+var RETIRES = {
+    'SRD_DataCompressor': 'réécrirait data/ dans un format que ni l\'éditeur ni les bancs ne relisent',
+    'SRD_AutoUpdater': 'appelle un serveur de mise à jour qui n\'existe pas',
+    'SRD_PluginUpdater': 'même serveur absent',
+    'SRD_RemoveTitleScreen': 'efface l\'écran-titre monté en MOG par JOKO',
+    'SRD_SkipTitleWithoutSave': 'saute ce même écran-titre',
+    'SRD_RemoveFadedContinue': 'retire le « Continuer » grisé que le titre gère déjà',
+    'SRD_TranslationEngine': 'traduction multilingue ; le jeu est en français',
+    'SRD_SpellCheck': 'correcteur à dictionnaire anglais',
+    'SRD_PKM_4MovesOnly': 'limiterait chaque héros à 4 compétences, sur 354',
+    'SRD_PKM_TypeSystem': 'plaque les types Pokémon sur les éléments',
+    'SRD_PKM_TypeDisplay': 'affiche ces types ; sans le système, rien à montrer',
+    'SRD_PKM_MoveDeleter': 'pensé pour la limite de quatre compétences',
+    'SRD_PKM_TrainerName': 'saisie de nom façon dresseur',
+    'SRD_PKM_TrainerSprite': 'sprites de dresseur',
+    'SRD_Natures': 'les « natures » de Pokémon',
+    'SRD_CharacterCreator': 'réclame un dossier d\'images qui n\'existe pas ; les héros ont déjà un visage',
+    'SRD_CharacterCreatorEX': 'la version étendue du même',
+    'SRD_CCEX_DynamicActors': 'extension du créateur de personnage',
+    'SRD_CCEX_MessageFaces': 'extension du créateur de personnage'
+};
 function description(nom) {
     if (FRANCAIS[nom]) { return FRANCAIS[nom]; }
     var p = path.join(D, nom + '.js');
@@ -256,7 +281,11 @@ FAMILLES.forEach(function (f) {
 
 /* ── le document ── */
 var L = [];
-L.push('# Les 130 plugins installés');
+var branches = srd.filter(function (n) { return inscrits[n] && inscrits[n].status; });
+L.push('# Les ' + (srd.length + Object.keys(RETIRES).length) + ' plugins installés');
+L.push('');
+L.push('*' + branches.length + ' branchés · ' + (srd.length - branches.length) + ' en attente · ' +
+    Object.keys(RETIRES).length + ' retirés du disque*');
 L.push('');
 L.push('*Écrit par `bancs/audit/17_les_130_plugins.js`. Les trois premières colonnes sont');
 L.push('mesurées ; le verdict est un avis, et JOKO tranche. Aucun plugin n\'est allumé,');
@@ -298,6 +327,23 @@ FAMILLES.forEach(function (f) {
     L.push('');
 });
 
+L.push('---');
+L.push('');
+L.push('## ' + Object.keys(RETIRES).length + ' · CE QUI A ÉTÉ RETIRÉ DU DISQUE');
+L.push('');
+L.push('Ces fichiers n\'étaient inscrits **nulle part** dans `js/plugins.js` : ils');
+L.push('n\'étaient jamais chargés et ne coûtaient rien au jeu. Les retirer n\'accélère');
+L.push('donc rien — c\'est mesuré, le démarrage n\'a pas bougé. Ce que ça change, c\'est');
+L.push('la liste du gestionnaire de plugins de l\'éditeur.');
+L.push('');
+L.push('Ils sont dans git et reviennent d\'une commande.');
+L.push('');
+L.push('| plugin | pourquoi il ne servira jamais ici |');
+L.push('|---|---|');
+Object.keys(RETIRES).forEach(function (k) {
+    L.push('| `' + k.replace(/^SRD_/, '') + '` | ' + RETIRES[k] + ' |');
+});
+L.push('');
 L.push('---');
 L.push('');
 L.push('## Ce qui reste à décider');
@@ -348,12 +394,22 @@ if (sansTraduction.length) {
  *   contenir n'importe quoi : une clé mal orthographiée traduirait un plugin
  *   qui n'existe pas, pendant qu'un vrai resterait en anglais sans qu'on le
  *   voie. On vérifie donc AUSSI que chaque clé désigne un plugin réel. */
-var orphelines = Object.keys(FRANCAIS).filter(function (k) { return srd.indexOf(k) < 0; });
+var orphelines = Object.keys(FRANCAIS).filter(function (k) {
+    return srd.indexOf(k) < 0 && !RETIRES[k];
+});
+var retiresAbsents = Object.keys(RETIRES).filter(function (k) { return srd.indexOf(k) >= 0; });
 if (orphelines.length) {
     console.log('   ⚠ ' + orphelines.length + ' phrase(s) écrite(s) pour un plugin qui n\'existe pas :');
     orphelines.forEach(function (k) { console.log('        ' + k); });
 } else {
     console.log('   contre-épreuve : aucune phrase ne vise un plugin inexistant ✔');
+}
+/* et dans l'autre sens : un plugin déclaré « retiré » qui serait encore là
+ * ferait mentir le document. */
+if (retiresAbsents.length) {
+    console.log('   ⚠ ' + retiresAbsents.length + ' déclaré(s) retiré(s) mais encore sur le disque : ' + retiresAbsents.join(', '));
+} else {
+    console.log('   contre-épreuve : les ' + Object.keys(RETIRES).length + ' retirés sont bien partis ✔');
 }
 
 if (ECRIRE) {
