@@ -220,29 +220,161 @@
         b.drawCircle(cx, cy, R_ORBE, '#000000');
         b.paintOpacity = 255;
 
-        // ── les branches autour
+        // ── les branches autour ────────────────────────────────────────────
+        // Trois défauts corrigés le 2026-09-20, vus sur les captures de JOKO :
+        //
+        //  ① les étiquettes étaient posées à « bx − 70 » sur 140 de large. Une
+        //     branche à gauche du cercle sortait donc du bitmap et se faisait
+        //     couper : « mbre de griffe », « ANA semi-parfait ». On les place
+        //     maintenant RADIALEMENT, alignées vers l'extérieur, et on les
+        //     ramène de force dans le cadre.
+        //  ② à treize branches, le tour du cercle ne fait pas 1 500 pixels : les
+        //     noms du bas se marchaient dessus. On ne NOMME plus que ce qui
+        //     sert — les branches ouvertes, plus celle qu'on a sous le curseur.
+        //     Les autres gardent leur point sur le cercle.
+        //  ③ une branche verrouillée pesait autant qu'une branche jouable. Elle
+        //     est maintenant plus petite, plus sombre, et son nom est rappelé en
+        //     bas de l'orbe : l'arbre garde tout, sans encombrer ce qu'on joue.
         var n = this._branches.length;
         if (n === 0) { return; }
+        var L = b.width, H = b.height;
+        var verrouillees = [];
+
+        // Les branches OUVERTES se répartissent sur tout le tour, pour que leurs
+        // noms soient loin les uns des autres. Les verrouillées se glissent
+        // entre elles, décalées d'un demi-pas : elles n'ont pas de nom à porter,
+        // elles peuvent se serrer. Répartir les quatorze d'un coup tassait les
+        // trois branches jouables de ludwing dans le coin haut.
+        var nOuv = 0, nFer = 0;
+        this._branches.forEach(function (x) { if (x.ouverte) { nOuv++; } else { nFer++; } });
+        var kOuv = 0, kFer = 0;
+        // On garde la trace de chaque étiquette POSÉE : c'est ce qu'un banc peut
+        // mesurer. Vérifier le code ne dirait pas si deux noms se chevauchent ;
+        // vérifier les rectangles dessinés, si.
+        this._etiquettes = [];
+
+        // PREMIER PASSAGE : les traits et les points. On note au passage ce
+        // qu'il faudra nommer — on ne pose aucun nom tout de suite, parce qu'une
+        // étiquette ne peut choisir sa place qu'en sachant où sont les autres.
+        var aNommer = [];
         for (var i = 0; i < n; i++) {
             var br = this._branches[i];
-            var a = (i / n) * Math.PI * 2 - Math.PI / 2;
-            var bx = cx + Math.cos(a) * R_BRANCHE;
-            var by = cy + Math.sin(a) * R_BRANCHE;
+            var a;
+            if (br.ouverte) {
+                a = (kOuv++ / Math.max(1, nOuv)) * Math.PI * 2 - Math.PI / 2;
+            } else {
+                a = (kFer++ / Math.max(1, nFer)) * Math.PI * 2 - Math.PI / 2
+                    + Math.PI / Math.max(1, nFer);
+            }
+            var dx = Math.cos(a), dy = Math.sin(a);
+            var bx = cx + dx * R_BRANCHE;
+            var by = cy + dy * R_BRANCHE;
             var choisie = (i === this._iBranche);
-            b.paintOpacity = choisie ? 255 : 110;
-            this.trait(cx + Math.cos(a) * (R_ORBE + 6), cy + Math.sin(a) * (R_ORBE + 6), bx, by,
-                br.couleur, choisie ? 6 : 9, choisie ? 3 : 2);
-            b.drawCircle(Math.round(bx), Math.round(by), choisie ? 13 : 8,
-                br.ouverte ? br.couleur : '#556070');
+            if (!br.ouverte) { verrouillees.push({ nom: br.nom, choisie: choisie }); }
+
+            b.paintOpacity = choisie ? 255 : (br.ouverte ? 110 : 60);
+            this.trait(cx + dx * (R_ORBE + 6), cy + dy * (R_ORBE + 6), bx, by,
+                br.couleur, choisie ? 6 : (br.ouverte ? 9 : 13), choisie ? 3 : 2);
+            b.drawCircle(Math.round(bx), Math.round(by),
+                choisie ? 13 : (br.ouverte ? 8 : 5),
+                br.ouverte ? br.couleur : '#4a5364');
             if (choisie) {
                 b.paintOpacity = 255;
                 b.drawCircle(Math.round(bx), Math.round(by), 6, '#ffffff');
             }
-            b.paintOpacity = choisie ? 255 : 150;
-            b.fontSize = choisie ? 20 : 16;
-            b.textColor = choisie ? '#ffffff' : '#b9c4d2';
-            var lx = Math.round(bx - 70), ly = Math.round(by + (Math.sin(a) >= 0 ? 14 : -38));
-            b.drawText(br.nom, lx, ly, 140, 24, 'center');
+            b.paintOpacity = 255;
+
+            // on ne nomme que ce qui sert : les branches jouables, plus celle
+            // qu'on a sous le curseur. Nommer les quatorze, c'est la bouillie
+            // qu'on voyait en bas des captures.
+            if (br.ouverte || choisie) {
+                aNommer.push({ br: br, bx: bx, by: by, dx: dx, dy: dy, choisie: choisie });
+            }
+        }
+
+        // SECOND PASSAGE : les noms, en évitant de se marcher dessus.
+        // Les branches jouables d'abord — elles forment le squelette et leur
+        // place ne doit pas sauter d'une image à l'autre. La verrouillée qu'on
+        // a sous le curseur passe en dernier : c'est elle qui se pousse.
+        aNommer.sort(function (x, y) { return (x.br.ouverte ? 0 : 1) - (y.br.ouverte ? 0 : 1); });
+        var HAUT = 24, LARG = 150;
+        var pied = nFer ? 26 : 2;
+        var posees = [];
+
+        function croise(r, s) {
+            return r.x < s.x + s.l && s.x < r.x + r.l && r.y < s.y + s.h && s.y < r.y + r.h;
+        }
+
+        aNommer.forEach(function (e) {
+            b.fontSize = e.choisie ? 20 : 16;
+            var mot = Math.min(LARG, b.measureTextWidth(e.br.nom) + 8);
+
+            // les places possibles, de la plus naturelle à la plus repliée :
+            // à côté du point vers l'extérieur, puis plus loin, puis dessus,
+            // puis dessous.
+            var essais = [];
+            [22, 46, 70].forEach(function (d) {
+                var px = e.bx + e.dx * d, py = e.by + e.dy * d;
+                var al = e.dx > 0.35 ? 'left' : (e.dx < -0.35 ? 'right' : 'center');
+                var x = al === 'left' ? px : (al === 'right' ? px - mot : px - mot / 2);
+                essais.push({ x: x, y: py - HAUT / 2, align: al });
+            });
+            essais.push({ x: e.bx - mot / 2, y: e.by - 20 - HAUT, align: 'center' });
+            essais.push({ x: e.bx - mot / 2, y: e.by + 20, align: 'center' });
+            essais.push({ x: e.bx - mot / 2, y: e.by - 44 - HAUT, align: 'center' });
+
+            var choix = null;
+            for (var k = 0; k < essais.length; k++) {
+                var r = { x: Math.round(essais[k].x), y: Math.round(essais[k].y), l: Math.round(mot), h: HAUT };
+                if (r.x < 2 || r.x + r.l > L - 2 || r.y < 2 || r.y + r.h > H - pied) { continue; }
+                // ni sur le visage du héros…
+                var qx = Math.max(r.x, Math.min(cx, r.x + r.l));
+                var qy = Math.max(r.y, Math.min(cy, r.y + r.h));
+                if (Math.sqrt((qx - cx) * (qx - cx) + (qy - cy) * (qy - cy)) < R_ORBE) { continue; }
+                // …ni sur son propre point…
+                if (e.bx >= r.x && e.bx <= r.x + r.l && e.by >= r.y && e.by <= r.y + r.h) { continue; }
+                // …ni sur un nom déjà posé.
+                if (posees.some(function (p) { return croise(r, p); })) { continue; }
+                choix = { r: r, align: essais[k].align };
+                break;
+            }
+            // aucune place libre : on prend la dernière, au-dessus du point, et
+            // on la ramène dans le cadre. Mieux vaut serré que hors de l'écran.
+            if (!choix) {
+                var secours = { x: Math.round(Math.max(2, Math.min(L - mot - 2, e.bx - mot / 2))),
+                                y: Math.round(Math.max(2, Math.min(H - HAUT - pied, e.by - 20 - HAUT))),
+                                l: Math.round(mot), h: HAUT };
+                choix = { r: secours, align: 'center' };
+            }
+
+            b.paintOpacity = e.choisie ? 255 : 170;
+            b.textColor = e.choisie ? '#ffffff' : (e.br.ouverte ? '#b9c4d2' : '#8a93a3');
+            b.drawText(e.br.nom, choix.r.x, choix.r.y, choix.r.l, HAUT, choix.align);
+            b.paintOpacity = 255;
+
+            posees.push(choix.r);
+            this._etiquettes.push({
+                nom: e.br.nom, ouverte: e.br.ouverte, choisie: e.choisie,
+                x: choix.r.x, y: choix.r.y, l: choix.r.l, h: HAUT,
+                px: Math.round(e.bx), py: Math.round(e.by)
+            });
+        }, this);
+
+        // ── le rappel des branches verrouillées, au pied de l'orbe
+        // ⚠ Surtout pas la liste entière : drawText RESSERRE le texte pour le
+        // faire tenir dans la largeur donnée, et onze noms dans quatre cents
+        // pixels donnent une bouillie illisible. On dit le nombre, et on nomme
+        // celle qu'on a sous le curseur — les autres se lisent en y allant.
+        if (verrouillees.length) {
+            var sous = verrouillees.filter(function (v) { return v.choisie; })[0];
+            var texte = sous
+                ? '🔒 ' + sous.nom + ' — verrouillée  (' + verrouillees.length + ' en tout)'
+                : '🔒 ' + verrouillees.length + ' branche' + (verrouillees.length > 1 ? 's' : '') +
+                  ' verrouillée' + (verrouillees.length > 1 ? 's' : '') + ' — apprises, pas encore ouvertes';
+            b.fontSize = 15;
+            b.paintOpacity = 220;
+            b.textColor = sous ? '#c9a84c' : '#7f8899';
+            b.drawText(texte, 6, H - 22, L - 12, 20, 'center');
             b.paintOpacity = 255;
         }
 
