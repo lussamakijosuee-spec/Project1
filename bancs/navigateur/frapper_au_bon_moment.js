@@ -380,7 +380,87 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         propre.note ? propre.note.slice(0, 40) : '(note vide, comme avant)');
     V('aucune balise de minutage ne reste posée', propre.balise === propre.attendue);
 
-    console.log('\n8) Le bilan');
+    console.log('\n8) LES ULTIMES, pour de vrai cette fois (balises posées dans data/)');
+    /* Les sections précédentes posaient la balise en mémoire pour prouver que
+     * le système marche. Celle-ci ne pose RIEN : elle lit ce que le moteur a
+     * chargé depuis data/Skills.json et vérifie que les quatorze ultimes
+     * arrivent avec leur minutage ET une formule qui en tient compte. */
+    var ultis = await ev(function () {
+        var out = { total: 0, avecBalise: [], sansBalise: [], formuleAveugle: [], parFacon: {} };
+        $dataSkills.forEach(function (s) {
+            if (!s || s.stypeId !== 3) { return; }
+            var faitDesDegats = s.damage.type !== 0 &&
+                String(s.damage.formula).trim() !== '' && String(s.damage.formula).trim() !== '0';
+            if (!faitDesDegats) { return; }          // celles-là sont laissées exprès
+            out.total++;
+            var b = s.meta['SRD TAS'];
+            if (!b) { out.sansBalise.push(s.name); return; }
+            out.avecBalise.push(s.name);
+            out.parFacon[b.type] = (out.parFacon[b.type] || 0) + 1;
+            if (String(s.damage.formula).indexOf('$gameTemp.tas_power') < 0) {
+                out.formuleAveugle.push(s.name);
+            }
+        });
+        return out;
+    });
+    console.log('      ' + Object.keys(ultis.parFacon).map(function (f) {
+        return f + ' ×' + ultis.parFacon[f];
+    }).join(' · '));
+    V('les ultimes qui font des dégâts portent toutes leur minutage',
+        ultis.sansBalise.length === 0,
+        ultis.avecBalise.length + '/' + ultis.total + (ultis.sansBalise.length ? '  manquent : ' + ultis.sansBalise.join(', ') : ''));
+    V('leur formule lit le minutage (sinon c\'est un décor)',
+        ultis.formuleAveugle.length === 0,
+        ultis.formuleAveugle.join(', ') || 'les ' + ultis.avecBalise.length);
+
+    /* ⚠ Contre-épreuve : les ultimes SANS dégâts ne doivent PAS avoir été
+     *   touchées. Sans ce contrôle, l'outil aurait pu tout baliser et je
+     *   n'aurais vu que du vert. */
+    var epargnees = await ev(function () {
+        var out = { total: 0, touchees: [] };
+        $dataSkills.forEach(function (s) {
+            if (!s || s.stypeId !== 3) { return; }
+            var faitDesDegats = s.damage.type !== 0 &&
+                String(s.damage.formula).trim() !== '' && String(s.damage.formula).trim() !== '0';
+            if (faitDesDegats) { return; }
+            out.total++;
+            if (s.meta['SRD TAS'] || String(s.damage.formula).indexOf('tas_power') >= 0) {
+                out.touchees.push(s.name);
+            }
+        });
+        return out;
+    });
+    V('les ultimes sans dégâts sont restées intactes (contre-épreuve)',
+        epargnees.touchees.length === 0,
+        epargnees.total + ' épargnées' + (epargnees.touchees.length ? ', mais touchées : ' + epargnees.touchees.join(', ') : ''));
+
+    /* et une, lancée pour de bon, sans rien poser à la main */
+    var enVrai = await ev(function () {
+        var s = $dataSkills.filter(function (x) {
+            return x && x.stypeId === 3 && x.meta['SRD TAS'] && x.scope === 1;
+        })[0];
+        if (!s) { return null; }
+        var acteur = $gameParty.members()[0];
+        var action = new Game_Action(acteur);
+        action.setSkill(s.id);
+        acteur.setAction(0, action);
+        BattleManager._subject = acteur;
+        BattleManager._action = action;
+        var t = SceneManager._scene._tasAttack;
+        t.setItem(s.meta['SRD TAS']);
+        t.open();
+        t.start();
+        return { nom: s.name, facon: s.meta['SRD TAS'].type, type: t._type };
+    });
+    if (enVrai) {
+        await pause(1500);
+        console.log('      lancée : « ' + enVrai.nom + ' » → ' + enVrai.facon);
+        V('une ultime lancée depuis data/ démarre son minutage',
+            enVrai.type === enVrai.facon, enVrai.type + ' = ' + enVrai.facon);
+        await photo('minutage_ultime');
+    }
+
+    console.log('\n9) Le bilan');
     var horsNWjs = erreurs.filter(function (e) { return /process is not defined/.test(e); });
     var vraies = erreurs.filter(function (e) { return !/process is not defined/.test(e); });
     if (horsNWjs.length) { console.log('   (' + horsNWjs.length + ' « process is not defined » : propre au navigateur, mis de côté)'); }

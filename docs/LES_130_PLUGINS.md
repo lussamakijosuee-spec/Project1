@@ -1,5 +1,7 @@
 # Les 130 plugins installés
 
+*47 branchés · 64 en attente · 19 retirés du disque*
+
 *Écrit par `bancs/audit/17_les_130_plugins.js`. Les trois premières colonnes sont
 mesurées ; le verdict est un avis, et JOKO tranche. Aucun plugin n'est allumé,
 éteint ni supprimé par ce banc.*
@@ -8,10 +10,10 @@ mesurées ; le verdict est un avis, et JOKO tranche. Aucun plugin n'est allumé,
 
 | | |
 |---|---:|
-| fichiers SRD sur le disque | 130 |
-| **branchés et mesurés** | **48** |
-| inscrits mais éteints | 0 |
-| jamais inscrits (donc invisibles pour le jeu) | 82 |
+| fichiers SRD sur le disque | 111 |
+| **branchés et mesurés** | **47** |
+| inscrits mais éteints | 1 |
+| jamais inscrits (donc invisibles pour le jeu) | 63 |
 
 > Un fichier posé dans `js/plugins/` ne fait **rien**. RPG Maker ne charge que
 > ce qui est inscrit dans `js/plugins.js`, et dans cet ordre-là.
@@ -44,25 +46,6 @@ Musiques, Éléments). En allumer un, c'est reprendre cet écran à zéro.
 | `AltMenuScreen_Phantasia` | pas inscrit | ⚠ 7 | Menu copié sur celui de Tales of Phantasia. |
 | `AltMenuScreen_Right` | pas inscrit | — | Le menu habituel, mais collé à droite. |
 | `AltMenuScreen_Up` | pas inscrit | ⚠ 7 | Menu avec les commandes en haut et les héros en carré 2 × 2. |
-
----
-
-## 7 · LES PLUGINS POKÉMON  —  *étranger*
-
-Un système de types à la Pokémon, des natures, un effaceur de capacités, et
-SRD_PKM_4MovesOnly qui limite chaque héros à QUATRE compétences. Le jeu en
-compte 354 et quatre arbres de progression. Ce n'est pas un réglage à
-ajuster : c'est un autre jeu.
-
-| plugin | état | écrase | ce qu'il fait |
-|---|---|---:|---|
-| `Natures` | pas inscrit | ⚠ 1 | Les « natures » de Pokémon : chaque héros naît avec une force et une faiblesse. |
-| `PKM_4MovesOnly` | pas inscrit | — | Limite chaque héros à QUATRE compétences apprises, comme un Pokémon. |
-| `PKM_MoveDeleter` | pas inscrit | — | Un écran pour oublier une compétence apprise, afin d'en apprendre une autre. |
-| `PKM_TrainerName` | pas inscrit | — | Saisie de nom façon dresseur, avec un écran dédié. |
-| `PKM_TrainerSprite` | pas inscrit | — | Des sprites de dresseur masculin et féminin, indépendants du héros. |
-| `PKM_TypeDisplay` | pas inscrit | — | Affiche les éléments d'un héros dans son écran de statut, comme un type Pokémon. |
-| `PKM_TypeSystem` | pas inscrit | — | Le système de types Pokémon plaqué sur les éléments de RPG Maker. |
 
 ---
 
@@ -114,22 +97,6 @@ de la laisser passive. Même remarque : ça change la nature des combats.
 |---|---|---:|---|
 | `ActiveDefenseCore` | **branché** | ⚠ 18 | Esquiver ou contrer l'attaque d'un ennemi en appuyant au bon moment. |
 | `ActiveDefense_Charge` | **branché** | ⚠ 2 | Une défense qu'il faut CHARGER avant de pouvoir esquiver. |
-
----
-
-## 4 · LE CRÉATEUR DE PERSONNAGE  —  *incomplet*
-
-Il laisse le joueur assembler son propre sprite pièce par pièce. Il lui faut
-un dossier img/SumRndmDde/CharacterCreator rempli de cheveux, d'yeux, de
-vêtements — ce dossier n'existe pas ici. Et les héros de ce jeu ont un
-visage : ce n'est pas un jeu où l'on se fabrique un inconnu.
-
-| plugin | état | écrase | ce qu'il fait |
-|---|---|---:|---|
-| `CCEX_DynamicActors` | pas inscrit | — | Les images d'un héros changent toutes seules selon sa classe ou son équipement. |
-| `CCEX_MessageFaces` | pas inscrit | ⚠ 1 | Plusieurs expressions de visage pour un personnage créé, utilisables dans les dialogues. |
-| `CharacterCreator` | pas inscrit | ⚠ 2 | Le joueur assemble son propre sprite, pièce par pièce. |
-| `CharacterCreatorEX` | pas inscrit | ⚠ 2 | La version étendue du créateur de personnage. |
 
 ---
 
@@ -201,30 +168,6 @@ Très beau potentiel, mais c'est un chantier à part entière.
 | `BattleStatusCustomizer_Part2` | pas inscrit | — | La suite : la position et la forme de chaque élément de la barre d'état. |
 | `StatePopups` | pas inscrit | — | Des bulles qui annoncent l'état posé ou retiré, en plus des dégâts. |
 | `WalkCharBattlers` | pas inscrit | ⚠ 3 | Utiliser les sprites de marche comme combattants, au lieu des sprites de combat. |
-
----
-
-## 8 · CE QU'IL NE FAUT PAS ALLUMER  —  *dangereux*
-
-SRD_DataCompressor réécrit les fichiers de data/ dans un format compressé :
-l'éditeur de RPG Maker et tous les bancs de ce projet cessent de les lire.
-SRD_AutoUpdater et SRD_PluginUpdater appellent un serveur de mise à jour qui
-n'existe pas.
-SRD_RemoveTitleScreen et SRD_SkipTitleWithoutSave effacent l'écran-titre —
-or JOKO y a monté MOG_TitleLayers, TitleParticles et TitleMagicCircles.
-SRD_TranslationEngine et SRD_SpellCheck servent à traduire vers l'anglais et
-à corriger l'orthographe anglaise : le jeu est en français.
-
-| plugin | état | écrase | ce qu'il fait |
-|---|---|---:|---|
-| `AutoUpdater` | pas inscrit | — | Le jeu va chercher ses mises à jour sur un serveur au lancement. ⚠ Aucun serveur ici. |
-| `DataCompressor` | pas inscrit | — | Compresse les fichiers de data/ pour réduire leur taille. ⚠ L'éditeur et les bancs ne les lisent plus. |
-| `PluginUpdater` | pas inscrit | — | Vérifie si les plugins SRD ont une version plus récente en ligne. |
-| `RemoveFadedContinue` | pas inscrit | ⚠ 1 | Enlève le « Continuer » grisé quand il n'y a rien à continuer. |
-| `RemoveTitleScreen` | pas inscrit | ⚠ 1 | Supprime l'écran-titre : le jeu démarre directement. ⚠ JOKO a monté un titre entier. |
-| `SkipTitleWithoutSave` | pas inscrit | ⚠ 1 | Saute le titre s'il n'y a aucune sauvegarde. |
-| `SpellCheck` | pas inscrit | — | Vérifie l'orthographe des textes. ⚠ Dictionnaire anglais. |
-| `TranslationEngine` | pas inscrit | — | Un outil pour traduire le jeu dans plusieurs langues, depuis le jeu. |
 
 ---
 
@@ -306,7 +249,7 @@ Des outils qui ne coûtent rien tant qu'on ne s'en sert pas, et qui répondent
 | `SuperToolsEngine` | **branché** | ⚠ 17 | Un éditeur dans le jeu, en mode test. Socle du HUD Maker. Invisible pour le joueur. |
 | `SwipeInput` | **branché** | — | Lire un glissement de doigt ou de souris. |
 | `SwitchShop` | **branché** | ⚠ 46 | Une boutique qui vend des interrupteurs : un service, un passage, une information. |
-| `TimerUpgrade` | **branché** | ⚠ 29 | Le chronomètre : position, format, couleur, pause automatique. |
+| `TimerUpgrade` | éteint | — | Le chronomètre : position, format, couleur, pause automatique. |
 | `UndertaleBattleSystem` | pas inscrit | — | Un combat où l'on esquive des projectiles au clavier, comme dans Undertale. |
 | `VariableRates` | **branché** | ⚠ 1 | Une variable qui monte ou descend toute seule dans le temps. |
 | `VideoWait` | **branché** | ⚠ 1 | L'événement attend tout seul la fin d'une vidéo. |
@@ -316,6 +259,39 @@ Des outils qui ne coûtent rien tant qu'on ne s'en sert pas, et qui répondent
 | `WindowOpenUpgrade` | pas inscrit | ⚠ 2 | Régler l'animation d'ouverture et de fermeture des fenêtres. |
 | `WindowSkinOption` | pas inscrit | — | Le joueur choisit l'apparence des fenêtres. ⚠ Réclame des images dans img/SumRndmDde/. |
 | `WindowUpgrade` | pas inscrit | ⚠ 22 | Refait le système de fenêtres : marges, polices, tailles. ⚠ Écrase 21 réglages de YEP_CoreEngine. |
+
+---
+
+## 19 · CE QUI A ÉTÉ RETIRÉ DU DISQUE
+
+Ces fichiers n'étaient inscrits **nulle part** dans `js/plugins.js` : ils
+n'étaient jamais chargés et ne coûtaient rien au jeu. Les retirer n'accélère
+donc rien — c'est mesuré, le démarrage n'a pas bougé. Ce que ça change, c'est
+la liste du gestionnaire de plugins de l'éditeur.
+
+Ils sont dans git et reviennent d'une commande.
+
+| plugin | pourquoi il ne servira jamais ici |
+|---|---|
+| `DataCompressor` | réécrirait data/ dans un format que ni l'éditeur ni les bancs ne relisent |
+| `AutoUpdater` | appelle un serveur de mise à jour qui n'existe pas |
+| `PluginUpdater` | même serveur absent |
+| `RemoveTitleScreen` | efface l'écran-titre monté en MOG par JOKO |
+| `SkipTitleWithoutSave` | saute ce même écran-titre |
+| `RemoveFadedContinue` | retire le « Continuer » grisé que le titre gère déjà |
+| `TranslationEngine` | traduction multilingue ; le jeu est en français |
+| `SpellCheck` | correcteur à dictionnaire anglais |
+| `PKM_4MovesOnly` | limiterait chaque héros à 4 compétences, sur 354 |
+| `PKM_TypeSystem` | plaque les types Pokémon sur les éléments |
+| `PKM_TypeDisplay` | affiche ces types ; sans le système, rien à montrer |
+| `PKM_MoveDeleter` | pensé pour la limite de quatre compétences |
+| `PKM_TrainerName` | saisie de nom façon dresseur |
+| `PKM_TrainerSprite` | sprites de dresseur |
+| `Natures` | les « natures » de Pokémon |
+| `CharacterCreator` | réclame un dossier d'images qui n'existe pas ; les héros ont déjà un visage |
+| `CharacterCreatorEX` | la version étendue du même |
+| `CCEX_DynamicActors` | extension du créateur de personnage |
+| `CCEX_MessageFaces` | extension du créateur de personnage |
 
 ---
 

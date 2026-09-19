@@ -65,7 +65,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             'SRD_FullscreenToggleOption': aDesReglages('SRD_FullscreenToggleOption'),
             'SRD_ShakingText': aDesReglages('SRD_ShakingText'),
             'SRD_AudioFader': aDesReglages('SRD_AudioFader'),
-            'SRD_TimerUpgrade': aDesReglages('SRD_TimerUpgrade'),
+            /* SRD_TimerUpgrade a été ÉTEINT volontairement : MOG_VisualTimer,
+             * celui de JOKO avec ses images, fait déjà le travail. On vérifie
+             * donc l'inverse — qu'il n'est PAS là, et que celui de JOKO l'est. */
             'SRD_CustomColors': aDesReglages('SRD_CustomColors'),
             // sans réglage : on les reconnaît à la marque qu'ils laissent
             /* ⚠ « addWindowLayer existe » ne prouve rien : MV nu l'a déjà.
@@ -82,7 +84,19 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         };
     });
     var morts = Object.keys(vivants).filter(function (n) { return !vivants[n]; });
-    V('les plugins branchés sont tous vivants', morts.length === 0, morts.join(', ') || 'les 11');
+    V('les plugins branchés sont tous vivants', morts.length === 0,
+        morts.join(', ') || 'les ' + Object.keys(vivants).length);
+
+    /* Le chronomètre : un seul doit tenir l'écran, et c'est celui de JOKO. */
+    var chrono = await ev(function () {
+        return {
+            mien: !!($plugins || []).filter(function (p) { return p.name === 'SRD_TimerUpgrade' && p.status; }).length,
+            sien: !!($plugins || []).filter(function (p) { return p.name === 'MOG_VisualTimer' && p.status; }).length
+        };
+    });
+    V('le chronomètre de JOKO est le seul allumé', chrono.sien && !chrono.mien,
+        'MOG_VisualTimer ' + (chrono.sien ? 'allumé' : 'ÉTEINT') +
+        ' · SRD_TimerUpgrade ' + (chrono.mien ? 'ALLUMÉ AUSSI' : 'éteint'));
 
     /* ── contre-épreuve : un plugin qu'on n'a PAS branché ne doit pas
      *    ressortir comme vivant, sinon ce contrôle ne prouve rien ── */
