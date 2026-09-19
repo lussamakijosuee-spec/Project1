@@ -348,8 +348,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 2 · Spéciale | 17 | ouvert |
 | ✔ | 3 · ult | 1 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✔ | 8 · invocation | 2 | ouvert |
-| ✔ | 9 · ame | 9 | ouvert |
+| ✘ | 8 · invocation | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 9 · ame | 9 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
@@ -359,13 +359,13 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 
-> **13 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **24 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
 
 ### Type 1 — capacité
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 14 | Roulette du Destin | 100 PM | script commun 21 · boost CHA 3t · pose « JACKPOT » 100% | 51 | — |
+| 1 | 14 | Roulette du Destin | 100 PM | script commun 1 | 51 | — |
 | 1 | 17 | Parole n°3 Technique d'Inversion | 30 PM | soin PV *mana positive* `1500 + a.mat` | 42 | `<Parole>` `<NomOrigine: Technique d'Inversion>` ⚠ |
 | 1 | 65 | copie d'Ame | 12 PM | **coquille** — rien | 51 | `<Parole: origine>` |
 | 1 | 111 | Arme d'Ombre | 12 PM | pose « épee d'ombre » 100% · pose « dague d'ombre » 100% · pose « arc d'ombre » 100% · pose « hache des tenerbre » 100% · pose « fusil des tenebre » 100% · pose « griffe hurleur d'ame » 100% · pose « lance des abysse » 100% · pose « katana de la mort » 100% · pose « fusil a pompe éternel » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
@@ -448,14 +448,14 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 84 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
-### Type 8 — invocation
+### ✘ Type 8 — invocation  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 124 | Jugement des Défunts | 12 PM | **coquille** — rien | 405 | — |
 | 1 | 125 | Rappel des Âmes | 12 PM | **coquille** — rien | 405 | — |
 
-### Type 9 — ame
+### ✘ Type 9 — ame  *(INVISIBLE)*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -751,7 +751,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **354** entrées d'apprentissage sur les quatre héros ;
-- **22** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
+- **33** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
 - **22** ne font rien du tout (ni dégâts, ni effet) ;
 - **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).
