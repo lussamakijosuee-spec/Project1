@@ -26,6 +26,11 @@
  * @desc Ce qui s'écrit en haut de l'écran.
  * @default L'ORBE DES CAPACITÉS
  *
+ * @param Branches visibles
+ * @desc Les types de compétence que l'Orbe montre, séparés par des virgules.
+ * Laisser VIDE pour tous les montrer. Ne retire aucune compétence du jeu.
+ * @default 1,2,3
+ *
  * @help
  * ============================================================================
  *  Ce que c'est
@@ -52,6 +57,21 @@
  *   Échap          sortir
  *
  * ============================================================================
+ *  Quelles branches l'Orbe montre
+ * ============================================================================
+ *
+ * Le réglage « Branches visibles » décide des types affichés. Il vaut
+ * « 1,2,3 » : capacité, Spéciale, ult — et rien d'autre. Le vider fait
+ * revenir toutes les branches.
+ *
+ * ⚠ CE RÉGLAGE NE RETIRE RIEN DU JEU. Les compétences écartées de l'écran
+ * restent apprises, leurs apprentissages restent dans les classes, leurs
+ * traits restent posés. Une branche masquée ici continue de s'employer EN
+ * COMBAT si son type y est ouvert : c'est la fenêtre de commandes du combat
+ * qui décide de ça, pas l'Orbe. Au 2026-09-20, le combat montre encore
+ * « sang » à Vesper et « ame » à ludwing.
+ *
+ * ============================================================================
  *  Ce que montre un nœud
  * ============================================================================
  *
@@ -71,6 +91,22 @@
     var P = PluginManager.parameters('OrbeDesCapacites');
     var R_ORBE = Number(P['Rayon de l\'orbe'] || 74);
     var R_BRANCHE = Number(P['Rayon des branches'] || 148);
+
+    // Les types que l'Orbe accepte de montrer. Réglage de JOKO : « je veux
+    // juste ulti, spécial, capacité. C'est tout. »
+    //
+    // ⚠ CECI NE RETIRE RIEN. Les compétences restent apprises, les
+    // apprentissages restent dans les classes, les traits restent posés : une
+    // branche écartée ici continue de s'employer en combat si son type est
+    // ouvert. C'est un filtre d'AFFICHAGE, et il se défait en vidant le
+    // réglage « Branches visibles ».
+    var BRANCHES_VUES = (function () {
+        var brut = P['Branches visibles'];
+        if (brut === undefined) { brut = '1,2,3'; }           // défaut du plugin
+        var l = String(brut).split(',').map(function (x) { return parseInt(x, 10); })
+                 .filter(function (x) { return x > 0; });
+        return l.length ? l : null;                            // null = toutes
+    })();
     var TITRE = String(P['Titre'] || 'L\'ORBE DES CAPACITÉS');
 
     // Le cadre : l'orbe occupe la moitié gauche, la liste des nœuds la droite.
@@ -122,6 +158,7 @@
         var types = acteur.addedSkillTypes().slice();
         var out = [];
         Object.keys(parType).map(Number).forEach(function (t) {
+            if (BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0) { return; }
             var noeuds = parType[t].sort(function (a, b) {
                 return (a.niveau - b.niveau) || (a.skill.id - b.skill.id);
             });
