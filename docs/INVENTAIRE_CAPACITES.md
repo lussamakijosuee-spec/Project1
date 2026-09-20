@@ -7,7 +7,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Marque | Ce que ça veut dire |
 |---|---|
-| **INVISIBLE** | le type n'est ouvert par aucun trait : la compétence est apprise mais n'apparaît dans aucun menu |
+| ✔ **ouvert** | la classe, l'acteur ou un état passif ouvre le type : la compétence se voit toujours |
+| ◑ **à condition** | le type s'ouvre sous un état que le héros sait poser, ou sous un équipement qu'il peut porter. La branche marche — la colonne « État » dit par où |
+| ✘ **INVISIBLE** | aucun chemin : soit rien n'ouvre le type, soit le seul ouvreur est hors d'atteinte (état que rien ne pose, arme que la classe ne porte pas) |
 | **encre morte** | la note porte une balise qu'aucun plugin de `js/plugins/` ne lit — elle ne fait rien |
 | **coquille** | ni dégâts ni effet : la compétence s'exécute et il ne se passe rien |
 
@@ -29,12 +31,12 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 1 · capacité | 55 | ouvert |
 | ✔ | 2 · Spéciale | 16 | ouvert |
 | ✔ | 3 · ult | 4 | ouvert |
-| ✘ | 5 · BERSEK | 4 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 5 · BERSEK | 4 | **INVISIBLE** — seul chemin : état « Berserk » — posé seulement par « Transformation », qu'aucune classe n'apprend, hors d'atteinte |
 | ✘ | 7 · MANA semi-parfait | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✔ | 10 · sang | 6 | ouvert |
-| ✘ | 19 · Arts Sereins | 3 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 19 · Arts Sereins | 3 | **INVISIBLE** — seul chemin : état « La Fureur Froide » — posé seulement par « Transformation — Second Stade », qu'aucune classe n'apprend, hors d'atteinte |
 
-> **9 compétences de Vesper ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **9 compétences de Vesper ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -128,6 +130,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 ### ✘ Type 5 — BERSEK  *(INVISIBLE)*
 
+*INVISIBLE — seul chemin : état « Berserk » — posé seulement par « Transformation », qu'aucune classe n'apprend, hors d'atteinte*
+
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 56 | Paon Hémorragique | 45 PM | dégâts PV *Physique* `Math.floor(a.atk * 2.1 * 200 / (200 + b.def))` · pose « Saignement Brûlant » 100% | 379 | `<NoParole>` `<Sang>` |
@@ -136,6 +140,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 59 | Dragon de la Nuit Sanglante | 10 PM + 20 PT + 50% PV | dégâts PV *Physique* `(a.atk * 25) + (a.mhp - a.hp)` | 415 | `<NoParole>` `<Sang>` |
 
 ### ✘ Type 7 — MANA semi-parfait  *(INVISIBLE)*
+
+*INVISIBLE — aucun trait n'ouvre ce type*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -154,6 +160,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 43 | 1146 | Écarlate Montante | 34 PT | dégâts PV *mana négative * `Math.floor(a.atk * 7.7 * 200 / (200 + b.def))` | 421 | `<Voie: sang>` |
 
 ### ✘ Type 19 — Arts Sereins  *(INVISIBLE)*
+
+*INVISIBLE — seul chemin : état « La Fureur Froide » — posé seulement par « Transformation — Second Stade », qu'aucune classe n'apprend, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -347,19 +355,21 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 1 · capacité | 44 | ouvert |
 | ✔ | 2 · Spéciale | 17 | ouvert |
 | ✔ | 3 · ult | 1 | ouvert |
-| ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 8 · invocation | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
+| ◑ | 8 · invocation | 2 | à condition : en lançant « Royaume Impérial » → état « Royaume Impérial » |
 | ✔ | 9 · ame | 9 | ouvert |
-| ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 14 · ombre de katana | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 15 · ombre de lance | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ◑ | 11 · ombre d'épeé | 1 | à condition : en lançant « Arme d'Ombre » → état « épee d'ombre » |
+| ◑ | 12 · ombre de dague | 1 | à condition : en lançant « Arme d'Ombre » → état « dague d'ombre » |
+| ◑ | 13 · ombre de hache | 1 | à condition : en lançant « Arme d'Ombre » → état « hache des tenerbre » |
+| ◑ | 14 · ombre de katana | 1 | à condition : en lançant « Arme d'Ombre » → état « katana de la mort » |
+| ◑ | 15 · ombre de lance | 1 | à condition : en lançant « Arme d'Ombre » → état « lance des abysse » |
+| ◑ | 16 · ombre de griffe | 1 | à condition : en lançant « Arme d'Ombre » → état « griffe hurleur d'ame » |
+| ◑ | 17 · ombre de arc | 1 | à condition : en lançant « Arme d'Ombre » → état « arc d'ombre » |
+| ◑ | 18 · ombre de arme a feu | 1 | à condition : en lançant « Arme d'Ombre » → état « fusil des tenebre » |
 
-> **15 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **10 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
+
+> **5 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -440,6 +450,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
 
+*INVISIBLE — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte*
+
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 47 | Rafale de Jetons | 8 PM | dégâts PV *Physique* `Math.floor((a.luk*3) * 1.203 * 200 / (200 + b.def))` | 16 | `<NoParole>` |
@@ -448,7 +460,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 84 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
-### ✘ Type 8 — invocation  *(INVISIBLE)*
+### ◑ Type 8 — invocation  *(à condition)*
+
+*à condition : en lançant « Royaume Impérial » → état « Royaume Impérial »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -469,49 +483,65 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 38 | 1169 | Parole n°7 Rappel | 42 PM | dégâts PV *AME * `Math.floor(a.mat * 23 * 200 / (200 + b.mdf))` | 449 | `<NomOrigine: Rappel>` ⚠ |
 | 48 | 1171 | Parole n°7 Dette Ancienne | 56 PM | dégâts PV *AME * `Math.floor(a.mat * 33 * 200 / (200 + b.mdf))` · pose « 🫀 Ravage » 70% | 460 | `<NomOrigine: Dette Ancienne>` ⚠ `<Cooldown: 2>` |
 
-### ✘ Type 11 — ombre d'épeé  *(INVISIBLE)*
+### ◑ Type 11 — ombre d'épeé  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « épee d'ombre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
 
-### ✘ Type 12 — ombre de dague  *(INVISIBLE)*
+### ◑ Type 12 — ombre de dague  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « dague d'ombre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
 
-### ✘ Type 13 — ombre de hache  *(INVISIBLE)*
+### ◑ Type 13 — ombre de hache  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « hache des tenerbre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 118 | Fendoir Obscur | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(a.atk * 5.2 * 200 / (200 + b.def))` | 250 | `<Voie: forge>` |
 
-### ✘ Type 14 — ombre de katana  *(INVISIBLE)*
+### ◑ Type 14 — ombre de katana  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « katana de la mort »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
 
-### ✘ Type 15 — ombre de lance  *(INVISIBLE)*
+### ◑ Type 15 — ombre de lance  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « lance des abysse »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 121 | Parole n°15 Geyser Abyssal | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(((a.atk + a.mat) * 2.5) * 1.173 * 200 / (200 + b.def))` | 84 | `<Voie: onde>` `<NomOrigine: Geyser Abyssal>` ⚠ |
 
-### ✘ Type 16 — ombre de griffe  *(INVISIBLE)*
+### ◑ Type 16 — ombre de griffe  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « griffe hurleur d'ame »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 252 | `<FrappeAme>` ⚠ |
 
-### ✘ Type 17 — ombre de arc  *(INVISIBLE)*
+### ◑ Type 17 — ombre de arc  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « arc d'ombre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
 
-### ✘ Type 18 — ombre de arme a feu  *(INVISIBLE)*
+### ◑ Type 18 — ombre de arme a feu  *(à condition)*
+
+*à condition : en lançant « Arme d'Ombre » → état « fusil des tenebre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -751,7 +781,8 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **354** entrées d'apprentissage sur les quatre héros ;
-- **24** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
+- **14** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **10** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **22** ne font rien du tout (ni dégâts, ni effet) ;
 - **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).

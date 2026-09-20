@@ -6,8 +6,13 @@
  * ce qui se garde, ce qui se réemploie, ce qui se renomme.
  *
  * Trois choses qu'on ne peut pas voir dans l'éditeur et que ce banc mesure :
- *   1. une compétence dont le TYPE n'est ouvert par aucun trait est apprise
- *      mais INVISIBLE dans tous les menus (piège MV connu du projet) ;
+ *   1. une compétence dont le TYPE n'est ouvert par AUCUN CHEMIN est apprise
+ *      mais INVISIBLE dans tous les menus (piège MV connu du projet). On suit
+ *      le chemin entier : la classe, l'acteur, les états passifs, mais aussi
+ *      l'équipement portable et les états que le héros sait poser lui-même.
+ *      Une branche à condition n'est pas une branche morte — vérifié dans le
+ *      moteur : ludwing lance « Arme d'Ombre » et ses 8 branches d'Ombre
+ *      s'ouvrent, avec leurs 8 compétences ;
  *   2. une balise <Truc> dans une note ne fait RIEN si aucun plugin ne la lit —
  *      on vérifie donc chaque balise contre le code de js/plugins/ ;
  *   3. une compétence sans dégâts ET sans effet ne fait rien du tout, même
@@ -24,6 +29,7 @@ var D = function (f) { return JSON.parse(fs.readFileSync(path.join(RACINE, 'data
 var Actors = D('Actors.json');
 var Classes = D('Classes.json');
 var Skills = D('Skills.json');
+var Items = D('Items.json');
 var States = D('States.json');
 var System = D('System.json');
 var Weapons = D('Weapons.json');
@@ -85,14 +91,57 @@ function balises(note) {
     return out;
 }
 
-/** Les types de compétence qu'un trait ouvre vraiment pour ce héros.
+/** Qui pose cet état ? On cherche l'effet 21 (ajouter un état) dans les
+ *  compétences et les objets. Un état que RIEN ne pose ferme sa branche
+ *  pour de bon, quel que soit le trait qu'il porte. */
+var memoPoseurs = {};
+/** Quelles classes apprennent cette compétence. Une compétence que PERSONNE
+ *  n'apprend ne pose jamais son état : la branche qu'elle ouvrirait est
+ *  fermée, même si le trait est bien là. */
+var QUI_APPREND = (function () {
+    var m = {};
+    Classes.forEach(function (c) {
+        if (!c || !c.name) { return; }
+        (c.learnings || []).forEach(function (l) { (m[l.skillId] = m[l.skillId] || []).push(c); });
+    });
+    return m;
+})();
+
+function poseursDe(idEtat) {
+    if (memoPoseurs[idEtat]) { return memoPoseurs[idEtat]; }
+    var r = [];
+    [[Skills, 'compétence'], [Items, 'objet']].forEach(function (src) {
+        src[0].forEach(function (o) {
+            if (!o || !o.name) { return; }
+            (o.effects || []).forEach(function (ef) {
+                if (ef.code === 21 && ef.dataId === idEtat) { r.push({ genre: src[1], o: o }); }
+            });
+        });
+    });
+    return (memoPoseurs[idEtat] = r);
+}
+
+/** Les types de compétence accessibles à ce héros, et PAR QUEL CHEMIN.
+ *
+ *  ⚠ CE CONTRÔLE ACCUSAIT. Il ne lisait que la classe, l'acteur et les états
+ *  passifs, et marquait « INVISIBLE » tout le reste. Les 8 branches d'Ombre de
+ *  ludwing étaient dans ce cas : elles s'ouvrent quand il lance « Arme
+ *  d'Ombre », qu'il apprend au niveau 1. Elles marchent. Un trait 41 posé par
+ *  un ÉTAT ou par un ÉQUIPEMENT n'est pas une branche morte — c'est une
+ *  branche à condition, et la condition doit être nommée, pas ignorée.
+ *
+ *  Mais une condition hors d'atteinte referme la branche pour de bon : un état
+ *  que rien ne pose, une arme que la classe ne peut pas porter. On mesure donc
+ *  le chemin entier, jusqu'au bout.
+ *
  *  ⚠ $dataActors.meta ne garde que la DERNIÈRE ligne <Passive State:>,
  *  alors que YEP_AutoPassiveStates les lit toutes : on relit à la main. */
 function typesOuverts(a) {
-    var ouverts = {}, passifs = [];
+    var ouverts = {}, conditions = {}, passifs = [];
+    var cl = Classes[a.classId];
     function lire(tr) { (tr || []).forEach(function (t) { if (t.code === 41) { ouverts[t.dataId] = true; } }); }
     lire(a.traits);
-    lire(Classes[a.classId].traits);
+    lire(cl.traits);
     ((a.note || '').match(/<Passive State:[^>]*>/gi) || []).forEach(function (ligne) {
         ligne.replace(/<Passive State:/i, '').replace('>', '').split(',').forEach(function (x) {
             var n = parseInt(x, 10);
@@ -100,7 +149,68 @@ function typesOuverts(a) {
         });
     });
     passifs.forEach(function (id) { if (States[id]) { lire(States[id].traits); } });
-    return { ouverts: ouverts, passifs: passifs };
+
+    // Ce que le héros peut porter (traits 51 « type d'arme » / 52 « type d'armure »).
+    var wOK = {}, aOK = {};
+    [a.traits, cl.traits].forEach(function (tr) {
+        (tr || []).forEach(function (t) {
+            if (t.code === 51) { wOK[t.dataId] = true; }
+            if (t.code === 52) { aOK[t.dataId] = true; }
+        });
+    });
+    // Les compétences que sa propre classe lui apprend : de quoi poser un état.
+    var sait = {};
+    (cl.learnings || []).forEach(function (l) { sait[l.skillId] = true; });
+
+    function noter(t, texte) { (conditions[t] = conditions[t] || []).push(texte); }
+    [[Weapons, 'arme'], [Armors, 'armure'], [States, 'état']].forEach(function (src) {
+        src[0].forEach(function (o) {
+            if (!o || !o.name) { return; }
+            (o.traits || []).forEach(function (t) {
+                if (t.code !== 41 || ouverts[t.dataId]) { return; }
+                var nom = '« ' + o.name.trim() + ' »';
+                if (src[1] === 'état') {
+                    var p = poseursDe(o.id);
+                    var sien = p.filter(function (x) { return x.genre === 'compétence' && sait[x.o.id]; });
+                    // Un objet s'obtient ; une compétence, il faut que QUELQU'UN l'apprenne.
+                    var autre = p.filter(function (x) {
+                        return x.genre === 'objet' || (QUI_APPREND[x.o.id] || []).length;
+                    });
+                    if (sien.length) {
+                        noter(t.dataId, 'en lançant « ' + sien[0].o.name.trim() + ' » → état ' + nom);
+                    } else if (autre.length) {
+                        var q = autre[0];
+                        noter(t.dataId, 'sous l\'état ' + nom + ', posé par ' + q.genre + ' « ' + q.o.name.trim() + ' »' +
+                            (q.genre === 'compétence' ? ' — que ' + QUI_APPREND[q.o.id][0].name + ' apprend, pas lui' : ''));
+                    } else if (p.length) {
+                        noter(t.dataId, '✗ état ' + nom + ' — posé seulement par « ' + p[0].o.name.trim() +
+                            ' », qu\'aucune classe n\'apprend');
+                    } else {
+                        noter(t.dataId, '✗ état ' + nom + ' — que rien ne pose');
+                    }
+                } else {
+                    var portable = src[1] === 'arme' ? wOK[o.wtypeId] : aOK[o.atypeId];
+                    noter(t.dataId, (portable ? 'en équipant ' : '✗ ') + src[1] + ' ' + nom +
+                        (portable ? '' : ' — que sa classe ne peut pas porter'));
+                }
+            });
+        });
+    });
+    return { ouverts: ouverts, conditions: conditions, passifs: passifs };
+}
+
+/** L'état d'une branche pour ce héros : 'ouvert', 'condition' ou 'ferme'. */
+function etatBranche(info, t) {
+    if (info.ouverts[t]) { return { rang: 'ouvert', texte: 'ouvert', marque: '✔' }; }
+    var voies = (info.conditions[t] || []).filter(function (x) { return x.charAt(0) !== '✗'; });
+    if (voies.length) { return { rang: 'condition', texte: 'à condition : ' + voies[0], marque: '◑' }; }
+    var mortes = info.conditions[t] || [];
+    return {
+        rang: 'ferme', marque: '✘',
+        texte: mortes.length
+            ? '**INVISIBLE** — ' + mortes[0].replace(/^✗ /, 'seul chemin : ') + ', hors d\'atteinte'
+            : '**INVISIBLE** — aucun trait n\'ouvre ce type'
+    };
 }
 
 /** Ce qu'une compétence fait RÉELLEMENT, en dehors de sa description. */
@@ -166,14 +276,16 @@ e('Trois colonnes de vérité, que l\'éditeur ne montre pas :');
 e();
 e('| Marque | Ce que ça veut dire |');
 e('|---|---|');
-e('| **INVISIBLE** | le type n\'est ouvert par aucun trait : la compétence est apprise mais n\'apparaît dans aucun menu |');
+e('| ✔ **ouvert** | la classe, l\'acteur ou un état passif ouvre le type : la compétence se voit toujours |');
+e('| ◑ **à condition** | le type s\'ouvre sous un état que le héros sait poser, ou sous un équipement qu\'il peut porter. La branche marche — la colonne « État » dit par où |');
+e('| ✘ **INVISIBLE** | aucun chemin : soit rien n\'ouvre le type, soit le seul ouvreur est hors d\'atteinte (état que rien ne pose, arme que la classe ne porte pas) |');
 e('| **encre morte** | la note porte une balise qu\'aucun plugin de `js/plugins/` ne lit — elle ne fait rien |');
 e('| **coquille** | ni dégâts ni effet : la compétence s\'exécute et il ne se passe rien |');
 e();
 
 /* ── ① Les quatre héros ── */
 var balisesMortes = {};
-var totaux = { skills: 0, invisibles: 0, coquilles: 0 };
+var totaux = { skills: 0, invisibles: 0, conditions: 0, coquilles: 0 };
 
 HEROS.forEach(function (h) {
     var a = Actors[h.id];
@@ -207,32 +319,44 @@ HEROS.forEach(function (h) {
     e();
     e('| | Type | Compétences | État |');
     e('|---|---|---|---|');
-    var invisiblesIci = 0;
+    var invisiblesIci = 0, sousConditionIci = 0;
     Object.keys(parType).map(Number).sort(function (x, y) { return x - y; }).forEach(function (t) {
-        var ouvert = !!info.ouverts[t];
-        if (!ouvert) { invisiblesIci += parType[t].length; }
-        e('| ' + (ouvert ? '✔' : '✘') + ' | ' + t + ' · ' + (System.skillTypes[t] || '?').trim() +
-            ' | ' + parType[t].length + ' | ' + (ouvert ? 'ouvert' : '**INVISIBLE** — aucun trait n\'ouvre ce type') + ' |');
+        var et = etatBranche(info, t);
+        if (et.rang === 'ferme') { invisiblesIci += parType[t].length; }
+        if (et.rang === 'condition') { sousConditionIci += parType[t].length; }
+        e('| ' + et.marque + ' | ' + t + ' · ' + (System.skillTypes[t] || '?').trim() +
+            ' | ' + parType[t].length + ' | ' + et.texte + ' |');
     });
     e();
+    if (sousConditionIci) {
+        e('> **' + sousConditionIci + ' compétences de ' + a.name + ' attendent leur condition.** ' +
+          'Elles ne sont pas mortes : la branche s\'ouvre dès que la condition est remplie, ' +
+          'et la colonne « État » dit laquelle.');
+        e();
+    }
     if (invisiblesIci) {
         e('> **' + invisiblesIci + ' compétences de ' + a.name + ' ne sont accessibles nulle part.** ' +
-          'Elles sont dans la classe, elles s\'apprennent, et aucun menu ne les montre.');
+          'Elles s\'apprennent, et rien — ni classe, ni état posable, ni équipement portable — ' +
+          'n\'ouvre leur type.');
         e();
     }
 
     /* le détail, branche par branche */
     Object.keys(parType).map(Number).sort(function (x, y) { return x - y; }).forEach(function (t) {
-        var ouvert = !!info.ouverts[t];
-        e('### ' + (ouvert ? '' : '✘ ') + 'Type ' + t + ' — ' + (System.skillTypes[t] || '?').trim() +
-            (ouvert ? '' : '  *(INVISIBLE)*'));
+        var et = etatBranche(info, t);
+        var ouvert = et.rang !== 'ferme';
+        e('### ' + (et.rang === 'ouvert' ? '' : et.marque + ' ') + 'Type ' + t + ' — ' +
+            (System.skillTypes[t] || '?').trim() +
+            (et.rang === 'ouvert' ? '' : et.rang === 'condition' ? '  *(à condition)*' : '  *(INVISIBLE)*'));
         e();
+        if (et.rang !== 'ouvert') { e('*' + et.texte.replace(/\*\*/g, '') + '*'); e(); }
         e('| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |');
         e('|---|---|---|---|---|---|---|');
         parType[t].sort(function (x, y) { return x.nv - y.nv || x.s.id - y.s.id; }).forEach(function (n) {
             var s = n.s;
             totaux.skills++;
             if (!ouvert) { totaux.invisibles++; }
+            if (et.rang === 'condition') { totaux.conditions++; }
 
             var cout = [];
             if (s.mpCost) { cout.push(s.mpCost + ' PM'); }
@@ -369,7 +493,8 @@ e();
 e('## Le compte');
 e();
 e('- **' + totaux.skills + '** entrées d\'apprentissage sur les quatre héros ;');
-e('- **' + totaux.invisibles + '** sont invisibles en jeu (leur type n\'est ouvert par aucun trait) ;');
+e('- **' + totaux.invisibles + '** sont invisibles en jeu : aucun chemin n\'ouvre leur type ;');
+e('- **' + totaux.conditions + '** s\'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;');
 e('- **' + totaux.coquilles + '** ne font rien du tout (ni dégâts, ni effet) ;');
 var rebranchables = mortes.filter(function (n) { return quiDort(n).length > 0; });
 e('- **' + mortes.length + '** balises différentes sont écrites sans qu\'aucun plugin actif ne les lise,');
@@ -381,4 +506,5 @@ var sortie = path.join(RACINE, 'docs', 'INVENTAIRE_CAPACITES.md');
 fs.writeFileSync(sortie, L.join('\n'), 'utf8');
 console.log('Écrit : docs/INVENTAIRE_CAPACITES.md   (' + L.length + ' lignes)');
 console.log('  ' + totaux.skills + ' apprentissages · ' + totaux.invisibles + ' invisibles · ' +
+    totaux.conditions + ' à condition · ' +
     totaux.coquilles + ' coquilles · ' + mortes.length + ' balises mortes');
