@@ -380,4 +380,14 @@
         this.drawTextEx(item.description, x, y);
     };
 
+
+    // ── Ajout JOKO 2026-09-20 ─────────────────────────────────────────────
+    // Scene_ItemBook vit dans cette IIFE : rien d'extérieur ne peut l'atteindre.
+    // Son seul point d'entrée public est la commande de plugin — et dans CE
+    // projet, une commande à un seul argument traverse MOG_CharGhostTrail,
+    // MOG_CharShatterEffect et MOG_PictureEffects, qui lisent args[1] sans le
+    // vérifier : « Cannot read properties of undefined (reading 'match') ».
+    // On expose donc la scène, et le menu la pousse directement.
+    window.Scene_ItemBook = Scene_ItemBook;
+
 })();
