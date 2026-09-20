@@ -35,7 +35,7 @@
  * @type note
  * @desc La branche à lui de chaque héros. Une ligne par héros :
  * idActeur | Nom de la branche | règle | règle…   (voir l'aide)
- * @default "1 | le Sang | types:10 | noms:sang,saign,hémorr,écarlate\n2 | l'Hiver | elements:13,22\n3 | l'Âme et l'Ombre | types:9,11,12,13,14,15,16,17,18"
+ * @default "1 | le Sang | types:10 | noms:sang,saign,hémorr,écarlate | hors:sang-froid\n2 | l'Hiver | elements:13,22\n3 | l'Âme et l'Ombre | types:9,11,12,13,14,15,16,17,18\n4 | le Miracle | noms:parole n°3 | pm:45"
  *
  * @help
  * ============================================================================
@@ -132,7 +132,9 @@
     //     elements:13,22     les compétences de ces éléments de dégâts
     //     noms:sang,givre    celles dont le nom ou la description contient ça
     //     ids:414,449        celles-là nommément
-    //     hors:sang-froid    ce qui annule « noms: » — le filet à faux positifs
+    //     pm:45              celles qui coûtent au moins tant de PM
+    //     hors:sang-froid    ce qui annule TOUTES les règles — le filet à
+    //                        faux positifs, examiné en premier
     //
     // ⚠ « hors: » n'est pas un ornement. « noms:sang » attrapait « Garde
     // Sereine », dont la description dit « force et SANG-FROID dans le même
@@ -148,13 +150,14 @@
             if (m.length < 3) { return; }
             var id = parseInt(m[0], 10);
             if (!(id > 0)) { return; }
-            var regle = { nom: m[1], types: [], elements: [], noms: [], ids: [], hors: [] };
+            var regle = { nom: m[1], types: [], elements: [], noms: [], ids: [], hors: [], pm: 0 };
             m.slice(2).forEach(function (r) {
-                var c = /^(types|elements|noms|ids|hors)\s*:\s*(.*)$/i.exec(r);
+                var c = /^(types|elements|noms|ids|hors|pm)\s*:\s*(.*)$/i.exec(r);
                 if (!c) { return; }
                 var quoi = c[1].toLowerCase();
                 var vals = c[2].split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-                if (quoi === 'noms' || quoi === 'hors') {
+                if (quoi === 'pm') { regle.pm = Number(vals[0]) || 0; }
+                else if (quoi === 'noms' || quoi === 'hors') {
                     regle[quoi] = regle[quoi].concat(vals.map(function (x) { return x.toLowerCase(); }));
                 } else {
                     regle[quoi] = regle[quoi].concat(vals.map(Number).filter(function (x) { return x > 0; }));
@@ -168,16 +171,20 @@
     /** Cette compétence appartient-elle à la branche propre de ce héros ? */
     function estPropre(regle, s) {
         if (!regle || !s) { return false; }
+        // Le filet d'abord : ce que « hors: » nomme ne rentre jamais.
+        if (regle.hors.length) {
+            var t0 = ((s.name || '') + ' ' + (s.description || '')).toLowerCase();
+            for (var k = 0; k < regle.hors.length; k++) {
+                if (t0.indexOf(regle.hors[k]) >= 0) { return false; }
+            }
+        }
         if (regle.ids.indexOf(s.id) >= 0) { return true; }
+        if (regle.pm > 0 && (s.mpCost || 0) >= regle.pm) { return true; }
         if (regle.types.indexOf(s.stypeId) >= 0) { return true; }
         var el = s.damage && s.damage.elementId;
         if (el > 0 && regle.elements.indexOf(el) >= 0) { return true; }
         if (regle.noms.length) {
             var texte = ((s.name || '') + ' ' + (s.description || '')).toLowerCase();
-            // « hors: » d'abord : un faux positif ne doit jamais passer.
-            for (var h = 0; h < regle.hors.length; h++) {
-                if (texte.indexOf(regle.hors[h]) >= 0) { return false; }
-            }
             for (var i = 0; i < regle.noms.length; i++) {
                 if (texte.indexOf(regle.noms[i]) >= 0) { return true; }
             }
