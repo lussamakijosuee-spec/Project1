@@ -31,6 +31,12 @@
  * Laisser VIDE pour tous les montrer. Ne retire aucune compétence du jeu.
  * @default 1,2,3
  *
+ * @param Branche propre
+ * @type note
+ * @desc La branche à lui de chaque héros. Une ligne par héros :
+ * idActeur | Nom de la branche | règle | règle…   (voir l'aide)
+ * @default "1 | le Sang | types:10 | noms:sang,saign,hémorr,écarlate\n2 | l'Hiver | elements:13,22\n3 | l'Âme et l'Ombre | types:9,11,12,13,14,15,16,17,18"
+ *
  * @help
  * ============================================================================
  *  Ce que c'est
@@ -107,6 +113,77 @@
                  .filter(function (x) { return x > 0; });
         return l.length ? l : null;                            // null = toutes
     })();
+
+    //=========================================================================
+    // La branche propre — « ils ont tous leur truc à eux »
+    //=========================================================================
+    // Une quatrième branche par héros, qui rassemble ce qui n'appartient qu'à
+    // lui : le Sang de Vesper, l'Hiver de Korrah, l'Âme et l'Ombre de ludwing.
+    //
+    // ⚠ ELLE NE DÉPLACE AUCUNE DONNÉE. Les compétences gardent leur stypeId,
+    // leur élément et leur place dans la classe. C'est un REGROUPEMENT
+    // D'AFFICHAGE : l'Orbe va les chercher là où elles sont et les montre
+    // ensemble. Vider le réglage rend chacune à sa branche d'origine.
+    //
+    // Une ligne par héros :
+    //     idActeur | Nom de la branche | règle | règle…
+    // Règles, cumulables (un OU entre elles) :
+    //     types:9,11,12      les compétences de ces types de compétence
+    //     elements:13,22     les compétences de ces éléments de dégâts
+    //     noms:sang,givre    celles dont le nom ou la description contient ça
+    //     ids:414,449        celles-là nommément
+    //     hors:sang-froid    ce qui annule « noms: » — le filet à faux positifs
+    //
+    // ⚠ « hors: » n'est pas un ornement. « noms:sang » attrapait « Garde
+    // Sereine », dont la description dit « force et SANG-FROID dans le même
+    // geste ». Le motif était là, le symptôme non. Un contrôle doit innocenter
+    // les faux autant qu'attraper les vrais.
+    var BRANCHE_PROPRE = (function () {
+        var brut = P['Branche propre'];
+        if (brut === undefined) { return {}; }
+        try { brut = JSON.parse(brut); } catch (e) { /* déjà du texte nu */ }
+        var out = {};
+        String(brut).split(/\r?\n/).forEach(function (ligne) {
+            var m = ligne.split('|').map(function (x) { return x.trim(); }).filter(function (x) { return x !== ''; });
+            if (m.length < 3) { return; }
+            var id = parseInt(m[0], 10);
+            if (!(id > 0)) { return; }
+            var regle = { nom: m[1], types: [], elements: [], noms: [], ids: [], hors: [] };
+            m.slice(2).forEach(function (r) {
+                var c = /^(types|elements|noms|ids|hors)\s*:\s*(.*)$/i.exec(r);
+                if (!c) { return; }
+                var quoi = c[1].toLowerCase();
+                var vals = c[2].split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+                if (quoi === 'noms' || quoi === 'hors') {
+                    regle[quoi] = regle[quoi].concat(vals.map(function (x) { return x.toLowerCase(); }));
+                } else {
+                    regle[quoi] = regle[quoi].concat(vals.map(Number).filter(function (x) { return x > 0; }));
+                }
+            });
+            out[id] = regle;
+        });
+        return out;
+    })();
+
+    /** Cette compétence appartient-elle à la branche propre de ce héros ? */
+    function estPropre(regle, s) {
+        if (!regle || !s) { return false; }
+        if (regle.ids.indexOf(s.id) >= 0) { return true; }
+        if (regle.types.indexOf(s.stypeId) >= 0) { return true; }
+        var el = s.damage && s.damage.elementId;
+        if (el > 0 && regle.elements.indexOf(el) >= 0) { return true; }
+        if (regle.noms.length) {
+            var texte = ((s.name || '') + ' ' + (s.description || '')).toLowerCase();
+            // « hors: » d'abord : un faux positif ne doit jamais passer.
+            for (var h = 0; h < regle.hors.length; h++) {
+                if (texte.indexOf(regle.hors[h]) >= 0) { return false; }
+            }
+            for (var i = 0; i < regle.noms.length; i++) {
+                if (texte.indexOf(regle.noms[i]) >= 0) { return true; }
+            }
+        }
+        return false;
+    }
     var TITRE = String(P['Titre'] || 'L\'ORBE DES CAPACITÉS');
 
     // Le cadre : l'orbe occupe la moitié gauche, la liste des nœuds la droite.
@@ -157,6 +234,23 @@
         });
         var types = acteur.addedSkillTypes().slice();
         var out = [];
+
+        // ── La branche propre : on retire ses compétences de leur branche de
+        //    type, pour qu'aucune n'apparaisse deux fois, et on les réunit.
+        var regle = BRANCHE_PROPRE[acteur.actorId()];
+        var propres = [], typesPropres = {};
+        if (regle) {
+            Object.keys(parType).map(Number).forEach(function (t) {
+                parType[t] = parType[t].filter(function (n) {
+                    if (!estPropre(regle, n.skill)) { return true; }
+                    propres.push(n);
+                    typesPropres[t] = true;
+                    return false;
+                });
+                if (!parType[t].length) { delete parType[t]; }
+            });
+        }
+
         Object.keys(parType).map(Number).forEach(function (t) {
             if (BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0) { return; }
             var noeuds = parType[t].sort(function (a, b) {
@@ -175,6 +269,22 @@
             if (a.ouverte !== b.ouverte) { return a.ouverte ? -1 : 1; }
             return b.noeuds.length - a.noeuds.length;
         });
+
+        // La branche propre vient en dernier : c'est la sienne, on la trouve
+        // toujours au même endroit. Elle est jouable dès qu'UN des types
+        // qu'elle rassemble est ouvert en combat pour ce héros.
+        if (propres.length) {
+            out.push({
+                stypeId: -acteur.actorId(),                 // jamais un vrai type
+                propre: true,
+                nom: regle.nom,
+                ouverte: Object.keys(typesPropres).map(Number).some(function (t) { return types.indexOf(t) >= 0; }),
+                couleur: teinte(acteur.actorId() * 7 + 3),
+                noeuds: propres.sort(function (a, b) {
+                    return (a.niveau - b.niveau) || (a.skill.id - b.skill.id);
+                })
+            });
+        }
         return out;
     }
 
