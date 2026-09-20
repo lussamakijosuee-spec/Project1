@@ -582,9 +582,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | | Type | Compétences | État |
 |---|---|---|---|
-| ✔ | 1 · capacité | 65 | ouvert |
+| ✔ | 1 · capacité | 68 | ouvert |
 | ✔ | 2 · Spéciale | 12 | ouvert |
-| ✔ | 3 · ult | 6 | ouvert |
+| ✔ | 3 · ult | 9 | ouvert |
 
 ### Type 1 — capacité
 
@@ -605,17 +605,20 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 29 | Recueillement | 15 PM | boost AGI 3t · boost CHA 1t | 101 | `<NoParole>` |
 | 1 | 142 | Parole n°3 Bénédiction Stellaire | 28 PM | soin PV *mana positive* `320 + a.mat * 3` | 41 | `<ParoleL: 4>` `<NomOrigine: Bénédiction Stellaire>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
+| 1 | 474 | Parole n°3 « Qu'il pleuve. » | 18 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: rain, 5>` `<NomOrigine: Qu'il pleuve.>` ⚠ |
 | 3 | 1174 | Parole n°14 Trait Clair | 12 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 8.4 * 200 / (200 + b.mdf))` | 441 | `<ParoleL: 3>` `<NomOrigine: Trait Clair>` ⚠ |
 | 4 | 1090 | Parade Juste | 14 PM | dégâts PV *Physique* `Math.floor(a.atk * 9.6 * 200 / (200 + b.def))` · pose « 🪞 Reflet » 40% | 2 | `<Voie: miroir>` |
 | 5 | 166 | Parole n°14 Rayon Stellaire | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 115 | `<ParoleL: 3>` `<NomOrigine: Rayon Stellaire>` ⚠ |
 | 5 | 1231 | Voir Clair | 14 PM | retire « 🌑 Éclipse » 100% · boost CHA 4t | 417 | — |
 | 6 | 1216 | Parole n°14 Lumière — Lueur | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 409 | `<ParoleL: 3>` `<NomOrigine: Lumière — Lueur>` ⚠ |
+| 8 | 475 | Parole n°3 « Que le ciel s'ouvre. » | 26 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: storm, 5>` `<NomOrigine: Que le ciel s'ouvre.>` ⚠ |
 | 8 | 1175 | Parole n°3 « Reste. » | 20 PM | dégâts PV *mana positive* `Math.floor(a.mat * 9 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 70% | 333 | `<ParoleL: 3>` `<NomOrigine: « Reste. »>` ⚠ |
 | 10 | 167 | Parole n°3 Soin Mineur | 8 PM | soin PV *mana positive* `300 + a.mat*2` | 41 | `<ParoleL: 3>` `<NomOrigine: Soin Mineur>` ⚠ |
 | 11 | 1091 | Renvoi Net | 28 PM | dégâts PV *mana positive* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` | 440 | `<Voie: miroir>` |
 | 12 | 1118 | Étau | 40 PM | dégâts PV *mana positive* `Math.floor(a.mat * 12 * 200 / (200 + b.mdf))` · malus AGI 4t | 414 | `<Voie: domaine>` |
 | 13 | 1176 | Parole n°14 Volée Nommée | 26 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 5.6 * 200 / (200 + b.mdf))` | 29 | `<ParoleL: 4>` `<NomOrigine: Volée Nommée>` ⚠ |
 | 13 | 1234 | Encourager | 26 PM | boost ATQ 4t · PT +20 | 408 | — |
+| 14 | 476 | Parole n°3 « Qu'il neige. » | 22 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: snow, 5>` `<NomOrigine: Qu'il neige.>` ⚠ |
 | 15 | 168 | Parole n°14 Lumière Apaisante | 24 PM | soin PV *LUMIÈRE* `200 + a.mat*2` | 48 | `<ParoleL: 4>` `<NomOrigine: Lumière Apaisante>` ⚠ |
 | 16 | 1196 | Parole n°10 Vent — Souffle | 10 PM | dégâts PV *VENT* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 401 | `<ParoleL: 3>` `<NomOrigine: Vent — Souffle>` ⚠ |
 | 17 | 1092 | Poser la Glace | 24 PM | pose « 🪞 Reflet » 100% · pose « 🛡 Posture de Fer » 100% | 439 | `<Voie: miroir>` |
@@ -680,9 +683,12 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 335 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
 | 1 | 457 | Parole n°14 Éclat de Conviction | 80 PM + 20% PV | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.7 * 200 / (200 + b.mdf))` | 31 | `<Ulti>` `<UltiColor: #ffd54a>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Éclat de Conviction>` ⚠ |
 | 20 | 819 | Parole n°3 le Verbe qui Défait | 32 PM | dégâts PV *mana positive* `Math.floor(a.mat * 3.4 * 200 / (200 + b.mdf))` | 458 | `<ParoleL: 4>` `<SceauMagie>` `<NomOrigine: le Verbe qui Défait>` ⚠ |
+| 30 | 477 | Parole n°12 le Ciel Ouvert | 96 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 32 * 200 / (200 + b.mdf))` | 64 | `<Parole>` `<Incantation: 2>` `<Ciel: storm>` `<CTB Speed: -50%>` `<NomOrigine: le Ciel Ouvert>` ⚠ `<Cooldown: 3>` |
 | 30 | 820 | Parole n°7 Syllabe de la Fin | 38 PM | dégâts PV *AME * `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 460 | `<ParoleL: 4>` `<NomOrigine: Syllabe de la Fin>` ⚠ |
+| 36 | 478 | Parole n°14 Plein Midi | 92 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 38 * 200 / (200 + b.mdf))` | 441 | `<Parole>` `<Incantation: 2>` `<Ciel: none>` `<CTB Speed: -50%>` `<NomOrigine: Plein Midi>` ⚠ `<Cooldown: 3>` |
 | 45 | 818 | ✴ la Parole Originelle | 60 PM | **coquille** — rien | 457 | `<Ultime: parole>` |
 | 58 | 1185 | Parole n°3 La Parole Tenue | 66 PM | dégâts PV *mana positive* `Math.floor(a.mat * 38 * 200 / (200 + b.mdf))` | 412 | `<ParoleL: 5>` `<NomOrigine: La Parole Tenue>` ⚠ `<Cooldown: 2>` |
+| 70 | 479 | Parole n°3 Celle Qu'on Ne Dit Qu'une Fois | 180 PM | dégâts PV *mana positive* `Math.floor(a.mat * 55 * 200 / (200 + b.mdf))` | 441 | `<Parole>` `<Incantation: 3>` `<Apres: surcharge>` `<Cooldown: 5>` `<CTB Speed: -70%>` `<NomOrigine: Celle Qu'on Ne Dit Qu'une Fois>` ⚠ |
 
 ### Ses états passifs
 
@@ -731,7 +737,7 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 
 | Balise | Compétences | Son lecteur | Exemples |
 |---|---|---|---|
-| `<NomOrigine>` | 114 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
+| `<NomOrigine>` | 120 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<ComboLien>` | 8 | dort dans `ComboLiens` | Vesper #413 Fureur Spectrale (Duo) · Vesper #417 Trinité d'Âmes (Trio) … |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
 
@@ -780,9 +786,9 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 
 ## Le compte
 
-- **354** entrées d'apprentissage sur les quatre héros ;
+- **360** entrées d'apprentissage sur les quatre héros ;
 - **14** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **10** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
-- **22** ne font rien du tout (ni dégâts, ni effet) ;
+- **25** ne font rien du tout (ni dégâts, ni effet) ;
 - **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).
