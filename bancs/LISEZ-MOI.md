@@ -82,6 +82,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/ponts_du_mana.js` | **le mana sans l'ancien lore** : les Chutes parties, les Voies qui tiennent — 9 contrôles |
 | `navigateur/etats_en_combat.js` | **les états posés sur un vrai combattant** : les notetags qui ne faisaient rien — 12 contrôles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
+| `navigateur/les_livres.js` | **le Bestiaire et l'Encyclopédie, ouverts depuis le menu et parcourus** — 12 contrôles |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
 
@@ -170,6 +171,28 @@ node bancs/navigateur/jouer.js
 ```
 
 Les captures atterrissent dans `bancs/navigateur/captures/` (non versionné).
+
+## `navigateur/les_livres.js` — le plantage qu'on a livré pour n'avoir ouvert qu'un écran
+
+`EnemyBook` et `ItemBook` ont été branchés le même jour. Le Bestiaire a été ouvert dans le
+moteur et vérifié. L'Encyclopédie, non — elle plantait à l'ouverture :
+
+```
+TypeError: Cannot read property 'name' of null
+at Window_ItemBookIndex.refresh (ItemBook.js:274)
+```
+
+**Et la cause est invisible dans `data/`.** Les quatre fichiers sont pleins : 2 000 objets,
+560 armes, 290 armures, **zéro trou**. Mais `YEP_ItemCore` rallonge ces tableaux **au
+démarrage** avec un réservoir d'emplacements **nuls** pour ses objets indépendants — mesuré
+dans le moteur : les armes passent de 560 à **3 008 dont 2 440 nuls**, les armures de 290 à
+**3 008 dont 2 710**. Les trois boucles de `refresh()` lisaient `.name` sans vérifier l'entrée.
+
+> Un écran ne se vérifie pas en lisant les données : il se vérifie en l'**ouvrant**. Et quand
+> deux écrans se ressemblent, on ouvre **les deux** — c'est exactement l'erreur qui a coûté ce
+> plantage.
+
+Contre-épreuve faite : la garde retirée, le banc rend 4 échecs et cite l'erreur mot pour mot.
 
 ## Pourquoi ils existent
 

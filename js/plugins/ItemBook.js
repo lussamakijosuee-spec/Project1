@@ -265,19 +265,23 @@
         this._list = [];
         for (i = 1; i < $dataItems.length; i++) {
             item = $dataItems[i];
-            if (item.name && item.itypeId === 1 && item.meta.book !== 'no') {
+            // ⚠ YEP_ItemCore rallonge $dataItems/$dataWeapons/$dataArmors
+            // AU DÉMARRAGE avec un réservoir d'emplacements NULS pour ses objets
+            // indépendants ($dataWeapons passe de 560 à 3008 ici). Lire .name
+            // sans vérifier l'entrée plante l'ouverture de l'écran.
+            if (item && item.name && item.itypeId === 1 && item.meta.book !== 'no') {
                 this._list.push(item);
             }
         }
         for (i = 1; i < $dataWeapons.length; i++) {
             item = $dataWeapons[i];
-            if (item.name && item.meta.book !== 'no') {
+            if (item && item.name && item.meta.book !== 'no') {
                 this._list.push(item);
             }
         }
         for (i = 1; i < $dataArmors.length; i++) {
             item = $dataArmors[i];
-            if (item.name && item.meta.book !== 'no') {
+            if (item && item.name && item.meta.book !== 'no') {
                 this._list.push(item);
             }
         }

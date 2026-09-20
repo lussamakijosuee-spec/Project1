@@ -205,7 +205,8 @@
         this._list = [];
         for (var i = 1; i < $dataEnemies.length; i++) {
             var enemy = $dataEnemies[i];
-            if (enemy.name && enemy.meta.book !== 'no') {
+            // Même garde que dans ItemBook : on ne lit jamais .name sans l'entrée.
+            if (enemy && enemy.name && enemy.meta.book !== 'no') {
                 this._list.push(enemy);
             }
         }
