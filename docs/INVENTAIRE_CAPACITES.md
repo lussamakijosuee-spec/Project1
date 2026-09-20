@@ -201,15 +201,27 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 2 · la Maîtrise |
 | Son unique Don | **l'Armure Volante** *(avatar spirituel)* → emplacement Âme (7) |
 | Trait | change + hiver |
-| Note de l'acteur | `<Passive State: 22, 23, 24, 25> · <Passive State: 62> · <Mana: negatif> · <Mana2: positif> · <VoieDefaut: miroir> · <Camp: lumiere>` |
+| Note de l'acteur | `<Passive State: 22, 23, 24, 25> · <Passive State: 62> · <Mana: negatif> · <Mana2: positif> · <VoieDefaut: flash> · <Camp: lumiere>` |
 
 ### Ses branches
 
 | | Type | Compétences | État |
 |---|---|---|---|
+| ✘ | 0 · ? | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✔ | 1 · capacité | 66 | ouvert |
-| ✔ | 2 · Spéciale | 23 | ouvert |
-| ✔ | 3 · ult | 6 | ouvert |
+| ✔ | 2 · Spéciale | 20 | ouvert |
+| ✔ | 3 · ult | 5 | ouvert |
+| ✔ | 21 · avatar | 9 | ouvert |
+
+> **1 compétences de Korrah ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+
+### ✘ Type 0 — ?  *(INVISIBLE)*
+
+*INVISIBLE — aucun trait n'ouvre ce type*
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 1 | 24 | le Monde Gelé | 100 PM + 50 PT | pose « Monde Gelé » 100% · script commun 6 | 232 | `<ParoleL: 5>` `<Trait: gel>` |
 
 ### Type 1 — capacité
 
@@ -299,9 +311,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 420 | Posture de Parade | 10 PM | pose « Posture de Parade » 100% | 1 | — |
 | 1 | 451 | Parole n°3 Focalisation | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 2 | `<ParoleL: 4>` `<NomOrigine: Focalisation>` ⚠ |
 | 1 | 452 | Parole n°2 Onde Concentrée | 12% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 3 * 200 / (200 + b.mdf))` | 7 | `<ParoleL: 5>` `<NomOrigine: Onde Concentrée>` ⚠ |
-| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` |
-| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` |
-| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` |
 | 20 | 816 | Carnage des Neuf Voies | 25 PT | dégâts PV *Physique* `Math.floor(a.atk * 4.9 * 200 / (200 + b.def))` | 450 | `<Invocation: 3>` `<ParoleL: 4>` |
 | 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` `<AvatarNiveau: 1>` |
 | 30 | 817 | Étreinte de la Bête | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 451 | `<ReculVital: 20>` |
@@ -314,12 +323,25 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 24 | le Monde Gelé | 100 PM + 50 PT | pose « Monde Gelé » 100% · script commun 6 | 232 | `<ParoleL: 5>` `<Trait: gel>` |
 | 1 | 89 | Armure de Givre | 12 PM | pose « arret du temps (corporelle) » 100% | 312 | `<Parole: origine>` `<Trait: gel>` |
 | 1 | 97 | Valse des Positions | 10 PM | dégâts PV *mana positive* `Math.floor(a.atk * 8.1 * 200 / (200 + b.def))` | 404 | `<ParoleL: n>` `<Trait: change>` |
 | 1 | 438 | Change | 20 PM + 20 PT | **coquille** — rien | 437 | `<Trait: change>` |
 | 1 | 449 | Parole n°3 Instant Absolu | 90 PM | dégâts PV *mana positive* `Math.floor(a.mat * 7.6 * 200 / (200 + b.mdf))` | 178 | `<Ulti>` `<UltiColor: #5cc8ff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Instant Absolu>` ⚠ |
 | 1 | 450 | Parole n°3 Point Zéro | 80 PM | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` | 40 | `<Ulti>` `<UltiColor: #3a9bff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Point Zéro>` ⚠ |
+
+### Type 21 — avatar
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 1 | 800 | le Monde Gelé | 1000 PM + 100 PT | pose « Monde Gelé » 100% · script commun 6 | 232 | `<Avatar>` `<AvatarNiveau: 3>` `<ParoleL: 5>` `<Trait: gel>` |
+| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` |
+| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` |
+| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` |
+| 1 | 1250 | Saisie de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 0.9 * 200 / (200 + b.def))` · pose « Étourdi » 55% | 21 | `<Avatar>` `<AvatarNiveau: 1>` |
+| 1 | 1251 | Étau de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.9 * 200 / (200 + b.def))` · pose « 🔩 Blindage Fissuré » 70% | 404 | `<Avatar>` `<AvatarNiveau: 2>` |
+| 1 | 1252 | Le Torse Se Referme | — | pose « 🛡 Posture de Fer » 100% | 440 | `<Avatar>` `<AvatarNiveau: 2>` `<AvatarGarde>` ⚠ |
+| 1 | 1253 | Déferlante d'Unisson | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.6 * 200 / (200 + b.def))` | 404 | `<Avatar>` `<AvatarNiveau: 3>` |
+| 1 | 1254 | Ce Que Le Froid Garde | — | dégâts PV *GLACE* `Math.floor(a.atk * 1.4 * 200 / (200 + b.def))` · pose « Gelure » 60% | 232 | `<Avatar>` `<AvatarNiveau: 3>` |
 
 ### Ses états passifs
 
@@ -354,7 +376,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|
 | ✔ | 1 · capacité | 44 | ouvert |
 | ✔ | 2 · Spéciale | 17 | ouvert |
-| ✔ | 3 · ult | 1 | ouvert |
+| ✔ | 3 · ult | 2 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
 | ◑ | 8 · invocation | 2 | à condition : en lançant « Royaume Impérial » → état « Royaume Impérial » |
 | ✔ | 9 · ame | 9 | ouvert |
@@ -377,11 +399,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 14 | Roulette du Destin | 100 PM | script commun 1 | 51 | — |
 | 1 | 17 | Parole n°3 Technique d'Inversion | 30 PM | soin PV *mana positive* `1500 + a.mat` | 42 | `<Parole>` `<NomOrigine: Technique d'Inversion>` ⚠ |
-| 1 | 65 | copie d'Ame | 12 PM | **coquille** — rien | 51 | `<Parole: origine>` |
 | 1 | 111 | Arme d'Ombre | 12 PM | pose « épee d'ombre » 100% · pose « dague d'ombre » 100% · pose « arc d'ombre » 100% · pose « hache des tenerbre » 100% · pose « fusil des tenebre » 100% · pose « griffe hurleur d'ame » 100% · pose « lance des abysse » 100% · pose « katana de la mort » 100% · pose « fusil a pompe éternel » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 112 | Âme d'Ombre | 12 PM | pose « scetre des ame perdus » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 141 | Parole n°2 Moisson des Âmes | 15% PV | drain PV *mana spirituelle * `Math.floor(((a.atk + a.mat) * 2) * 1.352 * 200 / (200 + b.mdf))` | 66 | `<NomOrigine: Moisson des Âmes>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
+| 1 | 480 | VUE | — | **coquille** — rien | — | — |
 | 4 | 1082 | Main Chaude | 14 PM | soin PV `Math.floor(a.mat * 4)` | 41 | `<Voie: source>` |
 | 5 | 158 | Parole n°2 Trait Spectral | 7% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 3 | `<ParoleL: 3>` `<NomOrigine: Trait Spectral>` ⚠ |
 | 5 | 1227 | Remonter le Mana | — | soin PM `Math.floor(a.mat * 0.8)` | 407 | — |
@@ -426,11 +448,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 11 | Éclat Noir | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 64 | `<Parole>` `<Trait: rupture>` `<Interdit>` |
 | 1 | 13 | Vannes | 10 PM | pose « Enragé » 30% · malus MDF 2t | 36 | — |
+| 1 | 65 | copie d'Ame | 12 PM | **coquille** — rien | 51 | `<Parole: origine>` |
 | 1 | 66 | Lotus des Ténèbres | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 100% | 257 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 68 | Parole n°15 Annihilation des Ténèbres | 10 PM + 20 PT | dégâts PV *OMBRE* `a.mat * 10` · pose « Muet » 100% | 258 | `<ParoleL: 3>` `<SceauMagie>` `<Ombre>` `<NomOrigine: Annihilation des Ténèbres>` ⚠ |
 | 1 | 69 | Porte de l'Envers | 12 PM | pose « Contre Total » 100% | 253 | `<ParoleL: 3>` `<Trait: porte>` |
 | 1 | 70 | Aspiration des Âmes Damnées | 8% PV | soin PV *mana spirituelle * `a.mhp * 0.50` · pose « Déstabilisé » 100% · script commun 16 | 434 | `<ParoleL: 4>` `<AspirationDamnees>` |
-| 1 | 71 | Royaume Impérial | 12 PM | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
 | 1 | 110 | Abri de l'Envers | 12 PM | pose « dimension d'ombre » 100% | 260 | `<Parole: origine>` `<Trait: porte>` |
 | 1 | 123 | Décharge Infinie | 15 PM | dégâts PV *AME * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 364 | `<Parole: origine>` |
@@ -446,6 +468,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
+| 1 | 71 | Royaume Impérial | 1500 PM + 100 PT | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
 | 45 | 810 | ☠ Royaume Impérial des Ténèbres | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
@@ -576,7 +599,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 4 · la Parole |
 | Son unique Don | **l'Arc** *(arme)* → emplacement Arme (1) |
 | Trait | miracle |
-| Note de l'acteur | `<Passive State: 40, 41, 42, 43> · <Passive State: 63> · <Mana: positif> · <VoieDefaut: miroir> · <Camp: lumiere>` |
+| Note de l'acteur | `<Passive State: 40, 41, 42, 43> · <Passive State: 63> · <Mana: positif> · <VoieDefaut: miroir> · <Camp: lumiere> · <Trait: miracle>` |
 
 ### Ses branches
 
@@ -584,7 +607,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|
 | ✔ | 1 · capacité | 68 | ouvert |
 | ✔ | 2 · Spéciale | 12 | ouvert |
-| ✔ | 3 · ult | 9 | ouvert |
+| ✔ | 3 · ult | 8 | ouvert |
+| ✔ | 20 · miracle | 1 | ouvert |
 
 ### Type 1 — capacité
 
@@ -680,7 +704,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 335 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
 | 1 | 457 | Parole n°14 Éclat de Conviction | 80 PM + 20% PV | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.7 * 200 / (200 + b.mdf))` | 31 | `<Ulti>` `<UltiColor: #ffd54a>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Éclat de Conviction>` ⚠ |
 | 20 | 819 | Parole n°3 le Verbe qui Défait | 32 PM | dégâts PV *mana positive* `Math.floor(a.mat * 3.4 * 200 / (200 + b.mdf))` | 458 | `<ParoleL: 4>` `<SceauMagie>` `<NomOrigine: le Verbe qui Défait>` ⚠ |
 | 30 | 477 | Parole n°12 le Ciel Ouvert | 96 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 32 * 200 / (200 + b.mdf))` | 64 | `<Parole>` `<Incantation: 2>` `<Ciel: storm>` `<CTB Speed: -50%>` `<NomOrigine: le Ciel Ouvert>` ⚠ `<Cooldown: 3>` |
@@ -689,6 +712,12 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 45 | 818 | ✴ la Parole Originelle | 60 PM | **coquille** — rien | 457 | `<Ultime: parole>` |
 | 58 | 1185 | Parole n°3 La Parole Tenue | 66 PM | dégâts PV *mana positive* `Math.floor(a.mat * 38 * 200 / (200 + b.mdf))` | 412 | `<ParoleL: 5>` `<NomOrigine: La Parole Tenue>` ⚠ `<Cooldown: 2>` |
 | 70 | 479 | Parole n°3 Celle Qu'on Ne Dit Qu'une Fois | 180 PM | dégâts PV *mana positive* `Math.floor(a.mat * 55 * 200 / (200 + b.mdf))` | 441 | `<Parole>` `<Incantation: 3>` `<Apres: surcharge>` `<Cooldown: 5>` `<CTB Speed: -70%>` `<NomOrigine: Celle Qu'on Ne Dit Qu'une Fois>` ⚠ |
+
+### Type 20 — miracle
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 335 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
 
 ### Ses états passifs
 
@@ -739,6 +768,7 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 |---|---|---|---|
 | `<NomOrigine>` | 120 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<ComboLien>` | 8 | dort dans `ComboLiens` | Vesper #413 Fureur Spectrale (Duo) · Vesper #417 Trinité d'Âmes (Trio) … |
+| `<AvatarGarde>` | 1 | **étiquette** — jamais lue nulle part | Korrah #1252 Le Torse Se Referme |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
 
 ---
@@ -786,9 +816,9 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 
 ## Le compte
 
-- **360** entrées d'apprentissage sur les quatre héros ;
-- **14** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **367** entrées d'apprentissage sur les quatre héros ;
+- **15** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **10** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
-- **25** ne font rien du tout (ni dégâts, ni effet) ;
-- **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
-  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).
+- **26** ne font rien du tout (ni dégâts, ni effet) ;
+- **4** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
+  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 2 simple(s) étiquette(s)).
