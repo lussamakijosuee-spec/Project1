@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-09-19. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-09-20. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -349,7 +349,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 3 · ult | 1 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 8 · invocation | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
-| ✘ | 9 · ame | 9 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✔ | 9 · ame | 9 | ouvert |
 | ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
@@ -359,7 +359,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 | ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — aucun trait n'ouvre ce type |
 
-> **24 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
+> **15 compétences de ludwing ne sont accessibles nulle part.** Elles sont dans la classe, elles s'apprennent, et aucun menu ne les montre.
 
 ### Type 1 — capacité
 
@@ -455,7 +455,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 124 | Jugement des Défunts | 12 PM | **coquille** — rien | 405 | — |
 | 1 | 125 | Rappel des Âmes | 12 PM | **coquille** — rien | 405 | — |
 
-### ✘ Type 9 — ame  *(INVISIBLE)*
+### Type 9 — ame
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -751,7 +751,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **354** entrées d'apprentissage sur les quatre héros ;
-- **33** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
+- **24** sont invisibles en jeu (leur type n'est ouvert par aucun trait) ;
 - **22** ne font rien du tout (ni dégâts, ni effet) ;
 - **3** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 1 simple(s) étiquette(s)).

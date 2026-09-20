@@ -72,7 +72,8 @@ ok(dropKo===0,`tous les butins pointent sur du réel (${dropKo} cassés)`);
 ok(sansArme===0,`les ${BOSS.length-BROUILLONS.length} boss réglés lâchent une arme unique (${sansArme} sans)`);
 const armesBoss=W.filter(w=>w&&w.name&&(w.note||'').includes('<ButinBoss:'));
 const reliques=A.filter(a=>a&&a.name&&(a.note||'').includes('<ButinBoss:'));
-ok(armesBoss.length===43,`43 armes de boss (${armesBoss.length})`);
+// 44 depuis qu'« esprit puissant » (124) a la sienne, comme les 43 autres boss réglés.
+ok(armesBoss.length===44,`44 armes de boss (${armesBoss.length})`);
 ok(reliques.length>=20,`${reliques.length} reliques d'Âme`);
 
 console.log('\n═══ LES MATÉRIAUX ═══');

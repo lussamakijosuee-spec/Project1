@@ -18,6 +18,20 @@
  * la plus haute où une troupe le pose, le sprite — mis à l'échelle par son
  * `<Scale Sprite: n%>` — doit tenir entier dans la bande visible.
  *
+ * ⚠ ET IL S'EST TROMPÉ UNE SECONDE FOIS, EN SENS INVERSE : IL ACCUSAIT.
+ *
+ * Il lisait `img/enemies/`. Or `Sprite_Enemy.loadBitmap` choisit son dossier :
+ * `$gameSystem.isSideView()` vrai → `ImageManager.loadSvEnemy`, donc
+ * `img/sv_enemies/`. Ce projet est en vue de côté (`optSideView: true`), et
+ * deux ennemis — l'Arbitre de l'Ordre d'Or et Donovano, le Mana Parfait —
+ * n'ont leur image QUE dans `img/sv_enemies/`. Le banc les déclarait sans
+ * visage ; le moteur, lui, chargeait le fichier sans broncher (237×309, pas
+ * un seul 404). Le contrôle attrapait donc de vrais coupables ET accusait
+ * deux innocents — la moitié de la règle §6 seulement.
+ *
+ * Il demande désormais à `System.json` quel dossier le moteur emploie, au
+ * lieu d'en choisir un d'avance.
+ *
  *   node bancs/8_visages_ennemis.js
  */
 'use strict';
@@ -31,9 +45,16 @@ var RACINE = path.join(__dirname, '..');
 var BANDE = 444;
 var LARGEUR = 816;
 
+// Le dossier que le MOTEUR emploie, pas celui qu'on suppose : `Sprite_Enemy`
+// bascule sur `loadSvEnemy` dès que `$gameSystem.isSideView()` est vrai.
+var DOSSIER = (function () {
+    var sys = JSON.parse(fs.readFileSync(path.join(RACINE, 'data/System.json'), 'utf8'));
+    return sys.optSideView ? 'img/sv_enemies' : 'img/enemies';
+})();
+
 function dim(nom) {
     try {
-        var b = fs.readFileSync(path.join(RACINE, 'img/enemies', nom + '.png'));
+        var b = fs.readFileSync(path.join(RACINE, DOSSIER, nom + '.png'));
         if (b.slice(1, 4).toString() !== 'PNG') { return null; }
         return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), couleur: b[25], o: b.length };
     } catch (e) { return null; }
