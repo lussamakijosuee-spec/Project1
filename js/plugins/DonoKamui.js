@@ -5,8 +5,7 @@
 /*:
  * @plugindesc v1.0 ■ Dono devient intangible (Kamui) : les attaques le traversent.
  * Il se matérialise par rythme pour être touché ; abuser du Kamui surcharge ses
- * Deux Yeux (vulnérable). L'Esprit Vengeur EST son 2e œil. Se porte par
- * <DonoKamui>, séparément de <DonoBoss>.
+ * Deux Yeux (vulnérable). L'Esprit Vengeur EST son 2e œil.
  * @author JOKO
  *
  * @param kamuiState
@@ -21,10 +20,7 @@
  *
  * @help
  * ──────────────────────────────────────────────────────────────────────────
- *  Détection : ennemi avec <DonoKamui> dans la Note. Son Esprit = <DonoEsprit>.
- *  <DonoKamui> est VOLONTAIREMENT distinct de <DonoBoss> : le Dono de milieu de
- *  partie (le mur) et la troupe 33 montée par JOKO doivent rester frappables.
- *  Seul le Dono de fin de jeu porte les deux.
+ *  Détection : ennemi avec <DonoBoss> dans la Note. Son Esprit = <DonoEsprit>.
  *  • Par défaut Dono est INTANGIBLE → dégâts subis = 0 (l'attaque le traverse).
  *  • Il se MATÉRIALISE par rythme (toutes les 3 actions si ses 2 yeux vivent,
  *    toutes les 2 si l'Esprit est mort) → fenêtre pour le frapper (télégraphié).
@@ -39,11 +35,7 @@
     var KAMUI = parseInt(P['kamuiState'] || 184);
     var OVER = parseInt(P['overloadState'] || 185);
 
-    // Le Kamui se porte à part de <DonoBoss>, par <DonoKamui>. Sans ça, il
-    // s'appliquerait AUSSI au Dono de milieu de partie (le mur, ennemi 427) et
-    // à la troupe 33 que JOKO a montée lui-même : deux combats qui doivent
-    // rester frappables. Seul le Dono de fin de jeu devient intangible.
-    function isDono(b) { return b && b.isEnemy && b.isEnemy() && b.enemy() && b.enemy().meta && b.enemy().meta.DonoKamui; }
+    function isDono(b) { return b && b.isEnemy && b.isEnemy() && b.enemy() && b.enemy().meta && b.enemy().meta.DonoBoss; }
     function espritAlive() {
         return $gameTroop && $gameTroop.aliveMembers().some(function (e) {
             return e.enemy && e.enemy() && e.enemy().meta && e.enemy().meta.DonoEsprit;
