@@ -377,8 +377,26 @@
     function log(txt) {
         if (!LOG_ON) return;
         var w = SceneManager._scene && SceneManager._scene._logWindow;
-        if (w) { w.push('addText', txt); w.push('wait'); }
-        else if ($gameMessage && !$gameMessage.isBusy()) $gameMessage.add(txt);
+        if (w) { w.push('addText', txt); w.push('wait'); return; }
+        // ⚠ LE JOURNAL DE L'AVATAR EST UN JOURNAL DE COMBAT. Hors combat, il
+        // se tait.
+        //
+        // Ce repli écrivait dans `$gameMessage` dès qu'il n'y avait pas de
+        // journal — c'est-à-dire sur la CARTE. Or sur la carte, une boîte de
+        // dialogue ouverte par du code n'est pilotée par aucun interpréteur :
+        // personne ne la referme, et `$gameMessage.isBusy()` reste vrai pour
+        // toujours.
+        //
+        // Mesuré : `surveillerLien()` part de `Game_Battler.refresh`, donc dès
+        // la création de la partie. Le message « Korrah rouvre les yeux »
+        // s'installait dans la file, et tout ce qui attend un message libre se
+        // figeait derrière. `VieDuVillage` teste `$gameMessage.isBusy()` avant
+        // de recenser : il ne prenait plus en charge AUCUN des 12 PNJ du
+        // Village de Pêche. Le village était mort, sans une seule erreur
+        // JavaScript pour le dire.
+        if ($gameParty && $gameParty.inBattle() && $gameMessage && !$gameMessage.isBusy()) {
+            $gameMessage.add(txt);
+        }
     }
     function porteurDe(battler) {
         if (!battler || !battler.isActor || !battler.isActor()) return 0;

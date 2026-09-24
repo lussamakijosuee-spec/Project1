@@ -19,6 +19,28 @@
  * Lancement  :  node bancs/navigateur/ecran_des_dons.js
  */
 'use strict';
+// ═════════════════════════════════════════════════════════════════════════════
+// BANC EN SOMMEIL DEPUIS LE 2026-09-24
+//
+// Ce banc ouvre `Scene_Dons`, l'écran des Dons Spirituels. JOKO a retiré le
+// système — « trop complexe pour rien » — et l'écran avec lui. On n'efface pas
+// le banc (§3) : il se rallume tout seul si DonsSpirituels revient au registre.
+//
+// Ce qui est mesuré à la place :
+//   · que le retrait tient            → bancs/21_le_retrait_des_dons.js
+//   · l'Avatar, seule pièce gardée    → bancs/navigateur/le_corps_de_lavatar.js
+// ═════════════════════════════════════════════════════════════════════════════
+(function () {
+    var reg = JSON.parse(require('fs').readFileSync(
+        require('path').join(__dirname, '..', '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    if (!reg.some(function (p) { return p.name === 'DonsSpirituels' && p.status; })) {
+        console.log('\n  ⏸  BANC EN SOMMEIL — l\'ecran des Dons a ete retire avec son systeme.');
+        console.log('     Voir  bancs/21_le_retrait_des_dons.js\n');
+        process.exit(0);
+    }
+})();
+
 var { chromium } = require('playwright');
 var fs = require('fs');
 var SHOTS = process.env.SHOTS || '/tmp/dons/';

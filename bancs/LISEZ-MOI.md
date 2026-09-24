@@ -63,11 +63,11 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 
 | Banc | Ce qu'il vérifie |
 |---|---|
-| `1_dons_spirituels.js` | Endurance, jauges de Sang et d'Ombre, casse, ÷2, bonus de l'Avatar, repos |
-| `2_evolution_paliers.js` | la montée Éclat → Forme → Résonance → Vérité — **et que l'acier, lui, ne monte pas** |
+| `1_dons_spirituels.js` | ⏸ **en sommeil** — Endurance, jauges, casse : le système des Dons est retiré |
+| `2_evolution_paliers.js` | ⏸ **en sommeil** — la montée des paliers d'un Don |
 | `3_avatar_spirituel.js` | l'Avatar : son tour, son ciblage, son interception, ses trois postures |
 | `4_un_seul_don.js` | **la règle d'or** : un seul Don par personne, 76 contrôles |
-| `5_verrou_et_ordres.js` | le Don ne se retire pas / ne se prête pas · les trois ordres en combat |
+| `5_verrou_et_ordres.js` | ⏸ **en sommeil** — le verrou du Don |
 | `6_avatar_niveaux.js` | les 3 niveaux de l'Avatar (25/50/85), le contrôle croissant, l'inséparabilité |
 | `audit/6_bestiaire.js` | les 400+ ennemis et les 41 boss |
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
@@ -83,6 +83,9 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/etats_en_combat.js` | **les états posés sur un vrai combattant** : les notetags qui ne faisaient rien — 12 contrôles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
 | `navigateur/les_livres.js` | **le Bestiaire et l'Encyclopédie, ouverts depuis le menu et parcourus** — 12 contrôles |
+| `21_le_retrait_des_dons.js` | **le retrait des Dons tient** : greffons éteints mais présents, 16 pièces gardées, l'Avatar survivant — 26 contrôles |
+| `navigateur/le_corps_de_lavatar.js` | **seiryu derrière Korrah**, dessiné derrière elle, entier dans l'écran, qui flotte et qui frappe — 11 contrôles |
+| `navigateur/ecran_des_dons.js` | ⏸ **en sommeil** — l'écran des Dons est parti avec son système |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
 
@@ -215,3 +218,43 @@ rien.** `5_verrou_et_ordres.js` rejoue par exemple `changeEquip`, `clearEquipmen
 C'est normal — ils encodent des attentes précises (nombre d'ennemis, nombre de compétences…).
 Ouvre le fichier, la ligne du contrôle porte son libellé en clair. Corrige l'attente si le
 changement est voulu ; corrige les données si ce n'en est pas un.
+
+
+## Le message qui tuait un village
+
+Le 2026-09-24, JOKO a retiré le système des Dons Spirituels et gardé l'Avatar de
+Korrah. Allumer `AvatarSpirituel.js` a fait tomber `une_journee_au_village.js` :
+**0 PNJ pris en charge** au Village de Pêche, là où il y en avait douze.
+
+Aucune erreur JavaScript. Aucun plantage. Le village était simplement mort.
+
+La cause tient en une ligne de repli :
+
+```js
+if (w) { w.push('addText', txt); }              // le journal de combat
+else if ($gameMessage && !$gameMessage.isBusy()) $gameMessage.add(txt);   // ← ici
+```
+
+Hors combat, il n'y a pas de journal — alors le greffon écrivait dans
+`$gameMessage`. Sur la carte, une boîte de dialogue ouverte par du code n'est
+pilotée par **aucun interpréteur** : personne ne la referme. `isBusy()` reste
+vrai pour toujours. Et `VieDuVillage` teste précisément `$gameMessage.isBusy()`
+avant de recenser ses PNJ.
+
+Un message de combat, posé sur la carte, avait gelé tout ce qui attendait un
+message libre.
+
+**Ce que ça apprend.** Un greffon qu'on rallume n'est pas un greffon qu'on a
+vérifié : celui-ci dormait depuis assez longtemps pour que son repli n'ait
+jamais servi. Et surtout — *une panne sans erreur ne se voit qu'en jouant*. Le
+seul contrôle qui l'a attrapée est celui qui compte les PNJ vivants sur une
+vraie carte.
+
+**Comment on l'a trouvée.** Pas en lisant le code : en bissectant. Quatre
+bascules du registre, une à la fois, jusqu'à ce que le compte de PNJ remonte à
+douze. Puis en mesurant `$gameMessage.isBusy()` sur la carte au lieu de le
+supposer. Le texte en attente disait le reste :
+
+```
+textes en attente : 1  ["\\C[23]✦ Korrah rouvre les yeux — l'Armure Volante est là."]
+```

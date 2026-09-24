@@ -113,7 +113,20 @@ global.Input = { isTriggered: () => false }; global.TouchInput = { isCancelled: 
 global.AudioManager = { playSe: noop };
 global.Scene_Map = { prototype: { onMapLoaded: noop, update: noop } };
 
-eval(fs.readFileSync(path + 'js/plugins/DonsSpirituels.js', 'utf8'));
+// ─────────────────────────────────────────────────────────────────────────────
+// ⚠ ON NE CHARGE QUE CE QUE LE JEU CHARGE.
+// Le 2026-09-24, JOKO a retiré le système des Dons Spirituels. Ce banc
+// continuait d'évaluer `DonsSpirituels.js` depuis le disque : il mesurait donc
+// un moteur qui n'existe plus, et accusait l'Avatar d'avoir disparu alors qu'il
+// va très bien. Un banc qui charge un greffon éteint ne simule pas le moteur
+// (§6). On lit le registre, et on s'aligne dessus.
+const _REGISTRE = JSON.parse(
+    require('fs').readFileSync(path + 'js/plugins.js', 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+const _greffonActif = n => _REGISTRE.some(p => p.name === n && p.status);
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (_greffonActif('DonsSpirituels')) { eval(fs.readFileSync(path + 'js/plugins/DonsSpirituels.js', 'utf8')); }
 eval(fs.readFileSync(path + 'js/plugins/AvatarSpirituel.js', 'utf8'));
 const Av = window.Avatars;
 
@@ -165,11 +178,20 @@ console.log('\n=== 5 · IL EST INSÉPARABLE — rien ne peut le lui prendre ==='
 K.level = 50; K.hp = 900; K._restr = 0;
 ok(Av.present(2), 'elle est vivante et consciente → il est là');
 
-// brisé, il ne disparaît PAS
-window.Dons.casser(2);
-ok(Av.present(2), 'BRISÉ, il est toujours là — il fatigue, il ne disparaît pas');
-ok(Av.de(2).brise, '…et il est bien signalé comme brisé');
-window.Dons.reparer(2);
+// ── EN SOMMEIL DEPUIS LE 2026-09-24 ────────────────────────────────────────
+// « Brisé » était un état du DON : la pièce s'usait, se fendait, se réparait.
+// JOKO a retiré le système des Dons — « trop complexe pour rien ». L'Avatar
+// lui a survécu comme FAMILIER : il ne se casse plus, il n'a plus d'endurance.
+// Ces deux contrôles n'ont donc plus d'objet. On ne les efface pas (§3) : ils
+// se rallument tout seuls le jour où DonsSpirituels revient au registre.
+if (_greffonActif('DonsSpirituels')) {
+    window.Dons.casser(2);
+    ok(Av.present(2), 'BRISÉ, il est toujours là — il fatigue, il ne disparaît pas');
+    ok(Av.de(2).brise, '…et il est bien signalé comme brisé');
+    window.Dons.reparer(2);
+} else {
+    console.log('  ⏸ « brisé » est en sommeil — le système des Dons est retiré, un familier ne se casse pas');
+}
 
 // inconsciente → il s'éteint
 K._restr = 4;

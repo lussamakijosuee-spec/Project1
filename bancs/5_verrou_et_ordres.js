@@ -88,8 +88,53 @@ global.Input = { isTriggered: () => false }; global.TouchInput = { isCancelled: 
 global.AudioManager = { playSe: noop };
 global.Scene_Map = { prototype: { onMapLoaded: noop, update: noop } };
 
-eval(fs.readFileSync(path + 'js/plugins/ObjetSpirituel.js', 'utf8'));
-eval(fs.readFileSync(path + 'js/plugins/DonsSpirituels.js', 'utf8'));
+// ═════════════════════════════════════════════════════════════════════════════
+// BANC EN SOMMEIL DEPUIS LE 2026-09-24
+//
+// Ce banc mesure le système des DONS SPIRITUELS. JOKO l'a retiré :
+//
+//   « Je voulais faire un système de pouvoir lié à un don spirituel — tu l'as
+//     à la naissance, à ton éveil de marque, et c'est aléatoire. Mais c'est
+//     trop complexe pour rien. Même en version bêta sans ça, tu comprends bien
+//     le jeu et tu comprends quand même bien te battre. »
+//
+// On n'efface pas le banc (§3) : il se rallume tout seul le jour où les
+// greffons reviennent au registre. En attendant, ce qui EST mesuré :
+//
+//   · que le retrait tient            → bancs/21_le_retrait_des_dons.js
+//   · l'Avatar, seule pièce gardée    → bancs/3_avatar_spirituel.js · bancs/6_avatar_niveaux.js
+//   · son corps dans le moteur        → bancs/navigateur/le_corps_de_lavatar.js
+// ═════════════════════════════════════════════════════════════════════════════
+(function () {
+    var _reg = JSON.parse(require('fs').readFileSync(
+        require('path').join(__dirname, '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    var vivant = ['DonsSpirituels', 'ObjetSpirituel'].some(function (n) {
+        return _reg.some(function (p) { return p.name === n && p.status; });
+    });
+    if (!vivant) {
+        console.log('\n  ⏸  BANC EN SOMMEIL — le systeme des Dons Spirituels a ete retire.');
+        console.log('     Le retrait est garde par  bancs/21_le_retrait_des_dons.js');
+        console.log('     Rallumer DonsSpirituels dans js/plugins.js reveille ce banc.\n');
+        process.exit(0);
+    }
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ⚠ ON NE CHARGE QUE CE QUE LE JEU CHARGE.
+// Le 2026-09-24, JOKO a retiré le système des Dons Spirituels. Ce banc
+// continuait d'évaluer `DonsSpirituels.js` depuis le disque : il mesurait donc
+// un moteur qui n'existe plus, et accusait l'Avatar d'avoir disparu alors qu'il
+// va très bien. Un banc qui charge un greffon éteint ne simule pas le moteur
+// (§6). On lit le registre, et on s'aligne dessus.
+const _REGISTRE = JSON.parse(
+    require('fs').readFileSync(path + 'js/plugins.js', 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+const _greffonActif = n => _REGISTRE.some(p => p.name === n && p.status);
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (_greffonActif('ObjetSpirituel')) { eval(fs.readFileSync(path + 'js/plugins/ObjetSpirituel.js', 'utf8')); }
+if (_greffonActif('DonsSpirituels')) { eval(fs.readFileSync(path + 'js/plugins/DonsSpirituels.js', 'utf8')); }
 
 console.log('\n=== 1 · LE DON NE SE RETIRE PAS ===');
 const v = ACTORS[1];

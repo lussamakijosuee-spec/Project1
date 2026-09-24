@@ -8,6 +8,15 @@ const W = rd('Weapons.json'), A = rd('Armors.json'), Ac = rd('Actors.json');
 const S = rd('Skills.json'), C = rd('Classes.json'), Sy = rd('System.json');
 const Et = rd('States.json');
 
+// Le système des Dons est-il encore en service ? Le registre le dit, pas nous.
+// Retiré le 2026-09-24 : « trop complexe pour rien ». Les contrôles qui le
+// concernent basculent alors sur la règle qui a cours — plus aucun Don porté.
+const DONS_EN_SERVICE = (function () {
+    const reg = JSON.parse(fs.readFileSync(require('path').join(__dirname, '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    return reg.some(p => p.name === 'DonsSpirituels' && p.status);
+})();
+
 let ok = 0, ko = 0;
 const T = (nom, cond, det) => {
     if (cond) { ok++; console.log('  ✅ ' + nom); }
@@ -69,17 +78,30 @@ for (const id in HEROS) {
         if (m['Don']) { dons++; detail.push(o.name + ' (DON)'); }
         else detail.push(o.name);
     });
-    T(HEROS[id] + ' démarre avec EXACTEMENT un Don équipé',
-      dons === 1, detail.join(' · '));
+    // Depuis le 2026-09-24, le système des Dons est retiré : la règle n'est
+    // plus « exactement un », c'est « plus aucun ». On mesure celle qui a cours.
+    if (DONS_EN_SERVICE) {
+        T(HEROS[id] + ' démarre avec EXACTEMENT un Don équipé',
+          dons === 1, detail.join(' · '));
+    } else {
+        T(HEROS[id] + ' ne porte plus aucun Don',
+          dons === 0, detail.join(' · '));
+    }
 }
-// et les armes équipées sont bien ordinaires, sauf pour Aël
+// et les armes équipées sont bien ordinaires — Aël comprise, depuis le retrait
 [1, 2, 3].forEach(id => {
     const w = W[Ac[id].equips[0]];
     T(HEROS[id] + ' tient une arme ORDINAIRE (' + (w ? w.name : '—') + ')',
       w && !meta(w)['Don'] && !/^Éclat /.test(w.name));
 });
-T('Aël tient son Don — c\'est une ARME spirituelle',
-  !!meta(W[Ac[4].equips[0]])['Don']);
+if (DONS_EN_SERVICE) {
+    T('Aël tient son Don — c\'est une ARME spirituelle',
+      !!meta(W[Ac[4].equips[0]])['Don']);
+} else {
+    const wA = W[Ac[4].equips[0]];
+    T('Aël aussi tient une arme ORDINAIRE (' + (wA ? wA.name : '—') + ')',
+      !!wA && !meta(wA)['Don']);
+}
 
 console.log('\n─── 4 · LE MOT « ÉCLAT » EST RÉSERVÉ AU PALIER 1 D\'UN DON ───');
 const faux = pieces.filter(p => /^Éclat\b/i.test(p.o.name) && !p.m['Don']);

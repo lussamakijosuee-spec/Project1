@@ -51,6 +51,38 @@ global.Game_Interpreter = { prototype: { pluginCommand: noop } };
 global.Scene_MenuBase = function () {}; global.Window_Base = function () {};
 global.Graphics = { boxWidth: 816, boxHeight: 624 };
 
+// ═════════════════════════════════════════════════════════════════════════════
+// BANC EN SOMMEIL DEPUIS LE 2026-09-24
+//
+// Ce banc mesure le système des DONS SPIRITUELS. JOKO l'a retiré :
+//
+//   « Je voulais faire un système de pouvoir lié à un don spirituel — tu l'as
+//     à la naissance, à ton éveil de marque, et c'est aléatoire. Mais c'est
+//     trop complexe pour rien. Même en version bêta sans ça, tu comprends bien
+//     le jeu et tu comprends quand même bien te battre. »
+//
+// On n'efface pas le banc (§3) : il se rallume tout seul le jour où les
+// greffons reviennent au registre. En attendant, ce qui EST mesuré :
+//
+//   · que le retrait tient            → bancs/21_le_retrait_des_dons.js
+//   · l'Avatar, seule pièce gardée    → bancs/3_avatar_spirituel.js · bancs/6_avatar_niveaux.js
+//   · son corps dans le moteur        → bancs/navigateur/le_corps_de_lavatar.js
+// ═════════════════════════════════════════════════════════════════════════════
+(function () {
+    var _reg = JSON.parse(require('fs').readFileSync(
+        require('path').join(__dirname, '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    var vivant = ['DonsSpirituels', 'ObjetSpirituel'].some(function (n) {
+        return _reg.some(function (p) { return p.name === n && p.status; });
+    });
+    if (!vivant) {
+        console.log('\n  ⏸  BANC EN SOMMEIL — le systeme des Dons Spirituels a ete retire.');
+        console.log('     Le retrait est garde par  bancs/21_le_retrait_des_dons.js');
+        console.log('     Rallumer DonsSpirituels dans js/plugins.js reveille ce banc.\n');
+        process.exit(0);
+    }
+})();
+
 const Dons = (function(){ eval(fs.readFileSync(path + 'js/plugins/DonsSpirituels.js', 'utf8')); return window.Dons; })();
 
 // ── vérifications ──────────────────────────────────────────────────────────

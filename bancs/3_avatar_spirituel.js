@@ -80,7 +80,20 @@ Game_Action.prototype.makeDamageValue=function(v){return v;};
 global.Scene_MenuBase=function(){}; global.Window_Base=function(){};
 global.Graphics={boxWidth:816,boxHeight:624};
 
-eval(fs.readFileSync(P+'js/plugins/DonsSpirituels.js','utf8'));
+// ─────────────────────────────────────────────────────────────────────────────
+// ⚠ ON NE CHARGE QUE CE QUE LE JEU CHARGE.
+// Le 2026-09-24, JOKO a retiré le système des Dons Spirituels. Ce banc
+// continuait d'évaluer `DonsSpirituels.js` depuis le disque : il mesurait donc
+// un moteur qui n'existe plus, et accusait l'Avatar d'avoir disparu alors qu'il
+// va très bien. Un banc qui charge un greffon éteint ne simule pas le moteur
+// (§6). On lit le registre, et on s'aligne dessus.
+const _REGISTRE = JSON.parse(
+    require('fs').readFileSync(P + 'js/plugins.js', 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+const _greffonActif = n => _REGISTRE.some(p => p.name === n && p.status);
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (_greffonActif('DonsSpirituels')) { eval(fs.readFileSync(P+'js/plugins/DonsSpirituels.js','utf8')); }
 eval(fs.readFileSync(P+'js/plugins/AvatarSpirituel.js','utf8'));
 
 let ko=0; const ok=(c,t)=>{console.log((c?'  ✔ ':'  ✘ ')+t); if(!c)ko++;};
@@ -107,58 +120,79 @@ BattleManager._subject=korrah; BattleManager.endAction.call(BattleManager);
 BattleManager.endAction.call(BattleManager);
 ok(JOURNAL.filter(l=>l.includes('agit')).length<=1, "il n'agit qu'une fois par tour");
 
-console.log('\n=== Palier 3 : il déferle sur le groupe un tour sur deux ===');
-korrah.level=35; korrah._equips[6]=78;   // Armure Résonante — palier 3
-Dons.reparer(2);
-JOURNAL.length=0; ANIMS.length=0;
-for(let t=0;t<4;t++) tour(null);
-const defer=ANIMS.filter(a=>a.anim===404);
-ok(defer.length>0, 'la Déferlante (anim 404) sort quand il y a plusieurs ennemis');
-ok(defer.every(a=>a.cibles>1), 'et elle touche bien tout le groupe');
+// ─────────────────────────────────────────────────────────────────────────────
+// TOUT CE QUI SUIT EST EN SOMMEIL DEPUIS LE 2026-09-24.
+//
+// Ces contrôles mesurent des propriétés du DON : son palier (une pièce qu'on
+// équipe au slot Âme), son Endurance (elle s'use quand l'Avatar encaisse), sa
+// casse, et ce qui arrive quand on le retire. JOKO a retiré le système des
+// Dons — « trop complexe pour rien » — et l'Avatar lui a survécu comme
+// FAMILIER : il n'a plus de palier, plus d'endurance, il ne se casse pas, et
+// on ne peut pas le lui enlever.
+//
+// On n'efface rien (§3). Le bloc se rallume tout seul si DonsSpirituels
+// revient au registre. Ce qui reste couvert aujourd'hui :
+//   · ses règles de combat      → les sections vertes ci-dessus, et le banc 6
+//   · le retrait lui-même       → bancs/21_le_retrait_des_dons.js
+//   · son corps dans le moteur  → bancs/navigateur/le_corps_de_lavatar.js
+// ─────────────────────────────────────────────────────────────────────────────
+if (_greffonActif('DonsSpirituels')) {
+    console.log('\n=== Palier 3 : il déferle sur le groupe un tour sur deux ===');
+    korrah.level=35; korrah._equips[6]=78;   // Armure Résonante — palier 3
+    Dons.reparer(2);
+    JOURNAL.length=0; ANIMS.length=0;
+    for(let t=0;t<4;t++) tour(null);
+    const defer=ANIMS.filter(a=>a.anim===404);
+    ok(defer.length>0, 'la Déferlante (anim 404) sort quand il y a plusieurs ennemis');
+    ok(defer.every(a=>a.cibles>1), 'et elle touche bien tout le groupe');
 
-console.log('\n=== Il se met devant quand elle est en danger (posture LIBRE) ===');
-JOURNAL.length=0; korrah.hp=200;         // 20 % de PV → sous le seuil de 40 %
-tour(null);
-ok(JOURNAL.some(l=>l.includes('se place devant')), 'sous 40 % de PV, il cesse de frapper pour protéger');
+    console.log('\n=== Il se met devant quand elle est en danger (posture LIBRE) ===');
+    JOURNAL.length=0; korrah.hp=200;         // 20 % de PV → sous le seuil de 40 %
+    tour(null);
+    ok(JOURNAL.some(l=>l.includes('se place devant')), 'sous 40 % de PV, il cesse de frapper pour protéger');
 
-console.log('\n=== Il encaisse à sa place — et ça use son Endurance ===');
-korrah.hp=1000; Dons.reparer(2);
-const endAvant=Dons.de(2).endurance;
-const coup=new Game_Action(ennemis[0]);
-JOURNAL.length=0;
-Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
-ok(korrah.hp>800, 'les 200 dégâts sont amortis — elle ne perd que '+(1000-korrah.hp));
-ok(JOURNAL.some(l=>l.includes('encaisse à sa place')), 'le familier annonce qu\'il encaisse');
-ok(Dons.de(2).endurance<endAvant, "protéger use son Endurance ("+endAvant+' → '+Dons.de(2).endurance+')');
+    console.log('\n=== Il encaisse à sa place — et ça use son Endurance ===');
+    korrah.hp=1000; Dons.reparer(2);
+    const endAvant=Dons.de(2).endurance;
+    const coup=new Game_Action(ennemis[0]);
+    JOURNAL.length=0;
+    Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
+    ok(korrah.hp>800, 'les 200 dégâts sont amortis — elle ne perd que '+(1000-korrah.hp));
+    ok(JOURNAL.some(l=>l.includes('encaisse à sa place')), 'le familier annonce qu\'il encaisse');
+    ok(Dons.de(2).endurance<endAvant, "protéger use son Endurance ("+endAvant+' → '+Dons.de(2).endurance+')');
 
-console.log('\n=== Posture GARDE : il ne frappe plus, il protège beaucoup plus ===');
-Familiers.posture(2,'garde'); Dons.reparer(2); korrah.hp=1000;
-JOURNAL.length=0;
-tour(null);
-ok(!JOURNAL.some(l=>l.includes('agit de lui-même')), 'en garde, il ne frappe plus');
-Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
-// v3.0 — l'interception gagne +5 points par niveau d'Avatar. Korrah est au
-// niveau 35, donc Avatar niveau 1 : la garde vaut 45+5 = 50 %.
-ok(1000-korrah.hp===100, 'en garde au niveau 35, il encaisse 50 % (45 % + 5 du niveau 1) — elle ne perd que '+(1000-korrah.hp)+' sur 200');
+    console.log('\n=== Posture GARDE : il ne frappe plus, il protège beaucoup plus ===');
+    Familiers.posture(2,'garde'); Dons.reparer(2); korrah.hp=1000;
+    JOURNAL.length=0;
+    tour(null);
+    ok(!JOURNAL.some(l=>l.includes('agit de lui-même')), 'en garde, il ne frappe plus');
+    Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
+    // v3.0 — l'interception gagne +5 points par niveau d'Avatar. Korrah est au
+    // niveau 35, donc Avatar niveau 1 : la garde vaut 45+5 = 50 %.
+    ok(1000-korrah.hp===100, 'en garde au niveau 35, il encaisse 50 % (45 % + 5 du niveau 1) — elle ne perd que '+(1000-korrah.hp)+' sur 200');
 
-console.log('\n=== Brisé : il fatigue, un tour sur deux, et tout ÷2 ===');
-Familiers.posture(2,'libre'); Dons.casser(2); korrah.hp=1000;
-JOURNAL.length=0;
-for(let t=0;t<4;t++) tour(null);
-const agi=JOURNAL.filter(l=>l.includes('agit de lui-même')).length;
-const pause=JOURNAL.filter(l=>l.includes('se recompose')).length;
-ok(pause>0 && agi<4, 'brisé, il saute des tours ('+agi+' actions, '+pause+' pauses sur 4 tours)');
-korrah.hp=1000; Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
-ok(1000-korrah.hp>=170, 'brisé, il n\'amortit plus que la moitié (perte '+(1000-korrah.hp)+'/200)');
+    console.log('\n=== Brisé : il fatigue, un tour sur deux, et tout ÷2 ===');
+    Familiers.posture(2,'libre'); Dons.casser(2); korrah.hp=1000;
+    JOURNAL.length=0;
+    for(let t=0;t<4;t++) tour(null);
+    const agi=JOURNAL.filter(l=>l.includes('agit de lui-même')).length;
+    const pause=JOURNAL.filter(l=>l.includes('se recompose')).length;
+    ok(pause>0 && agi<4, 'brisé, il saute des tours ('+agi+' actions, '+pause+' pauses sur 4 tours)');
+    korrah.hp=1000; Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
+    ok(1000-korrah.hp>=170, 'brisé, il n\'amortit plus que la moitié (perte '+(1000-korrah.hp)+'/200)');
 
-console.log('\n=== Retiré du slot Âme : il n\'existe plus ===');
-Dons.reparer(2); korrah._equips[6]=0; korrah.hp=1000;
-JOURNAL.length=0;
-tour(null);
-ok(!Familiers.present(2), 'window.Avatars.present(2) → false');
-ok(JOURNAL.length===0, 'aucune action, aucun message');
-Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
-ok(korrah.hp===800, 'plus aucune interception : elle prend les 200 en entier');
+    console.log('\n=== Retiré du slot Âme : il n\'existe plus ===');
+    Dons.reparer(2); korrah._equips[6]=0; korrah.hp=1000;
+    JOURNAL.length=0;
+    tour(null);
+    ok(!Familiers.present(2), 'window.Avatars.present(2) → false');
+    ok(JOURNAL.length===0, 'aucune action, aucun message');
+    Game_Action.prototype.executeHpDamage.call(coup, korrah, 200);
+    ok(korrah.hp===800, 'plus aucune interception : elle prend les 200 en entier');
+} else {
+    console.log('\n  ⏸ palier, Endurance, casse et retrait du slot Âme : en sommeil —');
+    console.log('     le système des Dons est retiré, un familier n\'a rien de tout ça.');
+}
 
 console.log(ko===0?'\n✅ TOUT PASSE\n':`\n❌ ${ko} échec(s)\n`);
 process.exit(ko?1:0);
