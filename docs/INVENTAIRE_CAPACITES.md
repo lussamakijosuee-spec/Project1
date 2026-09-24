@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-09-20. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-09-24. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
