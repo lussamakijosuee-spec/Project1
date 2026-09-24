@@ -6,6 +6,7 @@ const D = require('path').join(__dirname, '../data/');
 const rd = f => JSON.parse(fs.readFileSync(D + f, 'utf8'));
 const W = rd('Weapons.json'), A = rd('Armors.json'), Ac = rd('Actors.json');
 const S = rd('Skills.json'), C = rd('Classes.json'), Sy = rd('System.json');
+const Et = rd('States.json');
 
 let ok = 0, ko = 0;
 const T = (nom, cond, det) => {
@@ -177,6 +178,27 @@ T('Le Masque garde une jauge de Sang, et rien d\'autre en dur',
   'un trait de statistique spéciale traîne encore sur le Masque');
 
 console.log('\n─── 8 · TROIS ORDRES À L\'AVATAR, JOUABLES EN COMBAT ───');
+
+// Le moteur n'ouvre PAS un type de compétence depuis la seule classe : il
+// additionne les traits 41 de la classe, de l'acteur et de ses états passifs
+// (`Game_Actor.traitObjects`). Ce contrôle ne lisait que la classe — il a donc
+// accusé Korrah à tort le jour où les types sont passés de la classe à
+// l'acteur. On relit maintenant les trois sources, comme le banc 11.
+const typesOuvertsPour = idActeur => {
+    const a = Ac[idActeur], ouverts = {};
+    const lire = tr => (tr || []).forEach(t => { if (t.code === 41) { ouverts[t.dataId] = true; } });
+    lire(a.traits);
+    lire(C[a.classId].traits);
+    ((a.note || '').match(/<Passive State:[^>]*>/gi) || []).forEach(ligne => {
+        ligne.replace(/<Passive State:/i, '').replace('>', '').split(',').forEach(x => {
+            const n = parseInt(x, 10);
+            if (n > 0 && Et[n]) { lire(Et[n].traits); }
+        });
+    });
+    return ouverts;
+};
+const OUVERTS_KORRAH = typesOuvertsPour(2);
+
 const ORD = [1246, 1247, 1248];
 ORD.forEach(id => {
     const s = S[id];
@@ -186,7 +208,8 @@ ORD.forEach(id => {
     T('  · porte <AvatarPosture>', /<AvatarPosture:\s*\w+>/.test(s.note));
     T('  · en combat seulement', s.occasion === 1);
     T('  · type de compétence accessible à Korrah',
-      C[2].traits.some(t => t.code === 41 && t.dataId === s.stypeId));
+      OUVERTS_KORRAH[s.stypeId] === true,
+      'type ' + s.stypeId + ' · ouverts : ' + Object.keys(OUVERTS_KORRAH).join(', '));
 });
 const apprises = ORD.filter(id => C[2].learnings.some(l => l.skillId === id && l.level <= 1));
 T('Korrah connaît les trois ordres dès le niveau 1', apprises.length === 3,

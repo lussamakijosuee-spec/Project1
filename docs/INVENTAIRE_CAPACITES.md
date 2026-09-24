@@ -333,7 +333,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 800 | le Monde Gelé | 1000 PM + 100 PT | pose « Monde Gelé » 100% · script commun 6 | 232 | `<Avatar>` `<AvatarNiveau: 3>` `<ParoleL: 5>` `<Trait: gel>` |
+| 1 | 800 | le Monde Gelé | 1000 PM + 100 PT | drain PV *GLACE* `Math.floor(a.mat * 3.2 * 200 / (200 + b.mdf))` · pose « Monde Gelé » 100% | 232 | `<ParoleL: 5>` `<Trait: gel>` |
 | 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` |
 | 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` |
 | 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` |
@@ -380,18 +380,18 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
 | ◑ | 8 · invocation | 2 | à condition : en lançant « Royaume Impérial » → état « Royaume Impérial » |
 | ✔ | 9 · ame | 9 | ouvert |
-| ◑ | 11 · ombre d'épeé | 1 | à condition : en lançant « Arme d'Ombre » → état « épee d'ombre » |
-| ◑ | 12 · ombre de dague | 1 | à condition : en lançant « Arme d'Ombre » → état « dague d'ombre » |
-| ◑ | 13 · ombre de hache | 1 | à condition : en lançant « Arme d'Ombre » → état « hache des tenerbre » |
-| ◑ | 14 · ombre de katana | 1 | à condition : en lançant « Arme d'Ombre » → état « katana de la mort » |
-| ◑ | 15 · ombre de lance | 1 | à condition : en lançant « Arme d'Ombre » → état « lance des abysse » |
-| ◑ | 16 · ombre de griffe | 1 | à condition : en lançant « Arme d'Ombre » → état « griffe hurleur d'ame » |
-| ◑ | 17 · ombre de arc | 1 | à condition : en lançant « Arme d'Ombre » → état « arc d'ombre » |
-| ◑ | 18 · ombre de arme a feu | 1 | à condition : en lançant « Arme d'Ombre » → état « fusil des tenebre » |
+| ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — seul chemin : arme « Épée d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte |
+| ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — seul chemin : arme « Dague d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte |
+| ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — seul chemin : arme « Hache des Ténèbres » — que sa classe ne peut pas porter, hors d'atteinte |
+| ✘ | 14 · ombre de katana | 1 | **INVISIBLE** — seul chemin : état « katana de la mort » — que rien ne pose, hors d'atteinte |
+| ✘ | 15 · ombre de lance | 1 | **INVISIBLE** — seul chemin : arme « Lance des Abysses » — que sa classe ne peut pas porter, hors d'atteinte |
+| ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — seul chemin : état « griffe hurleur d'ame » — que rien ne pose, hors d'atteinte |
+| ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — seul chemin : état « arc d'ombre » — que rien ne pose, hors d'atteinte |
+| ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — seul chemin : arme « Fusil à Pompe Éternel » — que sa classe ne peut pas porter, hors d'atteinte |
 
-> **10 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
+> **2 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
-> **5 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+> **13 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -399,8 +399,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 14 | Roulette du Destin | 100 PM | script commun 1 | 51 | — |
 | 1 | 17 | Parole n°3 Technique d'Inversion | 30 PM | soin PV *mana positive* `1500 + a.mat` | 42 | `<Parole>` `<NomOrigine: Technique d'Inversion>` ⚠ |
-| 1 | 111 | Arme d'Ombre | 12 PM | pose « épee d'ombre » 100% · pose « dague d'ombre » 100% · pose « arc d'ombre » 100% · pose « hache des tenerbre » 100% · pose « fusil des tenebre » 100% · pose « griffe hurleur d'ame » 100% · pose « lance des abysse » 100% · pose « katana de la mort » 100% · pose « fusil a pompe éternel » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
-| 1 | 112 | Âme d'Ombre | 12 PM | pose « scetre des ame perdus » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
+| 1 | 111 | Arme d'Ombre | 12 PM | script commun 22 | 415 | `<ParoleL: 3>` `<Ombre>` |
+| 1 | 112 | Âme d'Ombre | 12 PM | pose « Malédiction Ancienne » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 141 | Parole n°2 Moisson des Âmes | 15% PV | drain PV *mana spirituelle * `Math.floor(((a.atk + a.mat) * 2) * 1.352 * 200 / (200 + b.mdf))` | 66 | `<NomOrigine: Moisson des Âmes>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
 | 1 | 480 | VUE | — | **coquille** — rien | — | — |
@@ -468,7 +468,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 71 | Royaume Impérial | 1500 PM + 100 PT | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
+| 1 | 71 | Royaume Impérial | 1000 PM | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
 | 45 | 810 | ☠ Royaume Impérial des Ténèbres | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
@@ -506,65 +506,65 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 38 | 1169 | Parole n°7 Rappel | 42 PM | dégâts PV *AME * `Math.floor(a.mat * 23 * 200 / (200 + b.mdf))` | 449 | `<NomOrigine: Rappel>` ⚠ |
 | 48 | 1171 | Parole n°7 Dette Ancienne | 56 PM | dégâts PV *AME * `Math.floor(a.mat * 33 * 200 / (200 + b.mdf))` · pose « 🫀 Ravage » 70% | 460 | `<NomOrigine: Dette Ancienne>` ⚠ `<Cooldown: 2>` |
 
-### ◑ Type 11 — ombre d'épeé  *(à condition)*
+### ✘ Type 11 — ombre d'épeé  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « épee d'ombre »*
+*INVISIBLE — seul chemin : arme « Épée d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
 
-### ◑ Type 12 — ombre de dague  *(à condition)*
+### ✘ Type 12 — ombre de dague  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « dague d'ombre »*
+*INVISIBLE — seul chemin : arme « Dague d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
 
-### ◑ Type 13 — ombre de hache  *(à condition)*
+### ✘ Type 13 — ombre de hache  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « hache des tenerbre »*
+*INVISIBLE — seul chemin : arme « Hache des Ténèbres » — que sa classe ne peut pas porter, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 118 | Fendoir Obscur | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(a.atk * 5.2 * 200 / (200 + b.def))` | 250 | `<Voie: forge>` |
 
-### ◑ Type 14 — ombre de katana  *(à condition)*
+### ✘ Type 14 — ombre de katana  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « katana de la mort »*
+*INVISIBLE — seul chemin : état « katana de la mort » — que rien ne pose, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
 
-### ◑ Type 15 — ombre de lance  *(à condition)*
+### ✘ Type 15 — ombre de lance  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « lance des abysse »*
+*INVISIBLE — seul chemin : arme « Lance des Abysses » — que sa classe ne peut pas porter, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 121 | Parole n°15 Geyser Abyssal | 22 PM + 20 PT | dégâts PV *OMBRE* `Math.floor(((a.atk + a.mat) * 2.5) * 1.173 * 200 / (200 + b.def))` | 84 | `<Voie: onde>` `<NomOrigine: Geyser Abyssal>` ⚠ |
 
-### ◑ Type 16 — ombre de griffe  *(à condition)*
+### ✘ Type 16 — ombre de griffe  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « griffe hurleur d'ame »*
+*INVISIBLE — seul chemin : état « griffe hurleur d'ame » — que rien ne pose, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 252 | `<FrappeAme>` ⚠ |
 
-### ◑ Type 17 — ombre de arc  *(à condition)*
+### ✘ Type 17 — ombre de arc  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « arc d'ombre »*
+*INVISIBLE — seul chemin : état « arc d'ombre » — que rien ne pose, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
 
-### ◑ Type 18 — ombre de arme a feu  *(à condition)*
+### ✘ Type 18 — ombre de arme a feu  *(INVISIBLE)*
 
-*à condition : en lançant « Arme d'Ombre » → état « fusil des tenebre »*
+*INVISIBLE — seul chemin : arme « Fusil à Pompe Éternel » — que sa classe ne peut pas porter, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -817,8 +817,8 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **367** entrées d'apprentissage sur les quatre héros ;
-- **15** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
-- **10** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
+- **23** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **2** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **26** ne font rien du tout (ni dégâts, ni effet) ;
 - **4** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 2 simple(s) étiquette(s)).

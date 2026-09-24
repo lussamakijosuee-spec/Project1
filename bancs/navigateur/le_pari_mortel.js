@@ -129,12 +129,29 @@ function V(libelle, condition, detail) {
 
     // La commande que l'espace rendait muette — on la lit dans la base chargée,
     // c'est la mesure exacte, sans dépendre du tirage.
+    //
+    // ⚠ Ce contrôle épinglait `$dataCommonEvents[21].list[12]`. Un index en dur
+    // ne mesure pas le défaut, il mesure une POSITION : le jour où l'événement
+    // a été réordonné dans l'éditeur, il a accusé une commande parfaitement
+    // saine. On balaie donc TOUS les événements communs à la recherche du vrai
+    // symptôme — une espace de tête, qui fait lire à MV un nom de commande vide.
     var cmd = await ev(function () {
-        var c = $dataCommonEvents[21].list[12];
-        return { code: c.code, texte: c.parameters[0] };
+        var fautives = [], vues = [];
+        $dataCommonEvents.forEach(function (e) {
+            if (!e) { return; }
+            e.list.forEach(function (c, i) {
+                if (c.code !== 356) { return; }
+                var s = c.parameters[0];
+                vues.push(s);
+                if (/^\s/.test(s)) { fautives.push('évCommun ' + e.id + ' [' + i + '] ' + JSON.stringify(s)); }
+            });
+        });
+        return { fautives: fautives, total: vues.length, win: vues.indexOf('JACKPOT win') >= 0 };
     });
-    V('« JACKPOT win » n\'a plus son espace de tête', cmd.texte === 'JACKPOT win',
-        'commande ' + cmd.code + ' : ' + JSON.stringify(cmd.texte));
+    V('aucune commande de plugin ne porte d\'espace de tête', cmd.fautives.length === 0,
+        cmd.total + ' commandes 356 relues · ' + (cmd.fautives.join(' · ') || 'aucune fautive'));
+    V('« JACKPOT win » est bien présente quelque part', cmd.win === true,
+        cmd.win ? 'trouvée' : 'introuvable dans les ' + cmd.total + ' commandes');
     var muette = await ev(function () {
         // ce que MV faisait AVANT : il coupe sur les espaces et prend le premier
         var args = ' JACKPOT win'.split(' ');
