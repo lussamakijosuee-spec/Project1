@@ -3,6 +3,17 @@
 Projet RPG Maker MV, en français. L'univers, les personnages, les compétences et l'équilibrage
 appartiennent à **JOKO**. Claude est là pour exécuter et vérifier, pas pour concevoir.
 
+**Ce jeu est personnel.** JOKO, le 2026-09-25 : *« mon jeu n'est pas pour le grand public […] il est
+totalement personnel et pour mes potes, je ne cherche pas à faire ça à une commerciale — retiens ça. »*
+Les références aux mangas et animés sont donc bienvenues comme inspiration de gameplay ; on ne
+calibre pas pour un public, on calibre pour que ce soit fun entre amis.
+
+**Quand JOKO dit « fais », il veut que je fasse — pas que je devine.** *« je suis un peu trop vague
+dans mes propos […] je veux que tu fasses, pas que tu devines. »* Ce qu'il écrit noir sur blanc
+s'exécute ; ce qu'il ne précise pas (un chiffre, une durée) devient un **paramètre réglable**, avec
+un défaut raisonnable annoncé — pas une question qui bloque. Et s'il demande d'être honnête sur
+la puissance : *« soit honnête si c'est trop fort, nerf »* — je mesure, je le dis, je règle.
+
 ---
 
 ## 1. Le lore ne s'interprète pas. Il se cite.

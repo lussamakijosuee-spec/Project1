@@ -126,6 +126,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     // ── 5 · il décide tout seul ───────────────────────────────────────────
     console.log('\n4) Il décide tout seul');
+    // ⚠ Depuis la v2 (le Lien), une partie neuve le fait démarrer SAUVAGE —
+    //   « au début il est incontrôlable, voire complètement stupide » (JOKO).
+    //   Ce qu'on vérifie ici, c'est le seiryu qui a appris : palier Dressé.
+    //   Le Sauvage a son propre contrôle dans bancs/navigateur/lavatar_obeit.js.
+    await page.evaluate(function () { window.Seiryu.experience(window.Seiryu.seuils.dresse); });
     var libre = await page.evaluate(function () {
         var s = $gameActors.actor(6);
         window.Seiryu.posture('libre');

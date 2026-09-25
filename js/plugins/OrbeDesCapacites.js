@@ -31,6 +31,13 @@
  * Laisser VIDE pour tous les montrer. Ne retire aucune compétence du jeu.
  * @default 1,2,3
  *
+ * @param Ses propres branches
+ * @type boolean
+ * @desc En plus des « Branches visibles », montrer chaque type de compétence
+ * que CE héros a d'ouvert en combat : Hiver et Avatar pour Korrah, Sang pour
+ * Vesper, Âme pour ludwing, Miracle pour Aël.
+ * @default true
+ *
  * @param Branche propre
  * @type note
  * @desc La branche à lui de chaque héros. Une ligne par héros :
@@ -113,6 +120,15 @@
                  .filter(function (x) { return x > 0; });
         return l.length ? l : null;                            // null = toutes
     })();
+
+    // JOKO, 2026-09-25 : « les orbes des compétences ne sont pas en raccord
+    // avec les personnages comme compétences ils ont. […] Korrah a hiver et
+    // avatar. » L'Orbe montrait capacité / Spéciale / ult, plus une branche
+    // « propre » devinée sur les NOMS — qui donnait 39 compétences « Miracle »
+    // à Aël, qui n'en a qu'une, et zéro Avatar à Korrah, qui en a quinze.
+    // Désormais l'Orbe montre aussi chaque type qu'ouvre CE héros en combat :
+    // la même chose que son menu de combat, ni plus ni moins.
+    var SES_BRANCHES = String(P['Ses propres branches'] === undefined ? 'true' : P['Ses propres branches']) === 'true';
 
     //=========================================================================
     // La branche propre — « ils ont tous leur truc à eux »
@@ -259,7 +275,8 @@
         }
 
         Object.keys(parType).map(Number).forEach(function (t) {
-            if (BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0) { return; }
+            if (BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0
+                && !(SES_BRANCHES && types.indexOf(t) >= 0)) { return; }
             var noeuds = parType[t].sort(function (a, b) {
                 return (a.niveau - b.niveau) || (a.skill.id - b.skill.id);
             });
@@ -937,4 +954,7 @@
     window.Scene_OrbeCapacites = Scene_OrbeCapacites;
     window.Scene_Skill_Yanfly = window.Scene_Skill;
     window.Scene_Skill = Scene_OrbeCapacites;
+
+    // De quoi mesurer sans deviner : ce que l'Orbe montre, héros par héros.
+    window.OrbeDesCapacites = { branchesDe: branchesDe, sesBranches: SES_BRANCHES };
 })();
