@@ -190,6 +190,19 @@ function ok(nom, cond, detail) {
     });
     ok('choisir « Style — Garde » change le style', st.style === 'garde');
     ok('et on reste sur Vesper, son action encore à choisir', st.toujoursVesper && st.index && st.commande && st.actionVide);
+    // JOKO : « quand Vesper change de style de combat […] un effet visuel, un truc très simple, juste que tu le voies. »
+    var fx = await page.evaluate(function () {
+        var a = $gameActors.actor(1), out = {};
+        a._animations = []; PacteDeSang.changerStyle('saignee');
+        out.n = a._animations.length; out.id = out.n ? a._animations[0].animationId : 0;
+        out.nom = out.id ? $dataAnimations[out.id].name : ''; out.frames = out.id ? $dataAnimations[out.id].frames.length : 0;
+        // contre-épreuve : le même changement fait par le moteur au début du combat ne joue rien
+        a._animations = []; BattleManager.startBattle(); out.auDebut = a._animations.length;
+        PacteDeSang.changerStyle('lame');
+        return out;
+    });
+    ok('changer de Style joue un effet visuel sur Vesper', fx.n > 0 && fx.frames > 1, fx.id + ' « ' + fx.nom + ' »');
+    ok('contre-épreuve : la reprise du Style au début du combat, elle, est muette', fx.auDebut === 0);
 
     // ═════════════════════════════════════════════════════════════════════
     console.log('\n══ AËL — LA BIBLIOTHÈQUE ' + '═'.repeat(48));

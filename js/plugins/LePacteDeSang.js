@@ -64,6 +64,24 @@
  * @type state
  * @default 236
  *
+ * @param animStyleLame
+ * @text Effet visuel — Style Lame
+ * @type animation
+ * @default 371
+ * @desc Joué sur Vesper quand elle passe en Lame (0 : rien). 371 = Lames triples · Rose.
+ *
+ * @param animStyleGarde
+ * @text Effet visuel — Style Garde
+ * @type animation
+ * @default 439
+ * @desc Joué sur Vesper quand elle passe en Garde (0 : rien). 439 = Dôme gardien · Rose.
+ *
+ * @param animStyleSaignee
+ * @text Effet visuel — Style Saignée
+ * @type animation
+ * @default 435
+ * @desc Joué sur Vesper quand elle passe en Saignée (0 : rien). 435 = Drain de vie · Rose.
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  VESPER — « juste comme Arlecchino »                                 JOKO
@@ -100,6 +118,9 @@
  *                Pacte consommée lui revient en PV : elle se soigne en frappant.
  *
  *  Le Pacte et la Réserve s'effacent à la fin du combat ; le Style se garde.
+ *  Chaque changement de Style se VOIT : un effet court joué sur Vesper (JOKO :
+ *  « un truc très simple, juste que tu le voies ») — trois animations réglables,
+ *  rouges comme elle : Lames triples, Dôme gardien, Drain de vie.
  *
  *  ── AVEC LES SYSTÈMES QUI EXISTAIENT DÉJÀ ───────────────────────────────
  *  · LA VOIE DU SANG (MaitriseVoies) lui rendait 45 % des dégâts en PV. Sous
@@ -128,6 +149,11 @@
         lame: parseInt(P['etatStyleLame'] || 234, 10),
         garde: parseInt(P['etatStyleGarde'] || 235, 10),
         saignee: parseInt(P['etatStyleSaignee'] || 236, 10)
+    };
+    var ANIM_STYLE = {
+        lame: parseInt(P['animStyleLame'] || 371, 10),
+        garde: parseInt(P['animStyleGarde'] || 439, 10),
+        saignee: parseInt(P['animStyleSaignee'] || 435, 10)
     };
     var STYLES = ['lame', 'garde', 'saignee'];
     var NOM_STYLE = { lame: '⚔ Lame', garde: '🛡 Garde', saignee: '🩸 Saignée' };
@@ -164,12 +190,17 @@
         }
     }
 
-    function changerStyle(a, s) {
+    /** `visuel === false` : sans l'effet (la reprise du Style au début du combat). */
+    function changerStyle(a, s, visuel) {
         if (STYLES.indexOf(s) < 0) { return; }
         a._styleVesper = s;
         STYLES.forEach(function (x) { if (a.isStateAffected(ETAT_STYLE[x])) { a.eraseState(ETAT_STYLE[x]); } });
         if (ETAT_STYLE[s] > 0 && $dataStates[ETAT_STYLE[s]]) { a.addNewState(ETAT_STYLE[s]); }
         a.refresh();
+        // Le changement se voit : une animation courte sur son sprite (vue de côté).
+        if (visuel !== false && enCombat() && ANIM_STYLE[s] > 0 && $dataAnimations[ANIM_STYLE[s]] && a.startAnimation) {
+            a.startAnimation(ANIM_STYLE[s], false, 0);
+        }
     }
 
     // ── ② et ⑤ : absorber, inscrire, rendre ─────────────────────────────────
@@ -346,7 +377,7 @@
         var a = $gameActors.actor(VESPER);
         if (a && $gameParty.battleMembers().indexOf(a) >= 0) {
             remettre(a);
-            changerStyle(a, a._styleVesper || 'lame');   // on garde le dernier style choisi
+            changerStyle(a, a._styleVesper || 'lame', false);   // on garde le dernier style choisi, sans l'effet
         }
     };
     var _fin = BattleManager.endBattle;

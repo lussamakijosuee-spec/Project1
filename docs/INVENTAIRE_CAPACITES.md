@@ -51,10 +51,10 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 17 | Parole n°3 Technique d'Inversion | 30 PM | soin PV *mana positive* `1500 + a.mat` | 42 | `<Parole>` `<NomOrigine: Technique d'Inversion>` ⚠ |
 | 1 | 18 | Pas de Rupture | 5 PM + 10 PT | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 6 | `<NoParole>` |
 | 1 | 74 | Reprends-toi | 10 PM | dégâts PV `a.atk * 0.5` · retire « Déstabilisé » 100% · retire « Folie Totale » 100% | 346 | `<Post-Damage Eval>` |
-| 1 | 139 | Déchaînement Négatif | 40 PT | dégâts PV *mana négative * `Math.floor(a.atk * 6.7 * 200 / (200 + b.def))` | 66 | — |
+| 1 | 139 | Déchaînement Négatif | 40 PT | dégâts PV *mana négative * `Math.floor(a.atk * 6.7 * 200 / (200 + b.def))` | 491 | — |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
 | 4 | 1130 | Ouvrir | 14 PM | drain PV *Physique* `Math.floor(a.atk * 14 * 200 / (200 + b.def))` · pose « 🩸 Hémorragie Profonde » 60% | 423 | `<Voie: sang>` |
-| 5 | 143 | Coup Furieux | 8 PT | dégâts PV *mana négative * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 2 | `<ParoleL: 3>` |
+| 5 | 143 | Coup Furieux | 8 PT | dégâts PV *mana négative * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 487 | `<ParoleL: 3>` |
 | 5 | 1226 | Pansement Rapide | 18 PM | soin PV `Math.floor(a.mat * 3.5)` | 41 | — |
 | 6 | 1186 | Parole n°8 Feu — Braise | 10 PM | dégâts PV *FEU* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 397 | `<ParoleL: 3>` `<NomOrigine: Feu — Braise>` ⚠ |
 | 10 | 144 | Brise-Garde | 6 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · malus DÉF 3t | 2 | — |
@@ -88,7 +88,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 40 | 1189 | Parole n°8 Feu — Fournaise | 46 PM | dégâts PV *FEU* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🔥 Combustion » 70% | 400 | `<ParoleL: 5>` `<NomOrigine: Feu — Fournaise>` ⚠ |
 | 43 | 1071 | Trempe | 18 PM | boost ATQ 5t · boost DÉF 5t | 51 | `<Voie: forge>` |
 | 43 | 1136 | Prix du Sang | 18 PT | dégâts PV *mana négative * `Math.floor(a.atk * 20 * 200 / (200 + b.def) * (1 + (a.mhp - a.hp) / a.mhp * 0.8))` | 399 | `<Voie: sang>` `<Nerf 2026-09-25: a.atk * 30 * → a.atk * 20 * — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
-| 44 | 1204 | Parole n°11 Terre — Faille | 46 PM | dégâts PV *TERRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 70% | 376 | `<ParoleL: 5>` `<NomOrigine: Terre — Faille>` ⚠ |
+| 44 | 1204 | Parole n°11 Terre — Faille | 46 PM | dégâts PV *TERRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 70% | 203 | `<ParoleL: 5>` `<NomOrigine: Terre — Faille>` ⚠ |
 | 47 | 1076 | Contre-Courant | 26 PM | dégâts PV *Physique* `Math.floor(a.atk * 19 * 200 / (200 + b.def))` · pose « 🌀 Vertige » 50% | 367 | `<Voie: onde>` |
 | 50 | 1072 | Reprise du Marteau | 34 PM | dégâts PV *Physique* `Math.floor(a.atk * 7 * 200 / (200 + b.def))` | 21 | `<Voie: forge>` |
 | 50 | 1137 | Tout Ce Qui Coule | 68 PT | drain PV *mana négative * `Math.floor((a.atk + a.mat) * 31 * 100 / (200 + b.def + b.mdf))` | 427 | `<Voie: sang>` |
@@ -105,12 +105,12 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 52 | Écaille Rouge Dansante | 25 PT | boost AGI 3t · boost DÉF 2t | 53 | `<NoParole>` |
 | 1 | 53 | Lame de Sang | 15 PT | dégâts PV *mana négative * `Math.floor(a.atk * 8.9 * 200 / (200 + b.def))` · pose « Saignement » 20% | 423 | `<NoParole>` `<Sang>` |
 | 1 | 54 | Parole n°3 Tir Perçant | 25 PM | dégâts PV *mana positive* `Math.floor(a.atk * 18 * 200 / (200 + b.def))` · pose « Saignement » 40% | 114 | `<Parole>` `<NomOrigine: Tir Perçant>` ⚠ |
-| 1 | 55 | Pluie de Flèches Sanglantes | 40 PT | drain PV *mana négative * `Math.floor(a.atk * 6.42 * 200 / (200 + b.def))` · pose « Saignement » 60% | 29 | `<Parole>` `<Sang>` |
+| 1 | 55 | Pluie de Flèches Sanglantes | 40 PT | drain PV *mana négative * `Math.floor(a.atk * 6.42 * 200 / (200 + b.def))` · pose « Saignement » 60% | 494 | `<Parole>` `<Sang>` |
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
 | 1 | 413 | Fureur Spectrale (Duo) | 30 PT | dégâts PV *mana négative * `(a.atk + $gameActors.actor(3).atk) * 4 - b.def*1.5` | 335 | `<Combo: 1,3>` `<ComboLien: 3>` ⚠ |
-| 1 | 417 | Trinité d'Âmes (Trio) | 50 PT | dégâts PV *AME * `(a.atk + $gameActors.actor(2).mat + $gameActors.actor(3).mat) * 4` | 323 | `<Combo: 1,2,3>` `<ComboLien: 5>` ⚠ |
-| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 1 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
-| 1 | 419 | Pacte d'Âme | 30 PT | PV -30% +0 · pose « Pacte d'Âme » 100% | 1 | — |
+| 1 | 417 | Trinité d'Âmes (Trio) | 50 PT | dégâts PV *AME * `(a.atk + $gameActors.actor(2).mat + $gameActors.actor(3).mat) * 4` | 533 | `<Combo: 1,2,3>` `<ComboLien: 5>` ⚠ |
+| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
+| 1 | 419 | Pacte d'Âme | 30 PT | PV -30% +0 · pose « Pacte d'Âme » 100% | 537 | — |
 | 1 | 447 | Faille d'Armure | 28 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 16 | — |
 | 1 | 448 | Garde Sereine | 24 PM | dégâts PV *Physique* `Math.floor((a.atk*3 + a.mdf*2) * 1.382 * 200 / (200 + b.def))` | 111 | — |
 | 23 | 1142 | Garde Écarlate | 22 PM | pose « 🛡 Posture de Fer » 100% · pose « 🪞 Reflet » 100% | 439 | — |
@@ -123,8 +123,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 133 | Déflagration Spirituelle | 10% PV | dégâts PV *mana spirituelle * `(a.atk * 10) - (b.def * 1.5)` | 69 | `<Post-Damage Eval>` `<Parole: origine>` `<Cooldown: 2>` |
-| 1 | 445 | Tranche-Néant | 60 PM + 25% PV | dégâts PV *AME * `(a.atk*6) - b.def*0.5` | 22 | `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` |
+| 1 | 133 | Déflagration Spirituelle | 10% PV | dégâts PV *mana spirituelle * `(a.atk * 10) - (b.def * 1.5)` | 470 | `<Post-Damage Eval>` `<Parole: origine>` `<Cooldown: 2>` |
+| 1 | 445 | Tranche-Néant | 60 PM + 25% PV | dégâts PV *AME * `(a.atk*6) - b.def*0.5` | 527 | `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` |
 | 1 | 446 | Jugement de Soi | 50 PM + 33% PV | dégâts PV *Physique* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` | 35 | `<Ulti>` `<UltiColor: #ff8a3a>` `<After Eval>` |
 | 58 | 1149 | Verdict de l'Équilibre | 60 PM | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 34 * 100 / (200 + b.def + b.mdf))` · pose « ⚖ Verdict » 100% | 412 | — |
 
@@ -225,7 +225,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 12 | Parole n°2 Encouragement | 9% PV | soin PV *mana spirituelle * `400 + a.mat` · PM 20% +0 · PT +5 | 37 | `<ParoleL: 4>` `<NomOrigine: Encouragement>` ⚠ |
 | 1 | 25 | Lecture du Corps | 5 PM + 10 PT | pose « Confus » 100% | 36 | `<NoParole>` `<Regard>` |
 | 1 | 73 | Mots de Réconfort | 12 PM | PV 10% +0 | 41 | `<Post-Damage Eval>` |
-| 1 | 140 | Parole n°3 Verdict de l'Équilibre | 24 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 66 | `<ParoleL: 4>` `<NomOrigine: Verdict de l'Équilibre>` ⚠ |
+| 1 | 140 | Parole n°3 Verdict de l'Équilibre | 24 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 480 | `<ParoleL: 4>` `<NomOrigine: Verdict de l'Équilibre>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
 | 4 | 1106 | Pas de Côté | 12 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 7.8 * 200 / (200 + b.def))` · boost AGI 4t | 381 | `<Voie: eclair>` |
 | 5 | 151 | Parole n°3 Éclat Positif | 10 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 122 | `<ParoleL: 3>` `<NomOrigine: Éclat Positif>` ⚠ |
@@ -235,7 +235,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 11 | 1107 | Trait Foudroyant | 24 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 11 * 200 / (200 + b.def))` | 384 | `<Voie: eclair>` |
 | 12 | 1098 | Traverser | 18 PM | dégâts PV *Physique* `Math.floor(a.atk * 11 * 200 / (200 + b.def * 0.3))` | 405 | `<Perce-Armure>` `<Voie: vide>` |
 | 13 | 1236 | Accélérer | 28 PM | boost AGI 4t | 381 | — |
-| 15 | 153 | Parole n°4 Faille Négative | 14 PT | dégâts PV *mana négative * `Math.floor(a.mat * 10 * 200 / (200 + b.mdf))` | 76 | `<ParoleL: 3>` `<NomOrigine: Faille Négative>` ⚠ |
+| 15 | 153 | Parole n°4 Faille Négative | 14 PT | dégâts PV *mana négative * `Math.floor(a.mat * 10 * 200 / (200 + b.mdf))` | 493 | `<ParoleL: 3>` `<NomOrigine: Faille Négative>` ⚠ |
 | 16 | 1206 | Parole n°12 Foudre — Étincelle | 10 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 381 | `<ParoleL: 3>` `<NomOrigine: Foudre — Étincelle>` ⚠ |
 | 17 | 1108 | Trois Fois Avant Lui | 30 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 5.6 * 200 / (200 + b.def))` | 382 | `<Voie: eclair>` |
 | 18 | 1099 | Paume Immobile | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 14 * 200 / (200 + b.def * 0.25))` | 1 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 2>` |
@@ -254,7 +254,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 32 | 1079 | Prendre l'Élan | 16 PM | pose « 🛡 Posture de Fer » 100% · PT +30 | 437 | `<Voie: onde>` |
 | 33 | 1123 | Distorsion | 28 PT | dégâts PV *mana négative * `Math.floor(a.atk * 17 * 200 / (200 + b.def))` | 430 | `<Voie: flash>` |
 | 33 | 1156 | Elle Prend Ta Place | 24 PM | PV 20% +0 · retire « 👁 Marqué » 100% | 404 | — |
-| 35 | 157 | Parole n°4 Jugement Dual | 30 PT | dégâts PV *mana négative * `Math.floor(a.mat * 29 * 200 / (200 + b.mdf))` | 1 | `<ParoleL: 4>` `<NomOrigine: Jugement Dual>` ⚠ |
+| 35 | 157 | Parole n°4 Jugement Dual | 30 PT | dégâts PV *mana négative * `Math.floor(a.mat * 29 * 200 / (200 + b.mdf))` | 493 | `<ParoleL: 4>` `<NomOrigine: Jugement Dual>` ⚠ |
 | 37 | 1102 | Rien de Visible | 40 PM | dégâts PV *Physique* `Math.floor(a.atk * 9.4 * 200 / (200 + b.def * 0.35))` | 407 | `<Perce-Armure>` `<Voie: vide>` |
 | 37 | 1111 | Charge Statique | 20 PM | boost AGI 5t · boost CHA 5t | 51 | `<Voie: eclair>` |
 | 37 | 1207 | Parole n°12 Foudre — Arc | 22 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 40% | 382 | `<ParoleL: 4>` `<NomOrigine: Foudre — Arc>` ⚠ |
@@ -266,7 +266,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 44 | 1205 | Parole n°11 Terre — Séisme | 62 PM | dégâts PV *TERRE* `Math.floor(a.mat * 18 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 50% | 431 | `<ParoleL: 5>` `<NomOrigine: Terre — Séisme>` ⚠ |
 | 47 | 1124 | Éclat Noir | 50 PT | dégâts PV *mana négative * `Math.floor(a.atk * 24 * 200 / (200 + b.def))` | 445 | `<Voie: flash>` `<Nerf 2026-09-25: a.atk * 29 * → a.atk * 24 * — ×2,98 en moyenne pour 50 PT>` ⚠ |
 | 50 | 1104 | Vider le Geste | 20 PM | dégâts PV *Physique* `Math.floor(a.atk * 17 * 200 / (200 + b.def))` | 371 | `<Voie: vide>` |
-| 50 | 1113 | Plus Vite que le Geste | 58 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 31 * 200 / (200 + b.def))` | 21 | `<Voie: eclair>` `<Cooldown: 2>` |
+| 50 | 1113 | Plus Vite que le Geste | 58 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 31 * 200 / (200 + b.def))` | 210 | `<Voie: eclair>` `<Cooldown: 2>` |
 | 50 | 1237 | Affûter | 28 PM | boost ATQ 5t · boost MAT 5t | 51 | — |
 | 53 | 1160 | Maîtrise | 22 PM | dégâts PV *Physique* `Math.floor(a.atk * 17 * 200 / (200 + b.def))` | 1 | `<Nerf 2026-09-25: a.atk * 20 * → a.atk * 17 * — ×2,85 en moyenne pour 22 PM>` ⚠ |
 | 56 | 1105 | Le Creux Entre Deux | 65 PM | dégâts PV *Physique* `Math.floor(a.atk * 22 * 200 / (200 + b.def * 0.15))` | 417 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 4>` `<Nerf 2026-09-25: a.atk * 34 * → a.atk * 22 * — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
@@ -284,11 +284,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 95 | Œil du Stratège | 12 PM | pose « Analyse » 100% | 415 | — |
 | 1 | 96 | Corps-à-corps lourd | 10 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Vulnérable » 30% | 2 | `<NoParole>` |
 | 1 | 100 | Debout ! | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
-| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 180 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
-| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 330 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
-| 1 | 420 | Posture de Parade | 10 PM | pose « Posture de Parade » 100% | 1 | — |
-| 1 | 451 | Parole n°3 Focalisation | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 2 | `<ParoleL: 4>` `<NomOrigine: Focalisation>` ⚠ |
-| 1 | 452 | Parole n°2 Onde Concentrée | 12% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 3 * 200 / (200 + b.mdf))` | 7 | `<ParoleL: 5>` `<NomOrigine: Onde Concentrée>` ⚠ |
+| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
+| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
+| 1 | 420 | Posture de Parade | 10 PM | pose « Posture de Parade » 100% | 485 | — |
+| 1 | 451 | Parole n°3 Focalisation | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 480 | `<ParoleL: 4>` `<NomOrigine: Focalisation>` ⚠ |
+| 1 | 452 | Parole n°2 Onde Concentrée | 12% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 3 * 200 / (200 + b.mdf))` | 468 | `<ParoleL: 5>` `<NomOrigine: Onde Concentrée>` ⚠ |
 | 20 | 816 | Carnage des Neuf Voies | 25 PT | dégâts PV *Physique* `Math.floor(a.atk * 4.9 * 200 / (200 + b.def))` | 450 | `<Invocation: 3>` `<ParoleL: 4>` |
 | 30 | 817 | Étreinte de la Bête | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 451 | `<ReculVital: 20>` |
 | 45 | 815 | ⚔ la Mue Souveraine | 40 PT | **coquille** — rien | 449 | `<Ultime: mue>` |
@@ -300,7 +300,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 89 | Armure de Givre | 12 PM | pose « arret du temps (corporelle) » 100% | 312 | `<Parole: origine>` `<Trait: gel>` |
 | 1 | 97 | Valse des Positions | 10 PM | dégâts PV *mana positive* `Math.floor(a.atk * 8.1 * 200 / (200 + b.def))` | 404 | `<ParoleL: n>` `<Trait: change>` |
 | 1 | 438 | Change | 20 PM + 20 PT | **coquille** — rien | 437 | `<Trait: change>` |
-| 1 | 449 | Parole n°3 Instant Absolu | 90 PM | dégâts PV *mana positive* `Math.floor(a.mat * 7.6 * 200 / (200 + b.mdf))` | 178 | `<Ulti>` `<UltiColor: #5cc8ff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Instant Absolu>` ⚠ |
+| 1 | 449 | Parole n°3 Instant Absolu | 90 PM | dégâts PV *mana positive* `Math.floor(a.mat * 7.6 * 200 / (200 + b.mdf))` | 483 | `<Ulti>` `<UltiColor: #5cc8ff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Instant Absolu>` ⚠ |
 | 1 | 450 | Parole n°3 Point Zéro | 80 PM | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` | 40 | `<Ulti>` `<UltiColor: #3a9bff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Point Zéro>` ⚠ |
 
 ### Type 6 — hiver
@@ -329,13 +329,13 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` `<HorsFamille>` |
 | 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` `<HorsFamille>` |
 | 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` `<HorsFamille>` |
-| 1 | 1250 | Saisie de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 0.9 * 200 / (200 + b.def))` · pose « Étourdi » 55% | 21 | `<Avatar>` `<AvatarNiveau: 1>` |
+| 1 | 1250 | Saisie de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 0.9 * 200 / (200 + b.def))` · pose « Étourdi » 55% | 487 | `<Avatar>` `<AvatarNiveau: 1>` |
 | 1 | 1251 | Étau de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.9 * 200 / (200 + b.def))` · pose « 🔩 Blindage Fissuré » 70% | 404 | `<Avatar>` `<AvatarNiveau: 2>` |
 | 1 | 1252 | Le Torse Se Referme | — | pose « 🛡 Posture de Fer » 100% | 440 | `<Avatar>` `<AvatarNiveau: 2>` `<AvatarGarde>` ⚠ |
 | 1 | 1253 | Déferlante d'Unisson | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.6 * 200 / (200 + b.def))` | 404 | `<Avatar>` `<AvatarNiveau: 3>` |
 | 1 | 1254 | Ce Que Le Froid Garde | — | dégâts PV *GLACE* `Math.floor(a.atk * 1.4 * 200 / (200 + b.def))` · pose « Gelure » 60% | 232 | `<Avatar>` `<AvatarNiveau: 3>` |
-| 1 | 1263 | Avatar — Protège-le | — | **coquille** — rien | — | `<AvatarProtege>` `<HorsFamille>` |
-| 1 | 1264 | Avatar — Soigne-le | — | **coquille** — rien | — | `<AvatarOrdre: 1259>` `<HorsFamille>` |
+| 1 | 1263 | Avatar — Protège-le | — | **coquille** — rien | 437 | `<AvatarProtege>` `<HorsFamille>` |
+| 1 | 1264 | Avatar — Soigne-le | — | **coquille** — rien | 405 | `<AvatarOrdre: 1259>` `<HorsFamille>` |
 | 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` `<AvatarNiveau: 1>` `<HorsFamille>` |
 | 50 | 1256 | Avatar — Étau | — | **coquille** — rien | 404 | `<AvatarOrdre: 1251>` `<AvatarNiveau: 2>` `<HorsFamille>` |
 | 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` `<AvatarNiveau: 3>` `<HorsFamille>` |
@@ -399,18 +399,18 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 17 | Parole n°3 Technique d'Inversion | 30 PM | soin PV *mana positive* `1500 + a.mat` | 42 | `<Parole>` `<NomOrigine: Technique d'Inversion>` ⚠ |
 | 1 | 111 | Arme d'Ombre | 12 PM | script commun 22 | 415 | `<ParoleL: 3>` `<Ombre>` |
 | 1 | 112 | Âme d'Ombre | 12 PM | pose « Malédiction Ancienne » 100% | 415 | `<ParoleL: 3>` `<Ombre>` |
-| 1 | 141 | Parole n°2 Moisson des Âmes | 15% PV | drain PV *mana spirituelle * `Math.floor(((a.atk + a.mat) * 2) * 1.352 * 200 / (200 + b.mdf))` | 66 | `<NomOrigine: Moisson des Âmes>` ⚠ |
+| 1 | 141 | Parole n°2 Moisson des Âmes | 15% PV | drain PV *mana spirituelle * `Math.floor(((a.atk + a.mat) * 2) * 1.352 * 200 / (200 + b.mdf))` | 468 | `<NomOrigine: Moisson des Âmes>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
-| 1 | 480 | VUE | — | **coquille** — rien | — | — |
+| 1 | 480 | VUE | — | **coquille** — rien | 417 | — |
 | 4 | 1082 | Main Chaude | 14 PM | soin PV `Math.floor(a.mat * 4)` | 41 | `<Voie: source>` |
-| 5 | 158 | Parole n°2 Trait Spectral | 7% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 3 | `<ParoleL: 3>` `<NomOrigine: Trait Spectral>` ⚠ |
+| 5 | 158 | Parole n°2 Trait Spectral | 7% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 467 | `<ParoleL: 3>` `<NomOrigine: Trait Spectral>` ⚠ |
 | 5 | 1227 | Remonter le Mana | — | soin PM `Math.floor(a.mat * 0.8)` | 407 | — |
 | 6 | 1221 | Parole n°15 Ombre — Voile | 10 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 445 | `<ParoleL: 3>` `<NomOrigine: Ombre — Voile>` ⚠ |
 | 8 | 1163 | Parole n°15 Porte Entrouverte | 22 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 11 * 200 / (200 + b.mdf))` · boost AGI 3t | 253 | `<NomOrigine: Porte Entrouverte>` ⚠ |
 | 11 | 1083 | Remonter la Source | 32 PM | soin PV `Math.floor(a.mat * 3)` | 439 | `<Voie: source>` |
 | 12 | 1114 | Tracer le Cercle | 22 PM | dégâts PV *mana positive* `Math.floor(a.mat * 9.8 * 200 / (200 + b.mdf))` | 413 | `<Voie: domaine>` |
 | 13 | 1229 | Rompre le Silence | 16 PM | retire « 🔇 Silence Runique » 100% | 405 | — |
-| 16 | 1201 | Parole n°11 Terre — Caillou | 10 PM | dégâts PV *TERRE* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 373 | `<ParoleL: 3>` `<NomOrigine: Terre — Caillou>` ⚠ |
+| 16 | 1201 | Parole n°11 Terre — Caillou | 10 PM | dégâts PV *TERRE* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 203 | `<ParoleL: 3>` `<NomOrigine: Terre — Caillou>` ⚠ |
 | 17 | 1084 | Cautère | 26 PM | soin PV `Math.floor(a.mat * 6)` · retire « 🩸 Hémorragie Profonde » 100% | 397 | `<Voie: source>` |
 | 18 | 1222 | Parole n°15 Ombre — Tache | 22 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 12 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 40% | 446 | `<ParoleL: 4>` `<NomOrigine: Ombre — Tache>` ⚠ |
 | 20 | 1126 | Sept Éclats | 36 PT | dégâts PV *mana négative * `Math.floor(a.atk * 3.5 * 200 / (200 + b.def))` | 446 | `<Voie: flash>` |
@@ -425,8 +425,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 33 | 1127 | Le Noir se Répand | 42 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 10 * 200 / (200 + b.def))` · pose « 🌑 Éclipse » 50% | 448 | `<Voie: flash>` |
 | 33 | 1168 | Lame d'Envers | 30 PM | dégâts PV *OMBRE* `Math.floor((a.atk + a.mat) * 21 * 100 / (200 + b.def + b.mdf))` | 250 | — |
 | 37 | 1087 | Prendre sur Soi | 22 PM | soin PV `Math.floor(a.mat * 5)` | 433 | `<Voie: source>` |
-| 37 | 1202 | Parole n°11 Terre — Éclat | 22 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 374 | `<ParoleL: 4>` `<NomOrigine: Terre — Éclat>` ⚠ |
-| 38 | 1199 | Parole n°10 Vent — Tempête | 46 PM | dégâts PV *VENT* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 404 | `<ParoleL: 5>` `<NomOrigine: Vent — Tempête>` ⚠ |
+| 37 | 1202 | Parole n°11 Terre — Éclat | 22 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 203 | `<ParoleL: 4>` `<NomOrigine: Terre — Éclat>` ⚠ |
+| 38 | 1199 | Parole n°10 Vent — Tempête | 46 PM | dégâts PV *VENT* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 192 | `<ParoleL: 5>` `<NomOrigine: Vent — Tempête>` ⚠ |
 | 40 | 1224 | Parole n°15 Ombre — Nuit | 46 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 70% | 448 | `<ParoleL: 5>` `<NomOrigine: Ombre — Nuit>` ⚠ |
 | 41 | 1116 | La Règle du Lieu | 50 PM | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` · pose « 🔇 Silence Runique » 60% | 416 | `<Voie: domaine>` |
 | 43 | 1088 | Rendre le Mana | 30 PT | soin PM `Math.floor(a.mat * 1.2)` | 407 | `<Voie: source>` |
@@ -437,7 +437,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 52 | 1225 | Parole n°15 Ombre — Fond | 62 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 21 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 50% | 457 | `<ParoleL: 5>` `<NomOrigine: Ombre — Fond>` ⚠ |
 | 53 | 1172 | Ombres Multiples | 38 PM | dégâts PV *OMBRE* `Math.floor((a.atk + a.mat) * 11 * 100 / (200 + b.def + b.mdf))` | 252 | — |
 | 56 | 1117 | Cloison | 30 PM | pose « 🛡 Posture de Fer » 100% · boost MDF 4t | 437 | `<Voie: domaine>` |
-| 58 | 1203 | Parole n°11 Terre — Pilier | 34 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 375 | `<ParoleL: 4>` `<NomOrigine: Terre — Pilier>` ⚠ |
+| 58 | 1203 | Parole n°11 Terre — Pilier | 34 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 204 | `<ParoleL: 4>` `<NomOrigine: Terre — Pilier>` ⚠ |
 | 60 | 1129 | Ce Qui Ne Devrait Pas Toucher | 64 PT | dégâts PV *mana négative * `Math.floor(a.atk * 26 * 200 / (200 + b.def))` | 456 | `<Voie: flash>` `<Nerf 2026-09-25: a.atk * 36 * → a.atk * 26 * — ×4,70 en moyenne (pic ×7,9) pour 64 PT>` ⚠ |
 
 ### Type 2 — Spéciale
@@ -452,11 +452,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 69 | Porte de l'Envers | 12 PM | pose « Contre Total » 100% | 253 | `<ParoleL: 3>` `<Trait: porte>` |
 | 1 | 70 | Aspiration des Âmes Damnées | 8% PV | soin PV *mana spirituelle * `a.mhp * 0.50` · pose « Déstabilisé » 100% · script commun 16 | 434 | `<ParoleL: 4>` `<AspirationDamnees>` |
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
-| 1 | 110 | Abri de l'Envers | 12 PM | pose « dimension d'ombre » 100% | 260 | `<Parole: origine>` `<Trait: porte>` |
+| 1 | 110 | Abri de l'Envers | 12 PM | pose « dimension d'ombre » 100% | 537 | `<Parole: origine>` `<Trait: porte>` |
 | 1 | 123 | Décharge Infinie | 15 PM | dégâts PV *AME * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 364 | `<Parole: origine>` |
-| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 1 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
-| 1 | 453 | Parole n°7 Dévoreur d'Âmes | 50 PM + 30% PV | drain PV *AME * `a.atk*4 + a.mat*3 - b.mdf` | 66 | `<Ulti>` `<UltiColor: #9b5cff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Dévoreur d'Âmes>` ⚠ |
-| 1 | 454 | Tout ou Rien | 40 PT | dégâts PV *mana négative * `((Math.random()<0.5)?(a.atk*12):(a.atk*2)) - b.def` | 84 | `<Ulti>` `<UltiColor: #c800ff>` `<After Eval>` `<Parole: origine>` |
+| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
+| 1 | 453 | Parole n°7 Dévoreur d'Âmes | 50 PM + 30% PV | drain PV *AME * `a.atk*4 + a.mat*3 - b.mdf` | 532 | `<Ulti>` `<UltiColor: #9b5cff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Dévoreur d'Âmes>` ⚠ |
+| 1 | 454 | Tout ou Rien | 40 PT | dégâts PV *mana négative * `((Math.random()<0.5)?(a.atk*12):(a.atk*2)) - b.def` | 487 | `<Ulti>` `<UltiColor: #c800ff>` `<After Eval>` `<Parole: origine>` |
 | 35 | 811 | Parole n°15 Pluie de Lance du Styx | 26 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 4.1 * 200 / (200 + b.mdf))` | 377 | `<Invocation: 3>` `<ParoleL: 4>` `<NomOrigine: Pluie de Lance du Styx>` ⚠ |
 | 35 | 812 | Contre Totale | 22 PM | **coquille** — rien | 429 | `<ContreTotale>` |
 | 43 | 1170 | Parole n°2 Le Symbole | 15% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 26 * 200 / (200 + b.mdf))` · pose « ✨ Grâce Volée » 60% | 417 | `<NomOrigine: Le Symbole>` ⚠ |
@@ -478,7 +478,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 47 | Rafale de Jetons | 8 PM | dégâts PV *Physique* `Math.floor((a.luk*3) * 1.203 * 200 / (200 + b.def))` | 16 | `<NoParole>` |
 | 1 | 48 | Frappe Éclair | 6 PM | dégâts PV *Physique* `Math.floor((a.luk*4) * 1.315 * 200 / (200 + b.def))` | 35 | `<NoParole>` |
 | 1 | 49 | Rush du Tambour | 14 PM | dégâts PV *Physique* `Math.floor((a.luk*5) * 1.114 * 200 / (200 + b.def))` | 111 | `<NoParole>` |
-| 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 84 | `<NoParole>` `<Cooldown: 2>` |
+| 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 21 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
 ### ✘ Type 8 — invocation  *(INVISIBLE)*
@@ -510,7 +510,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
+| 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | 236 | `<Voie: forge>` |
 
 ### ◑ Type 12 — ombre de dague  *(à condition)*
 
@@ -518,7 +518,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
+| 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 249 | `<Voie: onde>` |
 
 ### ◑ Type 13 — ombre de hache  *(à condition)*
 
@@ -534,7 +534,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
+| 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 468 | `<Voie: onde>` |
 
 ### ◑ Type 15 — ombre de lance  *(à condition)*
 
@@ -550,7 +550,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 252 | `<FrappeAme>` ⚠ |
+| 1 | 120 | Déchirure d'Âme | 8% PV | drain PV *mana spirituelle * `Math.floor(a.atk * 14.55 * 200 / (200 + b.def))` | 467 | `<FrappeAme>` ⚠ |
 
 ### ✘ Type 17 — ombre de arc  *(INVISIBLE)*
 
@@ -558,7 +558,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
+| 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 251 | `<Voie: miroir>` |
 
 ### ◑ Type 18 — ombre de arme a feu  *(à condition)*
 
@@ -625,25 +625,25 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 21 | Parole n°3 Aura d'Espoir | 12 PM | boost DÉF 5t · PV 20% +0 | 34 | `<After Eval>` `<Parole: origine>` `<NomOrigine: Aura d'Espoir>` ⚠ |
 | 1 | 23 | « Assez. » | 12 PM | fuite spéciale · PV 100% +0 · PM 100% +0 | 35 | `<ParoleL: 3>` |
 | 1 | 28 | Concentration | 7% PV | boost AGI 2t · boost CHA 3t | 40 | `<NoParole>` |
-| 1 | 29 | Recueillement | 15 PM | boost AGI 3t · boost CHA 1t | 101 | `<NoParole>` |
+| 1 | 29 | Recueillement | 15 PM | boost AGI 3t · boost CHA 1t | 485 | `<NoParole>` |
 | 1 | 142 | Parole n°3 Bénédiction Stellaire | 28 PM | soin PV *mana positive* `320 + a.mat * 3` | 41 | `<ParoleL: 4>` `<NomOrigine: Bénédiction Stellaire>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
-| 1 | 474 | Parole n°3 « Qu'il pleuve. » | 18 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: rain, 5>` `<NomOrigine: Qu'il pleuve.>` ⚠ |
+| 1 | 474 | Parole n°3 « Qu'il pleuve. » | 18 PM | **coquille** — rien | 377 | `<Parole>` `<ParoleL: 3>` `<Appel: rain, 5>` `<NomOrigine: Qu'il pleuve.>` ⚠ |
 | 3 | 1174 | Parole n°14 Trait Clair | 12 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 8.4 * 200 / (200 + b.mdf))` | 441 | `<ParoleL: 3>` `<NomOrigine: Trait Clair>` ⚠ |
 | 4 | 1090 | Parade Juste | 14 PM | dégâts PV *Physique* `Math.floor(a.atk * 9.6 * 200 / (200 + b.def))` · pose « 🪞 Reflet » 40% | 2 | `<Voie: miroir>` |
 | 5 | 166 | Parole n°14 Rayon Stellaire | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 115 | `<ParoleL: 3>` `<NomOrigine: Rayon Stellaire>` ⚠ |
 | 5 | 1231 | Voir Clair | 14 PM | retire « 🌑 Éclipse » 100% · boost CHA 4t | 417 | — |
 | 6 | 1216 | Parole n°14 Lumière — Lueur | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 409 | `<ParoleL: 3>` `<NomOrigine: Lumière — Lueur>` ⚠ |
-| 8 | 475 | Parole n°3 « Que le ciel s'ouvre. » | 26 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: storm, 5>` `<NomOrigine: Que le ciel s'ouvre.>` ⚠ |
-| 8 | 1175 | Parole n°3 « Reste. » | 20 PM | dégâts PV *mana positive* `Math.floor(a.mat * 9 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 70% | 333 | `<ParoleL: 3>` `<NomOrigine: « Reste. »>` ⚠ |
+| 8 | 475 | Parole n°3 « Que le ciel s'ouvre. » | 26 PM | **coquille** — rien | 483 | `<Parole>` `<ParoleL: 3>` `<Appel: storm, 5>` `<NomOrigine: Que le ciel s'ouvre.>` ⚠ |
+| 8 | 1175 | Parole n°3 « Reste. » | 20 PM | dégâts PV *mana positive* `Math.floor(a.mat * 9 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 70% | 480 | `<ParoleL: 3>` `<NomOrigine: « Reste. »>` ⚠ |
 | 10 | 167 | Parole n°3 Soin Mineur | 8 PM | soin PV *mana positive* `300 + a.mat*2` | 41 | `<ParoleL: 3>` `<NomOrigine: Soin Mineur>` ⚠ |
 | 11 | 1091 | Renvoi Net | 28 PM | dégâts PV *mana positive* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` | 440 | `<Voie: miroir>` |
 | 12 | 1118 | Étau | 40 PM | dégâts PV *mana positive* `Math.floor(a.mat * 12 * 200 / (200 + b.mdf))` · malus AGI 4t | 414 | `<Voie: domaine>` |
-| 13 | 1176 | Parole n°14 Volée Nommée | 26 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 5.6 * 200 / (200 + b.mdf))` | 29 | `<ParoleL: 4>` `<NomOrigine: Volée Nommée>` ⚠ |
+| 13 | 1176 | Parole n°14 Volée Nommée | 26 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 5.6 * 200 / (200 + b.mdf))` | 242 | `<ParoleL: 4>` `<NomOrigine: Volée Nommée>` ⚠ |
 | 13 | 1234 | Encourager | 26 PM | boost ATQ 4t · PT +20 | 408 | — |
-| 14 | 476 | Parole n°3 « Qu'il neige. » | 22 PM | **coquille** — rien | — | `<Parole>` `<ParoleL: 3>` `<Appel: snow, 5>` `<NomOrigine: Qu'il neige.>` ⚠ |
+| 14 | 476 | Parole n°3 « Qu'il neige. » | 22 PM | **coquille** — rien | 385 | `<Parole>` `<ParoleL: 3>` `<Appel: snow, 5>` `<NomOrigine: Qu'il neige.>` ⚠ |
 | 15 | 168 | Parole n°14 Lumière Apaisante | 24 PM | soin PV *LUMIÈRE* `200 + a.mat*2` | 48 | `<ParoleL: 4>` `<NomOrigine: Lumière Apaisante>` ⚠ |
-| 16 | 1196 | Parole n°10 Vent — Souffle | 10 PM | dégâts PV *VENT* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 401 | `<ParoleL: 3>` `<NomOrigine: Vent — Souffle>` ⚠ |
+| 16 | 1196 | Parole n°10 Vent — Souffle | 10 PM | dégâts PV *VENT* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 189 | `<ParoleL: 3>` `<NomOrigine: Vent — Souffle>` ⚠ |
 | 17 | 1092 | Poser la Glace | 24 PM | pose « 🪞 Reflet » 100% · pose « 🛡 Posture de Fer » 100% | 439 | `<Voie: miroir>` |
 | 18 | 1177 | Parole n°29 Flèche de Crépuscule | 32 PM | dégâts PV *Crépuscule* `Math.floor(a.mat * 16 * 200 / (200 + b.mdf))` | 334 | `<ParoleL: 4>` `<NomOrigine: Flèche de Crépuscule>` ⚠ |
 | 18 | 1217 | Parole n°14 Lumière — Rayon | 22 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 12 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 40% | 410 | `<ParoleL: 4>` `<NomOrigine: Lumière — Rayon>` ⚠ |
@@ -664,9 +664,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 33 | 1180 | Parole n°3 « Assez. » | 38 PM | dégâts PV *mana positive* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · malus ATQ 4t | 411 | `<ParoleL: 4>` `<NomOrigine: « Assez. »>` ⚠ |
 | 35 | 172 | Parole n°14 Pluie d'Étoiles | 28 PM + 25 PT | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 9.3 * 200 / (200 + b.mdf))` | 99 | `<ParoleL: 4>` `<NomOrigine: Pluie d'Étoiles>` ⚠ |
 | 37 | 1095 | Rendre la Monnaie | 32 PM | dégâts PV *mana positive* `Math.floor(a.atk * 20 * 200 / (200 + b.def) * (1 + (a.mhp - a.hp) / a.mhp * 0.8))` | 412 | `<Voie: miroir>` |
-| 37 | 1197 | Parole n°10 Vent — Rafale | 22 PM | dégâts PV *VENT* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 40% | 402 | `<ParoleL: 4>` `<NomOrigine: Vent — Rafale>` ⚠ |
-| 38 | 1181 | Parole n°14 Pluie Nommée | 42 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 11 * 200 / (200 + b.mdf))` | 446 | `<ParoleL: 5>` `<NomOrigine: Pluie Nommée>` ⚠ |
-| 38 | 1200 | Parole n°10 Vent — Ouragan | 62 PM | dégâts PV *VENT* `Math.floor(a.mat * 18 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 50% | 365 | `<ParoleL: 5>` `<NomOrigine: Vent — Ouragan>` ⚠ |
+| 37 | 1197 | Parole n°10 Vent — Rafale | 22 PM | dégâts PV *VENT* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 40% | 190 | `<ParoleL: 4>` `<NomOrigine: Vent — Rafale>` ⚠ |
+| 38 | 1181 | Parole n°14 Pluie Nommée | 42 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 11 * 200 / (200 + b.mdf))` | 243 | `<ParoleL: 5>` `<NomOrigine: Pluie Nommée>` ⚠ |
+| 38 | 1200 | Parole n°10 Vent — Ouragan | 62 PM | dégâts PV *VENT* `Math.floor(a.mat * 18 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 50% | 193 | `<ParoleL: 5>` `<NomOrigine: Vent — Ouragan>` ⚠ |
 | 40 | 1219 | Parole n°14 Lumière — Aube | 46 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 70% | 412 | `<ParoleL: 5>` `<NomOrigine: Lumière — Aube>` ⚠ |
 | 41 | 1120 | Frontière | 18 PM | pose « 🪞 Reflet » 100% · boost DÉF 4t | 439 | `<Voie: domaine>` |
 | 43 | 1096 | Face à Face | 30 PM | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 17 * 100 / (200 + b.def + b.mdf))` · malus ATQ 4t | 364 | `<Voie: miroir>` |
@@ -679,7 +679,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 52 | 1220 | Parole n°14 Lumière — Midi | 62 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 21 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 50% | 441 | `<ParoleL: 5>` `<NomOrigine: Lumière — Midi>` ⚠ |
 | 53 | 1184 | Parole n°29 Flèche Miracle | 54 PM | dégâts PV *Crépuscule* `Math.floor(a.mat * 34 * 200 / (200 + b.mdf))` | 444 | `<ParoleL: 5>` `<NomOrigine: Flèche Miracle>` ⚠ `<Cooldown: 2>` |
 | 56 | 1121 | Le Domaine Entier | 70 PM | dégâts PV *mana positive* `Math.floor(a.mat * 26 * 200 / (200 + b.mdf))` | 441 | `<Voie: domaine>` `<Cooldown: 2>` `<Nerf 2026-09-25: a.mat * 33 * → a.mat * 26 * — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
-| 58 | 1198 | Parole n°10 Vent — Bourrasque | 34 PM | dégâts PV *VENT* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 403 | `<ParoleL: 4>` `<NomOrigine: Vent — Bourrasque>` ⚠ |
+| 58 | 1198 | Parole n°10 Vent — Bourrasque | 34 PM | dégâts PV *VENT* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 191 | `<ParoleL: 4>` `<NomOrigine: Vent — Bourrasque>` ⚠ |
 | 60 | 1085 | Second Souffle | 45 PM | retire « mort » 100% · PV 50% +0 | 449 | `<Voie: source>` |
 
 ### Type 2 — Spéciale
@@ -688,27 +688,27 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 13 | Vannes | 10 PM | pose « Enragé » 30% · malus MDF 2t | 36 | — |
 | 1 | 22 | « Debout ! » — l'Appel | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | `<ParoleL: 4>` |
-| 1 | 101 | Parole n°3 « Viens. » — l'Attraction | 27 PM | dégâts PV *mana positive* `Math.floor(a.mat * 5.7 * 200 / (200 + b.mdf))` | 333 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 4>` `<Trait: verbe>` `<NomOrigine: « Viens. » — l'Attraction>` ⚠ |
-| 1 | 102 | Parole n°3 « Pars. » — la Répulsion | 20 PM | dégâts PV *mana positive* `a.mat * 8` | 334 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 3>` `<Trait: verbe>` `<NomOrigine: « Pars. » — la Répulsion>` ⚠ `<Cooldown: 2>` |
+| 1 | 101 | Parole n°3 « Viens. » — l'Attraction | 27 PM | dégâts PV *mana positive* `Math.floor(a.mat * 5.7 * 200 / (200 + b.mdf))` | 481 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 4>` `<Trait: verbe>` `<NomOrigine: « Viens. » — l'Attraction>` ⚠ |
+| 1 | 102 | Parole n°3 « Pars. » — la Répulsion | 20 PM | dégâts PV *mana positive* `a.mat * 8` | 480 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 3>` `<Trait: verbe>` `<NomOrigine: « Pars. » — la Répulsion>` ⚠ `<Cooldown: 2>` |
 | 1 | 103 | Parole n°3 Siphon Fébrile | 10 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 416 | `<Post-Damage Eval>` `<NomOrigine: Siphon Fébrile>` ⚠ |
 | 1 | 104 | Parole n°3 Soin Fluctuant | 16 PM | soin PV *mana positive* `(a.mat * 3) * (Math.max(5, $gameVariables.value(14)) / 10)` | 246 | `<Post-Damage Eval>` `<ParoleL: 4>` `<NomOrigine: Soin Fluctuant>` ⚠ |
 | 1 | 105 | Transfusion d'Âme Blanche | 30 PM | soin PV *AME * `b.mhp` | 349 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<Parole: origine>` |
 | 1 | 106 | Parole n°3 Fils de Mana Pur | 10 PM | dégâts PV *mana positive* `a.mat * 1.5` | 416 | `<Post-Damage Eval>` `<NomOrigine: Fils de Mana Pur>` ⚠ |
 | 1 | 107 | Geyser d'Éclats | 12 PM | **coquille** — rien | 405 | `<Post-Damage Eval>` `<ParoleL: 3>` |
-| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 180 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
-| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 330 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
+| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
+| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
 | 1 | 460 | Parole n°3 Élan d'Espoir | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 41 | `<ParoleL: 4>` `<NomOrigine: Élan d'Espoir>` ⚠ |
 
 ### Type 3 — ult
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 457 | Parole n°14 Éclat de Conviction | 80 PM + 20% PV | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.7 * 200 / (200 + b.mdf))` | 31 | `<Ulti>` `<UltiColor: #ffd54a>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Éclat de Conviction>` ⚠ |
+| 1 | 457 | Parole n°14 Éclat de Conviction | 80 PM + 20% PV | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 6.7 * 200 / (200 + b.mdf))` | 245 | `<Ulti>` `<UltiColor: #ffd54a>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Éclat de Conviction>` ⚠ |
 | 20 | 819 | Parole n°3 le Verbe qui Défait | 32 PM | dégâts PV *mana positive* `Math.floor(a.mat * 3.4 * 200 / (200 + b.mdf))` | 458 | `<ParoleL: 4>` `<SceauMagie>` `<NomOrigine: le Verbe qui Défait>` ⚠ |
 | 30 | 477 | Parole n°12 le Ciel Ouvert | 96 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 32 * 200 / (200 + b.mdf))` | 64 | `<Parole>` `<Incantation: 2>` `<Ciel: storm>` `<CTB Speed: -50%>` `<NomOrigine: le Ciel Ouvert>` ⚠ `<Cooldown: 3>` |
 | 30 | 820 | Parole n°7 Syllabe de la Fin | 38 PM | dégâts PV *AME * `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` | 460 | `<ParoleL: 4>` `<NomOrigine: Syllabe de la Fin>` ⚠ |
 | 36 | 478 | Parole n°14 Plein Midi | 92 PM | dégâts PV *LUMIÈRE* `Math.floor(a.mat * 38 * 200 / (200 + b.mdf))` | 441 | `<Parole>` `<Incantation: 2>` `<Ciel: none>` `<CTB Speed: -50%>` `<NomOrigine: Plein Midi>` ⚠ `<Cooldown: 3>` |
-| 45 | 818 | ✴ la Parole Originelle | 60 PM | **coquille** — rien | 457 | `<Ultime: parole>` |
+| 45 | 818 | ✴ la Parole Originelle | 60 PM | **coquille** — rien | 441 | `<Ultime: parole>` |
 | 58 | 1185 | Parole n°3 La Parole Tenue | 66 PM | dégâts PV *mana positive* `Math.floor(a.mat * 38 * 200 / (200 + b.mdf))` | 412 | `<ParoleL: 5>` `<NomOrigine: La Parole Tenue>` ⚠ `<Cooldown: 2>` |
 | 70 | 479 | Parole n°3 Celle Qu'on Ne Dit Qu'une Fois | 180 PM | dégâts PV *mana positive* `Math.floor(a.mat * 55 * 200 / (200 + b.mdf))` | 441 | `<Parole>` `<Incantation: 3>` `<Apres: surcharge>` `<Cooldown: 5>` `<CTB Speed: -70%>` `<NomOrigine: Celle Qu'on Ne Dit Qu'une Fois>` ⚠ |
 
@@ -716,7 +716,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 335 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
+| 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 481 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
 
 ### Type 23 — portes
 

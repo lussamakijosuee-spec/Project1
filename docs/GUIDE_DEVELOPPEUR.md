@@ -597,6 +597,20 @@ Les **rencontres 201-204** branchent maintenant automatiquement sur le TYPE de c
 | 453-456 | Corruption (écran) | FX_Glitch | méta, glitch |
 | 457-460 | Mains de l'ombre | FX_Mains | peur, malédictions |
 
+> **Les teintes (2026-09-25).** Le champ « hue » d'une animation fait *tourner* la couleur de la feuille, il ne la
+> pose pas. Les variantes ci-dessus et la grille 158-339 appliquaient la même rotation à toutes leurs feuilles
+> (« Eau · Soin » sortait orange). Elles sont maintenant calculées feuille par feuille : rotation = couleur voulue −
+> couleur de départ, départs mesurés par `bancs/outils/mesurer_teintes.js`. Le banc `bancs/22_animations_coherentes.js`
+> le vérifie.
+
+## 🎆 Les sept lignes des manas (461-551)
+
+La grille 158-339 (13 formes × 14 éléments naturels) n'avait pas de ligne pour les manas. Mêmes 13 formes, même
+recette, palette de `ManaVisualEX` : **Spirituel** 461-473 · **Positif** 474-486 (formes magiques sur les feuilles
+Holy) · **Négatif** 487-499 (feuilles Darkness) · **Sombre** 500-512 (Darkness) · **Originel** 513-525 · **Âme** 526-538 ·
+**Semi-parfait** 539-551. Chaque compétence élémentaire porte une animation de sa ligne, ou une qui lui va
+(règle : `bancs/outils/coherence_animations.js`) ; `node bancs/outils/animer_les_competences.js` remet tout d'aplomb.
+
 ## 🖼️ Les 70 nouvelles images (img/pictures)
 
 **Glyphes & symboles** : `glyphe_feu/eau/vent/terre/foudre/glace/lumiere/ombre` · `mana_positif/negatif/sombre/spirituel/pur/semiparfait` · `crest_esprit/corps/ame` · `triangle_sources` · `rune1-6` · `sceau_codex` · `porte_fusion`
