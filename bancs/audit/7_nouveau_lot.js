@@ -39,7 +39,12 @@ console.log('\n═══ LES COMPÉTENCES SONT-ELLES ATTEIGNABLES ? ═══');
 const app=new Set(); C.forEach(c=>{if(c&&c.name)c.learnings.forEach(l=>app.add(l.skillId));});
 // Les techniques notées <Avatar> ne sont apprises par PERSONNE, et c'est
 // voulu : c'est l'Avatar Spirituel qui les joue, jamais sa porteuse.
-const orphelines=NEW.filter(s=>!app.has(s.id) && !/<Avatar>/.test(s.note||''));
+// Deux autres chemins que la classe, tous deux voulus :
+//   · un TRAIT D'ACTEUR « ajouter une compétence » (les Styles de Vesper) ;
+//   · le MIRACLE d'Aël, qui apprend les <Miracle> en plein combat.
+const ACTEURS=JSON.parse(fs.readFileSync(D+'Actors.json','utf8'));
+ACTEURS.forEach(a=>{if(a&&a.traits)a.traits.forEach(t=>{if(t.code===43)app.add(t.dataId);});});
+const orphelines=NEW.filter(s=>!app.has(s.id) && !/<Avatar>/.test(s.note||'') && !/<Miracle>/.test(s.note||''));
 const aLAvatar=NEW.filter(s=>/<Avatar>/.test(s.note||''));
 ok(orphelines.length===0,`toutes les compétences de héros sont apprises par une classe (${orphelines.length} orphelines, ${aLAvatar.length} réservées à l'Avatar)`);
 const casse=[...app].filter(i=>!(S[i]&&S[i].name));

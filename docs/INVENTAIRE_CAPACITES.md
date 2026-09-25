@@ -152,11 +152,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 3 | 1138 | Première Entaille | 12 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.4 * 200 / (200 + b.def))` · pose « 🩸 Hémorragie Profonde » 50% | 423 | `<Voie: sang>` |
+| 3 | 1138 | Première Entaille | 12 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.4 * 200 / (200 + b.def))` · pose « 🩸 Hémorragie Profonde » 50% | 423 | `<Voie: sang>` `<InscritDette>` `<HorsFamille>` |
 | 8 | 1139 | Lame Liquide | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 11 * 200 / (200 + b.def))` | 379 | `<Voie: sang>` |
-| 13 | 1140 | Deux Cercles | 32 PT | drain PV *mana négative * `Math.floor((a.atk + a.mat) * 20 * 100 / (200 + b.def + b.mdf))` | 415 | `<Voie: sang>` |
+| 13 | 1140 | Deux Cercles | 32 PT | drain PV *mana négative * `Math.floor((a.atk + a.mat) * 20 * 100 / (200 + b.def + b.mdf))` | 415 | `<Voie: sang>` `<InscritDette>` `<HorsFamille>` |
 | 18 | 1141 | Elle Ne Recule Pas | 26 PT | dégâts PV *mana négative * `Math.floor(a.atk * 24 * 200 / (200 + b.def) * (1 + (a.mhp - a.hp) / a.mhp * 0.8))` | 399 | `<Voie: sang>` |
-| 28 | 1143 | Rendre le Sang | 30 PT | drain PV *mana négative * `Math.floor(a.atk * 22 * 200 / (200 + b.def))` | 436 | `<Voie: sang>` |
+| 28 | 1143 | Rendre le Sang | 30 PT | drain PV *mana négative * `Math.floor(a.atk * 22 * 200 / (200 + b.def))` | 436 | `<Voie: sang>` `<RendreLeSang>` `<HorsFamille>` |
 | 43 | 1146 | Écarlate Montante | 34 PT | dégâts PV *mana négative * `Math.floor(a.atk * 7.7 * 200 / (200 + b.def))` | 421 | `<Voie: sang>` |
 
 ### ✘ Type 19 — Arts Sereins  *(INVISIBLE)*
@@ -326,20 +326,20 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` |
-| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` |
-| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` |
+| 1 | 1246 | Avatar — Laisse-le faire | — | **coquille** — rien | 21 | `<AvatarPosture: libre>` `<HorsFamille>` |
+| 1 | 1247 | Avatar — Assaut | — | **coquille** — rien | 21 | `<AvatarPosture: agressif>` `<HorsFamille>` |
+| 1 | 1248 | Avatar — Devant moi | — | **coquille** — rien | 440 | `<AvatarPosture: garde>` `<HorsFamille>` |
 | 1 | 1250 | Saisie de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 0.9 * 200 / (200 + b.def))` · pose « Étourdi » 55% | 21 | `<Avatar>` `<AvatarNiveau: 1>` |
 | 1 | 1251 | Étau de l'Armure | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.9 * 200 / (200 + b.def))` · pose « 🔩 Blindage Fissuré » 70% | 404 | `<Avatar>` `<AvatarNiveau: 2>` |
 | 1 | 1252 | Le Torse Se Referme | — | pose « 🛡 Posture de Fer » 100% | 440 | `<Avatar>` `<AvatarNiveau: 2>` `<AvatarGarde>` ⚠ |
 | 1 | 1253 | Déferlante d'Unisson | — | dégâts PV *mana négative * `Math.floor(a.atk * 1.6 * 200 / (200 + b.def))` | 404 | `<Avatar>` `<AvatarNiveau: 3>` |
 | 1 | 1254 | Ce Que Le Froid Garde | — | dégâts PV *GLACE* `Math.floor(a.atk * 1.4 * 200 / (200 + b.def))` · pose « Gelure » 60% | 232 | `<Avatar>` `<AvatarNiveau: 3>` |
-| 1 | 1263 | Avatar — Protège-le | — | **coquille** — rien | — | `<AvatarProtege>` |
-| 1 | 1264 | Avatar — Soigne-le | — | **coquille** — rien | — | `<AvatarOrdre: 1259>` |
-| 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` `<AvatarNiveau: 1>` |
-| 50 | 1256 | Avatar — Étau | — | **coquille** — rien | 404 | `<AvatarOrdre: 1251>` `<AvatarNiveau: 2>` |
-| 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` `<AvatarNiveau: 3>` |
-| 85 | 1258 | Avatar — Rends-le | — | **coquille** — rien | 232 | `<AvatarOrdre: 1254>` `<AvatarNiveau: 3>` |
+| 1 | 1263 | Avatar — Protège-le | — | **coquille** — rien | — | `<AvatarProtege>` `<HorsFamille>` |
+| 1 | 1264 | Avatar — Soigne-le | — | **coquille** — rien | — | `<AvatarOrdre: 1259>` `<HorsFamille>` |
+| 25 | 1255 | Avatar — Vise ça | — | **coquille** — rien | 21 | `<AvatarOrdre: 1249>` `<AvatarNiveau: 1>` `<HorsFamille>` |
+| 50 | 1256 | Avatar — Étau | — | **coquille** — rien | 404 | `<AvatarOrdre: 1251>` `<AvatarNiveau: 2>` `<HorsFamille>` |
+| 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` `<AvatarNiveau: 3>` `<HorsFamille>` |
+| 85 | 1258 | Avatar — Rends-le | — | **coquille** — rien | 232 | `<AvatarOrdre: 1254>` `<AvatarNiveau: 3>` `<HorsFamille>` |
 
 ### Ses états passifs
 
@@ -607,6 +607,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 2 · Spéciale | 12 | ouvert |
 | ✔ | 3 · ult | 8 | ouvert |
 | ✔ | 20 · miracle | 1 | ouvert |
+| ✔ | 23 · portes | 8 | ouvert |
 
 ### Type 1 — capacité
 
@@ -717,6 +718,19 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 40 | Yin et Yang du Mana | 100 PM | dégâts PV *mana positive* `(a.mp * 2) * ($gameVariables.value(14) / 5)` | 335 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<ParoleL: 5>` |
 
+### Type 23 — portes
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 1 | 1273 | Porte — le Voile | 12 PM | pose « Voilé » 100% | 35 | `<HorsFamille>` |
+| 1 | 1279 | Le Contrat | — | **coquille** — rien | 40 | `<Contrat>` `<HorsFamille>` |
+| 1 | 1280 | Contrat Forcé | — | **coquille** — rien | 58 | `<ContratForce>` `<HorsFamille>` |
+| 8 | 1278 | Porte — l'Allègement | 10 PM | pose « Allégé » 100% | 51 | `<HorsFamille>` |
+| 15 | 1274 | Porte — l'Oubli | 15 PM | pose « Sans Volonté » 100% | 55 | `<HorsFamille>` |
+| 25 | 1276 | Porte — les Pieux de Cristal | 20 PM | dégâts PV *mana positive* `Math.floor(a.mat * 9)` · pose « Cristallisé » 30% | 72 | `<Cooldown: 2>` `<HorsFamille>` |
+| 35 | 1275 | Porte — le Gouffre | 18 PM | dégâts PV `Math.floor(a.mat * 16 * 200 / (200 + b.mdf * 0.5))` | 102 | `<Cooldown: 2>` `<HorsFamille>` |
+| 50 | 1277 | Porte — la Fermeture | 30 PM | **coquille** — rien | 101 | `<PorteFermee: 3>` `<Cooldown: 5>` `<HorsFamille>` |
+
 ### Ses états passifs
 
 | # | État | Traits | Ouvre |
@@ -816,9 +830,9 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 
 ## Le compte
 
-- **369** entrées d'apprentissage sur les quatre héros ;
+- **377** entrées d'apprentissage sur les quatre héros ;
 - **19** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **5** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
-- **28** ne font rien du tout (ni dégâts, ni effet) ;
+- **31** ne font rien du tout (ni dégâts, ni effet) ;
 - **6** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 4 simple(s) étiquette(s)).

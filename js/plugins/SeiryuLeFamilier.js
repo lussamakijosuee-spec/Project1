@@ -365,9 +365,16 @@
             return s && a.isLearnedSkill(id) && a.canUse(s);
         });
     }
+    // ⚠ Vesper ne se soigne pas en combat (LePacteDeSang, règle d'Arlecchino) :
+    //   un soin sur elle rembourse sa Dette et ne rend rien. Il ne la choisit
+    //   donc jamais comme blessée à soigner — sinon il gaspille son tour.
+    function soignable(m) {
+        try { return !(window.PacteDeSang && window.PacteDeSang.soignable && !window.PacteDeSang.soignable(m)); }
+        catch (e) { return true; }
+    }
     function blesses(seuil) {
         return $gameParty.aliveMembers().filter(function (m) {
-            return m.actorId() !== FAMILIER && m.hp / m.mhp <= seuil;
+            return m.actorId() !== FAMILIER && m.hp / m.mhp <= seuil && soignable(m);
         }).sort(function (x, y) { return (x.hp / x.mhp) - (y.hp / y.mhp); });
     }
     function poser(a, idSkill, cibleIndex) {

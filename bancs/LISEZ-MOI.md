@@ -91,6 +91,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/le_royaume_imperial.js` | **Royaume Impérial** dans un vrai combat : 2 min, une âme par retour, tous les PM, la fatigue — 25 contrôles |
 | `navigateur/lavatar_obeit.js` | **l'Avatar obéit, et il apprend** : de vrais tours joués, qui frappe qui, les trois paliers du Lien — 21 contrôles |
 | `navigateur/lorbe_en_raccord.js` | **l'Orbe montre ce que le héros a vraiment** : ses branches = son menu de combat — 13 contrôles |
+| `navigateur/vesper_et_ael.js` | **Vesper (le Pacte, comme Arlecchino ; les trois Styles) et Aël (Lecture, Miracle, Contrat, Portes)**, chaque règle avec sa contre-épreuve — 42 contrôles |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
 

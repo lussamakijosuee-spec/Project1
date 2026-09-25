@@ -144,16 +144,29 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     var soigne = await page.evaluate(function () {
         var s = $gameActors.actor(6);
-        var v = $gameParty.members().filter(function (a) { return a.actorId() === 1; })[0];
-        v.setHp(Math.floor(v.mhp * 0.2));          // Vesper à 20 %
+        // ⚠ ludwing, pas Vesper : Vesper ne se soigne plus en combat (Arlecchino).
+        var v = $gameParty.members().filter(function (a) { return a.actorId() === 3; })[0];
+        v.setHp(Math.floor(v.mhp * 0.2));          // ludwing à 20 %
         s.clearActions(); s.makeActions();
         var a = s.currentAction();
         var it = a && a.item();
-        return { skill: it ? it.name : null, soin: it ? it.damage.type === 3 : false,
-                 pvVesper: Math.round(v.hp / v.mhp * 100) };
+        var cible = a ? a.makeTargets()[0] : null;
+        var r = { skill: it ? it.name : null, soin: it ? it.damage.type === 3 : false,
+                  cible: cible ? cible.name() : null, pv: Math.round(v.hp / v.mhp * 100) };
+        v.recoverAll();
+        // … et Vesper à 20 % : il ne gaspille PAS son soin sur elle
+        var ve = $gameParty.members().filter(function (x) { return x.actorId() === 1; })[0];
+        ve.setHp(Math.floor(ve.mhp * 0.2));
+        s.clearActions(); s.makeActions();
+        var b = s.currentAction(), cb = b ? b.makeTargets()[0] : null;
+        r.vesper = { soin: b && b.item() ? b.item().damage.type === 3 : false, cible: cb ? cb.name() : null };
+        ve.recoverAll();
+        return r;
     });
-    v('un allié tombe à 20 %, il SOIGNE au lieu de frapper', soigne.soin === true,
-        'Vesper à ' + soigne.pvVesper + ' % → il choisit « ' + soigne.skill + ' »');
+    v('un allié tombe à 20 %, il SOIGNE au lieu de frapper', soigne.soin === true && soigne.cible === 'ludwing',
+        'ludwing à ' + soigne.pv + ' % → il choisit « ' + soigne.skill + ' » sur ' + soigne.cible);
+    v('mais pas Vesper : on ne la soigne pas, il ne gaspille pas son tour', !(soigne.vesper.soin && soigne.vesper.cible === 'Vesper'),
+        'Vesper à 20 % → ' + (soigne.vesper.soin ? 'soin sur ' + soigne.vesper.cible : 'il fait autre chose'));
 
     var garde = await page.evaluate(function () {
         var s = $gameActors.actor(6);
@@ -197,10 +210,12 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     var heal = await page.evaluate(function () {
         var s = $gameActors.actor(6);
-        var v = $gameParty.members().filter(function (a) { return a.actorId() === 1; })[0];
+        // ⚠ Pas Vesper : depuis LePacteDeSang, on ne la soigne pas en combat
+        //   (règle d'Arlecchino). On mesure le soin sur ludwing.
+        var v = $gameParty.members().filter(function (a) { return a.actorId() === 3; })[0];
         v.setHp(Math.floor(v.mhp * 0.3));
         var avant = v.hp;
-        var act = new Game_Action(s); act.setSkill(1259); act.setTarget(0);
+        var act = new Game_Action(s); act.setSkill(1259); act.setTarget($gameParty.members().indexOf(v));
         act.apply(v);
         return { avant: avant, apres: v.hp, max: v.mhp, mat: s.mat };
     });
