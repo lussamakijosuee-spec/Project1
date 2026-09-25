@@ -226,6 +226,26 @@
             }
         }
 
+        // ——— SEPT ANS · la surface se relisse
+        var sa = boss('MecaMiroir');
+        if (sa && sa._miroirBrise > 0) {
+            sa._miroirBrise--;
+            if (sa._miroirBrise <= 0) {
+                sa._miroirBrise = 0;
+                dire('\\C[23]✦ ' + sa.name() + ' redevient lisse. Ce qu\'on lui donne, il le rend.\\C[0]');
+            } else {
+                dire(sa.name() + ' est encore fendu — ' + sa._miroirBrise + ' tour(s).');
+            }
+        }
+
+        // ——— LE DIEU SANS VISAGE · il prend, il rend
+        var dv = boss('MecaSansVisage');
+        if (dv) {
+            if (dv._visageDe && !dv._visageDe.isAlive()) { rendreLeVisage(dv, 'elle est tombée'); }
+            else if (dv._visageDe && dv.isStateAffected(SURCHARGE)) { rendreLeVisage(dv, 'il vacille'); }
+            else if (!dv._visageDe && dv.isStateAffected(CHARGE)) { prendreUnVisage(dv); }
+        }
+
         // ——— GOLIATH-ZÉRO · la chaleur
         var go = boss('MecaChaleur');
         if (go) {
@@ -329,6 +349,8 @@
             var bonus = arg(s, 'MecaNombre', 0, 120) / 100;
             v = Math.floor(v * (1 + bonus * (1 - s.hpRate())));
         }
+        // LE DIEU SANS VISAGE · il frappe avec le visage qu'il porte
+        if (v > 0 && meca(s, 'MecaSansVisage') && s._visageDe) { v = Math.floor(v * 1.4); }
         // NOM EFFACÉ · un héros privé de son nom frappe à moitié
         if (v > 0 && s && s._nomPris) v = Math.floor(v * 0.5);
         return v;
@@ -414,6 +436,77 @@
         }
         _die.call(this);
     };
+
+    //=======================================================================
+    // SEPT ANS · le miroir
+    //=======================================================================
+    // <MecaMiroir: renvoi, seuil, tours>
+    //   renvoi : % des dégâts reçus renvoyés à l'attaquant, surface intacte
+    //   seuil  : % de ses PV max encaissés d'un coup qui BRISE la surface
+    //   tours  : combien de tours il reste brisé avant de se relisser
+    //
+    // JOKO a écrit les quatre compétences : « Surface Lisse », « Bris Total »,
+    // « Les Éclats se Lèvent », « Parole n°3 Renvoi ». Le combat était déjà
+    // dans les noms ; il manquait qu'il se joue.
+    //
+    // La décision : le cogner doucement, et encaisser le renvoi — ou le briser
+    // d'un grand coup, et affronter ce qu'il y a derrière la surface.
+    var _degatsMiroir = Game_Action.prototype.executeHpDamage;
+    Game_Action.prototype.executeHpDamage = function (target, value) {
+        _degatsMiroir.call(this, target, value);
+        if (value <= 0 || !meca(target, 'MecaMiroir')) { return; }
+        var attaquant = this.subject();
+        if (!attaquant || attaquant === target) { return; }
+
+        var seuil = arg(target, 'MecaMiroir', 1, 12) / 100;
+        // Un grand coup brise la surface. Un petit coup revient.
+        if (!target._miroirBrise && value >= target.mhp * seuil) {
+            target._miroirBrise = arg(target, 'MecaMiroir', 2, 3);
+            dire('\\C[18]★ ' + target.name() + ' se fend. Les éclats se lèvent.\\C[0]');
+            return;
+        }
+        if (target._miroirBrise) { return; }   // brisé : plus rien ne revient
+
+        var part = arg(target, 'MecaMiroir', 0, 35) / 100;
+        var renvoi = Math.floor(value * part);
+        if (renvoi <= 0) { return; }
+        attaquant.gainHp(-renvoi);
+        attaquant.refresh();
+        dire('\\C[2]La surface renvoie ' + renvoi + ' à ' + attaquant.name() + '.\\C[0]');
+    };
+
+    //=======================================================================
+    // LE DIEU SANS VISAGE · il prend un visage
+    //=======================================================================
+    // <MecaSansVisage: tours>
+    //   Il prend le visage d'un héros quand il est en ⚡ Charge. Ce héros ne
+    //   peut plus rien faire de ce qu'il savait — l'état 230 scelle ses trois
+    //   branches — et le dieu frappe plus fort tant qu'il le porte.
+    //
+    //   Il le rend quand on le met à découvert : la Surcharge le lui arrache.
+    //   C'est la même prise que pour les comptes, donc rien de neuf à
+    //   apprendre pour le joueur.
+    var VISAGE = 230;
+
+    function prendreUnVisage(d) {
+        var proies = herosVivants().filter(function (h) { return !h.isStateAffected(VISAGE); });
+        if (!proies.length) { return; }
+        // il prend le visage de celui qui frappe le plus fort — le priver de
+        // ses coups doit COÛTER, sinon la mécanique n'est qu'un décor
+        proies.sort(function (a, b) { return b.atk + b.mat - (a.atk + a.mat); });
+        var v = proies[0];
+        v.addState(VISAGE);
+        d._visageDe = v;
+        dire('\\C[18]★ ' + d.name() + ' lève les yeux, et prend le visage de ' + v.name() + '.\\C[0]');
+    }
+
+    function rendreLeVisage(d, pourquoi) {
+        if (!d._visageDe) { return; }
+        var v = d._visageDe;
+        d._visageDe = null;
+        if (v.isStateAffected(VISAGE)) { v.removeState(VISAGE); }
+        dire('\\C[23]✦ ' + v.name() + ' retrouve son visage — ' + pourquoi + '.\\C[0]');
+    }
 
     //=======================================================================
     // Remise à zéro en début de combat : rien ne doit traîner d'un combat
