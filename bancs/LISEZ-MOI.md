@@ -92,6 +92,34 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/lavatar_obeit.js` | **l'Avatar obéit, et il apprend** : de vrais tours joués, qui frappe qui, les trois paliers du Lien — 21 contrôles |
 | `navigateur/lorbe_en_raccord.js` | **l'Orbe montre ce que le héros a vraiment** : ses branches = son menu de combat — 13 contrôles |
 | `navigateur/vesper_et_ael.js` | **Vesper (le Pacte, comme Arlecchino ; les trois Styles) et Aël (Lecture, Miracle, Contrat, Portes)**, chaque règle avec sa contre-épreuve — 42 contrôles |
+| `navigateur/lequipe_a_chaque_niveau.js` | **l'équipe complète, en combat, à 13 niveaux** : ~420 combats joués dans le moteur, vraies troupes, vraie IA, phases de boss — écrit `mesures_equipe.json` *(une mesure, pas un contrôle)* |
+| `navigateur/analyser_equipe.js` | **lit ces mesures** : tours pour gagner, victoires, dégâts reçus par tour, qui joue en premier — et le multiplicateur qui amènerait chaque rang sur sa cible |
+
+## `navigateur/lequipe_a_chaque_niveau.js` — le banc qui jouait mal et faisait dire n'importe quoi
+
+Il ne lit aucune formule : il **joue**. Et quatre fois, c'est sa façon de jouer qui mentait, pas le jeu.
+
+| Ce que le banc faisait | Ce qu'il en concluait | Ce qui était vrai |
+|---|---|---|
+| Aël ne lançait que ses Portes | « Aël fait 0 à 200 dégâts par action » | elle a un vrai kit de Paroles : **3 800 à 10 000** |
+| les pages de troupe n'étaient pas jouées | « Le Compteur est imbattable en 40 tours » | sans ses phases, il n'avait pas de PHASE II : **battu en 17 tours** |
+| il lançait le coup le plus fort, point | « au niveau 1, l'équipe perd contre un rang D » | les héros **se tuaient eux-mêmes** : recul, Renvoi, Reflet, Parole brisée |
+| il visait un Miroir avec de la magie | idem | le 🪞 Reflet est affiché : un joueur frappe ailleurs |
+
+Il joue donc maintenant comme un joueur **raisonnable, pas parfait** : pas de magie sur une cible
+en Reflet, pas une Parole que l'aide du menu dit risquée (tenue < 50 %), pas un coup qui laisse le
+lanceur sous 30 % de ses PV, pas une cible dont « le Renvoi est prêt ».
+
+```bash
+TROUPES=16 node bancs/navigateur/lequipe_a_chaque_niveau.js        # la mesure (≈ 2 min)
+node bancs/navigateur/analyser_equipe.js                           # la lecture
+MULT="D:3.5,1.4;A:1.8,1" node bancs/navigateur/lequipe_a_chaque_niveau.js   # essayer un réglage
+DIAG=552,80 node bancs/navigateur/lequipe_a_chaque_niveau.js       # un combat, coup par coup
+SONDE=4,45,579 node bancs/navigateur/lequipe_a_chaque_niveau.js    # le kit d'un héros, trié
+```
+
+> Les boss restent **bruyants** : avec la même configuration, le niveau 60 a donné 2 victoires sur 8,
+> puis 5 sur 8. Un chiffre de boss se lit sur plusieurs passages, jamais sur un seul.
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
 
