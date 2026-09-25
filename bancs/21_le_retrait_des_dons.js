@@ -56,18 +56,16 @@ console.log('1) Les greffons : éteints, pas effacés');
 
 // ── 2 · l'Avatar, lui, tourne ─────────────────────────────────────────────
 console.log('\n2) L\'Avatar de Korrah a survécu');
-T('AvatarSpirituel est ALLUMÉ', actif('AvatarSpirituel'),
-    'c\'est la seule pièce que JOKO garde');
-T('AvatarDeKorrah est allumé — son corps', actif('AvatarDeKorrah'));
-T('il sait se passer des Dons', (function () {
-    var src = fs.readFileSync(P + 'js/plugins/AvatarSpirituel.js', 'utf8');
-    // toutes ses lectures du système retiré doivent être gardées
-    var nues = (src.match(/window\.Dons\.[a-zA-Z]/g) || []).length;
-    var gardees = (src.match(/window\.Dons\s*(\?|&&)/g) || []).length
-                + (src.match(/if\s*\(\s*!\s*window\.Dons\s*\)/g) || []).length
-                + (src.match(/if\s*\(\s*window\.Dons\s*&&/g) || []).length;
-    return gardees > 0 && nues <= gardees + 3;
-})(), 'ses appels à window.Dons sont tous derrière une garde');
+// L'Avatar n'a pas disparu : il a changé de nature. JOKO voulait « deux
+// personnes qui attaquent » — il est donc devenu un vrai cinquième combattant,
+// monté par SeiryuLeFamilier. L'ancien greffon, qui le jouait À TRAVERS Korrah,
+// s'éteint pour ne pas faire double emploi ; il reste sur le disque.
+T('SeiryuLeFamilier est ALLUMÉ', actif('SeiryuLeFamilier'),
+    'c\'est lui qui fait entrer seiryu en cinquième');
+T('AvatarDeKorrah est allumé — sa place derrière elle', actif('AvatarDeKorrah'));
+T('AvatarSpirituel est éteint, pas effacé',
+    !actif('AvatarSpirituel') && fs.existsSync(P + 'js/plugins/AvatarSpirituel.js'),
+    'il jouait l\'Avatar depuis Korrah : deux moteurs feraient agir seiryu deux fois');
 
 // ── 3 · le corps de l'Avatar existe ───────────────────────────────────────
 console.log('\n3) Son corps');

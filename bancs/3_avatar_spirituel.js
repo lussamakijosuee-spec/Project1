@@ -80,6 +80,32 @@ Game_Action.prototype.makeDamageValue=function(v){return v;};
 global.Scene_MenuBase=function(){}; global.Window_Base=function(){};
 global.Graphics={boxWidth:816,boxHeight:624};
 
+// ═════════════════════════════════════════════════════════════════════════════
+// BANC EN SOMMEIL DEPUIS LE 2026-09-24
+//
+// Ce banc mesure `AvatarSpirituel.js`, qui jouait l'Avatar À TRAVERS Korrah.
+// JOKO a précisé : « Korrah, elle a deux personnes qui attaquent. » seiryu est
+// donc devenu un vrai cinquième combattant, et l'ancien greffon est éteint —
+// deux moteurs le feraient agir deux fois par tour.
+//
+// Un banc qui mesure un greffon éteint ne mesure pas le jeu (§6). Il se
+// rallume tout seul si AvatarSpirituel revient au registre.
+//
+// Ce qui est mesuré à la place :
+//     bancs/navigateur/seiryu_cinquieme.js   — 24 contrôles, dans le moteur
+// ═════════════════════════════════════════════════════════════════════════════
+(function () {
+    var _reg = JSON.parse(require('fs').readFileSync(
+        require('path').join(__dirname, '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    if (!_reg.some(function (p) { return p.name === 'AvatarSpirituel' && p.status; })) {
+        console.log('\n  ⏸  BANC EN SOMMEIL — AvatarSpirituel est eteint.');
+        console.log('     seiryu est maintenant un vrai combattant :');
+        console.log('     voir  bancs/navigateur/seiryu_cinquieme.js\n');
+        process.exit(0);
+    }
+})();
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ⚠ ON NE CHARGE QUE CE QUE LE JEU CHARGE.
 // Le 2026-09-24, JOKO a retiré le système des Dons Spirituels. Ce banc

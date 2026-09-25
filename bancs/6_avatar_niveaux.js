@@ -113,6 +113,34 @@ global.Input = { isTriggered: () => false }; global.TouchInput = { isCancelled: 
 global.AudioManager = { playSe: noop };
 global.Scene_Map = { prototype: { onMapLoaded: noop, update: noop } };
 
+// ═════════════════════════════════════════════════════════════════════════════
+// BANC EN SOMMEIL DEPUIS LE 2026-09-24
+//
+// Ce banc mesure `AvatarSpirituel.js`, qui jouait l'Avatar À TRAVERS Korrah :
+// une action de plus, sans PV ni tour. JOKO a précisé ce qu'il voulait —
+// « Korrah, elle a deux personnes qui attaquent » — et seiryu est devenu un
+// vrai cinquième combattant. L'ancien greffon est éteint pour ne pas faire
+// double emploi.
+//
+// Ses seuils (25 · 50 · 85) ne sont pas perdus : ce sont désormais les niveaux
+// d'apprentissage de la classe 5 « familié », et seiryu monte avec Korrah.
+//
+// On n'efface pas le banc (§3). Ce qui est mesuré à la place :
+//     bancs/navigateur/seiryu_cinquieme.js   — 24 contrôles, dans le moteur
+//     bancs/21_le_retrait_des_dons.js        — que le montage tient
+// ═════════════════════════════════════════════════════════════════════════════
+(function () {
+    var _reg = JSON.parse(require('fs').readFileSync(
+        require('path').join(__dirname, '..', 'js', 'plugins.js'), 'utf8')
+        .replace(/^[^\[]*/, '').replace(/;\s*$/, ''));
+    if (!_reg.some(function (p) { return p.name === 'AvatarSpirituel' && p.status; })) {
+        console.log('\n  ⏸  BANC EN SOMMEIL — AvatarSpirituel est eteint.');
+        console.log('     seiryu est maintenant un vrai combattant :');
+        console.log('     voir  bancs/navigateur/seiryu_cinquieme.js\n');
+        process.exit(0);
+    }
+})();
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ⚠ ON NE CHARGE QUE CE QUE LE JEU CHARGE.
 // Le 2026-09-24, JOKO a retiré le système des Dons Spirituels. Ce banc

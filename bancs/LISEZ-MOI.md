@@ -65,10 +65,10 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 |---|---|
 | `1_dons_spirituels.js` | ⏸ **en sommeil** — Endurance, jauges, casse : le système des Dons est retiré |
 | `2_evolution_paliers.js` | ⏸ **en sommeil** — la montée des paliers d'un Don |
-| `3_avatar_spirituel.js` | l'Avatar : son tour, son ciblage, son interception, ses trois postures |
+| `3_avatar_spirituel.js` | ⏸ **en sommeil** — l'Avatar joué à travers Korrah |
 | `4_un_seul_don.js` | **la règle d'or** : un seul Don par personne, 76 contrôles |
 | `5_verrou_et_ordres.js` | ⏸ **en sommeil** — le verrou du Don |
-| `6_avatar_niveaux.js` | les 3 niveaux de l'Avatar (25/50/85), le contrôle croissant, l'inséparabilité |
+| `6_avatar_niveaux.js` | ⏸ **en sommeil** — les seuils sont passés dans la classe 5 |
 | `audit/6_bestiaire.js` | les 400+ ennemis et les 41 boss |
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
@@ -84,7 +84,8 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
 | `navigateur/les_livres.js` | **le Bestiaire et l'Encyclopédie, ouverts depuis le menu et parcourus** — 12 contrôles |
 | `21_le_retrait_des_dons.js` | **le retrait des Dons tient** : greffons éteints mais présents, 16 pièces gardées, l'Avatar survivant — 26 contrôles |
-| `navigateur/le_corps_de_lavatar.js` | **seiryu derrière Korrah**, dessiné derrière elle, entier dans l'écran, qui flotte et qui frappe — 11 contrôles |
+| `navigateur/seiryu_cinquieme.js` | **seiryu, cinquième combattant** : ses PV, son tour, ses décisions, ses trois postures, sa protection — 24 contrôles |
+| `navigateur/le_corps_de_lavatar.js` | ⏸ **remplacé** par `seiryu_cinquieme.js` |
 | `navigateur/ecran_des_dons.js` | ⏸ **en sommeil** — l'écran des Dons est parti avec son système |
 
 ## `9_doctrines.js` — pourquoi il ne relit pas le script qui a écrit les doctrines
@@ -258,3 +259,32 @@ supposer. Le texte en attente disait le reste :
 ```
 textes en attente : 1  ["\\C[23]✦ Korrah rouvre les yeux — l'Armure Volante est là."]
 ```
+
+
+## `occasion: 3` — la compétence que personne ne peut jouer
+
+seiryu est devenu un vrai combattant le 2026-09-24. Au premier essai, il a
+choisi **« Attaque »** — le coup de base — alors qu'il connaissait treize
+techniques et qu'il avait 970 PM.
+
+Le banc ne s'est pas contenté de constater : il a demandé à MV, ligne par ligne,
+pourquoi chacune lui était refusée.
+
+```
+#1253 Déferlante d'Unisson   apprise=true  canUse=false  occasion=3  coût=true
+```
+
+`occasion: 3` veut dire **jamais jouable** — ni au menu, ni au combat. C'était
+juste tant que l'Avatar était forcé à travers Korrah : le greffon appelait
+`Game_Action` directement et court-circuitait `canUse()`. Le jour où il a fallu
+que le personnage **choisisse lui-même**, MV a repris ses droits et lui a tout
+refusé.
+
+Trois d'entre elles avaient en plus `stypeId: 0`, le type que rien n'ouvre —
+apprises et invisibles, le piège du §7.
+
+**Ce que ça apprend.** Une donnée n'est pas juste ou fausse dans l'absolu : elle
+est juste *pour un mécanisme donné*. Changer le mécanisme peut retourner sa
+validité sans que rien ne bouge dans le fichier. Et surtout : quand un
+personnage fait quelque chose d'inattendu, on ne relit pas le code — on demande
+au moteur ce qu'il a refusé, et pourquoi.
