@@ -378,7 +378,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 2 · Spéciale | 17 | ouvert |
 | ✔ | 3 · ult | 2 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
-| ◑ | 8 · invocation | 2 | à condition : en lançant « Royaume Impérial » → état « Royaume Impérial » |
+| ✘ | 8 · invocation | 2 | **INVISIBLE** — seul chemin : état « Royaume Impérial » — que rien ne pose, hors d'atteinte |
 | ✔ | 9 · ame | 9 | ouvert |
 | ◑ | 11 · ombre d'épeé | 1 | à condition : en équipant arme « Épée d'Ombre » |
 | ◑ | 12 · ombre de dague | 1 | à condition : en équipant arme « Dague d'Ombre » |
@@ -389,9 +389,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — seul chemin : état « arc d'ombre » — que rien ne pose, hors d'atteinte |
 | ◑ | 18 · ombre de arme a feu | 1 | à condition : en équipant arme « Fusil à Pompe Éternel » |
 
-> **7 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
+> **5 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
-> **8 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+> **10 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -468,7 +468,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 71 | Royaume Impérial | 1000 PM | pose « Royaume Impérial » 100% | 415 | `<After Eval>` `<Voie: domaine>` |
+| 1 | 71 | Royaume Impérial | 1000 PM | pose « 👑 Royaume Impérial » 100% | 415 | `<DomaineRoyal>` `<Ancien After Eval — remplacé par RoyaumeImperial v2, INERTE>` ⚠ `<Voie: domaine>` |
 | 45 | 810 | ☠ Royaume Impérial des Ténèbres | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
@@ -483,9 +483,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 84 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
-### ◑ Type 8 — invocation  *(à condition)*
+### ✘ Type 8 — invocation  *(INVISIBLE)*
 
-*à condition : en lançant « Royaume Impérial » → état « Royaume Impérial »*
+*INVISIBLE — seul chemin : état « Royaume Impérial » — que rien ne pose, hors d'atteinte*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -769,6 +769,7 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 | `<NomOrigine>` | 120 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<ComboLien>` | 8 | dort dans `ComboLiens` | Vesper #413 Fureur Spectrale (Duo) · Vesper #417 Trinité d'Âmes (Trio) … |
 | `<AvatarGarde>` | 1 | **étiquette** — jamais lue nulle part | Korrah #1252 Le Torse Se Referme |
+| `<Ancien After Eval — remplacé par RoyaumeImperial v2, INERTE>` | 1 | **étiquette** — jamais lue nulle part | ludwing #71 Royaume Impérial |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
 
 ---
@@ -817,8 +818,8 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **367** entrées d'apprentissage sur les quatre héros ;
-- **18** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
-- **7** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
+- **20** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **5** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **26** ne font rien du tout (ni dégâts, ni effet) ;
-- **4** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
-  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 2 simple(s) étiquette(s)).
+- **5** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
+  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 3 simple(s) étiquette(s)).
