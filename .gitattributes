@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Les scripts Windows doivent sortir du depot avec des fins de ligne CRLF,
+# quel que soit le reglage git du PC qui clone.
+*.bat text eol=crlf
+LISEZ-MOI_GENERATEUR.txt text eol=crlf
