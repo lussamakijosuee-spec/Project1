@@ -1,0 +1,1282 @@
+{
+ "customEffect": [
+  {
+   "id": 7,
+   "nom": "Enragé",
+   "demandes": [
+    "Action Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionStartState"
+   ],
+   "octets": 664
+  },
+  {
+   "id": 10,
+   "nom": "Traqueur de Coups",
+   "demandes": [
+    "Respond"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "respondState"
+   ],
+   "octets": 2359
+  },
+  {
+   "id": 16,
+   "nom": "Domaine Déployé",
+   "demandes": [
+    "Action Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionStartState"
+   ],
+   "octets": 808
+  },
+  {
+   "id": 22,
+   "nom": "Éveil du Génie",
+   "demandes": [
+    "React"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "reactState"
+   ],
+   "octets": 477
+  },
+  {
+   "id": 24,
+   "nom": "Maladresse",
+   "demandes": [
+    "Action Start",
+    "Establish"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "establishState",
+    "actionStartState"
+   ],
+   "octets": 785
+  },
+  {
+   "id": 25,
+   "nom": "Méditation Profonde",
+   "demandes": [
+    "Confirm"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "confirmState"
+   ],
+   "octets": 692
+  },
+  {
+   "id": 27,
+   "nom": "Folie Totale",
+   "demandes": [
+    "Turn End"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnEndState"
+   ],
+   "octets": 825
+  },
+  {
+   "id": 28,
+   "nom": "Folie Destructrice",
+   "demandes": [
+    "Confirm"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "confirmState"
+   ],
+   "octets": 697
+  },
+  {
+   "id": 30,
+   "nom": "Sérénité Absolue",
+   "demandes": [
+    "Confirm"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "confirmState"
+   ],
+   "octets": 522
+  },
+  {
+   "id": 32,
+   "nom": "Trauma",
+   "demandes": [
+    "Action Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionStartState"
+   ],
+   "octets": 216
+  },
+  {
+   "id": 34,
+   "nom": "Maître Serein",
+   "demandes": [
+    "React"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "reactState"
+   ],
+   "octets": 523
+  },
+  {
+   "id": 36,
+   "nom": "Insupportable",
+   "demandes": [
+    "Turn Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnStartState"
+   ],
+   "octets": 1375
+  },
+  {
+   "id": 37,
+   "nom": "Souffre-Douleur",
+   "demandes": [
+    "React"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "reactState"
+   ],
+   "octets": 523
+  },
+  {
+   "id": 39,
+   "nom": "Royaume Impérial",
+   "demandes": [
+    "Apply",
+    "Turn End",
+    "Remove"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "addState",
+    "removeState",
+    "turnEndState"
+   ],
+   "octets": 2444
+  },
+  {
+   "id": 40,
+   "nom": "Confiance Absolue",
+   "demandes": [
+    "Regenerate"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "regenerateState"
+   ],
+   "octets": 1316
+  },
+  {
+   "id": 44,
+   "nom": "Sous Observation",
+   "demandes": [
+    "Action End"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionEndState"
+   ],
+   "octets": 2591
+  },
+  {
+   "id": 45,
+   "nom": "Technique Incomplète",
+   "demandes": [
+    "Action End"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionEndState"
+   ],
+   "octets": 51
+  },
+  {
+   "id": 46,
+   "nom": "Surcharge d'Âme",
+   "demandes": [
+    "Action Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "actionStartState"
+   ],
+   "octets": 209
+  },
+  {
+   "id": 47,
+   "nom": "Surcharge d'Âme (2)",
+   "demandes": [
+    "Initiate",
+    "Confirm"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "initiateState",
+    "confirmState"
+   ],
+   "octets": 383
+  },
+  {
+   "id": 48,
+   "nom": "Surcharge d'Âme (MAX)",
+   "demandes": [
+    "Action Start",
+    "Confirm",
+    "Turn End"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnEndState",
+    "confirmState",
+    "actionStartState"
+   ],
+   "octets": 977
+  },
+  {
+   "id": 49,
+   "nom": "Mangeur d'Âmes",
+   "demandes": [
+    "Turn End",
+    "Victory"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnEndState",
+    "victory"
+   ],
+   "octets": 1776
+  },
+  {
+   "id": 50,
+   "nom": "Présence Corrompue",
+   "demandes": [
+    "Turn End"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnEndState"
+   ],
+   "octets": 1126
+  },
+  {
+   "id": 66,
+   "nom": "arret du temps (corporelle) ",
+   "demandes": [
+    "React"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "reactState"
+   ],
+   "octets": 952
+  },
+  {
+   "id": 74,
+   "nom": "Résonance Passive",
+   "demandes": [
+    "Turn Start"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "turnStartState"
+   ],
+   "octets": 505
+  },
+  {
+   "id": 87,
+   "nom": "La Fureur Froide",
+   "demandes": [
+    "Apply",
+    "React",
+    "Remove"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "addState",
+    "removeState",
+    "reactState"
+   ],
+   "octets": 1769
+  },
+  {
+   "id": 89,
+   "nom": "Le Sang ne Ment Jamais",
+   "demandes": [
+    "Respond"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "respondState"
+   ],
+   "octets": 673
+  },
+  {
+   "id": 90,
+   "nom": "l'État d'évolution",
+   "demandes": [
+    "Respond"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "respondState"
+   ],
+   "octets": 990
+  },
+  {
+   "id": 214,
+   "nom": "♻ Reprise",
+   "demandes": [
+    "React"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "reactState"
+   ],
+   "octets": 884
+  },
+  {
+   "id": 220,
+   "nom": "☠ Compte à Rebours",
+   "demandes": [
+    "Apply",
+    "Turn End",
+    "Remove"
+   ],
+   "aLaStructure": true,
+   "remplis": [
+    "addState",
+    "removeState",
+    "turnEndState"
+   ],
+   "octets": 714
+  }
+ ],
+ "passives": [
+  {
+   "id": 22,
+   "nom": "Éveil du Génie",
+   "condition": 81
+  },
+  {
+   "id": 23,
+   "nom": "Distraite",
+   "condition": 81
+  },
+  {
+   "id": 24,
+   "nom": "Maladresse",
+   "condition": 81
+  },
+  {
+   "id": 25,
+   "nom": "Méditation Profonde",
+   "condition": 81
+  },
+  {
+   "id": 28,
+   "nom": "Folie Destructrice",
+   "condition": 81
+  },
+  {
+   "id": 29,
+   "nom": "Agressivité Nocive",
+   "condition": 81
+  },
+  {
+   "id": 30,
+   "nom": "Sérénité Absolue",
+   "condition": 81
+  },
+  {
+   "id": 31,
+   "nom": "Tension Latente",
+   "condition": 81
+  },
+  {
+   "id": 34,
+   "nom": "Maître Serein",
+   "condition": 81
+  },
+  {
+   "id": 35,
+   "nom": "Agaçant",
+   "condition": 81
+  },
+  {
+   "id": 36,
+   "nom": "Insupportable",
+   "condition": 81
+  },
+  {
+   "id": 37,
+   "nom": "Souffre-Douleur",
+   "condition": 81
+  },
+  {
+   "id": 40,
+   "nom": "Confiance Absolue",
+   "condition": 81
+  },
+  {
+   "id": 41,
+   "nom": "Hésitation",
+   "condition": 81
+  },
+  {
+   "id": 42,
+   "nom": "Complexe d'Infériorité",
+   "condition": 81
+  },
+  {
+   "id": 43,
+   "nom": "Blocage Psychologique",
+   "condition": 81
+  },
+  {
+   "id": 46,
+   "nom": "Surcharge d'Âme",
+   "condition": 81
+  },
+  {
+   "id": 47,
+   "nom": "Surcharge d'Âme (2)",
+   "condition": 81
+  },
+  {
+   "id": 48,
+   "nom": "Surcharge d'Âme (MAX)",
+   "condition": 81
+  },
+  {
+   "id": 61,
+   "nom": " NORMALTHY ",
+   "condition": 81
+  },
+  {
+   "id": 62,
+   "nom": "normal",
+   "condition": 81
+  },
+  {
+   "id": 63,
+   "nom": "normal",
+   "condition": 81
+  },
+  {
+   "id": 64,
+   "nom": "normal",
+   "condition": 81
+  },
+  {
+   "id": 74,
+   "nom": "Résonance Passive",
+   "condition": 81
+  }
+ ],
+ "ia": [],
+ "meta": {
+  "passive state": {
+   "poses": 14,
+   "dansMeta": 14,
+   "exemple": "acteur #1 Vesper"
+  },
+  "mana": {
+   "poses": 555,
+   "dansMeta": 555,
+   "exemple": "acteur #1 Vesper"
+  },
+  "mana2": {
+   "poses": 8,
+   "dansMeta": 8,
+   "exemple": "acteur #1 Vesper"
+  },
+  "voiedefaut": {
+   "poses": 221,
+   "dansMeta": 221,
+   "exemple": "acteur #1 Vesper"
+  },
+  "camp": {
+   "poses": 425,
+   "dansMeta": 425,
+   "exemple": "acteur #1 Vesper"
+  },
+  "trait": {
+   "poses": 17,
+   "dansMeta": 17,
+   "exemple": "acteur #4 Aël"
+  },
+  "parole": {
+   "poses": 47,
+   "dansMeta": 47,
+   "exemple": "compétence #8 Parole n°3 Guérir"
+  },
+  "nomorigine": {
+   "poses": 404,
+   "dansMeta": 404,
+   "exemple": "compétence #8 Parole n°3 Guérir"
+  },
+  "interdit": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #11 Éclat Noir"
+  },
+  "parolel": {
+   "poses": 274,
+   "dansMeta": 274,
+   "exemple": "compétence #12 Parole n°2 Encouragement"
+  },
+  "hp cost": {
+   "poses": 53,
+   "dansMeta": 53,
+   "exemple": "compétence #12 Parole n°2 Encouragement"
+  },
+  "noparole": {
+   "poses": 38,
+   "dansMeta": 38,
+   "exemple": "compétence #18 Pas de Rupture"
+  },
+  "after eval": {
+   "poses": 13,
+   "dansMeta": 13,
+   "exemple": "compétence #21 Parole n°3 Aura d'Espoir"
+  },
+  "regard": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #25 Lecture du Corps"
+  },
+  "pre-damage eval": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "compétence #40 Yin et Yang du Mana"
+  },
+  "post-damage eval": {
+   "poses": 14,
+   "dansMeta": 14,
+   "exemple": "compétence #40 Yin et Yang du Mana"
+  },
+  "target action": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "compétence #42 Magie de Projection"
+  },
+  "ombre": {
+   "poses": 13,
+   "dansMeta": 13,
+   "exemple": "compétence #44 Lame de Mana Sombre"
+  },
+  "setup action": {
+   "poses": 100,
+   "dansMeta": 100,
+   "exemple": "compétence #45 Assaut Fulgurant"
+  },
+  "finish action": {
+   "poses": 95,
+   "dansMeta": 95,
+   "exemple": "compétence #45 Assaut Fulgurant"
+  },
+  "voie": {
+   "poses": 98,
+   "dansMeta": 98,
+   "exemple": "compétence #46 Déploiement de Domaine"
+  },
+  "cooldown": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "compétence #50 Pari Téméraire"
+  },
+  "sang": {
+   "poses": 21,
+   "dansMeta": 21,
+   "exemple": "compétence #53 Lame de Sang"
+  },
+  "invocation": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "compétence #67 Pluie de Lances d'Ombre"
+  },
+  "sceaumagie": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #68 Parole n°15 Annihilation d"
+  },
+  "aspirationdamnees": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #70 Aspiration des Âmes Damnée"
+  },
+  "ames.length; ++i) {\n    var ame = ames[i];\n    \n    if (ame && ame.isactor()) {\n      // enlève l'état \"mort\"\n      ame.removestate(ame.deathstateid());\n      \n      // restaure 100% de leurs pv et pm\n      ame.sethp(ame.mhp);\n      ame.setmp(ame.mmp);\n      \n      // animation de résurrection\n      ame.startanimation(49);\n      hasrevived = true;\n    }\n  }\n  \n  // message fluide (ne bloque pas le combat)\n  if (hasrevived && scenemanager._scene._logwindow) {\n    scenemanager._scene._logwindow.addtext(\"les âmes du domaine se relèvent pour servir leur maître !\");\n    audiomanager.playse({ name": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "compétence #71 Royaume Impérial"
+  },
+  "before eval": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #86 Copy_Paste.sys"
+  },
+  "custom requirement": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #87 Brisement de Concept"
+  },
+  "chancedeparalyser) {\n    \n    // 3. application sécurisée de l'état\n    // on utilise addstate(8) uniquement si la cible peut être affectée\n    if (target.isstateaddable(8)) {\n        target.addstate(8); \n        user.startanimation(54); \n        audiomanager.playse({name": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "compétence #106 Parole n°3 Fils de Mana Pu"
+  },
+  "frappeame": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #120 Déchirure d'Âme"
+  },
+  "combo": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #413 Fureur Spectrale (Duo)"
+  },
+  "combolien": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #413 Fureur Spectrale (Duo)"
+  },
+  "ulti": {
+   "poses": 8,
+   "dansMeta": 8,
+   "exemple": "compétence #445 Tranche-Néant"
+  },
+  "ulticolor": {
+   "poses": 8,
+   "dansMeta": 8,
+   "exemple": "compétence #445 Tranche-Néant"
+  },
+  "ame": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #466 Parole n°2 Aspiration d'Âm"
+  },
+  "avatar": {
+   "poses": 13,
+   "dansMeta": 13,
+   "exemple": "compétence #469 Frappe des Poings Volants"
+  },
+  "telegraphe": {
+   "poses": 42,
+   "dansMeta": 42,
+   "exemple": "compétence #472 Les Deux Yeux se Ferment"
+  },
+  "whole action": {
+   "poses": 85,
+   "dansMeta": 85,
+   "exemple": "compétence #472 Les Deux Yeux se Ferment"
+  },
+  "apres": {
+   "poses": 43,
+   "dansMeta": 43,
+   "exemple": "compétence #473 Parole n°7 Synchronisation"
+  },
+  "appel": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #474 Parole n°3 « Qu'il pleuve."
+  },
+  "incantation": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "compétence #477 Parole n°12 le Ciel Ouvert"
+  },
+  "ciel": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #477 Parole n°12 le Ciel Ouvert"
+  },
+  "ctb speed": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #477 Parole n°12 le Ciel Ouvert"
+  },
+  "fusionchair": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #807 ⟡ Fusion — la Chair d'Âme"
+  },
+  "fusion": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #808 ⟡ Fusion — le Fil du Rasoi"
+  },
+  "royaumeimperial": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #810 ☠ Royaume Impérial des Tén"
+  },
+  "contretotale": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #812 Contre Totale"
+  },
+  "ultime": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #813 ✶ la Convergence"
+  },
+  "reculvital": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #817 Étreinte de la Bête"
+  },
+  "fusiontech": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #821 Parole n°7 ⟡ Lame de Chair"
+  },
+  "rune": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #824 Parole n°3 ◈ Rune d'Entrav"
+  },
+  "exécution": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #837 La Curée"
+  },
+  "après": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #850 Parole n°8 Détonation"
+  },
+  "perce-armure": {
+   "poses": 9,
+   "dansMeta": 9,
+   "exemple": "compétence #861 Arquebuse Impériale"
+  },
+  "dernier souffle": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #871 Parole n°7 Dernier Mot"
+  },
+  "escalade": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #876 Parole n°7 Famine"
+  },
+  "copie": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #880 Copie Fidèle"
+  },
+  "nombre": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #888 Parole n°3 Note Tenue"
+  },
+  "quatriememur": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #955 Parole n°16 Il te Regarde "
+  },
+  "avatarposture": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #1246 Avatar — Laisse-le faire"
+  },
+  "avatarniveau": {
+   "poses": 10,
+   "dansMeta": 10,
+   "exemple": "compétence #1249 Poings Enchaînés"
+  },
+  "avatargarde": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1252 Le Torse Se Referme"
+  },
+  "avatarordre": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "compétence #1255 Avatar — Vise ça"
+  },
+  "seiryu": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1259 Ce Que Le Dragon Rend"
+  },
+  "upgrade effect": {
+   "poses": 30,
+   "dansMeta": 30,
+   "exemple": "objet #80 Éclat d'Âme"
+  },
+  "materiau": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "objet #86 Croc Ébréché"
+  },
+  "materiaurare": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "objet #104 Cœur de Boss"
+  },
+  "rod": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "objet #110 Canne de Pêche"
+  },
+  "rodimg": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "objet #110 Canne de Pêche"
+  },
+  "bait": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "objet #111 Appât"
+  },
+  "baitimg": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "objet #111 Appât"
+  },
+  "baitsink": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "objet #111 Appât"
+  },
+  "don": {
+   "poses": 16,
+   "dansMeta": 16,
+   "exemple": "arme #513 Éclat Stellaire"
+  },
+  "forme": {
+   "poses": 16,
+   "dansMeta": 16,
+   "exemple": "arme #513 Éclat Stellaire"
+  },
+  "palier": {
+   "poses": 16,
+   "dansMeta": 16,
+   "exemple": "arme #513 Éclat Stellaire"
+  },
+  "donde": {
+   "poses": 16,
+   "dansMeta": 16,
+   "exemple": "arme #513 Éclat Stellaire"
+  },
+  "butinboss": {
+   "poses": 65,
+   "dansMeta": 65,
+   "exemple": "arme #517 de Gargal"
+  },
+  "famille": {
+   "poses": 464,
+   "dansMeta": 464,
+   "exemple": "arme #517 de Gargal"
+  },
+  "relic": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "armure #47 Talisman du Vampire"
+  },
+  "traitdebloque": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "armure #76 Éclat Volant"
+  },
+  "rang": {
+   "poses": 446,
+   "dansMeta": 446,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "aura": {
+   "poses": 421,
+   "dansMeta": 421,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "bete": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "danger": {
+   "poses": 549,
+   "dansMeta": 549,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "ai level": {
+   "poses": 549,
+   "dansMeta": 549,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "ai priority": {
+   "poses": 549,
+   "dansMeta": 549,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "breathing": {
+   "poses": 549,
+   "dansMeta": 549,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "breathing speed": {
+   "poses": 549,
+   "dansMeta": 549,
+   "exemple": "ennemi #1 Chauve-souris"
+  },
+  "scale sprite": {
+   "poses": 202,
+   "dansMeta": 202,
+   "exemple": "ennemi #3 Orc"
+  },
+  "noread": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #10 Roi Poulet"
+  },
+  "mahoraga": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #21 Champion de Vultric"
+  },
+  "radahn": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #21 Champion de Vultric"
+  },
+  "jadememoire": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #23 Noyé du Lac"
+  },
+  "custom target eval": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #25 Errant Gonflé"
+  },
+  "malenia": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #25 Errant Gonflé"
+  },
+  "donoboss": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "ennemi #37 Arbitre de l'Ordre d'Or"
+  },
+  "traitboss": {
+   "poses": 8,
+   "dansMeta": 8,
+   "exemple": "ennemi #41 Muta"
+  },
+  "jadeprime": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #42 L'Empereur Kevératus"
+  },
+  "atone": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #47 Bandit de Route"
+  },
+  "donoesprit": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "ennemi #77 Esprit Errant"
+  },
+  "lore": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "ennemi #79 Régis le Magnifique"
+  },
+  "gaster": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #83 Celui qui est Tombé"
+  },
+  "nom": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #84 chef des bandit muta"
+  },
+  "verite": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #84 chef des bandit muta"
+  },
+  "boss": {
+   "poses": 45,
+   "dansMeta": 45,
+   "exemple": "ennemi #101 le dieu sans visage"
+  },
+  "enable hp link breathing": {
+   "poses": 45,
+   "dansMeta": 45,
+   "exemple": "ennemi #101 le dieu sans visage"
+  },
+  "desc": {
+   "poses": 422,
+   "dansMeta": 422,
+   "exemple": "ennemi #124 esprit puissant"
+  },
+  "floating": {
+   "poses": 64,
+   "dansMeta": 64,
+   "exemple": "ennemi #124 esprit puissant"
+  },
+  "floating speed": {
+   "poses": 64,
+   "dansMeta": 64,
+   "exemple": "ennemi #124 esprit puissant"
+  },
+  "floating height": {
+   "poses": 64,
+   "dansMeta": 64,
+   "exemple": "ennemi #124 esprit puissant"
+  },
+  "dementtombe": {
+   "poses": 7,
+   "dansMeta": 7,
+   "exemple": "ennemi #401 Vesper, le Dément"
+  },
+  "betetombee": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "ennemi #402 Korrah, la Bête"
+  },
+  "erranttombe": {
+   "poses": 9,
+   "dansMeta": 9,
+   "exemple": "ennemi #403 Ludwing, l'Errant"
+  },
+  "dechiretombe": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #407 Aël, le Déchiré"
+  },
+  "mecamiroir": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #807 Sept Ans, ce qui sort d'un"
+  },
+  "mecasansvisage": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #808 le dieu sans visage"
+  },
+  "mecanom": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #817 Nom Effacé, le marqué dont"
+  },
+  "mecareprises": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #818 Reprise 21, ce qui revient"
+  },
+  "mecarecompile": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #819 Le Non-Défini, ce à quoi l"
+  },
+  "mecachaleur": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #820 Goliath-Zéro, le prototype"
+  },
+  "mecacomptearebours": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #821 Le Compteur, celui qui a f"
+  },
+  "mecaponte": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #822 La Pondeuse, celle qui rem"
+  },
+  "mecacarapace": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #823 Karkinos, le roi sous la c"
+  },
+  "mecanombre": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #824 Le Dernier des Petits, cel"
+  },
+  "mecaretournement": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #825 Rukkha, la tortue continen"
+  },
+  "mecamaree": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #826 Leviathan, ce qui vit sous"
+  },
+  "mecagueules": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #827 la forme de vie ultime"
+  },
+  "mecadime": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #828 Thanatos, la fin, simpleme"
+  },
+  "donokamui": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "ennemi #829 Donovano, le Mana Parfait"
+  },
+  "custom action start effect": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "état #7 Enragé"
+  },
+  "chanceattaquelou && lou && lou.isbattlemember() && lou.isalive()) {\n    battlemanager._targets = [lou];\n    action._targetindex = lou.index();\n  }\n}": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "état #7 Enragé"
+  },
+  "custom respond effect": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "état #10 Traqueur de Coups"
+  },
+  "statefx": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "état #11 JACKPOT"
+  },
+  "statefxcolor": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "état #11 JACKPOT"
+  },
+  "mue": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #12 Berserk"
+  },
+  "custom passive condition": {
+   "poses": 24,
+   "dansMeta": 24,
+   "exemple": "état #22 Éveil du Génie"
+  },
+  "custom react effect": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "état #22 Éveil du Génie"
+  },
+  "custom establish effect": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #24 Maladresse"
+  },
+  "ennemis.length; i++) {\n    ennemis[i].gainhp(-degatsonde);\n    ennemis[i].startdamagepopup();\n    ennemis[i].clearresult();\n  }\n}": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "état #24 Maladresse"
+  },
+  "custom confirm effect": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "état #25 Méditation Profonde"
+  },
+  "custom turn end effect": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "état #27 Folie Totale"
+  },
+  "custom turn start effect": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "état #36 Insupportable"
+  },
+  "custom apply effect": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "état #39 Royaume Impérial"
+  },
+  "custom remove effect": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "état #39 Royaume Impérial"
+  },
+  "custom regenerate effect": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #40 Confiance Absolue"
+  },
+  "membres.length; i++) {\n  var allie = membres[i];\n  var id = allie.actorid();\n  \n  // 3. sécurité": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "état #40 Confiance Absolue"
+  },
+  "custom action end effect": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "état #44 Sous Observation"
+  },
+  "custom initiate effect": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #47 Surcharge d'Âme (2)"
+  },
+  "custom victory effect": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #49 Mangeur d'Âmes"
+  },
+  "threshold) {\n        value = 0; // annule les dégâts\n        target.startanimation(51); // animation de parade légère\n        \n        if (battlemanager._logwindow) {\n            battlemanager._logwindow.addtext(\"aël dévie l'attaque avec un doigt. mouvement inutile.\");\n        }\n    } \n    // cas 2": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "état #87 La Fureur Froide"
+  },
+  "reprise": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #214 ♻ Reprise"
+  },
+  "defender.hp) && !defender._reprisefaite) {\n    defender._reprisefaite = true;\n    var seuil = math.max(1, math.floor(defender.mhp * 0.30));\n    value = defender.hp - seuil;\n    defender.removestate(214);\n    if (scenemanager._scene && scenemanager._scene._logwindow) {\n        scenemanager._scene._logwindow.addtext(defender.name() + ' refuse encore.');\n    }\n}": {
+   "poses": 1,
+   "dansMeta": 0,
+   "exemple": "état #214 ♻ Reprise"
+  },
+  "doom": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #220 ☠ Compte à Rebours"
+  },
+  "seiryu-non": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #230 🎭 Sans Visage"
+  },
+  "sansvisage": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #230 🎭 Sans Visage"
+  }
+ },
+ "sansTrace": [],
+ "iaAvec": 549,
+ "iaSans": 0
+}
