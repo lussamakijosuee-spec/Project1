@@ -147,6 +147,34 @@
         _startTurn.call(this);
     };
 
+    //-----------------------------------------------------------------------
+    // LA PRISE DU JOUEUR
+    //-----------------------------------------------------------------------
+    // Mesuré le 2026-09-25, en jouant Le Compteur sur quatorze tours : son
+    // compte faisait 4-3-2-1-ZÉRO puis recommençait, SANS CONDITION. Le groupe
+    // le frappait depuis le tour 14, ses PV tombaient de 100 % à 36 %, il
+    // changeait de phase — le compte ne bougeait pas d'un chiffre.
+    //
+    // Une mécanique qui annonce sans jamais rien demander n'est pas une
+    // mécanique : c'est un métronome. Le joueur la subit, il ne la joue pas.
+    //
+    // JOKO : « En le mettant à découvert. » Tout ce qui se COMPTE ne compte
+    // désormais que si le boss n'est pas en ✷ Surcharge. Le briser gagne un
+    // tour — et ça se branche sur le télégraphe qu'il avait déjà écrit, donc
+    // le joueur n'a rien de neuf à apprendre : il sait déjà que la Surcharge
+    // est la fenêtre. Elle sert maintenant à deux choses au lieu d'une.
+    //
+    // ⚠ Et ça se DIT. Une prise invisible ne vaut pas mieux qu'aucune prise :
+    // sans la ligne de journal, le joueur ne saurait pas que son coup a servi.
+    function leCompteAvance(b) {
+        if (!b) { return false; }
+        if (b.isStateAffected(SURCHARGE)) {
+            dire('\\C[23]✦ ' + b.name() + ' vacille — le compte s\'arrête ce tour-ci.\\C[0]');
+            return false;
+        }
+        return true;
+    }
+
     function battementDesMecaniques() {
         if (!$gameTroop) return;
 
@@ -154,7 +182,7 @@
         var th = boss('MecaDime');
         if (th) {
             if (th._dimeCible && th._dimeCible.isAlive()) {
-                th._dimeTours--;
+                th._dimeTours -= leCompteAvance(th) ? 1 : 0;
                 if (th._dimeTours <= 0) {
                     dire('\\C[2]Le compte est bon. ' + th._dimeCible.name() + ' paie la Dîme.\\C[0]');
                     th._dimeCible.gainHp(-Math.floor(th._dimeCible.mhp * 0.5));
@@ -178,11 +206,18 @@
         if (co) {
             var total = arg(co, 'MecaCompteARebours', 0, 5);
             if (co._compte === undefined) co._compte = total;
-            co._compte--;
+            // ⚠ Pas de `return` ici : on sortirait de TOUT le battement, et les
+            // mécaniques des autres boss de la troupe ne tourneraient plus.
+            if (leCompteAvance(co)) { co._compte--; }
             if (co._compte <= 0) {
                 dire('\\C[18]★ ZÉRO.\\C[0]');
+                // JOKO : « Oui, et durement. Une mécanique ratée doit pouvoir
+                // coûter le combat. » C'était un pourcentage des PV COURANTS :
+                // ça ne pouvait donc jamais tuer, quel que soit le nombre de
+                // fois qu'on laissait le compte arriver au bout. Sur les PV
+                // MAX, laisser passer deux Zéro de suite tue.
                 herosVivants().forEach(function (h) {
-                    h.gainHp(-Math.floor(h.hp * 0.45));
+                    h.gainHp(-Math.floor(h.mhp * 0.45));
                     h.refresh();
                 });
                 co._compte = total;
@@ -195,7 +230,7 @@
         var go = boss('MecaChaleur');
         if (go) {
             var max = arg(go, 'MecaChaleur', 0, 6);
-            go._chaleur = (go._chaleur || 0) + 1;
+            if (leCompteAvance(go)) { go._chaleur = (go._chaleur || 0) + 1; }
             if (go._chaleur >= max) {
                 dire('\\C[18]★ SURCHAUFFE ! ' + go.name() + ' disjoncte.\\C[0]');
                 go.gainHp(-Math.floor(go.mhp * 0.06));
