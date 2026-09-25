@@ -277,6 +277,11 @@
         var v = ev._vie;
         if (!v || v.metier === 'fixe') { return; }
 
+        // ⚠ Un PNJ à qui l'on parle ne s'en va pas au milieu de sa phrase.
+        //   `EvenementsUtiles` pose ce sursis sur « NPC talk <nom> » ; il
+        //   retombe de lui-même dès que l'événement se tait.
+        if (ev._pauseConversation > 0) { return; }
+
         var but = ouAller(v, heure(), jourDeRepos(), ilPleut());
         var cible = v[but.lieu] || v.poste;
         v.but = but.lieu;

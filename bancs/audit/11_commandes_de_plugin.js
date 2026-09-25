@@ -30,9 +30,14 @@ var RACINE = path.join(__dirname, '..', '..');
 var appels = {};
 function noter(mot, ou, texte) {
     var k = mot.toUpperCase();
-    appels[k] = appels[k] || { ou: {}, textes: {} };
+    appels[k] = appels[k] || { ou: {}, textes: {}, casses: {} };
     appels[k].ou[ou] = 1;
     appels[k].textes[texte] = 1;
+    // ⚠ On garde l'orthographe EXACTE. La plupart des greffons comparent avec
+    //   `command === 'theatrhythm'`, sans toucher à la casse : une majuscule
+    //   de trop et la commande est morte. En ne gardant que la version en
+    //   capitales, cet audit ne pouvait pas voir ce bug-là.
+    appels[k].casses[mot] = (appels[k].casses[mot] || 0) + 1;
 }
 function scan(list, ou) {
     (list || []).forEach(function (c) {
@@ -82,22 +87,78 @@ var actifs = JSON.parse(fs.readFileSync(path.join(RACINE, 'js/plugins.js'), 'utf
     .filter(function (p) { return p.status && !/^▬/.test(p.name); })
     .map(function (p) { return p.name; });
 
-function repondants(mot) {
-    var re = new RegExp("['\"]" + mot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "['\"]", 'i');
-    return gestionnaires.filter(function (f) { return re.test(sources[f]); })
+/**
+ * ⚠ ON NE CHERCHE PAS LE MOT DANS TOUT LE FICHIER.
+ *
+ * `FamillesDeCapacites.js` lit un paramètre nommé `marque` : `P['marque']`.
+ * Un `<Marque>` cité n'importe où suffisait donc à faire croire que la
+ * commande MARQUE trouvait preneur — alors qu'aucun greffon ne la traite.
+ *
+ * Les paramètres se lisent en haut du fichier ; la commande se traite en bas,
+ * dans le `pluginCommand`. On ne regarde donc que ce qui vient APRÈS la
+ * première mention de `pluginCommand` : l'endroit où l'on compare des noms
+ * de commande, et nulle part ailleurs.
+ */
+function zoneDeDispatch(f) {
+    var s = sources[f] || '';
+    var i = s.indexOf('pluginCommand');
+    return i < 0 ? '' : s.slice(i);
+}
+function repondants(mot, exact) {
+    var re = new RegExp("['\"]" + mot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "['\"]", exact ? '' : 'i');
+    return gestionnaires.filter(function (f) { return re.test(zoneDeDispatch(f)); })
         .map(function (f) { return path.relative(RACINE, f); });
+}
+function estActif(f) {
+    return f.indexOf('js/plugins/') === 0 && actifs.indexOf(path.basename(f, '.js')) >= 0;
+}
+
+/**
+ * Quelqu'un rattrape-t-il l'orthographe ?
+ *
+ * Beaucoup de greffons comparent `command === 'theatrhythm'` — caractère par
+ * caractère : une majuscule de trop et la commande est morte. Mais un greffon
+ * peut aussi servir de RELAIS : il reconnaît le mot quelle que soit la casse
+ * et rappelle l'orthographe attendue.
+ *
+ * On reconnaît un relais à une signature nette : le même fichier actif porte
+ * le mot en MAJUSCULES *et* en minuscules, tous deux entre guillemets. C'est
+ * précis — ça ne se produit pas par hasard — et ça se vérifie sans deviner
+ * comment le code est écrit.
+ *
+ * ⚠ Ce contrôle-ci reste statique. L'épreuve qui tranche est dans le moteur :
+ *   bancs/navigateur/les_commandes_qui_repondent.js
+ */
+function unRelaisRattrape(mot) {
+    var bas = mot.toLowerCase(), haut = mot.toUpperCase();
+    if (bas === haut) { return false; }
+    return gestionnaires.some(function (f) {
+        var rel = path.relative(RACINE, f);
+        if (!estActif(rel)) { return false; }
+        var s = zoneDeDispatch(f);
+        return new RegExp("['\"]" + bas + "['\"]").test(s)
+            && new RegExp("['\"]" + haut + "['\"]").test(s);
+    });
 }
 
 // ── 3 · confrontation ──────────────────────────────────────────────────────
 var mots = Object.keys(appels);
-var vivantes = [], recuperables = [], perdues = [];
+var vivantes = [], recuperables = [], perdues = [], casses = [];
 mots.forEach(function (w) {
-    var rep = repondants(w);
-    var actif = rep.some(function (f) {
-        return f.indexOf('js/plugins/') === 0 && actifs.indexOf(path.basename(f, '.js')) >= 0;
-    });
+    var rep = repondants(w, false);
+    var actif = rep.some(estActif);
     var n = Object.keys(appels[w].ou).length;
-    if (actif) { vivantes.push(w); return; }
+    if (actif) {
+        vivantes.push(w);
+        // Vivante à la casse près — mais l'est-elle telle qu'elle est écrite ?
+        // On reprend chaque orthographe réellement posée dans les événements.
+        Object.keys(appels[w].casses).forEach(function (orth) {
+            if (repondants(orth, true).some(estActif)) { return; }
+            if (unRelaisRattrape(orth)) { return; }
+            casses.push({ w: orth, n: appels[w].casses[orth], attendu: (repondants(w, false)[0] || '') });
+        });
+        return;
+    }
     var dort = rep.filter(function (f) { return actifs.indexOf(path.basename(f, '.js')) < 0; });
     if (dort.length) { recuperables.push({ w: w, n: n, f: dort[0] }); }
     else { perdues.push({ w: w, n: n, t: Object.keys(appels[w].textes)[0] }); }
@@ -142,6 +203,19 @@ if (perdues.length) {
     console.log('    c\'est un notetag collé dans la mauvaise case de l\'éditeur.)');
 }
 
+console.log('\n── VIVANTE, MAIS PAS À CETTE ORTHOGRAPHE — ' + casses.length + ' ──');
+if (!casses.length) {
+    console.log('   (aucune : toutes les commandes sont écrites comme le greffon les attend)');
+} else {
+    casses.forEach(function (x) {
+        console.log('   « ' + x.w + ' » ×' + x.n + '   un greffon actif connaît ce mot, mais pas');
+        console.log('       avec ces majuscules-là. MV compare caractère par caractère :');
+        console.log('       la commande ne part pas.');
+    });
+}
+
 console.log('\n' + '='.repeat(70));
-console.log('  ' + endroitsMorts + ' endroit(s) appellent quelque chose qui n\'existe pas');
+console.log('  ' + (endroitsMorts + casses.length) + ' endroit(s) appellent quelque chose qui ne répond pas');
+console.log('     dont ' + endroitsMorts + ' sans aucun greffon, et ' + casses.length + ' à cause de la casse');
 console.log('='.repeat(70));
+process.exit((endroitsMorts + casses.length) ? 1 : 0);

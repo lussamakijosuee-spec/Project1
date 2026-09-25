@@ -380,18 +380,18 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
 | ◑ | 8 · invocation | 2 | à condition : en lançant « Royaume Impérial » → état « Royaume Impérial » |
 | ✔ | 9 · ame | 9 | ouvert |
-| ✘ | 11 · ombre d'épeé | 1 | **INVISIBLE** — seul chemin : arme « Épée d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte |
-| ✘ | 12 · ombre de dague | 1 | **INVISIBLE** — seul chemin : arme « Dague d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte |
-| ✘ | 13 · ombre de hache | 1 | **INVISIBLE** — seul chemin : arme « Hache des Ténèbres » — que sa classe ne peut pas porter, hors d'atteinte |
+| ◑ | 11 · ombre d'épeé | 1 | à condition : en équipant arme « Épée d'Ombre » |
+| ◑ | 12 · ombre de dague | 1 | à condition : en équipant arme « Dague d'Ombre » |
+| ◑ | 13 · ombre de hache | 1 | à condition : en équipant arme « Hache des Ténèbres » |
 | ✘ | 14 · ombre de katana | 1 | **INVISIBLE** — seul chemin : état « katana de la mort » — que rien ne pose, hors d'atteinte |
-| ✘ | 15 · ombre de lance | 1 | **INVISIBLE** — seul chemin : arme « Lance des Abysses » — que sa classe ne peut pas porter, hors d'atteinte |
+| ◑ | 15 · ombre de lance | 1 | à condition : en équipant arme « Lance des Abysses » |
 | ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — seul chemin : état « griffe hurleur d'ame » — que rien ne pose, hors d'atteinte |
 | ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — seul chemin : état « arc d'ombre » — que rien ne pose, hors d'atteinte |
-| ✘ | 18 · ombre de arme a feu | 1 | **INVISIBLE** — seul chemin : arme « Fusil à Pompe Éternel » — que sa classe ne peut pas porter, hors d'atteinte |
+| ◑ | 18 · ombre de arme a feu | 1 | à condition : en équipant arme « Fusil à Pompe Éternel » |
 
-> **2 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
+> **7 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
-> **13 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+> **8 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -506,25 +506,25 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 38 | 1169 | Parole n°7 Rappel | 42 PM | dégâts PV *AME * `Math.floor(a.mat * 23 * 200 / (200 + b.mdf))` | 449 | `<NomOrigine: Rappel>` ⚠ |
 | 48 | 1171 | Parole n°7 Dette Ancienne | 56 PM | dégâts PV *AME * `Math.floor(a.mat * 33 * 200 / (200 + b.mdf))` · pose « 🫀 Ravage » 70% | 460 | `<NomOrigine: Dette Ancienne>` ⚠ `<Cooldown: 2>` |
 
-### ✘ Type 11 — ombre d'épeé  *(INVISIBLE)*
+### ◑ Type 11 — ombre d'épeé  *(à condition)*
 
-*INVISIBLE — seul chemin : arme « Épée d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte*
+*à condition : en équipant arme « Épée d'Ombre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 115 | Frappe Aveuglante | 10 PM | dégâts PV *LUMIÈRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 15% | arme | `<Voie: forge>` |
 
-### ✘ Type 12 — ombre de dague  *(INVISIBLE)*
+### ◑ Type 12 — ombre de dague  *(à condition)*
 
-*INVISIBLE — seul chemin : arme « Dague d'Ombre » — que sa classe ne peut pas porter, hors d'atteinte*
+*à condition : en équipant arme « Dague d'Ombre »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 116 | Rafale d'Ombre | 10 PM | dégâts PV *OMBRE* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 17 | `<Voie: onde>` |
 
-### ✘ Type 13 — ombre de hache  *(INVISIBLE)*
+### ◑ Type 13 — ombre de hache  *(à condition)*
 
-*INVISIBLE — seul chemin : arme « Hache des Ténèbres » — que sa classe ne peut pas porter, hors d'atteinte*
+*à condition : en équipant arme « Hache des Ténèbres »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -538,9 +538,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 122 | Danse Macabre | 8% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 2.2 * 200 / (200 + b.def))` | 7 | `<Voie: onde>` |
 
-### ✘ Type 15 — ombre de lance  *(INVISIBLE)*
+### ◑ Type 15 — ombre de lance  *(à condition)*
 
-*INVISIBLE — seul chemin : arme « Lance des Abysses » — que sa classe ne peut pas porter, hors d'atteinte*
+*à condition : en équipant arme « Lance des Abysses »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -562,9 +562,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 117 | Tir d'Ombre | 10 PM | dégâts PV *OMBRE* `a.atk * 2.5` | 29 | `<Voie: miroir>` |
 
-### ✘ Type 18 — ombre de arme a feu  *(INVISIBLE)*
+### ◑ Type 18 — ombre de arme a feu  *(à condition)*
 
-*INVISIBLE — seul chemin : arme « Fusil à Pompe Éternel » — que sa classe ne peut pas porter, hors d'atteinte*
+*à condition : en équipant arme « Fusil à Pompe Éternel »*
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -817,8 +817,8 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **367** entrées d'apprentissage sur les quatre héros ;
-- **23** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
-- **2** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
+- **18** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **7** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **26** ne font rien du tout (ni dégâts, ni effet) ;
 - **4** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 2 simple(s) étiquette(s)).
