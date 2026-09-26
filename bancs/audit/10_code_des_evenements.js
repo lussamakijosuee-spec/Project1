@@ -60,6 +60,27 @@ var existe = {
 };
 
 var CONSTATS = [];
+
+// Les interrupteurs que MOG_TimeSystem pilote lui-même (aube, jour, nuit,
+// saisons…) : il écrit directement $gameSwitches._data, ce qu'aucune lecture
+// des événements ne voit. Sans ça, les quatre saisons étaient accusées de ne
+// jamais s'éteindre, et « TS · Nuit » de ne jamais s'allumer — à tort.
+var pilotesParMOG = {};
+(function () {
+    try {
+        var b = fs.readFileSync(path.join(RACINE, 'js', 'plugins.js'), 'utf8');
+        var l = JSON.parse(b.slice(b.indexOf('['), b.lastIndexOf(']') + 1));
+        var mog = l.filter(function (p) { return p.name === 'MOG_TimeSystem' && p.status; })[0];
+        if (!mog) { return; }
+        Object.keys(mog.parameters).forEach(function (k) {
+            if (!/Switch/i.test(k)) { return; }
+            String(mog.parameters[k]).split(',').forEach(function (n) { n = Number(n); if (n > 0) { pilotesParMOG[n] = 1; } });
+        });
+    } catch (e) { }
+})();
+// Qui appelle chaque événement commun depuis un événement de CARTE : là,
+// MV passe le numéro de l'événement appelant, et l'interrupteur local marche.
+var appeleDepuisCarte = {};
 function noter(famille, ou, quoi) { CONSTATS.push({ famille: famille, ou: ou, quoi: quoi }); }
 
 // ── 1 · les interrupteurs qu'on allume et que personne n'éteint ─────────────
@@ -88,7 +109,7 @@ CE.forEach(function (c) {
     var seRelache = (c.list || []).some(function (x) {
         return x.code === 121 && x.parameters[2] === 1 && s >= x.parameters[0] && s <= x.parameters[1];
     });
-    if (!seRelache && !eteint[s]) {
+    if (!seRelache && !eteint[s] && !pilotesParMOG[s]) {
         noter('interrupteur jamais éteint',
             'EC' + c.id + ' « ' + c.name + ' »',
             type + ' sur l\'interrupteur ' + s + ' « ' + (SYS.switches[s] || '?') +
@@ -100,14 +121,28 @@ CE.forEach(function (c) {
 // ── 2 · l'interrupteur local posé dans un événement commun ─────────────────
 // Un interrupteur local (A/B/C/D) appartient à un événement de CARTE. Dans un
 // événement commun, la commande s'exécute et ne touche rien du tout.
+cartes.forEach(function (m) {
+    (m.d.events || []).forEach(function (ev) {
+        if (!ev) { return; }
+        (ev.pages || []).forEach(function (pg) {
+            (pg.list || []).forEach(function (x) { if (x.code === 117) { appeleDepuisCarte[x.parameters[0]] = true; } });
+        });
+    });
+});
 CE.forEach(function (c) {
     if (!c || !c.name) { return; }
+    // Déclencheur « Aucun » : il tourne APPELÉ, et l'appelant lui passe son
+    // numéro d'événement — depuis une carte, directement ou par une chaîne
+    // d'événements communs (233 « Miroirs » → 49-53), l'interrupteur local
+    // marque l'événement de carte, comme voulu. Seul un événement commun
+    // automatique ou parallèle n'a aucun événement pour le porter.
+    if (c.trigger === 0) { return; }
     (c.list || []).forEach(function (x) {
         if (x.code === 123) {
             noter('interrupteur local hors carte',
                 'EC' + c.id + ' « ' + c.name + ' »',
                 'pose l\'interrupteur local ' + x.parameters[0] +
-                ' — sans effet dans un événement commun');
+                ' — sans effet : un événement commun ' + (c.trigger === 1 ? 'automatique' : 'parallèle') + ' n\'a pas d\'événement de carte pour le porter');
         }
     });
 });
@@ -179,6 +214,7 @@ var allumeParPlugin = {};
 
 Object.keys(testes).map(Number).forEach(function (s) {
     if (allume[s]) { return; }
+    if (pilotesParMOG[s]) { return; }
     // Un plugin qui le lève suffit : la branche s'ouvre, le contrôle doit
     // innocenter ce cas au lieu de le compter comme une panne.
     if (allumeParPlugin[s]) { return; }
