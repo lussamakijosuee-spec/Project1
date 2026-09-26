@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-09-25. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-09-26. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -32,11 +32,11 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 2 · Spéciale | 16 | ouvert |
 | ✔ | 3 · ult | 4 | ouvert |
 | ✘ | 5 · BERSEK | 4 | **INVISIBLE** — seul chemin : état « Berserk » — posé seulement par « Transformation », qu'aucune classe n'apprend, hors d'atteinte |
-| ✘ | 7 · MANA semi-parfait | 2 | **INVISIBLE** — aucun trait n'ouvre ce type |
+| ✔ | 7 · MANA semi-parfait | 2 | ouvert |
 | ✔ | 10 · sang | 6 | ouvert |
 | ✘ | 19 · Arts Sereins | 3 | **INVISIBLE** — seul chemin : état « La Fureur Froide » — posé seulement par « Transformation — Second Stade », qu'aucune classe n'apprend, hors d'atteinte |
 
-> **9 compétences de Vesper ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+> **7 compétences de Vesper ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -139,9 +139,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 58 | Rafale de Coups Écarlates | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 423 | `<NoParole>` `<Sang>` |
 | 1 | 59 | Dragon de la Nuit Sanglante | 10 PM + 20 PT + 50% PV | dégâts PV *Physique* `(a.atk * 16) + (a.mhp - a.hp)` | 415 | `<NoParole>` `<Sang>` `<Nerf 2026-09-25: a.atk * 25 → a.atk * 16 — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
 
-### ✘ Type 7 — MANA semi-parfait  *(INVISIBLE)*
-
-*INVISIBLE — aucun trait n'ouvre ce type*
+### Type 7 — MANA semi-parfait
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -831,7 +829,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **377** entrées d'apprentissage sur les quatre héros ;
-- **19** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **17** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **5** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **31** ne font rien du tout (ni dégâts, ni effet) ;
 - **6** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
