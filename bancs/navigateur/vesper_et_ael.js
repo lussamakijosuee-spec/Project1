@@ -70,8 +70,12 @@ function ok(nom, cond, detail) {
         PacteDeSang.poser(1.0);
         var avecMasque = degats(1, e);
         out.ratioLame = avecMasque / sansMasque;
-        PacteDeSang.changerStyle('saignee');
-        out.ratioSaignee = degats(1, e) / sansMasque;
+        // Depuis le 2026-09-26 chaque Style porte ses propres traits (Lame : ATQ ×1,3…) : le
+        // Masque se mesure donc dans SON Style, Pacte vide contre Pacte plein.
+        PacteDeSang.changerStyle('saignee'); PacteDeSang.poser(0);
+        var sansMasqueSaignee = degats(1, e);
+        PacteDeSang.poser(1.0);
+        out.ratioSaignee = degats(1, e) / sansMasqueSaignee;
         PacteDeSang.changerStyle('lame');
         // consommation : 10 % en Lame
         PacteDeSang.poser(1.0);
@@ -165,7 +169,11 @@ function ok(nom, cond, detail) {
         'perdu ' + v.recul.perdu + ' · base ' + v.recul.surLaBase + ' · sur le total ç\'aurait été ' + v.recul.surLeTotal);
     ok('Saignée : le Pacte brûlé revient, et la Voie du Sang boit pour elle', v.saignee.brule > 0 && v.saignee.soin > v.saignee.brule,
         '+' + v.saignee.soin + ' PV (dont ' + v.saignee.brule + ' de Pacte)');
-    ok('Garde : −40 % de dégâts reçus', Math.abs(v.garde.garde / v.garde.lame - 0.6) < 0.02, v.garde.lame + ' → ' + v.garde.garde);
+    // La Garde bloque 40 % du coup (ce qui est bloqué devient Réserve) ET, depuis le 2026-09-26,
+    // porte DÉF ×1,4 : on mesure le blocage sur le coup tel qu'il arrive, pas contre la Lame.
+    ok('Garde : −40 % de dégâts reçus, le bloqué en Réserve', Math.abs(v.garde.garde / (v.garde.garde + v.garde.reserve) - 0.6) < 0.02,
+        (v.garde.garde + v.garde.reserve) + ' → ' + v.garde.garde + ' (Réserve ' + v.garde.reserve + ')');
+    ok('…et la Garde encaisse mieux que la Lame (DÉF ×1,4 contre ×0,85)', v.garde.garde < v.garde.lame, 'Lame ' + v.garde.lame + ' · Garde ' + v.garde.garde);
     ok('…et le bloqué part en Réserve', v.garde.reserve > 0, v.garde.reserve + '');
     ok('la Libération ajoute la Réserve au coup suivant, puis la vide', v.liberation.bonus > 0 && v.liberation.reserveApres === 0,
         '+' + v.liberation.bonus);

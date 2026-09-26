@@ -93,7 +93,7 @@ function controles(base) {
     // ne faisait tomber aucun contrôle. Un contrôle avec du mou n'est pas un
     // contrôle. Le plancher vaut le compte RÉEL : §3 interdit de supprimer, donc
     // ce nombre ne peut que monter, et toute perte se voit immédiatement.
-    var PLANCHER = [37, 11];
+    var PLANCHER = [38, 11];   // 2026-09-26 : + Jugement des Défunts et Rappel des Âmes (ludwing, AME)
     r.push(['le Mana Pur (7, 16) garde ses compétences et son prix libre',
         compte[0] >= PLANCHER[0] && compte[1] >= PLANCHER[1],
         'élém 7 : ' + compte[0] + ' (plancher ' + PLANCHER[0] + ') · élém 16 : ' +

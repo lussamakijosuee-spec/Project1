@@ -64,6 +64,11 @@
  * @type state
  * @default 236
  *
+ * @param volDeVieSaignee
+ * @text Saignée — vol de vie de base (%)
+ * @default 20
+ * @desc En Style Saignée, cette part des dégâts qu'elle inflige lui revient en PV, Masque ou pas.
+ *
  * @param animStyleLame
  * @text Effet visuel — Style Lame
  * @type animation
@@ -111,11 +116,16 @@
  *     Frappe, puis efface le Pacte et la soigne : 50 % du Pacte + 150 % ATQ.
  *
  *  LES TROIS STYLES — gratuits, sans perdre le tour (<StyleVesper: …>)
- *     ⚔ LAME     le Masque frappe ×1,5 plus fort, mais brûle 10 % par coup.
- *     🛡 GARDE    −40 % de dégâts reçus ; ce qu'elle bloque s'accumule en
+ *     ⚔ LAME     ATQ ×1,3, critiques +20 %, DÉF ×0,85 (traits de l'état 234) ;
+ *                le Masque frappe ×1,5 plus fort en plus, mais brûle 10 % par coup.
+ *     🛡 GARDE    DÉF et MDF ×1,4, elle attire les coups, ATQ ×0,85 (état 235) ;
+ *                −40 % de dégâts reçus ; ce qu'elle bloque s'accumule en
  *                RÉSERVE, relâchée sur son coup suivant — qui inscrit la Dette.
- *     🩸 SAIGNÉE  le Masque frappe deux fois moins fort, mais chaque part de
- *                Pacte consommée lui revient en PV : elle se soigne en frappant.
+ *     🩸 SAIGNÉE  20 % des dégâts qu'elle inflige lui reviennent, +5 % PV par
+ *                tour, AGI ×1,15 (état 236) ; le Masque frappe deux fois moins
+ *                fort, mais chaque part de Pacte consommée lui revient en PV.
+ *     (JOKO, 2026-09-26 : « je ne ressens pas la différence en jeu » — avant, hors
+ *      Masque, seule la Garde changeait quelque chose.)
  *
  *  Le Pacte et la Réserve s'effacent à la fin du combat ; le Style se garde.
  *  Chaque changement de Style se VOIT : un effet court joué sur Vesper (JOKO :
@@ -150,6 +160,7 @@
         garde: parseInt(P['etatStyleGarde'] || 235, 10),
         saignee: parseInt(P['etatStyleSaignee'] || 236, 10)
     };
+    var VOL_SAIGNEE = parseFloat(P['volDeVieSaignee'] || 20) / 100;
     var ANIM_STYLE = {
         lame: parseInt(P['animStyleLame'] || 371, 10),
         garde: parseInt(P['animStyleGarde'] || 439, 10),
@@ -287,12 +298,16 @@
             // chiffre vert qui n'a rien rendu.
             target.result().hpDamage = 0;
         }
-        if (estVesper(u) && enCombat() && value > 0 && target && target.isEnemy && target.isEnemy()
-            && masque(u) && sousMasque(this)) {
-            var part = style(u) === 'lame' ? 0.10 : CONSO;
-            var brule = Math.floor(pacte(u) * part);
-            poserPacte(u, pacte(u) - brule);
-            if (style(u) === 'saignee' && brule > 0) { soigner(u, brule); }
+        if (estVesper(u) && enCombat() && value > 0 && target && target.isEnemy && target.isEnemy()) {
+            // JOKO, 2026-09-26 : « je ne ressens pas la différence en jeu ». Sans le Masque, seule la
+            // Garde se voyait. La Saignée boit maintenant à chaque coup, Masque ou pas (réglable).
+            if (style(u) === 'saignee' && VOL_SAIGNEE > 0) { soigner(u, Math.floor(value * VOL_SAIGNEE)); }
+            if (masque(u) && sousMasque(this)) {
+                var part = style(u) === 'lame' ? 0.10 : CONSO;
+                var brule = Math.floor(pacte(u) * part);
+                poserPacte(u, pacte(u) - brule);
+                if (style(u) === 'saignee' && brule > 0) { soigner(u, brule); }
+            }
         }
     };
 

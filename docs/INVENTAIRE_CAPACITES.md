@@ -29,10 +29,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | | Type | Compétences | État |
 |---|---|---|---|
 | ✔ | 1 · capacité | 55 | ouvert |
-| ✔ | 2 · Spéciale | 16 | ouvert |
-| ✔ | 3 · ult | 4 | ouvert |
+| ✔ | 2 · Spéciale | 17 | ouvert |
+| ✔ | 3 · ult | 5 | ouvert |
 | ✘ | 5 · BERSEK | 4 | **INVISIBLE** — seul chemin : état « Berserk » — posé seulement par « Transformation », qu'aucune classe n'apprend, hors d'atteinte |
-| ✔ | 7 · MANA semi-parfait | 2 | ouvert |
 | ✔ | 10 · sang | 6 | ouvert |
 | ✘ | 19 · Arts Sereins | 3 | **INVISIBLE** — seul chemin : état « La Fureur Froide » — posé seulement par « Transformation — Second Stade », qu'aucune classe n'apprend, hors d'atteinte |
 
@@ -113,6 +112,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 419 | Pacte d'Âme | 30 PT | PV -30% +0 · pose « Pacte d'Âme » 100% | 537 | — |
 | 1 | 447 | Faille d'Armure | 28 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 16 | — |
 | 1 | 448 | Garde Sereine | 24 PM | dégâts PV *Physique* `Math.floor((a.atk*3 + a.mdf*2) * 1.382 * 200 / (200 + b.def))` | 111 | — |
+| 20 | 814 | Parole n°16 Tranche des Trois Sources | 30 PM | dégâts PV *mana semi parfait* `Math.floor((a.atk*2 + a.mat*2) * 1.054 * 200 / (200 + b.def))` | 447 | `<ParoleL: 3>` `<NomOrigine: Tranche des Trois Sources>` ⚠ |
 | 23 | 1142 | Garde Écarlate | 22 PM | pose « 🛡 Posture de Fer » 100% · pose « 🪞 Reflet » 100% | 439 | — |
 | 33 | 1144 | Parole n°2 Fil de Vie | 11% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⚖ Verdict » 80% | 450 | `<NomOrigine: Fil de Vie>` ⚠ |
 | 38 | 1145 | L'Équilibre Tenu | 36 PM | boost ATQ 5t · boost DÉF 5t · boost MDF 5t | 408 | — |
@@ -126,6 +126,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 133 | Déflagration Spirituelle | 10% PV | dégâts PV *mana spirituelle * `(a.atk * 10) - (b.def * 1.5)` | 470 | `<Post-Damage Eval>` `<Parole: origine>` `<Cooldown: 2>` |
 | 1 | 445 | Tranche-Néant | 60 PM + 25% PV | dégâts PV *AME * `(a.atk*6) - b.def*0.5` | 527 | `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` |
 | 1 | 446 | Jugement de Soi | 50 PM + 33% PV | dégâts PV *Physique* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` | 35 | `<Ulti>` `<UltiColor: #ff8a3a>` `<After Eval>` |
+| 45 | 813 | ✶ la Convergence | 55 PM | **coquille** — rien | 446 | `<Ultime: convergence>` |
 | 58 | 1149 | Verdict de l'Équilibre | 60 PM | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 34 * 100 / (200 + b.def + b.mdf))` · pose « ⚖ Verdict » 100% | 412 | — |
 
 ### ✘ Type 5 — BERSEK  *(INVISIBLE)*
@@ -138,13 +139,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 57 | Frappe Écarlate | 20 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 423 | `<NoParole>` `<Sang>` |
 | 1 | 58 | Rafale de Coups Écarlates | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 4.4 * 200 / (200 + b.def))` | 423 | `<NoParole>` `<Sang>` |
 | 1 | 59 | Dragon de la Nuit Sanglante | 10 PM + 20 PT + 50% PV | dégâts PV *Physique* `(a.atk * 16) + (a.mhp - a.hp)` | 415 | `<NoParole>` `<Sang>` `<Nerf 2026-09-25: a.atk * 25 → a.atk * 16 — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
-
-### Type 7 — MANA semi-parfait
-
-| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
-|---|---|---|---|---|---|---|
-| 20 | 814 | Parole n°16 Tranche des Trois Sources | 30 PM | dégâts PV *mana semi parfait* `Math.floor((a.atk*2 + a.mat*2) * 1.054 * 200 / (200 + b.def))` | 447 | `<ParoleL: 3>` `<NomOrigine: Tranche des Trois Sources>` ⚠ |
-| 45 | 813 | ✶ la Convergence | 55 PM | **coquille** — rien | 446 | `<Ultime: convergence>` |
 
 ### Type 10 — sang
 
@@ -485,8 +479,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 124 | Jugement des Défunts | 12 PM | **coquille** — rien | 405 | — |
-| 1 | 125 | Rappel des Âmes | 12 PM | **coquille** — rien | 405 | — |
+| 1 | 124 | Jugement des Défunts | 12 PM | dégâts PV *AME * `Math.floor(a.mat * 11 * 200 / (200 + b.mdf))` | 449 | `<Invocation: 3>` |
+| 1 | 125 | Rappel des Âmes | 12 PM | dégâts PV *AME * `Math.floor(a.mat * 7 * 200 / (200 + b.mdf))` | 450 | `<Invocation: 2>` |
 
 ### Type 9 — ame
 
@@ -831,6 +825,6 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 - **377** entrées d'apprentissage sur les quatre héros ;
 - **17** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **5** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
-- **31** ne font rien du tout (ni dégâts, ni effet) ;
+- **29** ne font rien du tout (ni dégâts, ni effet) ;
 - **6** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
   dont **2** dont le lecteur dort dans `_ancien_projet/` (et 4 simple(s) étiquette(s)).

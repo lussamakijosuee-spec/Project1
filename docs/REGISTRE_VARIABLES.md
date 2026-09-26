@@ -38,6 +38,8 @@
 | **Interrupteurs 200 – 231** | **`MOG_TimeSystem`** — phases, jours, saisons, mois, + le verrou météo | **en service** |
 | **Variables 200 – 202** | **`MOG_TimeSystem`** — heure, jour du mois, année | **en service** |
 
+| **Variables 300 – 340** | **`QuetesDuMonde`** — les compteurs de quête (chasse, visite, usage…), *nommés « Quête · compteur n »* | **en service** |
+
 **Hors plage :** variables 100+ et interrupteurs 1-19 / 50+ ne sont pas réservés. Ils
 s'inscrivent quand même ici, dans la dernière section.
 

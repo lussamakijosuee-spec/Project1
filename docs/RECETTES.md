@@ -425,6 +425,26 @@ Cocher un objectif fait (le prochain non fait) : `QUEST step herbe` — ou par n
 ◆ Commande de plugin : QUEST ecran
 ```
 
+### 8.5 — Ce que le journal affiche en plus (QuetesDuMonde.js, 2026-09-26)
+```
+◆ Commande de plugin : QUEST add perso vesper "Le sang qui répond" "…"     (quête de personnage ; tuto = apprentissage)
+◆ Commande de plugin : QUEST de herbe "L'apothicaire" "Magasin d'Objets"   (qui la donne, où)
+◆ Commande de plugin : QUEST prix herbe "Remède Universel ×2"              (la récompense annoncée)
+```
+
+### 8.6 — Un objectif qui tombe tout seul
+```
+◆ Commande de plugin : QUEST chasse bandits 1 5 "bandit"        (5 ennemis de ce nom tués → objectif 1 ; %1 / %2 dans le texte)
+◆ Commande de plugin : QUEST visite sortie 3 29                  (arriver sur la carte 29 → objectif 3)
+◆ Commande de plugin : QUEST usage korrah 1 3 1263 1264          (ces compétences employées 3 fois → objectif 1)
+◆ Commande de plugin : QUEST style vesper 1 5                    (Vesper a changé de Style 5 fois en combat)
+◆ Commande de plugin : QUEST commande feu 1 1 FEU                (la commande FEU exécutée une fois — se reposer)
+◆ Commande de plugin : QUEST achat marche 1 1                    (un achat en boutique)
+◆ Commande de plugin : QUEST auto sortie                         (tous les objectifs tombés → quête accomplie, sans PNJ)
+```
+Scripts : `$gameSystem.questObjDone('id', n)` · `$gameSystem.questCompte('id', n)`. Les compteurs vivent sur les variables 300+ (nommées « Quête · compteur n »).
+Tout est affiché par le journal YEP (menu « Quêtes »). Les événements posés par `bancs/outils/poser_les_quetes.js` en sont les modèles.
+
 ---
 
 # 9. SUCCÈS & TITRES
