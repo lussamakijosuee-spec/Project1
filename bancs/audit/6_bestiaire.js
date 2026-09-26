@@ -65,8 +65,15 @@ ok(rattrapes===3,`les 3 cas morts font maintenant quelque chose (${rattrapes}/3)
 ok(plancher(0,100,0)===0,'une IMMUNITÉ élémentaire (taux 0) reste une immunité');
 
 console.log('\n=== Les boss : télégraphe, coup annoncé, fenêtre de contre ===');
+// Les boss <DonoBoss> sont ceux de JOKO, montés à la main : leur propre IA
+// (<AI Priority>), leurs propres scripts de troupe. Ils ne suivent pas le
+// schéma Charge → coup annoncé → Surcharge du bestiaire généré, et c'est
+// voulu (§4 : les ennemis de JOKO restent hors des passes). On les compte
+// à part au lieu de les accuser.
+const DONO=b=>!!b._m.DonoBoss;
+const BOSS_GEN=BOSS.filter(b=>!DONO(b));
 let telOk=0,finOk=0,phasesOk=0;
-for(const b of BOSS){
+for(const b of BOSS_GEN){
   const tel=b.actions.find(a=>{const s=S[a.skillId];return s&&s.note.includes('<Telegraphe>');});
   const fin=b.actions.find(a=>{const s=S[a.skillId];return s&&s.note.includes('<Apres: surcharge>');});
   if(tel&&tel.conditionType===1) telOk++;
@@ -74,9 +81,9 @@ for(const b of BOSS){
   if(fin&&fin.conditionType===4&&fin.conditionParam1===207) finOk++;
   if(fin){const s=S[fin.skillId]; if(s.effects.some(e=>e.code===21&&e.dataId===218)) phasesOk++;}
 }
-ok(telOk===BOSS.length,`les ${BOSS.length} boss télégraphient (action conditionnée au tour)`);
-ok(finOk===BOSS.length,`leur coup lourd ne sort QUE s'ils sont en « ⚡ Charge » (${finOk})`);
-ok(phasesOk===BOSS.length,`et les laisse en « ✷ Surcharge » — la fenêtre pour riposter (${phasesOk})`);
+ok(telOk===BOSS_GEN.length,`les ${BOSS_GEN.length} boss du bestiaire télégraphient (action conditionnée au tour) · ${BOSS.length-BOSS_GEN.length} boss de JOKO à part`);
+ok(finOk===BOSS_GEN.length,`leur coup lourd ne sort QUE s'ils sont en « ⚡ Charge » (${finOk})`);
+ok(phasesOk===BOSS_GEN.length,`et les laisse en « ✷ Surcharge » — la fenêtre pour riposter (${phasesOk})`);
 
 console.log('\n=== Les événements de phase des boss ===');
 const TB=T.filter(t=>t&&t.name&&t.name.startsWith('◈'));
@@ -95,8 +102,10 @@ ok(condOk===TB.length,'les phases se déclenchent bien à 60 % et 25 % de PV');
 let cmdKo=0;
 for(const t of TB) for(const p of t.pages) for(const c of p.list){
   // 241/242 = jouer / arrêter le BGM : les boss basculent leur musique en
-  // changeant de phase. Ce sont des commandes valides, pas des casses (§6).
-  if(![0,101,401,333,337,241,242].includes(c.code)) cmdKo++;
+  // changeant de phase. 224 = flash d'écran, 225 = secousse, 335 = un renfort
+  // caché apparaît : la mise en scène que JOKO a écrite pour Donovano. Ce sont
+  // des commandes valides de MV, pas des casses (§6).
+  if(![0,101,401,333,337,241,242,224,225,335].includes(c.code)) cmdKo++;
   if(c.code===333&&(!ST[c.parameters[2]]||!ST[c.parameters[2]].name)) cmdKo++;
   if(c.code===337&&!AN[c.parameters[1]]) cmdKo++;
 }
@@ -105,7 +114,8 @@ ok(cmdKo===0,`toutes les commandes d'événement sont valides et pointent sur du
 console.log('\n=== Le cycle du mana est branché sur TOUT le monde ===');
 const tous=E.filter(e=>e&&e.name);
 // Le Mana Pur TRANSCENDE le cycle (canon §4) : ni faiblesse, ni résistance. C'est voulu.
-const sansRes=tous.filter(e=>!e.traits.some(t=>t.code===11)&&e._m.Mana!=='pur');
+// Les boss <DonoBoss> de JOKO gardent la fiche qu'il leur a écrite (§4) : on ne leur pose rien.
+const sansRes=tous.filter(e=>!e.traits.some(t=>t.code===11)&&e._m.Mana!=='pur'&&!e._m.DonoBoss);
 const purs=tous.filter(e=>e._m.Mana==='pur');
 ok(sansRes.length===0,`plus aucun ennemi hors-cycle sans résistance (${sansRes.length} sur ${tous.length})`);
 // « transcender le cycle » = aucune résistance sur le TRIANGLE (2 spirituelle, 3 positive,

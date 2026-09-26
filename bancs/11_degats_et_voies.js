@@ -125,25 +125,12 @@ function controles(base) {
     // ── 2. Aucune compétence invisible ───────────────────────────────────────
     var ouverts = typesOuverts(base);
 
-    // ⏳ EN ATTENTE DE JOKO — le type 7 « MANA semi-parfait » n'est ouvert par
-    // rien : ni classe, ni état, ni équipement. Ses deux compétences sont donc
-    // apprenables et introuvables, dont « ✶ la Convergence », une ULTIME.
-    // Ouvrir un type de compétence est une modification en masse au sens du §2
-    // (« ouvrir, fermer ou réattribuer un type de compétence … je le signale,
-    // JOKO décide »). On l'inscrit nommément plutôt que d'y toucher — et tout
-    // AUTRE cas continue de faire tomber le contrôle.
-    // ⚠ Repérées par IDENTIFIANT, pas par nom : le passage « Parole n°X » a
-    // renommé « Tranche des Trois Sources » et l'exception ne mordait plus.
-    var CONNUS = {};
-    reels.forEach(function (s) {
-        if (/^(✶ la Convergence|Tranche des Trois Sources)$/.test(s.name) ||
-            /<\s*NomOrigine\s*:\s*(✶ la Convergence|Tranche des Trois Sources)\s*>/i.test(s.note || '')) {
-            CONNUS[s.id] = 1;
-        }
-    });
-
-    var invisibles = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && !CONNUS[s.id]; });
-    var enAttente = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId] && CONNUS[s.id]; });
+    // Le type 7 « MANA semi-parfait » n'était ouvert par rien : « ✶ la Convergence »
+    // et « Tranche des Trois Sources » étaient apprises par l'Équilibre (niv. 45 et 20)
+    // et introuvables dans tous les menus. JOKO, 2026-09-26 : « corrige tout » —
+    // l'Équilibre ouvre maintenant le type 7. Plus aucune exception ici.
+    var invisibles = reels.filter(function (s) { return s.stypeId > 0 && !ouverts[s.stypeId]; });
+    var enAttente = [];
     var parType = {};
     invisibles.forEach(function (s) { (parType[s.stypeId] = parType[s.stypeId] || []).push(s.name); });
     r.push(['aucune compétence n\'est enfermée dans un type que rien n\'ouvre', invisibles.length === 0,
@@ -228,8 +215,9 @@ var SABOTAGES = [
         premiereOffensive(b).damage.formula = 'Math.floor(a.atk * 2 + b.def * 3)';
     }, /décroissent quand la défense monte/],
     ['une compétence rangée dans un type que rien n\'ouvre', function (b) {
-        // Le type 6 « TIME » n'est ouvert par personne, et ne sert à rien.
-        premiereOffensive(b).stypeId = 6;
+        // Le type 24 n'a pas de nom et n'est ouvert par personne (le 6 est devenu
+        // « hiver », ouvert par l'Avatar de Korrah — le sabotage ne mordait plus).
+        premiereOffensive(b).stypeId = 24;
     }, /enfermée dans un type/],
     ['l\'Amulette privée de ses types d\'Ombre', function (b) {
         // Le vrai piège : si on ne lisait que Classes.json, ce sabotage passerait

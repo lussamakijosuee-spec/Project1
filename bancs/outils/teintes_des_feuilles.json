@@ -1,0 +1,570 @@
+{
+ "Absorb": {
+  "teinte": 25,
+  "part": 0.5
+ },
+ "ArrowSpecial": {
+  "teinte": 55,
+  "part": 0.73
+ },
+ "Blow": {
+  "teinte": 26,
+  "part": 0.69
+ },
+ "Breath": {
+  "teinte": 123,
+  "part": 0.95
+ },
+ "Claw": {
+  "teinte": 207,
+  "part": 0.41
+ },
+ "ClawPhoton": {
+  "teinte": 60,
+  "part": 0.17
+ },
+ "ClawSpecial1": {
+  "teinte": 355,
+  "part": 0.5
+ },
+ "ClawSpecial2": {
+  "teinte": 356,
+  "part": 0.47
+ },
+ "Cure1": {
+  "teinte": 184,
+  "part": 0.89
+ },
+ "Cure2": {
+  "teinte": 194,
+  "part": 0.85
+ },
+ "Cure3": {
+  "teinte": 180,
+  "part": 0.28
+ },
+ "Cure4": {
+  "teinte": 188,
+  "part": 0.41
+ },
+ "Curse": {
+  "teinte": 51,
+  "part": 0.43
+ },
+ "Darkness1": {
+  "teinte": 250,
+  "part": 0.52
+ },
+ "Darkness2": {
+  "teinte": 261,
+  "part": 0.91
+ },
+ "Darkness3": {
+  "teinte": 329,
+  "part": 0.33
+ },
+ "Darkness4": {
+  "teinte": 340,
+  "part": 0.78
+ },
+ "Darkness5": {
+  "teinte": 307,
+  "part": 0.64
+ },
+ "Earth1": {
+  "teinte": 29,
+  "part": 0.96
+ },
+ "Earth2": {
+  "teinte": 25,
+  "part": 0.75
+ },
+ "Earth3": {
+  "teinte": 40,
+  "part": 0.57
+ },
+ "Earth4": {
+  "teinte": 18,
+  "part": 0.97
+ },
+ "Earth5": {
+  "teinte": 31,
+  "part": 0.71
+ },
+ "Explosion1": {
+  "teinte": 33,
+  "part": 0.96
+ },
+ "Explosion2": {
+  "teinte": 33,
+  "part": 0.82
+ },
+ "FX_Braises": {
+  "teinte": 31,
+  "part": 1
+ },
+ "FX_Bulles": {
+  "teinte": 215,
+  "part": 1
+ },
+ "FX_Charge": {
+  "teinte": 43,
+  "part": 1
+ },
+ "FX_Cristal": {
+  "teinte": 186,
+  "part": 0.97
+ },
+ "FX_Croix": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_Dome": {
+  "teinte": 42,
+  "part": 1
+ },
+ "FX_Drain": {
+  "teinte": 3,
+  "part": 1
+ },
+ "FX_Eclat": {
+  "teinte": 7,
+  "part": 1
+ },
+ "FX_Eclats": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_EtoilesNoires": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_Foudre": {
+  "teinte": 60,
+  "part": 1
+ },
+ "FX_Glitch": {
+  "teinte": 268,
+  "part": 0.84
+ },
+ "FX_Griffes": {
+  "teinte": 258,
+  "part": 1
+ },
+ "FX_Lames": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_Mains": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_Oeil": {
+  "teinte": -1,
+  "part": 0
+ },
+ "FX_Onde": {
+  "teinte": 217,
+  "part": 1
+ },
+ "FX_Petales": {
+  "teinte": 142,
+  "part": 1
+ },
+ "FX_Pilier": {
+  "teinte": 43,
+  "part": 1
+ },
+ "FX_Pluie": {
+  "teinte": 216,
+  "part": 1
+ },
+ "FX_Rayon": {
+  "teinte": 216,
+  "part": 0.74
+ },
+ "FX_Runes": {
+  "teinte": 2,
+  "part": 1
+ },
+ "FX_Vague": {
+  "teinte": 217,
+  "part": 1
+ },
+ "FX_Volutes": {
+  "teinte": 3,
+  "part": 1
+ },
+ "FX_Vortex": {
+  "teinte": 260,
+  "part": 1
+ },
+ "Fire1": {
+  "teinte": 31,
+  "part": 1
+ },
+ "Fire2": {
+  "teinte": 32,
+  "part": 1
+ },
+ "Fire3": {
+  "teinte": 45,
+  "part": 0.53
+ },
+ "Flash": {
+  "teinte": 42,
+  "part": 0.02
+ },
+ "Gun1": {
+  "teinte": 34,
+  "part": 0.82
+ },
+ "Gun2": {
+  "teinte": 29,
+  "part": 0.8
+ },
+ "Gun3": {
+  "teinte": 33,
+  "part": 0.91
+ },
+ "Hit1": {
+  "teinte": 51,
+  "part": 0.91
+ },
+ "Hit2": {
+  "teinte": 42,
+  "part": 0.42
+ },
+ "HitFire": {
+  "teinte": 30,
+  "part": 0.74
+ },
+ "HitIce": {
+  "teinte": 198,
+  "part": 0.62
+ },
+ "HitPhoton": {
+  "teinte": 60,
+  "part": 0.22
+ },
+ "HitSpecial1": {
+  "teinte": 44,
+  "part": 0.94
+ },
+ "HitSpecial2": {
+  "teinte": 25,
+  "part": 0.84
+ },
+ "HitThunder": {
+  "teinte": 53,
+  "part": 0.59
+ },
+ "Holy1": {
+  "teinte": 55,
+  "part": 0.59
+ },
+ "Holy2": {
+  "teinte": 56,
+  "part": 0.14
+ },
+ "Holy3": {
+  "teinte": 60,
+  "part": 0.01
+ },
+ "Holy4": {
+  "teinte": 52,
+  "part": 0.3
+ },
+ "Holy5": {
+  "teinte": 50,
+  "part": 0.69
+ },
+ "Howl": {
+  "teinte": 26,
+  "part": 0.22
+ },
+ "Ice1": {
+  "teinte": 190,
+  "part": 0.96
+ },
+ "Ice2": {
+  "teinte": 189,
+  "part": 0.78
+ },
+ "Ice3": {
+  "teinte": 188,
+  "part": 0.17
+ },
+ "Ice4": {
+  "teinte": -1,
+  "part": 0
+ },
+ "Ice5": {
+  "teinte": 189,
+  "part": 0.86
+ },
+ "Laser1": {
+  "teinte": 41,
+  "part": 0.91
+ },
+ "Laser2": {
+  "teinte": 41,
+  "part": 0.73
+ },
+ "Light1": {
+  "teinte": 44,
+  "part": 0.28
+ },
+ "Light2": {
+  "teinte": 44,
+  "part": 0.34
+ },
+ "Light3": {
+  "teinte": 36,
+  "part": 1
+ },
+ "Light4": {
+  "teinte": 40,
+  "part": 0.9
+ },
+ "Magic1": {
+  "teinte": 210,
+  "part": 0.01
+ },
+ "Magic2": {
+  "teinte": 26,
+  "part": 0.58
+ },
+ "Meteor": {
+  "teinte": 30,
+  "part": 0.88
+ },
+ "Mist": {
+  "teinte": -1,
+  "part": 0
+ },
+ "Pollen": {
+  "teinte": 307,
+  "part": 1
+ },
+ "PreSpecial1": {
+  "teinte": 51,
+  "part": 0.76
+ },
+ "PreSpecial2": {
+  "teinte": -1,
+  "part": 0
+ },
+ "PreSpecial3": {
+  "teinte": 325,
+  "part": 0.77
+ },
+ "Recovery1": {
+  "teinte": 118,
+  "part": 0.82
+ },
+ "Recovery2": {
+  "teinte": 109,
+  "part": 0.99
+ },
+ "Recovery3": {
+  "teinte": -1,
+  "part": 0
+ },
+ "Recovery4": {
+  "teinte": 181,
+  "part": 0.43
+ },
+ "Recovery5": {
+  "teinte": 98,
+  "part": 0.16
+ },
+ "Revival1": {
+  "teinte": 56,
+  "part": 0.84
+ },
+ "Revival2": {
+  "teinte": 38,
+  "part": 0.76
+ },
+ "Slash": {
+  "teinte": 48,
+  "part": 0.9
+ },
+ "SlashFire": {
+  "teinte": 29,
+  "part": 0.69
+ },
+ "SlashIce": {
+  "teinte": 200,
+  "part": 0.46
+ },
+ "SlashPhoton": {
+  "teinte": 60,
+  "part": 0.27
+ },
+ "SlashSpecial1": {
+  "teinte": 51,
+  "part": 0.96
+ },
+ "SlashSpecial2": {
+  "teinte": 23,
+  "part": 0.68
+ },
+ "SlashSpecial3": {
+  "teinte": 309,
+  "part": 0.88
+ },
+ "SlashThunder": {
+  "teinte": 10,
+  "part": 0.55
+ },
+ "Song": {
+  "teinte": 103,
+  "part": 0.31
+ },
+ "Sonic": {
+  "teinte": -1,
+  "part": 0
+ },
+ "Special1": {
+  "teinte": 47,
+  "part": 0.88
+ },
+ "Special2": {
+  "teinte": 47,
+  "part": 0.73
+ },
+ "Special3": {
+  "teinte": 192,
+  "part": 0.68
+ },
+ "StateChaos": {
+  "teinte": 60,
+  "part": 0.99
+ },
+ "StateDark": {
+  "teinte": 216,
+  "part": 0.47
+ },
+ "StateDeath": {
+  "teinte": 350,
+  "part": 0.33
+ },
+ "StateDown1": {
+  "teinte": 209,
+  "part": 0.4
+ },
+ "StateDown2": {
+  "teinte": 308,
+  "part": 0.44
+ },
+ "StateDown3": {
+  "teinte": 307,
+  "part": 0.83
+ },
+ "StateParalys": {
+  "teinte": 58,
+  "part": 0.96
+ },
+ "StatePoison": {
+  "teinte": 112,
+  "part": 0.94
+ },
+ "StateSilent": {
+  "teinte": 47,
+  "part": 0.76
+ },
+ "StateSleep": {
+  "teinte": 211,
+  "part": 0.99
+ },
+ "StateUp1": {
+  "teinte": 50,
+  "part": 1
+ },
+ "StateUp2": {
+  "teinte": 192,
+  "part": 0.7
+ },
+ "Stick": {
+  "teinte": 43,
+  "part": 0.98
+ },
+ "StickPhoton": {
+  "teinte": 60,
+  "part": 0.23
+ },
+ "StickSpecial1": {
+  "teinte": 43,
+  "part": 0.97
+ },
+ "StickSpecial2": {
+  "teinte": 41,
+  "part": 0.19
+ },
+ "StickSpecial3": {
+  "teinte": 47,
+  "part": 0.16
+ },
+ "Thunder1": {
+  "teinte": 60,
+  "part": 0.79
+ },
+ "Thunder2": {
+  "teinte": 64,
+  "part": 0.71
+ },
+ "Thunder3": {
+  "teinte": 39,
+  "part": 0.63
+ },
+ "Thunder4": {
+  "teinte": 51,
+  "part": 0.6
+ },
+ "Thunder5": {
+  "teinte": 289,
+  "part": 0.6
+ },
+ "Water1": {
+  "teinte": 192,
+  "part": 0.93
+ },
+ "Water2": {
+  "teinte": 209,
+  "part": 0.94
+ },
+ "Water3": {
+  "teinte": 197,
+  "part": 0.82
+ },
+ "Water4": {
+  "teinte": 197,
+  "part": 0.37
+ },
+ "Water5": {
+  "teinte": 217,
+  "part": 0.92
+ },
+ "Wind1": {
+  "teinte": 160,
+  "part": 0.79
+ },
+ "Wind2": {
+  "teinte": 165,
+  "part": 1
+ },
+ "Wind3": {
+  "teinte": 93,
+  "part": 0.81
+ },
+ "Wind4": {
+  "teinte": 37,
+  "part": 0.67
+ },
+ "Wind5": {
+  "teinte": 179,
+  "part": 0.92
+ }
+}

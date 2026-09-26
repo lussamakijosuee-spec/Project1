@@ -89,6 +89,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/ecran_des_dons.js` | ⏸ **en sommeil** — l'écran des Dons est parti avec son système |
 | `navigateur/les_commandes_qui_repondent.js` | **les commandes que les cartes appelaient dans le vide**, le marchand, les trois reliques — 43 contrôles |
 | `navigateur/le_royaume_imperial.js` | **Royaume Impérial** dans un vrai combat : 2 min, une âme par retour, tous les PM, la fatigue — 25 contrôles |
+| `22_animations_coherentes.js` | **chaque attaque se voit, et dans sa couleur** : aucune arme muette, aucune compétence de feu qui joue de l'eau, les vraies teintes (rotation = voulue − départ), et huit états qui faisaient le contraire de leur nom — 30 contrôles. Règle dans `outils/coherence_animations.js`, correction par `outils/animer_les_competences.js`, teintes mesurées par `outils/mesurer_teintes.js` |
 | `navigateur/lavatar_obeit.js` | **l'Avatar obéit, et il apprend** : de vrais tours joués, qui frappe qui, les trois paliers du Lien — 21 contrôles |
 | `navigateur/lorbe_en_raccord.js` | **l'Orbe montre ce que le héros a vraiment** : ses branches = son menu de combat — 13 contrôles |
 | `navigateur/vesper_et_ael.js` | **Vesper (le Pacte, comme Arlecchino ; les trois Styles) et Aël (Lecture, Miracle, Contrat, Portes)**, chaque règle avec sa contre-épreuve — 42 contrôles |
