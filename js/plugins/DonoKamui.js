@@ -56,10 +56,12 @@
             if (d._kamuiOverload > 0) {
                 d._kamuiMat = true; d.removeState(KAMUI); d.addState(OVER);
                 d._kamuiOverload--;
-                if (d._kamuiOverload <= 0) { d._kamuiCharge = espritAlive() ? 8 : 4; log(d.name() + ' rouvre les yeux. Le Kamui revient.'); }
+                if (d._kamuiOverload <= 0) { d._kamuiCharge = (espritAlive() && !d._oeilEteint) ? 8 : 4; log(d.name() + ' rouvre les yeux. Le Kamui revient.'); }
             } else {
                 d.removeState(OVER);
-                var twoEyes = espritAlive();
+                // « Tuer l'Esprit Vengeur affaiblit DURABLEMENT son Kamui » :
+                // l'Esprit renaît, mais l'œil éteint le reste.
+                var twoEyes = espritAlive() && !d._oeilEteint;
                 var period = twoEyes ? 3 : 2;
                 var cap = twoEyes ? 8 : 4;
                 if (d._kamuiCharge > cap) d._kamuiCharge = cap;
@@ -102,7 +104,7 @@
         _die.call(this);
         if (wasEsprit) {
             var d = getDono();
-            if (d && d.isAlive()) { d._kamuiCharge = Math.min(d._kamuiCharge || 4, 4); log('\\C[2]Un œil de ' + d.name() + ' s\'éteint. Son Kamui faiblit — il se découvrira plus souvent.\\C[0]'); }
+            if (d && d.isAlive()) { d._oeilEteint = true; d._kamuiCharge = Math.min(d._kamuiCharge || 4, 4); log('\\C[2]Un œil de ' + d.name() + ' s\'éteint. Son Kamui faiblit — il se découvrira plus souvent.\\C[0]'); }
         }
     };
 })();

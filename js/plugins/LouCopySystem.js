@@ -364,8 +364,11 @@
     }
 
     /** Banque une âme quand un ennemi meurt sous les coups de Lou. */
-    var _GBB_die = Game_BattlerBase.prototype.die;
-    Game_BattlerBase.prototype.die = function () {
+    // ⚠ Sur Game_Enemy : MecaniquesDeBoss (chargé avant) a son propre
+    // Game_Enemy.prototype.die, qui appelait la mort de base sans passer par
+    // Game_BattlerBase — l'âme n'était jamais capturée.
+    var _GBB_die = Game_Enemy.prototype.die;
+    Game_Enemy.prototype.die = function () {
         if (this.isEnemy && this.isEnemy() && this._louLastHit && $gameParty.inBattle()) {
             $gameVariables.setValue(SOUL_VAR, $gameVariables.value(SOUL_VAR) + 1);
             battleLog('Lou capture l\'âme damnée de sa victime. (Âmes : ' +

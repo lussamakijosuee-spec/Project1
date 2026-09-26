@@ -68,6 +68,8 @@ global.AudioManager = { playSe: function () { } };
 global.SceneManager = { _scene: null };
 global.$gameParty = { aliveMembers: function () { return []; } };
 global.PluginManager = { parameters: function () { return ENTREE.parameters; } };
+// Les vraies animations : un numéro réglé dans plugins.js doit exister.
+global.$dataAnimations = JSON.parse(fs.readFileSync(path.join(RACINE, 'data', 'Animations.json'), 'utf8'));
 
 require(path.join(RACINE, 'js', 'plugins', 'MahoragaBoss.js'));
 
@@ -82,7 +84,10 @@ function boss(note, pv) {
     b.enemy = function () { return this._d; };
     b.hpRate = function () { return this._hp / this.mhp; };
     b.isAlive = function () { return this._hp > 0; };
-    b.requestAnimation = function () { };
+    // MV n'a PAS de requestAnimation sur un combattant : l'ancien banc le
+    // simulait, et cachait ainsi le plantage dès qu'une animation était réglée.
+    b._anims = [];
+    b.startAnimation = function (id) { this._anims.push(id); };
     b.forceAction = function () { };
     Game_Enemy.prototype.setup.call(b);
     // le plugin initialise son état interne dans setup() — on rejoue ce qu'il y fait
@@ -164,11 +169,20 @@ function controles(monde) {
     // ——— l'adaptation aux états
     (function () {
         var m = boss('<Mahoraga>', 100000);
+        // un héros le lui inflige : la Roue ne s'adapte qu'à l'autre camp
+        BattleManager._subject = { isActor: function () { return true; } };
         m.addState(50);
         var premier = m._states.indexOf(50) >= 0;
         m._states = [];
         m.addState(50);
         var second = m._states.indexOf(50) >= 0;
+        // contre-épreuve : ce qu'il se pose lui-même, il le garde
+        BattleManager._subject = m; m._states = [];
+        m.addState(51); m._states = []; m.addState(51);
+        var sienne = m._states.indexOf(51) >= 0;
+        BattleManager._subject = null;
+        r.push(['la Roue ne s\'adapte pas à ce qu\'il se pose lui-même', sienne,
+            sienne ? 'sa posture tient la seconde fois' : 'refusée — il s\'immunisait contre lui-même']);
         r.push(['un état qu\'il a déjà subi ne le reprend plus',
             premier && !second, premier ? 'subi une fois, refusé ensuite' : 'il ne l\'a même pas subi']);
     })();

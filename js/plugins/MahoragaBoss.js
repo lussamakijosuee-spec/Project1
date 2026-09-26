@@ -165,8 +165,15 @@
         return arr[Math.floor(Math.random() * arr.length)];
     }
     function playAnim(battler, id) {
-        if (id > 0) battler.requestAnimation(id);
+        // requestAnimation n'existe pas dans MV : l'animation ne partait jamais.
+        if (id > 0 && $dataAnimations[id]) battler.startAnimation(id, false, 0);
     }
+    function bandeau(titre, sous, couleur) {
+        if (window.MecaBoss && MecaBoss.banniere) MecaBoss.banniere(titre, sous, couleur);
+    }
+    // ⚡ Charge / ✷ Surcharge ne sont pas des altérations : la Roue ne s'y
+    // adapte pas.
+    const CHARGE = 207, SURCHARGE = 218;
 
     // ═══════════════════════════════════════════════════════════════
     //  isMahoraga sécurisé sur TOUS les battlers (évite les erreurs
@@ -220,6 +227,7 @@
         if (!this._mBerserk && prev < 100 && this._mRage >= 100) {
             this._mBerserk = true;
             battleMsg(DLG.berserk);
+            bandeau('☸ INSTINCT', 'La Rage est pleine : ses coups frappent deux fois plus fort.', '#ff5a3d');
             playAnim(this, AN_BERSERK);
             playSe(SE_BERSERK);
         }
@@ -231,7 +239,10 @@
         if (!this._mAnnounced[p]) {
             this._mAnnounced[p] = true;
             battleMsg(DLG[p].phaseIn);
-            if (p > 1) { playAnim(this, AN_PHASE); playSe(SE_PHASE); }
+            if (p > 1) {
+                playAnim(this, AN_PHASE); playSe(SE_PHASE);
+                bandeau(p === 2 ? '☸ ENGAGEMENT' : '☸ FURIE', DLG[p].phaseIn.replace(/^Mahoraga : /, ''), '#e8c070');
+            }
         }
     };
 
@@ -284,7 +295,10 @@
         target.mCheckPhase();
 
         var phase   = target.mPhase();
-        var skillId = this.item().id;
+        if (!this.item() || !sub) return dmg;
+        // Une compétence et un objet peuvent porter le même numéro : la Roue
+        // ne doit pas confondre la Potion n°7 et la compétence n°7.
+        var skillId = (typeof this.isItem === 'function' && this.isItem() ? 'objet:' : '') + this.item().id;
         var elemId  = this.item().damage.elementId;
         var atkId   = sub.actorId ? sub.actorId() : (sub.enemyId ? sub.enemyId() : 0);
         var d       = DLG[phase];
@@ -360,7 +374,13 @@
     // ═══════════════════════════════════════════════════════════════
     var _addState = Game_Battler.prototype.addState;
     Game_Battler.prototype.addState = function (stateId) {
-        if (this.isEnemy() && this.isMahoraga() && stateId > 3) {
+        var qui = BattleManager._subject;
+        var parLAutreCamp = !!(qui && qui.isActor && qui.isActor());
+        if (this.isEnemy() && this.isMahoraga() && stateId > 3 &&
+            stateId !== CHARGE && stateId !== SURCHARGE && parLAutreCamp) {
+            // Avant : TOUT état au-dessus de 3 comptait — y compris ceux qu'il
+            // se pose lui-même. Sa deuxième posture était refusée avec
+            // « Tu répètes la même erreur ? », adressé à personne.
             var phase = this.mPhase();
 
             if (this._mStates.indexOf(stateId) >= 0) {
@@ -377,6 +397,14 @@
             this.mGainRage(10);
         }
         _addState.call(this, stateId);
+    };
+
+    // La phase s'annonce aussi quand c'est LUI qui agit — pas seulement
+    // quand on le frappe (un poison le faisait changer de phase en silence).
+    var _mMakeActions = Game_Enemy.prototype.makeActions;
+    Game_Enemy.prototype.makeActions = function () {
+        if (this.isMahoraga() && this._mAnnounced) this.mCheckPhase();
+        _mMakeActions.call(this);
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -422,13 +450,29 @@
         return v;
     };
     // Phase météores : annonce quand il passe sous 30% PV.
+    // Avant, l'annonce était tout : la pluie ne tombait jamais, sauf si le
+    // hasard de son IA tirait la compétence. Désormais ce qui s'annonce
+    // tombe — au tour suivant, puis tous les METEORES_TOUS tours.
+    var METEORES = 436;           // « Parole n°8 Pluie de Météores », déjà dans ses actions
+    var METEORES_TOUS = 3;
+    function connait(e, id) {
+        return e.enemy().actions.some(function (a) { return a.skillId === id; }) && $dataSkills[id];
+    }
     var _ma = Game_Enemy.prototype.makeActions;
     Game_Enemy.prototype.makeActions = function () {
+        var t = $gameTroop ? $gameTroop.turnCount() : 0;
         if (isRadahn(this) && !this._radahnMeteor && this.hpRate() <= 0.30) {
             this._radahnMeteor = true;
+            this._radahnProchain = t + 1;
             var sc = SceneManager._scene;
             if (sc && sc._logWindow) sc._logWindow.push('addText', "\\C[2]Kev s'élève dans le ciel… une PLUIE DE MÉTÉORES s'annonce !\\C[0]");
+            if (window.MecaBoss) MecaBoss.banniere('☄ PLUIE DE MÉTÉORES', "Kev s'élève dans le ciel. Au prochain tour, le ciel tombe.", '#ff7040');
         }
         _ma.call(this);
+        if (isRadahn(this) && this._radahnMeteor && t >= (this._radahnProchain || 0) &&
+            connait(this, METEORES) && this._actions.length && this.canMove()) {
+            this._actions[0].setSkill(METEORES);
+            this._radahnProchain = t + METEORES_TOUS;
+        }
     };
 })();
