@@ -1,0 +1,409 @@
+<meta charset="utf-8">
+<title>Carnet des plugins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --fond: #eceff3;
+  --surface: #ffffff;
+  --surface-2: #f5f7f9;
+  --encre: #18202c;
+  --doux: #5a6575;
+  --trait: #d5dbe3;
+  --accent: #0c7a68;
+  --accent-doux: #d7efe9;
+  --code: #e8edf2;
+  --g-commande: #0c7a68;
+  --g-script: #6246c9;
+  --g-note: #a05f00;
+  --g-commentaire: #8a4b2d;
+  --g-message: #2360b8;
+  --g-mv: #5a6575;
+  --ombre: 0 1px 2px rgba(20, 30, 45, .06), 0 4px 16px rgba(20, 30, 45, .05);
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --texte: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --titre: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --fond: #0f141b; --surface: #171e28; --surface-2: #1d2531; --encre: #e4e9f0; --doux: #98a4b5;
+    --trait: #2a3442; --accent: #4fd1b5; --accent-doux: #16352f; --code: #0c1117;
+    --g-commande: #4fd1b5; --g-script: #a893ff; --g-note: #f0b155; --g-commentaire: #e19a76; --g-message: #7fb2ff; --g-mv: #98a4b5;
+    --ombre: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --fond: #0f141b; --surface: #171e28; --surface-2: #1d2531; --encre: #e4e9f0; --doux: #98a4b5;
+  --trait: #2a3442; --accent: #4fd1b5; --accent-doux: #16352f; --code: #0c1117;
+  --g-commande: #4fd1b5; --g-script: #a893ff; --g-note: #f0b155; --g-commentaire: #e19a76; --g-message: #7fb2ff; --g-mv: #98a4b5;
+  --ombre: none;
+}
+* { box-sizing: border-box; }
+body { background: var(--fond); color: var(--encre); font: 16px/1.55 var(--texte); margin: 0; }
+.page { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 0 64px; }
+header.tete { padding-block: 28px 8px; }
+.surtitre { font: 600 12px/1 var(--texte); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 700 clamp(30px, 5vw, 44px)/1.05 var(--titre); margin: 8px 0 10px; text-wrap: balance; }
+.chapeau { color: var(--doux); max-width: 68ch; margin: 0; }
+.chiffres { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; color: var(--doux); font-size: 14px; font-variant-numeric: tabular-nums; }
+.chiffres b { color: var(--encre); font-weight: 600; }
+
+.barre { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--fond); padding-block: 12px; border-bottom: 1px solid var(--trait); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.recherche { flex: 1 1 280px; position: relative; }
+.recherche input { width: 100%; font: 16px var(--texte); padding: 11px 14px 11px 38px; border-radius: 10px; border: 1px solid var(--trait); background: var(--surface); color: var(--encre); }
+.recherche input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.recherche svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: none; stroke: var(--doux); stroke-width: 2; }
+.onglets { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--trait); border-radius: 10px; padding: 3px; }
+.onglets button { font: 600 14px var(--texte); border: 0; background: transparent; color: var(--doux); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
+.onglets button[aria-selected="true"] { background: var(--accent-doux); color: var(--encre); }
+.onglets button:focus-visible { outline: 2px solid var(--accent); }
+.compte { font-size: 13px; color: var(--doux); font-variant-numeric: tabular-nums; min-width: 12ch; }
+
+.cadre { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; margin-top: 22px; }
+nav.sommaire { position: sticky; top: 84px; align-self: start; max-height: calc(100vh - 100px); overflow: auto; font-size: 14px; }
+nav.sommaire a { display: block; color: var(--doux); text-decoration: none; padding: 4px 8px; border-radius: 6px; line-height: 1.3; }
+nav.sommaire a:hover, nav.sommaire a:focus-visible { background: var(--surface); color: var(--encre); outline: none; }
+nav.sommaire .groupe { font: 600 11px var(--texte); letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 14px 8px 4px; opacity: .8; }
+@media (max-width: 860px) { .cadre { grid-template-columns: 1fr; } nav.sommaire { display: none; } }
+
+.theme { margin-bottom: 36px; scroll-margin-top: 90px; }
+.theme > h2 { font: 700 26px/1.2 var(--titre); margin: 0 0 6px; text-wrap: balance; }
+.theme > p.intro { color: var(--doux); margin: 0 0 16px; max-width: 72ch; }
+.situ { background: var(--surface); border: 1px solid var(--trait); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: var(--ombre); }
+.situ h3 { font: 600 17px/1.35 var(--texte); margin: 0 0 4px; }
+.situ p { margin: 0 0 10px; color: var(--doux); font-size: 15px; max-width: 75ch; }
+.lignes { display: grid; gap: 8px; }
+.ligne { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 4px 12px; align-items: start; }
+@media (max-width: 560px) { .ligne { grid-template-columns: 1fr; } }
+.genre { font: 600 11px/1 var(--texte); letter-spacing: .06em; text-transform: uppercase; padding: 6px 8px; border-radius: 6px; border: 1px solid currentColor; justify-self: start; margin-top: 6px; white-space: nowrap; }
+.genre.commande { color: var(--g-commande); } .genre.script { color: var(--g-script); } .genre.note { color: var(--g-note); }
+.genre.commentaire { color: var(--g-commentaire); } .genre.message { color: var(--g-message); } .genre.mv { color: var(--g-mv); }
+.code { display: flex; align-items: flex-start; gap: 8px; background: var(--code); border-radius: 8px; padding: 7px 8px 7px 12px; min-width: 0; }
+.code code { font: 14px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; flex: 1; min-width: 0; }
+.code.mv code { font-family: var(--texte); font-style: italic; color: var(--doux); }
+.copier { flex: none; font: 600 12px var(--texte); border: 1px solid var(--trait); background: var(--surface); color: var(--doux); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.copier:hover { color: var(--encre); } .copier:focus-visible { outline: 2px solid var(--accent); }
+.copier.fait { color: var(--accent); border-color: var(--accent); }
+.meta { grid-column: 2; font-size: 13px; color: var(--doux); }
+@media (max-width: 560px) { .meta { grid-column: 1; } }
+.meta a { color: var(--accent); text-decoration: none; } .meta a:hover { text-decoration: underline; }
+
+.plugin { background: var(--surface); border: 1px solid var(--trait); border-radius: 12px; margin-bottom: 10px; scroll-margin-top: 90px; }
+.plugin > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 14px; }
+.plugin > summary::-webkit-details-marker { display: none; }
+.plugin > summary:focus-visible { outline: 2px solid var(--accent); border-radius: 12px; }
+.plugin .nom { font: 600 17px var(--mono); word-break: break-all; }
+.plugin .resume { grid-column: 1; color: var(--doux); font-size: 15px; }
+.plugin .pastilles { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; align-content: start; max-width: 260px; }
+.pastille { font: 600 12px var(--texte); padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--doux); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pastille.on { background: var(--accent-doux); color: var(--encre); }
+.corps { padding: 0 18px 16px; border-top: 1px solid var(--trait); }
+.corps h4 { font: 600 12px var(--texte); letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 18px 0 8px; }
+.cmd { margin-bottom: 12px; }
+.cmd .titre-cmd { font: 600 15px var(--mono); margin-bottom: 4px; }
+.cmd .titre-cmd small { font: 400 13px var(--texte); color: var(--doux); margin-left: 6px; }
+.glose { font-size: 13px; color: var(--doux); margin: 2px 0 6px 2px; }
+.tiennes { font-size: 13px; color: var(--doux); margin: 4px 0 2px; }
+.bal-groupe { font-size: 13px; color: var(--doux); margin: 10px 0 4px; font-style: italic; }
+.puces { display: flex; flex-wrap: wrap; gap: 6px; }
+.puces code { font: 13px var(--mono); background: var(--code); padding: 2px 7px; border-radius: 5px; }
+.tableau { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--trait); vertical-align: top; }
+th { font-weight: 600; color: var(--doux); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+td.num { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
+td code { font: 13px var(--mono); word-break: break-word; }
+details.aide > summary { cursor: pointer; font: 600 14px var(--texte); color: var(--accent); margin-top: 16px; }
+details.aide pre { font: 13px/1.5 var(--mono); background: var(--code); border-radius: 8px; padding: 12px; overflow-x: auto; white-space: pre; max-height: 520px; overflow-y: auto; }
+.section-plugins { font: 600 12px var(--texte); letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 26px 0 10px; }
+.vide { color: var(--doux); padding: 28px 0; }
+.legende { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 10px 0 22px; font-size: 13px; color: var(--doux); align-items: center; }
+.legende .genre { margin: 0; }
+mark { background: var(--accent-doux); color: inherit; border-radius: 3px; padding: 0 1px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="page">
+  <header class="tete">
+    <div class="surtitre">Le Codex des Trois Sources · pour JOKO</div>
+    <h1>Carnet des plugins</h1>
+    <p class="chapeau">Tout ce qu'on peut taper pour allumer, couper, régler, ajouter ou retirer quelque chose, pour chaque plugin actif du jeu. Les situations en premier, écrites en français. Puis chaque plugin, avec ce que son code écoute vraiment.</p>
+    <div class="chiffres" id="chiffres"></div>
+  </header>
+
+  <div class="barre">
+    <label class="recherche" for="q">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="q" type="search" placeholder="Chercher : météo, grotte, horloge, saut, quête, image…" autocomplete="off">
+    </label>
+    <div class="onglets" role="tablist">
+      <button role="tab" id="t-situations" aria-selected="true">Situations</button>
+      <button role="tab" id="t-plugins" aria-selected="false">Tous les plugins</button>
+    </div>
+    <div class="compte" id="compte" aria-live="polite"></div>
+  </div>
+
+  <div class="cadre">
+    <nav class="sommaire" id="sommaire" aria-label="Sommaire"></nav>
+    <main id="contenu"></main>
+  </div>
+</div>
+
+<script>
+var DONNEES = /*__DONNEES__*/null;
+(function () {
+  'use strict';
+  var D = DONNEES || { plugins: [], situations: [] };
+  var GENRES = {
+    commande: ['Commande de plugin', 'Commande d\'événement « Commande de plugin »'],
+    script: ['Script', 'Commande « Script », ou condition « Script »'],
+    note: ['Note', 'Dans la case Note (carte, ennemi, objet…) ou le nom indiqué'],
+    commentaire: ['Commentaire', 'Commande « Commentaire » dans la page de l\'événement'],
+    message: ['Dans un message', 'Dans le texte d\'« Afficher un message »'],
+    mv: ['Éditeur MV', 'Commande de l\'éditeur, sans plugin']
+  };
+  var onglet = 'situations', requete = '';
+  try { onglet = localStorage.getItem('carnet-onglet') || 'situations'; } catch (e) {}
+  if (location.hash && /^#p-/.test(location.hash)) onglet = 'plugins';
+
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function ancre(nom) { return 'p-' + nom.replace(/[^A-Za-z0-9_-]/g, '_'); }
+
+  var chiffres = document.getElementById('chiffres');
+  var nbCmd = D.plugins.reduce(function (s, p) { return s + p.commandes.length; }, 0);
+  var nbBal = D.plugins.reduce(function (s, p) { return s + p.balises.length; }, 0);
+  var nbSit = D.situations.reduce(function (s, t) { return s + t.situations.length; }, 0);
+  [['plugins actifs', D.plugins.length], ['situations', nbSit], ['commandes de plugin', nbCmd], ['lignes de balises', nbBal]].forEach(function (c) {
+    var s = el('span'); var b = el('b', null, String(c[1])); s.appendChild(b); s.appendChild(document.createTextNode(' ' + c[0])); chiffres.appendChild(s);
+  });
+  var d = el('span', null, 'généré le ' + D.date + ' depuis js/plugins.js'); chiffres.appendChild(d);
+
+  function boutonCopier(texte) {
+    var b = el('button', 'copier', 'Copier');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Copier : ' + texte.slice(0, 60));
+    b.addEventListener('click', function () {
+      function ok() { b.textContent = 'Copié'; b.classList.add('fait'); setTimeout(function () { b.textContent = 'Copier'; b.classList.remove('fait'); }, 1400); }
+      function repli() {
+        var r = document.createRange(); r.selectNodeContents(b.previousSibling);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); b.textContent = 'Sélectionné';
+      }
+      try { navigator.clipboard.writeText(texte).then(ok, repli); } catch (e) { repli(); }
+    });
+    return b;
+  }
+  function blocCode(texte, mv) {
+    var c = el('div', 'code' + (mv ? ' mv' : ''));
+    c.appendChild(el('code', null, texte));
+    if (!mv) c.appendChild(boutonCopier(texte));
+    return c;
+  }
+
+  // ── les situations
+  function rendreSituations(main, nav) {
+    var leg = el('div', 'legende');
+    leg.appendChild(el('span', null, 'Où coller :'));
+    Object.keys(GENRES).forEach(function (g) {
+      var s = el('span', 'genre ' + g, GENRES[g][0]); s.title = GENRES[g][1]; leg.appendChild(s);
+    });
+    main.appendChild(leg);
+    var vus = 0;
+    D.situations.forEach(function (th) {
+      var sec = el('section', 'theme'); sec.id = 's-' + th.id;
+      var cartes = [];
+      th.situations.forEach(function (s) {
+        var tout = norm([th.theme, s.titre, s.texte].concat((s.lignes || []).map(function (l) { return l.texte + ' ' + l.plugin + ' ' + l.ou; })).join(' '));
+        if (requete && tout.indexOf(requete) < 0) return;
+        var c = el('article', 'situ');
+        c.appendChild(el('h3', null, s.titre));
+        if (s.texte) c.appendChild(el('p', null, s.texte));
+        var ls = el('div', 'lignes');
+        (s.lignes || []).forEach(function (l) {
+          var r = el('div', 'ligne');
+          var g = el('span', 'genre ' + l.genre, GENRES[l.genre][0]); g.title = GENRES[l.genre][1];
+          r.appendChild(g);
+          r.appendChild(blocCode(l.texte, l.genre === 'mv'));
+          if (l.ou || (l.plugin && l.plugin !== 'MV')) {
+            var m = el('div', 'meta');
+            if (l.ou) m.appendChild(document.createTextNode(l.ou + (l.plugin && l.plugin !== 'MV' ? ' · ' : '')));
+            if (l.plugin && l.plugin !== 'MV') {
+              var a = el('a', null, l.plugin); a.href = '#' + ancre(l.plugin);
+              a.addEventListener('click', function (ev) { ev.preventDefault(); aller(l.plugin); });
+              m.appendChild(a);
+            }
+            r.appendChild(m);
+          }
+          ls.appendChild(r);
+        });
+        c.appendChild(ls);
+        cartes.push(c);
+      });
+      if (!cartes.length) return;
+      vus += cartes.length;
+      sec.appendChild(el('h2', null, th.theme));
+      if (th.intro && !requete) sec.appendChild(el('p', 'intro', th.intro));
+      cartes.forEach(function (c) { sec.appendChild(c); });
+      main.appendChild(sec);
+      var a = el('a', null, th.theme + ' (' + cartes.length + ')'); a.href = '#s-' + th.id; nav.appendChild(a);
+    });
+    return vus;
+  }
+
+  // ── les plugins
+  function texteDuPlugin(p) {
+    if (!p._t) {
+      p._t = norm([p.nom, p.resume, p.desc, p.section,
+        p.commandes.map(function (c) { return c.nom + ' ' + c.syntaxes.map(function (s) { return s.ex + ' ' + s.glose; }).join(' ') + ' ' + c.tiennes.join(' '); }).join(' '),
+        p.balises.map(function (b) { return b.ligne; }).join(' '), p.balisesCode.join(' '), p.scripts.join(' '),
+        p.interrupteurs.map(function (i) { return i.num + ' ' + i.nom + ' ' + i.role; }).join(' ')].join(' '));
+      p._aide = norm(p.aide);
+    }
+    return p._t;
+  }
+  function rendrePlugin(p, ouvert) {
+    var det = el('details', 'plugin'); det.id = ancre(p.nom);
+    if (ouvert) det.open = true;
+    var sum = el('summary');
+    sum.appendChild(el('span', 'nom', p.nom));
+    var past = el('span', 'pastilles');
+    function pastille(n, mot) { var s = el('span', 'pastille' + (n ? ' on' : ''), n + ' ' + mot); past.appendChild(s); }
+    pastille(p.commandes.length, p.commandes.length > 1 ? 'commandes' : 'commande');
+    pastille(p.balises.length, 'balises');
+    pastille(p.scripts.length, 'scripts');
+    if (p.interrupteurs.length) pastille(p.interrupteurs.length, 'inter./var.');
+    sum.appendChild(past);
+    sum.appendChild(el('span', 'resume', p.resume || p.desc));
+    det.appendChild(sum);
+    var rempli = false;
+    det.addEventListener('toggle', function () { if (det.open && !rempli) { rempli = true; det.appendChild(corps(p)); } });
+    if (ouvert) { rempli = true; det.appendChild(corps(p)); }
+    return det;
+  }
+  function corps(p) {
+    var c = el('div', 'corps');
+    if (p.resume && p.desc) c.appendChild(el('p', 'glose', 'Description d\'origine : ' + p.desc));
+    if (p.commandes.length) {
+      c.appendChild(el('h4', null, 'Commandes de plugin'));
+      p.commandes.forEach(function (k) {
+        var b = el('div', 'cmd');
+        var t = el('div', 'titre-cmd', k.nom);
+        if (k.casse) t.appendChild(el('small', null, 'majuscules indifférentes'));
+        if (k.fois) t.appendChild(el('small', null, 'déjà utilisée ' + k.fois + ' fois dans tes événements'));
+        b.appendChild(t);
+        k.syntaxes.forEach(function (s) {
+          b.appendChild(blocCode(s.ex));
+          if (s.glose) b.appendChild(el('div', 'glose', s.glose));
+        });
+        if (k.tiennes.length) {
+          b.appendChild(el('div', 'tiennes', 'Tes lignes, telles qu\'elles marchent déjà :'));
+          k.tiennes.forEach(function (x) { b.appendChild(blocCode(x)); });
+        }
+        if (!k.syntaxes.length && !k.tiennes.length) b.appendChild(blocCode(k.nom));
+        c.appendChild(b);
+      });
+      if (p.sousCommandes.length) {
+        c.appendChild(el('div', 'bal-groupe', 'Mots reconnus après la commande :'));
+        var pu = el('div', 'puces'); p.sousCommandes.forEach(function (s) { pu.appendChild(el('code', null, s)); }); c.appendChild(pu);
+      }
+    }
+    if (p.balises.length) {
+      c.appendChild(el('h4', null, 'Balises de note et commentaires'));
+      var groupe = null;
+      p.balises.forEach(function (b) {
+        var g = (b.cible ? b.cible + ' · ' : '') + (b.titre || '');
+        if (g !== groupe) { groupe = g; if (g) c.appendChild(el('div', 'bal-groupe', g)); }
+        c.appendChild(blocCode(b.ligne));
+      });
+    }
+    if (p.balisesCode.length) {
+      c.appendChild(el('h4', null, 'Mots-clés que le code lit dans les notes'));
+      var pu2 = el('div', 'puces'); p.balisesCode.forEach(function (s) { pu2.appendChild(el('code', null, s)); }); c.appendChild(pu2);
+    }
+    if (p.scripts.length) {
+      c.appendChild(el('h4', null, 'Appels de script'));
+      p.scripts.forEach(function (s) { c.appendChild(blocCode(s)); });
+    }
+    if (p.interrupteurs.length) {
+      c.appendChild(el('h4', null, 'Interrupteurs et variables'));
+      var tw = el('div', 'tableau'), tb = el('table');
+      var h = el('tr'); ['', 'N°', 'Nom dans le jeu', 'Rôle'].forEach(function (x) { h.appendChild(el('th', null, x)); }); tb.appendChild(h);
+      p.interrupteurs.forEach(function (i) {
+        var r = el('tr'); r.appendChild(el('td', null, i.genre)); r.appendChild(el('td', 'num', String(i.num)));
+        r.appendChild(el('td', null, i.nom || '—')); r.appendChild(el('td', null, i.role + (i.desc ? ' — ' + i.desc : ''))); tb.appendChild(r);
+      });
+      tw.appendChild(tb); c.appendChild(tw);
+    }
+    if (p.reglages.length) {
+      c.appendChild(el('h4', null, 'Réglages actuels (Gestionnaire de plugins)'));
+      var tw2 = el('div', 'tableau'), tb2 = el('table');
+      var h2 = el('tr'); ['Réglage', 'Valeur'].forEach(function (x) { h2.appendChild(el('th', null, x)); }); tb2.appendChild(h2);
+      p.reglages.forEach(function (g) {
+        var r = el('tr'); r.appendChild(el('td', null, g.texte ? g.texte + ' (' + g.cle + ')' : g.cle));
+        var td = el('td'); td.appendChild(el('code', null, g.valeur)); r.appendChild(td); tb2.appendChild(r);
+      });
+      tw2.appendChild(tb2); c.appendChild(tw2);
+    }
+    if (p.aide) {
+      var da = el('details', 'aide'); da.appendChild(el('summary', null, 'Aide complète du plugin (langue d\'origine)'));
+      da.appendChild(el('pre', null, p.aide)); c.appendChild(da);
+    }
+    return c;
+  }
+  function rendrePlugins(main, nav) {
+    var section = null, vus = 0;
+    D.plugins.forEach(function (p) {
+      var t = texteDuPlugin(p);
+      var trouve = !requete || t.indexOf(requete) >= 0 || p._aide.indexOf(requete) >= 0;
+      if (!trouve) return;
+      vus++;
+      if (p.section !== section) {
+        section = p.section;
+        var titre = section.replace(/^[①-⑳\s]+/, '');
+        main.appendChild(el('div', 'section-plugins', section));
+        nav.appendChild(el('div', 'groupe', titre.split('·')[0].trim()));
+      }
+      main.appendChild(rendrePlugin(p, !!requete && t.indexOf(requete) >= 0 && vus <= 6));
+      var a = el('a', null, p.nom); a.href = '#' + ancre(p.nom);
+      a.addEventListener('click', function (ev) { ev.preventDefault(); aller(p.nom); });
+      nav.appendChild(a);
+    });
+    return vus;
+  }
+
+  var main = document.getElementById('contenu'), nav = document.getElementById('sommaire'), compte = document.getElementById('compte');
+  function rendre() {
+    main.textContent = ''; nav.textContent = '';
+    document.getElementById('t-situations').setAttribute('aria-selected', onglet === 'situations');
+    document.getElementById('t-plugins').setAttribute('aria-selected', onglet === 'plugins');
+    var n = onglet === 'situations' ? rendreSituations(main, nav) : rendrePlugins(main, nav);
+    compte.textContent = requete ? n + (onglet === 'situations' ? ' situation(s)' : ' plugin(s)') : '';
+    if (!n) {
+      var v = el('div', 'vide', 'Rien pour « ' + document.getElementById('q').value + ' » ici.');
+      if (onglet === 'situations') v.textContent += ' Essaie l\'onglet « Tous les plugins », qui cherche aussi dans l\'aide complète.';
+      main.appendChild(v);
+    }
+  }
+  function choisir(o) { onglet = o; try { localStorage.setItem('carnet-onglet', o); } catch (e) {} rendre(); window.scrollTo(0, 0); }
+  function aller(nom) {
+    if (onglet !== 'plugins' || requete) { requete = ''; document.getElementById('q').value = ''; onglet = 'plugins'; rendre(); }
+    var d = document.getElementById(ancre(nom));
+    if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); try { history.replaceState(null, '', '#' + ancre(nom)); } catch (e) {} }
+  }
+  document.getElementById('t-situations').addEventListener('click', function () { choisir('situations'); });
+  document.getElementById('t-plugins').addEventListener('click', function () { choisir('plugins'); });
+  var minuteur;
+  document.getElementById('q').addEventListener('input', function (e) {
+    clearTimeout(minuteur);
+    minuteur = setTimeout(function () { requete = norm(e.target.value.trim()); rendre(); }, 120);
+  });
+  rendre();
+  if (location.hash && /^#p-/.test(location.hash)) {
+    var cible = document.getElementById(location.hash.slice(1));
+    if (cible) { cible.open = true; cible.scrollIntoView(); }
+  }
+})();
+</script>

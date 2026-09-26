@@ -82,6 +82,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `navigateur/ponts_du_mana.js` | **le mana sans l'ancien lore** : les Chutes parties, les Voies qui tiennent — 9 contrôles |
 | `navigateur/etats_en_combat.js` | **les états posés sur un vrai combattant** : les notetags qui ne faisaient rien — 12 contrôles |
 | `navigateur/doctrines_en_combat.js` | **un boss qui décide pour de vrai**, tour par tour, dans le moteur — 7 contrôles |
+| `outils/carnet_des_plugins.js` | **le carnet des plugins** : pour chacun des plugins actifs, ses commandes (lues dans son code), ses balises, ses scripts, ses interrupteurs, ses réglages et son aide ; en tête, les situations écrites à la main (`outils/carnet_situations.js`), chaque ligne vérifiée contre le code du plugin qu'elle cite. `--ecrire` produit `docs/CARNET_DES_PLUGINS.html` — à relancer quand on allume ou éteint un plugin |
 | `navigateur/les_boss.js` | **les boss, joués** : la rupture de la charge (et l'IA qui renonce à frapper), les insécables, les 27 mécaniques de `MecaniquesDeBossSuite` mise en garde → frappe, 14 d'entre elles mesurées ; Mahoraga, les météores de Radahn, l'Esprit de Dono, l'âme de Lou — 41 contrôles, deux captures |
 | `navigateur/les_livres.js` | **le Bestiaire et l'Encyclopédie, ouverts depuis le menu et parcourus** — 12 contrôles |
 | `21_le_retrait_des_dons.js` | **le retrait des Dons tient** : greffons éteints mais présents, 16 pièces gardées, l'Avatar survivant — 26 contrôles |
