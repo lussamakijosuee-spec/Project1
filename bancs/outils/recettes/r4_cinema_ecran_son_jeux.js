@@ -1,0 +1,145 @@
+'use strict';
+var D = require('./dsl.js');
+var A = D.A, C = D.C, M = D.M, SW = D.SW, VAR = D.VAR, si = D.si, choix = D.choix, dire = D.dire, narrer = D.narrer, note = D.note, route = D.route, cat = D.cat;
+var ICI = D.CE_EV, JOUEUR = D.JOUEUR;
+function R(nom, aide, cmds) { return { nom: nom, aide: aide, cmds: cmds }; }
+var NOIR = [-255, -255, -255, 0], NORMAL = [0, 0, 0, 0], SEPIA = [34, 0, -34, 170], NUIT = [-68, -68, 0, 68], SOIR = [68, -34, -34, 0], REVE = [34, -17, 68, 85], SANG = [68, -68, -68, 0];
+
+var cinema = [
+    R('Début de cinématique — le joueur ne bouge plus, tout se cache', 'À appeler au début d\'une scène.',
+        cat(A.sw(SW.cinema, true), A.plugin('hide_clock'), A.plugin('hide_gold_hud'), A.plugin('hide_treasure_hud'), A.plugin('hide_compass'), A.plugin('hide_all_indicators'), A.plugin('disable_time'), A.plugin('JUMPACTION FALSE'), A.plugin('DisableFastForward'), A.menuAcces(false))),
+    R('Fin de cinématique — tout revient', 'À appeler à la fin d\'une scène.',
+        cat(A.sw(SW.cinema, false), A.plugin('show_clock'), A.plugin('show_gold_hud'), A.plugin('show_treasure_hud'), A.plugin('show_compass'), A.plugin('show_all_indicators'), A.plugin('enable_time'), A.plugin('JUMPACTION TRUE'), A.plugin('EnableFastForward'), A.menuAcces(true))),
+    R('Ouverture — écran noir, puis la scène apparaît', '', cat(A.teinte(NOIR, 1, false), A.attendre(30), A.teinte(NORMAL, 120))),
+    R('Titre de chapitre au centre de l\'écran', 'Change le texte.', cat(A.fonduBgm(2), narrer('\\fs[36]Chapitre I\\fs[22]\n\\C[8]Le Seuil\\C[0]'), A.attendre(30))),
+    R('Lieu et date en bas de l\'écran (bulle qui se ferme seule)', '', dire('<c:0|520,180,0>Ville Forestière — le premier jour.')),
+    R('Flashback — souvenir en sépia', '', cat(A.teinte(SEPIA, 60), A.plugin('filter_effect : 1'), narrer('Il y a dix ans…'))),
+    R('Fin du flashback', '', cat(A.plugin('filter_clear'), A.teinte(NORMAL, 60))),
+    R('Rêve — teinte irréelle et ondulation', '', cat(A.teinte(REVE, 60), A.plugin('weather : 2 : 4 : 20 : 100 : 1 : Light_02A'), A.bgm('Myuu-Nebula', 70))),
+    R('Réveil — fin du rêve', '', cat(A.flash([255, 255, 255, 255], 30, true), A.teinte(NORMAL, 30), A.plugin('clear_weather : 2'), A.fonduBgm(2))),
+    R('Le soir tombe (teinte)', '', A.teinte(SOIR, 120)),
+    R('La nuit tombe (teinte)', '', A.teinte(NUIT, 120)),
+    R('Écran rouge — sang, colère', '', cat(A.teinte(SANG, 30), A.se('HeartBeat-long_slow'))),
+    R('Tremblement de terre', '', cat(A.se('Earth5'), A.bgs('Quake', 80), A.trembler(7, 7, 120, true), A.fonduBgs(2))),
+    R('Explosion au loin', '', cat(A.se('Explosion2', 60), A.flash([255, 220, 150, 170], 20), A.trembler(3, 8, 20))),
+    R('La caméra se déplace — montrer quelque chose au nord', 'Défile de 5 cases, attend, revient.', cat(A.defiler(8, 5, 3), A.attendre(60), A.defiler(2, 5, 3))),
+    R('Un personnage apparaît dans un éclair', 'L\'événement était transparent.', cat(A.se('Magic3'), A.anim(ICI, 40), route(ICI, [M.transparentOff]), A.bulle(ICI, 1))),
+    R('Un personnage disparaît en fondu', '', cat(route(ICI, [M.opacite(180), M.att(8), M.opacite(100), M.att(8), M.opacite(0)]), A.effacer())),
+    R('Un personnage entre dans la scène (marche vers le joueur)', '', route(ICI, [M.versJoueur, M.versJoueur, M.versJoueur, M.tVersJoueur])),
+    R('Un personnage part en courant', '', cat(route(ICI, [M.vitesse(5), M.fuirJoueur, M.fuirJoueur, M.fuirJoueur, M.fuirJoueur, M.transparentOn]), A.effacer())),
+    R('Le joueur fait un pas en arrière, surpris', '', cat(A.bulle(JOUEUR, 1), route(JOUEUR, [M.fixeOn, M.arriere, M.fixeOff]))),
+    R('Le joueur s\'agenouille / regarde vers le bas', '', route(JOUEUR, [M.tBas, M.att(30)])),
+    R('Le joueur saute de joie', '', route(JOUEUR, [M.saut(0, 0), M.saut(0, 0)])),
+    R('Deux personnages se regardent en silence', '', cat(route(JOUEUR, [M.tVersJoueur]), route(ICI, [M.tVersJoueur]), A.bulle(ICI, 8), A.attendre(60))),
+    R('Dialogue de scène — narrateur au centre, fond sombre', '', narrer('Le vent se tut.\nPlus rien ne bougeait dans la vallée.')),
+    R('Texte qui défile — prologue', '', D.defilant('Avant les royaumes, il y avait trois Sources.\nL\'une donnait la force.\nL\'autre, la pensée.\nLa dernière, l\'âme.\n\nCe récit commence quand la troisième se tut.', 2)),
+    R('Choisir son héros — DebutMarques', 'Au tout début du jeu, en Démarrage automatique.', A.plugin('DEBUT choisir')),
+    R('Choisir son héros — écran fait maison', 'Change les cartes de départ.',
+        cat(dire('Qui vas-tu incarner ?', { fond: 1, pos: 1 }), choix(['Vesper', 'Korrah', 'ludwing', 'Aël'], [1, 2, 3, 4].map(function (id) {
+            return cat([2, 3, 4, 1].filter(function (x) { return x !== id; }).map(function (x) { return A.equipe(x, false)[0]; }), A.equipe(id, true), A.transfert(1, 6, 8, 2, 0));
+        })))),
+    R('Présentation d\'un personnage (nom et titre)', '', cat(A.se('Flash1'), narrer('\\C[18]Vesper\\C[0]\n\\C[8]celle qui porte le Masque\\C[0]'))),
+    R('Le héros rejoint l\'équipe — fanfare', '', cat(A.equipe(2, true), A.me('Fanfare1'), dire('Korrah rejoint l\'équipe !'))),
+    R('Le héros quitte l\'équipe', '', cat(A.equipe(2, false), dire('Korrah s\'éloigne.'))),
+    R('Scène de mort — écran qui se vide', '', cat(A.se('Collapse1'), A.teinte([-68, -68, -68, 255], 120), A.fonduBgm(4), narrer('…'), A.attendre(60))),
+    R('Scène émouvante — musique douce, pas d\'avance rapide', '', cat(A.plugin('DisableFastForward'), A.garderBgm(), A.bgm('Nostalgia', 70), dire('Tu te souviens de moi ?'), A.reprendreBgm(), A.plugin('EnableFastForward'))),
+    R('Fin du jeu — crédits puis écran titre', '', cat(A.fonduBgm(3), A.fonduNoir(), D.defilant('Le Codex des Trois Sources\n\nUn jeu de JOKO\n\nMerci d\'avoir joué.', 2), A.titre())),
+    R('Ellipse — le temps passe', 'Écran noir, texte, un jour plus tard.', cat(A.fonduNoir(), narrer('Quelques jours plus tard…'), A.js('$gameSystem.add_day(3);'), A.fonduRetour())),
+    R('Cinématique d\'ultime (cut-in)', 'Plugin UltiCinematics.', A.plugin('ULTI cutin Tranche des Trois Sources | #ff3355 | Vesper')),
+    R('Aura colorée autour du joueur', '', A.plugin('AURA #00ffcc'))
+];
+
+var ecran = [
+    R('Image du lore — apparaît en fondu', 'Choisis l\'image dans la commande « Afficher une image ».',
+        cat(A.image(1, '', 0, 0, 0), A.bougerImage(1, 0, 0, 255, 60, true), A.plugin('pic_breath : 1 : 2 : 100'))),
+    R('Image du lore — disparaît en fondu', '', cat(A.bougerImage(1, 0, 0, 0, 60, true), A.effacerImage(1))),
+    R('Image qui flotte', '', A.plugin('pic_float : 1 : 0 : 100')),
+    R('Image qui tremble', '', A.plugin('pic_shake : 1 : 0 : 6 : 10 : 30')),
+    R('Image qui se balance', '', A.plugin('pic_swing : 1 : 0 : 100')),
+    R('Image qui zoome lentement', '', A.bougerImage(1, 0, 0, 255, 300, false, { zoom: 120 })),
+    R('Image qui tourne', '', A.tournerImage(1, 5)),
+    R('Image qui s\'assombrit', '', A.teinteImage(1, [-68, -68, -68, 0], 60)),
+    R('Image qui s\'effondre (disparition dramatique)', '', A.plugin('pic_collapse : 1 : 0 : 1 : 100')),
+    R('Portrait qui parle (image 2)', 'Clignement + bouche.', A.plugin('pic_skit : 2 : 160 : true')),
+    R('Deux portraits face à face', 'Images 2 et 3 : choisis-les.', cat(A.image(2, '', 60, 200, 255), A.image(3, '', 500, 200, 255))),
+    R('Effacer toutes les images', '', A.js('for (var i = 1; i <= 100; i++) $gameScreen.erasePicture(i);')),
+    R('Flash blanc', '', A.flash([255, 255, 255, 255], 20)),
+    R('Flash rouge (coup)', '', A.flash([255, 0, 0, 200], 10)),
+    R('Filtre — flou / souvenir', '', A.plugin('filter_effect : 1')),
+    R('Filtres — tout enlever', '', A.plugin('filter_clear')),
+    R('Nom du lieu autrement (rêve, souvenir)', '', A.js('$gameMap.overrideMapName("Le Vide entre les Sources");')),
+    R('Nom du lieu — remettre le vrai', '', A.js('$gameMap.clearOverrideMapName();')),
+    R('Ne plus afficher le nom des cartes', '', A.nomCarte(false)),
+    R('Afficher de nouveau le nom des cartes', '', A.nomCarte(true)),
+    R('Secousses — toujours horizontales', '', A.plugin('AriesScreenShakeType HORIZONTAL')),
+    R('Fondu au noir et retour (une seconde)', '', cat(A.fonduNoir(), A.attendre(60), A.fonduRetour()))
+];
+
+var son = [
+    R('Musique de zone — changer', '', A.bgm('Town1')),
+    R('Musique — mémoriser, jouer autre chose, revenir', '', cat(A.garderBgm(), A.bgm('Theme2'), A.attendre(300), A.reprendreBgm())),
+    R('Musique — fondu de sortie', '', A.fonduBgm(3)),
+    R('Silence total (musique et ambiance)', '', cat(A.fonduBgm(2), A.fonduBgs(2))),
+    R('Ambiance — rivière', '', A.bgs('River', 70)),
+    R('Ambiance — vent', '', A.bgs('Wind', 60)),
+    R('Ambiance — ville', '', A.bgs('City', 60)),
+    R('Ambiance — la nuit (grillons)', '', A.bgs('Night', 60)),
+    R('Ambiance — gouttes (grotte)', '', A.bgs('Drips', 70)),
+    R('Ambiance — la mer', '', A.bgs('Sea', 70)),
+    R('Ambiance selon l\'heure (jour : ville, nuit : grillons)', '', si(C.js('$gameSystem.hour() >= 20 || $gameSystem.hour() < 6'), A.bgs('Night', 60), A.bgs('City', 60))),
+    R('Jingle de victoire', '', A.me('Victory1')),
+    R('Jingle — objet important', '', A.me('Fanfare1')),
+    R('Boîte à musique — jouer une mélodie', '', cat(A.garderBgm(), A.bgm('Horror-MusicBox', 70), dire('La boîte à musique joue.'), A.reprendreBgm())),
+    R('Livre des musiques — ouvrir', '', A.plugin('music_book')),
+    R('Son qui s\'éloigne (volume qui baisse)', '', cat(A.se('Horse', 90), A.attendre(30), A.se('Horse', 60), A.attendre(30), A.se('Horse', 30)))
+];
+
+var jeux = [
+    R('Pile ou face — miser 50 or', '',
+        cat(dire('Pile ou face ? Mise : 50 \\G.'), si(C.or(50), cat(choix(['Pile', 'Face'], [A.vr(VAR.reponse, 1), A.vr(VAR.reponse, 2)]), A.or(-50), A.se('Coin'), A.vrHasard(VAR.tirage, 1, 2),
+            si(C.vrVar(VAR.reponse, '=', VAR.tirage), cat(A.or(100), A.me('Victory1'), dire('Gagné ! +100 \\G.')), dire('Perdu.'))), dire('Il faut 50 \\G.')))),
+    R('Dés — faire plus de 7', 'Deux dés.',
+        cat(A.vrHasard(VAR.de1, 1, 6), A.vrHasard(VAR.de2, 1, 6), A.se('Book2'), dire('\\V[' + VAR.de1 + '] et \\V[' + VAR.de2 + '].'),
+            si(C.js('$gameVariables.value(' + VAR.de1 + ') + $gameVariables.value(' + VAR.de2 + ') > 7'), cat(A.or(50), dire('Plus de 7 : +50 \\G !')), dire('Raté.')))),
+    R('Loterie — un ticket à 10 or', '1 chance sur 50 de gagner 1000.',
+        si(C.or(10), cat(A.or(-10), A.vrHasard(VAR.tirage, 1, 50), si(C.vr(VAR.tirage, '=', 1), cat(A.me('Fanfare2'), A.or(1000), dire('JACKPOT ! 1000 \\G !')), dire('Perdu.'))), dire('Un ticket coûte 10 \\G.'))),
+    R('Roue des prix — la faire tourner', '', cat(A.js('Galv.PRIZE.addPrizes("i1,1","i15,1","i22,1","i44,3");'), A.js('Galv.PRIZE.start();'), A.js('Galv.PRIZE.give();'))),
+    R('Plus ou moins — deviner la carte suivante', 'Carte de 1 à 13.',
+        cat(A.vrHasard(VAR.cartesJoueur, 1, 13), dire('Ta carte : \\V[' + VAR.cartesJoueur + ']. La suivante sera…'), choix(['Plus haute', 'Plus basse'], [A.vr(VAR.reponse, 1), A.vr(VAR.reponse, 2)]),
+            A.vrHasard(VAR.cartesBanque, 1, 13), dire('\\V[' + VAR.cartesBanque + '] !'),
+            si(C.js('($gameVariables.value(' + VAR.reponse + ') === 1) === ($gameVariables.value(' + VAR.cartesBanque + ') > $gameVariables.value(' + VAR.cartesJoueur + '))'), cat(A.or(30), dire('Gagné !')), dire('Perdu.')))),
+    R('Bataille — la plus haute carte gagne', '', cat(A.vrHasard(VAR.cartesJoueur, 1, 13), A.vrHasard(VAR.cartesBanque, 1, 13), dire('Toi : \\V[' + VAR.cartesJoueur + ']  ·  Lui : \\V[' + VAR.cartesBanque + ']'),
+        si(C.vrVar(VAR.cartesJoueur, '>', VAR.cartesBanque), cat(A.or(20), dire('Gagné.')), si(C.vrVar(VAR.cartesJoueur, '=', VAR.cartesBanque), dire('Égalité.'), dire('Perdu.'))))),
+    R('Pierre, feuille, ciseaux', '',
+        cat(choix(['Pierre', 'Feuille', 'Ciseaux'], [A.vr(VAR.reponse, 1), A.vr(VAR.reponse, 2), A.vr(VAR.reponse, 3)]), A.vrHasard(VAR.tirage, 1, 3),
+            si(C.vrVar(VAR.reponse, '=', VAR.tirage), dire('Égalité !'), si(C.js('($gameVariables.value(' + VAR.reponse + ') - $gameVariables.value(' + VAR.tirage + ') + 3) % 3 === 1'), cat(A.or(10), dire('Gagné !')), dire('Perdu !'))))),
+    R('Tir à la cible — une chance sur trois', '', cat(A.se('Crossbow'), A.vrHasard(VAR.tirage, 1, 3), si(C.vr(VAR.tirage, '=', 1), cat(A.vrAjout(VAR.score, 10), dire('En plein cœur ! Score \\V[' + VAR.score + '].')), dire('À côté.')))),
+    R('Course contre la montre — départ', '30 secondes pour toucher l\'arrivée.', cat(A.minuterie(30), A.sw(SW.chrono, true), A.se('Bell2'), dire('Partez !'))),
+    R('Course — arrivée', 'Contact avec l\'arrivée.', si(C.sw(SW.chrono), cat(A.stopMinuterie(), A.sw(SW.chrono, false), A.me('Victory1'), A.or(100), dire('Arrivé à temps !')))),
+    R('Quiz — trois questions', 'Une bonne réponse = 1 point.',
+        cat(A.vr(VAR.score, 0), dire('Combien de Sources ?'), choix(['Deux', 'Trois', 'Sept'], [[], A.vrAjout(VAR.score, 1), []]),
+            dire('Quel est le Don de Korrah ?'), choix(['Un Masque', 'Une Armure Volante', 'Un Arc'], [[], A.vrAjout(VAR.score, 1), []]),
+            dire('Qui manie l\'Arc ?'), choix(['Aël', 'ludwing', 'Vesper'], [A.vrAjout(VAR.score, 1), [], []]),
+            dire('Score : \\V[' + VAR.score + '] / 3.'), si(C.vr(VAR.score, '=', 3), cat(A.or(150), A.me('Fanfare1'))))),
+    R('Pari — miser un montant choisi', 'Doubler ou perdre.',
+        cat(dire('Combien miser ?'), A.nombre(VAR.mise, 4), si(C.js('$gameParty.gold() >= $gameVariables.value(' + VAR.mise + ') && $gameVariables.value(' + VAR.mise + ') > 0'),
+            cat(A.js('$gameParty.loseGold($gameVariables.value(' + VAR.mise + '));'), A.vrHasard(VAR.tirage, 1, 2), si(C.vr(VAR.tirage, '=', 1), cat(A.js('$gameParty.gainGold($gameVariables.value(' + VAR.mise + ') * 2);'), dire('Doublé !')), dire('Perdu…'))),
+            dire('Mise impossible.')))),
+    R('Machine à sous — trois symboles', 'Trois symboles égaux : 500 or.',
+        si(C.or(20), cat(A.or(-20), A.se('Machine'), A.vrHasard(VAR.de1, 1, 5), A.vrHasard(VAR.de2, 1, 5), A.vrHasard(VAR.tirage, 1, 5), dire('[ \\V[' + VAR.de1 + '] ] [ \\V[' + VAR.de2 + '] ] [ \\V[' + VAR.tirage + '] ]'),
+            si(C.js('$gameVariables.value(' + VAR.de1 + ') === $gameVariables.value(' + VAR.de2 + ') && $gameVariables.value(' + VAR.de2 + ') === $gameVariables.value(' + VAR.tirage + ')'), cat(A.me('Fanfare2'), A.or(500), dire('JACKPOT !')), dire('Perdu.'))), dire('20 \\G la partie.'))),
+    R('Tir — mini-jeu de tir vu de haut', '', A.js('ChampDeTir.lancer();')),
+    R('Rythme — Theatrhythm', '', A.plugin('theatrhythm : 99 : 5')),
+    R('Pêche — concours : attraper 3 poissons', '', si(C.vr(VAR.poissons, '>=', 3), cat(A.me('Fanfare1'), A.or(200), dire('Tu gagnes le concours !'), A.vrRetrait(VAR.poissons, 3)), dire('Il faut 3 poissons. Tu en as \\V[' + VAR.poissons + '].'))),
+    R('Tableau des scores', '', dire('Score : \\V[' + VAR.score + ']')),
+    R('Remettre le score à zéro', '', A.vr(VAR.score, 0)),
+    R('Bras de fer — la force du chef d\'équipe', 'Il faut 60 d\'ATQ.', si(C.js('$gameParty.leader().atk + Math.randomInt(20) >= 60'), cat(A.se('Blow1'), A.or(40), dire('Tu gagnes le bras de fer !')), cat(A.se('Blow2'), dire('Il te plaque la main sur la table.')))),
+    R('Cache-cache — l\'enfant se cache ailleurs', 'L\'événement change de place au hasard.', cat(A.bulle(ICI, 3), A.js('var e = $gameMap.event(this._eventId), m = $gameMap, x, y, t = 0; do { x = e.x + Math.randomInt(9) - 4; y = e.y + Math.randomInt(9) - 4; t++; } while ((!m.isValid(x, y) || !m.isPassable(x, y, 2)) && t < 100); if (t < 100) e.locate(x, y);'), dire('« Trouve-moi ! »')))
+];
+
+module.exports = [
+    { theme: 'Cinématiques et mise en scène', recettes: cinema },
+    { theme: 'Images et écran', recettes: ecran },
+    { theme: 'Musique et ambiance sonore', recettes: son },
+    { theme: 'Jeux, paris, mini-jeux', recettes: jeux }
+];

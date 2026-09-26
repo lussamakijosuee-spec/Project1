@@ -26,7 +26,10 @@ exports.estCEAtelier = function (ce) {
 /** La liste des événements communs, ceux de l'atelier remis à vide. */
 exports.sansCEAtelier = function (liste) {
     // une case d'atelier redevient la case vide qu'elle était avant
-    return (liste || []).map(function (ce) {
+    var l = (liste || []).slice();
+    // les recettes (1001+) sont au bout de la liste : elles s'en vont
+    while (l.length > 1 && exports.estCEAtelier(l[l.length - 1])) l.pop();
+    return l.map(function (ce) {
         return exports.estCEAtelier(ce) ? { id: ce.id, list: [{ code: 0, indent: 0, parameters: [] }], name: '', switchId: 1, trigger: 0 } : ce;
     });
 };
