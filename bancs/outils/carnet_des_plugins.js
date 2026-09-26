@@ -180,7 +180,7 @@ function syntaxesDe(aide, connues) {
 /* ── ce qui est déjà posé dans les événements (tes propres lignes) ────── */
 var employees = {};
 fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('./atelier.js').estAtelier(f); }).forEach(function (f) {
-    var t = fs.readFileSync(path.join(DATA, f), 'utf8');
+    var t = require('./atelier.js').texte(f);
     var m, re = /"code":356,"indent":\d+,"parameters":\["((?:[^"\\]|\\.)*)"\]/g;
     while ((m = re.exec(t))) {
         var ligne;

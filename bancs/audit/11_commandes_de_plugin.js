@@ -46,7 +46,7 @@ function scan(list, ou) {
         if (t) { noter(t.split(/[\s:]+/)[0], ou, t); }
     });
 }
-JSON.parse(fs.readFileSync(path.join(RACINE, 'data/CommonEvents.json'), 'utf8'))
+require('../outils/atelier.js').sansCEAtelier(JSON.parse(fs.readFileSync(path.join(RACINE, 'data/CommonEvents.json'), 'utf8')))
     .forEach(function (c) { if (c && c.name !== undefined) { scan(c.list, 'EC' + c.id + ' « ' + c.name + ' »'); } });
 fs.readdirSync(path.join(RACINE, 'data')).filter(function (f) { return /^Map\d+\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
     .forEach(function (f) {

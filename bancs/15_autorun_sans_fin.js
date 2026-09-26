@@ -126,7 +126,7 @@ var mapsCache = {};
 cartes().forEach(function (f) {
     mapsCache[f] = JSON.parse(fs.readFileSync(path.join(RACINE, 'data', f), 'utf8'));
 });
-var BASE = { CE: L('CommonEvents'), maps: mapsCache };
+var BASE = { CE: require('./outils/atelier.js').sansCEAtelier(L('CommonEvents')), maps: mapsCache };
 var copie = function (o) { return JSON.parse(JSON.stringify(o)); };
 
 var ok = 0, ko = 0;

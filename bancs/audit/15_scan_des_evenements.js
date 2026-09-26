@@ -50,7 +50,7 @@ var AVOIR = {
 };
 
 var Anim = lireJSON(path.join(RACINE, 'data', 'Animations.json'));
-var CE = lireJSON(path.join(RACINE, 'data', 'CommonEvents.json'));
+var CE = require('../outils/atelier.js').sansCEAtelier(lireJSON(path.join(RACINE, 'data', 'CommonEvents.json')));
 var Sys = lireJSON(path.join(RACINE, 'data', 'System.json'));
 var Infos = lireJSON(path.join(RACINE, 'data', 'MapInfos.json'));
 

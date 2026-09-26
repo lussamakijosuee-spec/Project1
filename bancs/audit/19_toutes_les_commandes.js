@@ -176,7 +176,7 @@ function corpsApres(t, i) {
  * ───────────────────────────────────────────────────────────────────────── */
 var employees = {};      // commande → { fois, exemples[], ou[] }
 fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); }).forEach(function (f) {
-    var t = fs.readFileSync(path.join(DATA, f), 'utf8');
+    var t = require('../outils/atelier.js').texte(f);
     var m, re = /"code":356,"indent":\d+,"parameters":\["((?:[^"\\]|\\.)*)"\]/g;
     while ((m = re.exec(t))) {
         var ligne = m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
@@ -215,7 +215,7 @@ function balisesDe(nom) {
 }
 var balisesPosees = {};
 fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); }).forEach(function (f) {
-    var t = fs.readFileSync(path.join(DATA, f), 'utf8');
+    var t = require('../outils/atelier.js').texte(f);
     var m, re = /<([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9 _]{1,36}?)\s*[:>]/g;
     while ((m = re.exec(t))) { balisesPosees[m[1].trim().toLowerCase()] = (balisesPosees[m[1].trim().toLowerCase()] || 0) + 1; }
 });
@@ -251,7 +251,8 @@ function parcourirListe(liste, fichier) {
 }
 fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); }).forEach(function (f) {
     var data;
-    try { data = JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch (e) { return; }
+    try { data = JSON.parse(require('../outils/atelier.js').texte(f) || 'null'); } catch (e) { return; }
+    if (!data) { return; }
     if (f === 'CommonEvents.json') {
         data.forEach(function (ce) { if (ce) { parcourirListe(ce.list, f); } });
     } else if (f === 'Troops.json') {

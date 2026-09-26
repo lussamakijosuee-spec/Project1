@@ -18,3 +18,26 @@ exports.estAtelier = function (fichier) {
     }
     return cache[f];
 };
+
+/* Les événements communs d'ATELIER : nommés « ✎ … » ou « ▬▬ ✎ … ». */
+exports.estCEAtelier = function (ce) {
+    return !!(ce && typeof ce.name === 'string' && /^(?:✎|▬▬ ✎)/.test(ce.name));
+};
+/** La liste des événements communs, ceux de l'atelier remis à vide. */
+exports.sansCEAtelier = function (liste) {
+    // une case d'atelier redevient la case vide qu'elle était avant
+    return (liste || []).map(function (ce) {
+        return exports.estCEAtelier(ce) ? { id: ce.id, list: [{ code: 0, indent: 0, parameters: [] }], name: '', switchId: 1, trigger: 0 } : ce;
+    });
+};
+/** Le texte d'un fichier de data/, sans ce qui appartient à l'atelier. */
+exports.texte = function (fichier) {
+    var f = path.basename(fichier);
+    if (exports.estAtelier(f)) return '';
+    var t = fs.readFileSync(path.join(DATA, f), 'utf8');
+    if (f === 'CommonEvents.json') {
+        var l = JSON.parse(t);
+        if (l.some(exports.estCEAtelier)) t = '[\n' + exports.sansCEAtelier(l).map(function (x) { return JSON.stringify(x); }).join(',\n') + '\n]';
+    }
+    return t;
+};

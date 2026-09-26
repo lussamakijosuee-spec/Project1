@@ -17,7 +17,7 @@ var path = require('path');
 var RACINE = path.join(__dirname, '..', '..');
 function lire(f) { return JSON.parse(fs.readFileSync(path.join(RACINE, 'data', f), 'utf8')); }
 
-var CE = lire('CommonEvents.json');
+var CE = require('../outils/atelier.js').sansCEAtelier(lire('CommonEvents.json'));
 var SYS = lire('System.json');
 var SKILLS = lire('Skills.json');
 var ITEMS = lire('Items.json');

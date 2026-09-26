@@ -181,7 +181,7 @@ function ecrire(id, nom, objet) {
 }
 
 /* ── 068 : les situations ─────────────────────────────────────────────── */
-var evs = [], id = 0, rangee = 0, total = 0;
+var evs = [], id = 0, rangee = 0, total = 0, ceSitu = [];
 SITUATIONS.forEach(function (th) {
     th.situations.forEach(function (s, col) {
         var liste = [];
@@ -195,6 +195,7 @@ SITUATIONS.forEach(function (th) {
         });
         if (!(s.lignes || []).length) commentaire(liste, 0, '(aide seulement — rien à copier)');
         id++; total += liste.length;
+        ceSitu.push({ theme: th.theme, titre: s.titre, liste: liste });
         evs.push(evenement(id, th.theme.split(/[ ,]/)[0] + ' · ' + s.titre, 2 + (col % COLONNES) * 2, 2 + rangee * 2 + Math.floor(col / COLONNES) * 2, liste));
     });
     rangee += 1 + Math.floor((th.situations.length - 1) / COLONNES);
@@ -274,3 +275,43 @@ if (sourdes.length) {
     process.exit(1);
 }
 console.log('   ✓ chaque commande de plugin posée est écoutée par un plugin actif, à cette orthographe');
+
+/* ── les ÉVÉNEMENTS COMMUNS : le même carnet, dans la base de données ───
+ * JOKO : « Je parle des événements communs. Tout ce que tu as fait dans le
+ * carnet. » Rangés loin des siens (il s'arrête à 234) :
+ *   701…  les situations, un séparateur « ▬▬ ✎ thème ▬▬ » avant chaque thème
+ *   801…  un événement commun par plugin actif
+ * Déclencheur « Aucun » : ils ne tournent jamais seuls. On peut les appeler
+ * (« Événement commun »), ou copier leurs lignes.
+ * On ne réécrit QUE des cases vides ou déjà à l'atelier (« ✎ » / « ▬▬ ✎ »). */
+var CE_SITU = 701, CE_PLUG = 801, CE_FIN = 999;
+var FCE = path.join(DATA, 'CommonEvents.json');
+var CE = JSON.parse(fs.readFileSync(FCE, 'utf8'));
+var atelier = require('./atelier.js');
+function libre(n) { var c = CE[n]; return !c || atelier.estCEAtelier(c) || (!c.name && (!c.list || c.list.length <= 1)); }
+for (var n = CE_SITU; n <= CE_FIN; n++) {
+    if (!libre(n)) { console.log('   ✗ l\'événement commun ' + n + ' « ' + CE[n].name + ' » n\'est pas à l\'atelier : on n\'y touche pas.'); process.exit(1); }
+}
+while (CE.length <= CE_FIN) CE.push(null);
+for (n = CE_SITU; n <= CE_FIN; n++) CE[n] = { id: n, list: [cmd(0, 0, [])], name: '', switchId: 1, trigger: 0 };
+function poser(n, nom, liste) {
+    if (n > CE_FIN) { console.log('   ✗ plus de place après ' + CE_FIN); process.exit(1); }
+    CE[n] = { id: n, list: JSON.parse(JSON.stringify(liste)), name: nom, switchId: 1, trigger: 0 };
+}
+var k = CE_SITU, themeVu = null;
+ceSitu.forEach(function (x) {
+    if (x.theme !== themeVu) {
+        themeVu = x.theme;
+        var tete = [];
+        commentaire(tete, 0, 'Séparateur : les événements communs qui suivent sont les situations « ' + x.theme + ' » du carnet des plugins.');
+        tete.push(cmd(0, 0, []));
+        poser(k++, '▬▬ ✎ ' + x.theme.toUpperCase() + ' ▬▬', tete);
+    }
+    poser(k++, '✎ ' + x.titre, x.liste);
+});
+var finSitu = k - 1;
+k = CE_PLUG;
+poser(k++, '▬▬ ✎ TOUS LES PLUGINS ACTIFS ▬▬', (function () { var t = []; commentaire(t, 0, 'Un événement commun par plugin actif, dans l\'ordre de chargement : toutes ses commandes, scripts, balises et interrupteurs.'); t.push(cmd(0, 0, [])); return t; })());
+evs2.forEach(function (e) { poser(k++, '✎ ' + e.name, e.pages[0].list); });
+fs.writeFileSync(FCE, '[\n' + CE.map(function (x) { return JSON.stringify(x); }).join(',\n') + '\n]');
+console.log('   événements communs ' + CE_SITU + '–' + finSitu + ' : situations · ' + CE_PLUG + '–' + (k - 1) + ' : plugins');
