@@ -43,7 +43,7 @@ var surDisque = fs.readdirSync(D).filter(function (f) { return /\.js$/.test(f); 
 var inscrits = {}; liste.forEach(function (p) { inscrits[p.name] = p; });
 
 /* ── tout le contenu de data/, en un seul bloc de texte ── */
-var toutData = fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f); })
+var toutData = fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
     .map(function (f) { return fs.readFileSync(path.join(DATA, f), 'utf8'); }).join('\n');
 /* et le code des AUTRES plugins : un plugin peut être appelé par un plugin */
 function codeDesAutres(nom) {

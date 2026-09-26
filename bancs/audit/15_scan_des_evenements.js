@@ -200,7 +200,7 @@ CE.forEach(function (e) {
 });
 
 fs.readdirSync(path.join(RACINE, 'data'))
-    .filter(function (f) { return /^Map\d+\.json$/.test(f); })
+    .filter(function (f) { return /^Map\d+\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
     .sort()
     .forEach(function (f) {
         var carte = lireJSON(path.join(RACINE, 'data', f));

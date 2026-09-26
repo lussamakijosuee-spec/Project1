@@ -161,19 +161,25 @@ function syntaxesDe(aide, connues) {
         var premier = nu.split(/\s+/)[0].replace(/[:：]$/, '');
         var vraie = min[premier.toLowerCase()];
         if (!vraie) return;
+        // MV compare caractère par caractère : si le plugin ne rattrape pas la
+        // casse, la ligne doit porter la commande EXACTEMENT comme il l'attend
+        if (!connues[vraie].casse && premier !== vraie) return;
+        // de la prose qui commence par le nom de la commande n'est pas un exemple
+        if (/[.;]\s*$/.test(nu) || /\.\s+[A-Za-z]/.test(nu) || (/\w: /.test(nu) && !/ : /.test(nu))) return;
         var coupe = nu.search(/\s{2,}[#\-]|\s+#\s|\s{3,}/);
         var ex = (coupe > 0 ? nu.slice(0, coupe) : nu).trim();
         var glose = coupe > 0 ? nu.slice(coupe).replace(/^[\s#\-\/]+/, '').trim() : '';
         if (ex.length < 2 || ex.length > 140 || ex.split(/\s+/).length > 12) return;
+        if (/ \/ /.test(ex)) return;   // un titre de l'aide (« VOIES INTERDITES / ÉTRANGÈRES »)
         var e = out[vraie] = out[vraie] || [];
-        if (!e.some(function (x) { return x.ex === ex; }) && e.length < 8) e.push({ ex: ex, glose: glose });
+        if (!e.some(function (x) { return x.ex === ex; }) && e.length < 40) e.push({ ex: ex, glose: glose });
     });
     return out;
 }
 
 /* ── ce qui est déjà posé dans les événements (tes propres lignes) ────── */
 var employees = {};
-fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f); }).forEach(function (f) {
+fs.readdirSync(DATA).filter(function (f) { return /\.json$/.test(f) && !require('./atelier.js').estAtelier(f); }).forEach(function (f) {
     var t = fs.readFileSync(path.join(DATA, f), 'utf8');
     var m, re = /"code":356,"indent":\d+,"parameters":\["((?:[^"\\]|\\.)*)"\]/g;
     while ((m = re.exec(t))) {

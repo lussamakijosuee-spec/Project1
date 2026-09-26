@@ -37,7 +37,7 @@ var CTRL_SWITCH = 121;   // Contrôle d'interrupteurs : [début, fin, 0=ON / 1=O
 
 function cartes() {
     return fs.readdirSync(path.join(RACINE, 'data'))
-        .filter(function (f) { return /^(Map\d+|BASE MAP|FULL MAP)\.json$/.test(f); });
+        .filter(function (f) { return /^(Map\d+|BASE MAP|FULL MAP)\.json$/.test(f) && !require('./outils/atelier.js').estAtelier(f); });
 }
 
 // Tous les interrupteurs allumés quelque part dans le jeu, et où.

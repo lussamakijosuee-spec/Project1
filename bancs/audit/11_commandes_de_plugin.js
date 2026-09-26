@@ -48,7 +48,7 @@ function scan(list, ou) {
 }
 JSON.parse(fs.readFileSync(path.join(RACINE, 'data/CommonEvents.json'), 'utf8'))
     .forEach(function (c) { if (c && c.name !== undefined) { scan(c.list, 'EC' + c.id + ' « ' + c.name + ' »'); } });
-fs.readdirSync(path.join(RACINE, 'data')).filter(function (f) { return /^Map\d+\.json$/.test(f); })
+fs.readdirSync(path.join(RACINE, 'data')).filter(function (f) { return /^Map\d+\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
     .forEach(function (f) {
         var d = JSON.parse(fs.readFileSync(path.join(RACINE, 'data', f), 'utf8'));
         (d.events || []).forEach(function (ev) {
@@ -105,9 +105,20 @@ function zoneDeDispatch(f) {
     return i < 0 ? '' : s.slice(i);
 }
 function repondants(mot, exact) {
-    var re = new RegExp("['\"]" + mot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "['\"]", exact ? '' : 'i');
-    return gestionnaires.filter(function (f) { return re.test(zoneDeDispatch(f)); })
-        .map(function (f) { return path.relative(RACINE, f); });
+    var sur = mot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var re = new RegExp("['\"]" + sur + "['\"]", exact ? '' : 'i');
+    /* Deux autres façons d'écouter, qu'on accusait à tort (2026-09-26) :
+     *   · une table d'aiguillage — Galv.pCmd[command](args), avec
+     *     Galv.pCmd.JUMPACTION = function… (GALV : JUMPACTION, VISRANGE,
+     *     AIVISIBLE) ;
+     *   · une expression — e.match(/FlushAudioCache/i) (Irina),
+     *     line.match(/Picture (\d+) Frame/i) (YEP_PictureSpritesheets). */
+    var table = new RegExp('pCmd(?:\\.' + sur + '\\b|\\[[\'"]' + sur + '[\'"]\\])\\s*=(?!=)', exact ? '' : 'i');
+    var expr = new RegExp('\\.match\\(\\s*\\/\\^?' + sur + '\\b', 'i');
+    return gestionnaires.filter(function (f) {
+        var z = zoneDeDispatch(f);
+        return re.test(z) || table.test(sources[f]) || expr.test(z);
+    }).map(function (f) { return path.relative(RACINE, f); });
 }
 function estActif(f) {
     return f.indexOf('js/plugins/') === 0 && actifs.indexOf(path.basename(f, '.js')) >= 0;
@@ -136,6 +147,10 @@ function unRelaisRattrape(mot) {
         var rel = path.relative(RACINE, f);
         if (!estActif(rel)) { return false; }
         var s = zoneDeDispatch(f);
+        // la commande passée en majuscules avant d'être comparée :
+        //   String(cmd).toUpperCase() !== 'VOIES'  — toute casse passe
+        if (new RegExp("toUpperCase\\(\\)\\s*[!=]==?\\s*['\"]" + haut + "['\"]").test(s) ||
+            new RegExp("toLowerCase\\(\\)\\s*[!=]==?\\s*['\"]" + bas + "['\"]").test(s)) { return true; }
         return new RegExp("['\"]" + bas + "['\"]").test(s)
             && new RegExp("['\"]" + haut + "['\"]").test(s);
     });

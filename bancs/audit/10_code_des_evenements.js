@@ -28,7 +28,7 @@ var TROOPS = lire('Troops.json');
 var INFOS = lire('MapInfos.json');
 
 var cartes = fs.readdirSync(path.join(RACINE, 'data'))
-    .filter(function (f) { return /^Map\d+\.json$/.test(f); })
+    .filter(function (f) { return /^Map\d+\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
     .map(function (f) { return { f: f, id: parseInt(f.slice(3), 10), d: lire(f) }; });
 
 /** Parcourt toutes les listes de commandes du projet, avec leur provenance. */
