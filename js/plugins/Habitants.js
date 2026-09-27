@@ -1,11 +1,12 @@
 //=============================================================================
-// Habitants.js — v1.0  ·  Les gens vivent leur vie
+// Habitants.js — v1.1  ·  Les gens vivent leur vie
 // RPG Maker MV   ·   pour JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure et la saison).
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Les habitants se souviennent de toi, ont des horaires
- * et changent de propos avec la saison et l'heure.
+ * @plugindesc v1.1 ■ Les habitants se souviennent de toi, ont des horaires,
+ * arrivent et repartent à pied par la porte, et changent de propos avec la
+ * saison et l'heure.
  * @author JOKO
  *
  * @param varVisites
@@ -61,6 +62,18 @@
  *     Hors de ses heures, le PNJ n'a plus de page : il n'est pas là. Il
  *     revient tout seul quand l'heure tourne, même si l'on reste sur la carte.
  *
+ *  3. LE PASSAGE — un PNJ qui a <Horaire:> ou <Saisons:> (ou <Passage> dans
+ *     sa Note, pour ceux dont la page dépend d'un interrupteur de moment
+ *     « TS · … ») ne clignote pas :
+ *       · quand son heure finit, il MARCHE jusqu'à la sortie la plus proche
+ *         (l'événement qui transfère le joueur), puis il n'est plus là ;
+ *       · quand son heure vient, il ENTRE par cette sortie et marche jusqu'à
+ *         sa place, puis reprend son orientation.
+ *     Bloqué plus de douze secondes, il passe quand même (il « se
+ *     téléporte »). On ne part pas au milieu d'une phrase : le PNJ à qui l'on
+ *     parle attend la fin du dialogue.
+ *         <Sortie: 20,39>        une autre sortie que la plus proche
+ *
  *  Commandes de plugin : aucune.
  */
 var Habitants = window.Habitants || {};
@@ -102,8 +115,11 @@ window.Habitants = Habitants;
         if (ev._habHoraire !== undefined) return;
         var n = (ev.event() && ev.event().note) || '';
         var h = n.match(/<Horaire:\s*(\d+)\s*-\s*(\d+)\s*>/i), s = n.match(/<Saisons:\s*([\d,\s]+)>/i);
+        var so = n.match(/<Sortie:\s*(\d+)\s*,\s*(\d+)\s*>/i);
         ev._habHoraire = h ? [Number(h[1]), Number(h[2])] : null;
         ev._habSaisons = s ? s[1].split(',').map(Number) : null;
+        ev._habPassage = !!(h || s || /<Passage>/i.test(n));
+        ev._habSortieDite = so ? { x: Number(so[1]), y: Number(so[2]) } : null;
     }
     Habitants.present = function (ev) {
         lire(ev);
@@ -120,7 +136,102 @@ window.Habitants = Habitants;
     var _upd = Game_Map.prototype.update;
     Game_Map.prototype.update = function (sceneActive) {
         _upd.call(this, sceneActive);
+        this._habPret = true;
         var h = heure() + ':' + saison();
         if (this._habHeure !== h) { var avant = this._habHeure; this._habHeure = h; if (avant !== undefined) this.requestRefresh(); }
+    };
+    var _setup = Game_Map.prototype.setup;
+    Game_Map.prototype.setup = function (mapId) {
+        this._habPret = false; this._habSorties = null;
+        _setup.call(this, mapId);
+    };
+
+    /* ── le passage : on arrive par la porte, on repart par la porte ─────── */
+    // Les sorties de la carte : chaque événement qui transfère le joueur.
+    function sorties() {
+        if ($gameMap._habSorties) return $gameMap._habSorties;
+        var l = [];
+        $gameMap.events().forEach(function (e) {
+            var transfere = e.event().pages.some(function (p) { return p.list.some(function (c) { return c.code === 201; }); });
+            if (transfere) l.push(e);
+        });
+        return ($gameMap._habSorties = l);
+    }
+    function passable(x, y) {
+        return $gameMap.isValid(x, y) && [2, 4, 6, 8].some(function (d) { return $gameMap.isPassable(x, y, d); });
+    }
+    // La case de sortie la plus proche de la place du PNJ : la case de la porte
+    // si on peut s'y tenir, sinon la case devant.
+    function sortieDe(ev) {
+        lire(ev);
+        if (ev._habSortieDite) return ev._habSortieDite;
+        var maison = { x: ev.event().x, y: ev.event().y }, best = null, d = Infinity;
+        sorties().forEach(function (s) {
+            var dd = Math.abs(s.x - maison.x) + Math.abs(s.y - maison.y);
+            if (dd < d) { d = dd; best = s; }
+        });
+        if (!best) return null;
+        if (!best.isNormalPriority() || best._pageIndex < 0) return { x: best.x, y: best.y };
+        var c = null, dc = Infinity;
+        [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach(function (o) {
+            var x = best.x + o[0], y = best.y + o[1];
+            if (!passable(x, y)) return;
+            var dd = Math.abs(x - maison.x) + Math.abs(y - maison.y);
+            if (dd < dc) { dc = dd; c = { x: x, y: y }; }
+        });
+        return c || { x: best.x, y: best.y };
+    }
+    function pasVers(ev, x, y) {
+        var ancien = ev.searchLimit;
+        ev.searchLimit = function () { return 48; };
+        var d = ev.findDirectionTo(x, y);
+        ev.searchLimit = ancien;
+        if (d > 0) ev.moveStraight(d);
+    }
+    function onLuiParle(ev) {
+        return $gameMap._interpreter && $gameMap._interpreter.isRunning() && $gameMap._interpreter.eventId() === ev.eventId();
+    }
+    var LIMITE = 60 * 12;       // douze secondes de marche au plus, puis il « passe » quand même
+
+    var _refresh = Game_Event.prototype.refresh;
+    Game_Event.prototype.refresh = function () {
+        lire(this);
+        if (!this._habPassage || !$gameMap._habPret || this._erased) return _refresh.call(this);
+        if (this._habDepart) return;                       // il est en route vers la sortie : on le laisse finir
+        var ancien = this._pageIndex, nouveau = this.findProperPageIndex();
+        if (ancien >= 0 && nouveau < 0) {
+            var s = sortieDe(this);
+            if (s) { this._habDepart = { x: s.x, y: s.y, t: 0 }; this._habArrivee = null; this._habMove = this._moveType; this._moveType = 0; return; }
+        }
+        _refresh.call(this);
+        if (ancien < 0 && this._pageIndex >= 0) {
+            var e = sortieDe(this);
+            if (e && (e.x !== this.x || e.y !== this.y)) {
+                this.locate(e.x, e.y);
+                this._habArrivee = { x: this.event().x, y: this.event().y, t: 0, dir: this.page().image.direction || 2 };
+                this._habMove = this._moveType; this._moveType = 0;
+            }
+        }
+    };
+    var _updEv = Game_Event.prototype.update;
+    Game_Event.prototype.update = function () {
+        _updEv.call(this);
+        var b = this._habDepart || this._habArrivee;
+        if (!b || this.isMoving() || onLuiParle(this) || $gameMessage.isBusy()) return;
+        b.t += 1;
+        var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) === 0 : (this.x === b.x && this.y === b.y);
+        if (arrive || b.t > LIMITE) {
+            this._moveType = this._habMove;
+            if (this._habDepart) { this._habDepart = null; _refresh.call(this); }
+            else { if (!arrive) this.locate(b.x, b.y); this.setDirection(b.dir); this._habArrivee = null; }
+            return;
+        }
+        if (b.t % 2 === 0) pasVers(this, b.x, b.y);
+    };
+    // ce que fait chacun, pour les bancs
+    Habitants.etat = function () {
+        return $gameMap.events().filter(function (e) { lire(e); return e._habPassage; }).map(function (e) {
+            return { id: e.eventId(), nom: e.event().name, page: e._pageIndex, x: e.x, y: e.y, depart: !!e._habDepart, arrivee: !!e._habArrivee };
+        });
     };
 })();

@@ -12032,5 +12032,5981 @@
   ],
   "x": 12,
   "y": 6
+ },
+ "29:11": {
+  "id": 11,
+  "name": "EV011",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <garde_porte>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 2
+ },
+ "29:12": {
+  "id": 12,
+  "name": "EV012",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 10,
+  "y": 2
+ },
+ "29:14": {
+  "id": 14,
+  "name": "EV014",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 6,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: recrue>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk recrue"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 10,
+  "y": 6
+ },
+ "29:30": {
+  "id": 30,
+  "name": "EV030",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk garde_ville"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 1,
+       "indent": null
+      },
+      {
+       "code": 2,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 4,
+       "indent": null
+      },
+      {
+       "code": 2,
+       "indent": null
+      },
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 20,
+  "y": 10
+ },
+ "29:31": {
+  "id": 31,
+  "name": "EV031",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 7,
+  "y": 24
+ },
+ "29:32": {
+  "id": 32,
+  "name": "EV032",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 9
+ },
+ "29:33": {
+  "id": 33,
+  "name": "EV033",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 24,
+  "y": 2
+ },
+ "29:34": {
+  "id": 34,
+  "name": "EV034",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <garde_porte>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 16,
+  "y": 36
+ },
+ "29:35": {
+  "id": 35,
+  "name": "EV035",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 12,
+  "y": 36
+ },
+ "29:36": {
+  "id": 36,
+  "name": "EV036",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: veteran>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk veteran"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 21,
+  "y": 20
+ },
+ "29:37": {
+  "id": 37,
+  "name": "EV037",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 20,
+  "y": 29
+ },
+ "29:25": {
+  "id": 25,
+  "name": "EV025",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 22,
+       "indent": null
+      },
+      {
+       "code": 22,
+       "indent": null
+      },
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 6,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 35,
+  "y": 20
+ },
+ "29:26": {
+  "id": 26,
+  "name": "EV026",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 6,
+     "pattern": 2,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 14,
+       "parameters": [
+        0,
+        0
+       ],
+       "indent": null
+      },
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 5,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 33,
+  "y": 20
+ },
+ "29:27": {
+  "id": 27,
+  "name": "EV027",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 2
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": false
+   }
+  ],
+  "x": 5,
+  "y": 19
+ },
+ "29:28": {
+  "id": 28,
+  "name": "EV028",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People2",
+     "direction": 6,
+     "pattern": 2,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <mere>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk <mere>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 33,
+  "y": 13
+ },
+ "29:29": {
+  "id": 29,
+  "name": "EV029",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 4,
+     "pattern": 2,
+     "characterIndex": 3
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 36,
+  "y": 13
+ },
+ "29:38": {
+  "id": 38,
+  "name": "EV038",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 4
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 11,
+  "y": 9
+ },
+ "29:39": {
+  "id": 39,
+  "name": "EV039",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk tobias"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: tobias>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 6,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 32,
+  "y": 23
+ },
+ "29:40": {
+  "id": 40,
+  "name": "EV040",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor1_MZ",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <kaze>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 7,
+  "y": 22
+ },
+ "29:41": {
+  "id": 41,
+  "name": "EV041",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 2,
+     "characterIndex": 4
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 19,
+  "y": 12
+ },
+ "29:42": {
+  "id": 42,
+  "name": "EV042",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "bd7tyzc",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 8,
+  "y": 28
+ },
+ "30:6": {
+  "id": 6,
+  "name": "EV006",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 6
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC talk <marchand>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 9
+ },
+ "30:7": {
+  "id": 7,
+  "name": "EV007",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica02",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 6"
+      ]
+     },
+     {
+      "code": 230,
+      "indent": 0,
+      "parameters": [
+       6
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 11
+ },
+ "30:8": {
+  "id": 8,
+  "name": "EV008",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 4
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 6"
+      ]
+     },
+     {
+      "code": 230,
+      "indent": 0,
+      "parameters": [
+       6
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 17,
+  "y": 10
+ },
+ "30:10": {
+  "id": 10,
+  "name": "EV010",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People2",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 230,
+      "indent": 0,
+      "parameters": [
+       6
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 16,
+  "y": 11
+ },
+ "30:11": {
+  "id": 11,
+  "name": "EV011",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "tian",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC talk <marchand>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 8
+ },
+ "30:12": {
+  "id": 12,
+  "name": "EV012",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica03",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 6"
+      ]
+     },
+     {
+      "code": 230,
+      "indent": 0,
+      "parameters": [
+       6
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 10
+ },
+ "30:13": {
+  "id": 13,
+  "name": "EV013",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica04",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 6"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 10,
+  "y": 10
+ },
+ "30:14": {
+  "id": 14,
+  "name": "EV014",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica05",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 230,
+      "indent": 0,
+      "parameters": [
+       6
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 11
+ },
+ "30:15": {
+  "id": 15,
+  "name": "EV015",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "1",
+     "direction": 6,
+     "pattern": 2,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 16
+ },
+ "30:16": {
+  "id": 16,
+  "name": "EV016",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor3",
+     "direction": 8,
+     "pattern": 0,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : ..."
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 18
+ },
+ "30:17": {
+  "id": 17,
+  "name": "EV017",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "hh",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : ..."
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 16
+ },
+ "30:18": {
+  "id": 18,
+  "name": "EV018",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk garde_ville"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 11,
+  "y": 11
+ },
+ "30:19": {
+  "id": 19,
+  "name": "EV019",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk garde_ville"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 19,
+  "y": 7
+ },
+ "30:20": {
+  "id": 20,
+  "name": "EV020",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "37",
+     "direction": 4,
+     "pattern": 1,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 21
+ },
+ "30:23": {
+  "id": 23,
+  "name": "EV023",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$zuxswlqw",
+     "direction": 4,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 13,
+  "y": 5
+ },
+ "33:16": {
+  "id": 16,
+  "name": "Recrue",
+  "note": "",
+  "x": 32,
+  "y": 14,
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 2,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: recrue>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk recrue"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ]
+ },
+ "33:17": {
+  "id": 17,
+  "name": "EV017",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "56",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] <NPC: orin>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC talk orin"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 13
+ },
+ "33:18": {
+  "id": 18,
+  "name": "EV018",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica03",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 13,
+  "y": 23
+ },
+ "33:19": {
+  "id": 19,
+  "name": "EV019",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$Magica05",
+     "direction": 6,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sora"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sora>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 6,
+  "y": 23
+ },
+ "33:21": {
+  "id": 21,
+  "name": "EV021",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "$245584-d9c72a2697ce4de1ac90a893d3b4d52b",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 16,
+  "y": 11
+ },
+ "33:22": {
+  "id": 22,
+  "name": "EV022",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor2",
+     "direction": 4,
+     "pattern": 1,
+     "characterIndex": 6
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 8,
+  "y": 23
+ },
+ "33:23": {
+  "id": 23,
+  "name": "EV023",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk regis"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: regis>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 6,
+  "y": 10
+ },
+ "33:24": {
+  "id": 24,
+  "name": "EV024",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 3
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 18
+ },
+ "33:25": {
+  "id": 25,
+  "name": "EV025",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 11,
+  "y": 14
+ },
+ "33:26": {
+  "id": 26,
+  "name": "EV026",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 5,
+  "y": 10
+ },
+ "33:27": {
+  "id": 27,
+  "name": "EV027",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 19,
+  "y": 11
+ },
+ "33:28": {
+  "id": 28,
+  "name": "EV028",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 29,
+  "y": 12
+ },
+ "33:29": {
+  "id": 29,
+  "name": "EV029",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 12,
+  "y": 26
+ },
+ "41:3": {
+  "id": 3,
+  "name": "Armor Shop",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 4
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator : ShopWeapon : 0 : 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "float_indicator"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: forgeron>"
+      ]
+     },
+     {
+      "code": 302,
+      "indent": 0,
+      "parameters": [
+       2,
+       1,
+       0,
+       0,
+       false
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       2,
+       2,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       2,
+       3,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       2,
+       4,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk forgeron"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 1,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 10,
+  "y": 5
+ },
+ "41:4": {
+  "id": 4,
+  "name": "EV004",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 202,
+     "switch1Valid": true,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "37",
+     "direction": 6,
+     "pattern": 1,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 16,
+  "y": 7
+ },
+ "41:6": {
+  "id": 6,
+  "name": "EV006",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 202,
+     "switch1Valid": true,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "37",
+     "direction": 6,
+     "pattern": 1,
+     "characterIndex": 1
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 8
+ },
+ "42:5": {
+  "id": 5,
+  "name": "Weapon Shop",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 2
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator : ShopArmor : 0 : 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "float_indicator"
+      ]
+     },
+     {
+      "code": 302,
+      "indent": 0,
+      "parameters": [
+       1,
+       1,
+       0,
+       0,
+       false
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       1,
+       2,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       1,
+       3,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       1,
+       4,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 1,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 10,
+  "y": 5
+ },
+ "43:3": {
+  "id": 3,
+  "name": "Item Shop",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator : ShopItem : 0 : 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "float_indicator"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: marchand>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk marchand"
+      ]
+     },
+     {
+      "code": 302,
+      "indent": 0,
+      "parameters": [
+       0,
+       22,
+       0,
+       0,
+       false
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       39,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       4,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       7,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       8,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       59,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       64,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 605,
+      "indent": 0,
+      "parameters": [
+       0,
+       65,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 1,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 8,
+  "y": 6
+ },
+ "36:9": {
+  "id": 9,
+  "name": "EV009",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk garde_ville"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 25,
+  "y": 13
+ },
+ "36:10": {
+  "id": 10,
+  "name": "EV010",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: garde_ville>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk garde_ville"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ react"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 3,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 23,
+  "y": 13
+ },
+ "36:24": {
+  "id": 24,
+  "name": "Chevalier",
+  "note": "",
+  "x": 27,
+  "y": 24,
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor1",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: chevalier>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk chevalier"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ]
+ },
+ "36:25": {
+  "id": 25,
+  "name": "EV025",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 2
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] PNJ rumeur"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "NPC bark <paysan>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: paysan>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk paysan"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": false
+   }
+  ],
+  "x": 16,
+  "y": 17
+ },
+ "36:27": {
+  "id": 27,
+  "name": "EV027",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor2",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: lila>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk lila"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 34,
+  "y": 36
+ },
+ "36:35": {
+  "id": 35,
+  "name": "EV035",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "98",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "[commande sans répondant] <NPC: sora>"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       " NPC talk sora"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 24
+ },
+ "36:36": {
+  "id": 36,
+  "name": "EV036",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "2R",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk mei"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: mei>"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 5,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": true,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 1,
+    "priorityType": 1,
+    "stepAnime": true,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 12,
+  "y": 27
+ },
+ "47:9": {
+  "id": 9,
+  "name": "EV009",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 17,
+  "y": 30
+ },
+ "47:10": {
+  "id": 10,
+  "name": "EV010",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 23,
+  "y": 30
+ },
+ "47:11": {
+  "id": 11,
+  "name": "EV011",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sentinelle>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sentinelle"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 22,
+  "y": 11
+ },
+ "47:12": {
+  "id": 12,
+  "name": "EV012",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sentinelle>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sentinelle"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 18,
+  "y": 11
+ },
+ "47:15": {
+  "id": 15,
+  "name": "EV015",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sentinelle>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sentinelle"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 23,
+  "y": 8
+ },
+ "47:17": {
+  "id": 17,
+  "name": "EV017",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "2_DF_Actor",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sentinelle>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sentinelle"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 22,
+  "y": 16
+ },
+ "47:18": {
+  "id": 18,
+  "name": "EV018",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "2_DF_Actor",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: sentinelle>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk sentinelle"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 18,
+  "y": 16
+ },
+ "47:13": {
+  "id": 13,
+  "name": "EV013",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 14,
+  "y": 15
+ },
+ "47:14": {
+  "id": 14,
+  "name": "EV014",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 26,
+  "y": 15
+ },
+ "47:16": {
+  "id": 16,
+  "name": "EV016",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 17,
+  "y": 8
+ },
+ "47:26": {
+  "id": 26,
+  "name": "EV026",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 12,
+  "y": 32
+ },
+ "47:27": {
+  "id": 27,
+  "name": "EV027",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People3",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 7
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 28,
+  "y": 32
+ },
+ "47:25": {
+  "id": 25,
+  "name": "EV025",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "Actor1_MZ_Pick",
+     "direction": 2,
+     "pattern": 1,
+     "characterIndex": 5
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "<NPC: guerisseur>"
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 0,
+      "parameters": [
+       "NPC talk guerisseur"
+      ]
+     },
+     {
+      "code": 311,
+      "indent": 0,
+      "parameters": [
+       0,
+       0,
+       0,
+       0,
+       9999,
+       false
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 9,
+  "y": 25
+ },
+ "47:32": {
+  "id": 32,
+  "name": "EV032",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "People4",
+     "direction": 8,
+     "pattern": 1,
+     "characterIndex": 2
+    },
+    "list": [
+     {
+      "code": 213,
+      "indent": 0,
+      "parameters": [
+       31,
+       3,
+       false
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "indicator :  : 0 : 0"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "text_indicator : Blah Blah Blah"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "fontsize_indicator : 15"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "range_indicator : 4"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 28,
+  "y": 12
  }
 }

@@ -27,28 +27,26 @@ var DATA = path.join(RACINE, 'data');
 var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
 var D = require('./recettes/dsl.js');
 var H = require('./habitants/moteur.js');
-var BAR = require('./habitants/bar.js');
-var AUBERGE = require('./habitants/auberge.js');
 var A = D.A, C = D.C, si = D.si, cat = D.cat;
 
-var LOTS = [BAR, AUBERGE];
+// chaque fichier de habitants/ (sauf le moteur) est un lot : { carte, fiches, tableau?, NOMS_SW? }
+var LOTS = fs.readdirSync(path.join(__dirname, 'habitants')).filter(function (x) { return /\.js$/.test(x) && x !== 'moteur.js' && x.charAt(0) !== '_'; }).sort()
+    .map(function (x) { return require('./habitants/' + x); });
+var BAR = LOTS.filter(function (l) { return l.carte === 46; })[0];
 var FSNAP = path.join(__dirname, 'habitants', 'originaux.json');
 function fichierCarte(n) { return path.join(DATA, 'Map' + String(n).padStart(3, '0') + '.json'); }
 var cartes = {};
-LOTS.forEach(function (lot) { cartes[lot.carte] = JSON.parse(fs.readFileSync(fichierCarte(lot.carte), 'utf8')); });
+function carteDe(n) { return cartes[n] || (cartes[n] = JSON.parse(fs.readFileSync(fichierCarte(n), 'utf8'))); }
+LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { f.carte = f.carte || lot.carte; carteDe(f.carte); }); });
 
-/* ── l'instantané des événements de JOKO ─────────────────────────────── */
-var snap;
-if (fs.existsSync(FSNAP)) snap = JSON.parse(fs.readFileSync(FSNAP, 'utf8'));
-else {
-    snap = {};
-    LOTS.forEach(function (lot) {
-        var ids = lot.fiches.map(function (f) { return f.ev; }).concat(lot.tableau ? [49] : []);
-        ids.forEach(function (id) { var e = cartes[lot.carte].events[id]; if (e) snap[lot.carte + ':' + id] = JSON.parse(JSON.stringify(e)); });
-    });
-    fs.writeFileSync(FSNAP, JSON.stringify(snap, null, 1));
-    console.log('   instantané des événements d\'origine écrit : ' + path.relative(RACINE, FSNAP));
-}
+/* ── l'instantané des événements de JOKO : chaque événement est photographié
+ *    la PREMIÈRE fois qu'une fiche le vise, puis jamais réécrit ────────── */
+var snap = fs.existsSync(FSNAP) ? JSON.parse(fs.readFileSync(FSNAP, 'utf8')) : {}, nouveauxClichés = 0;
+LOTS.forEach(function (lot) {
+    var ids = lot.fiches.map(function (f) { return [f.carte, f.ev]; }).concat(lot.tableau ? [[lot.carte, 49]] : []);
+    ids.forEach(function (x) { var k = x[0] + ':' + x[1], e = carteDe(x[0]).events[x[1]]; if (e && !snap[k]) { snap[k] = JSON.parse(JSON.stringify(e)); nouveauxClichés++; } });
+});
+if (nouveauxClichés) { fs.writeFileSync(FSNAP, JSON.stringify(snap, null, 1)); console.log('   instantané : ' + nouveauxClichés + ' événement(s) d\'origine photographié(s) dans ' + path.relative(RACINE, FSNAP)); }
 function original(carte, ev) { var e = snap[carte + ':' + ev]; if (!e) throw new Error('pas d\'instantané pour ' + carte + ':' + ev); return e; }
 
 /* ── extraire un morceau d'une liste MV → commandes du vocabulaire ───── */
@@ -121,36 +119,36 @@ function controle(nom, liste) {
     if (pile) defauts.push(nom + ' : bloc non refermé');
 }
 LOTS.forEach(function (lot) {
-    var m = cartes[lot.carte];
     lot.fiches.forEach(function (f) {
-        var e = m.events[f.ev];
-        if (!e) { defauts.push('carte ' + lot.carte + ' : événement ' + f.ev + ' absent'); return; }
-        var page = f.page || 1, orig = original(lot.carte, f.ev);
+        var m = carteDe(f.carte), e = m.events[f.ev];
+        if (!e) { defauts.push('carte ' + f.carte + ' : événement ' + f.ev + ' absent'); return; }
+        var page = f.page || 1, orig = original(f.carte, f.ev);
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
         var fiche = Object.assign({}, f);
         fiche.options = (f.options || []).map(function (o) {
             if (!o.garder) return o;
-            var cmds = extraire(lot.carte, f.ev, page, o.garder);
+            var cmds = extraire(f.carte, f.ev, page, o.garder);
             if (o.saisonnieres) cmds = si(C.js('Math.random() < 0.5'), H.selon(H.V.saison, f.nouvellesSaison, f.nom), cmds);
             return { titre: o.titre, si: o.si, cmds: cmds };
         });
         var liste;
-        try { liste = commentairesGardes(orig.pages[page - 1].list, f.murmure).concat(versListe(H.compiler(fiche))); }
+        var tags = (f.tags || []).map(function (t) { return { code: 108, indent: 0, parameters: [t] }; });
+        try { liste = commentairesGardes(orig.pages[page - 1].list, f.murmure).concat(tags, versListe(H.compiler(fiche))); }
         catch (err) { defauts.push(f.nom + ' : ' + err.message); return; }
         liste.push({ code: 0, indent: 0, parameters: [] });
         controle(f.nom, liste);
         e.pages[page - 1].list = liste;
         // les murmures des autres pages aussi
         e.pages.forEach(function (p, k) { if (k !== page - 1) p.list.forEach(function (c) { if (c.code === 108 && /^text_indicator\s*:\s*Blah Blah Blah\s*$/.test(c.parameters[0])) c.parameters[0] = 'text_indicator : ' + (f.murmure || '…'); }); });
-        if (f.horaire) {
-            var note = String(orig.note || '').replace(/<Horaire:[^>]*>\s*/i, '');
-            e.note = ('<Horaire: ' + f.horaire + '>' + (note ? '\n' + note : ''));
+        if (f.horaire || f.passage) {
+            var note = String(orig.note || '').replace(/<Horaire:[^>]*>\s*/i, '').replace(/<Passage>\s*/i, '');
+            e.note = ((f.horaire ? '<Horaire: ' + f.horaire + '>' : '<Passage>') + (note ? '\n' + note : ''));
         }
         if (!e.name || /^EV\d+$/.test(e.name)) e.name = f.nom;
         poses++;
     });
     if (lot.tableau) {
-        var t = m.events[49], tl = [];
+        var m = carteDe(lot.carte), t = m.events[49], tl = [];
         tl = tl.concat(D.note('◆ HABITANT · le tableau d\'affichage du bar — une affiche de saison, puis une vieille.'));
         tl = tl.concat(A.js('Habitants.prep(this);'), A.se('Book2'));
         tl = tl.concat(H.selon(H.V.saison, lot.tableau.lignes, ''), H.unParmi('', lot.tableau.toujours));
@@ -163,12 +161,14 @@ LOTS.forEach(function (lot) {
     }
 });
 
-console.log('   ' + poses + ' habitants posés (carte 46 : bar · carte 44 : auberge) · ' + lignes + ' lignes de dialogue');
+var parCarte = {};
+LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { parCarte[f.carte] = (parCarte[f.carte] || 0) + 1; }); });
+console.log('   ' + poses + ' habitants posés (' + Object.keys(parCarte).map(function (k) { return 'carte ' + k + ' : ' + parCarte[k]; }).join(' · ') + ') · ' + lignes + ' lignes de dialogue');
 if (defauts.length) { console.log('   ✗ ' + defauts.length + ' défaut(s) :\n     ' + defauts.slice(0, 40).join('\n     ')); process.exit(1); }
 console.log('   ✓ blocs refermés, scripts et conditions valides, sons présents, lignes à la bonne largeur');
 if (!ECRIRE) process.exit(0);
 
-LOTS.forEach(function (lot) { fs.writeFileSync(fichierCarte(lot.carte), JSON.stringify(cartes[lot.carte])); });
+Object.keys(cartes).forEach(function (n) { fs.writeFileSync(fichierCarte(n), JSON.stringify(cartes[n])); });
 var FS = path.join(DATA, 'System.json');
 var brut = fs.readFileSync(FS, 'utf8'), SYS = JSON.parse(brut);
 function nommer(tab, noms) {
@@ -178,6 +178,6 @@ function nommer(tab, noms) {
     });
 }
 nommer(SYS.variables, H.NOMS_VAR);
-nommer(SYS.switches, BAR.NOMS_SW);
+LOTS.forEach(function (lot) { if (lot.NOMS_SW) nommer(SYS.switches, lot.NOMS_SW); });
 fs.writeFileSync(FS, JSON.stringify(SYS) + (brut.endsWith('\n') ? '\n' : ''));
-console.log('   écrit : cartes 44 et 46, variables 880–885 et interrupteurs 886–887 nommés « ◆ … »');
+console.log('   écrit : cartes ' + Object.keys(cartes).join(', ') + ' ; variables 880–885 et interrupteurs ◆ nommés');

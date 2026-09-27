@@ -72,7 +72,7 @@ var fiches = [aubergiste(1), aubergiste(2), aubergiste(3)];
 
 /* ── les négociants du vendredi soir (ev 10 et 11 : coucher du soleil + vendredi) ── */
 fiches.push({
-    ev: 10, nom: 'Gaspard', role: 'négociant en laine, vient chaque vendredi soir', voix: 'affable, compte tout, parle affaires même en mangeant.',
+    ev: 10, passage: true, nom: 'Gaspard', role: 'négociant en laine, vient chaque vendredi soir', voix: 'affable, compte tout, parle affaires même en mangeant.',
     murmure: 'Trois balles de laine, à ce prix-là…',
     premiere: 'Gaspard, laine et draps. Je passe tous les vendredis. Si vous avez des moutons, je suis votre ami. Sinon, je suis poli.',
     retour: ['Ah, la tête qui revient ! Les affaires ont été bonnes ? Les miennes, moyennes.'],
@@ -84,7 +84,7 @@ fiches.push({
     aurevoir: ['Bon vendredi !', 'À vendredi prochain. Même table.']
 });
 fiches.push({
-    ev: 11, nom: 'Edmée', role: 'sœur et comptable de Gaspard', voix: 'précise, pince-sans-rire, lève les yeux au ciel quand son frère parle.',
+    ev: 11, passage: true, nom: 'Edmée', role: 'sœur et comptable de Gaspard', voix: 'précise, pince-sans-rire, lève les yeux au ciel quand son frère parle.',
     murmure: '…et trois de retenue.',
     premiere: 'Edmée. Je fais les comptes de mon frère. C\'est un travail à plein temps.',
     bonjourTous: ['Bonsoir.', '~Elle griffonne dans un carnet sans lever les yeux.|Un instant. … Voilà. Bonsoir.'],

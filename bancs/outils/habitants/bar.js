@@ -256,7 +256,7 @@ F(14, {
         'Garrec a pas de rang C. Il a un rang C-. Je le sais de source sûre.',
         'Il paraît que des nobles sont au manoir du lord. Ça cache quelque chose. Ça cache TOUJOURS quelque chose.',
         'Le vieux au comptoir… on dit qu\'il était très haut placé, autrefois. Très haut.',
-        'Le culte de la reine, dans la forêt ? Ma cousine en a vu un. Enfin, elle a vu une capuche.'
+        'Le lord a fait doubler la taxe sur le sel. Il paraît que c\'est pour recevoir ses nobles. Nous, on mangera fade.'
     ],
     nouvellesSaison: {
         1: ['Le fils du tanneur a demandé la main de la fille du charpentier. Le charpentier a dit non. Le fils insiste. À suivre.'],
@@ -516,7 +516,7 @@ F(37, {
     premiere: 'T\'as pas mangé, toi. Ça se voit. Assieds-toi. Mange.',
     bonjour: { 1: ['Le pain sort du four. Tiens, goûte. Non, c\'est pas une question.'], 2: ['Le ragoût mijote. Encore une heure.'], 3: ['C\'est le coup de feu ! Pousse-toi, pousse-toi !'], 4: ['Je nettoie. Il reste un fond de soupe, si tu veux.'] },
     saisons: { 1: ['Soupe d\'orties et d\'ail sauvage. Ysolde me les cueille. Elle cuisine pas, elle, mais elle sait où ça pousse.'], 2: ['Salade, fromage frais, tomates. L\'été, la cuisine se fait toute seule.'], 3: ['Ragoût de gibier et tarte aux pommes. L\'automne, c\'est ma saison.'], 4: ['Potée, lard, choux. L\'hiver, faut tenir au corps.'] },
-    blesse: ['Mon Dieu, dans quel état ! Mange d\'abord, tu saigneras après.'],
+    blesse: ['Mais dans quel état tu es ! Mange d\'abord, tu saigneras après.'],
     discuter: ['Je nourris ce bar depuis vingt ans. La moitié de ces ivrognes seraient morts sans ma soupe.', 'Théo dort près de mon four l\'hiver. Je fais semblant de pas le voir. Il fait semblant de pas voler de pain.', 'Le vieux au comptoir mange jamais. Je lui pose une assiette quand même. Elle revient vide, le matin.'],
     nouvelles: ['La viande a pris deux pièces. Les nobles du manoir achètent tout le gibier.'],
     perso: { titre: 'Votre recette secrète ?', paliers: [[1, 'Secrète. C\'est dans le mot.'], [4, 'Du thym. Beaucoup de thym. Et de la patience.'], [7, 'Ma mère cuisinait pour une caserne. Elle disait : « Un soldat qui a bien mangé rentre plus souvent. » Je nourris tout le monde comme s\'ils partaient demain.']] },
@@ -549,7 +549,7 @@ F(48, {
         4: ['Chasseuse de fourrures. L\'hiver, c\'est le moment. Les bêtes sont belles et les gens ont froid.', 'Je repars demain, s\'il ne neige pas. Il neigera.']
     },
     discuter: ['Chaque ville a son bar, et chaque bar a son vieux qui ne parle pas. Ici aussi, je vois.', 'On m\'a volé mon cheval au dernier village. Il est revenu tout seul. Les chevaux ont plus de morale que les gens.', 'Je ne reste jamais. Rester, c\'est commencer à avoir des choses à perdre.'],
-    nouvelles: ['Sur la route, on parle d\'un culte dans la forêt. Je n\'y crois pas. Mais j\'ai pris le chemin du sud.', 'Les nobles se déplacent beaucoup, en ce moment. Quand les nobles bougent, les pauvres feraient bien de rester chez eux.'],
+    nouvelles: ['Sur la route, les soldats du lord font payer un droit de passage. Pour la fête du lord. On paie la fête et on n\'y va pas.', 'Les nobles se déplacent beaucoup, en ce moment. Quand les nobles bougent, les pauvres feraient bien de rester chez eux.'],
     perso: { titre: 'D\'où venez-vous ?', paliers: [[1, 'De la route.'], [3, 'D\'un village qui n\'existe plus. Une crue. Je suis parti ce jour-là et je ne me suis plus arrêté.']] },
     aurevoir: ['Bonne route. Peut-être à la prochaine saison.', 'Adieu. Ou au revoir, on ne sait jamais.']
 });

@@ -1,0 +1,4551 @@
+{
+ "29:15": {
+  "id": 15,
+  "name": "EV015",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       12,
+       "$gameSystem.hour() >= 8 && $gameSystem.hour() < 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       901,
+       901,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       902,
+       902,
+       0,
+       0,
+       6
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       903,
+       903,
+       0,
+       0,
+       8
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 36,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 17,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 37,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 0,
+          "parameters": []
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 36,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       44,
+       10,
+       19,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 1,
+      "parameters": [
+       "clear_all_weathers"
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Un écriteau : « Fermé. Ouvert de 8 h à 20 h. »"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 5,
+  "y": 9
+ },
+ "29:16": {
+  "id": 16,
+  "name": "EV016",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 14
+ },
+ "29:17": {
+  "id": 17,
+  "name": "EV017",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 11,
+  "y": 14
+ },
+ "29:18": {
+  "id": 18,
+  "name": "EV018",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 23,
+  "y": 28
+ },
+ "29:19": {
+  "id": 19,
+  "name": "EV019",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       12,
+       "$gameSystem.hour() >= 8 && $gameSystem.hour() < 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       901,
+       901,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       902,
+       902,
+       0,
+       0,
+       6
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       903,
+       903,
+       0,
+       0,
+       8
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 36,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 17,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 37,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 0,
+          "parameters": []
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 36,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       41,
+       10,
+       12,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 1,
+      "parameters": [
+       "clear_all_weathers"
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Un écriteau : « Fermé. Ouvert de 8 h à 20 h. »"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 12,
+  "y": 23
+ },
+ "29:20": {
+  "id": 20,
+  "name": "EV020",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       12,
+       "$gameSystem.hour() >= 8 && $gameSystem.hour() < 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       901,
+       901,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       902,
+       902,
+       0,
+       0,
+       6
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       903,
+       903,
+       0,
+       0,
+       8
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 36,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 17,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 37,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 0,
+          "parameters": []
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 36,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       42,
+       10,
+       12,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 1,
+      "parameters": [
+       "clear_all_weathers"
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Un écriteau : « Fermé. Ouvert de 8 h à 20 h. »"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 17,
+  "y": 23
+ },
+ "29:21": {
+  "id": 21,
+  "name": "EV021",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       12,
+       "$gameSystem.hour() >= 20 || $gameSystem.hour() < 6"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       901,
+       901,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       902,
+       902,
+       0,
+       0,
+       6
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       903,
+       903,
+       0,
+       0,
+       8
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door2",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 36,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 17,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 37,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 0,
+          "parameters": []
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 36,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       46,
+       20,
+       39,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 1,
+      "parameters": [
+       "clear_all_weathers"
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Personne ne répond. Il faudra revenir à la nuit tombée."
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 14,
+  "y": 32
+ },
+ "29:22": {
+  "id": 22,
+  "name": "EV022",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       12,
+       "$gameSystem.hour() >= 8 && $gameSystem.hour() < 20"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       901,
+       901,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       902,
+       902,
+       0,
+       0,
+       6
+      ]
+     },
+     {
+      "code": 122,
+      "indent": 1,
+      "parameters": [
+       903,
+       903,
+       0,
+       0,
+       8
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 36,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 17,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 15,
+          "indent": null,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 37,
+          "indent": null,
+          "parameters": []
+         },
+         {
+          "code": 0,
+          "parameters": []
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 36,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "indent": null,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37,
+        "indent": null,
+        "parameters": []
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       43,
+       6,
+       14,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 356,
+      "indent": 1,
+      "parameters": [
+       "clear_all_weathers"
+      ]
+     },
+     {
+      "code": 121,
+      "indent": 1,
+      "parameters": [
+       231,
+       231,
+       1
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Un écriteau : « Fermé. Ouvert de 8 h à 20 h. »"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 5,
+  "y": 32
+ },
+ "29:23": {
+  "id": 23,
+  "name": "EV023",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 0,
+      "parameters": [
+       0,
+       37,
+       9,
+       13,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 7,
+  "y": 18
+ },
+ "29:24": {
+  "id": 24,
+  "name": "EV024",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 36,
+  "y": 6
+ },
+ "30:5": {
+  "id": 5,
+  "name": "EV005",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 0,
+      "parameters": [
+       0,
+       39,
+       10,
+       17,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 5,
+  "y": 10
+ },
+ "33:10": {
+  "id": 10,
+  "name": "EV010",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 15,
+  "y": 7
+ },
+ "33:11": {
+  "id": 11,
+  "name": "EV011",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 30,
+  "y": 7
+ },
+ "33:12": {
+  "id": 12,
+  "name": "EV012",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 27,
+  "y": 17
+ },
+ "33:13": {
+  "id": 13,
+  "name": "EV013",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 11,
+  "y": 20
+ },
+ "33:14": {
+  "id": 14,
+  "name": "EV014",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 0,
+      "parameters": [
+       0,
+       38,
+       10,
+       16,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 5,
+  "y": 22
+ },
+ "36:16": {
+  "id": 16,
+  "name": "EV016",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 5,
+  "y": 32
+ },
+ "36:17": {
+  "id": 17,
+  "name": "EV017",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 7,
+  "y": 24
+ },
+ "36:18": {
+  "id": 18,
+  "name": "EV018",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 8,
+  "y": 15
+ },
+ "36:19": {
+  "id": 19,
+  "name": "EV019",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 8,
+  "y": 9
+ },
+ "36:20": {
+  "id": 20,
+  "name": "EV020",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 37,
+  "y": 17
+ },
+ "36:21": {
+  "id": 21,
+  "name": "EV021",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "la porte est fermé"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 31,
+  "y": 32
+ },
+ "36:22": {
+  "id": 22,
+  "name": "EV022",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 0,
+      "parameters": [
+       0,
+       38,
+       10,
+       15,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 19,
+  "y": 31
+ },
+ "36:23": {
+  "id": 23,
+  "name": "EV023",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 0,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 0,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 0,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 0,
+      "parameters": [
+       0,
+       47,
+       20,
+       39,
+       8,
+       0
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 24,
+  "y": 12
+ },
+ "36:42": {
+  "id": 42,
+  "name": "EV042",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 36,
+  "y": 17
+ },
+ "44:9": {
+  "id": 9,
+  "name": "EV009",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 5,
+  "y": 11
+ },
+ "45:5": {
+  "id": 5,
+  "name": "EV005",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 0,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 3,
+  "y": 10
+ },
+ "45:6": {
+  "id": 6,
+  "name": "EV006",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "!Door1",
+     "direction": 2,
+     "pattern": 1,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "══ PORTES ET PASSAGES · Porte fermée à clé — la clé reste dans"
+      ]
+     },
+     {
+      "code": 408,
+      "indent": 0,
+      "parameters": [
+       "l'inventaire ══"
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "Pour une clé qui ouvre plusieurs portes."
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 0,
+      "parameters": [
+       "Déclencheur « Aucun » : appelle-le depuis un événement («"
+      ]
+     },
+     {
+      "code": 408,
+      "indent": 0,
+      "parameters": [
+       "Événement commun »), ou copie ses lignes."
+      ]
+     },
+     {
+      "code": 111,
+      "indent": 0,
+      "parameters": [
+       8,
+       112
+      ]
+     },
+     {
+      "code": 108,
+      "indent": 1,
+      "parameters": [
+       "↓ DESTINATION : change ces trois nombres (carte, X, Y)."
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Open1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Move1",
+        "pan": 0,
+        "pitch": 100,
+        "volume": 90
+       }
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Key",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       0,
+       {
+        "list": [
+         {
+          "code": 17
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 18
+         },
+         {
+          "code": 15,
+          "parameters": [
+           3
+          ]
+         },
+         {
+          "code": 19
+         },
+         {
+          "code": 37
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": false,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 17
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 18
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 15,
+        "parameters": [
+         3
+        ]
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 19
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 37
+       }
+      ]
+     },
+     {
+      "code": 205,
+      "indent": 1,
+      "parameters": [
+       -1,
+       {
+        "list": [
+         {
+          "code": 12
+         },
+         {
+          "code": 0
+         }
+        ],
+        "repeat": false,
+        "skippable": true,
+        "wait": true
+       }
+      ]
+     },
+     {
+      "code": 505,
+      "indent": 1,
+      "parameters": [
+       {
+        "code": 12
+       }
+      ]
+     },
+     {
+      "code": 201,
+      "indent": 1,
+      "parameters": [
+       0,
+       45,
+       11,
+       11,
+       0,
+       0
+      ]
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Door1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 411,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 250,
+      "indent": 1,
+      "parameters": [
+       {
+        "name": "Buzzer1",
+        "volume": 90,
+        "pitch": 100,
+        "pan": 0
+       }
+      ]
+     },
+     {
+      "code": 101,
+      "indent": 1,
+      "parameters": [
+       "",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 1,
+      "parameters": [
+       "Il faut une clé."
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 412,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 1,
+    "walkAnime": false
+   }
+  ],
+  "x": 11,
+  "y": 10
+ }
+}
