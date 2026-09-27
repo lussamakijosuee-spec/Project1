@@ -68,5 +68,6 @@ null,
 {"id":66,"expanded":false,"name":"Variable Huds","order":49,"parentId":15,"scrollX":1765.0909090909092,"scrollY":955.6363636363636},
 {"id":67,"expanded":true,"name":"Time System","order":38,"parentId":4,"scrollX":1786.909090909091,"scrollY":977.4545454545455},
 {"id":68,"expanded":false,"name":"✎ ATELIER · Situations","order":68,"parentId":0,"scrollX":0,"scrollY":0},
-{"id":69,"expanded":false,"name":"✎ ATELIER · Tous les plugins","order":69,"parentId":0,"scrollX":0,"scrollY":0}
+{"id":69,"expanded":false,"name":"✎ ATELIER · Tous les plugins","order":69,"parentId":0,"scrollX":0,"scrollY":0},
+{"id":70,"expanded":false,"name":"✎ ATELIER · Recettes à copier","order":70,"parentId":0,"scrollX":0,"scrollY":0}
 ]
