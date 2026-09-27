@@ -56,7 +56,7 @@ function pnj(nom) {
     return ch(GENS[h % 4], (h >> 3) % 8);
 }
 var GARDE = ch('People4', 5), MECHANT = ch('Evil', 0), CHIEN = ch('Nature', 0), CHAT = ch('Nature', 1), POULE = ch('Nature', 2), CHEVAL = ch('Nature', 3);
-var PORTE = ch('!Door1', 0), GRILLE = ch('!Door1', 7), CERCLE = ch('!Door2', 4), CRISTAL = ch('!Crystal', 0), COFFRE = ch('!Chest', 0);
+var PORTE = ch('!Door1', 1), GRILLE = ch('!Door1', 7), CERCLE = ch('!Door2', 4), CRISTAL = ch('!Crystal', 0), COFFRE = ch('!Chest', 0);
 var FLAMME = ch('!Flame', 0), BOUGIE = ch('!Flame', 1), FEU = ch('!Flame', 4), FEU_BLEU = ch('!Flame', 5), ECLAT = ch('!Flame', 6);
 var LEVIER = ch('!Switch1', 0), DALLE = ch('!Switch1', 4), BOUTON = ch('!Switch2', 0), ROCHER = ch('!Other1', 0), PIQUES = ch('!Other1', 4), SOCLE = ch('!Other1', 6);
 var MOUTON = ch('$Animal04_PixelScaled', 0), VACHE = ch('$Animal06_PixelScaled', 0), COQ = ch('$Bird01_PixelScaled', 0);
