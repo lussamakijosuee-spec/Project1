@@ -31,7 +31,9 @@ function reserver(table, noms, id, cle, nom) { table[cle] = id; noms[id] = '✎ 
  ['recompense', 'Récompense prise'], ['lettreLue', 'Lettre lue'], ['secret', 'Passage secret trouvé'],
  ['orage', 'Orage (ambiance)'], ['piegeArme', 'Piège armé'], ['chemin', 'Chemin dégagé'],
  ['puits', 'Seau remonté'], ['horloge', 'Horloge remontée'], ['miroir', 'Miroir orienté'],
- ['faim', 'Faim — système installé'], ['campement', 'Campement monté'], ['prison', 'En prison']
+ ['faim', 'Faim — système installé'], ['campement', 'Campement monté'], ['prison', 'En prison'],
+ ['vitrine', 'Vitrine — faire tourner les démarrages auto'], ['defiPas', 'Défi des pas en cours'],
+ ['salle', 'Salle verrouillée (combat)'], ['blocs', 'Blocs rouges levés'], ['maison', 'Maison achetée'], ['invisible', 'Invisible (sort)']
 ].forEach(function (x, i) { reserver(SW, NOMS_SW, 901 + i, x[0], x[1]); });
 [['destCarte', 'Destination · carte'], ['destX', 'Destination · X'], ['destY', 'Destination · Y'],
  ['tirage', 'Tirage au hasard'], ['reponse', 'Réponse (nombre saisi)'], ['objetChoisi', 'Objet choisi'],
@@ -45,7 +47,9 @@ function reserver(table, noms, id, cle, nom) { table[cle] = id; noms[id] = '✎ 
  ['etage', 'Étage'], ['cle', 'Clés trouvées'], ['fragments', 'Fragments'], ['taille', 'Taille de l\'équipe'],
  ['or', 'Or lu'], ['niveau', 'Niveau lu'], ['dir', 'Direction du joueur'], ['evX', 'X de l\'événement'], ['evY', 'Y de l\'événement'],
  ['distance', 'Distance au joueur'], ['pv', 'PV du chef (%)'], ['nuitsDormies', 'Nuits dormies'], ['dette', 'Dette'],
- ['marchandise', 'Marchandise livrée'], ['voix', 'Réplique tirée']
+ ['marchandise', 'Marchandise livrée'], ['voix', 'Réplique tirée'],
+ ['petitesCles', 'Petites clés (donjon)'], ['ennemis', 'Ennemis restants (salle)'], ['torches', 'Torches allumées (salle)'],
+ ['peur', 'Peur'], ['humeur', 'Réponse retenue'], ['prix', 'Prix négocié'], ['laine', 'Laine'], ['pret', 'Prêt de la banque']
 ].forEach(function (x, i) { reserver(VAR, NOMS_VAR, 901 + i, x[0], x[1]); });
 
 /* ── conditions (paramètres de la commande 111) ─────────────────────────── */
