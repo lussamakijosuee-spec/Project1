@@ -59,7 +59,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   /* 1. ses horaires (MOG 202) */
   await aller(41, 10, 11);
   await heure(10);
-  var r1 = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(6)._pageIndex]; });
+  var r1 = null;   // chacun entre à son tour, dans les trois secondes (Habitants v1.2)
+  for (var t1 = 0; t1 < 16 && !(r1 && r1[1] >= 0 && r1[2] >= 0); t1++) { await page.waitForTimeout(250); r1 = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(6)._pageIndex]; }); }
   await heure(22);
   var r1b = null;
   for (var t0 = 0; t0 < 40 && !(r1b && r1b[1] < 0); t0++) { await page.waitForTimeout(500); r1b = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(4)._habDepart ? 1 : 0]; }); }
@@ -96,7 +97,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   await page.waitForTimeout(800);
   await heure(18);
   var silasId = await page.evaluate(function () { return $gameMap.events().filter(function (e) { return e.event().name === 'Silas'; })[0].eventId(); });
-  var arrivee = await page.evaluate(function (id) { var e = $gameMap.event(id); return { page: e._pageIndex, x: e.x, y: e.y, marche: !!e._habArrivee, place: [e.event().x, e.event().y] }; }, silasId);
+  var arrivee = null;   // il entre dans les trois secondes (arrivées étalées)
+  for (var t2 = 0; t2 < 16 && !(arrivee && arrivee.page >= 0); t2++) { await page.waitForTimeout(250); arrivee = await page.evaluate(function (id) { var e = $gameMap.event(id); return { page: e._pageIndex, x: e.x, y: e.y, marche: !!e._habArrivee, place: [e.event().x, e.event().y] }; }, silasId); }
   var fin = null;
   for (var t = 0; t < 40 && !fin; t++) { await page.waitForTimeout(500); fin = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habArrivee ? [e.x, e.y] : null; }, silasId); }
   ok(arrivee.page >= 0 && arrivee.marche && fin && fin[0] === arrivee.place[0] && fin[1] === arrivee.place[1], 'à 18 h Silas entre par la porte (' + arrivee.x + ',' + arrivee.y + ') et marche jusqu\'à sa place (' + arrivee.place.join(',') + ')' + (fin ? ' — arrivé' : ' — pas arrivé'));

@@ -1,5 +1,5 @@
 //=============================================================================
-// Habitants.js — v1.1  ·  Les gens vivent leur vie
+// Habitants.js — v1.2  ·  Les gens vivent leur vie
 // RPG Maker MV   ·   pour JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure et la saison).
 //=============================================================================
@@ -69,7 +69,7 @@
  *         (l'événement qui transfère le joueur), puis il n'est plus là ;
  *       · quand son heure vient, il ENTRE par cette sortie et marche jusqu'à
  *         sa place, puis reprend son orientation.
- *     Bloqué plus de douze secondes, il passe quand même (il « se
+ *     Bloqué plus de huit secondes, il passe quand même (il « se
  *     téléporte »). On ne part pas au milieu d'une phrase : le PNJ à qui l'on
  *     parle attend la fin du dialogue.
  *         <Sortie: 20,39>        une autre sortie que la plus proche
@@ -135,6 +135,7 @@ window.Habitants = Habitants;
     };
     var _upd = Game_Map.prototype.update;
     Game_Map.prototype.update = function (sceneActive) {
+        this._habBudget = BUDGET;
         _upd.call(this, sceneActive);
         this._habPret = true;
         var h = heure() + ':' + saison();
@@ -142,7 +143,7 @@ window.Habitants = Habitants;
     };
     var _setup = Game_Map.prototype.setup;
     Game_Map.prototype.setup = function (mapId) {
-        this._habPret = false; this._habSorties = null;
+        this._habPret = false; this._habSorties = null; this._habDistances = null;
         _setup.call(this, mapId);
     };
 
@@ -181,17 +182,108 @@ window.Habitants = Habitants;
         });
         return c || { x: best.x, y: best.y };
     }
-    function pasVers(ev, x, y) {
-        var ancien = ev.searchLimit;
-        ev.searchLimit = function () { return 48; };
-        var d = ev.findDirectionTo(x, y);
-        ev.searchLimit = ancien;
-        if (d > 0) ev.moveStraight(d);
+    // ⚠ La recherche de chemin de MV est lente (listes parcourues en entier).
+    //   Mesuré le 2026-09-30 : au bar, à 10 h, huit habitués entraient ensemble,
+    //   se bloquaient à la porte, et relançaient chacun une recherche toutes les
+    //   deux images — 3 433 recherches en 12 s, des images de 50 ms : le jeu
+    //   « ramait parfois ». Désormais : trois recherches par image au plus pour
+    //   toute la carte, une attente quand on est bloqué, puis un pas de côté,
+    //   et les arrivées sont étalées sur quelques secondes.
+    var BUDGET = 3;
+
+    /* Le chemin : une carte des distances (parcours en largeur) calculée UNE
+     * fois par destination et par carte, sur les cases praticables. Chacun
+     * descend ensuite la pente case par case : une lecture de tableau au lieu
+     * d'une recherche A* de MV (jusqu'à 40 ms quand la cible est bloquée).
+     * Le décor-événement (réverbère, tonneau, étal : un événement fixe, qui
+     * bloque) est dans la carte : on le contourne. Les personnages, eux, n'y
+     * sont pas — ils bougent : on prend une case libre qui rapproche, sinon on
+     * attend puis on fait un pas de côté. */
+    var DX = { 2: 0, 4: -1, 6: 1, 8: 0 }, DY = { 2: 1, 4: 0, 6: 0, 8: -1 };
+    // les événements fixes qui bloquent, comme une liste de cases « i,j,… »
+    function decor() {
+        var w = $gameMap.width(), pilotes = $gameMap._viePNJ || [], l = [];
+        $gameMap.events().forEach(function (e) {
+            if (!e.isNormalPriority() || e.isThrough() || e._moveType !== 0) return;
+            if (e._habDepart || e._habArrivee || e._habDelai !== undefined || pilotes.indexOf(e) >= 0) return;
+            var m = e.event().meta || {};
+            if (m.Horaire || m.Passage || m.Saisons) return;
+            l.push(e.y * w + e.x);
+        });
+        return l.sort(function (a, b) { return a - b; }).join(',');
+    }
+    var _mapRefresh = Game_Map.prototype.refresh;
+    Game_Map.prototype.refresh = function () {
+        _mapRefresh.call(this);
+        this._habDecorAJour = false;           // une page a pu changer : on relira le décor
+    };
+    function distances(x, y) {
+        if (!$gameMap._habDecorAJour) {
+            var s = decor();
+            if (s !== $gameMap._habDecor) {
+                $gameMap._habDecor = s; $gameMap._habDistances = null;
+                var b = $gameMap._habBloque = {};
+                if (s) s.split(',').forEach(function (i) { b[i] = true; });
+            }
+            $gameMap._habDecorAJour = true;
+        }
+        var bloque = $gameMap._habBloque || {};
+        var cache = $gameMap._habDistances || ($gameMap._habDistances = {});
+        var k = x + ',' + y;
+        if (cache[k]) return cache[k];
+        var w = $gameMap.width(), h = $gameMap.height(), n = w * h;
+        var dist = new Int32Array(n); for (var i = 0; i < n; i++) dist[i] = -1;
+        var file = new Int32Array(n), tete = 0, queue = 0;
+        var cible = y * w + x;
+        dist[cible] = 0; file[queue++] = cible;
+        while (tete < queue) {
+            var c = file[tete++], cx = c % w, cy = (c - cx) / w;
+            [2, 4, 6, 8].forEach(function (d) {
+                // un voisin qui peut marcher VERS c
+                var nx = cx - DX[d], ny = cy - DY[d];
+                if (nx < 0 || ny < 0 || nx >= w || ny >= h) return;
+                var v = ny * w + nx;
+                if (dist[v] >= 0 || bloque[v]) return;
+                // la destination peut être une porte dans un mur : on s'arrête devant
+                if (!$gameMap.isPassable(nx, ny, d) || (c !== cible && !$gameMap.isPassable(cx, cy, 10 - d))) return;
+                dist[v] = dist[c] + 1; file[queue++] = v;
+            });
+        }
+        return (cache[k] = dist);
+    }
+    function directionVers(ev, x, y) {
+        var dist = distances(x, y), w = $gameMap.width(), ici = dist[ev.y * w + ev.x];
+        if (ici < 0) ici = 1e9;
+        var libre = 0, bl = ici, occupe = 0, bo = ici;
+        [2, 4, 6, 8].forEach(function (d) {
+            var nx = ev.x + DX[d], ny = ev.y + DY[d];
+            if (!$gameMap.isValid(nx, ny)) return;
+            var v = dist[ny * w + nx];
+            if (v < 0 || v >= ici) return;
+            // une case qui rapproche et où personne ne se tient, d'abord
+            if (ev.canPass(ev.x, ev.y, d)) { if (v < bl) { bl = v; libre = d; } }
+            else if (v < bo) { bo = v; occupe = d; }
+        });
+        return libre || occupe;
+    }
+    Habitants.directionVers = directionVers;
+
+    function pasVers(ev, b) {
+        if ($gameMap._habBudget <= 0) return;
+        $gameMap._habBudget--;
+        var d = directionVers(ev, b.x, b.y);
+        if (d > 0) {
+            ev.moveStraight(d);
+            if (ev.isMovementSucceeded()) { b.bloque = 0; return; }
+        }
+        b.bloque = (b.bloque || 0) + 1;
+        if (b.bloque >= 3) { ev.moveRandom(); b.bloque = 0; }
+        b.attente = 12 + Math.randomInt(24);
     }
     function onLuiParle(ev) {
         return $gameMap._interpreter && $gameMap._interpreter.isRunning() && $gameMap._interpreter.eventId() === ev.eventId();
     }
-    var LIMITE = 60 * 12;       // douze secondes de marche au plus, puis il « passe » quand même
+    var LIMITE = 60 * 8;        // huit secondes de marche au plus, puis il « passe » quand même
 
     var _refresh = Game_Event.prototype.refresh;
     Game_Event.prototype.refresh = function () {
@@ -203,6 +295,12 @@ window.Habitants = Habitants;
             var s = sortieDe(this);
             if (s) { this._habDepart = { x: s.x, y: s.y, t: 0 }; this._habArrivee = null; this._habMove = this._moveType; this._moveType = 0; return; }
         }
+        if (ancien < 0 && nouveau >= 0 && !this._habEntre) {
+            // il n'entre pas tout de suite : chacun à son tour, sur ~3 s
+            if (this._habDelai === undefined) this._habDelai = Math.randomInt(180);
+            return;
+        }
+        this._habEntre = false;
         _refresh.call(this);
         if (ancien < 0 && this._pageIndex >= 0) {
             var e = sortieDe(this);
@@ -216,17 +314,24 @@ window.Habitants = Habitants;
     var _updEv = Game_Event.prototype.update;
     Game_Event.prototype.update = function () {
         _updEv.call(this);
+        if (this._habDelai !== undefined) {
+            if (this._habDelai-- <= 0) { this._habDelai = undefined; this._habEntre = true; this.refresh(); }
+            return;
+        }
         var b = this._habDepart || this._habArrivee;
-        if (!b || this.isMoving() || onLuiParle(this) || $gameMessage.isBusy()) return;
-        b.t += 1;
-        var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) === 0 : (this.x === b.x && this.y === b.y);
+        if (!b || onLuiParle(this) || $gameMessage.isBusy()) return;
+        b.t += 1;                                  // en temps réel, même pendant les pas
+        if (this.isMoving() && b.t <= LIMITE) return;
+        // partir : être à côté de la sortie suffit (le joueur se tient souvent devant la porte)
+        var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) <= 1 : (this.x === b.x && this.y === b.y);
         if (arrive || b.t > LIMITE) {
             this._moveType = this._habMove;
             if (this._habDepart) { this._habDepart = null; _refresh.call(this); }
             else { if (!arrive) this.locate(b.x, b.y); this.setDirection(b.dir); this._habArrivee = null; }
             return;
         }
-        if (b.t % 2 === 0) pasVers(this, b.x, b.y);
+        if (b.attente > 0) { b.attente--; return; }
+        pasVers(this, b);
     };
     // ce que fait chacun, pour les bancs
     Habitants.etat = function () {

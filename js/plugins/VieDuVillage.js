@@ -286,15 +286,29 @@
     /** Un pas vers (x,y). MV borne sa recherche de chemin très court par
      *  défaut (douze cases) : sur un village de quarante de côté, un PNJ
      *  n'aurait jamais trouvé sa porte. On élargit le temps du calcul. */
+    // ⚠ 2026-09-30 : un PNJ bloqué (porte encombrée, joueur en travers)
+    //   relançait une recherche de chemin toutes les six images, sans fin. La
+    //   recherche de MV est lente : on attend un peu avant de réessayer, et
+    //   pas plus de quatre recherches par image pour tout le village.
     function unPasVers(ev, x, y) {
         if (ev.isMoving()) { return; }
         if (ev.x === x && ev.y === y) { return; }
-        var ancien = ev.searchLimit;
-        ev.searchLimit = function () { return PORTEE; };
-        var d = ev.findDirectionTo(x, y);
-        ev.searchLimit = ancien;
+        if (ev._vieAttente > 0) { ev._vieAttente--; return; }
+        if ($gameMap._vieBudget <= 0) { return; }
+        $gameMap._vieBudget--;
+        var d;
+        if (window.Habitants && Habitants.directionVers) {
+            // la carte des distances de Habitants : une lecture de tableau
+            d = Habitants.directionVers(ev, x, y);
+        } else {
+            var ancien = ev.searchLimit;
+            ev.searchLimit = function () { return PORTEE; };
+            d = ev.findDirectionTo(x, y);
+            ev.searchLimit = ancien;
+        }
         if (d > 0) { ev.moveStraight(d); }
         else { ev.moveTowardCharacter({ x: x, y: y, isMoving: function () { return false; } }); }
+        if (!ev.isMovementSucceeded()) { ev._vieAttente = 3 + Math.randomInt(5); }
     }
 
     function agendaDe(v, h) {
@@ -401,6 +415,7 @@
 
         var liste = $gameMap._viePNJ || [];
         if (!liste.length) { return; }
+        $gameMap._vieBudget = 4;
         this._vieT = (this._vieT || 0) + 1;
         if (this._vieT < PAS) { return; }
         this._vieT = 0;
