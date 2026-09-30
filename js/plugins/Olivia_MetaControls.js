@@ -283,33 +283,46 @@ Game_System.prototype.loadMetaVariables = function() {
 //
 // The game object class for switches.
 
+// ── Correctif (2026-09-30) ─────────────────────────────────────────
+// La version d'origine passait deux expressions régulières sur le NOM de
+// l'interrupteur ou de la variable à CHAQUE lecture — des milliers de fois
+// par seconde (conditions de pages, jauges, horloge) — et plantait sur un
+// numéro sans nom (« reading 'match' of undefined », le jeu s'arrêtait).
+// On classe chaque numéro une seule fois : 0 ordinaire, 1 <Global>, 2 <Meta>.
+Olivia.MetaControls.genre = function (liste, cache, id) {
+    var g = cache[id];
+    if (g === undefined) {
+        var nom = liste[id] || '';
+        g = /<(?:Global|Global Meta)>/i.test(nom) ? 1 : (/<(?:Local|Local Meta|Meta)>/i.test(nom) ? 2 : 0);
+        cache[id] = g;
+    }
+    return g;
+};
+Olivia.MetaControls._genreSw = [];
+Olivia.MetaControls._genreVar = [];
+
 Olivia.MetaControls.___Game_Switches_value___ = Game_Switches.prototype.value;
 Game_Switches.prototype.value = function(switchId) {
-    if (!$dataSystem.switches[switchId]) {
-        return Olivia.MetaControls.___Game_Switches_value___.call(this, switchId);
-    }
-    if ($dataSystem.switches[switchId].match(/<(?:Global|Global Meta)>/i)) {
+    var g = Olivia.MetaControls.genre($dataSystem.switches, Olivia.MetaControls._genreSw, switchId);
+    if (g === 1) {
         var value = !!ConfigManager.getMetaControlsData(0).switches[switchId];
         this._data[switchId] = value;
         return value;
-    } else if ($dataSystem.switches[switchId].match(/<(?:Local|Local Meta|Meta)>/i)) {
+    } else if (g === 2) {
         var value = !!ConfigManager.getMetaControlsData($gameSystem.getMetaID()).switches[switchId];
         this._data[switchId] = value;
         return value;
-    } else {
-        return Olivia.MetaControls.___Game_Switches_value___.call(this, switchId);
     }
+    return Olivia.MetaControls.___Game_Switches_value___.call(this, switchId);
 };
 
 Olivia.MetaControls.___Game_Switches_setValue___ = Game_Switches.prototype.setValue;
 Game_Switches.prototype.setValue = function(switchId, value) {
     Olivia.MetaControls.___Game_Switches_setValue___.call(this, switchId, value);
-    if (switchId > 0 && switchId < $dataSystem.switches.length) {
-        if ($dataSystem.switches[switchId].match(/<(?:Global|Global Meta)>/i)) {
-            this.processMetaChange(switchId, value, true);
-        } else if ($dataSystem.switches[switchId].match(/<(?:Local|Local Meta|Meta)>/i)) {
-            this.processMetaChange(switchId, value, false);
-        }
+    if (switchId > 0) {
+        var g = Olivia.MetaControls.genre($dataSystem.switches, Olivia.MetaControls._genreSw, switchId);
+        if (g === 1) this.processMetaChange(switchId, value, true);
+        else if (g === 2) this.processMetaChange(switchId, value, false);
     }
 };
 
@@ -331,28 +344,26 @@ Game_Switches.prototype.processMetaChange = function(switchId, value, global) {
 
 Olivia.MetaControls.___Game_Variables_value___ = Game_Variables.prototype.value;
 Game_Variables.prototype.value = function(variableId) {
-    if ($dataSystem.variables[variableId].match(/<(?:Global|Global Meta)>/i)) {
+    var g = Olivia.MetaControls.genre($dataSystem.variables, Olivia.MetaControls._genreVar, variableId);
+    if (g === 1) {
         var value = ConfigManager.getMetaControlsData(0).variables[variableId] || 0;
         this._data[variableId] = value;
         return value;
-    } else if ($dataSystem.variables[variableId].match(/<(?:Local|Local Meta|Meta)>/i)) {
+    } else if (g === 2) {
         var value = ConfigManager.getMetaControlsData($gameSystem.getMetaID()).variables[variableId] || 0;
         this._data[variableId] = value;
         return value;
-    } else {
-        return Olivia.MetaControls.___Game_Variables_value___.call(this, variableId);
     }
+    return Olivia.MetaControls.___Game_Variables_value___.call(this, variableId);
 };
 
 Olivia.MetaControls.___Game_Variables_setValue___ = Game_Variables.prototype.setValue;
 Game_Variables.prototype.setValue = function(variableId, value) {
     Olivia.MetaControls.___Game_Variables_setValue___.call(this, variableId, value);
-    if (variableId > 0 && variableId < $dataSystem.variables.length) {
-        if ($dataSystem.variables[variableId].match(/<(?:Global|Global Meta)>/i)) {
-            this.processMetaChange(variableId, value, true);
-        } else if ($dataSystem.variables[variableId].match(/<(?:Local|Local Meta|Meta)>/i)) {
-            this.processMetaChange(variableId, value, false);
-        }
+    if (variableId > 0) {
+        var g = Olivia.MetaControls.genre($dataSystem.variables, Olivia.MetaControls._genreVar, variableId);
+        if (g === 1) this.processMetaChange(variableId, value, true);
+        else if (g === 2) this.processMetaChange(variableId, value, false);
     }
 };
 
