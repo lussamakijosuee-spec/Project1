@@ -46,11 +46,12 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
       });
       var silas = $gameMap.events().filter(function (e) { return e.event().name === 'Silas'; })[0];
       var r = { res: res, total: hab.length };
-      if (silas) { $gameSystem.set_hour(10); $gameMap.update(false); $gameMap.refreshIfNeeded(); r.silas10 = silas._pageIndex; $gameSystem.set_hour(20); $gameMap.update(false); $gameMap.refreshIfNeeded(); r.silas20 = silas._pageIndex; }
+      // présence selon l'horaire (l'entrée et la sortie à pied sont vérifiées par une_journee_en_ville.js)
+      if (silas) { $gameSystem.set_hour(10); r.silas10 = Habitants.present(silas) ? 0 : -1; $gameSystem.set_hour(20); r.silas20 = Habitants.present(silas) ? 0 : -1; }
       return r;
     });
     Object.keys(h.res).forEach(function (hh) { console.log('    ' + String(hh).padStart(2) + ' h : ' + h.res[hh].length + '/' + h.total + ' présents — ' + h.res[hh].join(', ')); });
-    if (carte === 46) ok(h.silas10 === -1 && h.silas20 >= 0, 'Silas (<Horaire: 18-4>) : absent à 10 h, présent à 20 h, sans quitter la carte');
+    if (carte === 46) ok(h.silas10 === -1 && h.silas20 >= 0, 'Silas (<Horaire: 18-4>) : absent à 10 h, présent à 20 h');
 
     /* 2 + 3. la mémoire, puis chaque page */
     var r = await page.evaluate(function () {

@@ -78,12 +78,14 @@ Ces quatre cartes utilisent maintenant l'extension **VieDuVillage**, passée en 
 
 ### Dedans (bar, auberge, boutiques, manoir)
 
-C'est l'extension **Habitants**, en v1.1.
+C'est l'extension **Habitants**, en v1.2.
 
 - **Les horaires** se mettent dans la **Note** de l'événement : `<Horaire: 18-4>`, `<Saisons: 1,2,3>`.
 - **Personne ne clignote.** À la fin de son heure, le PNJ **marche jusqu'à la porte**,
   puis disparaît. À son heure, il **entre par la porte** et va à sa place.
-- **S'il est bloqué**, au bout de 12 secondes il « se téléporte ».
+- **S'il est bloqué**, au bout de 8 secondes il « se téléporte ».
+- **Ils ne se bousculent pas à la porte** : chacun entre à son tour, dans les trois secondes.
+- **Ils contournent le décor** (réverbères, tonneaux, étals) et attendent quand quelqu'un est en travers.
 - **On ne part pas au milieu d'une phrase** : le PNJ attend la fin du dialogue.
 - **Pour tes PNJ à interrupteur de moment**, ajoute `<Passage>` dans la Note : ils
   entrent et sortent à pied aussi. C'est déjà fait pour tes clients de la forge, et
