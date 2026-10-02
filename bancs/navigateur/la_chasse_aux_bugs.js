@@ -49,7 +49,7 @@ function ctxDemo(ctx) {
 }
 
 var erreurs = {};           // clé → { ctx, msg, n }
-var neFinitPas = [], figes = [], nonCharges = [], issues = {}, pagesJouees = 0, rienJoue = [];
+var neFinitPas = [], figes = [], nonCharges = [], issues = {}, pagesJouees = 0, rienJoue = [], coinces = [];
 function noter(ctx, msg) {
     var k = ctx + '|' + msg; if (erreurs[k]) { erreurs[k].n++; return; }
     erreurs[k] = { ctx: ctx, msg: msg, n: 1 };
@@ -163,7 +163,10 @@ async function cartesEtPages(page) {
         page.__etat.ctx = 'carte ' + id + ' (chargement)';
         await page.evaluate(function (c) { window.__ctx = c; }, page.__etat.ctx);
         var ok = await allerA(page, id, Math.floor(m.width / 2), Math.floor(m.height / 2));
-        if (!ok) { var diag = await page.evaluate(function () { var s = SceneManager._scene; return s.constructor.name + ' · actif ' + (s.isActive && s.isActive()) + ' · occupé ' + (s.isBusy && s.isBusy()) + ' · message ' + $gameMessage.isBusy() + ' · transfert ' + $gamePlayer.isTransferring() + ' · scène suivante ' + (SceneManager._nextScene && SceneManager._nextScene.constructor.name) + ' · arrêté ' + SceneManager._stopped + ' · carte ' + $gameMap.mapId(); }); nonCharges.push('carte ' + id + ' « ' + INFOS[id].name + ' » ne finit pas de charger en 30 s — ' + diag); await relever(page); await allerA(page, 29, 20, 22); continue; }
+        if (!ok) { var diag = await page.evaluate(function () { var s = SceneManager._scene; return s.constructor.name + ' · actif ' + (s.isActive && s.isActive()) + ' · occupé ' + (s.isBusy && s.isBusy()) + ' · message ' + $gameMessage.isBusy() + ' · transfert ' + $gamePlayer.isTransferring() + ' · scène suivante ' + (SceneManager._nextScene && SceneManager._nextScene.constructor.name) + ' · arrêté ' + SceneManager._stopped + ' · carte ' + $gameMap.mapId(); }); var msgNC = 'carte ' + id + ' « ' + INFOS[id].name + ' » ne finit pas de charger en 30 s — ' + diag;
+            // la carte d'avant a ouvert un mini-jeu ou un combat (voulu) : le banc y reste, ce n'est pas cette carte ;
+            // une carte d'atelier ou de démo ne fait pas échouer le banc
+            if (/Scene_Theatrhythm|Scene_Battle/.test(diag) || estDemo(id)) coinces.push(msgNC); else nonCharges.push(msgNC); await relever(page); await allerA(page, 29, 20, 22); continue; }
         if (PARTIES.indexOf('cartes') >= 0) {
             page.__etat.ctx = 'carte ' + id + ' (3 s de jeu)';
             await page.evaluate(function (c) { window.__ctx = c; }, page.__etat.ctx);
@@ -305,6 +308,7 @@ async function combats(page, liste) {
     montre('✗ ne se charge pas', nonCharges.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
     montre('✗ pages que le banc n\'a pas pu jouer (bloquées dès la 1re ligne)', rienJoue.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
     montre('⚠ erreurs dans les ateliers / démos / recettes ✎', demo);
+    montre('⚠ cartes non vérifiées : démo, ou banc resté dans un mini-jeu / un combat ouvert par la carte d\'avant', coinces.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
     console.log('⚠ pages qui ne finissent pas (attente sans fin, boucle) : ' + neFinitPas.length);
     neFinitPas.slice(0, 30).forEach(function (c) { console.log('   ' + c); });
     var echec = jeu.length + figes.length + nonCharges.length + rienJoue.length;
