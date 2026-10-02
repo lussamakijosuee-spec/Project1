@@ -410,6 +410,13 @@
     // ═══════════════════════════════════════════════════════════════
     //  4. CONTRE-ATTAQUE – Exécutée juste après l'action adverse
     // ═══════════════════════════════════════════════════════════════
+    // un contre en attente ne survit pas au combat qui l'a vu naître
+    var _initMembers = BattleManager.initMembers;
+    BattleManager.initMembers = function () {
+        _initMembers.call(this);
+        this._mCounter = null;
+    };
+
     var _endAction = BattleManager.endAction;
     BattleManager.endAction = function () {
         _endAction.call(this);
@@ -417,6 +424,11 @@
         if (!this._mCounter) return;
         var c = this._mCounter;
         this._mCounter = null;
+        // ⚠ 2026-10-02 (bancs/navigateur/la_chasse_aux_bugs.js) : un contre
+        //   planifié juste avant la fin d'un combat (fuite, victoire) partait
+        //   au premier coup du combat SUIVANT, lancé par un Mahoraga qui n'y
+        //   était plus — Game_Action sans lanceur, le jeu s'arrêtait.
+        if (!c.boss || $gameTroop.members().indexOf(c.boss) < 0 || !c.boss.canMove()) return;
 
         // Cible = l'attaquant original, ou un membre aléatoire s'il est K.O.
         var target = (c.attacker && c.attacker.isAlive()) ? c.attacker : null;

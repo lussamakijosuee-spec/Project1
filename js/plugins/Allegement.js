@@ -110,6 +110,19 @@ window.Allegement = Allegement;
         _snap.call(this);
     };
 
+    // ── Irina_AntiAudioDelay : ne pas précharger un son sans nom ──────────
+    // Irina précharge les sons des commandes à venir, sans regarder si la
+    // commande « Jouer un son » est restée sur « (Aucun) » : elle demandait
+    // alors audio/se/.ogg (trouvé en combat, troupe 24). On saute ces vides.
+    if (Game_Interpreter.prototype.loadAheadAudioCommands) {
+        var _avance = Game_Interpreter.prototype.loadAheadAudioCommands;
+        Game_Interpreter.prototype.loadAheadAudioCommands = function () {
+            var cb = AudioManager.createBuffer;
+            AudioManager.createBuffer = function (dossier, nom) { return nom ? cb.apply(this, arguments) : null; };
+            try { return _avance.apply(this, arguments); } finally { AudioManager.createBuffer = cb; }
+        };
+    }
+
     Allegement.enVeille = function () {
         var s = SceneManager._scene && SceneManager._scene._spriteset;
         if (!s || !s._characterSprites) return 0;
