@@ -226,13 +226,22 @@ async function combats(page, liste) {
             }
         });
         issues[r.fin] = (issues[r.fin] || 0) + 1;
-        if (r.fin === 'figé') figes.push(page.__etat.ctx + ' — ' + r.etat);
+        if (r.fin === 'figé') { figes.push(page.__etat.ctx + ' — ' + r.etat); console.log('\n   FIGÉ ' + page.__etat.ctx + ' — ' + r.etat); }
         await relever(page);
-        // sortir proprement
+        // sortir comme un joueur : en fuyant ENTRE deux actions. (Couper un
+        // combat en pleine séquence d'action — processAbort à n'importe quel
+        // moment — laissait un lanceur orphelin au combat suivant : la
+        // première version du banc accusait à tort la troupe 24.)
         await page.evaluate(function () {
-            window.__pause = true;
-            if (SceneManager._scene instanceof Scene_Battle) { try { BattleManager.processAbort(); } catch (e) { } }
-            setTimeout(function () { if (!(SceneManager._scene instanceof Scene_Map)) { $gamePlayer.reserveTransfer(29, 20, 22, 2, 0); SceneManager.goto(Scene_Map); } window.__pause = false; }, 4000);
+            var t = performance.now();
+            (function f() {
+                if (!(SceneManager._scene instanceof Scene_Battle)) return;
+                var ph = BattleManager._phase;
+                if (BattleManager._victoryPhase) { SceneManager.pop(); return; }
+                if (ph === 'input' || ph === 'turn' || ph === 'turnEnd' || ph === 'start') { BattleManager._escapeRatio = 1; try { BattleManager.processEscape(); } catch (e) { window.__dire(e); } return; }
+                if (performance.now() - t > 20000) { BattleManager.abort(); return; }
+                setTimeout(f, 30);
+            })();
         });
         try { await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && SceneManager._sceneStarted; }, null, { timeout: 30000 }); }
         catch (e) { await allerA(page, 29, 20, 22); }
