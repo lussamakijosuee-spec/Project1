@@ -1,11 +1,11 @@
 //=============================================================================
-// Allegement.js — v1.0  ·  Ce qu'on ne voit pas ne coûte rien
+// Allegement.js — v1.1  ·  Ce qu'on ne voit pas ne coûte rien
 // RPG Maker MV   ·   pour JOKO
 //   À charger EN DERNIER (après les MOG et les YEP qui touchent aux sprites).
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Les événements loin de l'écran ne sont plus recalculés
- * ni dessinés à chaque image (eux, leur ombre, leur poussière).
+ * @plugindesc v1.1 ■ Les événements loin de l'écran ne sont plus recalculés
+ * ni dessinés à chaque image ; relire des pixels ne bloque plus le jeu.
  * @author JOKO
  *
  * @param marge
@@ -31,6 +31,17 @@
  *  Habitants le pilotent. Dès qu'il revient près de l'écran, son sprite se
  *  réveille. Un événement qui joue une animation ou une bulle n'est jamais
  *  mis en veille.
+ *
+ *  v1.1 (2026-10-02) — « les cinémas rament » : mesuré par une sonde qui
+ *  joue chaque effet dans le moteur.
+ *   · La 1re animation recolorée d'un combat bloquait le jeu jusqu'à 1 s,
+ *     l'ouverture d'une fenêtre de message 0,6 s : MV relit les pixels d'un
+ *     canevas que le navigateur garde sur la carte graphique. Les canevas
+ *     sont maintenant déclarés « relus souvent » : 6,5 s de blocage → 0,2 s
+ *     sur le même parcours.
+ *   · D'une carte à l'autre, MV ne photographie plus l'écran (la photo ne
+ *     sert qu'au fond des menus) : un changement de carte bloque 185 ms au
+ *     lieu de 318.
  *
  *  SCRIPT :  Allegement.enVeille()   → combien de sprites dorment, là
  */
@@ -72,6 +83,32 @@ window.Allegement = Allegement;
     }
     if (typeof CharShadowSprite !== 'undefined') suivre(CharShadowSprite);
     if (typeof CharDustTrailSprites !== 'undefined') suivre(CharDustTrailSprites);
+
+    // ── Relire des pixels sans bloquer le jeu ─────────────────────────────
+    // ⚠ 2026-10-02, mesuré (cinéma.js) : la 1re animation recolorée d'un
+    //   combat (Bitmap.rotateHue) bloquait le jeu jusqu'à 1 s, l'ouverture de
+    //   la fenêtre de message (Bitmap.adjustTone) 0,6 s. MV y relit les pixels
+    //   d'un canevas 2D (getImageData) ; le navigateur garde ces canevas sur la
+    //   carte graphique, et les relire impose un aller-retour très lent. Un
+    //   canevas déclaré « relu souvent » reste en mémoire : la relecture devient
+    //   une simple copie, et l'envoi vers WebGL est aussi direct.
+    if (typeof HTMLCanvasElement !== 'undefined') {
+        var _ctx = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (type, opts) {
+            if (type === '2d' && !opts) return _ctx.call(this, type, { willReadFrequently: true });
+            return _ctx.apply(this, arguments);
+        };
+    }
+
+    // ── Changer de carte sans photographier l'écran ──────────────────────
+    // MV photographie l'écran (et le floute) en quittant une carte : c'est le
+    // fond des menus. D'une carte à l'autre, personne ne s'en sert, et la
+    // photo relit tout l'écran depuis la carte graphique (readPixels).
+    var _snap = SceneManager.snapForBackground;
+    SceneManager.snapForBackground = function () {
+        if (this._scene instanceof Scene_Map && this.isNextScene(Scene_Map)) return;
+        _snap.call(this);
+    };
 
     Allegement.enVeille = function () {
         var s = SceneManager._scene && SceneManager._scene._spriteset;

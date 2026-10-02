@@ -113,28 +113,33 @@ var StateFX   = StateFX   || {};
         st.id = 'ulti-cinematics-style';
         st.textContent = [
             // --- CUT-IN ---
-            '.uc-cutin{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99996;pointer-events:none;overflow:hidden;}',
+            // ⚠ 2026-10-02 : mesuré, une image sur cinq était ratée pendant le cut-in.
+            //   Le flou animé, l'espacement des lettres animé et la fusion « screen »
+            //   par-dessus le jeu se recalculaient à chaque image. Chaque couche est
+            //   maintenant dessinée une fois (will-change) puis seulement déplacée,
+            //   tournée ou fondue par la carte graphique.
+            '.uc-cutin{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99996;pointer-events:none;overflow:hidden;contain:strict;}',
             '.uc-dim{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;',
             'background:radial-gradient(circle at 50% 48%,rgba(0,0,0,0) 28%,rgba(0,0,0,.74) 100%);',
-            'animation:ucDim 1300ms ease-out forwards;}',
-            '.uc-rays{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;mix-blend-mode:screen;',
+            'will-change:opacity;animation:ucDim 1300ms ease-out forwards;}',
+            '.uc-rays{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;will-change:transform,opacity;',
             'background:repeating-conic-gradient(from 0deg at 50% 46%,rgba(255,255,255,.12) 0deg 6deg,rgba(255,255,255,0) 6deg 12deg);',
             'animation:ucRays 1300ms ease-out forwards;}',
             '.uc-band{position:absolute;top:39%;left:-20%;width:140%;height:22%;opacity:.92;',
-            'transform-origin:left center;transform:skewY(-6deg) scaleX(0);',
+            'transform-origin:left center;transform:skewY(-6deg) scaleX(0);will-change:transform,opacity;',
             'animation:ucBand 1300ms cubic-bezier(.2,.9,.2,1) forwards;}',
             '.uc-sub{position:absolute;top:28%;left:0;width:100%;text-align:center;opacity:0;',
-            'font-family:Arial,sans-serif;font-weight:700;font-size:2.4vw;letter-spacing:.5em;',
+            'font-family:Arial,sans-serif;font-weight:700;font-size:2.4vw;letter-spacing:.5em;will-change:transform,opacity;',
             'animation:ucSub 1300ms ease-out forwards;}',
             '.uc-name{position:absolute;top:35%;left:0;width:100%;text-align:center;opacity:0;color:#fff;',
             'font-family:"Arial Black",Arial,sans-serif;font-weight:900;font-size:7.6vw;letter-spacing:.03em;',
-            'transform:scale(2.4);animation:ucName 1300ms cubic-bezier(.15,1.2,.3,1) forwards;}',
+            'transform:scale(2.4);will-change:transform,opacity;animation:ucName 1300ms cubic-bezier(.15,1.2,.3,1) forwards;}',
             '@keyframes ucDim{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}',
             '@keyframes ucRays{0%{opacity:0;transform:rotate(0)}20%{opacity:1}100%{opacity:0;transform:rotate(12deg)}}',
             '@keyframes ucBand{0%{transform:skewY(-6deg) scaleX(0)}18%{transform:skewY(-6deg) scaleX(1)}',
             '82%{transform:skewY(-6deg) scaleX(1)}100%{transform:skewY(-6deg) scaleX(0);opacity:0}}',
-            '@keyframes ucSub{0%{opacity:0;letter-spacing:1em}25%{opacity:1;letter-spacing:.5em}80%{opacity:1}100%{opacity:0}}',
-            '@keyframes ucName{0%{transform:scale(2.4);opacity:0;filter:blur(8px)}22%{transform:scale(1);opacity:1;filter:blur(0)}',
+            '@keyframes ucSub{0%{opacity:0;transform:scaleX(1.6)}25%{opacity:1;transform:scaleX(1)}80%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}',
+            '@keyframes ucName{0%{transform:scale(2.4);opacity:0}22%{transform:scale(1);opacity:1}',
             '80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.96)}}',
             // --- SLOT / JACKPOT ---
             '.uc-slot{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99995;pointer-events:none;',
@@ -156,7 +161,7 @@ var StateFX   = StateFX   || {};
             'display:flex;align-items:center;justify-content:center;}',
             '.uc-ring{position:absolute;width:18vh;height:18vh;border-radius:50%;border:6px solid #fff;opacity:0;',
             'animation:ucRing 1000ms ease-out forwards;}',
-            '.uc-glow{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;mix-blend-mode:screen;',
+            '.uc-glow{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;will-change:opacity;',
             'animation:ucGlow 800ms ease-out forwards;}',
             '.uc-part{position:absolute;width:10px;height:10px;border-radius:50%;opacity:0;',
             'animation:ucPart 900ms ease-out forwards;}',

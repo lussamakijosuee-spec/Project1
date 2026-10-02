@@ -174,5 +174,5 @@ var $plugins =
 {"name":"LaBibliothequeDAel","status":true,"description":"v1.0 ■ Aël, à la Béatrice : la Lecture et le Miracle, le Contrat, les Portes.","parameters":{"acteur":"4","gainLecture":"25","seuilPM":"20","flechesIds":"29:1268,14:1269,3:1270,9:1271,12:1272","etatContrat":"237","etatContratForce":"238","rangsImmunises":"S"}},
 {"name":"EquilibreDesCombats","status":true,"description":"v1.0 ■ Les PV et la force des ennemis, par rang, réglés sur des combats joués dans le moteur avec l'équipe complète. Ne touche à aucune fiche.","parameters":{"pvD":"3.5","forceD":"1.4","pvC":"3.6","forceC":"1.5","pvB":"3.6","forceB":"1.45","pvA":"1.8","forceA":"1","pvS":"1","forceS":"1","pvBoss":"1","forceBoss":"1"}},
 {"name":"DebutMarques","status":true,"description":"v1.0 ■ Choisis un des 4 marqués avant de commencer. Les trois\r\nautres vivent leur vie (DestinsParalleles). Discours d'entrée inclus.","parameters":{}},
-{"name":"Allegement","status":true,"description":"v1.0 ■ Les événements loin de l'écran ne sont plus recalculés ni dessinés à chaque image (eux, leur ombre, leur poussière).","parameters":{"marge":"144"}}
+{"name":"Allegement","status":true,"description":"v1.1 ■ Les événements loin de l'écran ne sont plus recalculés ni dessinés à chaque image ; relire des pixels ne bloque plus le jeu.","parameters":{"marge":"144"}}
 ];
