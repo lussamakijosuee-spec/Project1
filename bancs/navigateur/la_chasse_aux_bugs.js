@@ -8,8 +8,8 @@
  *   cartes   chaque carte est chargée pour de vrai, puis vit 3 secondes
  *            (processus parallèles, autoruns, plugins de carte) ;
  *   pages    chaque page de chaque événement, et chaque événement commun,
- *            est exécutée jusqu'au bout — deux fois, une par branche de
- *            choix. Les transferts, combats, boutiques, menus, fin de partie
+ *            est exécutée jusqu'au bout — deux fois : premier choix, puis
+ *            dernier choix (« Au revoir » des menus qui reviennent). Les transferts, combats, boutiques, menus, fin de partie
  *            et vidéos sont neutralisés (notés, pas joués) pour que le
  *            balayage continue ;
  *   combats  chaque troupe est combattue en combat automatique (héros niveau
@@ -49,7 +49,7 @@ function ctxDemo(ctx) {
 }
 
 var erreurs = {};           // clé → { ctx, msg, n }
-var neFinitPas = [], figes = [], nonCharges = [], issues = {}, pagesJouees = 0;
+var neFinitPas = [], figes = [], nonCharges = [], issues = {}, pagesJouees = 0, rienJoue = [];
 function noter(ctx, msg) {
     var k = ctx + '|' + msg; if (erreurs[k]) { erreurs[k].n++; return; }
     erreurs[k] = { ctx: ctx, msg: msg, n: 1 };
@@ -83,6 +83,10 @@ function outils() {
     }
     window.__neutraliser = neutraliser;
     window.__executer = function (liste, evId, choix) {
+        // ⚠ Un écran demandé par un autorun (le choix du héros…) laisse la
+        //   scène « en changement » : l'interpréteur de MV n'exécute alors
+        //   RIEN. La première version du banc comptait ces pages comme jouées.
+        if (SceneManager.isSceneChanging()) SceneManager._nextScene = null;
         var it = new Game_Interpreter(); it.setup(liste, evId || 0);
         var pas = 0;
         while (it.isRunning() && pas < 400) {
@@ -95,7 +99,12 @@ function outils() {
             pas++;
         }
         $gameMessage.clear();
-        return it.isRunning() ? 'encours' : 'fini';
+        if (it.isRunning()) {
+            var c = it._list && it._list[it._index];
+            window.__ouEnCours = ' — arrêtée ligne ' + (it._index + 1) + ' (commande ' + (c && c.code) + (c && c.code === 102 ? ' ' + JSON.stringify(c.parameters[0]).slice(0, 60) : '') + ', attente « ' + it._waitMode + ' »' + (SceneManager.isSceneChanging() ? ', scène en changement' : '') + ')';
+            return 'encours';
+        }
+        return 'fini';
     };
     window.__propre = function () {
         $gameMessage.clear(); if ($gameMap._interpreter) $gameMap._interpreter.clear();
@@ -168,11 +177,14 @@ async function cartesEtPages(page) {
                 $dataMap.events.forEach(function (e) {
                     if (!e) return;
                     e.pages.forEach(function (p, pi) {
-                        [0, 1].forEach(function (choix) {
-                            if (choix === 1 && !p.list.some(function (c) { return c.code === 102; })) return;
-                            window.__ctx = 'carte ' + id + ' év.' + e.id + ' « ' + e.name + ' » p' + (pi + 1) + (choix ? ' (2e choix)' : '');
+                        [0, 99].forEach(function (choix) {   // 99 : le DERNIER choix (« Au revoir » des menus qui reviennent)
+                            if (choix === 99 && !p.list.some(function (c) { return c.code === 102; })) return;
+                            window.__ctx = 'carte ' + id + ' év.' + e.id + ' « ' + e.name + ' » p' + (pi + 1) + (choix ? ' (dernier choix)' : '');
                             var s = window.__executer(p.list, e.id, choix); res.n++;
-                            if (s === 'encours' && p.trigger < 4) res.encours.push(window.__ctx);
+                            // un menu qui revient (« Discuter » ramène au menu) ne compte que s'il ne
+                            // finit pas non plus par son dernier choix (« Au revoir »)
+                            var menu = p.list.some(function (c) { return c.code === 102; });
+                            if (s === 'encours' && p.trigger < 4 && !(menu && choix === 0)) res.encours.push(window.__ctx + window.__ouEnCours);
                             res[s === 'encours' ? 'fini' : s] = (res[s === 'encours' ? 'fini' : s] || 0) + 1;
                         });
                     });
@@ -180,7 +192,7 @@ async function cartesEtPages(page) {
                 window.__neutraliser(false);
                 return res;
             }, id);
-            r.encours.forEach(function (c) { neFinitPas.push(c); }); pagesJouees += r.n;
+            r.encours.forEach(function (c) { (/ligne 1 \(/.test(c) ? rienJoue : neFinitPas).push(c); }); pagesJouees += r.n;
             await relever(page);
         }
         process.stdout.write('.');
@@ -192,17 +204,18 @@ async function cartesEtPages(page) {
             window.__neutraliser(true);
             $dataCommonEvents.forEach(function (c) {
                 if (!c) return;
-                [0, 1].forEach(function (choix) {
-                    if (choix === 1 && !c.list.some(function (x) { return x.code === 102; })) return;
-                    window.__ctx = 'événement commun ' + c.id + ' « ' + c.name + ' »' + (choix ? ' (2e choix)' : '');
+                [0, 99].forEach(function (choix) {   // 99 : le DERNIER choix (« Au revoir » des menus qui reviennent)
+                    if (choix === 99 && !c.list.some(function (x) { return x.code === 102; })) return;
+                    window.__ctx = 'événement commun ' + c.id + ' « ' + c.name + ' »' + (choix ? ' (dernier choix)' : '');
                     var s = window.__executer(c.list, 0, choix); res.n++;
-                    if (s === 'encours' && c.trigger === 0) res.encours.push(window.__ctx);
+                    var menu2 = c.list.some(function (x) { return x.code === 102; });
+                    if (s === 'encours' && c.trigger === 0 && !(menu2 && choix === 0)) res.encours.push(window.__ctx + window.__ouEnCours);
                 });
             });
             window.__neutraliser(false);
             return res;
         });
-        r2.encours.forEach(function (c) { neFinitPas.push(c); }); pagesJouees += r2.n;
+        r2.encours.forEach(function (c) { (/ligne 1 \(/.test(c) ? rienJoue : neFinitPas).push(c); }); pagesJouees += r2.n;
         await relever(page);
     }
 }
@@ -290,10 +303,11 @@ async function combats(page, liste) {
     montre('✗ erreurs dans le jeu', jeu);
     montre('✗ combats figés', figes.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
     montre('✗ ne se charge pas', nonCharges.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
+    montre('✗ pages que le banc n\'a pas pu jouer (bloquées dès la 1re ligne)', rienJoue.map(function (f) { return { ctx: f, msg: '', n: 1 }; }));
     montre('⚠ erreurs dans les ateliers / démos / recettes ✎', demo);
     console.log('⚠ pages qui ne finissent pas (attente sans fin, boucle) : ' + neFinitPas.length);
     neFinitPas.slice(0, 30).forEach(function (c) { console.log('   ' + c); });
-    var echec = jeu.length + figes.length + nonCharges.length;
+    var echec = jeu.length + figes.length + nonCharges.length + rienJoue.length;
     console.log(echec ? '\n❌ ' + echec + ' défaut(s)' : '\n✅ TOUT PASSE');
     process.exit(echec ? 1 : 0);
 })();
