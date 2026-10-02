@@ -260,6 +260,8 @@
         var sig = q ? q.id + q.status + q.objs.map(function (o) { return o.done ? '1' : '0'; }).join('') + q.objs.map(function (o) { return texteObjectif(q, o); }).join('|') : '';
         if (sig !== this._sig) { this._sig = sig; this.refresh(); }
         if (this.visible && $gameMessage.isBusy()) { this.visible = false; this._sig = ''; }
+        // pendant une scène (mode cinématique d'OutilsDeScene), le suivi se retire
+        if (this.visible && window.OutilsDeScene && OutilsDeScene.actif()) { this.visible = false; this._sig = ''; }
     };
     var _fenetres = Scene_Map.prototype.createAllWindows;
     Scene_Map.prototype.createAllWindows = function () {

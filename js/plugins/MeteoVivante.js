@@ -70,8 +70,10 @@
  *     automne   : nuageux, pluie, brouillard
  *     hiver     : neige, beau froid, tempête de neige, brouillard
  *   Les décors de saison (tes événements communs 60 à 63) restent sur leur
- *   couche ; la météo vivante utilise les couches 1 et 2 de MOG_Weather_EX,
- *   avec les mêmes réglages que tes événements (Rain_01A, Snow_01…).
+ *   couche ; la météo vivante utilise les couches 1 et 2 de MOG_Weather_EX
+ *   (pour une météo à toi, prends la couche 3 ou plus). Ses images :
+ *   Rain_02 (la vraie goutte — Rain_01A/B sont des étincelles), Snow_01,
+ *   Fog_01a.
  *
  *  LA LOGIQUE
  *   · Les rayons de soleil (SunLight) s'effacent la nuit et par mauvais

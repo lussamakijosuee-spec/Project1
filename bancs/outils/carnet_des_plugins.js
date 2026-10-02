@@ -164,11 +164,15 @@ function syntaxesDe(aide, connues) {
         // MV compare caractère par caractère : si le plugin ne rattrape pas la
         // casse, la ligne doit porter la commande EXACTEMENT comme il l'attend
         if (!connues[vraie].casse && premier !== vraie) return;
-        // de la prose qui commence par le nom de la commande n'est pas un exemple
-        if (/[.;]\s*$/.test(nu) || /\.\s+[A-Za-z]/.test(nu) || (/\w: /.test(nu) && !/ : /.test(nu))) return;
         var coupe = nu.search(/\s{2,}[#\-]|\s+#\s|\s{3,}/);
         var ex = (coupe > 0 ? nu.slice(0, coupe) : nu).trim();
         var glose = coupe > 0 ? nu.slice(coupe).replace(/^[\s#\-\/]+/, '').trim() : '';
+        // de la prose qui commence par le nom de la commande n'est pas un exemple.
+        // ⚠ 2026-10-02 : on juge la COMMANDE, pas son explication — « setBattleSys
+        //   DTB      Sets battle system… » finit par un point, était jetée en
+        //   entier, et l'atelier posait « setBattleSys » sans argument (plantage)
+        var prose = coupe > 0 ? ex : nu;
+        if (/[.;]\s*$/.test(prose) || /\.\s+[A-Za-z]/.test(prose) || (/\w: /.test(prose) && !/ : /.test(prose))) return;
         if (ex.length < 2 || ex.length > 140 || ex.split(/\s+/).length > 12) return;
         if (/ \/ /.test(ex)) return;   // un titre de l'aide (« VOIES INTERDITES / ÉTRANGÈRES »)
         var e = out[vraie] = out[vraie] || [];
@@ -376,7 +380,7 @@ SITUATIONS.forEach(function (th) {
                 mot = m ? m[1] : '';
             } else {
                 var n = (l.genre === 'message' && /\\([a-zA-Z]{1,2})[\[<]/.exec(l.texte)) ||
-                    /<\s*([A-Za-z][A-Za-z ]*?)\s*(?:\d|:|>)/.exec(l.texte) || /^([a-z][a-z_ ]+?) :/.exec(l.texte);
+                    /<\s*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ ]*?)\s*(?:\d|:|>)/.exec(l.texte) || /^([a-z][a-z_ ]+?) :/.exec(l.texte);
                 mot = n ? n[1] : '';
             }
             if (!mot || code.toLowerCase().indexOf(mot.toLowerCase()) < 0) douteuses.push(l.plugin + ' : ' + l.texte.split('\n')[0] + ' [' + mot + ']');

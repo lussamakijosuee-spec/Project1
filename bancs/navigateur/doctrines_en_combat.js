@@ -32,6 +32,7 @@ var { chromium } = require('playwright');
 var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
 var ok = 0, ko = 0;
+var TIRAGES = 600;   // 600 tirages : l'écart-type d'un compte reste sous 13
 function verdict(titre, passe, detail) {
     if (passe) { ok++; console.log('   ✓ ' + titre + '  —  ' + detail); }
     else { ko++; console.log('   ✗ ' + titre + '  —  ' + detail); }
@@ -54,7 +55,7 @@ function verdict(titre, passe, detail) {
     }
     await page.waitForTimeout(2500);
 
-    var r = await page.evaluate(function () {
+    var r = await page.evaluate(function (TIRAGES) {
         var out = { lus: 0, sansPattern: 0, niveaux: [], boss: null, cadence: [], plein: {}, blesse: {}, erreurs: [] };
 
         for (var i = 1; i < $dataEnemies.length; i++) {
@@ -65,11 +66,24 @@ function verdict(titre, passe, detail) {
             if (out.niveaux.indexOf(n) < 0) { out.niveaux.push(n); }
         }
 
+        // ⚠ 2026-10-02 : ce banc attendait un troisième temps fait d'une autre
+        //   compétence que l'annonce et le coup. Le premier boss à cadence est
+        //   devenu le dieu sans visage, qui n'en a que DEUX : son troisième
+        //   temps retombe forcément sur l'une d'elles, et le banc l'accusait de
+        //   casser son rythme alors que le moteur faisait exactement ce que sa
+        //   doctrine écrit. On ne présume plus de la forme : on CALCULE, à
+        //   partir des lignes de la doctrine, la probabilité de chaque
+        //   compétence au troisième temps, et on la compare aux tirages.
+        //   On prend donc un boss dont les lignes sont toutes calculables :
+        //   HP%, TURN, RANDOM et ALWAYS.
         var boss = null;
         for (var i = 1; i < $dataEnemies.length; i++) {
             var e = $dataEnemies[i];
-            if (e && e.name && /<\s*Boss\s*>/i.test(e.note || '') && e.aiPattern &&
-                e.aiPattern.some(function (l) { return /TURN % 3 === 1/.test(l); })) { boss = e; break; }
+            if (!(e && e.name && /<\s*Boss\s*>/i.test(e.note || '') && e.aiPattern)) continue;
+            var a1 = e.aiPattern.some(function (l) { return /TURN % 3 === 1/.test(l); });
+            var c2 = e.aiPattern.some(function (l) { return /TURN % 3 === 2/.test(l); });
+            var simple = e.aiPattern.every(function (l) { return /^\s*(USER HP% param <= \d+% \+\+\+ )?(RANDOM \d+%|ALWAYS|TURN % 3 === \d):/.test(l); });
+            if (a1 && c2 && simple) { boss = e; break; }
         }
         if (!boss) { out.erreurs.push('aucun boss à cadence trouvé'); return out; }
 
@@ -88,7 +102,8 @@ function verdict(titre, passe, detail) {
             if (m[1] === '1') { annonce = +m[2]; } else if (m[1] === '2') { coup = +m[2]; }
         });
         out.boss = { nom: boss.name, lignes: pattern, annonce: annonce && $dataSkills[annonce].name,
-            coup: coup && $dataSkills[coup].name };
+            coup: coup && $dataSkills[coup].name, noms: {} };
+        pattern.forEach(function (l) { var m = /Skill (\d+)/.exec(l); if (m) out.boss.noms[m[1]] = $dataSkills[+m[1]].name; });
 
         // L'aiLevel saute une ligne au hasard : on l'écarte pour observer la
         // cadence elle-même, et non le tirage qui la voile.
@@ -112,11 +127,11 @@ function verdict(titre, passe, detail) {
             for (var k = 0; k < n; k++) { var nom = decide(2, pv); c[nom] = (c[nom] || 0) + 1; }
             return c;
         }
-        out.plein = echantillon(1.0, 200);
-        out.blesse = echantillon(0.2, 200);
+        out.plein = echantillon(1.0, TIRAGES);
+        out.blesse = echantillon(0.2, TIRAGES);
         Game_Enemy.prototype.aiLevel = vrai;
         return out;
-    });
+    }, TIRAGES);
 
     console.log('LES DOCTRINES DANS LE MOTEUR QUI TOURNE\n');
     if (r.erreurs.length) { console.log('   ⚠ ' + r.erreurs.join(' | ')); }
@@ -138,21 +153,45 @@ function verdict(titre, passe, detail) {
         verdict('le boss annonce au tour 1 et frappe au tour 2',
             noms[0] === r.boss.annonce && noms[1] === r.boss.coup,
             'tour 1 « ' + noms[0] +' » · tour 2 « ' + noms[1] + ' »');
-        verdict('la cadence se répète à l\'identique au tour suivant',
-            noms[3] === noms[0] && noms[4] === noms[1] && noms[5] === noms[2],
-            'tours 4-6 = tours 1-3 : ' + noms.slice(3).join(' · '));
-        verdict('le troisième temps n\'est ni l\'annonce ni le coup',
-            noms[2] !== r.boss.annonce && noms[2] !== r.boss.coup,
-            'tour 3 « ' + noms[2] + ' »');
+        verdict('les deux temps imposés reviennent au tour suivant',
+            noms[3] === noms[0] && noms[4] === noms[1],
+            'tours 4-5 = tours 1-2 : ' + noms.slice(3, 5).join(' · '));
 
-        var cle = r.boss.coup;
-        var sousSeuil = r.blesse[cle] || 0, auComplet = r.plein[cle] || 0;
-        verdict('sous 30 % de vie, le coup revient hors du rythme',
-            sousSeuil > 60 && sousSeuil < 140,
-            sousSeuil + ' fois sur 200 au tour 3 (attendu ~100)');
-        verdict('au complet, il ne sort JAMAIS hors du rythme (contre-épreuve)',
-            auComplet === 0,
-            auComplet + ' fois sur 200 · ' + JSON.stringify(r.plein));
+        // Ce que la doctrine promet au troisième temps (aucune ligne TURN n'y
+        // vaut) : on parcourt ses lignes dans l'ordre, comme Yanfly. RANDOM n%
+        // part avec la probabilité n, sinon on passe à la suivante ; ALWAYS
+        // part toujours ; la ligne de désespoir ne vaut que sous son seuil.
+        function promis(blesse) {
+            var p = {}, reste = 1;
+            r.boss.lignes.forEach(function (l) {
+                if (reste <= 0 || /TURN %/.test(l)) return;
+                var hp = /USER HP% param <= (\d+)%/.exec(l);
+                if (hp && !blesse) return;
+                var nom = r.boss.noms[+/Skill (\d+)/.exec(l)[1]];
+                var m = /RANDOM (\d+)%/.exec(l), q = m ? +m[1] / 100 : 1;
+                p[nom] = (p[nom] || 0) + reste * q;
+                reste *= (1 - q);
+            });
+            return p;
+        }
+        function ecart(mesure, attendu) {
+            var pire = 0, txt = [];
+            Object.keys(Object.assign({}, mesure, attendu)).forEach(function (k) {
+                var a = Math.round((attendu[k] || 0) * TIRAGES), m = mesure[k] || 0;
+                pire = Math.max(pire, Math.abs(a - m));
+                txt.push(k + ' ' + m + '/' + a);
+            });
+            return { pire: pire, txt: txt.join(' · ') };
+        }
+        var auComplet = ecart(r.plein, promis(false)), sousSeuil = ecart(r.blesse, promis(true));
+        verdict('au complet, le troisième temps suit la doctrine (mesuré / promis sur ' + TIRAGES + ')',
+            auComplet.pire <= 45, auComplet.txt);
+        verdict('sous 30 % de vie, la ligne de désespoir s\'y ajoute (mesuré / promis)',
+            sousSeuil.pire <= 45, sousSeuil.txt);
+        var cleD = r.boss.noms[+/Skill (\d+)/.exec(r.boss.lignes.filter(function (l) { return /HP%/.test(l); })[0] || 'Skill 0')[1]];
+        verdict('contre-épreuve : la ligne de désespoir change vraiment le tirage',
+            !cleD || (r.blesse[cleD] || 0) - (r.plein[cleD] || 0) >= 0.5 * TIRAGES * ((promis(true)[cleD] || 0) - (promis(false)[cleD] || 0)),
+            cleD ? cleD + ' : ' + (r.plein[cleD] || 0) + ' au complet → ' + (r.blesse[cleD] || 0) + ' blessé' : 'pas de ligne de désespoir');
     }
 
     // ── La phase deux d'une troupe, jouée par l'interpréteur de MV ───────────

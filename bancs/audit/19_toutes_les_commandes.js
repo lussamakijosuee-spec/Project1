@@ -66,7 +66,18 @@ function commandesDe(nom) {
 
     /* Le nom de la variable qui porte la commande change d'un plugin à
      * l'autre : command, cmd, _command… On les prend tous. */
-    var VAR = '(?:command|cmd|commande|_command|comando)';
+    var noms0 = ['command', 'cmd', 'commande', '_command', 'comando'];
+    /* ⚠ 2026-10-02 : EvenementsUtiles fait « var nom = String(command…);
+     *   var haut = nom.toUpperCase(); switch (haut) { case 'FEU': … } ».
+     *   Le carnet ne voyait pas ce switch et déclarait FEU, TEMPS, FORGE,
+     *   CHUTE et NPC « écoutées par personne » alors qu'elles répondaient
+     *   (le_carnet_dit_vrai.js les voyait bouger le moteur). On suit donc les
+     *   variables tirées de la commande, sur deux crans. */
+    for (var cran = 0; cran < 2; cran++) {
+        var reVar = new RegExp('var\\s+(\\w+)\\s*=\\s*(?:String\\(\\s*)?(?:' + noms0.join('|') + ')\\b[^;\\n]{0,60}(?:;|\\n)', 'g'), mv;
+        while ((mv = reVar.exec(t))) { if (noms0.indexOf(mv[1]) < 0) noms0.push(mv[1]); }
+    }
+    var VAR = '(?:' + noms0.join('|') + ')';
     var cmds = {}, m;
 
     /* forme 1 :  command === "poser"   ·   cmd == 'poser'  */
@@ -80,7 +91,8 @@ function commandesDe(nom) {
         cmds[m[1]].casse = true;
     }
     /* forme 2 bis : String(cmd).toUpperCase() !== 'POSER' */
-    var re2b = new RegExp('String\\(\\s*' + VAR + '\\s*\\)\\s*\\.to(?:Upper|Lower)Case\\(\\)\\s*[!=]==?\\s*[\'"]([A-Za-z_][\\w ]{1,30})[\'"]', 'g');
+    // (et String(command || '').trim().toUpperCase() — LeMarchandQuiSuit)
+    var re2b = new RegExp('String\\(\\s*' + VAR + '[^)]{0,12}\\)\\s*(?:\\.trim\\(\\))?\\s*\\.to(?:Upper|Lower)Case\\(\\)\\s*[!=]==?\\s*[\'"]([A-Za-z_][\\w ]{1,30})[\'"]', 'g');
     while ((m = re2b.exec(t))) {
         cmds[m[1]] = cmds[m[1]] || { sous: {}, casse: false };
         cmds[m[1]].casse = true;
@@ -392,8 +404,8 @@ L.push('Sans marque, le plugin l\'écoute mais tu ne t\'en es jamais servi.');
 L.push('');
 L.push('**Vérifié.** `bancs/navigateur/le_carnet_dit_vrai.js` ouvre le jeu et TIRE');
 L.push('des commandes de ce carnet pour de vrai : cinq sur six font bouger l\'état du');
-L.push('moteur, aucune ne plante. Et dans l\'autre sens — les sept déclarées mortes');
-L.push('plus bas sont tirées elles aussi, et ne font rien. Sans cette contre-épreuve,');
+L.push('moteur, aucune ne plante. Et dans l\'autre sens — des commandes que personne');
+L.push('n\'écoute sont tirées elles aussi, et ne font rien. Sans cette contre-épreuve,');
 L.push('un moteur qui avalerait n\'importe quoi passerait pour un carnet exact.');
 L.push('');
 L.push('> ⚠ **Une espace avant le nom et la commande n\'est jamais délivrée.**');

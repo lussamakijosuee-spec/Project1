@@ -764,7 +764,9 @@
             pied += '  —  aucun trait n\'ouvre ce type : invisible en combat';
         }
         if (niveauEnAttente(this._acteur)) { pied += '        [Maj] monter de niveau'; }
-        this.drawText(pied, 0, l * 3, this.contentsWidth());
+        // ⚠ 2026-10-02 (tous_les_menus.js) : à l * 3, la ligne débordait sous
+        //   le bas du cadre et les jambages se coupaient (« capacité »)
+        this.drawText(pied, 0, Math.min(l * 3, this.contentsHeight() - l), this.contentsWidth());
         this.resetTextColor();
         this.contents.fontSize = this.standardFontSize();
     };

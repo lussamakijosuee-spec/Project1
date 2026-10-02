@@ -556,8 +556,8 @@
    "exemple": "compétence #18 Pas de Rupture"
   },
   "after eval": {
-   "poses": 13,
-   "dansMeta": 13,
+   "poses": 12,
+   "dansMeta": 12,
    "exemple": "compétence #21 Parole n°3 Aura d'Espoir"
   },
   "regard": {
@@ -601,8 +601,8 @@
    "exemple": "compétence #46 Déploiement de Domaine"
   },
   "cooldown": {
-   "poses": 18,
-   "dansMeta": 18,
+   "poses": 21,
+   "dansMeta": 21,
    "exemple": "compétence #50 Pari Téméraire"
   },
   "sang": {
@@ -610,9 +610,14 @@
    "dansMeta": 21,
    "exemple": "compétence #53 Lame de Sang"
   },
+  "nerf 2026-09-25": {
+   "poses": 13,
+   "dansMeta": 13,
+   "exemple": "compétence #59 Dragon de la Nuit Sanglant"
+  },
   "invocation": {
-   "poses": 4,
-   "dansMeta": 4,
+   "poses": 6,
+   "dansMeta": 6,
    "exemple": "compétence #67 Pluie de Lances d'Ombre"
   },
   "sceaumagie": {
@@ -624,6 +629,16 @@
    "poses": 1,
    "dansMeta": 1,
    "exemple": "compétence #70 Aspiration des Âmes Damnée"
+  },
+  "domaineroyal": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #71 Royaume Impérial"
+  },
+  "ancien after eval": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #71 Royaume Impérial"
   },
   "ames.length; ++i) {\n    var ame = ames[i];\n    \n    if (ame && ame.isactor()) {\n      // enlève l'état \"mort\"\n      ame.removestate(ame.deathstateid());\n      \n      // restaure 100% de leurs pv et pm\n      ame.sethp(ame.mhp);\n      ame.setmp(ame.mmp);\n      \n      // animation de résurrection\n      ame.startanimation(49);\n      hasrevived = true;\n    }\n  }\n  \n  // message fluide (ne bloque pas le combat)\n  if (hasrevived && scenemanager._scene._logwindow) {\n    scenemanager._scene._logwindow.addtext(\"les âmes du domaine se relèvent pour servir leur maître !\");\n    audiomanager.playse({ name": {
    "poses": 1,
@@ -795,6 +810,21 @@
    "dansMeta": 1,
    "exemple": "compétence #955 Parole n°16 Il te Regarde "
   },
+  "inscritdette": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #1138 Première Entaille"
+  },
+  "horsfamille": {
+   "poses": 28,
+   "dansMeta": 28,
+   "exemple": "compétence #1138 Première Entaille"
+  },
+  "rendrelesang": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1143 Rendre le Sang"
+  },
   "avatarposture": {
    "poses": 3,
    "dansMeta": 3,
@@ -811,14 +841,44 @@
    "exemple": "compétence #1252 Le Torse Se Referme"
   },
   "avatarordre": {
-   "poses": 4,
-   "dansMeta": 4,
+   "poses": 5,
+   "dansMeta": 5,
    "exemple": "compétence #1255 Avatar — Vise ça"
   },
   "seiryu": {
-   "poses": 6,
-   "dansMeta": 6,
+   "poses": 7,
+   "dansMeta": 7,
    "exemple": "compétence #1259 Ce Que Le Dragon Rend"
+  },
+  "avatarprotege": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1263 Avatar — Protège-le"
+  },
+  "stylevesper": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #1265 Style — Lame"
+  },
+  "miracle": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #1268 Flèche de Miracle — Crépus"
+  },
+  "portefermee": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1277 Porte — la Fermeture"
+  },
+  "contrat": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1279 Le Contrat"
+  },
+  "contratforce": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1280 Contrat Forcé"
   },
   "upgrade effect": {
    "poses": 30,
@@ -1161,13 +1221,13 @@
    "exemple": "état #10 Traqueur de Coups"
   },
   "statefx": {
-   "poses": 18,
-   "dansMeta": 18,
+   "poses": 19,
+   "dansMeta": 19,
    "exemple": "état #11 JACKPOT"
   },
   "statefxcolor": {
-   "poses": 18,
-   "dansMeta": 18,
+   "poses": 19,
+   "dansMeta": 19,
    "exemple": "état #11 JACKPOT"
   },
   "mue": {
@@ -1274,6 +1334,16 @@
    "poses": 1,
    "dansMeta": 1,
    "exemple": "état #230 🎭 Sans Visage"
+  },
+  "lepactedesang": {
+   "poses": 4,
+   "dansMeta": 4,
+   "exemple": "état #233 🩸 Dette de Sang"
+  },
+  "labibliothequedael": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "état #237 ✦ Sous Contrat"
   }
  },
  "sansTrace": [],

@@ -349,3 +349,17 @@ au moteur ce qu'il a refusé, et pourquoi.
 | `navigateur/la_chasse_aux_bugs.js` | le vrai moteur : chaque carte chargée et jouée 3 s, chaque page d'événement et chaque événement commun exécuté (premier et dernier choix), chaque troupe combattue en automatique. `cartes`, `pages`, `combats`, `--cartes-de / --cartes-a`, `--de / --a` |
 
 Ce qu'ils ont trouvé et qui est corrigé : la neige `Snow_01A` (événement commun 229), le jingle `Recovery` du Feu d'Âme (EvenementsUtiles), le contre de Mahoraga qui faisait planter le combat suivant, le son vide préchargé par Irina (troupe 24), deux recettes d'atelier.
+
+---
+
+## Le dernier check-up (2026-10-02)
+
+| Banc | Ce qu'il vérifie |
+|---|---|
+| `navigateur/les_plugins_qui_se_marchent_dessus.js` | **les conflits de plugins** : le jeu chargé comme MV le fait, une photo de toutes les fonctions du moteur entre deux plugins. Un plugin qui remplace la modification d'un AUTRE sans la rappeler est listé ; les 34 cas voulus sont relus un par un (liste `RELUS`). **À relancer quand tu ajoutes un plugin** : un conflit nouveau le fait échouer |
+| `navigateur/les_textes_qui_debordent.js` | **le texte coupé** : chaque ligne de dialogue (8 870) et chaque description (1 387) mesurée avec la police du jeu, puis dessinée par la vraie fenêtre. 155 lignes et 388 descriptions dépassaient ; `TexteQuiTient.js` les fait tenir. `--sans-repli` : la contre-épreuve, plugin éteint |
+| `navigateur/tous_les_menus.js` | **chaque commande du menu** ouverte, parcourue au clavier, refermée — et tout texte tracé hors de son cadre (il a trouvé l'Orbe, le journal des quêtes, le livre des musiques) |
+| `navigateur/les_outils_de_scene.js` | **OutilsDeScene** : PNJ figés en scène, déplacement bloqué qui traverse, caméra, bandes, « passer » en maintenant Échap, « attendre » — chacun avec sa contre-épreuve |
+| `navigateur/le_confort_et_latelier.js` | **ConfortDeLecture** (vitesse du texte mesurée en images, journal des dialogues) et **AtelierDeTest** (absent hors test ; F6, F7, F10, Ctrl+clic en test) |
+| `navigateur/jouer_une_scene.js` | **joue une scène** comme un joueur et rend une planche d'images minutée, le déroulé, et ce qui cloche (bloqué ligne N, écran resté noir, images restées, mode cinématique oublié, joueur coincé). `--carte 1 --evenement 10 --page 1`, `--commun 20`, `--choix 2`, `--deroule` |
+| `23_chasse_aux_bugs.js` (ajout) | **ce qui sort de sa feuille** : icône au-delà d'IconSet, visage ou sprite hors de son image, case d'animation au-delà de son image |

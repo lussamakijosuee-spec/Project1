@@ -12,8 +12,8 @@
  *
  * ⚠ Et on le fait DANS LES DEUX SENS. Vérifier que les bonnes marchent ne
  *   prouve rien tout seul : si le moteur avalait n'importe quoi sans rien
- *   faire, le contrôle serait vert pareil. On tire donc aussi les sept
- *   commandes que le carnet déclare MORTES, et elles ne doivent RIEN changer.
+ *   faire, le contrôle serait vert pareil. On tire donc aussi des commandes
+ *   que personne n'écoute, et elles ne doivent RIEN changer.
  *
  *   npx http-server -p 8899 -c-1 .
  *   node bancs/navigateur/le_carnet_dit_vrai.js
@@ -119,11 +119,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('la plupart changent quelque chose dans le moteur', reconnues >= 4,
         reconnues + ' sur ' + vivantes.length + ' font bouger l\'état');
 
-    console.log('\n2) LA CONTRE-ÉPREUVE : les sept que le carnet dit mortes');
-    /* Si celles-ci faisaient bouger quelque chose, c'est mon carnet qui aurait
-     * tort — elles seraient vivantes et je les aurais calomniées. */
-    var mortes = ['NPC talk mira', 'AME bon neyssa 2', 'CHUTE errant 3',
-        'FEU repos', 'TEMPS nuit', 'FORGE', 'MARQUE'];
+    console.log('\n2) LA CONTRE-ÉPREUVE : des commandes que personne n\'écoute');
+    /* ⚠ 2026-10-02 : les « sept mortes » du 19 septembre (NPC, AME, CHUTE,
+     *   FEU, TEMPS, FORGE, MARQUE) ont toutes trouvé preneur le 25
+     *   (EvenementsUtiles, JadeEntitePlunging, MarqueVivante) — le banc les
+     *   accusait de bouger. La contre-épreuve garde son rôle avec ce qui est
+     *   muet AUJOURD'HUI : un nom qu'aucun plugin n'écoute, et ces vraies
+     *   commandes précédées d'une espace (MV perd alors le nom, cf. §3). */
+    var mortes = ['PERSONNE_NECOUTE 1', 'XYZ ouvrir', ' FEU repos', ' TEMPS nuit', ' FORGE', ' GainGold 500'];
     var remuantes = [];
     for (var j = 0; j < mortes.length; j++) {
         var av = await empreinte();
@@ -131,11 +134,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         await page.waitForTimeout(350);
         var ap = await empreinte();
         if (av !== ap) { remuantes.push(mortes[j]); }
-        console.log('      ' + mortes[j].padEnd(26) +
+        console.log('      ' + JSON.stringify(mortes[j]).padEnd(26) +
             (!rr.ok ? '✘ plante : ' + rr.erreur : (av !== ap ? '⚠ ÇA BOUGE — elle n\'est pas morte' : '· rien, comme annoncé')));
     }
-    V('les sept mortes ne font vraiment rien', remuantes.length === 0,
-        remuantes.join(', ') || 'les sept sont bien muettes');
+    V('les commandes que personne n\'écoute ne font vraiment rien', remuantes.length === 0,
+        remuantes.join(', ') || mortes.length + ' tirées, toutes muettes');
 
     console.log('\n3) Le piège de l\'espace en tête');
     /* On démontre le défaut que le carnet met en garde : MV découpe sur les

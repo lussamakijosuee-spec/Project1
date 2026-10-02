@@ -121,6 +121,16 @@ function traduire(liste, l, suite) {
             liste.push(cmd(232, 0, [Number(m[1]), 0, 0, 0, 0, 0, 100, 100, Number(m[2]), 0, Number(m[3]), true]));
         } else if ((m = /Effacer l'image : n°(\d+)/.exec(t))) {
             liste.push(cmd(235, 0, [Number(m[1])]));
+        } else if ((m = /^Étiquette : (.+)$/.exec(t))) {
+            liste.push(cmd(118, 0, [m[1].trim()]));
+        } else if ((m = /Afficher une bulle : événement (\d+), « ! »/.exec(t))) {
+            liste.push(cmd(213, 0, [Number(m[1]), 1, true]));
+        } else if ((m = /Définir un déplacement : événement (\d+), vers le joueur \(sans attendre\)/.exec(t))) {
+            // trois pas vers le joueur, « passer si impossible » décoché : c'est
+            // justement le cas que le garde-fou d'OutilsDeScene rattrape
+            var pas = { code: 10, indent: null, parameters: [] };
+            liste.push(cmd(205, 0, [Number(m[1]), { list: [pas, pas, pas, { code: 0, parameters: [] }], repeat: false, skippable: false, wait: false }]));
+            liste.push(cmd(505, 0, [pas])); liste.push(cmd(505, 0, [pas])); liste.push(cmd(505, 0, [pas]));
         } else if (/Faire trembler l'écran/.test(t)) {
             liste.push(cmd(225, 0, [5, 5, 30, false]));
         } else if ((m = /Afficher un choix : (.+)$/.exec(t))) {

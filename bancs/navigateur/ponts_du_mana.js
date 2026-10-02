@@ -72,11 +72,29 @@ function verdict(t, passe, detail) {
         return o;
     }, { SOCLES: SOCLES, RESTENT: RESTENT });
 
-    verdict('les sept socles de l\'ancien lore ne sont plus chargés', etat.charges.length === 0,
-        etat.charges.length ? 'encore là : ' + etat.charges.join(', ') : SOCLES.join(', ') + '  (' + etat.total + ' plugins actifs)');
-    verdict('aucune jauge de Chute ni de santé mentale ne subsiste', Object.keys(etat.vivants).length === 0,
-        Object.keys(etat.vivants).length ? 'encore définies : ' + Object.keys(etat.vivants).map(function (k) { return 'window.' + k; }).join(', ')
-            : 'ni window.Ame, ni Corruption, ni Errance, ni LoreCanon, ni Rangs, ni Equilibre');
+    // ⚠ 2026-10-02 — EN ATTENTE DE JOKO. Le 25 septembre, une session a
+    //   rallumé JadeEntitePlunging (la Jauge de Maîtrise = la santé mentale)
+    //   pour que les commandes AME répondent. Or JOKO avait dit le 17 :
+    //   « j'ai décidé de retirer tout ce qui est santé mentale ». MAIS ses
+    //   propres données (commit du 19) gardent les « gouffres » : variables
+    //   11-14 et 16 états passifs qui en dépendent — sans JadeEntitePlunging,
+    //   ces variables restent à 0 et Korrah prend « Méditation Profonde »
+    //   (elle ne peut plus agir). On ne tranche pas : on le DIT à chaque
+    //   passage, sans faire échouer le banc sur une question ouverte.
+    var JADE_EN_ATTENTE = ['JadeEntitePlunging'];
+    var charges = etat.charges.filter(function (n) { return JADE_EN_ATTENTE.indexOf(n) < 0; });
+    verdict('les socles de l\'ancien lore ne sont plus chargés (hors question en attente)', charges.length === 0,
+        charges.length ? 'encore là : ' + charges.join(', ') : SOCLES.filter(function (n) { return JADE_EN_ATTENTE.indexOf(n) < 0; }).join(', ') + '  (' + etat.total + ' plugins actifs)');
+    var vivants = Object.keys(etat.vivants).filter(function (k) { return k !== 'Ame' && k !== 'AmeSysteme'; });
+    verdict('aucune jauge de Chute ne subsiste', vivants.length === 0,
+        vivants.length ? 'encore définies : ' + vivants.map(function (k) { return 'window.' + k; }).join(', ')
+            : 'ni Corruption, ni Errance, ni LoreCanon, ni Rangs, ni Equilibre');
+    if (etat.charges.indexOf('JadeEntitePlunging') >= 0) {
+        console.log('   ⚠ QUESTION POUR JOKO — la santé mentale (JadeEntitePlunging, window.Ame) est rallumée');
+        console.log('     depuis le 25/09, alors que tu l\'avais retirée le 17/09. Tes états « gouffres »');
+        console.log('     (variables 11-14) en dépendent, et ton DebutMarques (26/09) les remet à 8.');
+        console.log('     Garder, ou retirer avec ses états ?');
+    }
     var manquants = RESTENT.filter(function (k) { return !etat.restent[k]; });
     verdict('le mana lui-même tourne toujours', manquants.length === 0,
         manquants.length ? 'perdus : ' + manquants.join(', ') : RESTENT.map(function (k) { return 'window.' + k; }).join(' · '));

@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-09-26. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-02. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -106,9 +106,9 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 54 | Parole n°3 Tir Perçant | 25 PM | dégâts PV *mana positive* `Math.floor(a.atk * 18 * 200 / (200 + b.def))` · pose « Saignement » 40% | 114 | `<Parole>` `<NomOrigine: Tir Perçant>` ⚠ |
 | 1 | 55 | Pluie de Flèches Sanglantes | 40 PT | drain PV *mana négative * `Math.floor(a.atk * 6.42 * 200 / (200 + b.def))` · pose « Saignement » 60% | 494 | `<Parole>` `<Sang>` |
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
-| 1 | 413 | Fureur Spectrale (Duo) | 30 PT | dégâts PV *mana négative * `(a.atk + $gameActors.actor(3).atk) * 4 - b.def*1.5` | 335 | `<Combo: 1,3>` `<ComboLien: 3>` ⚠ |
-| 1 | 417 | Trinité d'Âmes (Trio) | 50 PT | dégâts PV *AME * `(a.atk + $gameActors.actor(2).mat + $gameActors.actor(3).mat) * 4` | 533 | `<Combo: 1,2,3>` `<ComboLien: 5>` ⚠ |
-| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
+| 1 | 413 | Fureur Spectrale (Duo) | 30 PT | dégâts PV *mana négative * `(a.atk + $gameActors.actor(3).atk) * 4 - b.def*1.5` | 335 | `<Combo: 1,3>` `<ComboLien: 3>` |
+| 1 | 417 | Trinité d'Âmes (Trio) | 50 PT | dégâts PV *AME * `(a.atk + $gameActors.actor(2).mat + $gameActors.actor(3).mat) * 4` | 533 | `<Combo: 1,2,3>` `<ComboLien: 5>` |
+| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` |
 | 1 | 419 | Pacte d'Âme | 30 PT | PV -30% +0 · pose « Pacte d'Âme » 100% | 537 | — |
 | 1 | 447 | Faille d'Armure | 28 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 16 | — |
 | 1 | 448 | Garde Sereine | 24 PM | dégâts PV *Physique* `Math.floor((a.atk*3 + a.mdf*2) * 1.382 * 200 / (200 + b.def))` | 111 | — |
@@ -276,8 +276,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 95 | Œil du Stratège | 12 PM | pose « Analyse » 100% | 415 | — |
 | 1 | 96 | Corps-à-corps lourd | 10 PM | dégâts PV *Physique* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Vulnérable » 30% | 2 | `<NoParole>` |
 | 1 | 100 | Debout ! | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
-| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
-| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
+| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
+| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
 | 1 | 420 | Posture de Parade | 10 PM | pose « Posture de Parade » 100% | 485 | — |
 | 1 | 451 | Parole n°3 Focalisation | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 480 | `<ParoleL: 4>` `<NomOrigine: Focalisation>` ⚠ |
 | 1 | 452 | Parole n°2 Onde Concentrée | 12% PV | dégâts PV *mana spirituelle * `Math.floor(a.mat * 3 * 200 / (200 + b.mdf))` | 468 | `<ParoleL: 5>` `<NomOrigine: Onde Concentrée>` ⚠ |
@@ -446,7 +446,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 99 | « Ohhh, lève-toi ! » | 50 PM | PV 100% +1000 · boost PVmax 2t | 49 | — |
 | 1 | 110 | Abri de l'Envers | 12 PM | pose « dimension d'ombre » 100% | 537 | `<Parole: origine>` `<Trait: porte>` |
 | 1 | 123 | Décharge Infinie | 15 PM | dégâts PV *AME * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` | 364 | `<Parole: origine>` |
-| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` ⚠ |
+| 1 | 418 | Communion des Quatre (Escouade) | 80 PT | dégâts PV *AME * `$gameParty.aliveMembers().reduce(function(s,m){return s+m.atk+m.mat;},0) * 3` | 533 | `<Combo: 1,2,3,4>` `<ComboLien: 7>` |
 | 1 | 453 | Parole n°7 Dévoreur d'Âmes | 50 PM + 30% PV | drain PV *AME * `a.atk*4 + a.mat*3 - b.mdf` | 532 | `<Ulti>` `<UltiColor: #9b5cff>` `<After Eval>` `<Parole: origine>` `<NomOrigine: Dévoreur d'Âmes>` ⚠ |
 | 1 | 454 | Tout ou Rien | 40 PT | dégâts PV *mana négative * `((Math.random()<0.5)?(a.atk*12):(a.atk*2)) - b.def` | 487 | `<Ulti>` `<UltiColor: #c800ff>` `<After Eval>` `<Parole: origine>` |
 | 35 | 811 | Parole n°15 Pluie de Lance du Styx | 26 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 4.1 * 200 / (200 + b.mdf))` | 377 | `<Invocation: 3>` `<ParoleL: 4>` `<NomOrigine: Pluie de Lance du Styx>` ⚠ |
@@ -687,8 +687,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 105 | Transfusion d'Âme Blanche | 30 PM | soin PV *AME * `b.mhp` | 349 | `<Pre-Damage Eval>` `<Post-Damage Eval>` `<Parole: origine>` |
 | 1 | 106 | Parole n°3 Fils de Mana Pur | 10 PM | dégâts PV *mana positive* `a.mat * 1.5` | 416 | `<Post-Damage Eval>` `<NomOrigine: Fils de Mana Pur>` ⚠ |
 | 1 | 107 | Geyser d'Éclats | 12 PM | **coquille** — rien | 405 | `<Post-Damage Eval>` `<ParoleL: 3>` |
-| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` ⚠ `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
-| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` ⚠ `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
+| 1 | 414 | Parole n°3 Verdict Stellaire (Duo) | 30 PM | dégâts PV *mana positive* `(a.mat + $gameActors.actor(4).mat) * 4 - b.mdf*1.5` | 481 | `<Combo: 2,4>` `<ComboLien: 3>` `<NomOrigine: Verdict Stellaire (Duo)>` ⚠ |
+| 1 | 416 | Parole n°14 Aube Ardente (Duo) | 30 PT | dégâts PV *LUMIÈRE* `(a.mat + $gameActors.actor(1).atk) * 4 - b.mdf` | 243 | `<Combo: 4,1>` `<ComboLien: 3>` `<NomOrigine: Aube Ardente (Duo)>` ⚠ |
 | 1 | 460 | Parole n°3 Élan d'Espoir | 30 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 41 | `<ParoleL: 4>` `<NomOrigine: Élan d'Espoir>` ⚠ |
 
 ### Type 3 — ult
@@ -772,7 +772,6 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 |---|---|---|---|
 | `<NomOrigine>` | 120 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<Nerf 2026-09-25>` | 13 | **étiquette** — jamais lue nulle part | Vesper #1068 Le Point Final · Vesper #1069 Marteau à Deux Mains … |
-| `<ComboLien>` | 8 | dort dans `ComboLiens` | Vesper #413 Fureur Spectrale (Duo) · Vesper #417 Trinité d'Âmes (Trio) … |
 | `<AvatarGarde>` | 1 | **étiquette** — jamais lue nulle part | Korrah #1252 Le Torse Se Referme |
 | `<Ancien After Eval>` | 1 | **étiquette** — jamais lue nulle part | ludwing #71 Royaume Impérial |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
@@ -826,5 +825,5 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 - **17** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **5** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **29** ne font rien du tout (ni dégâts, ni effet) ;
-- **6** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
-  dont **2** dont le lecteur dort dans `_ancien_projet/` (et 4 simple(s) étiquette(s)).
+- **5** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,
+  dont **1** dont le lecteur dort dans `_ancien_projet/` (et 4 simple(s) étiquette(s)).

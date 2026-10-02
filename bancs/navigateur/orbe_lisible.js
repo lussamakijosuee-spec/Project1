@@ -151,9 +151,18 @@ function V(l, c, d) {
         if (r.choisie && !r.choisie.ouverte) { break; }
     }
     var r2 = await releve();
-    V('on peut atteindre une branche verrouillée', !!(r2.choisie && !r2.choisie.ouverte),
-        r2.choisie ? r2.choisie.nom + (r2.choisie.ouverte ? ' (ouverte)' : ' (verrouillée)') : '—');
-    await examiner('branche verrouillée sous le curseur', r2);
+    // ⚠ 2026-10-02 : depuis FamillesDeCapacites, ludwing n'a plus que
+    //   r1.branches branches, TOUTES ouvertes — il n'y a plus de branche
+    //   verrouillée à atteindre, et le banc accusait l'Orbe d'un défaut qui
+    //   n'était qu'une réorganisation. Sans branche verrouillée, le contrôle
+    //   est sans objet ; dès qu'il en existe une, on l'atteint et on l'examine.
+    if (r1.branches > r1.ouvertes) {
+        V('on peut atteindre une branche verrouillée', !!(r2.choisie && !r2.choisie.ouverte),
+            r2.choisie ? r2.choisie.nom + (r2.choisie.ouverte ? ' (ouverte)' : ' (verrouillée)') : '—');
+        await examiner('branche verrouillée sous le curseur', r2);
+    } else {
+        console.log('   ·   aucune branche verrouillée chez ' + r1.nom + ' (' + r1.branches + ' branches, toutes ouvertes) — contrôle sans objet');
+    }
     await page.screenshot({ path: SHOTS + 'o2_ludwing_verrou.png' });
 
     // ── Vesper : moins de branches, autre répartition ──

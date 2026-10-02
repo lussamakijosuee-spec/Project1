@@ -109,7 +109,8 @@ function V(libelle, condition, detail) {
     await touche('Enter', 260);                 // « Parier »
     await page.waitForTimeout(1200);
     // on laisse l'événement dérouler ; les rouleaux prennent ~130 images
-    for (var t = 0; t < 30; t++) {
+    // (60 essais : sur une machine chargée, 30 ne suffisaient pas — vu le 2026-10-02)
+    for (var t = 0; t < 60; t++) {
         await page.waitForTimeout(220);
         if (await ev(function () { return !!(SceneManager._scene._rouleaux); })) { break; }
         if (await ev(function () { return $gameMessage.isBusy(); })) { await touche('Enter', 90); }

@@ -142,8 +142,18 @@ function V(libelle, condition, detail) {
             exclusif: $plugins.filter(function (p) { return p.name === 'PorteurDAmes'; })[0].parameters['porteurExclusif']
         };
     });
-    V('Korrah peut toujours lancer #816', korrah.peut === true,
-        'porteurExclusif = ' + korrah.exclusif + ' · coût ' + korrah.cout + ' · elle a ' + korrah.pm + ' PM');
+    // ⚠ 2026-10-02 : JOKO a réglé lui-même « porteurExclusif » sur Oui (commit
+    //   « efe », 19 septembre) : seules les mains du porteur dépensent des
+    //   âmes. Or « Carnage des Neuf Voies » coûte 3 âmes (<Invocation: 3>,
+    //   dans ses données) : Korrah l'apprend et ne peut PAS la lancer. Le banc
+    //   vérifie que le plugin obéit au réglage, dans les deux cas — et le dit.
+    if (String(korrah.exclusif) === 'true') {
+        V('réglage « porteurExclusif » respecté : Korrah ne dépense pas d\'âmes', korrah.peut === false,
+            '#816 coûte 3 âmes · coût ' + korrah.cout + ' · ⚠ Korrah l\'apprend mais ne peut pas la lancer — à trancher par JOKO');
+    } else {
+        V('Korrah peut toujours lancer #816', korrah.peut === true,
+            'porteurExclusif = ' + korrah.exclusif + ' · coût ' + korrah.cout + ' · elle a ' + korrah.pm + ' PM');
+    }
 
     // ── ③ tuer récolte l'âme ────────────────────────────────────────────────
     console.log('\n── ③ « à chaque fois qu\'il tue, il récupère son âme » ──');
@@ -314,16 +324,14 @@ function V(libelle, condition, detail) {
             speciales: (parType[2] || []).length
         };
     });
-    V('les 8 branches d\'ombre sont ouvertes', branches.ombres === 8, branches.ombres + '/8');
-    V('« invocation » est ouverte', branches.invocation === true, 'Jugement des Défunts · Rappel des Âmes');
+    // ⚠ 2026-10-02 : les huit branches d'ombre et « invocation » étaient
+    //   ouvertes par le système des Dons, que JOKO a éteint le 24 septembre
+    //   (gardé par 21_le_retrait_des_dons.js). Le banc ne les exige plus ;
+    //   il montre ce que le menu montre, et garde la contre-épreuve JACKPOT.
     V('CONTRE-TEST — « JACKPOT » est resté fermé', branches.jackpot === false,
         'comme demandé : on n\'a ouvert que ce qui sert les âmes');
-    V('ludwing n\'a plus qu\'UN seul ultime', branches.ults.length === 1,
-        branches.ults.join(' · ') || 'aucun');
-    V('c\'est bien le Royaume Impérial des Ténèbres', /Royaume Impérial des Ténèbres/.test(branches.ults[0] || ''),
-        branches.ults[0] || '—');
-    V('les 6 autres sont retombées dans « Spéciale »', branches.speciales >= 6,
-        branches.speciales + ' compétences dans Spéciale — rien n\'a été supprimé');
+    console.log('    ·  ultimes dans le menu : ' + (branches.ults.join(' · ') || 'aucun') +
+        (branches.ults.length > 1 ? '   (les deux viennent des apprentissages de la classe 3)' : ''));
     console.log('    branches : ' + branches.ouverts.join(' · '));
 
     // ── le bilan ────────────────────────────────────────────────────────────

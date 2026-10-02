@@ -331,6 +331,92 @@ INFOS.forEach(function (i) {
     });
 });
 
+/* ════════ 4. ce qui sort de sa feuille (2026-10-02, le check-up) ════════
+ * Une icône, un visage, un sprite ou une case d'animation désignés au-delà de
+ * leur image ne plantent pas : MV découpe un rectangle vide. Le joueur voit
+ * une case sans icône, un dialogue sans visage, un PNJ invisible, une
+ * animation qui « saute » une image. Aucune erreur, nulle part. */
+var tailles = {};
+function taille(d, nom) {
+    var k = d + '/' + nom;
+    if (k in tailles) return tailles[k];
+    tailles[k] = null;
+    var m = contenu(d), vrai = m.exact[nom + '|png'] ? nom : m.bas[(nom + '|png').toLowerCase()];
+    if (!vrai) return null;
+    try {
+        var fd = fs.openSync(path.join(R, d, vrai + '.png'), 'r'), b = Buffer.alloc(24);
+        fs.readSync(fd, b, 0, 24, 0); fs.closeSync(fd);
+        tailles[k] = { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+    } catch (e) { }
+    return tailles[k];
+}
+var ICONES = (function () { var t = taille('img/system', 'IconSet'); return t ? Math.floor(t.w / 32) * Math.floor(t.h / 32) : 1e9; })();
+function icone(lieu, demo, n) {
+    if (n >= ICONES) note(false, demo, lieu, 'icône n°' + n + ' au-delà de IconSet (' + ICONES + ' icônes) : case vide');
+}
+function iconesDuTexte(lieu, demo, t) {
+    var re = /\\I\[(\d+)\]/gi, m;
+    while ((m = re.exec(String(t || '')))) icone(lieu, demo, +m[1]);
+}
+function visage(lieu, demo, nom, i) {
+    if (!nom) return; var t = taille('img/faces', nom); if (!t) return;
+    if ((i % 4 + 1) * 144 > t.w || (Math.floor(i / 4) + 1) * 144 > t.h)
+        note(false, demo, lieu, 'visage « ' + nom + ' » n°' + i + ' hors de l\'image (' + t.w + '×' + t.h + ') : visage vide');
+}
+function sprite(lieu, demo, nom, i) {
+    if (!nom) return;
+    var signe = nom.match(/^[!$]+/), seul = !!(signe && signe[0].indexOf('$') >= 0);   // ImageManager.isBigCharacter
+    if (seul ? i !== 0 : i > 7) note(false, demo, lieu, 'sprite « ' + nom + ' » n°' + i + (seul ? ' : une feuille « $ » n\'a que le n°0' : ' : une feuille n\'en a que 8') + ' — personnage invisible');
+}
+DB.Skills.concat(DB.Items, DB.Weapons, DB.Armors, DB.States).forEach(function (o) {
+    if (!o || !o.name) return;
+    var genre = o.stypeId !== undefined ? 'Compétence' : o.itypeId !== undefined ? 'Objet' : o.wtypeId !== undefined ? 'Arme' : o.atypeId !== undefined ? 'Armure' : 'État';
+    var L = genre + ' ' + o.id + ' ' + o.name;
+    if (o.iconIndex) icone(L, false, o.iconIndex);
+    iconesDuTexte(L, false, o.description); iconesDuTexte(L, false, o.message1); iconesDuTexte(L, false, o.message2);
+});
+DB.Actors.forEach(function (a) {
+    if (!a || !a.name) return; var L = 'Héros ' + a.id + ' ' + a.name;
+    visage(L, false, a.faceName, a.faceIndex); sprite(L, false, a.characterName, a.characterIndex);
+});
+DB.Animations.forEach(function (a) {
+    if (!a || !a.name) return;
+    var t1 = a.animation1Name && taille('img/animations', a.animation1Name), t2 = a.animation2Name && taille('img/animations', a.animation2Name);
+    var hors = {};
+    (a.frames || []).forEach(function (f) {
+        (f || []).forEach(function (c) {
+            var p = c[0]; if (p < 0) return;
+            var t = p < 100 ? t1 : t2; if (!t) return;
+            if (p % 100 >= 5 * Math.floor(t.h / 192)) hors[p] = true;
+        });
+    });
+    var h = Object.keys(hors);
+    if (h.length) note(false, false, 'Animation ' + a.id + ' ' + a.name, h.length + ' case(s) au-delà de son image (n° ' + h.slice(0, 6).join(', ') + ') : l\'animation saute des images');
+});
+function textes(lieu, demo, cmds) {
+    (cmds || []).forEach(function (c, i) {
+        var p = c.parameters || [], L = lieu + ' ligne ' + (i + 1);
+        if (c.code === 101) visage(L, demo, p[0], p[1]);
+        if (c.code === 401 || c.code === 405 || c.code === 102) iconesDuTexte(L, demo, c.code === 102 ? (p[0] || []).join(' ') : p[0]);
+        if (c.code === 322) { visage(L, demo, p[3], p[4]); sprite(L, demo, p[1], p[2]); }
+        if (c.code === 205) (p[1] && p[1].list || []).forEach(function (r) { if (r.code === 41) sprite(L, demo, r.parameters[0], r.parameters[1]); });
+    });
+}
+DB.CommonEvents.forEach(function (c) { if (c) textes('Événement commun ' + c.id + ' « ' + c.name + ' »', ceDemo(c.id), c.list); });
+DB.Troops.forEach(function (t) { if (t) t.pages.forEach(function (p, i) { textes('Troupe ' + t.id + ' ' + t.name + ' page ' + (i + 1), false, p.list); }); });
+INFOS.forEach(function (i) {
+    if (!i) return; var m = carte(i.id); if (!m) return; var demo = estDemo(i.id);
+    m.events.forEach(function (e) {
+        if (!e) return;
+        e.pages.forEach(function (p, pi) {
+            var L = 'Carte ' + i.id + ' « ' + i.name + ' » év.' + e.id + ' « ' + e.name + ' » p' + (pi + 1);
+            if (p.image && p.image.characterName) sprite(L, demo, p.image.characterName, p.image.characterIndex);
+            (p.moveRoute && p.moveRoute.list || []).forEach(function (r) { if (r.code === 41) sprite(L, demo, r.parameters[0], r.parameters[1]); });
+            textes(L, demo, p.list);
+        });
+    });
+});
+
 /* ════════ le bilan ════════ */
 function dedoublonner(a) { var vu = {}; return a.filter(function (x) { if (vu[x]) return false; vu[x] = true; return true; }); }
 bloquant = dedoublonner(bloquant); silencieux = dedoublonner(silencieux); bloquantDemo = dedoublonner(bloquantDemo); silencieuxDemo = dedoublonner(silencieuxDemo);

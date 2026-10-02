@@ -7,9 +7,9 @@ documentation : chaque ligne vient du code qui l'écoute.*
 
 | | |
 |---|---:|
-| plugins qui écoutent | 53 |
-| commandes distinctes | 109 |
-| déjà posées dans tes événements | 55 |
+| plugins qui écoutent | 73 |
+| commandes distinctes | 125 |
+| déjà posées dans tes événements | 61 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
 dans le jeu — l'exemple donné est ta propre ligne, copiée telle quelle.
@@ -17,8 +17,8 @@ Sans marque, le plugin l'écoute mais tu ne t'en es jamais servi.
 
 **Vérifié.** `bancs/navigateur/le_carnet_dit_vrai.js` ouvre le jeu et TIRE
 des commandes de ce carnet pour de vrai : cinq sur six font bouger l'état du
-moteur, aucune ne plante. Et dans l'autre sens — les sept déclarées mortes
-plus bas sont tirées elles aussi, et ne font rien. Sans cette contre-épreuve,
+moteur, aucune ne plante. Et dans l'autre sens — des commandes que personne
+n'écoute sont tirées elles aussi, et ne font rien. Sans cette contre-épreuve,
 un moteur qui avalerait n'importe quoi passerait pour un carnet exact.
 
 > ⚠ **Une espace avant le nom et la commande n'est jamais délivrée.**
@@ -110,10 +110,6 @@ Balises de note employées dans le jeu :
 <whole action: …>
 ```
 
----
-
-## COMBAT · IA, ordre des tours, états passifs
-
 ### `YEP_BattleAICore`
 
 This plugin allows you to structure battle A.I.
@@ -124,6 +120,17 @@ Balises de note employées dans le jeu :
 ```
 <AI Level: …>
 <AI Priority: …>
+```
+
+### `YEP_X_BattleSysCTB`
+
+(Requires YEP_BattleEngineCore.js) Add CTB (Charge
+Turn Battle) into your game using this plugin!
+
+Balises de note employées dans le jeu :
+
+```
+<CTB Speed: …>
 ```
 
 ### `YEP_X_AnimatedSVEnemies`
@@ -142,6 +149,10 @@ Balises de note employées dans le jeu :
 <Floating Speed: …>
 <Scale Sprite: …>
 ```
+
+---
+
+## COMBAT · IA, ordre des tours, états passifs
 
 ### `YEP_AutoPassiveStates`
 
@@ -359,21 +370,74 @@ DisableFastForward
 
 ## MENUS · gestionnaire, journal de quêtes, sauvegarde
 
+### `EnemyBook`
+
+Le bestiaire : ce qu on a rencontre, ses forces et ses faiblesses.
+
+**✔ `EnemyBook`**  — utilisée 2 fois dans tes événements
+
+```
+EnemyBook open
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+EnemyBook open    # Open the enemy book screen
+EnemyBook add 3    # Add enemy #3 to the enemy book
+EnemyBook remove 4    # Remove enemy #4 from the enemy book
+EnemyBook complete    # Complete the enemy book
+EnemyBook clear    # Clear the enemy book
+```
+
+### `ItemBook`
+
+L encyclopedie des objets rencontres.
+
+**✔ `ItemBook`**  — utilisée 1 fois dans tes événements
+
+```
+ItemBook open
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+ItemBook open    # Open the item book screen
+ItemBook add weapon 3    # Add weapon #3 to the item book
+ItemBook add armor 4    # Add armor #4 to the item book
+ItemBook remove armor 5    # Remove armor #5 from the item book
+ItemBook remove item 6    # Remove item #6 from the item book
+ItemBook complete    # Complete the item book
+```
+
 ### `YEP_QuestJournal`
 
 Insert a quest journal system into your game!
 
-**`OpenQuestJournal`**
+**✔ `OpenQuestJournal`**  — utilisée 1 fois dans tes événements
 
 ```
 OpenQuestJournal
 ```
 
-*Le plugin l'écoute, mais il ne documente aucun argument et tu ne
-t'en es jamais servi — à essayer telle quelle d'abord.*
+*Tes propres lignes, copiées de tes événements.*
 
-**`Quest`**
+**✔ `Quest`**  — utilisée 219 fois dans tes événements
 
+```
+QUEST add main sortie "Sortir de la pierre" "La Caverne de Pierre s'ouvre sur le Marécage. Au-delà, une forêt, et quelque part une ville avec un toit et un feu."
+QUEST de sortie "—" "Caverne de Pierre"
+QUEST obj sortie "Traverser le Marécage"
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
 
 ```
 Quest Indent
@@ -431,7 +495,7 @@ t'en es jamais servi — à essayer telle quelle d'abord.*
 clear_weather : WEATHER_INDEX
 ```
 
-**✔ `clear_all_weathers`**  — utilisée 19 fois dans tes événements
+**✔ `clear_all_weathers`**  — utilisée 20 fois dans tes événements
 
 ```
 clear_all_weathers
@@ -460,7 +524,7 @@ Et la syntaxe complète :
 battle_weather : false
 ```
 
-**✔ `weather`**  — utilisée 78 fois dans tes événements
+**✔ `weather`**  — utilisée 80 fois dans tes événements
 
 ```
 weather : 0 : 25 : 60 : 100 : 1 : Star_01A : 0
@@ -474,7 +538,7 @@ weather : 0 : 15 : 30 : 100 : 0 : Cloud_01A
 
 (v1.7) Adiciona uma bússola indicando o destino a ser seguido.
 
-**✔ `show_compass`**  — utilisée 4 fois dans tes événements
+**✔ `show_compass`**  — utilisée 5 fois dans tes événements
 
 ```
 show_compass
@@ -488,7 +552,7 @@ Et la syntaxe complète :
 show_compass
 ```
 
-**✔ `hide_compass`**  — utilisée 3 fois dans tes événements
+**✔ `hide_compass`**  — utilisée 4 fois dans tes événements
 
 ```
 hide_compass
@@ -1253,8 +1317,15 @@ hide_treasure_popup
 
 (v1.5) O plugin adiciona a cena Livro de Músicas.
 
-**`music_book`**
+**✔ `music_book`**  — utilisée 1 fois dans tes événements
 
+```
+music_book
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
 
 ```
 music_book
@@ -1343,12 +1414,12 @@ Balises de note employées dans le jeu :
 (v1.1) Apresenta o contador de tempo através de imagens.
 https://mogplugins.com
 
-**✔ `visual_timer`**  — utilisée 3 fois dans tes événements
+**✔ `visual_timer`**  — utilisée 4 fois dans tes événements
 
 ```
+visual_timer : 60 : true
 visual_timer : 330 : 300
 visual_timer : 32 : 90
-visual_timer : 310 : 64
 ```
 
 *Tes propres lignes, copiées de tes événements.*
@@ -1415,11 +1486,12 @@ ULTI
 *Le plugin l'écoute, mais il ne documente aucun argument et tu ne
 t'en es jamais servi — à essayer telle quelle d'abord.*
 
-**✔ `JACKPOT`**  — utilisée 2 fois dans tes événements
+**✔ `JACKPOT`**  — utilisée 5 fois dans tes événements
 
 ```
 JACKPOT win
 JACKPOT fail
+JACKPOT lancer
 ```
 
 *Tes propres lignes, copiées de tes événements.*
@@ -1536,6 +1608,29 @@ Balises de note employées dans le jeu :
 <Telegraphe: …>
 ```
 
+### `DoctrinesDeBoss`
+
+Le VOCABULAIRE des doctrines de boss : aMarque, compte, phase, combien, seul. N'ajoute aucune règle — donne à <AI Priority> les mots pour en écrire.
+
+Balises de note employées dans le jeu :
+
+```
+<AI Priority: …>
+```
+
+### `CielDAel`
+
+Les Paroles longues d'Aël : elle annonce, l'équipe tient, le coup part. Et le ciel décide si elle doit attendre.
+
+Balises de note employées dans le jeu :
+
+```
+<Appel: …>
+<Apres: …>
+<Ciel: …>
+<Incantation: …>
+```
+
 ### `MecaniquesDeBoss`
 
 Douze mécaniques de boss, déclarées par notetag. Chacune rend littéral un nom de compétence déjà écrit.
@@ -1550,12 +1645,14 @@ Balises de note employées dans le jeu :
 <MecaDime: …>
 <MecaGueules: …>
 <MecaMaree: …>
+<MecaMiroir: …>
 <MecaNom: …>
 <MecaNombre: …>
 <MecaPonte: …>
 <MecaRecompile: …>
 <MecaReprises: …>
 <MecaRetournement: …>
+<MecaSansVisage: …>
 ```
 
 ---
@@ -1564,7 +1661,8 @@ Balises de note employées dans le jeu :
 
 ### `DonoBoss`
 
-Dono : boss duo (lui + son Esprit Vengeur). Génie qui évolue avec le combat — empathie → sérieux → synchronisation → Mana Parfait.
+Dono : boss duo (lui + son Esprit Vengeur). Génie qui
+évolue avec le combat — empathie → sérieux → synchronisation → Mana Parfait.
 
 Balises de note employées dans le jeu :
 
@@ -1575,14 +1673,15 @@ Balises de note employées dans le jeu :
 
 ### `DonoKamui`
 
-Dono devient intangible (Kamui) : les attaques le traversent. Se porte par <DonoKamui>, séparément de <DonoBoss>.
+Dono devient intangible (Kamui) : les attaques le traversent.
+Il se matérialise par rythme pour être touché ; abuser du Kamui surcharge ses
+Deux Yeux (vulnérable). L'Esprit Vengeur EST son 2e œil.
 
 Balises de note employées dans le jeu :
 
 ```
 <DonoBoss: …>
 <DonoEsprit: …>
-<DonoKamui: …>
 ```
 
 ---
@@ -1597,6 +1696,16 @@ Balises de note employées dans le jeu :
 
 ```
 <Radahn: …>
+```
+
+### `ScenesDeBoss`
+
+Le combat de boss se VOIT : carte-titre, barre du boss, bandeaux de mise en garde, et la RUPTURE — briser son élan annule sa frappe.
+
+Balises de note employées dans le jeu :
+
+```
+<Apres: …>
 ```
 
 ---
@@ -1644,7 +1753,7 @@ Balises de note employées dans le jeu :
 
 ### `RoyaumeImperial`
 
-Le Domaine de ludwing : les âmes reviennent, les invocations sont libres, les stats montent — et l'arsenal des Ténèbres s'arme.
+Le Royaume Impérial (71) : deux minutes où toute mort est rendue contre une âme — tous les PM, puis l'épuisement. Et le Domaine des Ténèbres (810), inchangé.
 
 **`DOMAINE`**  *(la casse n'a pas d'importance)*
 
@@ -1659,6 +1768,7 @@ Balises de note employées dans le jeu :
 ```
 <AspirationDamnees: …>
 <ContreTotale: …>
+<DomaineRoyal: …>
 <Invocation: …>
 <RoyaumeImperial: …>
 <SceauMagie: …>
@@ -1670,13 +1780,15 @@ Balises de note employées dans le jeu :
 
 ### `JackpotHakari`
 
-Le Pari Mortel de ludwing : les rouleaux tournent, et le JACKPOT dure UNE VRAIE MINUTE — du temps, pas des tours.
+Le Pari Mortel de ludwing : les rouleaux tournent, et le
+JACKPOT dure UNE VRAIE MINUTE — du temps, pas des tours.
 
-**✔ `JACKPOT`**  *(la casse n'a pas d'importance)*  — utilisée 2 fois dans tes événements
+**✔ `JACKPOT`**  *(la casse n'a pas d'importance)*  — utilisée 5 fois dans tes événements
 
 ```
 JACKPOT win
 JACKPOT fail
+JACKPOT lancer
 ```
 
 *Tes propres lignes, copiées de tes événements.*
@@ -1697,6 +1809,38 @@ JACKPOT rouleaux
 JACKPOT win
 ```
 
+### `SeiryuLeFamilier`
+
+seiryu entre au combat comme CINQUIÈME COMBATTANT : ses propres PV, son propre tour, ses propres coups. Il protège et il soigne.
+
+**`SEIRYU`**  *(la casse n'a pas d'importance)*
+
+
+```
+SEIRYU experience
+SEIRYU oublier
+SEIRYU palier
+```
+
+Balises de note employées dans le jeu :
+
+```
+<Avatar: …>
+<AvatarOrdre: …>
+<AvatarPosture: …>
+<AvatarProtege: …>
+```
+
+### `FamillesDeCapacites`
+
+En combat, les compétences qui font la même chose ne tiennent qu’une ligne : la meilleure que le héros puisse lancer. L’arbre, lui, montre tout.
+
+Balises de note employées dans le jeu :
+
+```
+<HorsFamille: …>
+```
+
 ### `VieDuVillage`
 
 Les PNJ ont un poste, un logis, et des heures : ils sortent le matin, travaillent, flânent le soir, et rentrent dormir.
@@ -1704,7 +1848,299 @@ Les PNJ ont un poste, un logis, et des heures : ils sortent le matin, travaillen
 Balises de note employées dans le jeu :
 
 ```
+<Agenda: …>
 <NPC: …>
+<Soiree: …>
+<Vie: …>
+<nom: …>
+```
+
+### `LouCopySystem`
+
+Lou : copie les techniques ennemies (2x de suite), 4 slots
+aléatoires à usage unique (spam en Domaine) + aspiration des âmes damnées.
+
+**`LOU`**  *(la casse n'a pas d'importance)*
+
+
+```
+LOU copies          Affiche les techniques actuellement copiées
+LOU clear_copies    Vide le presse-papier de Lou
+```
+
+---
+
+## LES ÉVÉNEMENTS SYSTÈME · ce que les cartes appelaient dans le vide
+
+### `JadeEntitePlunging`
+
+Santé Mentale de l'Âme — Jauge de Maîtrise (5 phases). Écrit par JOKO, posé dans js/plugins/ mais jamais inscrit : les 21 commandes « AME » de ses cartes tombaient dans le vide.
+
+**✔ `AME`**  *(la casse n'a pas d'importance)*  — utilisée 21 fois dans tes événements
+
+```
+AME mauvais thylane 1
+AME bon thylane 2
+AME mauvais neyssa 1
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+### `EvenementsUtiles`
+
+Répond aux commandes de greffon que les cartes appellent depuis toujours sans que personne ne décroche : NPC, FEU, FORGE, TEMPS, CHUTE. Plus les trois reliques dont la description promettait pour rien.
+
+**✔ `theatrhythm`**  — utilisée 13 fois dans tes événements
+
+```
+theatrhythm : 99 : 2
+theatrhythm : 99 : 5
+theatrhythm : 99 : 10
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+**✔ `FORGE`**  — utilisée 5 fois dans tes événements
+
+```
+FORGE
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+FORGE          3 ×     « FORGE »
+FORGE
+```
+
+**✔ `FEU`**  — utilisée 5 fois dans tes événements
+
+```
+FEU repos
+FEU renaitre
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+FEU            4 ×     « FEU repos »
+FEU repos
+FEU renaitre
+```
+
+**✔ `TEMPS`**  — utilisée 7 fois dans tes événements
+
+```
+TEMPS nuit
+TEMPS jour
+TEMPS basculer
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+TEMPS          3 ×     « TEMPS basculer »
+TEMPS jour | nuit | basculer
+```
+
+**✔ `CHUTE`**  — utilisée 11 fois dans tes événements
+
+```
+CHUTE dechire
+CHUTE bete
+CHUTE dement
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+**✔ `NPC`**  — utilisée 32 fois dans tes événements
+
+```
+NPC talk forgeron
+NPC talk marchand
+NPC talk mira
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+NPC talk <nom>
+```
+
+**✔ `THEATRHYTHM`**  — utilisée 13 fois dans tes événements
+
+```
+theatrhythm : 99 : 2
+theatrhythm : 99 : 5
+theatrhythm : 99 : 10
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+Theatrhythm    1 ×     majuscule de trop
+Theatrhythm ...
+```
+
+*Mots reconnus après le nom de la commande, sans qu'on puisse dire
+lequel va avec laquelle :* `parle` · `renaitre` · `repos` · `talk`
+
+Balises de note employées dans le jeu :
+
+```
+<NPC: …>
+<Relic: …>
+<nom: …>
+```
+
+### `QuetesDuMonde`
+
+Les commandes QUEST (add, obj, step, done…), questStatus, le suivi sur la carte et les compteurs de chasse — affichés par YEP_QuestJournal.
+
+**✔ `QUEST`**  — utilisée 219 fois dans tes événements
+
+```
+QUEST add main sortie "Sortir de la pierre" "La Caverne de Pierre s'ouvre sur le Marécage. Au-delà, une forêt, et quelque part une ville avec un toit et un feu."
+QUEST de sortie "—" "Caverne de Pierre"
+QUEST obj sortie "Traverser le Marécage"
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+QUEST add main  <id> "Titre" "Description"
+QUEST add side  <id> "Titre" "Description"
+QUEST add tuto  <id> "Titre" "Description"       (apprentissage)
+QUEST done <id>   ·   QUEST fail <id>
+QUEST track <id>  ·   QUEST untrack
+QUEST ecran                  ouvre le journal
+```
+
+### `Habitants`
+
+Les habitants se souviennent de toi, ont des horaires, arrivent et repartent à pied par la porte, et changent de propos avec la saison et l'heure.
+
+Balises de note employées dans le jeu :
+
+```
+<Horaire: …>
+<Passage: …>
+```
+
+### `LeMarchandQuiSuit`
+
+« MARCHAND <palier> » : une boutique dont le stock se calcule à l'exécution, par le prix. De quoi rendre atteignable l'échelle d'équipement que le jeu possède déjà et ne vend nulle part.
+
+**✔ `MARCHAND`**  *(la casse n'a pas d'importance)*  — utilisée 9 fois dans tes événements
+
+```
+MARCHAND 1
+MARCHAND 2
+MARCHAND 3
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+MARCHAND 2      le bourg                            1 600 or
+MARCHAND 3      la ville                            3 200 or
+MARCHAND 4      la capitale                         5 200 or
+MARCHAND 6      l'arsenal                          11 500 or
+MARCHAND 7      le dernier comptoir                 tout
+MARCHAND objets      les consommables, tous paliers confondus
+```
+
+Balises de note employées dans le jeu :
+
+```
+<palier: …>
+```
+
+### `MarqueVivante`
+
+La Marque vivante — un sigil par héros, qui fleurit, se fend, se boursoufle ou porte des épines selon les jauges. Lecture seule. Remonté de _ancien_projet : la carte 5 appelait « MARQUE » dans le vide.
+
+**✔ `MARQUE`**  *(la casse n'a pas d'importance)*  — utilisée 1 fois dans tes événements
+
+```
+MARQUE
+```
+
+*Tes propres lignes, copiées de tes événements.*
+
+---
+
+## VESPER ET AËL · le Pacte de Sang, la Bibliothèque
+
+### `LePacteDeSang`
+
+Vesper, comme Arlecchino : Dette de Sang, Pacte, Masque Rouge, Rendre le Sang — et trois Styles sans perdre le tour.
+
+Balises de note employées dans le jeu :
+
+```
+<InscritDette: …>
+<RendreLeSang: …>
+<StyleVesper: …>
+```
+
+### `LaBibliothequeDAel`
+
+Aël, à la Béatrice : la Lecture et le Miracle, le Contrat, les Portes.
+
+Balises de note employées dans le jeu :
+
+```
+<Rang: …>
+```
+
+### `EquilibreDesCombats`
+
+Les PV et la force des ennemis, par rang, réglés sur des combats joués dans le moteur avec l'équipe complète. Ne touche à aucune fiche.
+
+Balises de note employées dans le jeu :
+
+```
+<Rang: …>
+```
+
+### `DebutMarques`
+
+Choisis un des 4 marqués avant de commencer. Les trois
+autres vivent leur vie (DestinsParalleles). Discours d'entrée inclus.
+
+**`DEBUT`**  *(la casse n'a pas d'importance)*
+
+```
+DEBUT
+```
+
+*Le plugin l'écoute, mais il ne documente aucun argument et tu ne
+t'en es jamais servi — à essayer telle quelle d'abord.*
+
+### `MeteoVivante`
+
+Météo vivante : un temps qui change avec les jours et les saisons (pluie, orage, brouillard, neige), sons d ambiance, éclairs.
+
+**`METEO`**  *(la casse n'a pas d'importance)*
+
+
+```
+METEO auto          le temps redevient libre
 ```
 
 ---
@@ -1714,9 +2150,14 @@ Balises de note employées dans le jeu :
 Dans un événement : **Script…**. Ceux-ci ne sont pas déduits du code —
 ce sont les tiens, relevés dans tes propres événements. Ils tournent déjà.
 
-### Une ligne — 20
+### Une ligne — 25
 
 ```js
+Habitants.prep(this);    // ×110
+Habitants.affinite(this, 1);    // ×12
+Habitants.affinite(this, 2);    // ×5
+$gameSystem.set_hour(7); $gameSystem.set_minute(0);    // ×4
+$gameParty.loseGold($gameVariables.value(938));    // ×3
 if(window.Lien)Lien.up(5,1);    // ×3
 SceneManager.push(Scene_LevelUp);    // ×2
 ChampDeTir.lancer();    // ×2
@@ -1821,7 +2262,8 @@ plante, le système se met simplement à lire le mauvais nombre.
 |---:|---|---|
 | 1 | TIRAGE | YEP_X_ItemUpgradeSlots · Slot Variance |
 | 5 | BONUS | MOG_Theatrhythm · Points Variable ID |
-| 15 | Âmes Damnées | FusionMana · soulVar, InvocationAmes · soulVar, PorteurDAmes · soulVar, RoyaumeImperial · soulVar |
+| 13 | LOU | LouCopySystem · mentalVar |
+| 15 | Âmes Damnées | FusionMana · soulVar, InvocationAmes · soulVar, PorteurDAmes · soulVar, RoyaumeImperial · soulVar, LouCopySystem · soulVar, EvenementsUtiles · varAmes |
 | 150 | Voyage · carte de destination | GALV_MapTravel · Transfer Map Variable |
 | 151 | Voyage · X | GALV_MapTravel · Transfer X Variable |
 | 152 | Voyage · Y | GALV_MapTravel · Transfer Y Variable |
@@ -1830,6 +2272,13 @@ plante, le système se met simplement à lire le mauvais nombre.
 | 200 | TS · Heure | MOG_TimeSystem · Hour Variable ID |
 | 201 | TS · Jour du mois | MOG_TimeSystem · Day Variable ID |
 | 202 | TS · Année | MOG_TimeSystem · Year Variable ID |
+| 300 | Quête · compteur 1 | QuetesDuMonde · varChasse |
+| 880 | ◆ Habitants · visites (ce PNJ) | Habitants · varVisites |
+| 881 | ◆ Habitants · jours depuis | Habitants · varJours |
+| 882 | ◆ Habitants · tirage | Habitants · varTirage |
+| 883 | ◆ Habitants · moment (1 matin…4 nuit) | Habitants · varMoment |
+| 884 | ◆ Habitants · saison (1…4) | Habitants · varSaison |
+| 885 | ◆ Habitants · affinité (ce PNJ) | Habitants · varAffinite |
 
 ### Interrupteurs
 
@@ -1845,22 +2294,4 @@ plante, le système se met simplement à lire le mauvais nombre.
 | 206 | TS · Service de jour | MOG_TimeSystem · Day Shift Switch ID |
 | 207 | TS · Service de nuit | MOG_TimeSystem · Night Shift Switch ID |
 | 231 | TS · Météo des saisons | VerrouDesSaisons · interrupteur |
-
----
-
-## Ce qui ne marche pas
-
-### Posées dans un événement, écoutées par personne — 7
-
-Soit le plugin qui les écoutait est éteint, soit le nom a changé.
-
-| commande | fois | où |
-|---|---:|---|
-| `FEU` | 4 | CommonEvents.json, Map002.json, Map029.json, Map044.json |
-| `TEMPS` | 3 | CommonEvents.json, Map004.json |
-| `AME` | 21 | CommonEvents.json, Map002.json, Map005.json |
-| `NPC` | 58 | Map002.json, Map029.json, Map030.json, Map033.json |
-| `FORGE` | 2 | Map005.json, Map041.json |
-| `MARQUE` | 1 | Map005.json |
-| `CHUTE` | 5 | Map023.json, Map055.json |
 

@@ -320,6 +320,8 @@ window.Habitants = Habitants;
         }
         var b = this._habDepart || this._habArrivee;
         if (!b || onLuiParle(this) || $gameMessage.isBusy()) return;
+        // pendant une scène (OutilsDeScene, mode cinématique), il s'arrête sur place
+        if (window.OutilsDeScene && OutilsDeScene.figeAussi(this)) return;
         b.t += 1;                                  // en temps réel, même pendant les pas
         if (this.isMoving() && b.t <= LIMITE) return;
         // partir : être à côté de la sortie suffit (le joueur se tient souvent devant la porte)
