@@ -51,7 +51,8 @@ function V(l, c, d) {
         var s = SceneManager._scene;
         return s && s._commandWindow && s._commandWindow.active && s._commandWindow.isOpen();
     }, null, { timeout: 120000 });
-    await ev(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
+    await ev(function () { DataManager.setupNewGame(); $gameSystem._meteo = { cle: "", type: "clair", force: "clair" };   // beau temps : sous la pluie, les habitants rentrent (MeteoVivante)
+    SceneManager.goto(Scene_Map); });
     await page.waitForFunction(function () {
         return SceneManager._scene.constructor.name === 'Scene_Map' && DataManager.isMapLoaded();
     }, null, { timeout: 60000 }).catch(function () { });

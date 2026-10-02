@@ -208,13 +208,20 @@ window.Embellie = Embellie;
         return undefined;
     }
 
+    // gardé par événement : on ne relit sa page et son sprite que quand sa
+    // page, son image ou sa direction changent (la vitrine a 808 événements)
     function lumiereDe(ev) {
         if (ev._erased || ev._pageIndex < 0 || ev.isTransparent() || ev.opacity() < 60) return null;
-        var imp = lumiereImposee(ev);
-        if (imp !== undefined) return imp;
         var nom = ev.characterName();
-        if (!nom || nom.charAt(0) !== '!') return null;      // seulement les objets
-        return lire(nom, ev.characterIndex(), ev.direction());
+        var cle = ev._pageIndex + '|' + nom + '|' + ev.characterIndex() + '|' + ev.direction();
+        if (ev._embCle === cle) return ev._embLum;
+        var imp = lumiereImposee(ev), res;
+        if (imp !== undefined) res = imp;
+        else if (!nom || nom.charAt(0) !== '!') res = null;      // seulement les objets
+        else res = lire(nom, ev.characterIndex(), ev.direction());
+        if (res === undefined) return null;                       // image pas prête : on relira
+        ev._embCle = cle; ev._embLum = res;
+        return res;
     }
 
     /* ═══ les halos sur la carte ═══ */
@@ -239,7 +246,13 @@ window.Embellie = Embellie;
         var base = dedans ? 0.55 : nu * 0.95;
         if (base > 0.02 && $gameMap) {
             var w = Graphics.width, h = Graphics.height, t = this._t;
-            var evs = $gameMap.events();
+            // la liste des sources de lumière, refaite une fois par seconde
+            // (la vitrine a 808 événements ; une ville, une dizaine de lampes)
+            if (!this._sources || t % 60 === 1 || this._carte !== $gameMap.mapId()) {
+                this._carte = $gameMap.mapId();
+                this._sources = $gameMap.events().filter(function (e) { return !!lumiereDe(e); });
+            }
+            var evs = this._sources;
             for (var i = 0; i < evs.length; i++) {
                 var ev = evs[i], L = lumiereDe(ev);
                 if (!L) continue;
@@ -283,7 +296,8 @@ window.Embellie = Embellie;
     Lucioles.prototype.update = function () {
         this._t++;
         var saison = $gameSystem && $gameSystem.season ? $gameSystem.season() : 0;
-        var actif = dehors() && nuit() > 0.55 && saison !== 3;
+        var meteoOk = !window.Meteo || Meteo.lucioles();      // pas sous la pluie, le brouillard, la neige
+        var actif = dehors() && nuit() > 0.55 && saison !== 4 && meteoOk;   // saisons MOG : 1 printemps … 4 hiver
         if (!actif && !this._l.length) return;
         var w = Graphics.width, h = Graphics.height;
         while (actif && this._l.length < 12) {

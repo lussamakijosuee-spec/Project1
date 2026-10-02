@@ -23,7 +23,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   var err = []; page.on('pageerror', function (e) { err.push(e.message.split('\n')[0]); });
   await page.goto(BASE + '/index.html', { waitUntil: 'load' });
   await page.waitForFunction(function () { var s = SceneManager._scene; return s && s._commandWindow && s._commandWindow.active; }, null, { timeout: 180000 });
-  await page.evaluate(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
+  await page.evaluate(function () { DataManager.setupNewGame(); $gameSystem._meteo = { cle: "", type: "clair", force: "clair" };   // beau temps : sous la pluie, les habitants rentrent (MeteoVivante)
+    SceneManager.goto(Scene_Map); });
   await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
   await page.waitForTimeout(1000);
   var echecs = 0;
