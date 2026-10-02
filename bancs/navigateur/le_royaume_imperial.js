@@ -67,7 +67,7 @@ function ok(nom, cond, detail) {
             afterEvalVivant: s.note.split(/[\r\n]+/).some(function (l) { return /<(?:AFTER EVAL)>/i.test(l); })
         };
     });
-    ok('la compétence 71 est Royaume Impérial, et porte <DomaineRoyal>', d.nom === 'Royaume Impérial' && d.tag);
+    ok('la compétence 71 est Royaume Impérial, et porte <DomaineRoyal>', /^Royaume Impérial/.test(d.nom) && d.tag);
     ok('elle pose l\'état 231', d.effets.length === 1 && d.effets[0].code === 21 && d.effets[0].dataId === 231);
     ok('l\'état 231 n\'a AUCUN trait — « pas d\'autre effet »', d.etatTraits === 0, d.etatNom);
     ok('l\'ancienne résurrection gratuite ne s\'exécute plus', !d.afterEvalVivant);

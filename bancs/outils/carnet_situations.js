@@ -132,7 +132,7 @@ module.exports = [
           lignes: [M('<c:4,160,0>Il paraît que la forêt a changé.', 'GALV_TimedMessagePopups', 'sur l\'événement 4, 160 images'),
                    M('<c:-1,90,0>Hm ?', 'GALV_TimedMessagePopups', 'sur le joueur'), S('Galv.Mpup.clear()', 'GALV_TimedMessagePopups', 'tout effacer')] },
         { titre: 'Choisir son héros au début, avec DebutMarques (ton plugin)',
-          texte: 'Dans l\'événement d\'intro, en Démarrage automatique. Une seule ligne : le choix des quatre marqués, avec leur titre ; les trois autres quittent le groupe, la santé mentale de chacun revient à 8, et le discours du marqué se joue. Une fois le choix fait, la commande ne refait rien et efface l\'événement d\'intro : pas de boucle.',
+          texte: 'Dans l\'événement d\'intro, en Démarrage automatique. Une seule ligne : le choix des quatre marqués, avec leur titre ; les trois autres quittent le groupe, et le discours du marqué se joue. Une fois le choix fait, la commande ne refait rien et efface l\'événement d\'intro : pas de boucle.',
           lignes: [C('DEBUT choisir', 'DebutMarques', 'ouvre le choix'), C('DEBUT reset', 'DebutMarques', 'pour re-choisir pendant tes tests')] },
         { titre: 'Choisir son héros à la main (si tu veux ton propre écran de choix)',
           texte: 'Choix MV, puis on vide l\'équipe et on met le héros choisi. Les choix s\'affichent en style visual novel si on l\'active.',
@@ -322,8 +322,8 @@ module.exports = [
         { titre: 'Lou et les âmes',
           lignes: [C('LOU copies', 'LouCopySystem'), C('LOU clear_copies', 'LouCopySystem'), C('LOU add_copy 124', 'LouCopySystem'),
                    N('<Invocation: 3>', 'InvocationAmes', 'note d\'une compétence : coûte 3 âmes')] },
-        { titre: 'Les chutes et la santé mentale',
-          lignes: [C('CHUTE bete 2', 'EvenementsUtiles', 'errant · bete · dement · dechire · fond · calme'), C('AME bon 1 1', 'JadeEntitePlunging', 'héros 1 (Vesper) : +1 de sérénité'), C('AME mauvais 1 1', 'JadeEntitePlunging', 'la clé peut aussi être l\'ancien prénom : thylane 1 · neyssa 2 · lou 3 · tianna 4')] },
+        { titre: 'Les chutes',
+          lignes: [C('CHUTE bete 2', 'EvenementsUtiles', 'errant · bete · dement · dechire · fond · calme')] },
         { titre: 'Les cinématiques d\'ultime',
           lignes: [C('ULTI cutin Nom de l\'attaque | #ff3355 | Sous-titre', 'UltiCinematics'), C('AURA #00ffcc', 'UltiCinematics'), C('BURST #ffd700', 'UltiCinematics')] }
     ]

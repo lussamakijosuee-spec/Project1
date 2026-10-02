@@ -26,8 +26,9 @@ var equipe = [
     R('Retirer un état (soigner un poison, une brûlure)', 'État 91 (Brûlure).', A.etat(91, false)),
     R('Tester si un héros est dans l\'équipe', 'Héros 3.', si(C.acteur(3), dire('ludwing est avec toi.'), dire('ludwing n\'est pas là.'))),
     R('Tester le niveau du chef', 'Niveau 10 ou plus.', si(C.js('$gameParty.leader().level >= 10'), dire('Tu es assez fort.'), dire('Reviens au niveau 10.'))),
-    R('Santé mentale — calmer (bon choix)', 'Héros 1 : +1 de sérénité.', A.plugin('AME bon 1 1')),
-    R('Santé mentale — perturber (mauvais choix)', 'Héros 1 : −1.', A.plugin('AME mauvais 1 1')),
+    // la santé mentale est retirée du jeu (JOKO, 2026-10-02) : les deux places restent, vides
+    R('(retiré) Santé mentale — calmer', 'La santé mentale est retirée du jeu.', note('La santé mentale est retirée du jeu (JOKO, 2026-10-02).')),
+    R('(retiré) Santé mentale — perturber', 'La santé mentale est retirée du jeu.', note('La santé mentale est retirée du jeu (JOKO, 2026-10-02).')),
     R('Dire combien de héros sont dans l\'équipe', '', cat(A.vrJs(VAR.taille, '$gameParty.size()'), dire('Vous êtes \\V[' + VAR.taille + '].')))
 ];
 

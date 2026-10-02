@@ -22,7 +22,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 1 · l'Équilibre |
 | Son unique Don | **le Masque** *(objet)* → emplacement Accessoire (5) |
 | Trait | sang |
-| Note de l'acteur | `<Passive State: 61> · <Passive State: 10> · <Passive State: 30, 31, 28, 29> · <Mana: spirituelle> · <Mana2: negatif> · <VoieDefaut: sang> · <Camp: ombre> · ` |
+| Note de l'acteur | `<Passive State: 61> · <Passive State: 10> · <Mana: spirituelle> · <Mana2: negatif> · <VoieDefaut: sang> · <Camp: ombre> · ` |
 
 ### Ses branches
 
@@ -167,10 +167,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|
 | 61 | NORMALTHY | 0 **aucun : il ne fait rien** | — |
 | 10 | Traqueur de Coups | 0 **aucun : il ne fait rien** | — |
-| 30 | Sérénité Absolue | 2 | — |
-| 31 | Tension Latente | 2 | — |
-| 28 | Folie Destructrice | 1 | — |
-| 29 | Agressivité Nocive | 2 | — |
 
 ### Son Don dans l'équipement
 
@@ -193,7 +189,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 2 · la Maîtrise |
 | Son unique Don | **l'Armure Volante** *(avatar spirituel)* → emplacement Âme (7) |
 | Trait | change + hiver |
-| Note de l'acteur | `<Passive State: 22, 23, 24, 25> · <Passive State: 62> · <Mana: negatif> · <Mana2: positif> · <VoieDefaut: flash> · <Camp: lumiere>` |
+| Note de l'acteur | `<Passive State: 62> · <Mana: negatif> · <Mana2: positif> · <VoieDefaut: flash> · <Camp: lumiere>` |
 
 ### Ses branches
 
@@ -337,10 +333,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | # | État | Traits | Ouvre |
 |---|---|---|---|
-| 22 | Éveil du Génie | 2 | — |
-| 23 | Distraite | 1 | — |
-| 24 | Maladresse | 1 | — |
-| 25 | Méditation Profonde | 1 | — |
 | 62 | normal | 0 **aucun : il ne fait rien** | — |
 
 ### Son Don dans l'équipement
@@ -358,7 +350,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 3 · le Symbole |
 | Son unique Don | **l'Amulette** *(objet)* → emplacement Accessoire (5) |
 | Trait | ames |
-| Note de l'acteur | `<Passive State: 34, 35, 36, 37, 64> · <Mana: spirituelle> · <Mana2: positif> · <VoieDefaut: source> · <Camp: ombre> · ` |
+| Note de l'acteur | `<Passive State: 64> · <Mana: spirituelle> · <Mana2: positif> · <VoieDefaut: source> · <Camp: ombre> · ` |
 
 ### Ses branches
 
@@ -458,8 +450,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
-| 1 | 71 | Royaume Impérial | 1000 PM | pose « 👑 Royaume Impérial » 100% | 415 | `<DomaineRoyal>` `<Ancien After Eval>` ⚠ `<Voie: domaine>` |
-| 45 | 810 | ☠ Royaume Impérial des Ténèbres | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
+| 1 | 71 | Royaume Impérial · le Domaine des Retours | 1000 PM | pose « 👑 Royaume Impérial » 100% | 415 | `<DomaineRoyal>` `<Ancien After Eval>` ⚠ `<Voie: domaine>` |
+| 45 | 810 | ☠ Ténèbres Impériales | 60 PM | **coquille** — rien | 445 | `<RoyaumeImperial>` `<Parole: origine>` |
 
 ### ✘ Type 4 — JACKPOT  *(INVISIBLE)*
 
@@ -564,10 +556,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | # | État | Traits | Ouvre |
 |---|---|---|---|
-| 34 | Maître Serein | 2 | — |
-| 35 | Agaçant | 2 | — |
-| 36 | Insupportable | 2 | — |
-| 37 | Souffre-Douleur | 4 | — |
 | 64 | normal | 0 **aucun : il ne fait rien** | — |
 
 ### Son Don dans l'équipement
@@ -589,7 +577,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Classe | 4 · la Parole |
 | Son unique Don | **l'Arc** *(arme)* → emplacement Arme (1) |
 | Trait | miracle |
-| Note de l'acteur | `<Passive State: 40, 41, 42, 43> · <Passive State: 63> · <Mana: positif> · <VoieDefaut: miroir> · <Camp: lumiere> · <Trait: miracle>` |
+| Note de l'acteur | `<Passive State: 63> · <Mana: positif> · <VoieDefaut: miroir> · <Camp: lumiere> · <Trait: miracle>` |
 
 ### Ses branches
 
@@ -727,10 +715,6 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | # | État | Traits | Ouvre |
 |---|---|---|---|
-| 40 | Confiance Absolue | 4 | — |
-| 41 | Hésitation | 3 | — |
-| 42 | Complexe d'Infériorité | 3 | — |
-| 43 | Blocage Psychologique | 2 | — |
 | 63 | normal | 0 **aucun : il ne fait rien** | — |
 
 ### Son Don dans l'équipement
@@ -773,7 +757,7 @@ La colonne de droite fait la différence entre deux cas qu'il ne faut pas confon
 | `<NomOrigine>` | 120 | **étiquette** — jamais lue nulle part | Vesper #9 Parole n°8 Feu · Vesper #10 Parole n°12 Étincelle … |
 | `<Nerf 2026-09-25>` | 13 | **étiquette** — jamais lue nulle part | Vesper #1068 Le Point Final · Vesper #1069 Marteau à Deux Mains … |
 | `<AvatarGarde>` | 1 | **étiquette** — jamais lue nulle part | Korrah #1252 Le Torse Se Referme |
-| `<Ancien After Eval>` | 1 | **étiquette** — jamais lue nulle part | ludwing #71 Royaume Impérial |
+| `<Ancien After Eval>` | 1 | **étiquette** — jamais lue nulle part | ludwing #71 Royaume Impérial · le Domaine des Retours |
 | `<FrappeAme>` | 1 | dort dans `ManaCodex`, `FrappeAme`, `PortesProgression` | ludwing #120 Déchirure d'Âme |
 
 ---

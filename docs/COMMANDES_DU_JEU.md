@@ -1527,7 +1527,7 @@ Balises de note employées dans le jeu :
 
 ### `ParolesSysteme`
 
-Magie par PAROLES : longueur de parole + santé mentale =
+Magie par PAROLES : longueur de parole =
 réussite / ratage / backlash. Aide en direct, soins inclus, compatible CTB/ATB.
 
 Balises de note employées dans le jeu :
@@ -1872,20 +1872,6 @@ LOU clear_copies    Vide le presse-papier de Lou
 
 ## LES ÉVÉNEMENTS SYSTÈME · ce que les cartes appelaient dans le vide
 
-### `JadeEntitePlunging`
-
-Santé Mentale de l'Âme — Jauge de Maîtrise (5 phases). Écrit par JOKO, posé dans js/plugins/ mais jamais inscrit : les 21 commandes « AME » de ses cartes tombaient dans le vide.
-
-**✔ `AME`**  *(la casse n'a pas d'importance)*  — utilisée 21 fois dans tes événements
-
-```
-AME mauvais thylane 1
-AME bon thylane 2
-AME mauvais neyssa 1
-```
-
-*Tes propres lignes, copiées de tes événements.*
-
 ### `EvenementsUtiles`
 
 Répond aux commandes de greffon que les cartes appellent depuis toujours sans que personne ne décroche : NPC, FEU, FORGE, TEMPS, CHUTE. Plus les trois reliques dont la description promettait pour rien.
@@ -2143,6 +2129,19 @@ Météo vivante : un temps qui change avec les jours et les saisons (pluie, orag
 METEO auto          le temps redevient libre
 ```
 
+### `OutilsDeScene`
+
+Scènes : les PNJ s'arrêtent, un personnage bloqué traverse au lieu de tout figer, caméra, bandes de cinéma, scène à passer.
+
+**`SCENE`**
+
+
+```
+SCENE debut          le mode cinématique commence
+SCENE barres 90           … plus hautes
+SCENE barres off          elles repartent
+```
+
 ---
 
 ## Les appels de script
@@ -2294,4 +2293,17 @@ plante, le système se met simplement à lire le mauvais nombre.
 | 206 | TS · Service de jour | MOG_TimeSystem · Day Shift Switch ID |
 | 207 | TS · Service de nuit | MOG_TimeSystem · Night Shift Switch ID |
 | 231 | TS · Météo des saisons | VerrouDesSaisons · interrupteur |
+| 912 | ✎ Mode cinématique | OutilsDeScene · interrupteur |
+
+---
+
+## Ce qui ne marche pas
+
+### Posées dans un événement, écoutées par personne — 1
+
+Soit le plugin qui les écoutait est éteint, soit le nom a changé.
+
+| commande | fois | où |
+|---|---:|---|
+| `AME` | 21 | CommonEvents.json, Map002.json, Map005.json |
 
