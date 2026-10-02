@@ -14,7 +14,8 @@
  *            balayage continue ;
  *   combats  chaque troupe est combattue en combat automatique (héros niveau
  *            50), accéléré ×4, jusqu'à la victoire, la défaite ou 3 tours.
- *            Un combat qui ne progresse plus est signalé « figé ».
+ *            Un combat qui ne progresse plus pendant 60 s est signalé « figé » (les
+ *            actions de Mahoraga durent plus de 20 s : 20 s accusait à tort).
  *
  * Une erreur porte son contexte : « carte 29 év.12 p2 », « troupe 519 ».
  * Les cartes et événements communs d'atelier (✎, ★, démos) sont comptés à
@@ -221,7 +222,7 @@ async function combats(page, liste) {
                 if ($gameTroop.turnCount() >= 3) return { fin: '3 tours' };
                 var s = [$gameTroop.turnCount(), BattleManager._phase, BattleManager._subject && BattleManager._subject.name(), $gameTroop.members().map(function (e) { return e.hp; }).join(','), $gameParty.members().map(function (e) { return e.hp + ':' + e.mp; }).join(',')].join('|');
                 if (s !== sig) { sig = s; dernier = performance.now(); }
-                if (performance.now() - dernier > 20000) return { fin: 'figé', etat: 'phase ' + BattleManager._phase + ' · sujet ' + (BattleManager._subject ? BattleManager._subject.name() : '—') + ' · tour ' + $gameTroop.turnCount() + ' · message ' + $gameMessage.isBusy() + ' · événement ' + $gameTroop.isEventRunning() };
+                if (performance.now() - dernier > 60000) return { fin: 'figé', etat: 'phase ' + BattleManager._phase + ' · sujet ' + (BattleManager._subject ? BattleManager._subject.name() : '—') + ' · tour ' + $gameTroop.turnCount() + ' · message ' + $gameMessage.isBusy() + ' · événement ' + $gameTroop.isEventRunning() };
                 if (performance.now() - t0 > 90000) return { fin: 'long' };
             }
         });
