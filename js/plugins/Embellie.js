@@ -80,6 +80,9 @@
  *  vignette et les lucioles se coupent d'elles-mêmes : elles y coûtaient
  *  7 et 5 images par seconde ; les halos restent (2 images/s).
  *
+ *  OPTION : « Effets visuels » dans le menu Options coupe tout (halos,
+ *  lucioles, vignette, pluie et neige à l'écran). Les teintes restent.
+ *
  *  SCRIPT : Embellie.halos()  → combien de halos sur la carte, là
  */
 var Embellie = window.Embellie || {};
@@ -319,6 +322,19 @@ window.Embellie = Embellie;
         if (!actif && this._l.every(function (s) { return s.alpha < 0.02; })) { this._l.forEach(function (s) { this.removeChild(s); }, this); this._l = []; }
     };
 
+    /* ═══ l'option « Effets visuels » (menu Options) ═══
+     * Pour un ami au vieux PC, ou qui n'aime pas : il coupe halos, lucioles,
+     * vignette (et la pluie/neige à l'écran de MeteoVivante) sans toucher au
+     * projet. Gardé avec les autres options, pas dans la sauvegarde. */
+    ConfigManager.embellie = true;
+    var _mk = ConfigManager.makeData;
+    ConfigManager.makeData = function () { var c = _mk.call(this); c.embellie = this.embellie; return c; };
+    var _ap = ConfigManager.applyData;
+    ConfigManager.applyData = function (c) { _ap.call(this, c); this.embellie = c.embellie === undefined ? true : !!c.embellie; };
+    var _go = Window_Options.prototype.addGeneralOptions;
+    Window_Options.prototype.addGeneralOptions = function () { _go.call(this); this.addCommand('Effets visuels', 'embellie'); };
+    Embellie.actif = function () { return ConfigManager.embellie !== false; };
+
     /* ═══ la pose : au-dessus de la carte teintée, sous la météo et les images ═══ */
     var _lower = Spriteset_Map.prototype.createLowerLayer;
     Spriteset_Map.prototype.createLowerLayer = function () {
@@ -337,9 +353,8 @@ window.Embellie = Embellie;
     var _upd = Spriteset_Map.prototype.update;
     Spriteset_Map.prototype.update = function () {
         _upd.call(this);
-        if (this._embHalos) this._embHalos.update();
-        if (this._embLucioles) this._embLucioles.update();
-        if (this._embVignette) this._embVignette.update();
+        var on = Embellie.actif();
+        [this._embHalos, this._embLucioles, this._embVignette].forEach(function (c) { if (c) { c.visible = on; if (on) c.update(); } });
     };
 
     Embellie.halos = function () { var s = SceneManager._scene && SceneManager._scene._spriteset; return s && s._embHalos ? s._embHalos._vus : 0; };

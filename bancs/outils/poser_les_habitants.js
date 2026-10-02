@@ -27,6 +27,7 @@ var DATA = path.join(RACINE, 'data');
 var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
 var D = require('./recettes/dsl.js');
 var H = require('./habitants/moteur.js');
+var COMMUNS = require('./habitants/_communs.js');
 var A = D.A, C = D.C, si = D.si, cat = D.cat;
 
 // chaque fichier de habitants/ (sauf le moteur) est un lot : { carte, fiches, tableau?, NOMS_SW? }
@@ -118,13 +119,21 @@ function controle(nom, liste) {
     });
     if (pile) defauts.push(nom + ' : bloc non refermé');
 }
+var repris = [];
 LOTS.forEach(function (lot) {
     lot.fiches.forEach(function (f) {
         var m = carteDe(f.carte), e = m.events[f.ev];
-        if (!e) { defauts.push('carte ' + f.carte + ' : événement ' + f.ev + ' absent'); return; }
+        // ⚠ 2026-10-02 : JOKO a retiré Gaston (carte 29, év. 27) et repris deux
+        //   habitants du bar (év. 28 « vesper », év. 48 « colidia »). Un
+        //   événement retiré, ou une page qui ne porte plus la marque
+        //   « ◆ HABITANT », est à JOKO : on ne la réécrit jamais, on le dit.
+        if (!e) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (' + f.nom + ') : retiré par JOKO'); return; }
         var page = f.page || 1, orig = original(f.carte, f.ev);
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
+        if (!e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
         var fiche = Object.assign({}, f);
+        // le temps qu'il fait : sa propre voix, sinon celle de son milieu
+        if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
         fiche.options = (f.options || []).map(function (o) {
             if (!o.garder) return o;
             var cmds = extraire(f.carte, f.ev, page, o.garder);
@@ -164,11 +173,18 @@ LOTS.forEach(function (lot) {
 var parCarte = {};
 LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { parCarte[f.carte] = (parCarte[f.carte] || 0) + 1; }); });
 console.log('   ' + poses + ' habitants posés (' + Object.keys(parCarte).map(function (k) { return 'carte ' + k + ' : ' + parCarte[k]; }).join(' · ') + ') · ' + lignes + ' lignes de dialogue');
+if (repris.length) console.log('   ⚑ laissés à JOKO :\n     ' + repris.join('\n     '));
 if (defauts.length) { console.log('   ✗ ' + defauts.length + ' défaut(s) :\n     ' + defauts.slice(0, 40).join('\n     ')); process.exit(1); }
 console.log('   ✓ blocs refermés, scripts et conditions valides, sons présents, lignes à la bonne largeur');
 if (!ECRIRE) process.exit(0);
 
-Object.keys(cartes).forEach(function (n) { fs.writeFileSync(fichierCarte(n), JSON.stringify(cartes[n])); });
+// au format de l'éditeur (un événement par ligne) : les commits de JOKO
+// restent lisibles, et un diff montre l'événement qui a changé
+function formatCarte(m) {
+    var props = Object.keys(m).filter(function (k) { return k !== 'data' && k !== 'events'; }).map(function (k) { return JSON.stringify(k) + ':' + JSON.stringify(m[k]); }).join(',');
+    return '{\n' + props + ',\n"data":' + JSON.stringify(m.data) + ',\n"events":[\n' + m.events.map(function (e) { return JSON.stringify(e); }).join(',\n') + '\n]\n}';
+}
+Object.keys(cartes).forEach(function (n) { fs.writeFileSync(fichierCarte(n), formatCarte(cartes[n])); });
 var FS = path.join(DATA, 'System.json');
 var brut = fs.readFileSync(FS, 'utf8'), SYS = JSON.parse(brut);
 function nommer(tab, noms) {

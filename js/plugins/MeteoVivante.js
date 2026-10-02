@@ -90,6 +90,10 @@
  *     étouffés. Une carte qui a son propre son d'ambiance le garde.
  *   · Orage : éclair bref, puis le tonnerre, avec le délai de la distance.
  *
+ *  OPTIONS (menu Options du jeu) : « Sons d'ambiance » coupe pluie, vent,
+ *  grillons et tonnerre ; « Effets visuels » (Embellie) coupe la pluie et la
+ *  neige à l'écran. Le temps continue (habitants, teinte) dans les deux cas.
+ *
  *  COMMANDES DE PLUGIN (pour tes scènes)
  *     METEO pluie | orage | brouillard | neige | tempete | nuageux | clair
  *     METEO auto          le temps redevient libre
@@ -206,9 +210,20 @@ window.Meteo = Meteo;
         }
     }
 
+    /* ── l'option « Sons d'ambiance » (menu Options) ── */
+    ConfigManager.ambiance = true;
+    var _mk = ConfigManager.makeData;
+    ConfigManager.makeData = function () { var c = _mk.call(this); c.ambiance = this.ambiance; return c; };
+    var _ap = ConfigManager.applyData;
+    ConfigManager.applyData = function (c) { _ap.call(this, c); this.ambiance = c.ambiance === undefined ? true : !!c.ambiance; };
+    var _go = Window_Options.prototype.addGeneralOptions;
+    Window_Options.prototype.addGeneralOptions = function () { _go.call(this); if (SONS) this.addCommand('Sons d\'ambiance', 'ambiance'); };
+    function sonsOk() { return SONS && ConfigManager.ambiance !== false; }
+    function visuelOk() { return !window.Embellie || !Embellie.actif || Embellie.actif(); }
+
     /* ── le son d'ambiance ── */
     function sonVoulu(type) {
-        if (!SONS) return null;
+        if (!sonsOk()) return null;
         var T = TEMPS[type], s = saison();
         if (T && T.son) return { name: T.son, volume: Math.round(T.vol * VOLUME / 100 * (dehors() ? 1 : 0.35)), pitch: dehors() ? 100 : 85, pan: 0 };
         // les nuits claires d'été et de printemps : les grillons
@@ -236,14 +251,14 @@ window.Meteo = Meteo;
         if (!ACTIF || !$gameMap || !$gameMap.mapId() || !$gameSystem._weatherEX_Data) return;
         if ($dataMap && /<Disable Time System>|<Atelier>/i.test($dataMap.note || '')) return;
         var type = typeActuel();
-        var cle = [type, dehors(), nuit(), $gameMap.mapId(), saison()].join('|');
+        var cle = [type, dehors(), nuit(), $gameMap.mapId(), saison(), sonsOk(), visuelOk()].join('|');
         if (cle === _dernier && !forcer) return;
         var change = cle.split('|')[0] !== _dernier.split('|')[0];
         _dernier = cle;
         var T = TEMPS[type] || TEMPS.clair;
         // couches 1 et 2 : la météo vivante, dehors seulement
         $gameSystem.clearWeatherEX(1, true); $gameSystem.clearWeatherEX(2, true);
-        if (dehors()) T.couches.forEach(commande);
+        if (dehors() && visuelOk()) T.couches.forEach(commande);
         coucheZero(type);
         ambiance(type);
         // la teinte suit le temps (Embellie ou MOG la recalcule)
@@ -290,7 +305,7 @@ window.Meteo = Meteo;
         }
         if (_tonnerre && f >= _tonnerre) {
             _tonnerre = 0;
-            AudioManager.playSe({ name: 'Thunder' + (1 + Math.randomInt(5)), volume: Math.round((dehors() ? 75 : 35) * VOLUME / 60), pitch: 85 + Math.randomInt(25), pan: Math.randomInt(60) - 30 });
+            if (sonsOk()) AudioManager.playSe({ name: 'Thunder' + (1 + Math.randomInt(5)), volume: Math.round((dehors() ? 75 : 35) * VOLUME / 60), pitch: 85 + Math.randomInt(25), pan: Math.randomInt(60) - 30 });
         }
     }
 

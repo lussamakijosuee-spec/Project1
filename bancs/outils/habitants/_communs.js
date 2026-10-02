@@ -51,6 +51,77 @@ var SAISON = {
 };
 var AUREVOIR = ['Bonne route.', 'À la prochaine.', 'Allez, va.', 'Porte-toi bien.'];
 
+/* LE TEMPS QU'IL FAIT — ce qu'on en dit, selon le milieu (MeteoVivante,
+ * 2026-10-02). Par mauvais temps, la remarque remplace celle de saison.
+ * Une fiche peut avoir ses propres répliques : meteo: { pluie: [...], … }.
+ * Dehors : on vit le temps. Dedans : on le voit entrer avec les clients. */
+var METEO = {
+    ville: {
+        pluie: ['Encore la pluie. Les rues se changent en ruisseaux, et les ruisseaux en boue.', 'T\'as pas de capuche ? Moi non plus. On rentre vite, c\'est tout.'],
+        orage: ['T\'as entendu ce coup-là ? J\'ai cru que le toit du voisin partait.', 'Par un temps pareil, même les chiens restent sous les porches.'],
+        brouillard: ['Je vois pas le bout de la rue. Si quelqu\'un te parle sans visage, réponds pas.', 'Le brouillard du matin. Il colle aux vêtements comme une mauvaise nouvelle.'],
+        neige: ['La neige tient. Les gamins sont contents, les vieux beaucoup moins.', 'Marche dans les traces des autres. Sous la neige, il y a des trous.'],
+        tempete: ['On voit plus rien ! Rentre quelque part, et vite.', 'Le vent arrache les volets. J\'en ai déjà ramassé deux.']
+    },
+    marche: {
+        pluie: ['La pluie fait fuir les clients. Et les clients qui restent veulent un rabais.', 'Mes étals prennent l\'eau. Je vends des fruits lavés, ce matin. Gratuitement lavés.'],
+        orage: ['Un orage, et tout le monde remballe. Une journée perdue.', 'La toile de mon étal a pris le vent. Elle est sur le toit d\'en face, maintenant.'],
+        brouillard: ['Avec ce brouillard, les voleurs ont la tâche facile. Je garde une main sur la caisse.', 'On ne voit pas la marchandise. Les gens achètent au toucher. Ils se plaignent après.'],
+        neige: ['L\'hiver, je vends du bois, de la laine et des promesses de printemps.', 'La neige gâte les légumes. Et elle fait monter les prix. Ça, c\'est bon pour moi.'],
+        tempete: ['Aujourd\'hui je ne vends rien. Je tiens mon étal pour qu\'il ne s\'envole pas.', 'Pas de marché par ce temps. Reviens quand on y verra.']
+    },
+    peche: {
+        pluie: ['La pluie, ça ne gêne pas les poissons. Ça gêne les pêcheurs.', 'Les barques restent à quai. La mer est grise, le ciel aussi, et moi pareil.'],
+        orage: ['Personne ne sort par un temps pareil. Ceux qui sortent, on les cherche le lendemain.', 'La mer cogne la jetée. Elle a faim, aujourd\'hui.'],
+        brouillard: ['Brouillard sur l\'eau : on sonne la cloche du port pour que les barques retrouvent le quai.', 'Par ce brouillard, on rentre à l\'oreille : les vagues sur les rochers, c\'est la seule carte qui vaille.'],
+        neige: ['La neige sur la mer, c\'est beau. Ça ne pêche pas, mais c\'est beau.', 'Les filets gèlent. On les casse en les dépliant.'],
+        tempete: ['Tempête. Les barques sont attachées deux fois. Moi aussi, si je pouvais.', 'Le port ferme. Même les mouettes ont abandonné.']
+    },
+    montagne: {
+        pluie: ['La pluie descend de la montagne. Elle emporte la terre des chemins avec elle.', 'Le torrent grossit. Personne ne traverse le gué aujourd\'hui.'],
+        orage: ['Là-haut, l\'orage tape sur les crêtes. Ici, on compte entre l\'éclair et le bruit.', 'Un orage en montagne, ça se respecte. On se met à l\'abri et on se tait.'],
+        brouillard: ['Le brouillard monte de la vallée. Les chèvres rentrent seules, elles savent.', 'Par brouillard, on ne prend pas le sentier du col. On le prend une fois, pas deux.'],
+        neige: ['La neige, ici, c\'est la moitié de l\'année. On s\'y fait. Les genoux, eux, s\'y font pas.', 'Le col est fermé. Ceux qui sont de l\'autre côté y restent jusqu\'au dégel.'],
+        tempete: ['Tempête de neige : on ferme les volets, on garde le feu, on attend. C\'est tout ce qu\'on peut faire.', 'Par une tempête comme ça, des gens se perdent à dix pas de chez eux. Reste près des murs.']
+    },
+    bar: {
+        pluie: ['T\'es trempé. Viens près du feu, et ferme cette porte avant qu\'on prenne froid.', 'Quand il pleut, le bar se remplit. Les gens boivent pour sécher de l\'intérieur.'],
+        orage: ['Avec l\'orage dehors, personne ne part. Bonne soirée pour les affaires, longue soirée pour moi.', 'Le tonnerre fait trembler les verres. Les clients, eux, tremblent quand je leur donne la note.'],
+        brouillard: ['Le brouillard ramène des têtes qu\'on n\'a jamais vues. On ne pose pas de questions.', 'On dirait que la rue a disparu, derrière la fenêtre.'],
+        neige: ['T\'as de la neige plein les épaules. Secoue-toi dehors, pas sur mon plancher.', 'L\'hiver, le vin chaud se vend mieux que la bière. Je fais les deux, je suis prévoyant.'],
+        tempete: ['Personne ne sort ce soir. Je fais un prix pour ceux qui dorment sur les bancs.', 'Le vent siffle dans la cheminée. On dirait quelqu\'un qui chante faux. Comme Grod.']
+    },
+    auberge: {
+        pluie: ['Tes bottes, sur le paillasson ! J\'ai lavé le sol ce matin.', 'Avec cette pluie, les chambres se remplissent. Les voyageurs arrivent mouillés et repartent secs. Moyennant finance.'],
+        orage: ['Ce soir, personne ne reprend la route. Il me reste deux chambres, et elles sont chères.', 'L\'orage a réveillé tout l\'étage. Ils réclament du thé. À cette heure.'],
+        brouillard: ['Les voyageurs se perdent dans le brouillard et finissent ici. Le brouillard, c\'est mon meilleur rabatteur.', 'Le cocher du matin n\'est pas parti. Il dit qu\'il voit pas ses chevaux.'],
+        neige: ['La route est bloquée par la neige. Ceux qui sont ici vont rester. Ils ne se supportent déjà plus.', 'Le bois coûte plus cher que les chambres, l\'hiver. Je chauffe quand même.'],
+        tempete: ['Tempête. Personne ne part, personne n\'arrive. On attend.', 'Le vent a cassé un carreau à l\'étage. Le client dit que c\'est pas lui. Je le crois. À moitié.']
+    },
+    boutique: {
+        pluie: ['La pluie ? Bonne nouvelle : on vend des capes. Mauvaise : on n\'en a plus.', 'Essuie tes pieds avant de toucher à la marchandise.'],
+        orage: ['Avec l\'orage, tu es mon seul client de la journée. Je te fais un prix. Un petit.', 'Si le tonnerre tombe sur la boutique, je te rends pas ta monnaie.'],
+        brouillard: ['Le brouillard fait rentrer des gens qui cherchaient autre chose. Ils achètent quand même.', 'On n\'y voit rien dehors. Ici, au moins, on voit les prix.'],
+        neige: ['L\'hiver, je vends des gants. Et des excuses quand je n\'en ai plus.', 'Ferme la porte, la neige rentre.'],
+        tempete: ['Par une tempête pareille, je n\'aurais pas ouvert. Mais tu es là, alors autant vendre.', 'Le vent fait claquer l\'enseigne. Si elle tombe, elle est à toi, gratuite.']
+    },
+    manoir: {
+        pluie: ['Il pleut. Les invités du lord se plaignent de la boue sur leurs bottes. Nous, on la nettoie.', 'Madame ne sortira pas aujourd\'hui. Quand il pleut, tout le manoir s\'ennuie, et l\'ennui se passe sur nous.'],
+        orage: ['L\'orage a fait tomber un tableau dans la galerie. On ne dira pas qui l\'avait mal accroché.', 'Les invités veulent des bougies dans chaque pièce. Par orage, les nobles ont peur du noir.'],
+        brouillard: ['Le brouillard cache le jardin. Le jardinier dit que c\'est le seul jour où personne ne critique ses haies.', 'On ne voit pas l\'allée, ce matin. Les carrosses attendent.'],
+        neige: ['La neige, vue d\'ici, c\'est joli. Vue du village, c\'est du bois qu\'il faut couper.', 'Les cheminées brûlent jour et nuit. Les nobles ont chaud. Les domestiques portent le bois.'],
+        tempete: ['Tempête. Les invités ne repartiront pas. Il faudra les nourrir jusqu\'à ce que ça passe.', 'Le vent hurle dans les couloirs. Les nobles disent que c\'est le manoir qui a de l\'âme. C\'est surtout qu\'il a des fenêtres mal fermées.']
+    },
+    garde: {
+        pluie: ['Garde sous la pluie : l\'armure rouille, les pieds pourrissent, et la paie arrive pas plus vite.', 'Les gens rentrent chez eux. Nous, on reste. On est payés pour être mouillés.'],
+        orage: ['Un orage, et le capitaine veut quand même la ronde. Il est au sec, lui.', 'Pas de lance levée sous l\'orage. Ça, c\'est la seule règle que je respecte vraiment.'],
+        brouillard: ['Par ce brouillard, n\'importe qui peut passer la porte. Alors j\'arrête tout le monde. Même toi.', 'On voit à trois pas. Si tu vois quelqu\'un courir, c\'est pas forcément un voleur. Mais souvent.'],
+        neige: ['La neige gèle les gants à la hampe. On garde la porte, et la porte nous garde froids.', 'Les traces dans la neige, c\'est pratique : on sait qui est sorti cette nuit.'],
+        tempete: ['Tempête. On garde la porte fermée, et on fait semblant de surveiller.', 'Par ce vent, même les brigands restent chez eux. C\'est déjà ça.']
+    }
+};
+var LIEU_DE_CARTE = { 29: 'ville', 30: 'marche', 33: 'peche', 36: 'montagne', 41: 'boutique', 42: 'boutique', 43: 'boutique', 44: 'auberge', 46: 'bar', 47: 'manoir' };
+
 /* un garde : un fonds de caserne, et ce qui n'appartient qu'à lui */
 function garde(ev, nom, o) {
     return Object.assign({
@@ -73,8 +144,9 @@ function garde(ev, nom, o) {
         perso: o.perso,
         options: o.options,
         tags: o.tags,
-        aurevoir: o.aurevoir || ['Circule.', 'Reste dans les rues éclairées.', 'Et pas de bêtises.']
+        aurevoir: o.aurevoir || ['Circule.', 'Reste dans les rues éclairées.', 'Et pas de bêtises.'],
+        meteo: o.meteo || METEO.garde
     }, o.extra || {});
 }
 
-module.exports = { P: P, paye: paye, boutique: boutique, garde: garde, LORD: LORD, MAGIE: MAGIE, DUR: DUR, SAISON: SAISON, AUREVOIR: AUREVOIR, A: A, C: C, si: si, cat: cat, H: H, D: D };
+module.exports = { METEO: METEO, LIEU_DE_CARTE: LIEU_DE_CARTE, P: P, paye: paye, boutique: boutique, garde: garde, LORD: LORD, MAGIE: MAGIE, DUR: DUR, SAISON: SAISON, AUREVOIR: AUREVOIR, A: A, C: C, si: si, cat: cat, H: H, D: D };

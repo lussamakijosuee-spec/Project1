@@ -131,6 +131,7 @@ suit la même mécanique que ton aubergiste, en plus fin.
   quand tu reviens après 7 jours d'absence.
 - **Il dit bonjour selon le moment** (matin, après-midi, soir, nuit) et fait une
   **remarque de saison**.
+- **Il parle du temps qu'il fait** (MeteoVivante) : par pluie, orage, neige, tempête ou brouillard, sa remarque du jour change, dans la voix de son milieu (la caserne pour les gardes, le port pour les pêcheurs, la montagne, le marché, le bar, l'auberge, le manoir).
 - **Il réagit si ton chef d'équipe est blessé.**
 - **Son menu revient après chaque sujet**, jusqu'à « Au revoir » :
   - Discuter ;

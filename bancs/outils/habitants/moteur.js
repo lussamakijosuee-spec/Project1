@@ -106,7 +106,17 @@ function compiler(p) {
     if (p.premiere) accueil = si(C.vr(V.visites, '=', 1), element(nom, p.premiere), accueil);
     l = l.concat(accueil);
     if (p.blesse) l = l.concat(si(C.js('$gameParty.leader() && $gameParty.leader().hpRate() < 0.4'), unParmi(nom, [].concat(p.blesse))));
-    if (p.saisons) l = l.concat(si(C.vr(V.visites, '>', 1), selon(V.saison, p.saisons, nom)));
+    // la remarque du jour : par mauvais temps, le temps qu'il fait (MeteoVivante) ;
+    // sinon, à partir de la 2e visite, la saison
+    var remSaison = p.saisons ? si(C.vr(V.visites, '>', 1), selon(V.saison, p.saisons, nom)) : [];
+    if (p.meteo) {
+        var types = ['orage', 'tempete', 'pluie', 'neige', 'brouillard'].filter(function (t) { return p.meteo[t] && p.meteo[t].length; });
+        var chaine = function (i) {
+            if (i >= types.length) return remSaison;
+            return si(C.js("window.Meteo && Meteo.est('" + types[i] + "')"), unParmi(nom, p.meteo[types[i]]), chaine(i + 1));
+        };
+        l = l.concat(chaine(0));
+    } else l = l.concat(remSaison);
     if (p.apresAccueil) l = l.concat(p.apresAccueil);
 
     // le menu
