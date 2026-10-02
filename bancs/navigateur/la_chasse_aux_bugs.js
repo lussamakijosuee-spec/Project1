@@ -126,7 +126,19 @@ async function relever(page) {
 }
 async function allerA(page, id, x, y) {
     // (une carte de démo peut avoir ouvert un mini-jeu : on revient d'abord à la carte)
-    await page.evaluate(function (d) { window.__neutraliser(false); window.__propre(); $gamePlayer.reserveTransfer(d[0], d[1], d[2], 2, 0); if (!(SceneManager._scene instanceof Scene_Map)) SceneManager.goto(Scene_Map); }, [id, x || 0, y || 0]);
+    await page.evaluate(function (d) {
+        window.__neutraliser(false); window.__propre();
+        // se relever d'un fichier introuvable : MV s'arrête (SceneManager.stop)
+        // et garde l'image fautive dans son cache, qui lève à chaque image
+        if (SceneManager._stopped) { SceneManager._stopped = false; if (Graphics.eraseLoadingError) Graphics.eraseLoadingError(); SceneManager.requestUpdate(); }
+        [ImageManager._imageCache, ImageManager.cache].forEach(function (c) {
+            var it = c && (c._items || c._inner); if (!it) return;
+            Object.keys(it).forEach(function (k) { var b = it[k] && (it[k].bitmap || it[k].item || it[k]); if (b && (b._loadingState === 'error' || (b.isError && b.isError()))) delete it[k]; });
+        });
+        $gamePlayer.reserveTransfer(d[0], d[1], d[2], 2, 0);
+        // une carte de démo peut avoir ouvert un mini-jeu qui ne rend pas la main
+        if (!(SceneManager._scene instanceof Scene_Map)) { SceneManager._scene.isBusy = function () { return false; }; SceneManager.goto(Scene_Map); }
+    }, [id, x || 0, y || 0]);
     try {
         await page.waitForFunction(function (d) { return $gameMap.mapId() === d && SceneManager._sceneStarted && SceneManager._scene instanceof Scene_Map; }, id, { timeout: 30000 });
         return true;

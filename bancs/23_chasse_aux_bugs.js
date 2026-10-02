@@ -193,6 +193,20 @@ function liste(lieu, demo, cmds) {
             case 301: if (p[0] === 0) ref(L, demo, 'Troops', p[1], 'troupe'); break;
             case 322: img(L, demo, 'characters', p[1]); img(L, demo, 'faces', p[3]); img(L, demo, 'sv_actors', p[5]); break;
             case 323: img(L, demo, 'characters', p[1]); break;
+            case 108: case 408:
+                // MOG_EventIndicators : « indicator : Flame : 0 : 60 » (une image,
+                // ou une série Flame_0, Flame_1…). Carte 16 : « flame » au lieu
+                // de « Flame » — passe sous Windows, s'arrête ailleurs.
+                var ind = String(p[0]).match(/^\s*indicator\s*:\s*([^:]+?)\s*:/i);
+                if (ind && ind[1] && ind[1].trim()) {   // vide : un indicateur de texte seul, sans image
+                    var nomI = ind[1].trim(), r0 = existe('img/eventindicators', nomI, 'png'), r1 = existe('img/eventindicators', nomI + '_0', 'png');
+                    if (r0 !== 'ok' && r1 !== 'ok') {
+                        var cas = r0.indexOf('casse:') === 0 ? r0 : r1;
+                        if (cas.indexOf('casse:') === 0) note(false, demo, L, 'indicateur « ' + nomI + ' » : le fichier s\'appelle « ' + cas.slice(6) + ' » (casse)');
+                        else note(true, demo, L, 'indicateur « ' + nomI + ' » : img/eventindicators/' + nomI + '.png introuvable');
+                    }
+                }
+                break;
             case 356:
                 commandePlugin(L, demo, p[0]);
                 // MOG_Weather_EX : « weather : couche : type : densité : vitesse : mode : IMAGE … »
@@ -218,7 +232,8 @@ function liste(lieu, demo, cmds) {
 actifs.filter(function (p) { return p.status; }).forEach(function (p) {
     var f = path.join(R, 'js', 'plugins', p.name + '.js'); if (!fs.existsSync(f)) return;
     var src = fs.readFileSync(f, 'utf8'), m;
-    var reA = /AudioManager\.play(Bgm|Bgs|Me|Se)\(\s*\{\s*name\s*:\s*(['"])([^'"]+)\2/g;
+    // nom complet seulement : 'Thunder' + n (MeteoVivante) n'est pas un nom
+    var reA = /AudioManager\.play(Bgm|Bgs|Me|Se)\(\s*\{\s*name\s*:\s*(['"])([^'"]+)\2(?=\s*[,}])/g;
     while ((m = reA.exec(src))) fichier('Plugin ' + p.name + ' (code)', false, 'audio/' + m[1].toLowerCase(), m[3], 'ogg');
     var reI = /ImageManager\.load(System|Picture|Character|Face|Parallax|Animation|Battleback1|Battleback2|Enemy|SvEnemy|SvActor|Tileset|Title1|Title2)\(\s*(['"])([^'"]+)\2/g;
     var dossierImg = { System: 'system', Picture: 'pictures', Character: 'characters', Face: 'faces', Parallax: 'parallaxes', Animation: 'animations', Battleback1: 'battlebacks1', Battleback2: 'battlebacks2', Enemy: 'enemies', SvEnemy: 'sv_enemies', SvActor: 'sv_actors', Tileset: 'tilesets', Title1: 'titles1', Title2: 'titles2' };
