@@ -338,3 +338,14 @@ est juste *pour un mécanisme donné*. Changer le mécanisme peut retourner sa
 validité sans que rien ne bouge dans le fichier. Et surtout : quand un
 personnage fait quelque chose d'inattendu, on ne relit pas le code — on demande
 au moteur ce qu'il a refusé, et pourquoi.
+
+---
+
+## La chasse aux bugs (2026-10-02)
+
+| Banc | Ce qu'il vérifie |
+|---|---|
+| `23_chasse_aux_bugs.js` | toutes les données, sans lancer le jeu : fichiers introuvables (y compris dans les commandes de plugin, les paramètres « fichier », les indicateurs MOG et les noms écrits en dur dans le code des plugins), scripts et formules qui ne compilent pas, références vers rien, commandes de plugin que personne ne lit, transferts sur une case d'où l'on ne peut plus bouger |
+| `navigateur/la_chasse_aux_bugs.js` | le vrai moteur : chaque carte chargée et jouée 3 s, chaque page d'événement et chaque événement commun exécuté (premier et dernier choix), chaque troupe combattue en automatique. `cartes`, `pages`, `combats`, `--cartes-de / --cartes-a`, `--de / --a` |
+
+Ce qu'ils ont trouvé et qui est corrigé : la neige `Snow_01A` (événement commun 229), le jingle `Recovery` du Feu d'Âme (EvenementsUtiles), le contre de Mahoraga qui faisait planter le combat suivant, le son vide préchargé par Irina (troupe 24), deux recettes d'atelier.
