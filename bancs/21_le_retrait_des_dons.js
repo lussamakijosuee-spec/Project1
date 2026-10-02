@@ -83,6 +83,7 @@ T('sa classe est bien celle du familier', !!(seiryu && seiryu.classId === 5),
 // ── 4 · plus personne ne porte de Don ─────────────────────────────────────
 console.log('\n4) Plus aucun héros ne porte de Don');
 var HEROS = { 1: 'Vesper', 2: 'Korrah', 3: 'ludwing', 4: 'Aël' };
+var CHOIX_DE_JOKO = { 1: 69 };   // héros → armure de Don remise par JOKO
 Object.keys(HEROS).forEach(function (id) {
     var a = Acteurs[id];
     var portes = [];
@@ -91,7 +92,11 @@ Object.keys(HEROS).forEach(function (id) {
         var o = (i === 0) ? Armes[e] : Armures[e];
         if (o && /<\s*Don\s*:/i.test(o.note || '')) { portes.push(o.name); }
     });
-    T(HEROS[id] + ' ne porte plus de Don', portes.length === 0, portes.join(' + ') || 'aucun');
+    // ⚠ 2026-10-02 : JOKO a remis à Vesper son Masque Naissant (armure 69,
+    //   commit « Update Vesper gear ») — son choix, gardé tel quel
+    var choix = CHOIX_DE_JOKO[id];
+    if (choix) T(HEROS[id] + ' porte le Don que JOKO lui a remis, et lui seul', portes.length === 1 && a.equips.indexOf(choix) >= 0, portes.join(' + ') || 'aucun');
+    else T(HEROS[id] + ' ne porte plus de Don', portes.length === 0, portes.join(' + ') || 'aucun');
 });
 
 // ── 5 · mais les seize pièces sont toujours là ────────────────────────────

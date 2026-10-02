@@ -66,6 +66,8 @@ T('Plus aucun <Forme: familier> dans les données',
 
 console.log('\n─── 3 · L\'ÉQUIPEMENT DE DÉPART : une main d\'acier ───');
 const SLOT = { 0: 'Arme', 4: 'Accessoire', 6: 'Âme' };
+// les Dons que JOKO a remis lui-même après le retrait (héros → armure)
+const CHOIX_DE_JOKO = { 1: 69 };
 for (const id in HEROS) {
     const eq = Ac[id].equips;
     // combien de pièces de Don le héros porte-t-il au départ ?
@@ -83,6 +85,13 @@ for (const id in HEROS) {
     if (DONS_EN_SERVICE) {
         T(HEROS[id] + ' démarre avec EXACTEMENT un Don équipé',
           dons === 1, detail.join(' · '));
+    } else if (CHOIX_DE_JOKO[id]) {
+        // ⚠ 2026-10-02, commit de JOKO « Update Vesper gear » : il a remis à
+        //   Vesper son Masque Naissant (armure 69) — SON choix, après le
+        //   retrait. Le banc garde ce choix au lieu de le contredire.
+        const porte = eq.indexOf(CHOIX_DE_JOKO[id]) >= 0;
+        T(HEROS[id] + ' porte le Don que JOKO lui a remis (armure ' + CHOIX_DE_JOKO[id] + '), et rien d\'autre',
+          porte && dons === 1, detail.join(' · '));
     } else {
         T(HEROS[id] + ' ne porte plus aucun Don',
           dons === 0, detail.join(' · '));
