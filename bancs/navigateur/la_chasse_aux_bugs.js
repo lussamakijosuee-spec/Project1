@@ -36,7 +36,7 @@ var args = process.argv.slice(2);
 function opt(n, d) { var i = args.indexOf(n); return i >= 0 ? Number(args[i + 1]) : d; }
 var PARTIES = args.filter(function (a) { return /^(cartes|pages|combats)$/.test(a); });
 if (!PARTIES.length) PARTIES = ['cartes', 'pages', 'combats'];
-var ONGLETS = opt('--onglets', 3), DE = opt('--de', 1), A = opt('--a', 99999);
+var ONGLETS = opt('--onglets', 3), DE = opt('--de', 1), A = opt('--a', 99999), CDE = opt('--cartes-de', 1), CA = opt('--cartes-a', 9999);
 
 var INFOS = JSON.parse(fs.readFileSync(path.join(R, 'data', 'MapInfos.json'), 'utf8'));
 var CES = JSON.parse(fs.readFileSync(path.join(R, 'data', 'CommonEvents.json'), 'utf8'));
@@ -68,16 +68,16 @@ function outils() {
     Window_Message.prototype.isTriggered = function () { return true; };
 
     // ── le bac à sable pour une page ──
-    var vrai = { transfer: Game_Player.prototype.reserveTransfer, push: SceneManager.push, goto: SceneManager.goto, c301: Game_Interpreter.prototype.command301, video: Graphics.playVideo };
+    var vrai = { prep: SceneManager.prepareNextScene, transfer: Game_Player.prototype.reserveTransfer, push: SceneManager.push, goto: SceneManager.goto, c301: Game_Interpreter.prototype.command301, video: Graphics.playVideo };
     function neutraliser(on) {
         if (on) {
             Game_Player.prototype.reserveTransfer = function () { };
-            SceneManager.push = function () { }; SceneManager.goto = function () { };
+            SceneManager.push = function () { }; SceneManager.goto = function () { }; SceneManager.prepareNextScene = function () { };
             Game_Interpreter.prototype.command301 = function () { this._branch[this._indent] = 0; return true; };
             Graphics.playVideo = function () { };
         } else {
             Game_Player.prototype.reserveTransfer = vrai.transfer;
-            SceneManager.push = vrai.push; SceneManager.goto = vrai.goto;
+            SceneManager.push = vrai.push; SceneManager.goto = vrai.goto; SceneManager.prepareNextScene = vrai.prep;
             Game_Interpreter.prototype.command301 = vrai.c301; Graphics.playVideo = vrai.video;
         }
     }
@@ -125,7 +125,8 @@ async function relever(page) {
     l.forEach(function (e) { noter(e[0], e[1]); });
 }
 async function allerA(page, id, x, y) {
-    await page.evaluate(function (d) { window.__neutraliser(false); window.__propre(); $gamePlayer.reserveTransfer(d[0], d[1], d[2], 2, 0); }, [id, x || 0, y || 0]);
+    // (une carte de démo peut avoir ouvert un mini-jeu : on revient d'abord à la carte)
+    await page.evaluate(function (d) { window.__neutraliser(false); window.__propre(); $gamePlayer.reserveTransfer(d[0], d[1], d[2], 2, 0); if (!(SceneManager._scene instanceof Scene_Map)) SceneManager.goto(Scene_Map); }, [id, x || 0, y || 0]);
     try {
         await page.waitForFunction(function (d) { return $gameMap.mapId() === d && SceneManager._sceneStarted && SceneManager._scene instanceof Scene_Map; }, id, { timeout: 30000 });
         return true;
@@ -134,14 +135,14 @@ async function allerA(page, id, x, y) {
 
 /* ════════ cartes + pages ════════ */
 async function cartesEtPages(page) {
-    var ids = INFOS.filter(Boolean).map(function (i) { return i.id; });
+    var ids = INFOS.filter(Boolean).map(function (i) { return i.id; }).filter(function (i) { return i >= CDE && i <= CA; });
     for (var id of ids) {
         var m = JSON.parse(fs.readFileSync(path.join(R, 'data', 'Map' + String(id).padStart(3, '0') + '.json'), 'utf8'));
         // une case praticable quelconque : le milieu
         page.__etat.ctx = 'carte ' + id + ' (chargement)';
         await page.evaluate(function (c) { window.__ctx = c; }, page.__etat.ctx);
         var ok = await allerA(page, id, Math.floor(m.width / 2), Math.floor(m.height / 2));
-        if (!ok) { nonCharges.push('carte ' + id + ' « ' + INFOS[id].name + ' » ne finit pas de charger en 30 s'); await relever(page); await allerA(page, 29, 20, 22); continue; }
+        if (!ok) { var diag = await page.evaluate(function () { var s = SceneManager._scene; return s.constructor.name + ' · actif ' + (s.isActive && s.isActive()) + ' · occupé ' + (s.isBusy && s.isBusy()) + ' · message ' + $gameMessage.isBusy() + ' · transfert ' + $gamePlayer.isTransferring() + ' · scène suivante ' + (SceneManager._nextScene && SceneManager._nextScene.constructor.name) + ' · arrêté ' + SceneManager._stopped + ' · carte ' + $gameMap.mapId(); }); nonCharges.push('carte ' + id + ' « ' + INFOS[id].name + ' » ne finit pas de charger en 30 s — ' + diag); await relever(page); await allerA(page, 29, 20, 22); continue; }
         if (PARTIES.indexOf('cartes') >= 0) {
             page.__etat.ctx = 'carte ' + id + ' (3 s de jeu)';
             await page.evaluate(function (c) { window.__ctx = c; }, page.__etat.ctx);

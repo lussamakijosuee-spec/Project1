@@ -173,7 +173,10 @@
                 d: $gamePlayer.direction()
             };
         }
-        AudioManager.playMe({ name: 'Recovery', volume: 80, pitch: 100, pan: 0 });
+        // ⚠ 2026-10-02 : « Recovery » n'existe qu'en bruitage (audio/se) ; en
+        //   jingle (audio/me), MV s'arrêtait sur « Failed to load » à chaque
+        //   repos. Trouvé par bancs/navigateur/la_chasse_aux_bugs.js.
+        AudioManager.playMe({ name: 'Inn', volume: 80, pitch: 100, pan: 0 });
     }
 
     function feuRenaitre() {

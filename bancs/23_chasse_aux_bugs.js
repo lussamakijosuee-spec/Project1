@@ -211,6 +211,20 @@ function liste(lieu, demo, cmds) {
     if (bloc !== null) compile(blocLieu, demo, bloc, 'appel de script');
 }
 
+/* ════════ 0. les noms écrits en dur dans le code des plugins ════════
+ * AudioManager.playMe({ name: 'Recovery' }) dans EvenementsUtiles : le
+ * fichier n'existait qu'en bruitage, chaque repos au Feu d'Âme arrêtait le
+ * jeu. Aucune donnée ne le mentionnait : il faut lire le code. */
+actifs.filter(function (p) { return p.status; }).forEach(function (p) {
+    var f = path.join(R, 'js', 'plugins', p.name + '.js'); if (!fs.existsSync(f)) return;
+    var src = fs.readFileSync(f, 'utf8'), m;
+    var reA = /AudioManager\.play(Bgm|Bgs|Me|Se)\(\s*\{\s*name\s*:\s*(['"])([^'"]+)\2/g;
+    while ((m = reA.exec(src))) fichier('Plugin ' + p.name + ' (code)', false, 'audio/' + m[1].toLowerCase(), m[3], 'ogg');
+    var reI = /ImageManager\.load(System|Picture|Character|Face|Parallax|Animation|Battleback1|Battleback2|Enemy|SvEnemy|SvActor|Tileset|Title1|Title2)\(\s*(['"])([^'"]+)\2/g;
+    var dossierImg = { System: 'system', Picture: 'pictures', Character: 'characters', Face: 'faces', Parallax: 'parallaxes', Animation: 'animations', Battleback1: 'battlebacks1', Battleback2: 'battlebacks2', Enemy: 'enemies', SvEnemy: 'sv_enemies', SvActor: 'sv_actors', Tileset: 'tilesets', Title1: 'titles1', Title2: 'titles2' };
+    while ((m = reI.exec(src))) fichier('Plugin ' + p.name + ' (code)', false, 'img/' + dossierImg[m[1]], m[3], 'png');
+});
+
 /* ════════ 1. la base de données ════════ */
 DB.Actors.forEach(function (a) {
     if (!a || !a.name) return;
