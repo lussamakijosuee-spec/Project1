@@ -14,7 +14,7 @@
  *     dedans elle est coupée et la teinte est nulle ; on ressort : elle revient.
  *  4. LE PASSAGE — au bar, à 18 h Silas arrive PAR LA PORTE et marche à sa
  *     place ; à 4 h il marche jusqu'à la porte avant de disparaître.
- *  5. LA SOIRÉE — carte 29, à 19 h, Gaston (<Soiree: 14,32>) marche jusqu'à
+ *  5. LA SOIRÉE — carte 29, à 19 h, un habitant <Soiree: 14,32> marche jusqu'à
  *     la porte du bar et y entre.
  *  6. TOUTES LES CONVERSATIONS de chaque habitant de chaque carte, aux quatre
  *     saisons, matin et soir, jusqu'à « Au revoir » : aucune erreur.
@@ -108,16 +108,21 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   for (t = 0; t < 40 && !parti; t++) { await page.waitForTimeout(500); parti = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habDepart && e._pageIndex < 0; }, silasId); }
   ok(depart.page >= 0 && depart.marche && parti, 'à 4 h Silas marche jusqu\'à la porte, puis n\'est plus là');
 
-  /* 5. la soirée au bar */
+  /* 5. la soirée au bar — un habitant qui a <Soiree: 14,32> (Gaston, l'év. 27,
+   *    a été retiré par JOKO le 2026-10-01 ; Colette et Mado y vont aussi) */
   await aller(29, 20, 22);
+  var soiree = await page.evaluate(function () {
+    var e = $gameMap.events().filter(function (e) { return e.page() && e.page().list.some(function (c) { return (c.code === 108 || c.code === 408) && /<Soiree:\s*14,\s*32>/.test(c.parameters[0]); }); })[0];
+    return e ? { id: e.eventId(), nom: e.event().name } : null;
+  });
   await heure(19);
   var gaston = null;
-  for (t = 0; t < 60 && !gaston; t++) {
+  for (t = 0; soiree && t < 240 && !gaston; t++) {   // Colette part de 11,9 : 25 cases
     await page.waitForTimeout(500);
-    gaston = await page.evaluate(function () { var s = VieDuVillage.etat().filter(function (v) { return v.id === 27; })[0]; return s && s.dedans ? s : null; });
+    gaston = await page.evaluate(function (id) { var s = VieDuVillage.etat().filter(function (v) { return v.id === id; })[0]; return s && s.dedans ? s : null; }, soiree.id);
   }
-  var but = await page.evaluate(function () { var s = VieDuVillage.etat().filter(function (v) { return v.id === 27; })[0]; return s && s.but; });
-  ok(!!gaston, 'à 19 h Gaston (<Soiree: 14,32>) va au bar : but « ' + but + ' »' + (gaston ? ', entré' : ', pas encore entré'));
+  var but = soiree ? await page.evaluate(function (id) { var s = VieDuVillage.etat().filter(function (v) { return v.id === id; })[0]; return s && s.but; }, soiree.id) : '—';
+  ok(!!gaston, 'à 19 h ' + (soiree ? soiree.nom + ' (év. ' + soiree.id + ', <Soiree: 14,32>)' : 'personne n\'a <Soiree: 14,32>') + ' va au bar : but « ' + but + ' »' + (gaston ? ', entré' : ', pas encore entré'));
 
   /* 6. toutes les conversations */
   var total = { pages: 0, ok: 0, erreurs: [] };
