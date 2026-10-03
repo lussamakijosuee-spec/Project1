@@ -15,7 +15,10 @@
  *   ④ les bandes de cinéma descendent et repartent ;
  *   ⑤ MAINTENIR Échap saute à l'étiquette — un simple appui ne saute rien,
  *     et sans « SCENE passer » maintenir ne saute rien non plus ;
- *   ⑥ « SCENE attendre » attend que tous les déplacements soient finis.
+ *   ⑥ « SCENE attendre » attend que tous les déplacements soient finis ;
+ *   ⑦ « SCENE icone » : l'icône demandée apparaît AU-DESSUS du personnage,
+ *     s'en va seule, « attendre » fait patienter la ligne d'après, « off »
+ *     l'enlève tout de suite, et un personnage absent ne plante rien.
  *
  *   npx http-server -p 8899 -c-1 .
  *   node bancs/navigateur/les_outils_de_scene.js
@@ -232,6 +235,43 @@ var CARTE = 29;
     await attendreQue(function () { return !!window.__tous; }, null, 8000);
     var t = await ev(function () { return window.__tous; });
     V('la ligne d\'après attend que les deux aient fini (le plus long : 5 pas)', t && !t.a && !t.b, t ? 'B arrivé en x=' + t.bx + ' (départ ' + prep.couloir.x + ')' : 'jamais atteinte');
+
+    console.log('\n── ⑦ « SCENE icone » ──');
+    async function icone(qui) {
+        return ev(function (a) {
+            var car = a.qui === 'joueur' ? $gamePlayer : $gameMap.event(a.qui);
+            var sp = SceneManager._scene._spriteset._characterSprites.filter(function (s) { return s._character === car; })[0];
+            var ic = sp && sp._odsIcone;
+            return { donnee: car._odsIcone ? car._odsIcone.icone : 0, sprite: !!(ic && ic.parent), dessus: ic ? ic.y < sp.y - 20 && Math.abs(ic.x - sp.x) < 2 : false,
+                cadre: ic ? [ic._frame.x, ic._frame.y] : null };
+        }, { qui: qui });
+    }
+    await ev(function (a) {
+        window.__apres = null;
+        $gameMap._interpreter.setup([
+            { code: 356, indent: 0, parameters: ['SCENE icone ' + a.C + ' 87 60 attendre'] },
+            { code: 355, indent: 0, parameters: ['window.__apres = { encore: !!$gameMap.event(' + a.C + ')._odsIcone }'] },
+            { code: 0, indent: 0, parameters: [] }], 0);
+    }, { C: C });
+    await page.waitForTimeout(400);
+    var i1 = await icone(C);
+    V('l\'icône 87 apparaît au-dessus du PNJ ' + C + ' (bonne case d\'IconSet)', i1.donnee === 87 && i1.sprite && i1.dessus && i1.cadre && i1.cadre[0] === 87 % 16 * 32 && i1.cadre[1] === Math.floor(87 / 16) * 32, JSON.stringify(i1));
+    var pendant = await ev(function () { return window.__apres; });
+    await attendreQue(function () { return !!window.__apres; }, null, 6000);
+    var i2 = await icone(C), apres = await ev(function () { return window.__apres; });
+    V('« attendre » : la ligne d\'après ne passe qu\'une fois l\'icône partie, et l\'icône s\'en va seule', pendant === null && apres && !apres.encore && !i2.sprite, 'pendant : ' + JSON.stringify(pendant) + ' · après : ' + JSON.stringify(apres));
+    await ev(function () { $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: ['SCENE icone joueur 5 600'] }, { code: 0, indent: 0, parameters: [] }], 0); });
+    await page.waitForTimeout(300);
+    var i3 = await icone('joueur');
+    await ev(function () { $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: ['SCENE icone joueur off'] }, { code: 0, indent: 0, parameters: [] }], 0); });
+    await page.waitForTimeout(300);
+    var i4 = await icone('joueur');
+    V('contre-épreuve : sur le joueur pour 10 s, « off » l\'enlève tout de suite', i3.sprite && i3.dessus && !i4.sprite && i4.donnee === 0, 'avant off : ' + i3.sprite + ' · après : ' + i4.sprite);
+    var n0 = erreurs.length;
+    await ev(function () { $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: ['SCENE icone 9999 87'] }, { code: 0, indent: 0, parameters: [] }], 0); });
+    await page.waitForTimeout(300);
+    var sig = await ev(function () { return OutilsDeScene._aAfficher ? OutilsDeScene._aAfficher.texte : ''; });
+    V('un personnage absent : rien ne plante, le bandeau de test le dit', erreurs.length === n0 && /aucun personnage/.test(sig), sig);
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

@@ -51,6 +51,18 @@
  *  Texte : \lv[visites]. Chaque événement a les siennes, comme les
  *  interrupteurs locaux, mais avec des nombres et autant qu'on veut.
  *
+ *  ── UNE PAGE QUI NE COMPTE QUE SI… ────────────────────────────────────
+ *  Un commentaire dans la page :   <si: v[3] >= 5>
+ *  → la page ne compte que si c'est vrai, EN PLUS des cases de l'éditeur,
+ *  et sans la limite de deux interrupteurs. s[n] interrupteur, v[n]
+ *  variable, ss[A] interrupteur local, lv[nom] variable locale de
+ *  l'événement, ou du JavaScript. Plusieurs <si:> : toutes doivent être vraies.
+ *      <si: lv[visites] >= 3>       le PNJ change de page à la 3e visite
+ *      <si: s[12] && !s[13]>        après la lettre, avant le duel
+ *  La page se réévalue quand un interrupteur, une variable, une variable
+ *  locale ou l'inventaire change. Une condition illisible ferme la page
+ *  (et le dit dans la console, F8).
+ *
  *  ── ÉTIQUETTES AU-DESSUS DES PNJ ──────────────────────────────────────
  *  Note de l'événement, ou commentaire dans la page active :
  *      <Étiquette: Forgeron>        <Étiquette: \c[6]Auberge>
@@ -65,6 +77,32 @@
  *  ── SOLS GLISSANTS ────────────────────────────────────────────────────
  *  Note de la CARTE :  <Glissant: 5>  (ou <Glissant: 5, 6>) → sur les cases
  *  de région 5, le joueur glisse jusqu'à heurter quelque chose. Pour la glace.
+ *
+ *  ── CLIQUER SUR UN ÉVÉNEMENT ──────────────────────────────────────────
+ *  Note de l'événement, ou commentaire de la page :   <Clic>
+ *  → un clic (ou un toucher) dessus le lance tout de suite, sans que le
+ *  joueur ait à marcher jusqu'à lui. Pour un panneau, un objet du décor,
+ *  un PNJ de l'autre côté d'un comptoir.
+ *
+ *  ── DÉCALER L'IMAGE D'UN ÉVÉNEMENT ────────────────────────────────────
+ *  Note ou commentaire :   <Décalage: 0, -12>
+ *  → l'image se dessine 0 px plus à droite et 12 px plus haut (négatif =
+ *  gauche / haut). Pour un tableau accroché, un objet posé sur une table.
+ *  La case de l'événement, elle, ne bouge pas.
+ *
+ *  ── SE DÉCLENCHER QUAND LE JOUEUR ENTRE DANS UNE RÉGION ───────────────
+ *  Note ou commentaire :   <Région: 5>     (ou <Région: 5, 6>)
+ *  → l'événement se lance chaque fois que le joueur pose le pied sur une
+ *  case de la région 5, où qu'elle soit sur la carte. Pour une alarme, un
+ *  piège, un dialogue au seuil d'une zone. (Un interrupteur local pour
+ *  qu'il ne se joue qu'une fois.)
+ *
+ *  ── LE CHRONOMÈTRE ────────────────────────────────────────────────────
+ *      CHRONO pause            le chronomètre s'arrête, sans se remettre à 0
+ *      CHRONO reprendre        il repart d'où il en était
+ *      CHRONO ajouter 30       30 secondes de plus
+ *      CHRONO retirer 10       10 secondes de moins
+ *  (On le lance toujours avec « Contrôle du chronomètre » de l'éditeur.)
  *
  *  ── BRUITS DE PAS ─────────────────────────────────────────────────────
  *  Note de la CARTE :  <Pas: Footstep-middle>  → un son à chaque pas du joueur.
@@ -153,6 +191,113 @@ window.EvenementsPlus = EvenementsPlus;
     };
 
     //=========================================================================
+    // Les conditions de page : <si: …> dans un commentaire de la page
+    //=========================================================================
+    EvenementsPlus.locale = function (ev, nom) {
+        var v = locales()[ev._mapId + ':' + ev._eventId + ':' + nom];
+        return v === undefined ? 0 : v;
+    };
+    function compiler(expr) {
+        var js = String(expr)
+            .replace(/\bss\[\s*([A-D])\s*\]/gi, function (a, l) { return '$gameSelfSwitches.value([ev._mapId, ev._eventId, "' + l.toUpperCase() + '"])'; })
+            .replace(/\blv\[\s*([^\]]+?)\s*\]/g, function (a, n) { return 'EvenementsPlus.locale(ev, ' + JSON.stringify(n) + ')'; })
+            .replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)')
+            .replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+        var f;
+        try { f = new Function('ev', 'return (' + js + ');'); }
+        catch (e) { console.warn('[EvenementsPlus] condition de page illisible : <si: ' + expr + '>'); return function () { return false; }; }
+        return function (ev) {
+            try { return !!f.call(ev, ev); }
+            catch (e) { console.warn('[EvenementsPlus] condition de page en erreur : <si: ' + expr + '> — ' + e.message); return false; }
+        };
+    }
+    // Les balises <nom: expression> d'un texte. L'expression peut contenir « > »
+    // (v[3] >= 2) : elle va jusqu'au DERNIER « > » avant la balise suivante,
+    // ou avant la fin du texte. ([^>]+ s'arrêtait au « > » de « >= » : la
+    // condition devenait « v[3] », vraie dès que la variable n'était pas nulle.)
+    function balises(texte, noms) {
+        var re = new RegExp('<\\s*(' + noms + ')\\s*:', 'gi'), m, debuts = [], out = [];
+        while ((m = re.exec(texte))) debuts.push({ i: m.index, apres: re.lastIndex, nom: m[1].toLowerCase() });
+        debuts.forEach(function (d, k) {
+            var bout = k + 1 < debuts.length ? debuts[k + 1].i : texte.length;
+            var f = texte.lastIndexOf('>', bout - 1);
+            if (f >= d.apres) out.push({ nom: d.nom, expr: texte.slice(d.apres, f).trim(), debut: d.i, fin: f + 1 });
+        });
+        return out;
+    }
+    function conditionsDe(page) {
+        if (page._epSi) return page._epSi;
+        var l = [];
+        (page.list || []).forEach(function (c) {
+            if (c.code !== 108 && c.code !== 408) return;
+            balises(String(c.parameters[0] || ''), 'si').forEach(function (b) { l.push(compiler(b.expr)); });
+        });
+        // non énumérable : une copie JSON de la page (MODELE poser) ne l'emporte pas
+        Object.defineProperty(page, '_epSi', { value: l, configurable: true, writable: true });
+        return l;
+    }
+    EvenementsPlus.conditionsDe = conditionsDe;
+    var _meets = Game_Event.prototype.meetsConditions;
+    Game_Event.prototype.meetsConditions = function (page) {
+        if (!_meets.call(this, page)) return false;
+        var l = conditionsDe(page);
+        for (var i = 0; i < l.length; i++) if (!l[i](this)) return false;
+        return true;
+    };
+
+    //=========================================================================
+    // <Clic>, <Décalage: x, y>, <Région: n> : dans la note, ou en commentaire
+    // de la page active (alors ils suivent la page)
+    //=========================================================================
+    function balisePage(ev, re) {
+        var e = ev.event(), p = ev.page(), m;
+        if (p && p.list) {
+            for (var i = 0; i < p.list.length; i++) {
+                var c = p.list[i];
+                if ((c.code === 108 || c.code === 408) && (m = re.exec(String(c.parameters[0] || '')))) return m;
+            }
+        }
+        return e && e.note ? re.exec(e.note) : null;
+    }
+    // relu seulement quand la page change : ces fonctions tournent à chaque image
+    function balisesEv(ev) {
+        if (ev._epBal && ev._epBalIdx === ev._pageIndex) return ev._epBal;
+        var p = ev.page();
+        var d = balisePage(ev, /<\s*D[ée]calage\s*:\s*(-?\d+)\s*,\s*(-?\d+)\s*>/i);
+        var r = balisePage(ev, /<\s*R[ée]gion\s*:\s*([\d\s,]+)>/i);
+        ev._epBalIdx = ev._pageIndex;
+        ev._epBal = { clic: !!balisePage(ev, /<\s*Clic\s*>/i), dx: d ? Number(d[1]) : 0, dy: d ? Number(d[2]) : 0,
+            regions: r ? r[1].split(/[\s,]+/).filter(Boolean).map(Number) : [] };
+        return ev._epBal;
+    }
+    EvenementsPlus.balises = balisesEv;
+    var _sx = Game_Event.prototype.screenX;
+    Game_Event.prototype.screenX = function () { return _sx.call(this) + (this._pageIndex >= 0 ? balisesEv(this).dx : 0); };
+    var _sy = Game_Event.prototype.screenY;
+    Game_Event.prototype.screenY = function () { return _sy.call(this) + (this._pageIndex >= 0 ? balisesEv(this).dy : 0); };
+
+    var _pmt = Scene_Map.prototype.processMapTouch;
+    Scene_Map.prototype.processMapTouch = function () {
+        if (TouchInput.isTriggered() && !$gameMap.isEventRunning() && $gamePlayer.canMove()) {
+            var x = $gameMap.canvasToMapX(TouchInput.x), y = $gameMap.canvasToMapY(TouchInput.y);
+            var ev = $gameMap.eventsXy(x, y).filter(function (e) { return e.page() && e.list().length > 1 && balisesEv(e).clic; })[0];
+            if (ev) { $gameTemp.clearDestination(); ev.start(); return; }
+        }
+        _pmt.call(this);
+    };
+
+    var _ceth = Game_Player.prototype.checkEventTriggerHere;
+    Game_Player.prototype.checkEventTriggerHere = function (triggers) {
+        _ceth.call(this, triggers);
+        // seulement en arrivant sur une case (MV passe [1, 2]), pas sur la touche OK ([0])
+        if ($gameMap.isEventRunning() || !triggers || triggers.indexOf(1) < 0) return;
+        var r = this.regionId();
+        if (!r) return;
+        var ev = $gameMap.events().filter(function (e) { return e.page() && e.list().length > 1 && balisesEv(e).regions.indexOf(r) >= 0; })[0];
+        if (ev) ev.start();
+    };
+
+    //=========================================================================
     // Les commandes
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
@@ -175,6 +320,13 @@ window.EvenementsPlus = EvenementsPlus;
             var nom = String(args[0] || ''), op = String(args[1] || '='), val = Number(args[2]) || 0;
             var k = this._mapId + ':' + this._eventId + ':' + nom, L = locales(), v = L[k] || 0;
             L[k] = op === '+' ? v + val : op === '-' ? v - val : op === '*' ? v * val : val;
+            $gameMap.requestRefresh();   // une page <si: lv[…]> peut changer
+        } else if (c === 'CHRONO') {
+            var t = $gameTimer, sous2 = String(args[0] || '').toLowerCase(), sec = Number(args[1]) || 0;
+            if (sous2 === 'pause') t._working = false;
+            else if (sous2 === 'reprendre') t._working = t._frames > 0;
+            else if (sous2 === 'ajouter') t._frames = Math.max(0, t._frames + sec * 60);
+            else if (sous2 === 'retirer') t._frames = Math.max(0, t._frames - sec * 60);
         } else if (c === 'MODELE' || c === 'MODÈLE') {
             var sous = String(args[0] || '').toLowerCase();
             if (sous === 'changer') {
@@ -183,7 +335,7 @@ window.EvenementsPlus = EvenementsPlus;
                 else morphes()[cle] = { carte: Number(args[2]), id: Number(args[3]) };
                 var cible = $gameMap.event(id);
                 // MV ne refait la page que si son numéro change : on l'y oblige
-                if (cible) { cible._epCle = null; cible._pageIndex = -2; cible.refresh(); }
+                if (cible) { cible._epCle = null; cible._epBal = null; cible._pageIndex = -2; cible.refresh(); }
             } else if (sous === 'poser') {
                 EvenementsPlus.poser(Number(args[1]), Number(args[2]), Number(args[3]), Number(args[4]));
             }

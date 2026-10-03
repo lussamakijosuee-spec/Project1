@@ -200,7 +200,11 @@ module.exports = [
                    M('\\bulle[-1]Hein ?', 'DialoguesPlus', 'au-dessus du joueur')] },
         { titre: 'Le nom d\'un héros en couleur, sans le retaper',
           texte: 'Les macros sont dans les paramètres de DialoguesPlus (ves, kor, lud, ael) ; ajoutes-y les tiennes (un lieu, un objet). Changer la macro change tous les messages.',
-          lignes: [M('\\m[ves] te regarde sans rien dire.', 'DialoguesPlus')] }
+          lignes: [M('\\m[ves] te regarde sans rien dire.', 'DialoguesPlus')] },
+        { titre: 'Une icône au-dessus de quelqu\'un (comme une bulle « ! »)',
+          texte: 'N\'importe quelle icône d\'IconSet : une épée qui pense au combat, une pièce d\'or, un cœur. Elle surgit, flotte, puis s\'efface seule.',
+          lignes: [C('SCENE icone 5 87', 'OutilsDeScene', 'l\'icône 87 au-dessus de l\'événement 5'), C('SCENE icone joueur 87 120', 'OutilsDeScene', 'au-dessus du joueur, 120 images'),
+                   C('SCENE icone ici 87 attendre', 'OutilsDeScene', 'l\'événement lui-même, et la scène attend'), C('SCENE icone 5 off', 'OutilsDeScene', 'l\'enlever tout de suite')] }
     ]
 },
 {
@@ -269,7 +273,25 @@ module.exports = [
           lignes: [N('<Glissant: 5>', 'EvenementsPlus', 'note de la carte : il glisse sur la région 5 jusqu\'à heurter quelque chose')] },
         { titre: 'Des bruits de pas',
           texte: 'Le volume suit les « Sons » du menu Options.',
-          lignes: [N('<Pas: Footstep-middle>', 'EvenementsPlus', 'note de la carte'), N('<Pas région 3: Footstep-low>', 'EvenementsPlus', 'un autre son sur la région 3')] }
+          lignes: [N('<Pas: Footstep-middle>', 'EvenementsPlus', 'note de la carte'), N('<Pas région 3: Footstep-low>', 'EvenementsPlus', 'un autre son sur la région 3')] },
+        { titre: 'Une page qui ne compte que si… (sans limite de deux interrupteurs)',
+          texte: 'EvenementsPlus. Un commentaire dans la page : elle ne compte que si c\'est vrai, en plus des cases de l\'éditeur. s[n], v[n], ss[A], lv[nom] (variable locale), ou du JavaScript. Plusieurs <si:> : toutes doivent être vraies.',
+          lignes: [K('<si: v[3] >= 5>', 'EvenementsPlus', 'commentaire dans la page'),
+                   K('<si: lv[visites] >= 3>', 'EvenementsPlus', 'le PNJ change de page à la 3e visite (avec LOCALE visites + 1)'),
+                   K('<si: s[12] && !s[13]>', 'EvenementsPlus', 'après la lettre, avant le duel')] },
+        { titre: 'Cliquer sur un événement pour le lancer',
+          texte: 'EvenementsPlus. Un clic (ou un toucher) le lance tout de suite, sans que le joueur marche jusqu\'à lui : un panneau, un objet du décor, un PNJ derrière un comptoir.',
+          lignes: [N('<Clic>', 'EvenementsPlus', 'note de l\'événement, ou commentaire de la page')] },
+        { titre: 'Décaler l\'image d\'un événement de quelques pixels',
+          texte: 'La case ne bouge pas, seulement l\'image : un tableau accroché, un objet posé sur une table.',
+          lignes: [N('<Décalage: 0, -12>', 'EvenementsPlus', '0 px à droite, 12 px plus haut (négatif = gauche / haut)')] },
+        { titre: 'Un événement qui se lance quand le joueur entre dans une région',
+          texte: 'Chaque fois que le joueur pose le pied sur une case de la région, où qu\'elle soit. Un interrupteur local pour qu\'il ne se joue qu\'une fois.',
+          lignes: [N('<Région: 5>', 'EvenementsPlus', 'note ou commentaire'), N('<Région: 5, 6>', 'EvenementsPlus', 'plusieurs régions')] },
+        { titre: 'Mettre le chronomètre en pause, lui ajouter ou retirer du temps',
+          texte: 'On le lance toujours avec « Contrôle du chronomètre » de l\'éditeur.',
+          lignes: [V('Contrôle du chronomètre : démarrer, 1 min'), C('CHRONO pause', 'EvenementsPlus'), C('CHRONO reprendre', 'EvenementsPlus'),
+                   C('CHRONO ajouter 30', 'EvenementsPlus', '30 secondes de plus'), C('CHRONO retirer 10', 'EvenementsPlus')] }
     ]
 },
 {
@@ -323,7 +345,14 @@ module.exports = [
                    C('TRANSITION eclats toujours', 'CombatPlus', 'jusqu\'à nouvel ordre'), C('TRANSITION défaut', 'CombatPlus', 'revenir aux paramètres')] },
         { titre: 'Un ennemi sans jauge de PV, ou qui ne vacille pas',
           texte: 'La petite jauge apparaît sous l\'ennemi visé ou touché ; sous 25 % de PV, il vacille. Pour un ennemi mystérieux, ou une statue qui ne doit pas tanguer :',
-          lignes: [N('<Sans jauge>', 'CombatPlus', 'note de l\'ennemi'), N('<Ne vacille pas>', 'CombatPlus', 'note de l\'ennemi')] }
+          lignes: [N('<Sans jauge>', 'CombatPlus', 'note de l\'ennemi'), N('<Ne vacille pas>', 'CombatPlus', 'note de l\'ennemi')] },
+        { titre: 'La musique d\'un combat scénarisé',
+          texte: 'CombatPlus. Juste avant « Combat » dans l\'événement. « garder » : la musique de la carte continue, d\'où elle en était.',
+          lignes: [C('COMBAT musique garder', 'CombatPlus', 'ce combat-là seulement'), C('COMBAT musique Battle-05', 'CombatPlus', 'un fichier de audio/bgm, pour ce combat'),
+                   C('COMBAT musique garder toujours', 'CombatPlus', 'jusqu\'à nouvel ordre'), C('COMBAT musique défaut', 'CombatPlus', 'la musique de combat habituelle')] },
+        { titre: 'Un fond de combat selon la région peinte',
+          texte: 'Un combat qui commence sur la région prend ces fonds (img/battlebacks1, puis img/battlebacks2). ⚠ Le nom doit être celui d\'une image qui existe.',
+          lignes: [N('<Fond région 5: Grassland, Forest>', 'CombatPlus', 'note de la carte'), N('<Fond région 5, 6: Castle1, Castle2>', 'CombatPlus', 'plusieurs régions')] }
     ]
 },
 {
@@ -356,7 +385,18 @@ module.exports = [
         { titre: 'Un menu de destinations (ou de n\'importe quoi)',
           texte: 'La liste montre le NOM des événements communs ; le joueur en choisit un, il est joué, puis l\'événement reprend. Le premier commentaire de chacun sert d\'aide.',
           lignes: [C('MENU_EC 1001 1002 1005', 'InterfacePlus'), C('MENU_EC 1001-1010', 'InterfacePlus', 'une plage'),
-                   K('<si: s[30]>', 'InterfacePlus', 'commentaire dans l\'événement commun : il n\'apparaît que si l\'interrupteur 30 est ON')] }
+                   K('<si: s[30]>', 'InterfacePlus', 'commentaire dans l\'événement commun : il n\'apparaît que si l\'interrupteur 30 est ON')] },
+        { titre: 'Le joueur choisit une compétence ou un équipement',
+          texte: 'InterfacePlus. La variable reçoit le numéro de ce qui a été choisi (0 si Échap). Pour une énigme, un forgeron, un maître d\'armes.',
+          lignes: [C('CHOISIR competence 20', 'InterfacePlus', 'une compétence du chef d\'équipe → variable 20'), C('CHOISIR competence 20 3', 'InterfacePlus', '… du héros n°3'),
+                   C('CHOISIR arme 20', 'InterfacePlus', 'une arme du sac'), C('CHOISIR armure 20', 'InterfacePlus', 'une armure du sac'),
+                   V('Embranchement conditionnel : variable 20 = le numéro attendu')] },
+        { titre: 'Un objet de boutique qui n\'apparaît que si…',
+          texte: 'Dans toutes les boutiques, l\'objet n\'est en vente que si c\'est vrai.',
+          lignes: [N('<Boutique si: s[12]>', 'InterfacePlus', 'note de l\'objet, de l\'arme ou de l\'armure')] },
+        { titre: 'Un événement commun qui se lance tout seul (victoire, niveau, chargement…)',
+          texte: 'InterfacePlus, paramètre « Événements communs automatiques », une ligne par moment : nouvelle partie, chargement, victoire, fuite, défaite, niveau. Il se joue sur la carte quand rien d\'autre ne tourne. Pour « niveau », le numéro du héros va dans la variable du paramètre « Variable : héros ».',
+          lignes: [V('Paramètre de InterfacePlus : victoire = 1202'), V('Paramètre de InterfacePlus : niveau = 1205')] }
     ]
 },
 {
@@ -405,7 +445,11 @@ module.exports = [
         { titre: 'Un interrupteur ou une variable qui survit à toutes les sauvegardes',
           texte: 'Pas de commande : on l\'écrit dans le NOM de l\'interrupteur ou de la variable, dans la base de données.',
           lignes: [N('Fin vue <Global Meta>', 'Olivia_MetaControls', 'nom d\'un interrupteur : partagé par toutes les parties'),
-                   N('Coffres <Local Meta>', 'Olivia_MetaControls', 'partagé par les sauvegardes d\'une même partie')] }
+                   N('Coffres <Local Meta>', 'Olivia_MetaControls', 'partagé par les sauvegardes d\'une même partie')] },
+        { titre: 'La sauvegarde automatique : la couper pour une zone',
+          texte: 'InterfacePlus. Après un changement de carte et après un combat, la partie se sauve dans l\'emplacement où le joueur a lui-même sauvé ou chargé (jamais pendant un événement, jamais une partie jamais sauvée). Option « Sauvegarde auto » dans le menu Options.',
+          lignes: [C('SAUVEGARDE_AUTO off', 'InterfacePlus', 'un donjon piégé, une scène où l\'on ne doit pas revenir en arrière'),
+                   C('SAUVEGARDE_AUTO on', 'InterfacePlus'), C('SAUVEGARDE_AUTO maintenant', 'InterfacePlus', 'sauver tout de suite, si c\'est permis')] }
     ]
 }
 ];

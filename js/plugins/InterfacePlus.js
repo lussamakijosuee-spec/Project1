@@ -5,8 +5,8 @@
 //   Events et Common Event Menu (Yanfly). Rien n'est branché par défaut.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Une touche lance un événement commun, une image
- * cliquable aussi, et un menu qui liste des événements communs.
+ * @plugindesc v1.0 ■ Touches, images cliquables, menu d'événements communs,
+ * événements communs automatiques, CHOISIR, boutique conditionnelle, sauvegarde auto.
  * @author JOKO
  *
  * @param touches
@@ -14,6 +14,26 @@
  * @type note
  * @default ""
  * @desc Une par ligne : « M = 1050 » (la touche M lance l'événement commun 1050). Vide = aucune.
+ *
+ * @param evenementsAuto
+ * @text Événements communs automatiques
+ * @type note
+ * @default ""
+ * @desc Une par ligne : « victoire = 1202 ». Moments : nouvelle partie, chargement, victoire, fuite, défaite, niveau.
+ *
+ * @param sauvegardeAuto
+ * @text Sauvegarde automatique (défaut)
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc Valeur de départ de l'option « Sauvegarde auto ». Le joueur peut la changer dans les Options.
+ *
+ * @param variableHeros
+ * @text Variable : héros qui monte de niveau
+ * @type variable
+ * @default 0
+ * @desc Avant l'événement « niveau », cette variable reçoit le numéro du héros. 0 = aucune.
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
@@ -43,6 +63,43 @@
  *  le menu que si l'interrupteur 12 est ON (s[n], v[n], ou du JavaScript)
  *  — de quoi débloquer des destinations au fil du jeu. Le premier
  *  commentaire de l'événement commun sert d'aide.
+ *
+ *  ── DES ÉVÉNEMENTS COMMUNS QUI SE LANCENT TOUT SEULS ──────────────────
+ *  Dans le paramètre « Événements communs automatiques », une ligne par
+ *  moment :
+ *      nouvelle partie = 1200        chargement = 1201
+ *      victoire = 1202     fuite = 1203     défaite = 1204
+ *      niveau = 1205       (un héros monte de niveau ; son numéro va dans
+ *                           la variable du paramètre « Variable : héros »)
+ *  Ils se jouent sur la carte, l'un après l'autre, quand rien d'autre ne
+ *  tourne. Pour un récapitulatif après un combat, un mot d'un compagnon au
+ *  premier niveau gagné, un rappel en reprenant une sauvegarde…
+ *
+ *  ── LE JOUEUR CHOISIT UNE COMPÉTENCE OU UN ÉQUIPEMENT ─────────────────
+ *      CHOISIR competence 20         une compétence du chef d'équipe → v20
+ *      CHOISIR competence 20 3       … du héros n°3
+ *      CHOISIR arme 20               une arme du sac → v20
+ *      CHOISIR armure 20             une armure du sac → v20
+ *  La variable reçoit le numéro de ce qui a été choisi (0 si Échap). Pour
+ *  une énigme (« montre-moi la Lame de Givre »), un forgeron, un maître
+ *  d'armes qui juge une technique.
+ *
+ *  ── LA SAUVEGARDE AUTOMATIQUE ─────────────────────────────────────────
+ *  Après un changement de carte et après un combat, la partie se sauve
+ *  toute seule — dans l'emplacement où le joueur a LUI-MÊME sauvegardé ou
+ *  chargé cette partie. Une nouvelle partie jamais sauvegardée n'écrit
+ *  rien : on n'écrase jamais la sauvegarde de quelqu'un d'autre. Jamais
+ *  pendant un événement ; au plus une fois toutes les 20 secondes. Un petit
+ *  « Sauvegarde auto » s'affiche en haut à droite.
+ *  Option « Sauvegarde auto » (Oui / Non) dans le menu Options.
+ *      SAUVEGARDE_AUTO off      couper pour une zone (un donjon piégé…)
+ *      SAUVEGARDE_AUTO on       la remettre
+ *      SAUVEGARDE_AUTO maintenant    sauver tout de suite (si permis)
+ *
+ *  ── UN OBJET DE BOUTIQUE QUI N'APPARAÎT QUE SI… ───────────────────────
+ *  Note de l'objet, de l'arme ou de l'armure :   <Boutique si: s[12]>
+ *  Il n'est en vente (dans toutes les boutiques) que si c'est vrai.
+ *  s[n], v[n], ou du JavaScript.
  */
 var InterfacePlus = window.InterfacePlus || {};
 window.InterfacePlus = InterfacePlus;
@@ -161,14 +218,28 @@ window.InterfacePlus = InterfacePlus;
     }
     // <si: s[12]> dans un commentaire de l'événement commun : il n'apparaît
     // dans le menu que si la condition est vraie (s[n], v[n], ou du JavaScript)
+    // Les balises <nom: expression> d'un texte. L'expression peut contenir « > »
+    // (v[3] >= 2) : elle va jusqu'au DERNIER « > » avant la balise suivante,
+    // ou avant la fin du texte. ([^>]+ s'arrêtait au « > » de « >= » : la
+    // condition devenait « v[3] », vraie dès que la variable n'était pas nulle.)
+    function balises(texte, noms) {
+        var re = new RegExp('<\\s*(' + noms + ')\\s*:', 'gi'), m, debuts = [], out = [];
+        while ((m = re.exec(texte))) debuts.push({ i: m.index, apres: re.lastIndex, nom: m[1].toLowerCase() });
+        debuts.forEach(function (d, k) {
+            var bout = k + 1 < debuts.length ? debuts[k + 1].i : texte.length;
+            var f = texte.lastIndexOf('>', bout - 1);
+            if (f >= d.apres) out.push({ nom: d.nom, expr: texte.slice(d.apres, f).trim(), debut: d.i, fin: f + 1 });
+        });
+        return out;
+    }
     function visibleDansLeMenu(c) {
         var ok = true;
         (c.list || []).forEach(function (x) {
             if (x.code !== 108 && x.code !== 408) return;
-            var m = /<\s*si\s*:\s*([^>]+)>/i.exec(x.parameters[0]);
-            if (!m) return;
-            var js = m[1].replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
-            try { if (!(new Function('return (' + js + ');'))()) ok = false; } catch (e) { console.warn('[InterfacePlus] condition illisible : ' + m[1]); }
+            balises(String(x.parameters[0] || ''), 'si').forEach(function (b) {
+                var js = b.expr.replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+                try { if (!(new Function('return (' + js + ');'))()) ok = false; } catch (e) { console.warn('[InterfacePlus] condition illisible : ' + b.expr); }
+            });
         });
         return ok;
     }
@@ -239,6 +310,200 @@ window.InterfacePlus = InterfacePlus;
     };
 
     //=========================================================================
+    // Les événements communs automatiques
+    //=========================================================================
+    var AUTO = {};
+    (function () {
+        var brut = P.evenementsAuto || '';
+        try { brut = JSON.parse(brut); } catch (e) { }
+        String(brut).split(/\r?\n/).forEach(function (l) {
+            var m = /^\s*([^=]+?)\s*=\s*(\d+)/.exec(l);
+            if (m) AUTO[m[1].toLowerCase().replace(/[éè]/g, 'e')] = Number(m[2]);
+        });
+    })();
+    InterfacePlus.variableHeros = Number(P.variableHeros || 0);
+    InterfacePlus.auto = AUTO;
+    function fileAuto() { return ($gameTemp._ipAuto = $gameTemp._ipAuto || []); }
+    InterfacePlus.lancerAuto = function (moment, heros) {
+        var id = AUTO[moment];
+        if (id && $dataCommonEvents[id] && $gameTemp) fileAuto().push({ id: id, heros: heros || 0 });
+    };
+    var _sng = DataManager.setupNewGame;
+    DataManager.setupNewGame = function () { _sng.call(this); InterfacePlus.lancerAuto('nouvelle partie'); };
+    var _ols = Scene_Load.prototype.onLoadSuccess;
+    Scene_Load.prototype.onLoadSuccess = function () { _ols.call(this); InterfacePlus.lancerAuto('chargement'); };
+    var _ebat = BattleManager.endBattle;
+    BattleManager.endBattle = function (resultat) {
+        _ebat.call(this, resultat);
+        if (!this.isBattleTest()) InterfacePlus.lancerAuto(resultat === 0 ? 'victoire' : resultat === 2 ? 'defaite' : 'fuite');
+    };
+    var _lvl = Game_Actor.prototype.levelUp;
+    Game_Actor.prototype.levelUp = function () {
+        _lvl.call(this);
+        if ($gameParty && $gameParty.members().indexOf(this) >= 0) InterfacePlus.lancerAuto('niveau', this.actorId());
+    };
+    var _smuAuto = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function () {
+        _smuAuto.call(this);
+        var f = $gameTemp._ipAuto;
+        if (f && f.length && !$gameMap.isEventRunning() && !$gameTemp.isCommonEventReserved() && !SceneManager.isSceneChanging()) {
+            var a = f.shift();
+            if (a.heros && InterfacePlus.variableHeros > 0) $gameVariables.setValue(InterfacePlus.variableHeros, a.heros);
+            $gameTemp.reserveCommonEvent(a.id);
+        }
+    };
+
+    //=========================================================================
+    // Le joueur choisit une compétence, une arme, une armure
+    //=========================================================================
+    function Window_ChoixObjet() { this.initialize.apply(this, arguments); }
+    Window_ChoixObjet.prototype = Object.create(Window_Command.prototype);
+    Window_ChoixObjet.prototype.constructor = Window_ChoixObjet;
+    Window_ChoixObjet.prototype.initialize = function (objets) {
+        this._objets = objets;
+        Window_Command.prototype.initialize.call(this, 0, 0);
+        this.x = (Graphics.boxWidth - this.width) / 2;
+        this.y = Math.max(0, (Graphics.boxHeight - this.height) / 2 - 40);
+    };
+    Window_ChoixObjet.prototype.windowWidth = function () { return 420; };
+    Window_ChoixObjet.prototype.numVisibleRows = function () { return Math.min(8, Math.max(1, this.maxItems())); };
+    Window_ChoixObjet.prototype.makeCommandList = function () {
+        (this._objets || []).forEach(function (o) { this.addCommand(o.name, 'objet', true, o); }, this);
+    };
+    Window_ChoixObjet.prototype.drawItem = function (index) {
+        var r = this.itemRectForText(index);
+        this.drawItemName(this._list[index].ext, r.x, r.y, r.width);
+    };
+    Window_ChoixObjet.prototype.updateHelp = function () {
+        var o = this.currentExt();
+        if (this._helpWindow) this._helpWindow.setText(o ? o.description : '');
+    };
+    InterfacePlus.choisir = function (interp, genre, variable, acteurId) {
+        var s = SceneManager._scene, objets = [];
+        if (!(s instanceof Scene_Map)) return;
+        if (genre === 'competence') {
+            var a = acteurId ? $gameActors.actor(acteurId) : $gameParty.leader();
+            objets = a ? a.skills() : [];
+        } else if (genre === 'arme') objets = $gameParty.weapons();
+        else if (genre === 'armure') objets = $gameParty.armors();
+        var w = new Window_ChoixObjet(objets), h = new Window_Help(2);
+        h.y = Graphics.boxHeight - h.height;
+        w.setHelpWindow(h);
+        s.addWindow(h); s.addWindow(w);
+        interp._ipMenu = { w: w, h: h, choisi: null, fini: false, variable: variable };
+        var fermer = function (o) {
+            $gameVariables.setValue(variable, o ? o.id : 0);
+            interp._ipMenu.fini = true;
+            w.close(); h.close(); w.deactivate();
+        };
+        w.setHandler('objet', function () { fermer(w.currentExt()); });
+        w.setHandler('cancel', function () { fermer(null); });
+        if (!w.maxItems()) fermer(null);
+        else { w.select(0); w.activate(); }
+        interp.setWaitMode('ipMenu');
+    };
+
+    //=========================================================================
+    // La sauvegarde automatique
+    //=========================================================================
+    var DEFAUT_AUTO = String(P.sauvegardeAuto === undefined ? 'true' : P.sauvegardeAuto) !== 'false';
+    ConfigManager.autoSauve = DEFAUT_AUTO;
+    var _mkS = ConfigManager.makeData;
+    ConfigManager.makeData = function () { var c = _mkS.call(this); c.autoSauve = this.autoSauve; return c; };
+    var _apS = ConfigManager.applyData;
+    ConfigManager.applyData = function (c) { _apS.call(this, c); this.autoSauve = c.autoSauve === undefined ? DEFAUT_AUTO : !!c.autoSauve; };
+    var _goS = Window_Options.prototype.addGeneralOptions;
+    Window_Options.prototype.addGeneralOptions = function () { _goS.call(this); this.addCommand('Sauvegarde auto', 'autoSauve'); };
+    var _stS = Window_Options.prototype.statusText;
+    Window_Options.prototype.statusText = function (index) {
+        if (this.commandSymbol(index) === 'autoSauve') return this.getConfigValue('autoSauve') ? 'Oui' : 'Non';
+        return _stS.call(this, index);
+    };
+    // l'emplacement du joueur : celui où il a sauvé ou chargé CETTE partie
+    var _sg = DataManager.saveGame;
+    DataManager.saveGame = function (id) {
+        if ($gameSystem && !InterfacePlus._enAuto) $gameSystem._ipEmplacement = id;
+        return _sg.call(this, id);
+    };
+    var _lg = DataManager.loadGame;
+    DataManager.loadGame = function (id) {
+        var ok = _lg.call(this, id);
+        if (ok && $gameSystem) $gameSystem._ipEmplacement = id;
+        return ok;
+    };
+    InterfacePlus.demanderSauvegarde = function () { if ($gameTemp) $gameTemp._ipAutoSauve = true; };
+    InterfacePlus.sauvegardePermise = function () {
+        var sys = $gameSystem;
+        return !!(sys && ConfigManager.autoSauve && sys._ipEmplacement > 0 && !sys._ipAutoOff && sys.isSaveEnabled() && !DataManager.isBattleTest() && !DataManager.isEventTest());
+    };
+    InterfacePlus.sauvegarderMaintenant = function () {
+        if (!InterfacePlus.sauvegardePermise()) return false;
+        var id = $gameSystem._ipEmplacement, ok;
+        InterfacePlus._enAuto = true;
+        try { $gameSystem.onBeforeSave(); ok = DataManager.saveGame(id); } finally { InterfacePlus._enAuto = false; }
+        if (ok) { StorageManager.cleanBackup && StorageManager.cleanBackup(id); InterfacePlus._derniereAuto = Date.now(); InterfacePlus._avis = 120; }
+        return ok;
+    };
+    var _pt = Game_Player.prototype.performTransfer;
+    Game_Player.prototype.performTransfer = function () {
+        var transfert = this.isTransferring();
+        _pt.call(this);
+        if (transfert) InterfacePlus.demanderSauvegarde();
+    };
+    var _ebS = BattleManager.endBattle;
+    BattleManager.endBattle = function (resultat) {
+        _ebS.call(this, resultat);
+        if (resultat !== 2) InterfacePlus.demanderSauvegarde();
+    };
+    var _smuS = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function () {
+        _smuS.call(this);
+        if ($gameTemp._ipAutoSauve && !$gameMap.isEventRunning() && !$gamePlayer.isTransferring() && !SceneManager.isSceneChanging() &&
+            !$gameMessage.isBusy() && (!InterfacePlus._derniereAuto || Date.now() - InterfacePlus._derniereAuto > 20000)) {
+            $gameTemp._ipAutoSauve = false;
+            InterfacePlus.sauvegarderMaintenant();
+        }
+        if (InterfacePlus._avis > 0 && this._ipAvis) this._ipAvis.montrer(InterfacePlus._avis--);
+        else if (this._ipAvis) this._ipAvis.opacity = 0;
+    };
+    function Sprite_AvisSauvegarde() { this.initialize.apply(this, arguments); }
+    Sprite_AvisSauvegarde.prototype = Object.create(Sprite.prototype);
+    Sprite_AvisSauvegarde.prototype.constructor = Sprite_AvisSauvegarde;
+    Sprite_AvisSauvegarde.prototype.initialize = function () {
+        Sprite.prototype.initialize.call(this, new Bitmap(200, 30));
+        this.x = Graphics.boxWidth - 210; this.y = 8; this.opacity = 0;
+        var b = this.bitmap;
+        b.fillRect(0, 0, 200, 30, 'rgba(0,0,0,0.5)'); b.fontSize = 17; b.drawText('✦ Sauvegarde auto', 0, 1, 200, 28, 'center');
+    };
+    Sprite_AvisSauvegarde.prototype.montrer = function (t) { this.opacity = t > 100 ? (120 - t) * 12 : Math.min(255, t * 6); };
+    var _cdoS = Scene_Map.prototype.createDisplayObjects;
+    Scene_Map.prototype.createDisplayObjects = function () {
+        _cdoS.call(this);
+        this._ipAvis = new Sprite_AvisSauvegarde();
+        this.addChild(this._ipAvis);
+    };
+
+    //=========================================================================
+    // Les objets de boutique conditionnels
+    //=========================================================================
+    function enVente(item) {
+        if (!item || !item.note || item.note.indexOf('outique') < 0) return true;
+        return balises(item.note, 'boutique\\s+si').every(function (b) {
+            var js = b.expr.replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+            try { return !!(new Function('return (' + js + ');'))(); }
+            catch (e) { console.warn('[InterfacePlus] <Boutique si:> illisible sur « ' + item.name + ' » : ' + b.expr); return true; }
+        });
+    }
+    InterfacePlus.enVente = enVente;
+    var _mil = Window_ShopBuy.prototype.makeItemList;
+    Window_ShopBuy.prototype.makeItemList = function () {
+        _mil.call(this);
+        var data = [], prix = [];
+        (this._data || []).forEach(function (it, i) { if (enVente(it)) { data.push(it); prix.push(this._price[i]); } }, this);
+        this._data = data; this._price = prix;
+    };
+
+    //=========================================================================
     // Les commandes
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
@@ -260,6 +525,16 @@ window.InterfacePlus = InterfacePlus;
                 else if (Number(a)) ids.push(Number(a));
             });
             InterfacePlus.ouvrirMenu(this, ids);
+        } else if (c === 'SAUVEGARDE_AUTO') {
+            var a0 = String(args[0] || '').toLowerCase();
+            if (a0 === 'off' || a0 === 'non') $gameSystem._ipAutoOff = true;
+            else if (a0 === 'on' || a0 === 'oui') $gameSystem._ipAutoOff = false;
+            else if (a0 === 'maintenant') { InterfacePlus._derniereAuto = 0; InterfacePlus.demanderSauvegarde(); }
+        } else if (c === 'CHOISIR') {
+            var genre = String(args[0] || '').toLowerCase().replace(/[éè]/g, 'e');
+            if (genre === 'competences') genre = 'competence';
+            if (['competence', 'arme', 'armure'].indexOf(genre) < 0 || !(Number(args[1]) > 0)) { console.warn('[InterfacePlus] CHOISIR : ' + args.join(' ')); return; }
+            InterfacePlus.choisir(this, genre, Number(args[1]), Number(args[2]) || 0);
         }
     };
 })();
