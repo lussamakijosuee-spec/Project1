@@ -8,7 +8,7 @@ documentation : chaque ligne vient du code qui l'écoute.*
 | | |
 |---|---:|
 | plugins qui écoutent | 77 |
-| commandes distinctes | 134 |
+| commandes distinctes | 135 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2208,6 +2208,16 @@ APPEL 7 2 70    # la page 2 de l'événement 7 de la carte 70 (modèle)
 
 ```
 LOCALE visites + 1    # LOCALE humeur = 3        LOCALE x - 2
+```
+
+**`CHRONO`**
+
+
+```
+CHRONO pause    # le chronomètre s'arrête, sans se remettre à 0
+CHRONO reprendre    # il repart d'où il en était
+CHRONO ajouter 30       30 secondes de plus
+CHRONO retirer 10       10 secondes de moins
 ```
 
 **`MODELE`**

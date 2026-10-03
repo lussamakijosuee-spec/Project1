@@ -78,6 +78,32 @@
  *  Note de la CARTE :  <Glissant: 5>  (ou <Glissant: 5, 6>) → sur les cases
  *  de région 5, le joueur glisse jusqu'à heurter quelque chose. Pour la glace.
  *
+ *  ── CLIQUER SUR UN ÉVÉNEMENT ──────────────────────────────────────────
+ *  Note de l'événement, ou commentaire de la page :   <Clic>
+ *  → un clic (ou un toucher) dessus le lance tout de suite, sans que le
+ *  joueur ait à marcher jusqu'à lui. Pour un panneau, un objet du décor,
+ *  un PNJ de l'autre côté d'un comptoir.
+ *
+ *  ── DÉCALER L'IMAGE D'UN ÉVÉNEMENT ────────────────────────────────────
+ *  Note ou commentaire :   <Décalage: 0, -12>
+ *  → l'image se dessine 0 px plus à droite et 12 px plus haut (négatif =
+ *  gauche / haut). Pour un tableau accroché, un objet posé sur une table.
+ *  La case de l'événement, elle, ne bouge pas.
+ *
+ *  ── SE DÉCLENCHER QUAND LE JOUEUR ENTRE DANS UNE RÉGION ───────────────
+ *  Note ou commentaire :   <Région: 5>     (ou <Région: 5, 6>)
+ *  → l'événement se lance chaque fois que le joueur pose le pied sur une
+ *  case de la région 5, où qu'elle soit sur la carte. Pour une alarme, un
+ *  piège, un dialogue au seuil d'une zone. (Un interrupteur local pour
+ *  qu'il ne se joue qu'une fois.)
+ *
+ *  ── LE CHRONOMÈTRE ────────────────────────────────────────────────────
+ *      CHRONO pause            le chronomètre s'arrête, sans se remettre à 0
+ *      CHRONO reprendre        il repart d'où il en était
+ *      CHRONO ajouter 30       30 secondes de plus
+ *      CHRONO retirer 10       10 secondes de moins
+ *  (On le lance toujours avec « Contrôle du chronomètre » de l'éditeur.)
+ *
  *  ── BRUITS DE PAS ─────────────────────────────────────────────────────
  *  Note de la CARTE :  <Pas: Footstep-middle>  → un son à chaque pas du joueur.
  *  Par région :  <Pas région 3: Footstep-low>  (un pas plus sourd sur la région 3).
@@ -220,6 +246,58 @@ window.EvenementsPlus = EvenementsPlus;
     };
 
     //=========================================================================
+    // <Clic>, <Décalage: x, y>, <Région: n> : dans la note, ou en commentaire
+    // de la page active (alors ils suivent la page)
+    //=========================================================================
+    function balisePage(ev, re) {
+        var e = ev.event(), p = ev.page(), m;
+        if (p && p.list) {
+            for (var i = 0; i < p.list.length; i++) {
+                var c = p.list[i];
+                if ((c.code === 108 || c.code === 408) && (m = re.exec(String(c.parameters[0] || '')))) return m;
+            }
+        }
+        return e && e.note ? re.exec(e.note) : null;
+    }
+    // relu seulement quand la page change : ces fonctions tournent à chaque image
+    function balisesEv(ev) {
+        if (ev._epBal && ev._epBalIdx === ev._pageIndex) return ev._epBal;
+        var p = ev.page();
+        var d = balisePage(ev, /<\s*D[ée]calage\s*:\s*(-?\d+)\s*,\s*(-?\d+)\s*>/i);
+        var r = balisePage(ev, /<\s*R[ée]gion\s*:\s*([\d\s,]+)>/i);
+        ev._epBalIdx = ev._pageIndex;
+        ev._epBal = { clic: !!balisePage(ev, /<\s*Clic\s*>/i), dx: d ? Number(d[1]) : 0, dy: d ? Number(d[2]) : 0,
+            regions: r ? r[1].split(/[\s,]+/).filter(Boolean).map(Number) : [] };
+        return ev._epBal;
+    }
+    EvenementsPlus.balises = balisesEv;
+    var _sx = Game_Event.prototype.screenX;
+    Game_Event.prototype.screenX = function () { return _sx.call(this) + (this._pageIndex >= 0 ? balisesEv(this).dx : 0); };
+    var _sy = Game_Event.prototype.screenY;
+    Game_Event.prototype.screenY = function () { return _sy.call(this) + (this._pageIndex >= 0 ? balisesEv(this).dy : 0); };
+
+    var _pmt = Scene_Map.prototype.processMapTouch;
+    Scene_Map.prototype.processMapTouch = function () {
+        if (TouchInput.isTriggered() && !$gameMap.isEventRunning() && $gamePlayer.canMove()) {
+            var x = $gameMap.canvasToMapX(TouchInput.x), y = $gameMap.canvasToMapY(TouchInput.y);
+            var ev = $gameMap.eventsXy(x, y).filter(function (e) { return e.page() && e.list().length > 1 && balisesEv(e).clic; })[0];
+            if (ev) { $gameTemp.clearDestination(); ev.start(); return; }
+        }
+        _pmt.call(this);
+    };
+
+    var _ceth = Game_Player.prototype.checkEventTriggerHere;
+    Game_Player.prototype.checkEventTriggerHere = function (triggers) {
+        _ceth.call(this, triggers);
+        // seulement en arrivant sur une case (MV passe [1, 2]), pas sur la touche OK ([0])
+        if ($gameMap.isEventRunning() || !triggers || triggers.indexOf(1) < 0) return;
+        var r = this.regionId();
+        if (!r) return;
+        var ev = $gameMap.events().filter(function (e) { return e.page() && e.list().length > 1 && balisesEv(e).regions.indexOf(r) >= 0; })[0];
+        if (ev) ev.start();
+    };
+
+    //=========================================================================
     // Les commandes
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
@@ -243,6 +321,12 @@ window.EvenementsPlus = EvenementsPlus;
             var k = this._mapId + ':' + this._eventId + ':' + nom, L = locales(), v = L[k] || 0;
             L[k] = op === '+' ? v + val : op === '-' ? v - val : op === '*' ? v * val : val;
             $gameMap.requestRefresh();   // une page <si: lv[…]> peut changer
+        } else if (c === 'CHRONO') {
+            var t = $gameTimer, sous2 = String(args[0] || '').toLowerCase(), sec = Number(args[1]) || 0;
+            if (sous2 === 'pause') t._working = false;
+            else if (sous2 === 'reprendre') t._working = t._frames > 0;
+            else if (sous2 === 'ajouter') t._frames = Math.max(0, t._frames + sec * 60);
+            else if (sous2 === 'retirer') t._frames = Math.max(0, t._frames - sec * 60);
         } else if (c === 'MODELE' || c === 'MODÈLE') {
             var sous = String(args[0] || '').toLowerCase();
             if (sous === 'changer') {
@@ -251,7 +335,7 @@ window.EvenementsPlus = EvenementsPlus;
                 else morphes()[cle] = { carte: Number(args[2]), id: Number(args[3]) };
                 var cible = $gameMap.event(id);
                 // MV ne refait la page que si son numéro change : on l'y oblige
-                if (cible) { cible._epCle = null; cible._pageIndex = -2; cible.refresh(); }
+                if (cible) { cible._epCle = null; cible._epBal = null; cible._pageIndex = -2; cible.refresh(); }
             } else if (sous === 'poser') {
                 EvenementsPlus.poser(Number(args[1]), Number(args[2]), Number(args[3]), Number(args[4]));
             }

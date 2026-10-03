@@ -15,6 +15,13 @@
  *   ⑩ <si: …> en commentaire de page : la page compte quand c'est vrai et
  *     plus quand c'est faux (variable, interrupteur local, variable locale
  *     via LOCALE) ; une condition illisible ferme sa page sans planter
+ *   ⑪ <Clic> : un clic sur l'événement le lance sur place ; sans la balise,
+ *     le joueur part marcher (contre-épreuve)
+ *   ⑫ <Décalage: 0, -12> : l'image monte de 12 px, la case ne bouge pas ;
+ *     sans la balise, rien ne bouge
+ *   ⑬ <Région: 9> : un pas sur la région 9 lance l'événement ; un pas
+ *     ailleurs, ou la touche OK sur place, non
+ *   ⑭ CHRONO pause / reprendre / ajouter / retirer
  *
  *   node bancs/navigateur/les_evenements_plus.js
  */
@@ -197,6 +204,119 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await commande('LOCALE visites = 0', idSi);
     var p4 = await pageSi();
     V('contre-épreuve : visites remises à 0 et v40 à 2, retour à la page 1 ; la page illisible (4) ne s\'ouvre jamais', p4 === 1 && [p0, p1, p1b, p2, p3, p4].indexOf(4) < 0, 'page ' + p4);
+
+    // un événement d'essai posé sur la carte (meta : GALV_ActionIndicators la lit)
+    async function poserEssai(note, x, y, marque) {
+        return ev(function (a) {
+            var p = JSON.parse(JSON.stringify($dataMap.events[a.base].pages[0]));
+            ['switch1Valid', 'switch2Valid', 'variableValid', 'selfSwitchValid', 'itemValid', 'actorValid'].forEach(function (k) { p.conditions[k] = false; });
+            p.trigger = 0; p.priorityType = 1;
+            p.list = [{ code: 355, indent: 0, parameters: ['window.__ess = (window.__ess || []).concat("' + a.marque + '")'] }, { code: 0, indent: 0, parameters: [] }];
+            var id = Math.max($dataMap.events.length, $gameMap._events.length);
+            var d = { id: id, name: 'essai', note: a.note, x: a.x, y: a.y, pages: [p] };
+            DataManager.extractMetadata(d);
+            $dataMap.events[id] = d;
+            var e = new Game_Event($gameMap.mapId(), id); $gameMap._events[id] = e;
+            var sc = SceneManager._scene._spriteset, sp = new Sprite_Character(e);
+            sc._characterSprites.push(sp); sc._tilemap.addChild(sp);
+            return id;
+        }, { base: base.id, note: note, x: x, y: y, marque: marque });
+    }
+    // des cases libres près du joueur
+    var cases = await ev(function () {
+        var px = $gamePlayer.x, py = $gamePlayer.y, l = [];
+        for (var dy = -3; dy <= 3; dy++) for (var dx = -5; dx <= 5; dx++) {
+            var x = px + dx, y = py + dy;
+            if ((dx || dy) && $gameMap.isValid(x, y) && !$gameMap.eventsXy(x, y).length && $gameMap.isPassable(x, y, 2)) l.push([x, y]);
+        }
+        return { joueur: [px, py], libres: l };
+    });
+
+    console.log('\n── ⑪ <Clic> ──');
+    await ev(function () { window.__ess = []; $gameTemp.clearDestination(); });
+    var loin = cases.libres.filter(function (c) { return Math.abs(c[0] - cases.joueur[0]) + Math.abs(c[1] - cases.joueur[1]) >= 3; });
+    var idClic = await poserEssai('<Clic>', loin[0][0], loin[0][1], 'clic');
+    var idSans = await poserEssai('', loin[1][0], loin[1][1], 'sans');
+    await page.waitForTimeout(400);
+    async function cliquer(id) {
+        var pt = await ev(function (id) { var e = $gameMap.event(id); return { x: e.screenX(), y: e.screenY() - 20 }; }, id);
+        // un vrai clic tient le bouton quelques images : MV ne pose sa destination
+        // que si le bouton est encore enfoncé quand il lit la souris
+        // on regarde JUSTE après : sans <Clic>, MV fait marcher le joueur jusqu'à
+        // l'événement et le lance à l'arrivée — c'est le comportement normal
+        await page.mouse.move(pt.x, pt.y); await page.mouse.down(); await page.waitForTimeout(120); await page.mouse.up();
+        await page.waitForTimeout(60);
+        var r = await ev(function () { return { ess: (window.__ess || []).slice(), dest: $gameTemp.isDestinationValid() }; });
+        await page.waitForTimeout(1500);
+        return r;
+    }
+    var k1 = await cliquer(idClic);
+    await ev(function () { $gameTemp.clearDestination(); $gamePlayer.locate($gamePlayer.x, $gamePlayer.y); });
+    await ev(function () { window.__ess = []; });
+    var k2 = await cliquer(idSans);
+    await ev(function () { $gameTemp.clearDestination(); });
+    V('<Clic> : un clic dessus le lance sur place, sans faire marcher le joueur', k1.ess.join() === 'clic' && !k1.dest, JSON.stringify(k1));
+    V('contre-épreuve : sans la balise, le clic fait d\'abord marcher le joueur (rien de lancé sur le coup)', k2.ess.length === 0 && k2.dest, JSON.stringify(k2));
+
+    console.log('\n── ⑫ <Décalage: 0, -12> ──');
+    var idDec = await poserEssai('<Décalage: 0, -12>', loin[2][0], loin[2][1], 'dec');
+    var dec = await ev(function (a) {
+        function m(id) { var e = $gameMap.event(id); return { x: e.screenX() - Game_CharacterBase.prototype.screenX.call(e), y: e.screenY() - Game_CharacterBase.prototype.screenY.call(e), cx: e.x, cy: e.y }; }
+        return { avec: m(a.d), sans: m(a.s) };
+    }, { d: idDec, s: idSans });
+    V('<Décalage: 0, -12> : l\'image monte de 12 px, la case reste la même', dec.avec.x === 0 && dec.avec.y === -12 && dec.avec.cx === loin[2][0] && dec.avec.cy === loin[2][1], JSON.stringify(dec.avec));
+    V('contre-épreuve : sans la balise, aucun décalage', dec.sans.x === 0 && dec.sans.y === 0, JSON.stringify(dec.sans));
+
+    console.log('\n── ⑬ <Région: 9> ──');
+    var pas = await ev(function () {
+        var px = $gamePlayer.x, py = $gamePlayer.y, dirs = [[6, 1, 0], [4, -1, 0], [2, 0, 1], [8, 0, -1]], bons = [];
+        dirs.forEach(function (d) { if ($gamePlayer.canPass(px, py, d[0]) && !$gameMap.eventsXy(px + d[1], py + d[2]).length) bons.push(d); });
+        return { px: px, py: py, bons: bons };
+    });
+    await poserEssai('<Région: 9>', loin[3][0], loin[3][1], 'region');
+    await ev(function (a) {
+        window.__ess = [];
+        var d = a.bons[0], w = $dataMap.width, h = $dataMap.height;
+        window.__caseR = (5 * h + (a.py + d[2])) * w + (a.px + d[1]); window.__avantR = $dataMap.data[window.__caseR];
+        $dataMap.data[window.__caseR] = 9;
+        if (a.bons[1]) { window.__caseN = [a.px + a.bons[1][1], a.py + a.bons[1][2], a.bons[1][0]]; }
+    }, pas);
+    // d'abord un pas AILLEURS (contre-épreuve), retour, puis le pas sur la région
+    var r0 = null;
+    if (pas.bons[1]) {
+        await ev(function () { $gamePlayer.moveStraight(window.__caseN[2]); });
+        await page.waitForTimeout(700);
+        r0 = await ev(function () { return (window.__ess || []).slice(); });
+        await ev(function (a) { $gamePlayer.locate(a.px, a.py); }, pas);
+        await page.waitForTimeout(300);
+    }
+    await ev(function (a) { $gamePlayer.moveStraight(a.bons[0][0]); }, pas);
+    await page.waitForTimeout(900);
+    var r1 = await ev(function () { return { ess: (window.__ess || []).slice(), region: $gamePlayer.regionId() }; });
+    await ev(function () { window.__ess = []; $gamePlayer.checkEventTriggerHere([0]); });
+    await page.waitForTimeout(500);
+    var r2 = await ev(function () { return (window.__ess || []).slice(); });
+    await ev(function () { $dataMap.data[window.__caseR] = window.__avantR; });
+    V('<Région: 9> : un pas sur la région lance l\'événement', r1.region === 9 && r1.ess.join() === 'region', JSON.stringify(r1));
+    V('contre-épreuve : un pas ailleurs ne lance rien, la touche OK sur place non plus', (r0 === null || r0.length === 0) && r2.length === 0, 'ailleurs ' + JSON.stringify(r0) + ' · OK ' + JSON.stringify(r2));
+
+    console.log('\n── ⑭ CHRONO ──');
+    await ev(function () { $gameTimer.start(60 * 60); });
+    await commande('CHRONO pause');
+    var t0 = await ev(function () { return { f: $gameTimer._frames, w: $gameTimer.isWorking() }; });
+    await page.waitForTimeout(600);
+    var t1 = await ev(function () { return $gameTimer._frames; });
+    await commande('CHRONO reprendre');
+    var t2 = await ev(function () { return $gameTimer.isWorking(); });
+    await commande('CHRONO pause');
+    var f3 = await ev(function () { return $gameTimer._frames; });
+    await commande('CHRONO ajouter 30');
+    var f4 = await ev(function () { return $gameTimer._frames; });
+    await commande('CHRONO retirer 10');
+    var f5 = await ev(function () { return $gameTimer._frames; });
+    await ev(function () { $gameTimer.stop(); });
+    V('CHRONO pause arrête sans remettre à 0, reprendre relance', !t0.w && t0.f === t1 && t1 > 3000 && t2, 'pause à ' + t0.f + ' images, toujours ' + t1 + ' après 0,6 s · reprise : ' + t2);
+    V('CHRONO ajouter 30 / retirer 10 : +1800 puis −600 images', f4 - f3 === 1800 && f4 - f5 === 600, f3 + ' → ' + f4 + ' → ' + f5);
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

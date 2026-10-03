@@ -278,7 +278,20 @@ module.exports = [
           texte: 'EvenementsPlus. Un commentaire dans la page : elle ne compte que si c\'est vrai, en plus des cases de l\'éditeur. s[n], v[n], ss[A], lv[nom] (variable locale), ou du JavaScript. Plusieurs <si:> : toutes doivent être vraies.',
           lignes: [K('<si: v[3] >= 5>', 'EvenementsPlus', 'commentaire dans la page'),
                    K('<si: lv[visites] >= 3>', 'EvenementsPlus', 'le PNJ change de page à la 3e visite (avec LOCALE visites + 1)'),
-                   K('<si: s[12] && !s[13]>', 'EvenementsPlus', 'après la lettre, avant le duel')] }
+                   K('<si: s[12] && !s[13]>', 'EvenementsPlus', 'après la lettre, avant le duel')] },
+        { titre: 'Cliquer sur un événement pour le lancer',
+          texte: 'EvenementsPlus. Un clic (ou un toucher) le lance tout de suite, sans que le joueur marche jusqu\'à lui : un panneau, un objet du décor, un PNJ derrière un comptoir.',
+          lignes: [N('<Clic>', 'EvenementsPlus', 'note de l\'événement, ou commentaire de la page')] },
+        { titre: 'Décaler l\'image d\'un événement de quelques pixels',
+          texte: 'La case ne bouge pas, seulement l\'image : un tableau accroché, un objet posé sur une table.',
+          lignes: [N('<Décalage: 0, -12>', 'EvenementsPlus', '0 px à droite, 12 px plus haut (négatif = gauche / haut)')] },
+        { titre: 'Un événement qui se lance quand le joueur entre dans une région',
+          texte: 'Chaque fois que le joueur pose le pied sur une case de la région, où qu\'elle soit. Un interrupteur local pour qu\'il ne se joue qu\'une fois.',
+          lignes: [N('<Région: 5>', 'EvenementsPlus', 'note ou commentaire'), N('<Région: 5, 6>', 'EvenementsPlus', 'plusieurs régions')] },
+        { titre: 'Mettre le chronomètre en pause, lui ajouter ou retirer du temps',
+          texte: 'On le lance toujours avec « Contrôle du chronomètre » de l\'éditeur.',
+          lignes: [V('Contrôle du chronomètre : démarrer, 1 min'), C('CHRONO pause', 'EvenementsPlus'), C('CHRONO reprendre', 'EvenementsPlus'),
+                   C('CHRONO ajouter 30', 'EvenementsPlus', '30 secondes de plus'), C('CHRONO retirer 10', 'EvenementsPlus')] }
     ]
 },
 {
