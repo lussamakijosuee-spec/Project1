@@ -9,7 +9,9 @@
  *     CE combat, et le suivant reprend la musique de combat (une seule fois) ;
  *     un nom de fichier la remplace ; « toujours » et « défaut » ;
  *   ③ <Fond région 7: Castle1, Castle2> : un combat lancé sur la région 7
- *     prend ces fonds ; ailleurs, le fond habituel (contre-épreuve).
+ *     prend ces fonds ; ailleurs, le fond habituel (contre-épreuve) ;
+ *   ④ <Image d'arme: Sword Blue> : le héros brandit l'image du pack de
+ *     Yanfly ; sans la note, celle de son type d'arme.
  *
  *   node bancs/navigateur/les_outils_de_combat.js
  */
@@ -114,6 +116,25 @@ var TROUPE = 2, MUSIQUE_CARTE = '058-Slow01', AUTRE = 'Battle-Ayakashi';
     await retour();
     V('sur la région ' + reg + ' : les fonds Castle1 et Castle2', reg === 7 && /battlebacks1\/Castle1\.png$/.test(f1.fond1) && /battlebacks2\/Castle2\.png$/.test(f1.fond2), f1.fond1 + ' · ' + f1.fond2);
     V('contre-épreuve : hors de la région, le fond habituel', !/Castle1/.test(f2.fond1), f2.fond1 || '(aucun)');
+
+    console.log('\n── ④ l\'image de l\'arme ──');
+    await combat();
+    async function attaque(note) {
+        return ev(function (note) {
+            var a = $gameParty.battleMembers()[0], w = a.weapons()[0];
+            if (!w) { a.changeEquip(0, $dataWeapons.filter(function (x) { return x && x.wtypeId; })[0]); w = a.weapons()[0]; }
+            w.note = (w.note || '').replace(/<Image d'arme:[^>]*>/g, '') + note;
+            a.performAttack();
+            return new Promise(function (ok) { setTimeout(function () {
+                var sp = SceneManager._scene._spriteset._actorSprites.filter(function (s) { return s._actor === a; })[0]._weaponSprite;
+                ok({ url: sp.bitmap ? decodeURIComponent(sp.bitmap._url) : '', w: sp._frame.width, arme: w.name });
+            }, 150); });
+        }, note);
+    }
+    var w1 = await attaque("<Image d'arme: Sword Blue>"), w2 = await attaque('');
+    await retour();
+    V('<Image d\'arme: Sword Blue> : en attaquant, le héros brandit img/weapons/Sword Blue.png', /img\/weapons\/Sword Blue\.png$/.test(w1.url) && w1.w === 96, w1.arme + ' → ' + w1.url);
+    V('contre-épreuve : sans la note, l\'image du type d\'arme (img/system/Weapons…)', /img\/system\/Weapons\d?\.png$|img\/system\/\.png$/.test(w2.url), w2.url);
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

@@ -231,6 +231,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var apres = await lireCase(2);
     V('pendant un événement, la sauvegarde attend ; elle se fait juste après', pendant === 778 && apres === 781, 'pendant ' + pendant + ' · après ' + apres);
 
+    console.log('\n── ⑧ l\'habillage des fenêtres ──');
+    function habillage() { return ev(function () { var w = new Window_Base(0, 0, 100, 100); return decodeURIComponent(w.windowskin._url); }); }
+    await commande('FENETRE Blue');
+    var f1 = await habillage(), fSys = await ev(function () { return $gameSystem._ipFenetre; });
+    await commande('FENETRE défaut');
+    var f2 = await habillage();
+    V('FENETRE Blue : les fenêtres prennent img/windows/Blue.png, gardé dans $gameSystem', /img\/windows\/Blue\.png$/.test(f1) && fSys === 'Blue', f1);
+    V('contre-épreuve : FENETRE défaut, retour à img/system/Window.png', /img\/system\/Window\.png$/.test(f2), f2);
+
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
     console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(66));

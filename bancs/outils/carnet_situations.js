@@ -352,7 +352,10 @@ module.exports = [
                    C('COMBAT musique garder toujours', 'CombatPlus', 'jusqu\'à nouvel ordre'), C('COMBAT musique défaut', 'CombatPlus', 'la musique de combat habituelle')] },
         { titre: 'Un fond de combat selon la région peinte',
           texte: 'Un combat qui commence sur la région prend ces fonds (img/battlebacks1, puis img/battlebacks2). ⚠ Le nom doit être celui d\'une image qui existe.',
-          lignes: [N('<Fond région 5: Grassland, Forest>', 'CombatPlus', 'note de la carte'), N('<Fond région 5, 6: Castle1, Castle2>', 'CombatPlus', 'plusieurs régions')] }
+          lignes: [N('<Fond région 5: Grassland, Forest>', 'CombatPlus', 'note de la carte'), N('<Fond région 5, 6: Castle1, Castle2>', 'CombatPlus', 'plusieurs régions')] },
+        { titre: 'L\'image de l\'arme que le héros brandit en attaquant',
+          texte: 'CombatPlus. Les 512 armes du pack de Yanfly sont dans img/weapons (Sword, Axe, Whip… en 16 couleurs : Base, Blue, Red…).',
+          lignes: [N('<Image d\'arme: Sword Blue>', 'CombatPlus', 'note de l\'arme')] }
     ]
 },
 {
@@ -396,7 +399,10 @@ module.exports = [
           lignes: [N('<Boutique si: s[12]>', 'InterfacePlus', 'note de l\'objet, de l\'arme ou de l\'armure')] },
         { titre: 'Un événement commun qui se lance tout seul (victoire, niveau, chargement…)',
           texte: 'InterfacePlus, paramètre « Événements communs automatiques », une ligne par moment : nouvelle partie, chargement, victoire, fuite, défaite, niveau. Il se joue sur la carte quand rien d\'autre ne tourne. Pour « niveau », le numéro du héros va dans la variable du paramètre « Variable : héros ».',
-          lignes: [V('Paramètre de InterfacePlus : victoire = 1202'), V('Paramètre de InterfacePlus : niveau = 1205')] }
+          lignes: [V('Paramètre de InterfacePlus : victoire = 1202'), V('Paramètre de InterfacePlus : niveau = 1205')] },
+        { titre: 'Changer l\'habillage des fenêtres (un rêve, un chapitre)',
+          texte: 'InterfacePlus. Les dix habillages du pack de Yanfly, dans img/windows : Blue, Cyan, Default, Green, Grey, Magenta, Orange, Red, Violet, Yellow. Gardé dans la sauvegarde.',
+          lignes: [C('FENETRE Blue', 'InterfacePlus'), C('FENETRE défaut', 'InterfacePlus', 'retour à l\'habillage normal')] }
     ]
 },
 {

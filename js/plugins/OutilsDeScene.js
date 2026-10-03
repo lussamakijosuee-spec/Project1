@@ -431,14 +431,25 @@ window.OutilsDeScene = OutilsDeScene;
     Sprite_IconeScene.prototype = Object.create(Sprite.prototype);
     Sprite_IconeScene.prototype.constructor = Sprite_IconeScene;
     Sprite_IconeScene.prototype.initialize = function () {
-        Sprite.prototype.initialize.call(this, ImageManager.loadSystem('IconSet'));
-        this.anchor.x = 0.5; this.anchor.y = 1;
+        Sprite.prototype.initialize.call(this);
         this.z = 7;
         this._icone = -1;
+        // la bulle vide du pack de Yanfly (img/system/EmptyBalloon.png, 8 cases
+        // de 48 × 48) : elle s'ouvre derrière l'icône, comme une bulle « ! »
+        this._bulle = new Sprite(ImageManager.loadSystem('EmptyBalloon'));
+        this._bulle.anchor.x = 0.5; this._bulle.anchor.y = 1;
+        this._bulle.y = 8;
+        this.addChildAt(this._bulle, 0);
+        this._iconeSp = new Sprite(ImageManager.loadSystem('IconSet'));   // devant la bulle
+        this._iconeSp.anchor.x = 0.5; this._iconeSp.anchor.y = 1;
+        this.addChild(this._iconeSp);
     };
     Sprite_IconeScene.prototype.montrer = function (ic) {
         var pw = Window_Base._iconWidth, ph = Window_Base._iconHeight;
-        if (ic.icone !== this._icone) { this._icone = ic.icone; this.setFrame(ic.icone % 16 * pw, Math.floor(ic.icone / 16) * ph, pw, ph); }
+        if (ic.icone !== this._icone) { this._icone = ic.icone; this._iconeSp.setFrame(ic.icone % 16 * pw, Math.floor(ic.icone / 16) * ph, pw, ph); }
+        var b = this._bulle.bitmap;
+        if (b && b.isReady() && b.width >= 384) this._bulle.setFrame(Math.min(7, Math.floor(ic.t / 2)) * 48, 0, 48, 48);
+        else this._bulle.visible = false;
         // elle surgit (petit rebond), flotte, puis s'efface sur la fin
         var k = Math.min(1, ic.t / 8), reste = ic.duree - ic.t;
         var echelle = k < 1 ? 0.4 + 0.8 * k : 1 + 0.08 * Math.max(0, 1 - (ic.t - 8) / 8);

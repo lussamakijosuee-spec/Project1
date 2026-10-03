@@ -243,7 +243,8 @@ var CARTE = 29;
             var sp = SceneManager._scene._spriteset._characterSprites.filter(function (s) { return s._character === car; })[0];
             var ic = sp && sp._odsIcone;
             return { donnee: car._odsIcone ? car._odsIcone.icone : 0, sprite: !!(ic && ic.parent), dessus: ic ? ic.y < sp.y - 20 && Math.abs(ic.x - sp.x) < 2 : false,
-                cadre: ic ? [ic._frame.x, ic._frame.y] : null };
+                cadre: ic ? [ic._iconeSp._frame.x, ic._iconeSp._frame.y] : null, bulle: ic ? ic._bulle.bitmap._url + ' ' + ic._bulle._frame.width : null,
+                iconeDevant: ic ? ic.children.indexOf(ic._iconeSp) > ic.children.indexOf(ic._bulle) : false };
         }, { qui: qui });
     }
     await ev(function (a) {
@@ -255,7 +256,7 @@ var CARTE = 29;
     }, { C: C });
     await page.waitForTimeout(400);
     var i1 = await icone(C);
-    V('l\'icône 87 apparaît au-dessus du PNJ ' + C + ' (bonne case d\'IconSet)', i1.donnee === 87 && i1.sprite && i1.dessus && i1.cadre && i1.cadre[0] === 87 % 16 * 32 && i1.cadre[1] === Math.floor(87 / 16) * 32, JSON.stringify(i1));
+    V('l\'icône 87 apparaît au-dessus du PNJ ' + C + ' (bonne case d\'IconSet), devant la bulle vide', i1.donnee === 87 && i1.sprite && i1.dessus && i1.iconeDevant && /EmptyBalloon/.test(i1.bulle || '') && i1.cadre && i1.cadre[0] === 87 % 16 * 32 && i1.cadre[1] === Math.floor(87 / 16) * 32, JSON.stringify(i1));
     var pendant = await ev(function () { return window.__apres; });
     await attendreQue(function () { return !!window.__apres; }, null, 6000);
     var i2 = await icone(C), apres = await ev(function () { return window.__apres; });

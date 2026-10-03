@@ -8,7 +8,7 @@ documentation : chaque ligne vient du code qui l'écoute.*
 | | |
 |---|---:|
 | plugins qui écoutent | 77 |
-| commandes distinctes | 136 |
+| commandes distinctes | 137 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2236,7 +2236,7 @@ Balises de note employées dans le jeu :
 
 ### `InterfacePlus`
 
-Une touche lance un événement commun, une image cliquable aussi, et un menu qui liste des événements communs.
+Touches, images cliquables, menu d'événements communs, événements communs automatiques, CHOISIR, boutique conditionnelle, sauvegarde auto.
 
 **`TOUCHE`**
 
@@ -2259,6 +2259,14 @@ IMAGE clic 3 off
 
 ```
 MENU_EC 1001 1002 1005    # ou     MENU_EC 1001-1010
+```
+
+**`FENETRE`**
+
+
+```
+FENETRE Blue    # les fenêtres prennent img/windows/Blue.png
+FENETRE défaut    # retour à img/system/Window.png
 ```
 
 **`SAUVEGARDE_AUTO`**
@@ -2288,7 +2296,7 @@ Balises de note employées dans le jeu :
 
 ### `CombatPlus`
 
-Une jauge de PV sous l'ennemi visé ou touché, les ennemis presque morts qui vacillent, et des transitions d'entrée en combat.
+Jauge de PV ennemie, ennemis qui vacillent, transitions d'entrée en combat, musique et fonds de combat, option de vitesse des animations.
 
 **`COMBAT`**  *(la casse n'a pas d'importance)*
 

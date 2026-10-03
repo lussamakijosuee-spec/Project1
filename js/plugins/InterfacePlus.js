@@ -96,6 +96,13 @@
  *      SAUVEGARDE_AUTO on       la remettre
  *      SAUVEGARDE_AUTO maintenant    sauver tout de suite (si permis)
  *
+ *  ── L'HABILLAGE DES FENÊTRES ──────────────────────────────────────────
+ *      FENETRE Blue        les fenêtres prennent img/windows/Blue.png
+ *      FENETRE défaut      retour à img/system/Window.png
+ *  Les dix habillages du pack de Yanfly : Blue, Cyan, Default, Green, Grey,
+ *  Magenta, Orange, Red, Violet, Yellow. Gardé dans la sauvegarde. Pour un
+ *  chapitre, un rêve, un souvenir.
+ *
  *  ── UN OBJET DE BOUTIQUE QUI N'APPARAÎT QUE SI… ───────────────────────
  *  Note de l'objet, de l'arme ou de l'armure :   <Boutique si: s[12]>
  *  Il n'est en vente (dans toutes les boutiques) que si c'est vrai.
@@ -484,6 +491,24 @@ window.InterfacePlus = InterfacePlus;
     };
 
     //=========================================================================
+    // L'habillage des fenêtres
+    //=========================================================================
+    var _lws = Window_Base.prototype.loadWindowskin;
+    Window_Base.prototype.loadWindowskin = function () {
+        var n = $gameSystem && $gameSystem._ipFenetre;
+        if (n) this.windowskin = ImageManager.loadBitmap('img/windows/', n);
+        else _lws.call(this);
+    };
+    InterfacePlus.changerFenetre = function (nom) {
+        $gameSystem._ipFenetre = nom || null;
+        var s = SceneManager._scene;
+        (function revetir(o) {
+            if (o instanceof Window_Base) { o.loadWindowskin(); }
+            (o.children || []).forEach(revetir);
+        })(s || {});
+    };
+
+    //=========================================================================
     // Les objets de boutique conditionnels
     //=========================================================================
     function enVente(item) {
@@ -525,6 +550,9 @@ window.InterfacePlus = InterfacePlus;
                 else if (Number(a)) ids.push(Number(a));
             });
             InterfacePlus.ouvrirMenu(this, ids);
+        } else if (c === 'FENETRE' || c === 'FENÊTRE') {
+            var nomF = String(args[0] || '');
+            InterfacePlus.changerFenetre(!nomF || /^d[ée]faut$/i.test(nomF) ? null : nomF);
         } else if (c === 'SAUVEGARDE_AUTO') {
             var a0 = String(args[0] || '').toLowerCase();
             if (a0 === 'off' || a0 === 'non') $gameSystem._ipAutoOff = true;

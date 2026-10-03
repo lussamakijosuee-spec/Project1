@@ -122,6 +122,12 @@
  *  Plusieurs régions :  <Fond région 5, 6: Castle1, Castle2>
  *  ⚠ Le nom doit être celui d'une image qui existe, sinon le combat plante.
  *
+ *  ── L'IMAGE DE L'ARME PENDANT L'ATTAQUE ───────────────────────────────
+ *  Note de l'ARME :   <Image d'arme: Sword Blue>
+ *  → en combat, le héros brandit img/weapons/Sword Blue.png (les 512 armes
+ *  du pack de Yanfly : Sword, Axe, Whip… en 16 couleurs) au lieu de l'image
+ *  de son type d'arme. La balise de Yanfly <Weapon Image: …> marche aussi.
+ *
  *  ── L'OPTION « ANIMATIONS (COMBAT) » ──────────────────────────────────
  *  Dans le menu Options : Normal, Rapide ou Éclair. Les animations des
  *  compétences jouent plus vite en combat (pour qui les a déjà vues cent
@@ -576,6 +582,36 @@ window.CombatPlus = CombatPlus;
         _setupRate.call(this);
         var v = ConfigManager.animCombat || 0;
         if (v > 0 && $gameParty.inBattle()) this._rate = v === 1 ? Math.max(1, this._rate - 1) : Math.max(1, Math.round(this._rate / 2));
+    };
+
+    //=========================================================================
+    // L'image de l'arme pendant l'attaque (img/weapons, 3 cases de 96 × 64)
+    //=========================================================================
+    function imageDArme(acteur) {
+        var w = acteur && acteur.weapons ? acteur.weapons()[0] : null;
+        var m = w && /<\s*(?:Image d'arme|Weapon Image)\s*:\s*([^>]+?)\s*>/i.exec(w.note || '');
+        return m ? m[1] : '';
+    }
+    CombatPlus.imageDArme = imageDArme;
+    var _swa = Game_Actor.prototype.startWeaponAnimation;
+    Game_Actor.prototype.startWeaponAnimation = function (id) {
+        // une arme qui a son image s'affiche même si son type n'en prévoit pas
+        _swa.call(this, id || (imageDArme(this) ? 1 : 0));
+    };
+    var _setupWA = Sprite_Actor.prototype.setupWeaponAnimation;
+    Sprite_Actor.prototype.setupWeaponAnimation = function () {
+        if (this._actor && this._actor.isWeaponAnimationRequested() && this._weaponSprite) this._weaponSprite._cpNom = imageDArme(this._actor);
+        _setupWA.call(this);
+    };
+    var _wLoad = Sprite_Weapon.prototype.loadBitmap;
+    Sprite_Weapon.prototype.loadBitmap = function () {
+        if (this._cpNom && this._weaponImageId > 0) this.bitmap = ImageManager.loadBitmap('img/weapons/', this._cpNom);
+        else _wLoad.call(this);
+    };
+    var _wFrame = Sprite_Weapon.prototype.updateFrame;
+    Sprite_Weapon.prototype.updateFrame = function () {
+        if (this._cpNom && this._weaponImageId > 0) this.setFrame(this._pattern * 96, 0, 96, 64);
+        else _wFrame.call(this);
     };
 
     //=========================================================================
