@@ -1,10 +1,10 @@
 //=============================================================================
-// Allegement.js — v1.1  ·  Ce qu'on ne voit pas ne coûte rien
+// Allegement.js — v1.2  ·  Ce qu'on ne voit pas ne coûte rien
 // RPG Maker MV   ·   pour JOKO
 //   À charger EN DERNIER (après les MOG et les YEP qui touchent aux sprites).
 //=============================================================================
 /*:
- * @plugindesc v1.1 ■ Les événements loin de l'écran ne sont plus recalculés
+ * @plugindesc v1.2 ■ Les événements loin de l'écran ne sont plus recalculés
  * ni dessinés à chaque image ; relire des pixels ne bloque plus le jeu.
  * @author JOKO
  *
@@ -43,7 +43,17 @@
  *     sert qu'au fond des menus) : un changement de carte bloque 185 ms au
  *     lieu de 318.
  *
+ *  v1.2 (2026-10-03) — « des carrés noirs au-dessus des ennemis » :
+ *   IconSet.png fait 8 384 px de haut. Une carte graphique qui plafonne ses
+ *   textures à 8 192 px (rendu logiciel, beaucoup de portables) refuse
+ *   l'image entière : chaque icône dessinée par un SPRITE (états sur les
+ *   ennemis, popups) sort en carré noir. Une image plus haute que ce que
+ *   la carte accepte est maintenant découpée en pages, en mémoire, et
+ *   chaque sprite lit la page où tombe son icône. L'image du projet n'est
+ *   pas touchée ; sur une carte qui accepte 16 384 px, rien ne change.
+ *
  *  SCRIPT :  Allegement.enVeille()   → combien de sprites dorment, là
+ *            Allegement.plafondTextures()  → ce que la carte accepte
  */
 var Allegement = window.Allegement || {};
 window.Allegement = Allegement;
@@ -131,6 +141,41 @@ window.Allegement = Allegement;
             try { return _avance.apply(this, arguments); } finally { AudioManager.createBuffer = cb; }
         };
     }
+
+    // ── Les images plus hautes que ce que la carte graphique accepte ───────
+    var plafond = null;
+    Allegement.plafondTextures = function () {
+        if (plafond !== null) return plafond;
+        var r = Graphics._renderer, gl = r && r.gl;
+        plafond = gl ? Number(gl.getParameter(gl.MAX_TEXTURE_SIZE)) || 0 : 0;   // 0 : Canvas, pas de plafond
+        return plafond;
+    };
+    Allegement.decoupage = true;
+    function pagesDe(bm) {
+        if (bm.__pages !== undefined) return bm.__pages;
+        var max = Allegement.plafondTextures();
+        if (!max || !bm.isReady() || bm.height <= max || bm.width > max) return (bm.__pages = null);
+        var haut = Math.floor(max / 32) * 32, pages = [];       // des pages qui ne coupent pas une icône
+        for (var y = 0; y < bm.height; y += haut) {
+            var h = Math.min(haut, bm.height - y), p = new Bitmap(bm.width, h);
+            p.blt(bm, 0, y, bm.width, h, 0, 0);
+            p.__y = y;
+            pages.push(p);
+        }
+        return (bm.__pages = pages);
+    }
+    Allegement.pagesDe = pagesDe;
+    var _refresh = Sprite.prototype._refresh;
+    Sprite.prototype._refresh = function () {
+        var bm = this._bitmap;
+        var pages = Allegement.decoupage && bm && bm.height > 4096 ? pagesDe(bm) : null;
+        if (!pages) return _refresh.apply(this, arguments);
+        var f = this._frame, p = pages[Math.max(0, Math.min(pages.length - 1, Math.floor(f.y / pages[0].height)))];
+        if (f.y + f.height > p.__y + p.height) return _refresh.apply(this, arguments);   // à cheval : tel quel
+        var y0 = f.y;
+        this._bitmap = p; f.y = y0 - p.__y;
+        try { return _refresh.apply(this, arguments); } finally { this._bitmap = bm; f.y = y0; }
+    };
 
     Allegement.enVeille = function () {
         var s = SceneManager._scene && SceneManager._scene._spriteset;
