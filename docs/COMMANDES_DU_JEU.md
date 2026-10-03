@@ -8,7 +8,7 @@ documentation : chaque ligne vient du code qui l'écoute.*
 | | |
 |---|---:|
 | plugins qui écoutent | 77 |
-| commandes distinctes | 133 |
+| commandes distinctes | 134 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2249,6 +2249,16 @@ IMAGE clic 3 off
 
 ```
 MENU_EC 1001 1002 1005    # ou     MENU_EC 1001-1010
+```
+
+**`CHOISIR`**
+
+
+```
+CHOISIR competence 20    # une compétence du chef d'équipe → v20
+CHOISIR competence 20 3    # … du héros n°3
+CHOISIR arme 20    # une arme du sac → v20
+CHOISIR armure 20    # une armure du sac → v20
 ```
 
 Balises de note employées dans le jeu :

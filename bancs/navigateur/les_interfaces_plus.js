@@ -8,6 +8,14 @@
  *   ③ MENU_EC : la liste montre les noms, cache celui dont la condition
  *     <si: …> est fausse ; le choix est joué puis l'événement reprend ;
  *     Échap ne joue rien et l'événement reprend aussi
+ *   ④ événements communs automatiques : une fuite (combat abandonné) lance
+ *     celui de « fuite », une montée de niveau celui de « niveau » avec le
+ *     numéro du héros ; un moment sans événement commun ne lance rien, et
+ *     rien ne coupe un événement en cours (contre-épreuves)
+ *   ⑤ CHOISIR : la compétence ou l'arme choisie va dans la variable ; Échap
+ *     y met 0
+ *   ⑥ <Boutique si: s[30]> : l'objet n'est pas en vente interrupteur OFF, il
+ *     l'est ON, et les prix restent en face des bons objets
  *
  *   node bancs/navigateur/les_interfaces_plus.js
  */
@@ -110,6 +118,77 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var m4 = await menu(true, 3);
     V('<si: v[40] >= 3> : cachée à v40 = 1 (ci-dessus), la crypte apparaît à v40 = 3', m4 && m4.noms.length === 4 && m4.noms[3] === 'La crypte', m4 && m4.noms.join(' | '));
     await touche('Escape'); await page.waitForTimeout(500);
+
+    console.log('\n── ④ les événements communs automatiques ──');
+    var auto = await ev(function () {
+        function ce(nom, marque) { var id = $dataCommonEvents.length; $dataCommonEvents.push({ id: id, name: nom, switchId: 1, trigger: 0, list: [{ code: 355, indent: 0, parameters: ['window.__ec.push("' + marque + '"' + (marque === 'niveau' ? ' + ":" + $gameVariables.value(40)' : '') + ')'] }, { code: 0, indent: 0, parameters: [] }] }); return id; }
+        for (var k in InterfacePlus.auto) delete InterfacePlus.auto[k];
+        InterfacePlus.auto.fuite = ce('auto fuite', 'fuite');
+        InterfacePlus.auto.niveau = ce('auto niveau', 'niveau');
+        InterfacePlus.variableHeros = 40; window.__v40 = true;
+        window.__ec.length = 0;
+        return true;
+    });
+    await ev(function () { BattleManager.setup(2, true, true); SceneManager.push(Scene_Battle); });
+    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Battle && BattleManager._phase && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
+    await page.waitForTimeout(500);
+    for (var z = 0; z < 20 && (await ev(function () { return $gameMessage.isBusy(); })); z++) { await page.keyboard.press('Enter'); await page.waitForTimeout(150); }
+    await ev(function () { $gameTroop._interpreter.clear(); BattleManager.processAbort(); });
+    await page.waitForFunction(function () { var s = SceneManager._scene; return s instanceof Scene_Map && s.isReady() && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
+    await page.waitForTimeout(1200);
+    var a1 = await ev(function () { return window.__ec.slice(); });
+    V('combat abandonné : l\'événement commun « fuite » se joue, de retour sur la carte', a1.join() === 'fuite', JSON.stringify(a1));
+    // une montée de niveau PENDANT un événement : elle attend qu'il finisse
+    await ev(function () {
+        window.__ec.length = 0;
+        $gameMap._interpreter.setup([{ code: 230, indent: 0, parameters: [40] }, { code: 355, indent: 0, parameters: ['window.__ec.push("événement fini")'] }, { code: 0, indent: 0, parameters: [] }], 0);
+        // GALV_ManualLevel met l'expérience en réserve si « show » est faux : on passe par le vrai chemin de montée de niveau
+        var h = $gameParty.leader(); window.__heros = h.actorId(); h.changeExp(h.expForLevel(h.level + 1), true);
+    });
+    await page.waitForTimeout(1800);
+    var a2 = await ev(function () { return { ec: window.__ec.slice(), heros: window.__heros }; });
+    V('montée de niveau pendant un événement : « niveau » attend la fin, puis se joue avec le numéro du héros', a2.ec[0] === 'événement fini' && a2.ec[1] === 'niveau:' + a2.heros, JSON.stringify(a2));
+    var a3 = await ev(function () { return InterfacePlus.auto.victoire === undefined && !($gameTemp._ipAuto || []).length; });
+    V('contre-épreuve : « victoire » n\'a pas d\'événement commun, rien n\'est en attente', a3, '');
+
+    console.log('\n── ⑤ CHOISIR ──');
+    async function choisir(cmd, k, annuler) {
+        await ev(function (c) { $gameVariables.setValue(41, -1); $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: [c] }, { code: 0, indent: 0, parameters: [] }], 0); }, cmd);
+        await page.waitForTimeout(600);
+        var liste = await ev(function () { var m = $gameMap._interpreter._ipMenu; return m ? m.w._list.map(function (c) { return c.ext.id; }) : null; });
+        if (annuler) await touche('Escape');
+        else { for (var i = 0; i < k; i++) await touche('ArrowDown'); await touche('Enter'); }
+        await page.waitForTimeout(500);
+        return { liste: liste, v: await ev(function () { return $gameVariables.value(41); }) };
+    }
+    var ch1 = await choisir('CHOISIR competence 41', 1);
+    var attendu = await ev(function () { return $gameParty.leader().skills().map(function (s) { return s.id; }); });
+    V('CHOISIR competence 41 : les compétences du chef, la 2e choisie → v41', ch1.liste && ch1.liste.join() === attendu.join() && ch1.v === attendu[1], 'liste de ' + (ch1.liste || []).length + ' · v41 = ' + ch1.v);
+    var ch2 = await choisir('CHOISIR competence 41', 0, true);
+    V('contre-épreuve : Échap met 0', ch2.v === 0, 'v41 = ' + ch2.v);
+    await ev(function () { $gameParty.gainItem($dataWeapons[1], 1); $gameParty.gainItem($dataWeapons[2], 1); });
+    var ch3 = await choisir('CHOISIR arme 41', 1);
+    var armes = await ev(function () { return $gameParty.weapons().map(function (w) { return w.id; }); });
+    V('CHOISIR arme 41 : les armes du sac, la 2e → v41', ch3.liste && ch3.liste.join() === armes.join() && ch3.v === armes[1], 'armes ' + armes.join(',') + ' · v41 = ' + ch3.v);
+
+    console.log('\n── ⑥ la boutique conditionnelle ──');
+    async function boutique(sw) {
+        await ev(function (sw) {
+            $gameSwitches.setValue(30, sw);
+            if ($dataItems[1].note.indexOf('<Boutique si') < 0) $dataItems[1].note += '\n<Boutique si: s[30]>';
+            SceneManager.push(Scene_Shop); SceneManager.prepareNextScene([[0, 1, 1, 111], [0, 2, 1, 222]], true);
+        }, sw);
+        await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Shop && SceneManager._scene._buyWindow; }, null, { timeout: 20000 });
+        await page.waitForTimeout(400);
+        var r = await ev(function () { var w = SceneManager._scene._buyWindow; return w._data.map(function (it, i) { return it.id + '=' + w._price[i]; }); });
+        await ev(function () { SceneManager.pop(); });
+        await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 20000 });
+        await page.waitForTimeout(300);
+        return r;
+    }
+    var b1 = await boutique(false), b2 = await boutique(true);
+    V('<Boutique si: s[30]> : interrupteur OFF, l\'objet 1 n\'est pas en vente, l\'objet 2 garde SON prix', b1.join() === '2=222', b1.join(' · '));
+    V('contre-épreuve : interrupteur ON, les deux, chacun à son prix', b2.join() === '1=111,2=222', b2.join(' · '));
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

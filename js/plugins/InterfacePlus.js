@@ -15,6 +15,18 @@
  * @default ""
  * @desc Une par ligne : « M = 1050 » (la touche M lance l'événement commun 1050). Vide = aucune.
  *
+ * @param evenementsAuto
+ * @text Événements communs automatiques
+ * @type note
+ * @default ""
+ * @desc Une par ligne : « victoire = 1202 ». Moments : nouvelle partie, chargement, victoire, fuite, défaite, niveau.
+ *
+ * @param variableHeros
+ * @text Variable : héros qui monte de niveau
+ * @type variable
+ * @default 0
+ * @desc Avant l'événement « niveau », cette variable reçoit le numéro du héros. 0 = aucune.
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  TOUCHES, IMAGES CLIQUABLES, MENUS MAISON
@@ -43,6 +55,31 @@
  *  le menu que si l'interrupteur 12 est ON (s[n], v[n], ou du JavaScript)
  *  — de quoi débloquer des destinations au fil du jeu. Le premier
  *  commentaire de l'événement commun sert d'aide.
+ *
+ *  ── DES ÉVÉNEMENTS COMMUNS QUI SE LANCENT TOUT SEULS ──────────────────
+ *  Dans le paramètre « Événements communs automatiques », une ligne par
+ *  moment :
+ *      nouvelle partie = 1200        chargement = 1201
+ *      victoire = 1202     fuite = 1203     défaite = 1204
+ *      niveau = 1205       (un héros monte de niveau ; son numéro va dans
+ *                           la variable du paramètre « Variable : héros »)
+ *  Ils se jouent sur la carte, l'un après l'autre, quand rien d'autre ne
+ *  tourne. Pour un récapitulatif après un combat, un mot d'un compagnon au
+ *  premier niveau gagné, un rappel en reprenant une sauvegarde…
+ *
+ *  ── LE JOUEUR CHOISIT UNE COMPÉTENCE OU UN ÉQUIPEMENT ─────────────────
+ *      CHOISIR competence 20         une compétence du chef d'équipe → v20
+ *      CHOISIR competence 20 3       … du héros n°3
+ *      CHOISIR arme 20               une arme du sac → v20
+ *      CHOISIR armure 20             une armure du sac → v20
+ *  La variable reçoit le numéro de ce qui a été choisi (0 si Échap). Pour
+ *  une énigme (« montre-moi la Lame de Givre »), un forgeron, un maître
+ *  d'armes qui juge une technique.
+ *
+ *  ── UN OBJET DE BOUTIQUE QUI N'APPARAÎT QUE SI… ───────────────────────
+ *  Note de l'objet, de l'arme ou de l'armure :   <Boutique si: s[12]>
+ *  Il n'est en vente (dans toutes les boutiques) que si c'est vrai.
+ *  s[n], v[n], ou du JavaScript.
  */
 var InterfacePlus = window.InterfacePlus || {};
 window.InterfacePlus = InterfacePlus;
@@ -253,6 +290,120 @@ window.InterfacePlus = InterfacePlus;
     };
 
     //=========================================================================
+    // Les événements communs automatiques
+    //=========================================================================
+    var AUTO = {};
+    (function () {
+        var brut = P.evenementsAuto || '';
+        try { brut = JSON.parse(brut); } catch (e) { }
+        String(brut).split(/\r?\n/).forEach(function (l) {
+            var m = /^\s*([^=]+?)\s*=\s*(\d+)/.exec(l);
+            if (m) AUTO[m[1].toLowerCase().replace(/[éè]/g, 'e')] = Number(m[2]);
+        });
+    })();
+    InterfacePlus.variableHeros = Number(P.variableHeros || 0);
+    InterfacePlus.auto = AUTO;
+    function fileAuto() { return ($gameTemp._ipAuto = $gameTemp._ipAuto || []); }
+    InterfacePlus.lancerAuto = function (moment, heros) {
+        var id = AUTO[moment];
+        if (id && $dataCommonEvents[id] && $gameTemp) fileAuto().push({ id: id, heros: heros || 0 });
+    };
+    var _sng = DataManager.setupNewGame;
+    DataManager.setupNewGame = function () { _sng.call(this); InterfacePlus.lancerAuto('nouvelle partie'); };
+    var _ols = Scene_Load.prototype.onLoadSuccess;
+    Scene_Load.prototype.onLoadSuccess = function () { _ols.call(this); InterfacePlus.lancerAuto('chargement'); };
+    var _ebat = BattleManager.endBattle;
+    BattleManager.endBattle = function (resultat) {
+        _ebat.call(this, resultat);
+        if (!this.isBattleTest()) InterfacePlus.lancerAuto(resultat === 0 ? 'victoire' : resultat === 2 ? 'defaite' : 'fuite');
+    };
+    var _lvl = Game_Actor.prototype.levelUp;
+    Game_Actor.prototype.levelUp = function () {
+        _lvl.call(this);
+        if ($gameParty && $gameParty.members().indexOf(this) >= 0) InterfacePlus.lancerAuto('niveau', this.actorId());
+    };
+    var _smuAuto = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function () {
+        _smuAuto.call(this);
+        var f = $gameTemp._ipAuto;
+        if (f && f.length && !$gameMap.isEventRunning() && !$gameTemp.isCommonEventReserved() && !SceneManager.isSceneChanging()) {
+            var a = f.shift();
+            if (a.heros && InterfacePlus.variableHeros > 0) $gameVariables.setValue(InterfacePlus.variableHeros, a.heros);
+            $gameTemp.reserveCommonEvent(a.id);
+        }
+    };
+
+    //=========================================================================
+    // Le joueur choisit une compétence, une arme, une armure
+    //=========================================================================
+    function Window_ChoixObjet() { this.initialize.apply(this, arguments); }
+    Window_ChoixObjet.prototype = Object.create(Window_Command.prototype);
+    Window_ChoixObjet.prototype.constructor = Window_ChoixObjet;
+    Window_ChoixObjet.prototype.initialize = function (objets) {
+        this._objets = objets;
+        Window_Command.prototype.initialize.call(this, 0, 0);
+        this.x = (Graphics.boxWidth - this.width) / 2;
+        this.y = Math.max(0, (Graphics.boxHeight - this.height) / 2 - 40);
+    };
+    Window_ChoixObjet.prototype.windowWidth = function () { return 420; };
+    Window_ChoixObjet.prototype.numVisibleRows = function () { return Math.min(8, Math.max(1, this.maxItems())); };
+    Window_ChoixObjet.prototype.makeCommandList = function () {
+        (this._objets || []).forEach(function (o) { this.addCommand(o.name, 'objet', true, o); }, this);
+    };
+    Window_ChoixObjet.prototype.drawItem = function (index) {
+        var r = this.itemRectForText(index);
+        this.drawItemName(this._list[index].ext, r.x, r.y, r.width);
+    };
+    Window_ChoixObjet.prototype.updateHelp = function () {
+        var o = this.currentExt();
+        if (this._helpWindow) this._helpWindow.setText(o ? o.description : '');
+    };
+    InterfacePlus.choisir = function (interp, genre, variable, acteurId) {
+        var s = SceneManager._scene, objets = [];
+        if (!(s instanceof Scene_Map)) return;
+        if (genre === 'competence') {
+            var a = acteurId ? $gameActors.actor(acteurId) : $gameParty.leader();
+            objets = a ? a.skills() : [];
+        } else if (genre === 'arme') objets = $gameParty.weapons();
+        else if (genre === 'armure') objets = $gameParty.armors();
+        var w = new Window_ChoixObjet(objets), h = new Window_Help(2);
+        h.y = Graphics.boxHeight - h.height;
+        w.setHelpWindow(h);
+        s.addWindow(h); s.addWindow(w);
+        interp._ipMenu = { w: w, h: h, choisi: null, fini: false, variable: variable };
+        var fermer = function (o) {
+            $gameVariables.setValue(variable, o ? o.id : 0);
+            interp._ipMenu.fini = true;
+            w.close(); h.close(); w.deactivate();
+        };
+        w.setHandler('objet', function () { fermer(w.currentExt()); });
+        w.setHandler('cancel', function () { fermer(null); });
+        if (!w.maxItems()) fermer(null);
+        else { w.select(0); w.activate(); }
+        interp.setWaitMode('ipMenu');
+    };
+
+    //=========================================================================
+    // Les objets de boutique conditionnels
+    //=========================================================================
+    function enVente(item) {
+        if (!item || !item.note || item.note.indexOf('outique') < 0) return true;
+        return balises(item.note, 'boutique\\s+si').every(function (b) {
+            var js = b.expr.replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+            try { return !!(new Function('return (' + js + ');'))(); }
+            catch (e) { console.warn('[InterfacePlus] <Boutique si:> illisible sur « ' + item.name + ' » : ' + b.expr); return true; }
+        });
+    }
+    InterfacePlus.enVente = enVente;
+    var _mil = Window_ShopBuy.prototype.makeItemList;
+    Window_ShopBuy.prototype.makeItemList = function () {
+        _mil.call(this);
+        var data = [], prix = [];
+        (this._data || []).forEach(function (it, i) { if (enVente(it)) { data.push(it); prix.push(this._price[i]); } }, this);
+        this._data = data; this._price = prix;
+    };
+
+    //=========================================================================
     // Les commandes
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
@@ -274,6 +425,11 @@ window.InterfacePlus = InterfacePlus;
                 else if (Number(a)) ids.push(Number(a));
             });
             InterfacePlus.ouvrirMenu(this, ids);
+        } else if (c === 'CHOISIR') {
+            var genre = String(args[0] || '').toLowerCase().replace(/[éè]/g, 'e');
+            if (genre === 'competences') genre = 'competence';
+            if (['competence', 'arme', 'armure'].indexOf(genre) < 0 || !(Number(args[1]) > 0)) { console.warn('[InterfacePlus] CHOISIR : ' + args.join(' ')); return; }
+            InterfacePlus.choisir(this, genre, Number(args[1]), Number(args[2]) || 0);
         }
     };
 })();

@@ -372,7 +372,18 @@ module.exports = [
         { titre: 'Un menu de destinations (ou de n\'importe quoi)',
           texte: 'La liste montre le NOM des événements communs ; le joueur en choisit un, il est joué, puis l\'événement reprend. Le premier commentaire de chacun sert d\'aide.',
           lignes: [C('MENU_EC 1001 1002 1005', 'InterfacePlus'), C('MENU_EC 1001-1010', 'InterfacePlus', 'une plage'),
-                   K('<si: s[30]>', 'InterfacePlus', 'commentaire dans l\'événement commun : il n\'apparaît que si l\'interrupteur 30 est ON')] }
+                   K('<si: s[30]>', 'InterfacePlus', 'commentaire dans l\'événement commun : il n\'apparaît que si l\'interrupteur 30 est ON')] },
+        { titre: 'Le joueur choisit une compétence ou un équipement',
+          texte: 'InterfacePlus. La variable reçoit le numéro de ce qui a été choisi (0 si Échap). Pour une énigme, un forgeron, un maître d\'armes.',
+          lignes: [C('CHOISIR competence 20', 'InterfacePlus', 'une compétence du chef d\'équipe → variable 20'), C('CHOISIR competence 20 3', 'InterfacePlus', '… du héros n°3'),
+                   C('CHOISIR arme 20', 'InterfacePlus', 'une arme du sac'), C('CHOISIR armure 20', 'InterfacePlus', 'une armure du sac'),
+                   V('Embranchement conditionnel : variable 20 = le numéro attendu')] },
+        { titre: 'Un objet de boutique qui n\'apparaît que si…',
+          texte: 'Dans toutes les boutiques, l\'objet n\'est en vente que si c\'est vrai.',
+          lignes: [N('<Boutique si: s[12]>', 'InterfacePlus', 'note de l\'objet, de l\'arme ou de l\'armure')] },
+        { titre: 'Un événement commun qui se lance tout seul (victoire, niveau, chargement…)',
+          texte: 'InterfacePlus, paramètre « Événements communs automatiques », une ligne par moment : nouvelle partie, chargement, victoire, fuite, défaite, niveau. Il se joue sur la carte quand rien d\'autre ne tourne. Pour « niveau », le numéro du héros va dans la variable du paramètre « Variable : héros ».',
+          lignes: [V('Paramètre de InterfacePlus : victoire = 1202'), V('Paramètre de InterfacePlus : niveau = 1205')] }
     ]
 },
 {
