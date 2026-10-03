@@ -80,7 +80,7 @@ nav.sommaire .groupe { font: 600 11px var(--texte); letter-spacing: .1em; text-t
 @media (max-width: 560px) { .ligne { grid-template-columns: 1fr; } }
 .genre { font: 600 11px/1 var(--texte); letter-spacing: .06em; text-transform: uppercase; padding: 6px 8px; border-radius: 6px; border: 1px solid currentColor; justify-self: start; margin-top: 6px; white-space: nowrap; }
 .genre.commande { color: var(--g-commande); } .genre.script { color: var(--g-script); } .genre.note { color: var(--g-note); }
-.genre.commentaire { color: var(--g-commentaire); } .genre.message { color: var(--g-message); } .genre.mv { color: var(--g-mv); }
+.genre.commentaire { color: var(--g-commentaire); } .genre.message, .genre.choix { color: var(--g-message); } .genre.mv { color: var(--g-mv); }
 .code { display: flex; align-items: flex-start; gap: 8px; background: var(--code); border-radius: 8px; padding: 7px 8px 7px 12px; min-width: 0; }
 .code code { font: 14px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; flex: 1; min-width: 0; }
 .code.mv code { font-family: var(--texte); font-style: italic; color: var(--doux); }
@@ -163,6 +163,7 @@ var DONNEES = /*__DONNEES__*/null;
     note: ['Note', 'Dans la case Note (carte, ennemi, objet…) ou le nom indiqué'],
     commentaire: ['Commentaire', 'Commande « Commentaire » dans la page de l\'événement'],
     message: ['Dans un message', 'Dans le texte d\'« Afficher un message »'],
+    choix: ['Texte d\'un choix', 'Dans le texte d\'un choix, commande « Afficher des choix »'],
     mv: ['Éditeur MV', 'Commande de l\'éditeur, sans plugin']
   };
   var onglet = 'situations', requete = '';

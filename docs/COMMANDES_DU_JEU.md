@@ -7,9 +7,9 @@ documentation : chaque ligne vient du code qui l'écoute.*
 
 | | |
 |---|---:|
-| plugins qui écoutent | 73 |
-| commandes distinctes | 125 |
-| déjà posées dans tes événements | 61 |
+| plugins qui écoutent | 76 |
+| commandes distinctes | 132 |
+| déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
 dans le jeu — l'exemple donné est ta propre ligne, copiée telle quelle.
@@ -61,12 +61,10 @@ with this plugin and alter various aspects to your liking.
 
 **`setBattleSys`**
 
-```
-setBattleSys
-```
 
-*Le plugin l'écoute, mais il ne documente aucun argument et tu ne
-t'en es jamais servi — à essayer telle quelle d'abord.*
+```
+setBattleSys DTB    # Sets battle system to Default Turn Battle.
+```
 
 ### `YEP_X_ActSeqPack1`
 
@@ -413,6 +411,7 @@ ItemBook add armor 4    # Add armor #4 to the item book
 ItemBook remove armor 5    # Remove armor #5 from the item book
 ItemBook remove item 6    # Remove item #6 from the item book
 ItemBook complete    # Complete the item book
+ItemBook clear    # Clear the item book
 ```
 
 ### `YEP_QuestJournal`
@@ -446,6 +445,12 @@ Quest Data Format
 Quest Journal Open
 Quest Journal Open To x
 Quest Journal Show
+Quest Journal Hide
+Quest Journal Enable
+Quest Journal Disable
+Quest Add x
+Quest Add x to y
+Quest Add x, x, x
 ```
 
 ---
@@ -1044,14 +1049,14 @@ shatter_event_id : 4 : 2 : 1 : 1
 
 
 ```
-breath_mode_follower_id : ID : EFFECT       (1..3)
+breath_mode_follower_id : ID : EFFECT    # (1..3)
 ```
 
 **`ghost_mode_follower_id`**
 
 
 ```
-ghost_mode_follower_id : ID : EFFECT        (1..2)
+ghost_mode_follower_id : ID : EFFECT    # (1..2)
 ghost_mode_follower_id : 0 : 1
 ```
 
@@ -1088,7 +1093,7 @@ zoom_follower_id : 1 : 2.5
 
 
 ```
-collapse_effect_follower_id : ID : EFFECT     (1..3)
+collapse_effect_follower_id : ID : EFFECT    # (1..3)
 ```
 
 **`clear_effects_follower_id`**
@@ -1109,7 +1114,7 @@ shake_effects_follower_id : ID : DURATION
 
 
 ```
-breath_mode_event_id : ID : EFFECT       (1..3)
+breath_mode_event_id : ID : EFFECT    # (1..3)
 breath_mode_event_id : 15 : 2
 ```
 
@@ -1126,7 +1131,7 @@ ghost_mode_event_id : 5 : 1
 Et la syntaxe complète :
 
 ```
-ghost_mode_event_id : ID : EFFECT        (1..2)
+ghost_mode_event_id : ID : EFFECT    # (1..2)
 ```
 
 **`float_mode_event_id`**
@@ -1499,21 +1504,22 @@ JACKPOT lancer
 Et la syntaxe complète :
 
 ```
-JACKPOT fail           bobines qui ratent
+JACKPOT win    # bobines qui tombent sur 777 doré
+JACKPOT fail    # bobines qui ratent
 ```
 
 **`AURA`**
 
 
 ```
-AURA #00ffcc           aura colorée
+AURA #00ffcc    # aura colorée
 ```
 
 **`BURST`**
 
 
 ```
-BURST #ffd700          explosion de particules colorée
+BURST #ffd700    # explosion de particules colorée
 ```
 
 Balises de note employées dans le jeu :
@@ -1796,7 +1802,10 @@ JACKPOT lancer
 Et la syntaxe complète :
 
 ```
-JACKPOT arreter             coupe court
+JACKPOT rouleaux gagne    # les rouleaux s'arrêtent sur 7-7-7
+JACKPOT rouleaux perd    # ils s'arrêtent sur autre chose
+JACKPOT lancer    # pose l'état et démarre la minute
+JACKPOT arreter    # coupe court
 ```
 
 Les mots qu'elle accepte :
@@ -1864,8 +1873,9 @@ aléatoires à usage unique (spam en Domaine) + aspiration des âmes damnées.
 
 
 ```
-LOU copies          Affiche les techniques actuellement copiées
-LOU clear_copies    Vide le presse-papier de Lou
+LOU copies    # Affiche les techniques actuellement copiées
+LOU clear_copies    # Vide le presse-papier de Lou
+LOU add_copy <id>    # Ajoute manuellement la copie du skill <id>
 ```
 
 ---
@@ -1897,7 +1907,7 @@ FORGE
 Et la syntaxe complète :
 
 ```
-FORGE          3 ×     « FORGE »
+FORGE          3 ×    # « FORGE »
 FORGE
 ```
 
@@ -1913,7 +1923,7 @@ FEU renaitre
 Et la syntaxe complète :
 
 ```
-FEU            4 ×     « FEU repos »
+FEU            4 ×    # « FEU repos »
 FEU repos
 FEU renaitre
 ```
@@ -1931,7 +1941,7 @@ TEMPS basculer
 Et la syntaxe complète :
 
 ```
-TEMPS          3 ×     « TEMPS basculer »
+TEMPS          3 ×    # « TEMPS basculer »
 TEMPS jour | nuit | basculer
 ```
 
@@ -1944,6 +1954,12 @@ CHUTE dement
 ```
 
 *Tes propres lignes, copiées de tes événements.*
+
+Et la syntaxe complète :
+
+```
+CHUTE          5 ×    # « CHUTE bete 2 »
+```
 
 **✔ `NPC`**  — utilisée 32 fois dans tes événements
 
@@ -1958,6 +1974,7 @@ NPC talk mira
 Et la syntaxe complète :
 
 ```
+NPC           60 ×    # « NPC talk forgeron »
 NPC talk <nom>
 ```
 
@@ -1974,7 +1991,7 @@ theatrhythm : 99 : 10
 Et la syntaxe complète :
 
 ```
-Theatrhythm    1 ×     majuscule de trop
+Theatrhythm    1 ×    # majuscule de trop
 Theatrhythm ...
 ```
 
@@ -2008,10 +2025,16 @@ Et la syntaxe complète :
 ```
 QUEST add main  <id> "Titre" "Description"
 QUEST add side  <id> "Titre" "Description"
-QUEST add tuto  <id> "Titre" "Description"       (apprentissage)
-QUEST done <id>   ·   QUEST fail <id>
-QUEST track <id>  ·   QUEST untrack
-QUEST ecran                  ouvre le journal
+QUEST add perso <id> "Titre" "Description"    # (quête de personnage)
+QUEST add tuto  <id> "Titre" "Description"    # (apprentissage)
+QUEST de   <id> "Nom du PNJ" "Lieu"    # (facultatif, pour le journal)
+QUEST obj  <id> "Texte de l'objectif"    # (en ajoute un, visible)
+QUEST prix <id> "Texte de la récompense"    # (l'annonce dans le journal)
+QUEST step <id> <n>    # l'objectif n est accompli (1-based)
+QUEST step <id> next    # le prochain objectif non accompli
+QUEST done <id>    # QUEST fail <id>
+QUEST track <id>  ·    # QUEST untrack
+QUEST ecran    # ouvre le journal
 ```
 
 ### `Habitants`
@@ -2042,12 +2065,18 @@ MARCHAND 3
 Et la syntaxe complète :
 
 ```
-MARCHAND 2      le bourg                            1 600 or
-MARCHAND 3      la ville                            3 200 or
-MARCHAND 4      la capitale                         5 200 or
-MARCHAND 6      l'arsenal                          11 500 or
-MARCHAND 7      le dernier comptoir                 tout
-MARCHAND objets      les consommables, tous paliers confondus
+MARCHAND 1    # la forge de village      jusqu'à     700 or
+MARCHAND 2    # le bourg                            1 600 or
+MARCHAND 3    # la ville                            3 200 or
+MARCHAND 4    # la capitale                         5 200 or
+MARCHAND 5    # le quartier haut                    8 000 or
+MARCHAND 6    # l'arsenal                          11 500 or
+MARCHAND 7    # le dernier comptoir                 tout
+MARCHAND armes 3    # seulement les armes,   jusqu'au palier 3
+MARCHAND armures 5    # seulement les armures, jusqu'au palier 5
+MARCHAND objets    # les consommables, tous paliers confondus
+MARCHAND auto    # le palier du plus haut niveau du groupe
+MARCHAND tout    # absolument tout ce qui a un prix
 ```
 
 Balises de note employées dans le jeu :
@@ -2126,7 +2155,7 @@ Météo vivante : un temps qui change avec les jours et les saisons (pluie, orag
 
 
 ```
-METEO auto          le temps redevient libre
+METEO auto    # le temps redevient libre
 ```
 
 ### `OutilsDeScene`
@@ -2137,9 +2166,97 @@ Scènes : les PNJ s'arrêtent, un personnage bloqué traverse au lieu de tout fi
 
 
 ```
-SCENE debut          le mode cinématique commence
-SCENE barres 90           … plus hautes
-SCENE barres off          elles repartent
+SCENE debut    # le mode cinématique commence
+SCENE fin    # il s'arrête : bandes, caméra et « passer » aussi
+SCENE camera 5    # glisse vers l'événement 5 et le suit
+SCENE camera 5 90    # … en 90 images (45 par défaut)
+SCENE camera 5 90 attendre    # … et la scène attend l'arrivée
+SCENE camera ici    # l'événement qui exécute la commande
+SCENE camera case 12 8    # une case de la carte
+SCENE camera joueur    # revient sur le joueur, puis le suit comme avant
+SCENE barres    # deux bandes noires glissent (64 px)
+SCENE barres 90    # … plus hautes
+SCENE barres off    # elles repartent
+SCENE passer FIN    # dès maintenant, MAINTENIR Échap saute à
+```
+
+### `EvenementsPlus`
+
+Modèles d'événements, appeler un autre événement, variables locales, étiquettes au-dessus des PNJ, gros événements, sols glissants, bruits de pas.
+
+**`APPEL`**
+
+
+```
+APPEL 7    # joue la page active de l'événement 7, puis revient
+APPEL 7 2    # joue sa page 2
+APPEL 7 2 70    # la page 2 de l'événement 7 de la carte 70 (modèle)
+```
+
+**`LOCALE`**
+
+
+```
+LOCALE visites + 1    # LOCALE humeur = 3        LOCALE x - 2
+```
+
+**`MODELE`**
+
+
+```
+MODELE changer 5 70 123    # l'événement 5 devient le modèle 123 (gardé
+MODELE poser 70 123 12 8    # pose une copie du modèle en 12,8 (jusqu'au
+```
+
+### `InterfacePlus`
+
+Une touche lance un événement commun, une image cliquable aussi, et un menu qui liste des événements communs.
+
+**`TOUCHE`**
+
+
+```
+TOUCHE M 1050    # la touche M lance l'événement commun 1050
+TOUCHE M off    # la touche M ne fait plus rien
+```
+
+**`IMAGE`**
+
+
+```
+IMAGE clic 3 1020    # un clic sur l'image n°3 lance l'événement commun 1020
+IMAGE clic 3 off
+```
+
+**`MENU_EC`**
+
+
+```
+MENU_EC 1001 1002 1005    # ou     MENU_EC 1001-1010
+```
+
+### `CombatPlus`
+
+Une jauge de PV sous l'ennemi visé ou touché, les ennemis presque morts qui vacillent, et des transitions d'entrée en combat.
+
+**`TRANSITION`**  *(la casse n'a pas d'importance)*
+
+
+```
+TRANSITION eclats    # le prochain combat seulement
+TRANSITION tourbillon
+TRANSITION mv
+TRANSITION eclats toujours    # tous les combats, boss compris
+TRANSITION défaut    # revenir aux paramètres du plugin
+```
+
+Balises de note employées dans le jeu :
+
+```
+<Boss: …>
+<DonoBoss: …>
+<Mahoraga: …>
+<Radahn: …>
 ```
 
 ---
@@ -2294,16 +2411,4 @@ plante, le système se met simplement à lire le mauvais nombre.
 | 207 | TS · Service de nuit | MOG_TimeSystem · Night Shift Switch ID |
 | 231 | TS · Météo des saisons | VerrouDesSaisons · interrupteur |
 | 912 | ✎ Mode cinématique | OutilsDeScene · interrupteur |
-
----
-
-## Ce qui ne marche pas
-
-### Posées dans un événement, écoutées par personne — 1
-
-Soit le plugin qui les écoutait est éteint, soit le nom a changé.
-
-| commande | fois | où |
-|---|---:|---|
-| `AME` | 21 | CommonEvents.json, Map002.json, Map005.json |
 

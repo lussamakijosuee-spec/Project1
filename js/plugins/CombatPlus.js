@@ -1,8 +1,8 @@
 //=============================================================================
 // CombatPlus.js — v1.0  ·  Jauges ennemies, ennemis qui vacillent, transitions
 // RPG Maker MV   ·   pour JOKO
-//   Inspiré, sans rien en copier, de Visual HP Gauge, Weak Enemy Poses et
-//   Battle Start Transition (Yanfly).
+//   Inspiré, sans rien en copier, de Visual HP Gauge et Weak Enemy Poses
+//   (Yanfly) ; les transitions d'entrée en combat sont maison.
 //=============================================================================
 /*:
  * @plugindesc v1.0 ■ Une jauge de PV sous l'ennemi visé ou touché, les
@@ -99,9 +99,12 @@
  *  mv         : le zoom d'origine de RPG Maker.
  *  Les combats de boss ont la leur (éclats par défaut).
  *  Pour UN combat précis, juste avant « Combat » dans l'événement :
- *      TRANSITION eclats            (ou tourbillon, ou mv)
+ *      TRANSITION eclats            le prochain combat seulement
+ *      TRANSITION tourbillon
+ *      TRANSITION mv
  *  Pour changer la règle jusqu'à nouvel ordre :
- *      TRANSITION eclats toujours        ·      TRANSITION défaut
+ *      TRANSITION eclats toujours   tous les combats, boss compris
+ *      TRANSITION défaut            revenir aux paramètres du plugin
  *  La musique de combat, la photo du fond et le fondu au noir restent ceux
  *  de MV, aux mêmes images.
  */

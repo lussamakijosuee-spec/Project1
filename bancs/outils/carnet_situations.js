@@ -15,12 +15,15 @@
  *   note         → la case Note (de la carte, de l'objet, de l'ennemi…)
  *   commentaire  → une commande « Commentaire » dans la page de l'événement
  *   message      → dans le texte d'un « Afficher un message »
+ *   choix        → dans le texte d'un « Afficher des choix » (des lignes choix
+ *                  qui se suivent = UN bloc de choix dans l'atelier)
  */
 function C(texte, plugin, ou) { return { genre: 'commande', texte: texte, plugin: plugin, ou: ou || '' }; }
 function S(texte, plugin, ou) { return { genre: 'script', texte: texte, plugin: plugin, ou: ou || '' }; }
 function N(texte, plugin, ou) { return { genre: 'note', texte: texte, plugin: plugin, ou: ou || '' }; }
 function K(texte, plugin, ou) { return { genre: 'commentaire', texte: texte, plugin: plugin, ou: ou || '' }; }
 function M(texte, plugin, ou) { return { genre: 'message', texte: texte, plugin: plugin, ou: ou || '' }; }
+function CH(texte, plugin, ou) { return { genre: 'choix', texte: texte, plugin: plugin, ou: ou || '' }; }
 function V(texte, ou) { return { genre: 'mv', texte: texte, plugin: 'MV', ou: ou || '' }; }
 
 module.exports = [
@@ -178,7 +181,26 @@ module.exports = [
         { titre: 'Fin de la cinématique : tout remettre',
           lignes: [C('show_clock', 'MOG_TimeSystem'), C('show_gold_hud', 'MOG_GoldHud'), C('show_treasure_hud', 'MOG_TreasureHud'),
                    C('show_compass', 'MOG_Compass'), C('show_all_indicators', 'MOG_EventIndicators'), C('enable_time', 'MOG_TimeSystem'),
-                   C('JUMPACTION TRUE', 'GALV_JumpAbility'), V('Effacer l\'image : n°1')] }
+                   C('JUMPACTION TRUE', 'GALV_JumpAbility'), V('Effacer l\'image : n°1')] },
+        { titre: 'Un choix qui n\'apparaît que si le joueur a fait quelque chose',
+          texte: 'DialoguesPlus. La condition s\'écrit dans le texte du choix et ne s\'affiche pas. s[n] interrupteur, v[n] variable, ss[A] interrupteur local, ou du JavaScript. Les branches restent celles de l\'éditeur.',
+          lignes: [CH('Bonjour', 'MV'),
+                   CH('Parler de la lettre <si: s[12]>', 'DialoguesPlus', 'seulement si l\'interrupteur 12 est ON'),
+                   CH('Demander pardon <si: v[3] >= 2>', 'DialoguesPlus', 'si la variable 3 vaut 2 ou plus'),
+                   CH('Payer 500 or <grisé: $gameParty.gold() < 500>', 'DialoguesPlus', 'visible, mais grisé : on ne peut pas le prendre'),
+                   CH('Au revoir', 'MV')] },
+        { titre: 'Plus de 6 choix',
+          texte: 'DialoguesPlus. Deux « Afficher des choix » l\'un juste après l\'autre, rien entre les deux : une seule liste à l\'écran, et chaque bloc garde ses branches.',
+          lignes: [CH('Choix 1', 'MV'), CH('Choix 2', 'MV'), CH('Choix 3', 'MV'), CH('Choix 4', 'MV'), CH('Choix 5', 'MV'), CH('Choix 6', 'MV'),
+                   CH('Choix 7', 'MV', 'commence le second « Afficher des choix », collé au premier'), CH('Choix 8', 'MV')] },
+        { titre: 'Une bulle au-dessus de celui qui parle',
+          texte: 'Sans visage, on voit quand même qui parle. S\'il n\'y a pas la place au-dessus, la bulle passe dessous.',
+          lignes: [M('\\bulle[5]Tu es enfin là.', 'DialoguesPlus', 'au-dessus de l\'événement 5'),
+                   M('\\bulle[0]Hm.', 'DialoguesPlus', 'au-dessus de l\'événement qui parle'),
+                   M('\\bulle[-1]Hein ?', 'DialoguesPlus', 'au-dessus du joueur')] },
+        { titre: 'Le nom d\'un héros en couleur, sans le retaper',
+          texte: 'Les macros sont dans les paramètres de DialoguesPlus (ves, kor, lud, ael) ; ajoutes-y les tiennes (un lieu, un objet). Changer la macro change tous les messages.',
+          lignes: [M('\\m[ves] te regarde sans rien dire.', 'DialoguesPlus')] }
     ]
 },
 {
@@ -221,7 +243,33 @@ module.exports = [
           lignes: [N('<NPC: forgeron>', 'VieDuVillage', 'nom de l\'événement ou note'), C('NPC talk forgeron', 'EvenementsUtiles', 'en tête de sa page'),
                    N('<Vie: garde>', 'VieDuVillage', 'aussi : sedentaire, noctambule, villageois, fixe')] },
         { titre: 'Voyage rapide sur une carte du monde',
-          lignes: [S('Galv.MAPT.openMap(1)', 'GALV_MapTravel'), S('Galv.MAPT.enableLocation(1,"Ville Forestière",true)', 'GALV_MapTravel', 'débloquer un lieu')] }
+          lignes: [S('Galv.MAPT.openMap(1)', 'GALV_MapTravel'), S('Galv.MAPT.enableLocation(1,"Ville Forestière",true)', 'GALV_MapTravel', 'débloquer un lieu')] },
+        { titre: 'Un événement écrit une fois, posé partout (modèles)',
+          texte: 'EvenementsPlus. La vitrine (carte 70) est pleine de recettes prêtes : un coffre, une porte, un marchand. Corrige le modèle : tous ses exemplaires changent.',
+          lignes: [N('<Modèle: 70, 123>', 'EvenementsPlus', 'note de l\'événement : il prend les pages de l\'événement 123 de la carte 70'),
+                   C('MODELE changer 5 70 123', 'EvenementsPlus', 'l\'événement 5 devient ce modèle (gardé dans la sauvegarde)'),
+                   C('MODELE changer 5 off', 'EvenementsPlus'),
+                   C('MODELE poser 70 123 12 8', 'EvenementsPlus', 'une copie en 12,8, jusqu\'au changement de carte')] },
+        { titre: 'Jouer la page d\'un autre événement, puis revenir',
+          texte: 'Comme un événement commun, mais écrit sur la carte, à côté du reste.',
+          lignes: [C('APPEL 7', 'EvenementsPlus', 'sa page active'), C('APPEL 7 2', 'EvenementsPlus', 'sa page 2'),
+                   C('APPEL 7 2 70', 'EvenementsPlus', 'la page 2 de l\'événement 7 de la carte 70')] },
+        { titre: 'Un PNJ qui compte (les visites, son humeur…)',
+          texte: 'Des variables propres à chaque événement, comme ses interrupteurs locaux, mais avec des nombres, autant qu\'on veut.',
+          lignes: [C('LOCALE visites + 1', 'EvenementsPlus'), C('LOCALE humeur = 3', 'EvenementsPlus'),
+                   S('this.locale(\'visites\') >= 3', 'EvenementsPlus', 'condition « Script »'),
+                   M('Tu es déjà venu \\lv[visites] fois.', 'EvenementsPlus', 'dans un message')] },
+        { titre: 'Un nom au-dessus d\'un PNJ quand on s\'approche',
+          texte: 'Il apparaît à 4 cases et s\'efface quand on s\'éloigne. En commentaire, il suit la page : il peut changer avec elle.',
+          lignes: [N('<Étiquette: Forgeron>', 'EvenementsPlus', 'note de l\'événement'), K('<Étiquette: \\c[6]Auberge>', 'EvenementsPlus', 'commentaire de la page active')] },
+        { titre: 'Un gros événement : dragon, chariot, portail',
+          texte: 'Il occupe plusieurs cases (centré en bas, comme son image) : on le touche et il bloque partout.',
+          lignes: [N('<Taille: 3x2>', 'EvenementsPlus', 'note de l\'événement : 3 cases de large, 2 de haut')] },
+        { titre: 'De la glace où le joueur glisse',
+          lignes: [N('<Glissant: 5>', 'EvenementsPlus', 'note de la carte : il glisse sur la région 5 jusqu\'à heurter quelque chose')] },
+        { titre: 'Des bruits de pas',
+          texte: 'Le volume suit les « Sons » du menu Options.',
+          lignes: [N('<Pas: Footstep-middle>', 'EvenementsPlus', 'note de la carte'), N('<Pas région 3: Footstep-low>', 'EvenementsPlus', 'un autre son sur la région 3')] }
     ]
 },
 {
@@ -267,7 +315,15 @@ module.exports = [
         { titre: 'L\'IA d\'un ennemi',
           lignes: [N('<AI Priority>\nEVAL user.enCharge(): Skill 985, Random\nHP% param <= 40%: Skill 984, Random\nALWAYS: Skill 833, Random\n</AI Priority>', 'YEP_BattleAICore', 'note de l\'ennemi')] },
         { titre: 'Le bestiaire et le livre des objets',
-          lignes: [C('EnemyBook open', 'EnemyBook'), C('EnemyBook add 788', 'EnemyBook', 'inscrire un ennemi'), C('ItemBook open', 'ItemBook')] }
+          lignes: [C('EnemyBook open', 'EnemyBook'), C('EnemyBook add 788', 'EnemyBook', 'inscrire un ennemi'), C('ItemBook open', 'ItemBook')] },
+        { titre: 'Choisir la transition d\'entrée en combat',
+          texte: 'CombatPlus. Par défaut le tourbillon, et les éclats pour un boss. Juste avant « Combat » dans l\'événement :',
+          lignes: [C('TRANSITION eclats', 'CombatPlus', 'pour ce combat seulement'), C('TRANSITION tourbillon', 'CombatPlus'),
+                   C('TRANSITION mv', 'CombatPlus', 'le zoom d\'origine de RPG Maker'),
+                   C('TRANSITION eclats toujours', 'CombatPlus', 'jusqu\'à nouvel ordre'), C('TRANSITION défaut', 'CombatPlus', 'revenir aux paramètres')] },
+        { titre: 'Un ennemi sans jauge de PV, ou qui ne vacille pas',
+          texte: 'La petite jauge apparaît sous l\'ennemi visé ou touché ; sous 25 % de PV, il vacille. Pour un ennemi mystérieux, ou une statue qui ne doit pas tanguer :',
+          lignes: [N('<Sans jauge>', 'CombatPlus', 'note de l\'ennemi'), N('<Ne vacille pas>', 'CombatPlus', 'note de l\'ennemi')] }
     ]
 },
 {
@@ -289,7 +345,18 @@ module.exports = [
           lignes: [C('show_gold_hud', 'MOG_GoldHud'), C('hide_gold_hud', 'MOG_GoldHud'), C('show_treasure_popup', 'MOG_TreasurePopup'), C('hide_treasure_popup', 'MOG_TreasurePopup')] },
         { titre: 'Ouvrir un écran',
           lignes: [C('OpenQuestJournal', 'YEP_QuestJournal', 'journal des quêtes'), C('music_book', 'MOG_Music_Book', 'livre des musiques'),
-                   C('ELEMENTS', 'VisualMaxEX', 'écran des éléments'), C('VOIES ecran', 'MaitriseVoies', 'les cinq Voies'), S('Galv.MLEVEL.levelUp(1)', 'GALV_ManualLevel', 'monter de niveau à la main')] }
+                   C('ELEMENTS', 'VisualMaxEX', 'écran des éléments'), C('VOIES ecran', 'MaitriseVoies', 'les cinq Voies'), S('Galv.MLEVEL.levelUp(1)', 'GALV_ManualLevel', 'monter de niveau à la main')] },
+        { titre: 'Une touche du clavier qui ouvre quelque chose',
+          texte: 'InterfacePlus. Sur la carte, quand rien d\'autre ne se passe. Touches libres : les lettres sauf Q W X Z, et les chiffres 1 à 9. 1050 = le numéro de TON événement commun.',
+          lignes: [C('TOUCHE M 1050', 'InterfacePlus', 'M lance l\'événement commun 1050'), C('TOUCHE M off', 'InterfacePlus')] },
+        { titre: 'Une image sur laquelle on clique',
+          texte: 'Une carte où l\'on clique sur une ville, un inventaire en images, un code à taper. L\'image grossit un peu sous la souris.',
+          lignes: [V('Afficher une image : n°3'), C('IMAGE clic 3 1020', 'InterfacePlus', 'un clic dessus lance l\'événement commun 1020'),
+                   C('IMAGE clic 3 off', 'InterfacePlus')] },
+        { titre: 'Un menu de destinations (ou de n\'importe quoi)',
+          texte: 'La liste montre le NOM des événements communs ; le joueur en choisit un, il est joué, puis l\'événement reprend. Le premier commentaire de chacun sert d\'aide.',
+          lignes: [C('MENU_EC 1001 1002 1005', 'InterfacePlus'), C('MENU_EC 1001-1010', 'InterfacePlus', 'une plage'),
+                   K('<si: s[30]>', 'InterfacePlus', 'commentaire dans l\'événement commun : il n\'apparaît que si l\'interrupteur 30 est ON')] }
     ]
 },
 {

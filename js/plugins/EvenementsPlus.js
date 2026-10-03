@@ -67,8 +67,8 @@
  *  de région 5, le joueur glisse jusqu'à heurter quelque chose. Pour la glace.
  *
  *  ── BRUITS DE PAS ─────────────────────────────────────────────────────
- *  Note de la CARTE :  <Pas: Step1>  → un son à chaque pas du joueur.
- *  Par région :  <Pas région 3: Sand>  (le sable sur la région 3).
+ *  Note de la CARTE :  <Pas: Footstep-middle>  → un son à chaque pas du joueur.
+ *  Par région :  <Pas région 3: Footstep-low>  (un pas plus sourd sur la région 3).
  *  Volume réglé sur les « Sons » du menu Options.
  */
 var EvenementsPlus = window.EvenementsPlus || {};

@@ -155,16 +155,20 @@ function syntaxesDe(nom, connues) {
         var premier = nu.split(/\s+/)[0].replace(/[:：]$/, '');
         var vraie = minuscules[premier.toLowerCase()];
         if (!vraie) { return; }
-        // on sépare l'exemple de son commentaire (# … ou - …)
-        var coupe = nu.search(/\s{2,}[#\-]|\s+#\s/);
+        // on sépare l'exemple de son commentaire (# …, - …, ou trois espaces
+        // et plus, comme le fait le carnet : « APPEL 7 2        joue sa page 2 »
+        // gardait sinon son explication DANS la commande à copier)
+        // (pas devant un argument : « QUEST de   <id> "PNJ" » garde ses arguments)
+        var coupe = nu.search(/\s{2,}[#\-]|\s+#\s|\s{3,}(?=[^\s<"'\[{\d])/);
         var exemple = (coupe > 0 ? nu.slice(0, coupe) : nu).trim();
-        var glose = coupe > 0 ? nu.slice(coupe).replace(/^[\s#\-]+/, '').trim() : '';
+        var glose = coupe > 0 ? nu.slice(coupe).replace(/^[\s#\-\/·]+/, '').trim() : '';
         if (exemple.length < 2 || exemple.length > 120) { return; }
+        if (/ — /.test(exemple)) { return; }   // un titre de l'aide (« LOU — COPIE & ASPIRATION »)
         // une ligne de prose qui commence par le nom de la commande n'est pas
         // un exemple : on exige qu'elle tienne en peu de mots
         if (exemple.split(/\s+/).length > 7) { return; }
         var e = out[vraie] = out[vraie] || [];
-        if (!e.some(function (x) { return x.exemple === exemple; }) && e.length < 6) {
+        if (!e.some(function (x) { return x.exemple === exemple; }) && e.length < 12) {
             e.push({ exemple: exemple, glose: glose });
         }
     });

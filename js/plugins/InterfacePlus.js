@@ -21,7 +21,9 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *  ── UNE TOUCHE, UN ÉVÉNEMENT COMMUN ───────────────────────────────────
  *  Dans les paramètres :   M = 1050      (une par ligne)
- *  Ou en jeu :             TOUCHE M 1050      ·      TOUCHE M off
+ *  Ou en jeu :
+ *      TOUCHE M 1050      la touche M lance l'événement commun 1050
+ *      TOUCHE M off       la touche M ne fait plus rien
  *  Sur la carte, quand rien d'autre ne se passe. Touches libres : les
  *  lettres sauf Q W X Z, et les chiffres 1 à 9 (les autres servent déjà).
  *  Pour une carte du monde, un journal, un pouvoir de terrain…

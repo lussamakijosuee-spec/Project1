@@ -164,7 +164,9 @@ function syntaxesDe(aide, connues) {
         // MV compare caractère par caractère : si le plugin ne rattrape pas la
         // casse, la ligne doit porter la commande EXACTEMENT comme il l'attend
         if (!connues[vraie].casse && premier !== vraie) return;
-        var coupe = nu.search(/\s{2,}[#\-]|\s+#\s|\s{3,}/);
+        // trois espaces séparent l'explication, sauf devant un argument
+        // (« QUEST de   <id> "PNJ" "Lieu" » perdait sinon ses arguments)
+        var coupe = nu.search(/\s{2,}[#\-]|\s+#\s|\s{3,}(?=[^\s<"'\[{\d])/);
         var ex = (coupe > 0 ? nu.slice(0, coupe) : nu).trim();
         var glose = coupe > 0 ? nu.slice(coupe).replace(/^[\s#\-\/]+/, '').trim() : '';
         // de la prose qui commence par le nom de la commande n'est pas un exemple.
@@ -174,7 +176,7 @@ function syntaxesDe(aide, connues) {
         var prose = coupe > 0 ? ex : nu;
         if (/[.;]\s*$/.test(prose) || /\.\s+[A-Za-z]/.test(prose) || (/\w: /.test(prose) && !/ : /.test(prose))) return;
         if (ex.length < 2 || ex.length > 140 || ex.split(/\s+/).length > 12) return;
-        if (/ \/ /.test(ex)) return;   // un titre de l'aide (« VOIES INTERDITES / ÉTRANGÈRES »)
+        if (/ \/ /.test(ex) || / — /.test(ex)) return;   // un titre de l'aide (« VOIES INTERDITES / ÉTRANGÈRES », « LOU — COPIE »)
         var e = out[vraie] = out[vraie] || [];
         if (!e.some(function (x) { return x.ex === ex; }) && e.length < 40) e.push({ ex: ex, glose: glose });
     });
@@ -379,7 +381,7 @@ SITUATIONS.forEach(function (th) {
                 var m = /([A-Za-z_$][\w$]*)\s*(?:\(|=)/.exec(l.texte.replace(/^.*\.(?=[A-Za-z_$][\w$]*\s*(?:\(|=))/, ''));
                 mot = m ? m[1] : '';
             } else {
-                var n = (l.genre === 'message' && /\\([a-zA-Z]{1,2})[\[<]/.exec(l.texte)) ||
+                var n = (l.genre === 'message' && /\\([a-zA-Z]{1,8})[\[<]/.exec(l.texte)) ||
                     /<\s*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ ]*?)\s*(?:\d|:|>)/.exec(l.texte) || /^([a-z][a-z_ ]+?) :/.exec(l.texte);
                 mot = n ? n[1] : '';
             }

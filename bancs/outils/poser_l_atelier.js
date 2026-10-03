@@ -152,6 +152,22 @@ function traduire(liste, l, suite) {
     }
 }
 
+function blocDeChoix(liste, bloc) {
+    var notes = bloc.filter(function (l) { return l.ou; });
+    notes.forEach(function (l) { commentaire(liste, 0, '↓ « ' + l.texte.replace(/\s*<[^>]*>/g, '') + ' » : ' + l.ou); });
+    // six au plus par commande : MV n'en accepte pas davantage (DialoguesPlus recolle les blocs)
+    for (var d = 0; d < bloc.length; d += 6) {
+        var noms = bloc.slice(d, d + 6).map(function (l) { return l.texte; });
+        liste.push(cmd(102, 0, [noms, -1, 0, 2, 0]));
+        noms.forEach(function (n, i) {
+            liste.push(cmd(402, 0, [i, n]));
+            commentaire(liste, 1, 'Ce qui se passe si on prend « ' + n.replace(/\s*<[^>]*>/g, '') + ' »');
+            liste.push(cmd(0, 1, []));
+        });
+        liste.push(cmd(404, 0, []));
+    }
+}
+
 /* ── une page, un événement ───────────────────────────────────────────── */
 function page(liste) {
     liste.push(cmd(0, 0, []));
@@ -199,10 +215,19 @@ SITUATIONS.forEach(function (th) {
         commentaire(liste, 0, s.titre);
         if (s.texte) commentaire(liste, 0, s.texte);
         var suite = { sauter: null };
-        (s.lignes || []).forEach(function (l) {
-            if (suite.sauter && l.genre === 'mv' && suite.sauter.test(l.texte)) return;
+        var lignes = s.lignes || [];
+        for (var k = 0; k < lignes.length; k++) {
+            var l = lignes[k];
+            if (l.genre === 'choix') {   // les choix qui se suivent forment UN bloc « Afficher des choix »
+                var bloc = [];
+                while (k < lignes.length && lignes[k].genre === 'choix') bloc.push(lignes[k++]);
+                k--;
+                blocDeChoix(liste, bloc);
+                continue;
+            }
+            if (suite.sauter && l.genre === 'mv' && suite.sauter.test(l.texte)) continue;
             traduire(liste, l, suite);
-        });
+        }
         if (!(s.lignes || []).length) commentaire(liste, 0, '(aide seulement — rien à copier)');
         id++; total += liste.length;
         ceSitu.push({ theme: th.theme, titre: s.titre, liste: liste });
@@ -290,7 +315,8 @@ console.log('   ✓ chaque commande de plugin posée est écoutée par un plugin
  * JOKO : « Je parle des événements communs. Tout ce que tu as fait dans le
  * carnet. » Rangés loin des siens (il s'arrête à 234) :
  *   701…  les situations, un séparateur « ▬▬ ✎ thème ▬▬ » avant chaque thème
- *   801…  un événement commun par plugin actif
+ *   801…  un événement commun par plugin actif (plus loin si les situations
+ *         débordent : elles ne sont jamais écrasées)
  * Déclencheur « Aucun » : ils ne tournent jamais seuls. On peut les appeler
  * (« Événement commun »), ou copier leurs lignes.
  * On ne réécrit QUE des cases vides ou déjà à l'atelier (« ✎ » / « ▬▬ ✎ »). */
@@ -304,8 +330,12 @@ for (var n = CE_SITU; n <= CE_FIN; n++) {
 }
 while (CE.length <= CE_FIN) CE.push(null);
 for (n = CE_SITU; n <= CE_FIN; n++) CE[n] = { id: n, list: [cmd(0, 0, [])], name: '', switchId: 1, trigger: 0 };
+var poses = {};
 function poser(n, nom, liste) {
     if (n > CE_FIN) { console.log('   ✗ plus de place après ' + CE_FIN); process.exit(1); }
+    // deux panneaux sur le même numéro : le second effacerait le premier sans un mot
+    if (poses[n]) { console.log('   ✗ l\'événement commun ' + n + ' serait écrit deux fois (« ' + poses[n] + ' » puis « ' + nom + ' »)'); process.exit(1); }
+    poses[n] = nom;
     CE[n] = { id: n, list: JSON.parse(JSON.stringify(liste)), name: nom, switchId: 1, trigger: 0 };
 }
 var k = CE_SITU, themeVu = null;
@@ -320,8 +350,9 @@ ceSitu.forEach(function (x) {
     poser(k++, '✎ ' + x.titre, x.liste);
 });
 var finSitu = k - 1;
-k = CE_PLUG;
+k = Math.max(CE_PLUG, Math.ceil((finSitu + 2) / 10) * 10 + 1);   // après les situations, sur une dizaine ronde
+var debutPlug = k;
 poser(k++, '▬▬ ✎ TOUS LES PLUGINS ACTIFS ▬▬', (function () { var t = []; commentaire(t, 0, 'Un événement commun par plugin actif, dans l\'ordre de chargement : toutes ses commandes, scripts, balises et interrupteurs.'); t.push(cmd(0, 0, [])); return t; })());
 evs2.forEach(function (e) { poser(k++, '✎ ' + e.name, e.pages[0].list); });
 fs.writeFileSync(FCE, '[\n' + CE.map(function (x) { return JSON.stringify(x); }).join(',\n') + '\n]');
-console.log('   événements communs ' + CE_SITU + '–' + finSitu + ' : situations · ' + CE_PLUG + '–' + (k - 1) + ' : plugins');
+console.log('   événements communs ' + CE_SITU + '–' + finSitu + ' : situations · ' + debutPlug + '–' + (k - 1) + ' : plugins');
