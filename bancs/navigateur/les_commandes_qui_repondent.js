@@ -22,7 +22,9 @@
  *     FEU repos       →  les PV remontent, et $gameSystem._feuDAme existe
  *     TEMPS basculer  →  $gameSystem.hour() a changé de moitié de journée
  *     CHUTE bete      →  l'interrupteur 97 est levé
- *     AME set …       →  la variable de la jauge vaut ce qu'on a demandé
+ *     AME set …       →  RIEN : la santé mentale est retirée (JOKO, 2026-10-03),
+ *                        la jauge v11 ne bouge plus et plus aucun événement
+ *                        n'appelle AME
  *     MARCHAND 3      →  Scene_Shop est empilée, avec un stock chiffré
  *
  * ── ET LES CONTRE-ÉPREUVES ─────────────────────────────────────────────────
@@ -34,6 +36,7 @@
  */
 'use strict';
 var { chromium } = require('playwright');
+var path = require('path');
 var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
 var vert = 0, rouge = 0;
@@ -123,15 +126,14 @@ function ok(nom, cond, detail) {
         lancer('CHUTE calme');
         out.chute.apresCalme = [95, 96, 97, 98, 99].map(function (s) { return $gameSwitches.value(s); });
 
-        // ── AME (JadeEntitePlunging, réinscrit) ─────────────────────────────
-        // 21 commandes des cartes de JOKO l'appellent. La jauge est v11..v15.
+        // ── AME : la santé mentale est RETIRÉE ──────────────────────────────
+        // JOKO, 2026-10-03 : « efface toute santé mentale ». JadeEntitePlunging
+        // est éteint et ses 21 appels sont passés en commentaires : la commande
+        // ne doit plus rien faire (v11, la jauge d'autrefois, ne bouge pas).
         $gameVariables.setValue(11, 0);
         lancer('AME set thylane 7');
-        out.ame = { apresSet: $gameVariables.value(11) };
         lancer('AME bon thylane 2');
-        out.ame.apresBon = $gameVariables.value(11);
-        lancer('AME mauvais thylane 3');
-        out.ame.apresMauvais = $gameVariables.value(11);
+        out.ame = { apres: $gameVariables.value(11), plugin: $plugins.some(function (p) { return p.name === 'JadeEntitePlunging' && p.status; }) };
 
         // ── MARCHAND ────────────────────────────────────────────────────────
         out.marchand = { recensement: window.LeMarchandQuiSuit ? window.LeMarchandQuiSuit.recensement() : null };
@@ -308,10 +310,11 @@ function ok(nom, cond, detail) {
     ok('CHUTE fond lève le 99', r.chute.fond99 === true);
     ok('CHUTE calme rabaisse tout', r.chute.apresCalme.every(function (x) { return x === false; }));
 
-    console.log('\n── « AME » — JadeEntitePlunging, réinscrit (21 appels) ' + '─'.repeat(19));
-    ok('AME set pose la jauge', r.ame.apresSet === 7, 'v11 = ' + r.ame.apresSet);
-    ok('AME bon la fait monter', r.ame.apresBon > r.ame.apresSet, 'v11 = ' + r.ame.apresBon);
-    ok('AME mauvais la fait descendre', r.ame.apresMauvais < r.ame.apresBon, 'v11 = ' + r.ame.apresMauvais);
+    console.log('\n── « AME » — la santé mentale, retirée à la demande de JOKO ' + '─'.repeat(15));
+    ok('JadeEntitePlunging est éteint, et AME ne fait plus bouger la jauge', !r.ame.plugin && r.ame.apres === 0, 'v11 = ' + r.ame.apres);
+    var appelsAme = require('fs').readdirSync(path.join(__dirname, '..', '..', 'data')).filter(function (f) { return /\.json$/.test(f) && !require('../outils/atelier.js').estAtelier(f); })
+        .reduce(function (n, f) { return n + (require('../outils/atelier.js').texte(f).match(/"code":356,"indent":\d+,"parameters":\["AME\b/g) || []).length; }, 0);
+    ok('plus aucun événement n\'appelle AME', appelsAme === 0, appelsAme + ' appel(s)');
 
     console.log('\n── « MARCHAND » — l\'échelle enfin en rayon ' + '─'.repeat(31));
     ok('la boutique s\'ouvre', r.marchand.pousseUneBoutique);

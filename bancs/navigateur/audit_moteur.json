@@ -496,8 +496,8 @@
  "ia": [],
  "meta": {
   "passive state": {
-   "poses": 14,
-   "dansMeta": 14,
+   "poses": 11,
+   "dansMeta": 11,
    "exemple": "acteur #1 Vesper"
   },
   "mana": {
@@ -633,17 +633,17 @@
   "domaineroyal": {
    "poses": 1,
    "dansMeta": 1,
-   "exemple": "compétence #71 Royaume Impérial"
+   "exemple": "compétence #71 Royaume Impérial · le Doma"
   },
   "ancien after eval": {
    "poses": 1,
    "dansMeta": 1,
-   "exemple": "compétence #71 Royaume Impérial"
+   "exemple": "compétence #71 Royaume Impérial · le Doma"
   },
   "ames.length; ++i) {\n    var ame = ames[i];\n    \n    if (ame && ame.isactor()) {\n      // enlève l'état \"mort\"\n      ame.removestate(ame.deathstateid());\n      \n      // restaure 100% de leurs pv et pm\n      ame.sethp(ame.mhp);\n      ame.setmp(ame.mmp);\n      \n      // animation de résurrection\n      ame.startanimation(49);\n      hasrevived = true;\n    }\n  }\n  \n  // message fluide (ne bloque pas le combat)\n  if (hasrevived && scenemanager._scene._logwindow) {\n    scenemanager._scene._logwindow.addtext(\"les âmes du domaine se relèvent pour servir leur maître !\");\n    audiomanager.playse({ name": {
    "poses": 1,
    "dansMeta": 0,
-   "exemple": "compétence #71 Royaume Impérial"
+   "exemple": "compétence #71 Royaume Impérial · le Doma"
   },
   "before eval": {
    "poses": 1,
@@ -743,7 +743,7 @@
   "royaumeimperial": {
    "poses": 1,
    "dansMeta": 1,
-   "exemple": "compétence #810 ☠ Royaume Impérial des Tén"
+   "exemple": "compétence #810 ☠ Ténèbres Impériales"
   },
   "contretotale": {
    "poses": 1,
