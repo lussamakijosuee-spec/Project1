@@ -291,7 +291,10 @@ module.exports = [
         { titre: 'Mettre le chronomètre en pause, lui ajouter ou retirer du temps',
           texte: 'On le lance toujours avec « Contrôle du chronomètre » de l\'éditeur.',
           lignes: [V('Contrôle du chronomètre : démarrer, 1 min'), C('CHRONO pause', 'EvenementsPlus'), C('CHRONO reprendre', 'EvenementsPlus'),
-                   C('CHRONO ajouter 30', 'EvenementsPlus', '30 secondes de plus'), C('CHRONO retirer 10', 'EvenementsPlus')] }
+                   C('CHRONO ajouter 30', 'EvenementsPlus', '30 secondes de plus'), C('CHRONO retirer 10', 'EvenementsPlus')] },
+        { titre: 'Poser des décors au pixel, hors de la grille (lits, tonneaux, torches, arbres…)',
+          texte: 'DecorsLibres. En TEST (lancé depuis RPG Maker), sur la carte : Ctrl+D ouvre le panneau des 1 432 décors (img/doodads). Clique une image, puis CLIC GAUCHE sur la carte pour la poser, CLIC DROIT pour enlever. Couche sol / personnages / dessus, taille, miroir, opacité, aimanter. « Enregistrer » écrit data/Decors.json. Les noms en [3x1] sont animés. Rien n\'est écrit dans tes cartes.',
+          lignes: [V('Jouer en test depuis RPG Maker, puis Ctrl+D sur la carte')] }
     ]
 },
 {

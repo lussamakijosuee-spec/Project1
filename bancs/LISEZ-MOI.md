@@ -385,3 +385,5 @@ Quatre plugins inspirés de la collection Yanfly, sans rien en copier : **Dialog
 
 **Les images d'armes.** `outils/images_des_armes.js [--ecrire]` pose `<Image d'arme: …>` sur les 226 armes (famille selon le type, couleur selon l'élément, sinon le rang de prix) ; tables réglables en tête, relançable, une balise écrite à la main n'est jamais touchée. ⚠ YEP_ItemCore vide la note des exemplaires possédés (`ItemNoteParse` éteint) : CombatPlus lit la balise sur l'arme d'origine (`baseItemId`), et `les_outils_de_combat` ④ le vérifie sur une vraie arme, sans retoucher sa note.
 
+**Les décors libres.** `navigateur/les_decors.js` : les décors de `data/Decors.json` s'affichent sur leur carte, au pixel, sur leur couche, les `[3x1]` défilent, et pas sur une autre carte ; hors test, Ctrl+D n'ouvre rien ; en test, poser sous la souris, clic droit pour enlever (sans ouvrir le menu), Annuler, Enregistrer. ⚠ MV pose sur le canevas un paragraphe vide (`ErrorPrinter`) qui reçoit les clics : l'éditeur juge un clic à sa position, pas à l'élément touché. `outils/index_des_decors.js` refait `data/DecorsIndex.json` quand on ajoute des images dans `img/doodads`.
+
