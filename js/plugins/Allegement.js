@@ -110,6 +110,15 @@ window.Allegement = Allegement;
         _snap.call(this);
     };
 
+    // ── MOG_VisualTimer au « Test de combat » de l'éditeur ───────────────
+    // Le test de combat n'a pas de carte ($dataMap reste vide). La jauge du
+    // minuteur demande où est le joueur à l'écran pour s'estomper sous lui ;
+    // ça lit la carte, et le test plantait avant même de s'ouvrir.
+    if (typeof TimerGauge !== 'undefined' && TimerGauge.prototype.isHudVisible) {
+        var _hudVisible = TimerGauge.prototype.isHudVisible;
+        TimerGauge.prototype.isHudVisible = function () { return $dataMap ? _hudVisible.call(this) : true; };
+    }
+
     // ── Irina_AntiAudioDelay : ne pas précharger un son sans nom ──────────
     // Irina précharge les sons des commandes à venir, sans regarder si la
     // commande « Jouer un son » est restée sur « (Aucun) » : elle demandait
