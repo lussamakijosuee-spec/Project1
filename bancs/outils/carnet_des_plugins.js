@@ -382,7 +382,7 @@ SITUATIONS.forEach(function (th) {
                 mot = m ? m[1] : '';
             } else {
                 var n = (l.genre === 'message' && /\\([a-zA-Z]{1,8})[\[<]/.exec(l.texte)) ||
-                    /<\s*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' ]*?)\s*(?:\d|:|>)/.exec(l.texte) || /^([a-z][a-z_ ]+?) :/.exec(l.texte);
+                    /<\s*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]*?)\s*(?:\d|:|>)/.exec(l.texte) || /^([a-z][a-z_ ]+?) :/.exec(l.texte);
                 mot = n ? n[1] : '';
             }
             if (!mot || code.toLowerCase().indexOf(mot.toLowerCase()) < 0) douteuses.push(l.plugin + ' : ' + l.texte.split('\n')[0] + ' [' + mot + ']');

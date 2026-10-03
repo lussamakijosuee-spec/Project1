@@ -7,8 +7,8 @@ documentation : chaque ligne vient du code qui l'écoute.*
 
 | | |
 |---|---:|
-| plugins qui écoutent | 77 |
-| commandes distinctes | 137 |
+| plugins qui écoutent | 81 |
+| commandes distinctes | 145 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2326,6 +2326,91 @@ Balises de note employées dans le jeu :
 <DonoBoss: …>
 <Mahoraga: …>
 <Radahn: …>
+```
+
+### `CombatTactique`
+
+Jauge de limite d'équipe, barrières, provocation, overkill, compétences instantanées, usages limités, vol, difficulté.
+
+**`LIMITE`**
+
+
+```
+LIMITE +20    # ajoute 20
+LIMITE -20    # retire 20
+LIMITE plein
+LIMITE vide
+LIMITE =50    # la met à 50
+```
+
+**`BARRIERE`**
+
+
+```
+BARRIERE 1 300    # le héros 1 reçoit 300 de barrière (0 = l'enlever)
+```
+
+**`DIFFICULTE`**
+
+
+```
+DIFFICULTE facile
+DIFFICULTE normal
+DIFFICULTE difficile
+```
+
+### `MaitriseDesCompetences`
+
+Plus un héros utilise une compétence, plus elle se renforce. Et une page « Statistiques » des combats dans le menu.
+
+**`STATS`**
+
+
+```
+STATS ouvrir
+```
+
+**`MAITRISE`**
+
+
+```
+MAITRISE 1 12 +10    # héros 1, compétence 12 : 10 utilisations de plus
+MAITRISE 1 12 =0    # remise à zéro
+```
+
+### `ExplorationPlus`
+
+Prendre un ennemi visible de dos (ou se faire prendre), se faufiler sans être vu, des sols qui blessent selon la région.
+
+**`FURTIVITE`**
+
+
+```
+FURTIVITE on
+FURTIVITE off
+FURTIVITE 30    # pendant 30 secondes
+```
+
+### `EconomiePlus`
+
+Fabriquer des objets à partir d'ingrédients (recettes en balises) ; des boutiques qui demandent autre chose que de l'or.
+
+**`ARTISANAT`**
+
+
+```
+ARTISANAT ouvrir    # toutes les recettes
+ARTISANAT ouvrir forge    # celles de l'atelier « forge »
+ARTISANAT apprendre o12
+ARTISANAT oublier o12
+```
+
+**`MONNAIE`**
+
+
+```
+MONNAIE objet 45    # la boutique se paie en objets n°45
+MONNAIE variable 12 Jetons    # … avec la variable 12, appelée « Jetons »
 ```
 
 ---

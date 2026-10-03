@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-10-02. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-03. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -172,8 +172,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Genre | # | Nom | etypeId | Note |
 |---|---|---|---|---|
-| arme | 529 | arrachée à Ton Visage | 1 | `<ButinBoss: 800> · <Famille: Les Masques>` |
-| arme | 530 | que La Doublure tenait | 1 | `<ButinBoss: 801> · <Famille: Les Masques>` |
+| arme | 529 | arrachée à Ton Visage | 1 | `<ButinBoss: 800> · <Famille: Les Masques> · <Image d'arme: Dagger Magenta> <!-- auto -->` |
+| arme | 530 | que La Doublure tenait | 1 | `<ButinBoss: 801> · <Famille: Les Masques> · <Image d'arme: Dagger Magenta> <!-- auto -->` |
 | armure | 68 | Éclat de Masque | 5 | `<Don: vesper> · <Forme: objet> · <Palier: 1> · <DonDe: 1>` |
 | armure | 69 | Masque Naissant | 5 | `<Don: vesper> · <Forme: objet> · <Palier: 2> · <DonDe: 1>` |
 | armure | 70 | Masque Résonant | 5 | `<Don: vesper> · <Forme: objet> · <Palier: 3> · <DonDe: 1>` |
@@ -721,18 +721,18 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 | Genre | # | Nom | etypeId | Note |
 |---|---|---|---|---|
-| arme | 4 | Arc | 1 | `` |
-| arme | 32 | Arc en or | 1 | `` |
-| arme | 33 | Arc en fer | 1 | `` |
-| arme | 34 | Arc en Diamant | 1 | `` |
-| arme | 35 | Arc en platine | 1 | `` |
-| arme | 36 | Arc de lumière | 1 | `` |
-| arme | 70 | Arc d'Ombre | 1 | `` |
-| arme | 112 | Arc de Fer | 1 | `` |
-| arme | 113 | Arc d'Acier | 1 | `` |
-| arme | 114 | Arc d'Argent | 1 | `` |
-| arme | 115 | Arc de Mithril | 1 | `` |
-| arme | 116 | Arc de Cristal | 1 | `` |
+| arme | 4 | Arc | 1 | `<Image d'arme: Bow Light> <!-- auto -->` |
+| arme | 32 | Arc en or | 1 | `<Image d'arme: Bow Base> <!-- auto -->` |
+| arme | 33 | Arc en fer | 1 | `<Image d'arme: Bow Base> <!-- auto -->` |
+| arme | 34 | Arc en Diamant | 1 | `<Image d'arme: Bow Base> <!-- auto -->` |
+| arme | 35 | Arc en platine | 1 | `<Image d'arme: Bow Base> <!-- auto -->` |
+| arme | 36 | Arc de lumière | 1 | `<Image d'arme: Bow Base> <!-- auto -->` |
+| arme | 70 | Arc d'Ombre | 1 | `<Image d'arme: Sword Dark> <!-- auto -->` |
+| arme | 112 | Arc de Fer | 1 | `<Image d'arme: Bow Light> <!-- auto -->` |
+| arme | 113 | Arc d'Acier | 1 | `<Image d'arme: Bow Yellow> <!-- auto -->` |
+| arme | 114 | Arc d'Argent | 1 | `<Image d'arme: Bow Yellow> <!-- auto -->` |
+| arme | 115 | Arc de Mithril | 1 | `<Image d'arme: Bow Yellow> <!-- auto -->` |
+| arme | 116 | Arc de Cristal | 1 | `<Image d'arme: Bow Yellow> <!-- auto -->` |
 
 *… et 5 autres pièces portant ce nom.*
 

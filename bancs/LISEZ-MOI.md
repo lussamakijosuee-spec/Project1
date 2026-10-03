@@ -387,3 +387,15 @@ Quatre plugins inspirés de la collection Yanfly, sans rien en copier : **Dialog
 
 **Les décors libres.** `navigateur/les_decors.js` : les décors de `data/Decors.json` s'affichent sur leur carte, au pixel, sur leur couche, les `[3x1]` défilent, et pas sur une autre carte ; hors test, Ctrl+D n'ouvre rien ; en test, poser sous la souris, clic droit pour enlever (sans ouvrir le menu), Annuler, Enregistrer. ⚠ MV pose sur le canevas un paragraphe vide (`ErrorPrinter`) qui reçoit les clics : l'éditeur juge un clic à sa position, pas à l'élément touché. `outils/index_des_decors.js` refait `data/DecorsIndex.json` quand on ajoute des images dans `img/doodads`.
 
+
+## Les systèmes gardés du pack (2026-10-03)
+
+JOKO a gardé quinze systèmes du pack Yanfly, refaits en code maison dans quatre plugins : **CombatTactique** (limite d'équipe, barrière, provocation, overkill, instantané, usages limités, vol, difficulté), **MaitriseDesCompetences** (maîtrise, statistiques), **ExplorationPlus** (attaque surprise, furtivité, sols dangereux), **EconomiePlus** (artisanat, autres monnaies). Tout passe par des balises : rien n'est écrit dans `data/`. Les deux bancs créent leurs compétences, états, événements, régions et recettes d'essai **en mémoire**.
+
+| Banc | Ce qu'il vérifie |
+|---|---|
+| `navigateur/le_combat_tactique.js` | la limite (+3 en frappant, +4 en encaissant, +15 quand un héros tombe, `<Coût limite>` qui bloque puis paie, gardée d'un combat à l'autre, jauge cachée sans compétence qui la coûte) ; la barrière (absorbe, s'épuise, `<Perce-barrière>`, 30 %, plafond, tours, départ ; le bleu mesuré en **pixels** sur la jauge de PV, et pas sans barrière) ; la provocation (60 coups sur 60, répartis sans elle, « magique » ne détourne pas un coup physique, un ennemi qui provoque est le seul visable) ; l'overkill (et un coup juste qui n'en donne pas) ; l'instantané (le héros rechoisit ; revenir en arrière retire l'action en plus) ; usages, vol, difficulté ; la maîtrise (★1 au 5e usage, +4 %) ; les statistiques (une victoire comptée **une** fois : YEP_VictoryAftermath rappelle `processVictory` à chaque image tant que l'écran de victoire est là, on compte donc dans `endBattle`) |
+| `navigateur/lexploration_et_leconomie.js` | l'attaque surprise en **vrais déplacements** (le joueur fonce dans le dos d'un ennemi, un ennemi fonce dans le dos du joueur, face à face, `<Pas de surprise>`, un boss, un PNJ à la touche OK) ; la furtivité (repéré seulement collé, transparence, minuteur, objet, état) ; les sols en marchant (10 %, état, immunité, case sans danger) ; l'artisanat (entrée du menu seulement avec une recette, ingrédients, arme « indépendante » de YEP, quantité, atelier, écran) ; les monnaies (objet, variable, la boutique suivante revient à l'or) |
+
+⚠ **La carte est relue au retour d'un combat** (`Scene_Map.create` recharge `$dataMap`) : un événement d'essai ajouté en mémoire doit être retiré de `$gameMap._events` avant, sinon les sprites plantent sur une page introuvable.
+⚠ **`die()` ne tue pas** au sens de MV (il met les PV à 0 sans l'état de mort) : pour finir un combat, `setHp(0)`.
