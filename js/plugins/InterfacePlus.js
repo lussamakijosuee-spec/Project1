@@ -5,8 +5,8 @@
 //   Events et Common Event Menu (Yanfly). Rien n'est branché par défaut.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Une touche lance un événement commun, une image
- * cliquable aussi, et un menu qui liste des événements communs.
+ * @plugindesc v1.0 ■ Touches, images cliquables, menu d'événements communs,
+ * événements communs automatiques, CHOISIR, boutique conditionnelle, sauvegarde auto.
  * @author JOKO
  *
  * @param touches
@@ -20,6 +20,14 @@
  * @type note
  * @default ""
  * @desc Une par ligne : « victoire = 1202 ». Moments : nouvelle partie, chargement, victoire, fuite, défaite, niveau.
+ *
+ * @param sauvegardeAuto
+ * @text Sauvegarde automatique (défaut)
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc Valeur de départ de l'option « Sauvegarde auto ». Le joueur peut la changer dans les Options.
  *
  * @param variableHeros
  * @text Variable : héros qui monte de niveau
@@ -75,6 +83,18 @@
  *  La variable reçoit le numéro de ce qui a été choisi (0 si Échap). Pour
  *  une énigme (« montre-moi la Lame de Givre »), un forgeron, un maître
  *  d'armes qui juge une technique.
+ *
+ *  ── LA SAUVEGARDE AUTOMATIQUE ─────────────────────────────────────────
+ *  Après un changement de carte et après un combat, la partie se sauve
+ *  toute seule — dans l'emplacement où le joueur a LUI-MÊME sauvegardé ou
+ *  chargé cette partie. Une nouvelle partie jamais sauvegardée n'écrit
+ *  rien : on n'écrase jamais la sauvegarde de quelqu'un d'autre. Jamais
+ *  pendant un événement ; au plus une fois toutes les 20 secondes. Un petit
+ *  « Sauvegarde auto » s'affiche en haut à droite.
+ *  Option « Sauvegarde auto » (Oui / Non) dans le menu Options.
+ *      SAUVEGARDE_AUTO off      couper pour une zone (un donjon piégé…)
+ *      SAUVEGARDE_AUTO on       la remettre
+ *      SAUVEGARDE_AUTO maintenant    sauver tout de suite (si permis)
  *
  *  ── UN OBJET DE BOUTIQUE QUI N'APPARAÎT QUE SI… ───────────────────────
  *  Note de l'objet, de l'arme ou de l'armure :   <Boutique si: s[12]>
@@ -384,6 +404,86 @@ window.InterfacePlus = InterfacePlus;
     };
 
     //=========================================================================
+    // La sauvegarde automatique
+    //=========================================================================
+    var DEFAUT_AUTO = String(P.sauvegardeAuto === undefined ? 'true' : P.sauvegardeAuto) !== 'false';
+    ConfigManager.autoSauve = DEFAUT_AUTO;
+    var _mkS = ConfigManager.makeData;
+    ConfigManager.makeData = function () { var c = _mkS.call(this); c.autoSauve = this.autoSauve; return c; };
+    var _apS = ConfigManager.applyData;
+    ConfigManager.applyData = function (c) { _apS.call(this, c); this.autoSauve = c.autoSauve === undefined ? DEFAUT_AUTO : !!c.autoSauve; };
+    var _goS = Window_Options.prototype.addGeneralOptions;
+    Window_Options.prototype.addGeneralOptions = function () { _goS.call(this); this.addCommand('Sauvegarde auto', 'autoSauve'); };
+    var _stS = Window_Options.prototype.statusText;
+    Window_Options.prototype.statusText = function (index) {
+        if (this.commandSymbol(index) === 'autoSauve') return this.getConfigValue('autoSauve') ? 'Oui' : 'Non';
+        return _stS.call(this, index);
+    };
+    // l'emplacement du joueur : celui où il a sauvé ou chargé CETTE partie
+    var _sg = DataManager.saveGame;
+    DataManager.saveGame = function (id) {
+        if ($gameSystem && !InterfacePlus._enAuto) $gameSystem._ipEmplacement = id;
+        return _sg.call(this, id);
+    };
+    var _lg = DataManager.loadGame;
+    DataManager.loadGame = function (id) {
+        var ok = _lg.call(this, id);
+        if (ok && $gameSystem) $gameSystem._ipEmplacement = id;
+        return ok;
+    };
+    InterfacePlus.demanderSauvegarde = function () { if ($gameTemp) $gameTemp._ipAutoSauve = true; };
+    InterfacePlus.sauvegardePermise = function () {
+        var sys = $gameSystem;
+        return !!(sys && ConfigManager.autoSauve && sys._ipEmplacement > 0 && !sys._ipAutoOff && sys.isSaveEnabled() && !DataManager.isBattleTest() && !DataManager.isEventTest());
+    };
+    InterfacePlus.sauvegarderMaintenant = function () {
+        if (!InterfacePlus.sauvegardePermise()) return false;
+        var id = $gameSystem._ipEmplacement, ok;
+        InterfacePlus._enAuto = true;
+        try { $gameSystem.onBeforeSave(); ok = DataManager.saveGame(id); } finally { InterfacePlus._enAuto = false; }
+        if (ok) { StorageManager.cleanBackup && StorageManager.cleanBackup(id); InterfacePlus._derniereAuto = Date.now(); InterfacePlus._avis = 120; }
+        return ok;
+    };
+    var _pt = Game_Player.prototype.performTransfer;
+    Game_Player.prototype.performTransfer = function () {
+        var transfert = this.isTransferring();
+        _pt.call(this);
+        if (transfert) InterfacePlus.demanderSauvegarde();
+    };
+    var _ebS = BattleManager.endBattle;
+    BattleManager.endBattle = function (resultat) {
+        _ebS.call(this, resultat);
+        if (resultat !== 2) InterfacePlus.demanderSauvegarde();
+    };
+    var _smuS = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function () {
+        _smuS.call(this);
+        if ($gameTemp._ipAutoSauve && !$gameMap.isEventRunning() && !$gamePlayer.isTransferring() && !SceneManager.isSceneChanging() &&
+            !$gameMessage.isBusy() && (!InterfacePlus._derniereAuto || Date.now() - InterfacePlus._derniereAuto > 20000)) {
+            $gameTemp._ipAutoSauve = false;
+            InterfacePlus.sauvegarderMaintenant();
+        }
+        if (InterfacePlus._avis > 0 && this._ipAvis) this._ipAvis.montrer(InterfacePlus._avis--);
+        else if (this._ipAvis) this._ipAvis.opacity = 0;
+    };
+    function Sprite_AvisSauvegarde() { this.initialize.apply(this, arguments); }
+    Sprite_AvisSauvegarde.prototype = Object.create(Sprite.prototype);
+    Sprite_AvisSauvegarde.prototype.constructor = Sprite_AvisSauvegarde;
+    Sprite_AvisSauvegarde.prototype.initialize = function () {
+        Sprite.prototype.initialize.call(this, new Bitmap(200, 30));
+        this.x = Graphics.boxWidth - 210; this.y = 8; this.opacity = 0;
+        var b = this.bitmap;
+        b.fillRect(0, 0, 200, 30, 'rgba(0,0,0,0.5)'); b.fontSize = 17; b.drawText('✦ Sauvegarde auto', 0, 1, 200, 28, 'center');
+    };
+    Sprite_AvisSauvegarde.prototype.montrer = function (t) { this.opacity = t > 100 ? (120 - t) * 12 : Math.min(255, t * 6); };
+    var _cdoS = Scene_Map.prototype.createDisplayObjects;
+    Scene_Map.prototype.createDisplayObjects = function () {
+        _cdoS.call(this);
+        this._ipAvis = new Sprite_AvisSauvegarde();
+        this.addChild(this._ipAvis);
+    };
+
+    //=========================================================================
     // Les objets de boutique conditionnels
     //=========================================================================
     function enVente(item) {
@@ -425,6 +525,11 @@ window.InterfacePlus = InterfacePlus;
                 else if (Number(a)) ids.push(Number(a));
             });
             InterfacePlus.ouvrirMenu(this, ids);
+        } else if (c === 'SAUVEGARDE_AUTO') {
+            var a0 = String(args[0] || '').toLowerCase();
+            if (a0 === 'off' || a0 === 'non') $gameSystem._ipAutoOff = true;
+            else if (a0 === 'on' || a0 === 'oui') $gameSystem._ipAutoOff = false;
+            else if (a0 === 'maintenant') { InterfacePlus._derniereAuto = 0; InterfacePlus.demanderSauvegarde(); }
         } else if (c === 'CHOISIR') {
             var genre = String(args[0] || '').toLowerCase().replace(/[éè]/g, 'e');
             if (genre === 'competences') genre = 'competence';

@@ -445,7 +445,11 @@ module.exports = [
         { titre: 'Un interrupteur ou une variable qui survit à toutes les sauvegardes',
           texte: 'Pas de commande : on l\'écrit dans le NOM de l\'interrupteur ou de la variable, dans la base de données.',
           lignes: [N('Fin vue <Global Meta>', 'Olivia_MetaControls', 'nom d\'un interrupteur : partagé par toutes les parties'),
-                   N('Coffres <Local Meta>', 'Olivia_MetaControls', 'partagé par les sauvegardes d\'une même partie')] }
+                   N('Coffres <Local Meta>', 'Olivia_MetaControls', 'partagé par les sauvegardes d\'une même partie')] },
+        { titre: 'La sauvegarde automatique : la couper pour une zone',
+          texte: 'InterfacePlus. Après un changement de carte et après un combat, la partie se sauve dans l\'emplacement où le joueur a lui-même sauvé ou chargé (jamais pendant un événement, jamais une partie jamais sauvée). Option « Sauvegarde auto » dans le menu Options.',
+          lignes: [C('SAUVEGARDE_AUTO off', 'InterfacePlus', 'un donjon piégé, une scène où l\'on ne doit pas revenir en arrière'),
+                   C('SAUVEGARDE_AUTO on', 'InterfacePlus'), C('SAUVEGARDE_AUTO maintenant', 'InterfacePlus', 'sauver tout de suite, si c\'est permis')] }
     ]
 }
 ];

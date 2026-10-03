@@ -16,6 +16,10 @@
  *     y met 0
  *   ⑥ <Boutique si: s[30]> : l'objet n'est pas en vente interrupteur OFF, il
  *     l'est ON, et les prix restent en face des bons objets
+ *   ⑦ la sauvegarde auto : une partie jamais sauvée n'écrit rien ; après une
+ *     sauvegarde en case 2, un changement de carte réécrit la case 2 (et
+ *     aucune autre) ; option « Non », SAUVEGARDE_AUTO off, ou un événement
+ *     en cours : rien n'est écrit (contre-épreuves)
  *
  *   node bancs/navigateur/les_interfaces_plus.js
  */
@@ -189,6 +193,43 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var b1 = await boutique(false), b2 = await boutique(true);
     V('<Boutique si: s[30]> : interrupteur OFF, l\'objet 1 n\'est pas en vente, l\'objet 2 garde SON prix', b1.join() === '2=222', b1.join(' · '));
     V('contre-épreuve : interrupteur ON, les deux, chacun à son prix', b2.join() === '1=111,2=222', b2.join(' · '));
+
+    console.log('\n── ⑦ la sauvegarde auto ──');
+    async function changerDeCarte() {
+        await ev(function () { InterfacePlus._derniereAuto = 0; $gamePlayer.reserveTransfer($gameMap.mapId(), $gamePlayer.x, $gamePlayer.y, 2, 2); });
+        await page.waitForFunction(function () { var s = SceneManager._scene; return s instanceof Scene_Map && s.isReady() && !SceneManager.isSceneChanging() && !$gamePlayer.isTransferring(); }, null, { timeout: 30000 });
+        await page.waitForTimeout(700);
+    }
+    function lireCase(n) { return ev(function (n) { if (!StorageManager.exists(n)) return null; try { return JsonEx.parse(StorageManager.load(n)).variables._data[45]; } catch (e) { return 'illisible'; } }, n); }
+    function cases() { return ev(function () { var l = []; for (var i = 1; i <= 4; i++) l.push(StorageManager.exists(i)); return l; }); }
+    await ev(function () { ConfigManager.autoSauve = true; $gameVariables.setValue(45, 776); });
+    await changerDeCarte();
+    var s0 = await cases();
+    V('une partie jamais sauvegardée : un changement de carte n\'écrit aucune case', s0.every(function (x) { return !x; }), JSON.stringify(s0));
+    await ev(function () { $gameVariables.setValue(45, 777); DataManager.saveGame(2); $gameVariables.setValue(45, 778); });
+    await changerDeCarte();
+    var s1 = await lireCase(2), autres = await cases(), avis = await ev(function () { return SceneManager._scene._ipAvis.opacity; });
+    V('après une sauvegarde en case 2 : le changement de carte réécrit la case 2, et elle seule', s1 === 778 && !autres[0] && !autres[2] && !autres[3], 'case 2 : v45 = ' + s1 + ' · cases ' + JSON.stringify(autres) + ' · avis ' + Math.round(avis));
+    await ev(function () { ConfigManager.autoSauve = false; $gameVariables.setValue(45, 779); });
+    await changerDeCarte();
+    var s2 = await lireCase(2);
+    await commande('SAUVEGARDE_AUTO off');
+    await ev(function () { ConfigManager.autoSauve = true; $gameVariables.setValue(45, 780); });
+    await changerDeCarte();
+    var s3 = await lireCase(2);
+    await commande('SAUVEGARDE_AUTO on');
+    V('contre-épreuves : option « Non », puis SAUVEGARDE_AUTO off → la case 2 n\'est pas touchée', s2 === 778 && s3 === 778, 'v45 en case 2 : ' + s2 + ' puis ' + s3);
+    await ev(function () {
+        $gameVariables.setValue(45, 781); InterfacePlus._derniereAuto = 0;
+        $gameMap._interpreter.setup([{ code: 230, indent: 0, parameters: [60] }, { code: 0, indent: 0, parameters: [] }], 0);
+        InterfacePlus.demanderSauvegarde();
+    });
+    await page.waitForTimeout(300);
+    var pendant = await lireCase(2);
+    await page.waitForFunction(function () { return !$gameMap.isEventRunning(); }, null, { timeout: 30000 });
+    await page.waitForTimeout(500);
+    var apres = await lireCase(2);
+    V('pendant un événement, la sauvegarde attend ; elle se fait juste après', pendant === 778 && apres === 781, 'pendant ' + pendant + ' · après ' + apres);
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

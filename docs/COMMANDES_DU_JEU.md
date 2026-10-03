@@ -8,7 +8,7 @@ documentation : chaque ligne vient du code qui l'écoute.*
 | | |
 |---|---:|
 | plugins qui écoutent | 77 |
-| commandes distinctes | 135 |
+| commandes distinctes | 136 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2259,6 +2259,15 @@ IMAGE clic 3 off
 
 ```
 MENU_EC 1001 1002 1005    # ou     MENU_EC 1001-1010
+```
+
+**`SAUVEGARDE_AUTO`**
+
+
+```
+SAUVEGARDE_AUTO off    # couper pour une zone (un donjon piégé…)
+SAUVEGARDE_AUTO on    # la remettre
+SAUVEGARDE_AUTO maintenant    # sauver tout de suite (si permis)
 ```
 
 **`CHOISIR`**

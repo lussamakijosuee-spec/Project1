@@ -5,8 +5,8 @@
 //   (Yanfly) ; les transitions d'entrée en combat sont maison.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Une jauge de PV sous l'ennemi visé ou touché, les
- * ennemis presque morts qui vacillent, et des transitions d'entrée en combat.
+ * @plugindesc v1.0 ■ Jauge de PV ennemie, ennemis qui vacillent, transitions
+ * d'entrée en combat, musique et fonds de combat, option de vitesse des animations.
  * @author JOKO
  *
  * @param jauge
