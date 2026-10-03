@@ -589,7 +589,11 @@ window.CombatPlus = CombatPlus;
     //=========================================================================
     function imageDArme(acteur) {
         var w = acteur && acteur.weapons ? acteur.weapons()[0] : null;
-        var m = w && /<\s*(?:Image d'arme|Weapon Image)\s*:\s*([^>]+?)\s*>/i.exec(w.note || '');
+        // YEP_ItemCore : l'arme possédée est un exemplaire « indépendant » dont la
+        // note est VIDÉE — la balise est sur l'arme d'origine (baseItemId)
+        var base = w && w.baseItemId && $dataWeapons[w.baseItemId];
+        var re = /<\s*(?:Image d'arme|Weapon Image)\s*:\s*([^>]+?)\s*>/i;
+        var m = w && (re.exec(w.note || '') || (base && re.exec(base.note || '')));
         return m ? m[1] : '';
     }
     CombatPlus.imageDArme = imageDArme;

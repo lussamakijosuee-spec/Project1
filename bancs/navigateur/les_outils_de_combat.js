@@ -124,6 +124,8 @@ var TROUPE = 2, MUSIQUE_CARTE = '058-Slow01', AUTRE = 'Battle-Ayakashi';
             var a = $gameParty.battleMembers()[0], w = a.weapons()[0];
             if (!w) { a.changeEquip(0, $dataWeapons.filter(function (x) { return x && x.wtypeId; })[0]); w = a.weapons()[0]; }
             w.note = (w.note || '').replace(/<Image d'arme:[^>]*>/g, '') + note;
+            var base = w.baseItemId ? $dataWeapons[w.baseItemId] : null;
+            if (base) { window.__noteBase = window.__noteBase === undefined ? base.note : window.__noteBase; base.note = note ? window.__noteBase : base.note.replace(/<Image d'arme:[^>]*>/g, ''); }
             a.performAttack();
             return new Promise(function (ok) { setTimeout(function () {
                 var sp = SceneManager._scene._spriteset._actorSprites.filter(function (s) { return s._actor === a; })[0]._weaponSprite;
@@ -131,6 +133,18 @@ var TROUPE = 2, MUSIQUE_CARTE = '058-Slow01', AUTRE = 'Battle-Ayakashi';
             }, 150); });
         }, note);
     }
+    // d'abord l'arme TELLE QU'ELLE EST dans la base (note posée par images_des_armes.js) :
+    // YEP_ItemCore vide la note de l'exemplaire possédé, la balise est sur l'arme d'origine
+    var w0 = await ev(function () {
+        var a = $gameParty.battleMembers()[0], w = a.weapons()[0], base = w && w.baseItemId ? $dataWeapons[w.baseItemId] : w;
+        var attendu = (/<Image d'arme:\s*([^>]+?)\s*>/.exec(base.note || '') || [])[1] || '';
+        a.performAttack();
+        return new Promise(function (ok) { setTimeout(function () {
+            var sp = SceneManager._scene._spriteset._actorSprites.filter(function (s) { return s._actor === a; })[0]._weaponSprite;
+            ok({ attendu: attendu, url: sp.bitmap ? decodeURIComponent(sp.bitmap._url) : '', noteExemplaire: w.note, arme: w.name });
+        }, 150); });
+    });
+    V('l\'arme de la base (exemplaire YEP à note vide) montre son image : ' + w0.attendu, w0.attendu && w0.url.slice(-w0.attendu.length - 4) === w0.attendu + '.png', w0.arme + ' → ' + w0.url + ' · note de l\'exemplaire « ' + w0.noteExemplaire + ' »');
     var w1 = await attaque("<Image d'arme: Sword Blue>"), w2 = await attaque('');
     await retour();
     V('<Image d\'arme: Sword Blue> : en attaquant, le héros brandit img/weapons/Sword Blue.png', /img\/weapons\/Sword Blue\.png$/.test(w1.url) && w1.w === 96, w1.arme + ' → ' + w1.url);

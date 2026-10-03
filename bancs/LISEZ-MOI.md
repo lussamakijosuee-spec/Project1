@@ -383,3 +383,5 @@ Quatre plugins inspirés de la collection Yanfly, sans rien en copier : **Dialog
 
 **Les bancs en temps réel.** Le 2026-10-03, le Chromium des bancs tournait à 7 images par seconde (rendu logiciel), avec ou sans les plugins du jour (coût d'une image : 1,8 ms en ville, 6 à 7 ms sur la vitrine et ses 808 événements, mêmes chiffres avant et après). `la_vitrine` (une animation + un flash = 61 images, plus de 8 s à ce rythme) et `une_journee_en_ville` jugent en secondes réelles : à ce rythme ils signalent des pages « encore en cours » qui ne sont pas bloquées. Avant d'y voir un bug, mesurer `Graphics.frameCount` pendant l'attente.
 
+**Les images d'armes.** `outils/images_des_armes.js [--ecrire]` pose `<Image d'arme: …>` sur les 226 armes (famille selon le type, couleur selon l'élément, sinon le rang de prix) ; tables réglables en tête, relançable, une balise écrite à la main n'est jamais touchée. ⚠ YEP_ItemCore vide la note des exemplaires possédés (`ItemNoteParse` éteint) : CombatPlus lit la balise sur l'arme d'origine (`baseItemId`), et `les_outils_de_combat` ④ le vérifie sur une vraie arme, sans retoucher sa note.
+
