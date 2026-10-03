@@ -110,6 +110,14 @@
  *                                plusieurs « Définir un déplacement » sans
  *                                « Attendre la fin »)
  *
+ *  ── UNE ICÔNE AU-DESSUS DE QUELQU'UN ──────────────────────────────────
+ *      SCENE icone 5 87          l'icône 87 (IconSet) au-dessus de l'événement 5
+ *      SCENE icone joueur 87 120     … du joueur, pendant 120 images (90 par défaut)
+ *      SCENE icone ici 87 attendre   … de l'événement lui-même, et la scène attend
+ *      SCENE icone 5 off         l'enlève tout de suite
+ *  Comme les bulles « ! » de MV, mais avec n'importe quelle icône : une
+ *  épée qui pense au combat, une pièce d'or, un cœur, une note de musique.
+ *
  *  ── EN TEST (lancé depuis l'éditeur) ──────────────────────────────────
  *  Quand un déplacement est bloqué depuis 2 secondes, un bandeau le dit en
  *  haut de l'écran : quel événement, sur quelle case, et ce qui se passe.
@@ -397,6 +405,63 @@ window.OutilsDeScene = OutilsDeScene;
     };
 
     //=========================================================================
+    // 6 bis. L'icône au-dessus de quelqu'un (comme une bulle, en icône)
+    //=========================================================================
+    function personnage(it, qui) {
+        var q = String(qui || '').toLowerCase();
+        if (q === 'joueur' || q === '-1') return $gamePlayer;
+        if (q === 'ici' || q === '0' || q === '') return $gameMap.event(it._eventId);
+        return $gameMap.event(Number(q)) || null;
+    }
+    OutilsDeScene.icone = function (car, icone, duree) {
+        if (!car) return;
+        car._odsIcone = icone > 0 ? { icone: icone, duree: Math.max(10, duree || 90), t: 0 } : null;
+    };
+    OutilsDeScene.iconeEnCours = function () {
+        if ($gamePlayer._odsIcone) return true;
+        return $gameMap.events().some(function (e) { return !!e._odsIcone; });
+    };
+    var _gcbUpdate = Game_CharacterBase.prototype.update;
+    Game_CharacterBase.prototype.update = function () {
+        _gcbUpdate.call(this);
+        var ic = this._odsIcone;
+        if (ic && ++ic.t >= ic.duree) this._odsIcone = null;
+    };
+    function Sprite_IconeScene() { this.initialize.apply(this, arguments); }
+    Sprite_IconeScene.prototype = Object.create(Sprite.prototype);
+    Sprite_IconeScene.prototype.constructor = Sprite_IconeScene;
+    Sprite_IconeScene.prototype.initialize = function () {
+        Sprite.prototype.initialize.call(this, ImageManager.loadSystem('IconSet'));
+        this.anchor.x = 0.5; this.anchor.y = 1;
+        this.z = 7;
+        this._icone = -1;
+    };
+    Sprite_IconeScene.prototype.montrer = function (ic) {
+        var pw = Window_Base._iconWidth, ph = Window_Base._iconHeight;
+        if (ic.icone !== this._icone) { this._icone = ic.icone; this.setFrame(ic.icone % 16 * pw, Math.floor(ic.icone / 16) * ph, pw, ph); }
+        // elle surgit (petit rebond), flotte, puis s'efface sur la fin
+        var k = Math.min(1, ic.t / 8), reste = ic.duree - ic.t;
+        var echelle = k < 1 ? 0.4 + 0.8 * k : 1 + 0.08 * Math.max(0, 1 - (ic.t - 8) / 8);
+        this.scale.x = this.scale.y = echelle;
+        this.opacity = reste < 12 ? 255 * reste / 12 : 255;
+        return Math.sin(ic.t / 10) * 2;
+    };
+    var _scUpdate = Sprite_Character.prototype.update;
+    Sprite_Character.prototype.update = function () {
+        _scUpdate.call(this);
+        var ic = this._character && this._character._odsIcone;
+        if (ic && this.parent) {
+            if (!this._odsIcone) { this._odsIcone = new Sprite_IconeScene(); this.parent.addChild(this._odsIcone); }
+            var flotte = this._odsIcone.montrer(ic);
+            this._odsIcone.x = this.x;
+            this._odsIcone.y = this.y - this.patternHeight() - 4 + flotte;
+        } else if (this._odsIcone) {
+            if (this._odsIcone.parent) this._odsIcone.parent.removeChild(this._odsIcone);
+            this._odsIcone = null;
+        }
+    };
+
+    //=========================================================================
     // 7. Attendre tout le monde
     //=========================================================================
     OutilsDeScene.quelquUnBouge = function () {
@@ -407,6 +472,7 @@ window.OutilsDeScene = OutilsDeScene;
     Game_Interpreter.prototype.updateWaitMode = function () {
         if (this._waitMode === 'odsCamera') { if (OutilsDeScene.cameraEnCours()) return true; this._waitMode = ''; return false; }
         if (this._waitMode === 'odsTous') { if (OutilsDeScene.quelquUnBouge()) return true; this._waitMode = ''; return false; }
+        if (this._waitMode === 'odsIcone') { if (OutilsDeScene.iconeEnCours()) return true; this._waitMode = ''; return false; }
         return _uwm.call(this);
     };
 
@@ -453,6 +519,14 @@ window.OutilsDeScene = OutilsDeScene;
                 break;
             case 'attendre':
                 this.setWaitMode('odsTous');
+                break;
+            case 'icone': case 'icône':
+                var car = personnage(this, args[1]);
+                var n = /^off$/i.test(args[2] || '') ? 0 : Number(args[2]) || 0;
+                var d = Number(args[3]) || 90;
+                if (!car) { OutilsDeScene.signaler('SCENE icone : aucun personnage « ' + args[1] + ' » sur cette carte'); break; }
+                OutilsDeScene.icone(car, n, d);
+                if (n > 0 && args.some(function (a) { return /^attend/i.test(a); })) this.setWaitMode('odsIcone');
                 break;
         }
     };

@@ -41,7 +41,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         }
         window.__ids = { a: ce('✎ Voyage · Le port', 'port', [{ code: 108, indent: 0, parameters: ['Rejoindre le port en barque.'] }]),
             b: ce('✎ Voyage · La montagne', 'montagne'),
-            c: ce('✎ Voyage · Le sanctuaire', 'sanctuaire', [{ code: 108, indent: 0, parameters: ['<si: s[30]> Débloqué plus tard.'] }]) };
+            c: ce('✎ Voyage · Le sanctuaire', 'sanctuaire', [{ code: 108, indent: 0, parameters: ['<si: s[30]> Débloqué plus tard.'] }]),
+            d: ce('✎ Voyage · La crypte', 'crypte', [{ code: 108, indent: 0, parameters: ['<si: v[40] >= 3>'] }]) };
     });
     await page.waitForFunction(function () { var s = SceneManager._scene; return s instanceof Scene_Map && s.isReady() && !SceneManager.isSceneChanging() && !$gamePlayer.isTransferring(); }, null, { timeout: 60000 });
     await page.waitForTimeout(1200);
@@ -81,12 +82,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await ev(function () { $gameScreen.erasePicture(5); $gameTemp.clearDestination(); });
 
     console.log('\n── ③ le menu d\'événements communs ──');
-    async function menu(sw30) {
+    async function menu(sw30, v40) {
         await ev(function (a) {
             var ids = a.ids;
-            window.__ec.length = 0; $gameSwitches.setValue(30, !!a.sw);
-            $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: ['MENU_EC ' + ids.a + ' ' + ids.b + ' ' + ids.c] }, { code: 355, indent: 0, parameters: ['window.__ec.push("après")'] }, { code: 0, indent: 0, parameters: [] }], 0);
-        }, { ids: ids, sw: sw30 });
+            // v40 = 1 par défaut : la crypte (<si: v[40] >= 3>) doit rester cachée — l'ancienne
+            // lecture coupait au « > » de « >= » et la montrait dès que v40 n'était pas nul
+            window.__ec.length = 0; $gameSwitches.setValue(30, !!a.sw); $gameVariables.setValue(40, a.v40 || 1);
+            $gameMap._interpreter.setup([{ code: 356, indent: 0, parameters: ['MENU_EC ' + ids.a + ' ' + ids.b + ' ' + ids.c + ' ' + ids.d] }, { code: 355, indent: 0, parameters: ['window.__ec.push("après")'] }, { code: 0, indent: 0, parameters: [] }], 0);
+        }, { ids: ids, sw: sw30, v40: v40 });
         await page.waitForTimeout(800);
         return ev(function () { var m = $gameMap._interpreter._ipMenu; return m ? { noms: m.w._list.map(function (c) { return c.name; }), aide: m.h._text } : null; });
     }
@@ -103,6 +106,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('contre-épreuve : Échap ne joue rien, l\'événement reprend, le menu principal ne s\'ouvre pas', r2.ec.join() === 'après' && r2.scene === 'Scene_Map', JSON.stringify(r2));
     var m3 = await menu(true);
     V('contre-épreuve : interrupteur 30 ON, le sanctuaire apparaît', m3 && m3.noms.length === 3 && m3.noms[2] === 'Le sanctuaire', m3 && m3.noms.join(' | '));
+    await touche('Escape'); await page.waitForTimeout(500);
+    var m4 = await menu(true, 3);
+    V('<si: v[40] >= 3> : cachée à v40 = 1 (ci-dessus), la crypte apparaît à v40 = 3', m4 && m4.noms.length === 4 && m4.noms[3] === 'La crypte', m4 && m4.noms.join(' | '));
     await touche('Escape'); await page.waitForTimeout(500);
 
     console.log('\n── le bilan ──');

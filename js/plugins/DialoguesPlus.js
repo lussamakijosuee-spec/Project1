@@ -96,10 +96,28 @@ window.DialoguesPlus = DialoguesPlus;
         try { return !!(new Function('return (' + js + ');')).call(it); }
         catch (e) { console.warn('[DialoguesPlus] condition illisible : ' + expr); return true; }
     }
+    // Les balises <nom: expression> d'un texte. L'expression peut contenir « > »
+    // (v[3] >= 2) : elle va jusqu'au DERNIER « > » avant la balise suivante,
+    // ou avant la fin du texte. ([^>]+ s'arrêtait au « > » de « >= » : la
+    // condition devenait « v[3] », vraie dès que la variable n'était pas nulle.)
+    function balises(texte, noms) {
+        var re = new RegExp('<\\s*(' + noms + ')\\s*:', 'gi'), m, debuts = [], out = [];
+        while ((m = re.exec(texte))) debuts.push({ i: m.index, apres: re.lastIndex, nom: m[1].toLowerCase() });
+        debuts.forEach(function (d, k) {
+            var bout = k + 1 < debuts.length ? debuts[k + 1].i : texte.length;
+            var f = texte.lastIndexOf('>', bout - 1);
+            if (f >= d.apres) out.push({ nom: d.nom, expr: texte.slice(d.apres, f).trim(), debut: d.i, fin: f + 1 });
+        });
+        return out;
+    }
     function lireChoix(texte, it) {
-        var o = { texte: texte, visible: true, actif: true };
-        o.texte = o.texte.replace(/<\s*si\s*:\s*([^>]+)>/gi, function (a, e) { if (!evaluer(e, it)) o.visible = false; return ''; });
-        o.texte = o.texte.replace(/<\s*gris[ée]\s*:\s*([^>]+)>/gi, function (a, e) { if (evaluer(e, it)) o.actif = false; return ''; });
+        var o = { texte: String(texte), visible: true, actif: true };
+        var b = balises(o.texte, 'si|gris[ée]');
+        for (var k = b.length - 1; k >= 0; k--) {
+            if (b[k].nom === 'si') { if (!evaluer(b[k].expr, it)) o.visible = false; }
+            else if (evaluer(b[k].expr, it)) o.actif = false;
+            o.texte = o.texte.slice(0, b[k].debut) + o.texte.slice(b[k].fin);
+        }
         o.texte = o.texte.replace(/\s+$/, '');
         return o;
     }

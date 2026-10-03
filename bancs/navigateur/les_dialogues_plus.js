@@ -3,6 +3,8 @@
  * ---------------------------------------------------------------------------
  *   ① un choix <si: …> faux disparaît, vrai il revient (contre-épreuve) ;
  *   ② un choix <grisé: …> est visible mais refuse d'être pris (buzzer) ;
+ *     une condition qui CONTIENT « > » (v[3] >= 2) est lue en entière, sans
+ *     reste de balise dans le texte (le premier « > » la coupait) ;
  *   ③ deux « Afficher des choix » à la suite : une seule liste de 8, et le
  *     7e choix mène bien à SA branche dans le 2e bloc (et pas ailleurs) ;
  *   ④ \bulle[n] : la fenêtre se pose au-dessus de l'événement n, à sa taille ;
@@ -74,6 +76,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('contre-épreuve : interrupteur ON et 1000 or, les quatre choix, aucun grisé', l2.length === 4 && l2.join('|').indexOf('(grisé)') < 0, l2.join(' | '));
     var r3 = await prendre(1);
     V('… et la lettre mène à sa branche', r3.b === '0:1', 'branche ' + r3.b);
+
+    await ev(function () { $gameVariables.setValue(3, 1); });
+    var l5 = await poser([['Rester', 'Demander pardon <si: v[3] >= 2>', 'Partir <grisé: v[3] > 0>']]);
+    await prendre(0);
+    V('une condition avec « > » : <si: v[3] >= 2> caché à v3 = 1, « Partir » grisé, aucun reste de balise', l5.length === 2 && l5[1] === '(grisé) Partir' && l5.join('').indexOf('>') < 0, l5.join(' | '));
+    await ev(function () { $gameVariables.setValue(3, 2); });
+    var l6 = await poser([['Rester', 'Demander pardon <si: v[3] >= 2>', 'Partir <grisé: v[3] > 0>']]);
+    await prendre(0);
+    V('contre-épreuve : à v3 = 2, « Demander pardon » apparaît, propre', l6.length === 3 && l6[1] === 'Demander pardon', l6.join(' | '));
 
     console.log('\n── ③ plus de 6 choix ──');
     var l3 = await poser([['A1', 'A2', 'A3', 'A4', 'A5', 'A6'], ['B1', 'B2']]);

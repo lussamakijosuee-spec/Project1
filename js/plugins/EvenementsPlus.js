@@ -51,6 +51,18 @@
  *  Texte : \lv[visites]. Chaque événement a les siennes, comme les
  *  interrupteurs locaux, mais avec des nombres et autant qu'on veut.
  *
+ *  ── UNE PAGE QUI NE COMPTE QUE SI… ────────────────────────────────────
+ *  Un commentaire dans la page :   <si: v[3] >= 5>
+ *  → la page ne compte que si c'est vrai, EN PLUS des cases de l'éditeur,
+ *  et sans la limite de deux interrupteurs. s[n] interrupteur, v[n]
+ *  variable, ss[A] interrupteur local, lv[nom] variable locale de
+ *  l'événement, ou du JavaScript. Plusieurs <si:> : toutes doivent être vraies.
+ *      <si: lv[visites] >= 3>       le PNJ change de page à la 3e visite
+ *      <si: s[12] && !s[13]>        après la lettre, avant le duel
+ *  La page se réévalue quand un interrupteur, une variable, une variable
+ *  locale ou l'inventaire change. Une condition illisible ferme la page
+ *  (et le dit dans la console, F8).
+ *
  *  ── ÉTIQUETTES AU-DESSUS DES PNJ ──────────────────────────────────────
  *  Note de l'événement, ou commentaire dans la page active :
  *      <Étiquette: Forgeron>        <Étiquette: \c[6]Auberge>
@@ -153,6 +165,61 @@ window.EvenementsPlus = EvenementsPlus;
     };
 
     //=========================================================================
+    // Les conditions de page : <si: …> dans un commentaire de la page
+    //=========================================================================
+    EvenementsPlus.locale = function (ev, nom) {
+        var v = locales()[ev._mapId + ':' + ev._eventId + ':' + nom];
+        return v === undefined ? 0 : v;
+    };
+    function compiler(expr) {
+        var js = String(expr)
+            .replace(/\bss\[\s*([A-D])\s*\]/gi, function (a, l) { return '$gameSelfSwitches.value([ev._mapId, ev._eventId, "' + l.toUpperCase() + '"])'; })
+            .replace(/\blv\[\s*([^\]]+?)\s*\]/g, function (a, n) { return 'EvenementsPlus.locale(ev, ' + JSON.stringify(n) + ')'; })
+            .replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)')
+            .replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+        var f;
+        try { f = new Function('ev', 'return (' + js + ');'); }
+        catch (e) { console.warn('[EvenementsPlus] condition de page illisible : <si: ' + expr + '>'); return function () { return false; }; }
+        return function (ev) {
+            try { return !!f.call(ev, ev); }
+            catch (e) { console.warn('[EvenementsPlus] condition de page en erreur : <si: ' + expr + '> — ' + e.message); return false; }
+        };
+    }
+    // Les balises <nom: expression> d'un texte. L'expression peut contenir « > »
+    // (v[3] >= 2) : elle va jusqu'au DERNIER « > » avant la balise suivante,
+    // ou avant la fin du texte. ([^>]+ s'arrêtait au « > » de « >= » : la
+    // condition devenait « v[3] », vraie dès que la variable n'était pas nulle.)
+    function balises(texte, noms) {
+        var re = new RegExp('<\\s*(' + noms + ')\\s*:', 'gi'), m, debuts = [], out = [];
+        while ((m = re.exec(texte))) debuts.push({ i: m.index, apres: re.lastIndex, nom: m[1].toLowerCase() });
+        debuts.forEach(function (d, k) {
+            var bout = k + 1 < debuts.length ? debuts[k + 1].i : texte.length;
+            var f = texte.lastIndexOf('>', bout - 1);
+            if (f >= d.apres) out.push({ nom: d.nom, expr: texte.slice(d.apres, f).trim(), debut: d.i, fin: f + 1 });
+        });
+        return out;
+    }
+    function conditionsDe(page) {
+        if (page._epSi) return page._epSi;
+        var l = [];
+        (page.list || []).forEach(function (c) {
+            if (c.code !== 108 && c.code !== 408) return;
+            balises(String(c.parameters[0] || ''), 'si').forEach(function (b) { l.push(compiler(b.expr)); });
+        });
+        // non énumérable : une copie JSON de la page (MODELE poser) ne l'emporte pas
+        Object.defineProperty(page, '_epSi', { value: l, configurable: true, writable: true });
+        return l;
+    }
+    EvenementsPlus.conditionsDe = conditionsDe;
+    var _meets = Game_Event.prototype.meetsConditions;
+    Game_Event.prototype.meetsConditions = function (page) {
+        if (!_meets.call(this, page)) return false;
+        var l = conditionsDe(page);
+        for (var i = 0; i < l.length; i++) if (!l[i](this)) return false;
+        return true;
+    };
+
+    //=========================================================================
     // Les commandes
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
@@ -175,6 +242,7 @@ window.EvenementsPlus = EvenementsPlus;
             var nom = String(args[0] || ''), op = String(args[1] || '='), val = Number(args[2]) || 0;
             var k = this._mapId + ':' + this._eventId + ':' + nom, L = locales(), v = L[k] || 0;
             L[k] = op === '+' ? v + val : op === '-' ? v - val : op === '*' ? v * val : val;
+            $gameMap.requestRefresh();   // une page <si: lv[…]> peut changer
         } else if (c === 'MODELE' || c === 'MODÈLE') {
             var sous = String(args[0] || '').toLowerCase();
             if (sous === 'changer') {

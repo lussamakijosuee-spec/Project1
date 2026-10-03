@@ -7,8 +7,8 @@ documentation : chaque ligne vient du code qui l'écoute.*
 
 | | |
 |---|---:|
-| plugins qui écoutent | 76 |
-| commandes distinctes | 132 |
+| plugins qui écoutent | 77 |
+| commandes distinctes | 133 |
 | déjà posées dans tes événements | 60 |
 
 **Comment lire.** ✔ veut dire que la commande tourne déjà quelque part
@@ -2180,6 +2180,16 @@ SCENE barres off    # elles repartent
 SCENE passer FIN    # dès maintenant, MAINTENIR Échap saute à
 ```
 
+### `DialoguesPlus`
+
+Choix cachés ou grisés selon une condition, plus de 6 choix, bulles de dialogue au-dessus d'un personnage, macros de texte.
+
+Balises de note employées dans le jeu :
+
+```
+<nom: …>
+```
+
 ### `EvenementsPlus`
 
 Modèles d'événements, appeler un autre événement, variables locales, étiquettes au-dessus des PNJ, gros événements, sols glissants, bruits de pas.
@@ -2206,6 +2216,12 @@ LOCALE visites + 1    # LOCALE humeur = 3        LOCALE x - 2
 ```
 MODELE changer 5 70 123    # l'événement 5 devient le modèle 123 (gardé
 MODELE poser 70 123 12 8    # pose une copie du modèle en 12,8 (jusqu'au
+```
+
+Balises de note employées dans le jeu :
+
+```
+<nom: …>
 ```
 
 ### `InterfacePlus`
@@ -2235,9 +2251,25 @@ IMAGE clic 3 off
 MENU_EC 1001 1002 1005    # ou     MENU_EC 1001-1010
 ```
 
+Balises de note employées dans le jeu :
+
+```
+<nom: …>
+```
+
 ### `CombatPlus`
 
 Une jauge de PV sous l'ennemi visé ou touché, les ennemis presque morts qui vacillent, et des transitions d'entrée en combat.
+
+**`COMBAT`**  *(la casse n'a pas d'importance)*
+
+
+```
+COMBAT musique garder    # la musique de la carte continue
+COMBAT musique Battle-05    # ce combat-là joue Battle-05 (audio/bgm)
+COMBAT musique garder toujours    # … pour tous, jusqu'à nouvel ordre
+COMBAT musique défaut    # la musique de combat habituelle
+```
 
 **`TRANSITION`**  *(la casse n'a pas d'importance)*
 

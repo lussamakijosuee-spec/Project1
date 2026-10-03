@@ -161,14 +161,28 @@ window.InterfacePlus = InterfacePlus;
     }
     // <si: s[12]> dans un commentaire de l'événement commun : il n'apparaît
     // dans le menu que si la condition est vraie (s[n], v[n], ou du JavaScript)
+    // Les balises <nom: expression> d'un texte. L'expression peut contenir « > »
+    // (v[3] >= 2) : elle va jusqu'au DERNIER « > » avant la balise suivante,
+    // ou avant la fin du texte. ([^>]+ s'arrêtait au « > » de « >= » : la
+    // condition devenait « v[3] », vraie dès que la variable n'était pas nulle.)
+    function balises(texte, noms) {
+        var re = new RegExp('<\\s*(' + noms + ')\\s*:', 'gi'), m, debuts = [], out = [];
+        while ((m = re.exec(texte))) debuts.push({ i: m.index, apres: re.lastIndex, nom: m[1].toLowerCase() });
+        debuts.forEach(function (d, k) {
+            var bout = k + 1 < debuts.length ? debuts[k + 1].i : texte.length;
+            var f = texte.lastIndexOf('>', bout - 1);
+            if (f >= d.apres) out.push({ nom: d.nom, expr: texte.slice(d.apres, f).trim(), debut: d.i, fin: f + 1 });
+        });
+        return out;
+    }
     function visibleDansLeMenu(c) {
         var ok = true;
         (c.list || []).forEach(function (x) {
             if (x.code !== 108 && x.code !== 408) return;
-            var m = /<\s*si\s*:\s*([^>]+)>/i.exec(x.parameters[0]);
-            if (!m) return;
-            var js = m[1].replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
-            try { if (!(new Function('return (' + js + ');'))()) ok = false; } catch (e) { console.warn('[InterfacePlus] condition illisible : ' + m[1]); }
+            balises(String(x.parameters[0] || ''), 'si').forEach(function (b) {
+                var js = b.expr.replace(/\bs\[\s*(\d+)\s*\]/g, '$gameSwitches.value($1)').replace(/\bv\[\s*(\d+)\s*\]/g, '$gameVariables.value($1)');
+                try { if (!(new Function('return (' + js + ');'))()) ok = false; } catch (e) { console.warn('[InterfacePlus] condition illisible : ' + b.expr); }
+            });
         });
         return ok;
     }

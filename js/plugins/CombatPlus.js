@@ -107,6 +107,25 @@
  *      TRANSITION défaut            revenir aux paramètres du plugin
  *  La musique de combat, la photo du fond et le fondu au noir restent ceux
  *  de MV, aux mêmes images.
+ *
+ *  ── LA MUSIQUE D'UN COMBAT SCÉNARISÉ ──────────────────────────────────
+ *  Juste avant « Combat » dans l'événement :
+ *      COMBAT musique garder        la musique de la carte continue
+ *      COMBAT musique Battle-05     ce combat-là joue Battle-05 (audio/bgm)
+ *      COMBAT musique garder toujours    … pour tous, jusqu'à nouvel ordre
+ *      COMBAT musique défaut        la musique de combat habituelle
+ *
+ *  ── UN FOND DE COMBAT SELON LA RÉGION ─────────────────────────────────
+ *  Note de la CARTE :   <Fond région 5: Grassland, Forest>
+ *  → un combat qui commence sur la région 5 prend ces deux fonds
+ *  (img/battlebacks1, puis img/battlebacks2 ; le second peut manquer).
+ *  Plusieurs régions :  <Fond région 5, 6: Castle1, Castle2>
+ *  ⚠ Le nom doit être celui d'une image qui existe, sinon le combat plante.
+ *
+ *  ── L'OPTION « ANIMATIONS (COMBAT) » ──────────────────────────────────
+ *  Dans le menu Options : Normal, Rapide ou Éclair. Les animations des
+ *  compétences jouent plus vite en combat (pour qui les a déjà vues cent
+ *  fois). Sur la carte, rien ne change.
  */
 var CombatPlus = window.CombatPlus || {};
 window.CombatPlus = CombatPlus;
@@ -463,11 +482,116 @@ window.CombatPlus = CombatPlus;
     };
 
     //=========================================================================
+    // La musique d'un combat scénarisé
+    //=========================================================================
+    var _pbb = BattleManager.playBattleBgm;
+    BattleManager.playBattleBgm = function () {
+        var s = $gameSystem, m = s && (s._cpMusiqueSuivante || s._cpMusique);
+        if (!m) return _pbb.call(this);
+        if (m === 'garder') {
+            // MV coupe la musique de la carte au lancement du combat
+            // (stopAudioOnBattleStart) après l'avoir notée, position comprise :
+            // on la relance d'où elle en était. Après le combat, MV voit qu'elle
+            // joue déjà et la laisse continuer.
+            var b = this._mapBgm;
+            if (b && b.name) AudioManager.playBgm(b, b.pos);
+        } else {
+            AudioManager.playBgm({ name: m, volume: 90, pitch: 100, pan: 0 });
+            AudioManager.stopBgs();
+        }
+    };
+    // une seule fois : effacée à la fin du combat (victoire, fuite, défaite, abandon)
+    var _endBattle = BattleManager.endBattle;
+    BattleManager.endBattle = function (resultat) {
+        _endBattle.call(this, resultat);
+        if ($gameSystem) $gameSystem._cpMusiqueSuivante = null;
+    };
+
+    //=========================================================================
+    // Un fond de combat selon la région
+    //=========================================================================
+    CombatPlus.fondsDeRegion = function () {
+        if (!$dataMap || !$gamePlayer || BattleManager.isBattleTest()) return null;
+        var r = $gamePlayer.regionId();
+        if (!r) return null;
+        var re = /<\s*Fond\s+r[ée]gion\s+([\d\s,]+?)\s*:\s*([^,>]*?)\s*(?:,\s*([^>]*?)\s*)?>/gi, m;
+        while ((m = re.exec($dataMap.note || ''))) {
+            if (m[1].split(/[\s,]+/).map(Number).indexOf(r) >= 0) return [m[2] || '', m[3] || ''];
+        }
+        return null;
+    };
+    var _bb1 = Spriteset_Battle.prototype.battleback1Name;
+    Spriteset_Battle.prototype.battleback1Name = function () {
+        var f = CombatPlus.fondsDeRegion();
+        return f ? f[0] : _bb1.call(this);
+    };
+    var _bb2 = Spriteset_Battle.prototype.battleback2Name;
+    Spriteset_Battle.prototype.battleback2Name = function () {
+        var f = CombatPlus.fondsDeRegion();
+        return f ? f[1] : _bb2.call(this);
+    };
+
+    //=========================================================================
+    // L'option « Animations (combat) »
+    //=========================================================================
+    var NOMS_ANIM = ['Normal', 'Rapide', 'Éclair'];
+    ConfigManager.animCombat = 0;
+    var _mk = ConfigManager.makeData;
+    ConfigManager.makeData = function () { var c = _mk.call(this); c.animCombat = this.animCombat; return c; };
+    var _ap = ConfigManager.applyData;
+    ConfigManager.applyData = function (c) {
+        _ap.call(this, c);
+        var v = Number(c.animCombat);
+        this.animCombat = isNaN(v) ? 0 : Math.max(0, Math.min(2, v));
+    };
+    var _go = Window_Options.prototype.addGeneralOptions;
+    Window_Options.prototype.addGeneralOptions = function () { _go.call(this); this.addCommand('Animations (combat)', 'animCombat'); };
+    var _st = Window_Options.prototype.statusText;
+    Window_Options.prototype.statusText = function (index) {
+        if (this.commandSymbol(index) === 'animCombat') return NOMS_ANIM[this.getConfigValue('animCombat')] || NOMS_ANIM[0];
+        return _st.call(this, index);
+    };
+    function bougerAnim(fen, sens, boucle) {
+        var v = Number(fen.getConfigValue('animCombat')) + sens;
+        v = boucle ? (v + 3) % 3 : Math.max(0, Math.min(2, v));
+        fen.changeValue('animCombat', v);
+    }
+    var _ok = Window_Options.prototype.processOk;
+    Window_Options.prototype.processOk = function () {
+        if (this.commandSymbol(this.index()) === 'animCombat') return bougerAnim(this, 1, true);
+        _ok.call(this);
+    };
+    var _droite = Window_Options.prototype.cursorRight;
+    Window_Options.prototype.cursorRight = function (wrap) {
+        if (this.commandSymbol(this.index()) === 'animCombat') return bougerAnim(this, 1, false);
+        _droite.call(this, wrap);
+    };
+    var _gauche = Window_Options.prototype.cursorLeft;
+    Window_Options.prototype.cursorLeft = function (wrap) {
+        if (this.commandSymbol(this.index()) === 'animCombat') return bougerAnim(this, -1, false);
+        _gauche.call(this, wrap);
+    };
+    var _setupRate = Sprite_Animation.prototype.setupRate;
+    Sprite_Animation.prototype.setupRate = function () {
+        _setupRate.call(this);
+        var v = ConfigManager.animCombat || 0;
+        if (v > 0 && $gameParty.inBattle()) this._rate = v === 1 ? Math.max(1, this._rate - 1) : Math.max(1, Math.round(this._rate / 2));
+    };
+
+    //=========================================================================
     // La commande
     //=========================================================================
     var _pc = Game_Interpreter.prototype.pluginCommand;
     Game_Interpreter.prototype.pluginCommand = function (command, args) {
         _pc.call(this, command, args);
+        if (String(command || '').toUpperCase() === 'COMBAT' && /^musique$/i.test(args[0] || '')) {
+            var nom = String(args[1] || '');
+            if (!nom || /^d[ée]faut$/i.test(nom)) { $gameSystem._cpMusique = null; $gameSystem._cpMusiqueSuivante = null; return; }
+            if (/^garder$/i.test(nom)) nom = 'garder';
+            if (/^toujours$/i.test(args[2] || '')) $gameSystem._cpMusique = nom;
+            else $gameSystem._cpMusiqueSuivante = nom;
+            return;
+        }
         if (String(command || '').toUpperCase() !== 'TRANSITION') return;
         var a = String(args[0] || '').toLowerCase().replace(/é/g, 'e');
         if (a === 'defaut') { $gameSystem._cpTransition = null; $gameSystem._cpTransitionSuivante = null; return; }

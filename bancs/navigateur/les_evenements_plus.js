@@ -12,6 +12,9 @@
  *   ⑧ <Glissant: r> : un pas sur la glace mène jusqu'au mur ; sans la
  *     balise, un seul pas (contre-épreuve)
  *   ⑨ <Pas: son> : un son à chaque pas
+ *   ⑩ <si: …> en commentaire de page : la page compte quand c'est vrai et
+ *     plus quand c'est faux (variable, interrupteur local, variable locale
+ *     via LOCALE) ; une condition illisible ferme sa page sans planter
  *
  *   node bancs/navigateur/les_evenements_plus.js
  */
@@ -160,6 +163,40 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return window.__sons;
     });
     V('<Pas: Cursor1> : un son par pas ; sans la balise, aucun', p9.filter(function (s) { return s === 'Cursor1'; }).length === 2, JSON.stringify(p9));
+
+    console.log('\n── ⑩ conditions de page <si: …> ──');
+    var idSi = await ev(function (b) {
+        var modele = $dataMap.events[b.id].pages[0];
+        function pageAvec(cond) {
+            var p = JSON.parse(JSON.stringify(modele));
+            ['switch1Valid', 'switch2Valid', 'variableValid', 'selfSwitchValid', 'itemValid', 'actorValid'].forEach(function (k) { p.conditions[k] = false; });
+            p.list = (cond ? [{ code: 108, indent: 0, parameters: [cond] }] : []).concat([{ code: 0, indent: 0, parameters: [] }]);
+            return p;
+        }
+        var id = Math.max($dataMap.events.length, $gameMap._events.length);
+        $dataMap.events[id] = { id: id, name: 'essai <si>', note: '', meta: {}, x: 2, y: 2,
+            pages: [pageAvec(''), pageAvec('<si: v[40] >= 5 && !ss[B]>'), pageAvec('<si: lv[visites] >= 3>'), pageAvec('<si: (( illisible>')] };
+        $gameMap._events[id] = new Game_Event($gameMap.mapId(), id);
+        $gameVariables.setValue(40, 0);
+        return id;
+    }, base);
+    async function pageSi() { await page.waitForTimeout(150); return ev(function (id) { return $gameMap.event(id).findProperPageIndex() + 1; }, idSi); }
+    var p0 = await pageSi();
+    await ev(function () { $gameVariables.setValue(40, 5); });
+    var p1 = await pageSi();
+    await ev(function (id) { $gameSelfSwitches.setValue([$gameMap.mapId(), id, 'B'], true); }, idSi);
+    var p1b = await pageSi();
+    await ev(function (id) { $gameSelfSwitches.setValue([$gameMap.mapId(), id, 'B'], false); }, idSi);
+    V('<si: v[40] >= 5 && !ss[B]> : page 1 à v40 = 0, page 2 à v40 = 5, page 1 si l\'interrupteur local B s\'allume', p0 === 1 && p1 === 2 && p1b === 1, 'pages ' + [p0, p1, p1b].join(' → '));
+    await commande('LOCALE visites + 1', idSi); await commande('LOCALE visites + 1', idSi);
+    var p2 = await pageSi();
+    await commande('LOCALE visites + 1', idSi);
+    var p3 = await pageSi();
+    V('<si: lv[visites] >= 3> : à 2 visites toujours la page 2, à la 3e la page 3', p2 === 2 && p3 === 3, 'pages ' + p2 + ' → ' + p3);
+    await ev(function () { $gameVariables.setValue(40, 2); });
+    await commande('LOCALE visites = 0', idSi);
+    var p4 = await pageSi();
+    V('contre-épreuve : visites remises à 0 et v40 à 2, retour à la page 1 ; la page illisible (4) ne s\'ouvre jamais', p4 === 1 && [p0, p1, p1b, p2, p3, p4].indexOf(4) < 0, 'page ' + p4);
 
     console.log('\n── le bilan ──');
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
