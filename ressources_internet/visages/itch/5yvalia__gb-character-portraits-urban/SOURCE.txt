@@ -1,0 +1,13 @@
+Titre   : GB Style Character Portraits - Urban
+Auteur  : 5yvalia
+Page    : https://5yvalia.itch.io/gb-character-portraits-urban
+Licence : voir les conditions ci-dessous
+Images  : 1
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+TERMS OF USE
+1. Grant of License
+You are granted a non-exclusive license to use, modify, and integrate these assets into any personal or commercial project (such as games, media, or software), subject to the restrictions below.
+You may not resell, sublicense, or redistribute these assets (original or modified) as standalone files, asset packs, or templates. Uncompiled, raw asset files must never be made accessible or downloadable to end-users, even inside a game folder or public repository unless permission is granted.
+Credit is appreciated, but not required.

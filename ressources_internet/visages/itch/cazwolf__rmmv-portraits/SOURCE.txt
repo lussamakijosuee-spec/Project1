@@ -1,0 +1,9 @@
+Titre   : RPG Maker MV RTP Shoulder-Up Portraits
+Auteur  : cazwolf
+Page    : https://cazwolf.itch.io/rmmv-portraits
+Licence : voir les conditions ci-dessous
+Images  : 80
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+You MUST own a legal copy of RPG Maker MV to use these resources in your RPG Maker project. The original graphics belong to KADOKAWA and I take no credit for their creation. You must adhere to KADOKAWA's terms of use when using these assets!

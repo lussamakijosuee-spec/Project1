@@ -1,0 +1,9 @@
+Titre   : Game Faces
+Auteur  : 23
+Page    : https://23.itch.io/game-faces
+Licence : voir les conditions ci-dessous
+Images  : 383
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+These faces were extracted from the Internet Archive Book Images Flickr Stream using the Google Vision face recognition API. They are in the public domain and maintained on Github.
