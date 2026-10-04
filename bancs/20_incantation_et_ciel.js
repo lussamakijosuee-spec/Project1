@@ -201,11 +201,12 @@ function controles(B) {
     r.push(['Korrah est celle qui tient : le plus de PV et la meilleure DÉF',
         plusGrand(pvs) === '2' && plusGrand(defs) === '2',
         'PV ' + pvs[2] + ' · DÉF ' + defs[2]]);
-    // JOKO, commit « J » du 2026-10-01 : l'ATK de la classe 1 (Vesper) baisse
-    // de 30 % à tous les niveaux (236 → 164 au niveau 99), rien d'autre ne
-    // bouge. Vesper n'est plus la plus forte au corps à corps : c'est son
-    // choix. Le banc garde son réglage (et non plus l'ancienne règle).
-    r.push(['Vesper garde le réglage de JOKO du 2026-10-01 (ATK ×0,7 : 164 au niveau 99)', C[1].params[2][99] === 164, 'ATK ' + C[1].params[2][99] + ' au niveau 99 · ' + atks[1] + ' au niveau 89']);
+    // JOKO, commit « J » du 2026-10-01 : ATK de Vesper ×0,7 (236 → 164 au
+    // niveau 99). Puis commit « Rebalance classes and update world data » du
+    // 2026-10-03 : 208 au niveau 99. JOKO, le 2026-10-04 : « je me fie au
+    // profil […] il y a écrit comment ils doivent jouer, genre DPS ». Le banc
+    // garde SON dernier réglage, pas une règle à moi.
+    r.push(['Vesper garde le réglage de JOKO du 2026-10-03 (ATK 208 au niveau 99)', C[1].params[2][99] === 208, 'ATK ' + C[1].params[2][99] + ' au niveau 99 · ' + atks[1] + ' au niveau 89']);
     r.push(['ludwing est le plus rapide, et de loin', plusGrand(agis) === '3' && agis[3] > 1.3 * agis[1], 'AGI ' + agis[3] + ' contre ' + agis[1] + ' au deuxième']);
     r.push(['Aël est en verre : le moins de PV, la plus faible DÉF, la plus lente',
         plusPetit(pvs) === '4' && plusPetit(defs) === '4' && plusPetit(agis) === '4',
