@@ -30,7 +30,7 @@ contradictoire avec une autre.
 | « Perfection », vrai nom du Codex absolu ? | *« non »*, puis *« perfection est effacé »* | Retiré des vrais noms : Éternité, Odin, Surpassement. |
 | Comment on obtient un Don | *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »* | Le Don Spirituel s'obtient **uniquement** en réussissant un **donjon de couverture**. L'ancienne règle « il apparaît de lui-même » est barrée dans les documents des Dons. |
 | Le temps dans le donjon de couverture | *« le donjon a un temps limité ; si tu échoues ça te sort et tu devras attendre plusieurs mois pour une nouvelle ouverture de couverture »* | Ajouté au récit, section « Les Codex ». |
-| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »*, puis *« Couverture du savoir »* | L'État possède la couverture « savoir oublié » et le chapitre « la découverte », tous deux du Codex de l'ignorance. |
+| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »*, puis *« Couverture du savoir »* | Le **Royaume Vastos** (*« Le royaume vastos »*) possède la couverture « savoir oublié » et le chapitre « la découverte », tous deux du Codex de l'ignorance. |
 
 ---
 
@@ -192,14 +192,8 @@ de JOKO, le 2026-10-04). **On ne naît pas avec un Don : c'est le seul moyen de 
 Le donjon de couverture a un **temps limité**. Si tu échoues, il te sort, et tu dois **attendre
 plusieurs mois** pour une nouvelle ouverture de la couverture.
 
-**L'État** possède **une couverture** et **un chapitre** du **Codex de l'ignorance** : la couverture
+**L'État — le Royaume Vastos —** possède **une couverture** et **un chapitre** du **Codex de l'ignorance** : la couverture
 du savoir (**« savoir oublié »**) et le chapitre de **la découverte** (le chapitre 1).
-
----
-
-## Question encore ouverte
-
-- **Quel État ?** Le texte dit « l'État » sans le nommer (l'Empire aux Trois Têtes ? un autre ?).
 
 ---
 
@@ -249,3 +243,5 @@ devra attendre plusieurs mois pour une nouvelle ouverture de couverture l'état 
 couverture et un chapitres celui de la découverte, »*
 
 **3ᵉ réponse de JOKO, le 2026-10-04, mot pour mot :** *« Couverture du savoir et perfection est effacé »*
+
+**4ᵉ réponse de JOKO, le 2026-10-04, mot pour mot :** *« Le royaume vastos »* (l'État qui possède la couverture et le chapitre).
