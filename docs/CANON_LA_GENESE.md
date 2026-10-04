@@ -27,10 +27,10 @@ contradictoire avec une autre.
 | Le Premier, expliqué ou mystère ? | *« c'est une légende »* | Son histoire est racontée, mais comme une légende du monde, incertaine (voir ci-dessus). |
 | La récompense du donjon de couverture | *« tu ressors automatiquement avec un don spirituel »* · *« A »* | C'est un **vrai Don Spirituel** — seulement pour quelqu'un qui n'en a pas encore, et toujours **un seul**. Ajouté à la règle des Dons. |
 | Le mot « Codex » déjà pris par le livre en jeu | *« Non car le codex change de nom pour le livre de Dieu »* — puis : *« Le codex absolu »* | Le **Codex absolu** est appelé **« le Livre de Dieu »**. Le livre en jeu (`CODEX`) ne change pas. |
-| « Perfection », vrai nom du Codex absolu ? | *« non »* | Voir la question ouverte n°1. |
+| « Perfection », vrai nom du Codex absolu ? | *« non »*, puis *« perfection est effacé »* | Retiré des vrais noms : Éternité, Odin, Surpassement. |
 | Comment on obtient un Don | *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »* | Le Don Spirituel s'obtient **uniquement** en réussissant un **donjon de couverture**. L'ancienne règle « il apparaît de lui-même » est barrée dans les documents des Dons. |
 | Le temps dans le donjon de couverture | *« le donjon a un temps limité ; si tu échoues ça te sort et tu devras attendre plusieurs mois pour une nouvelle ouverture de couverture »* | Ajouté au récit, section « Les Codex ». |
-| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »* | Voir la question ouverte n°2. |
+| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »*, puis *« Couverture du savoir »* | L'État possède la couverture « savoir oublié » et le chapitre « la découverte », tous deux du Codex de l'ignorance. |
 
 ---
 
@@ -192,19 +192,14 @@ de JOKO, le 2026-10-04). **On ne naît pas avec un Don : c'est le seul moyen de 
 Le donjon de couverture a un **temps limité**. Si tu échoues, il te sort, et tu dois **attendre
 plusieurs mois** pour une nouvelle ouverture de la couverture.
 
-**L'État** possède **une couverture** et **un chapitre** : celui de **la découverte** (le chapitre 1
-du Codex de l'ignorance).
+**L'État** possède **une couverture** et **un chapitre** du **Codex de l'ignorance** : la couverture
+du savoir (**« savoir oublié »**) et le chapitre de **la découverte** (le chapitre 1).
 
 ---
 
-## Questions encore ouvertes
+## Question encore ouverte
 
-1. **« Perfection ».** Ce n'est **pas** le vrai nom du Codex absolu (JOKO : « non »). Les vrais
-   noms sont donc Éternité (la Mère), Odin (le Père), Surpassement (la Fille) — et Perfection
-   désigne quoi ?
-2. **« L'État possède une couverture et un chapitre, celui de la découverte ».** Quel État (l'Empire
-   aux Trois Têtes ? un autre ?) et quelle couverture : celle du même Codex (« savoir oublié »)
-   ou une autre ?
+- **Quel État ?** Le texte dit « l'État » sans le nommer (l'Empire aux Trois Têtes ? un autre ?).
 
 ---
 
@@ -252,3 +247,5 @@ Il y a pas de limite de temps dans ses dimensions le seule moyen de réussir c'e
 QUE l'obtenir par le donjon d'ailleurs le donjon a un temps limité si tu échoue sa te sort et tu
 devra attendre plusieurs mois pour une nouvelle ouverture de couverture l'état possède une
 couverture et un chapitres celui de la découverte, »*
+
+**3ᵉ réponse de JOKO, le 2026-10-04, mot pour mot :** *« Couverture du savoir et perfection est effacé »*
