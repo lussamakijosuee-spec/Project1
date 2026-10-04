@@ -26,7 +26,11 @@ contradictoire avec une autre.
 | L'ancienne origine du Mana Négatif « l'Empire Vultric, fondé par un joueur » | *« existe plus »* | Remplacée : ce sont les **voies d'art des mouvements** du **Premier** qui permettent de projeter et d'utiliser le mana négatif. Marquée comme remplacée. |
 | Le Premier, expliqué ou mystère ? | *« c'est une légende »* | Son histoire est racontée, mais comme une légende du monde, incertaine (voir ci-dessus). |
 | La récompense du donjon de couverture | *« tu ressors automatiquement avec un don spirituel »* · *« A »* | C'est un **vrai Don Spirituel** — seulement pour quelqu'un qui n'en a pas encore, et toujours **un seul**. Ajouté à la règle des Dons. |
-| Le mot « Codex » déjà pris par le livre en jeu | *« Non car le codex change de nom pour le livre de Dieu »* | Voir la question ouverte n°1. |
+| Le mot « Codex » déjà pris par le livre en jeu | *« Non car le codex change de nom pour le livre de Dieu »* — puis : *« Le codex absolu »* | Le **Codex absolu** est appelé **« le Livre de Dieu »**. Le livre en jeu (`CODEX`) ne change pas. |
+| « Perfection », vrai nom du Codex absolu ? | *« non »* | Voir la question ouverte n°1. |
+| Comment on obtient un Don | *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »* | Le Don Spirituel s'obtient **uniquement** en réussissant un **donjon de couverture**. L'ancienne règle « il apparaît de lui-même » est barrée dans les documents des Dons. |
+| Le temps dans le donjon de couverture | *« le donjon a un temps limité ; si tu échoues ça te sort et tu devras attendre plusieurs mois pour une nouvelle ouverture de couverture »* | Ajouté au récit, section « Les Codex ». |
+| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »* | Voir la question ouverte n°2. |
 
 ---
 
@@ -105,8 +109,7 @@ réduits, commencèrent à fabriquer des armes, à copier les soldats du Père e
 de la Mère, tout en étant guidés par la Fille de la rébellion.
 
 C'est pendant cette période qu'un homme se démarqua des autres par son intelligence élevée, mais
-son instinct… [*texte d'origine : « mais sont instinct elle fn plus de sont savoir »* — passage
-illisible, laissé tel quel]. Il fut l'un des rares à ne suivre personne. Il avait voyagé pendant
+son instinct est tout aussi élevé que son savoir *(passage réécrit par JOKO le 2026-10-04)*. Il fut l'un des rares à ne suivre personne. Il avait voyagé pendant
 des années pour trouver une solution pour arrêter cette guerre éternelle, ce cycle, et il trouva
 ce moyen. Il organisa secrètement un plan pour faire venir directement les trois sources au même
 endroit. Il manipula le Père avec un raisonnement d'une logique si impressionnante que le Père
@@ -184,24 +187,24 @@ c'est de battre le **gardien du chapitre** ; il n'y a pas d'autre moyen.
 inconnue, le Premier a laissé la porte ouverte pour sortir du donjon. Il y a **deux étages** dans
 un donjon de couverture, et si tu réussis le donjon de couverture, **tu ressors automatiquement
 avec un Don Spirituel** — *seulement si tu n'en as pas encore, et toujours un seul* (réponse « A »
-de JOKO, le 2026-10-04).
+de JOKO, le 2026-10-04). **On ne naît pas avec un Don : c'est le seul moyen de l'obtenir.**
+
+Le donjon de couverture a un **temps limité**. Si tu échoues, il te sort, et tu dois **attendre
+plusieurs mois** pour une nouvelle ouverture de la couverture.
+
+**L'État** possède **une couverture** et **un chapitre** : celui de **la découverte** (le chapitre 1
+du Codex de l'ignorance).
 
 ---
 
 ## Questions encore ouvertes
 
-1. **« le codex change de nom pour le livre de Dieu ».** Deux lectures possibles :
-   - le **Codex absolu** (le livre du Premier) s'appelle, dans la bouche des gens, **« le Livre
-     de Dieu »** — ce qui irait avec le point de vue « Elden Ring » (les gens le croient divin,
-     alors que le Premier disait qu'un homme ne devient pas dieu) ;
-   - ou c'est le **livre déjà en jeu** (« Codex des Trois Sources », commande `CODEX`) qui doit
-     changer de nom pour **« le Livre de Dieu »**.
-   Rien n'est renommé tant que JOKO n'a pas dit laquelle.
-2. **Les vrais noms : quatre mots pour trois livres.** Éternité (la Mère), Odin (le Père),
-   Surpassement (la Fille) — et **Perfection** : le vrai nom du **Codex absolu** entier ? Ou
-   autre chose ?
-3. **Le passage illisible** sur l'instinct du Premier : *« mais sont instinct elle fn plus de sont
-   savoir »* — à réécrire par JOKO.
+1. **« Perfection ».** Ce n'est **pas** le vrai nom du Codex absolu (JOKO : « non »). Les vrais
+   noms sont donc Éternité (la Mère), Odin (le Père), Surpassement (la Fille) — et Perfection
+   désigne quoi ?
+2. **« L'État possède une couverture et un chapitre, celui de la découverte ».** Quel État (l'Empire
+   aux Trois Têtes ? un autre ?) et quelle couverture : celle du même Codex (« savoir oublié »)
+   ou une autre ?
 
 ---
 
@@ -243,3 +246,9 @@ Chapitres 3: détermination
 Il y a pas de limite de temps dans ses dimensions le seule moyen de réussir c'est en battant le gardien du Chapitres il y a pas d'autre moyen mais pour lee Couverture c'est plus complexe c'est un donjon plus qu'un monde pour une raison encore inconnue le premier a laissé la porte ouverte pour sortir du donjon. Il a deux étages dans un donjon de couverture et si tu réussis le donjon de couverture tu ressort automatiquement avec un don spirituelle
 
 </details>
+
+**Réponses de JOKO du 2026-10-04 (2ᵉ message), mot pour mot :** *« Le codex absolue, 2 non ,
+"mais sont instinct est tout aussi élevé que son savoir", règles A on né pas avec des don on peut
+QUE l'obtenir par le donjon d'ailleurs le donjon a un temps limité si tu échoue sa te sort et tu
+devra attendre plusieurs mois pour une nouvelle ouverture de couverture l'état possède une
+couverture et un chapitres celui de la découverte, »*

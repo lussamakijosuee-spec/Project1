@@ -134,9 +134,10 @@ OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
 > d'âme, les compétences, les états, les animations, les 3 plugins et leurs réglages) :
 > **[`docs/DONS_SPIRITUELS.md`](docs/DONS_SPIRITUELS.md)**.
 
-Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. Il n'est pas remis : il **apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme. On ne le choisit pas, on ne le fabrique pas — il *sort*.
+Le **Don Spirituel** est la manifestation physique de l'âme **en surface**. ~~Il n'est pas remis : il **apparaît de lui-même**, à la **première fois** qu'un marqué se sert vraiment de son âme.~~ On ne le choisit pas, on ne le fabrique pas.
 
-> 🆕 **L'autre chemin — le donjon de couverture** (JOKO, 2026-10-04) : *« si tu réussis le donjon de couverture tu ressors automatiquement avec un don spirituel »* — réponse **A** : c'est un **vrai Don**, **seulement pour quelqu'un qui n'en a pas encore**, et on n'en a **toujours qu'un**. Voir [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md).
+> 🆕 **Le Don ne s'obtient QUE par le donjon de couverture** (JOKO, 2026-10-04) : *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »*. Réussir un donjon de couverture donne un **vrai Don** — seulement à qui n'en a pas encore, et **toujours un seul**. Voir [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md).
+
 
 **Image de l'âme = une coquille :**
 - **La surface** : ce qui peut être **touché et matérialisé** → le Don Spirituel.
