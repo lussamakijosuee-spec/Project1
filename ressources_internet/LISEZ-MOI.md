@@ -1,6 +1,8 @@
 # Ressources trouvées sur internet — à trier
 
-Rassemblées le 2026-10-04 pour JOKO : visages, expressions, personnages, ennemis, battlers.
+Rassemblées le 2026-10-04 pour JOKO : visages, morceaux d'expression, personnages, ennemis,
+battlers, effets de sorts, icônes. Tri « raccord » avec le jeu : fantasy médiévale — pas de
+science-fiction, de robots, de monde moderne ni de post-apocalyptique.
 **Rien de tout ça n'est dans le jeu** : c'est une réserve. Tu prends ce qui te plaît et tu le
 copies dans `img/faces`, `img/characters`, `img/enemies`, `img/sv_enemies` ou `img/sv_actors`.
 
@@ -19,7 +21,7 @@ Chaque pack a un fichier **SOURCE.txt** : titre, auteur, page d'origine, licence
   d'autres interdisent la revente, quelques-uns ne permettent que l'usage non commercial
   (ton jeu est perso, ça va, mais c'est à toi de juger).
 
-Laissés de côté : les packs sans conditions écrites, les personnages de licences connues
+Laissés de côté : les packs sans conditions écrites, la science-fiction, les robots, le moderne, les personnages de licences connues
 (Spider-Man, Batman, Hololive), les décors et tilesets, les jeux de plateforme et de tir.
 
 ## Formats utiles dans RPG Maker MV
@@ -32,7 +34,7 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 - **Battlers SV** : 9 × 6 cases de 64 × 64 (576 × 384).
 
 
-## Visages, portraits, expressions — 143 packs, 4705 images
+## Visages, portraits — 183 packs, 7435 images
 
 | Titre | Auteur | Licence | Images | Source | Dossier |
 |---|---|---|---|---|---|
@@ -48,7 +50,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | 48x48 Faces 2nd Sheet | CharlesGabriel | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/48x48-faces-2nd-sheet) | `visages/opengameart/48x48-faces-2nd-sheet` |
 | 48x48 Faces 3rd Sheet | CharlesGabriel | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/48x48-faces-3rd-sheet) | `visages/opengameart/48x48-faces-3rd-sheet` |
 | 48x48 Faces 4th Sheet | CharlesGabriel | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/48x48-faces-4th-sheet) | `visages/opengameart/48x48-faces-4th-sheet` |
-| 6 Post-Apocalyptical Snow Portraits | qubodup | CC-BY-SA 3.0 | 8 | [opengameart](https://opengameart.org/content/6-post-apocalyptical-snow-portraits) | `visages/opengameart/6-post-apocalyptical-snow-portraits` |
 | 64px portraits | pebonius | CC-BY 4.0 | 42 | [opengameart](https://opengameart.org/content/64px-portraits) | `visages/opengameart/64px-portraits` |
 | 64x64 Portrait | Nila122 | CC-BY-SA 3.0 / OGA-BY 3.0 | 1516 | [opengameart](https://opengameart.org/content/64x64-portrait) | `visages/opengameart/64x64-portrait` |
 | A Lonely Nightmare - All NPC | WakianTech | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/a-lonely-nightmare-all-npc) | `visages/opengameart/a-lonely-nightmare-all-npc` |
@@ -57,12 +58,23 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Animated Nordic Warrior Sprite + Bust | Sevarihk | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/animated-nordic-warrior-sprite-bust) | `visages/opengameart/animated-nordic-warrior-sprite-bust` |
 | Animated Portraits | KevoTheChamp | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/animated-portraits) | `visages/opengameart/animated-portraits` |
 | Animated Shield Maiden Sprite + Busts | Sevarihk | CC-BY 4.0 | 6 | [opengameart](https://opengameart.org/content/animated-shield-maiden-sprite-busts) | `visages/opengameart/animated-shield-maiden-sprite-busts` |
+| Anime Characters | Technopeasant | CC0 | 1 | [opengameart](https://opengameart.org/content/anime-characters) | `visages/opengameart/anime-characters` |
 | Anime Girl and Boy Portraits | stevenburrow | CC0 | 9 | [opengameart](https://opengameart.org/content/anime-girl-and-boy-portraits) | `visages/opengameart/anime-girl-and-boy-portraits` |
+| Anime heads | Rainbow Design | CC-BY-SA 3.0 / GPL 3.0 | 9 | [opengameart](https://opengameart.org/content/anime-heads) | `visages/opengameart/anime-heads` |
+| Anime LPC Hair | BlueVortexGames | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/anime-lpc-hair) | `visages/opengameart/anime-lpc-hair` |
+| Anime Martial arts | Ironthunder | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/anime-martial-arts) | `visages/opengameart/anime-martial-arts` |
+| Anime Martial arts 2 | Ironthunder | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/anime-martial-arts-2) | `visages/opengameart/anime-martial-arts-2` |
+| Anime martial arts 3 | Ironthunder | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/anime-martial-arts-3) | `visages/opengameart/anime-martial-arts-3` |
 | Anime Portrait for LPC characters | ZaPaper | CC-BY-SA 3.0 | 17 | [opengameart](https://opengameart.org/content/anime-portrait-for-lpc-characters) | `visages/opengameart/anime-portrait-for-lpc-characters` |
+| Anime Samurai Swordsman | Ironthunder | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/anime-samurai-swordsman) | `visages/opengameart/anime-samurai-swordsman` |
 | Ascension 2 Galaxy: Portraits | XCVG | CC-BY-SA 3.0 | 62 | [opengameart](https://opengameart.org/content/ascension-2-galaxy-portraits) | `visages/opengameart/ascension-2-galaxy-portraits` |
 | Avatar pack by Bullseye | ? | CC-BY-SA 3.0 | 3 | [opengameart](https://opengameart.org/content/avatar-pack-by-bullseye) | `visages/opengameart/avatar-pack-by-bullseye` |
+| BCGJ 2020 Art Pack | XCVG | CC-BY 3.0 | 25 | [opengameart](https://opengameart.org/content/bcgj-2020-art-pack) | `visages/opengameart/bcgj-2020-art-pack` |
+| blonde anime girl | Ironthunder | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/blonde-anime-girl-0) | `visages/opengameart/blonde-anime-girl-0` |
 | Blu | megupets | CC0 | 3 | [opengameart](https://opengameart.org/content/blu) | `visages/opengameart/blu` |
 | Boss Portraits Emotion Pixel Art | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 58 | [opengameart](https://opengameart.org/content/boss-portraits-emotion-pixel-art) | `visages/opengameart/boss-portraits-emotion-pixel-art` |
+| boy | Aeihu | CC-BY 3.0 | 16 | [opengameart](https://opengameart.org/content/boy) | `visages/opengameart/boy` |
+| Cartooney Portriat Maker Pack | Acharkl | CC0 | 6 | [opengameart](https://opengameart.org/content/cartooney-portriat-maker-pack) | `visages/opengameart/cartooney-portriat-maker-pack` |
 | Casual Avatars | Kitsuge Apps | CC0 | 20 | [opengameart](https://opengameart.org/content/casual-avatars) | `visages/opengameart/casual-avatars` |
 | Character graphics Cardboard style | Sevarihk | CC-BY 4.0 | 10 | [opengameart](https://opengameart.org/content/character-graphics-cardboard-style) | `visages/opengameart/character-graphics-cardboard-style` |
 | Character Portrait ~ Bandit | jupitersdaughter | CC-BY 3.0 | 9 | [opengameart](https://opengameart.org/content/character-portrait-bandit) | `visages/opengameart/character-portrait-bandit` |
@@ -71,34 +83,41 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Character Portraits | Bleddyuffles | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/character-portraits) | `visages/opengameart/character-portraits` |
 | Clothes for Cabbit-style face portraits | diamonddmgirl | CC0 | 1 | [opengameart](https://opengameart.org/content/clothes-for-cabbit-style-face-portraits) | `visages/opengameart/clothes-for-cabbit-style-face-portraits` |
 | Criko | megupets | CC0 | 3 | [opengameart](https://opengameart.org/content/criko) | `visages/opengameart/criko` |
-| Cyberpunk Portraits | Hyptosis | CC0 | 3 | [opengameart](https://opengameart.org/content/cyberpunk-portraits) | `visages/opengameart/cyberpunk-portraits` |
+| Dark anime character | Ironthunder | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/dark-anime-character) | `visages/opengameart/dark-anime-character` |
+| Dark hair anime | Ironthunder | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/dark-hair-anime) | `visages/opengameart/dark-hair-anime` |
 | Definitely not models portrait collection | Some Weirdo | CC0 | 5 | [opengameart](https://opengameart.org/content/definitely-not-models-portrait-collection) | `visages/opengameart/definitely-not-models-portrait-collection` |
 | Dino RPG Character | Shepardskin | CC0 | 20 | [opengameart](https://opengameart.org/content/dino-rpg-character) | `visages/opengameart/dino-rpg-character` |
 | Dragon Portrait | pocok | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/dragon-portrait) | `visages/opengameart/dragon-portrait` |
+| Eredah RPG Character Base 48x64 (OnGoing) | kcilds | CC-BY 4.0 | 64 | [opengameart](https://opengameart.org/content/eredah-rpg-character-base-48x64-ongoing) | `visages/opengameart/eredah-rpg-character-base-48x64-ongoing` |
 | EverFace | Efilheim | CC0 | 1 | [opengameart](https://opengameart.org/content/everface) | `visages/opengameart/everface` |
 | Face of Greg | Vander96 | OGA-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/face-of-greg) | `visages/opengameart/face-of-greg` |
 | Faces for female anime base sprites | bart | GPL 2.0 / GPL 3.0 / CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/faces-for-female-anime-base-sprites) | `visages/opengameart/faces-for-female-anime-base-sprites` |
 | Fantasy Portrait Pack by Ravenmore | Ravenmore | CC-BY 3.0 | 22 | [opengameart](https://opengameart.org/content/fantasy-portrait-pack-by-ravenmore) | `visages/opengameart/fantasy-portrait-pack-by-ravenmore` |
 | Female Elf Portrait | pocok | CC-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/female-elf-portrait) | `visages/opengameart/female-elf-portrait` |
 | Fever Dream Faces | knekko | CC0 | 1 | [opengameart](https://opengameart.org/content/fever-dream-faces) | `visages/opengameart/fever-dream-faces` |
-| Four Post-Apocalyptic Portraits | qubodup | CC-BY-SA 3.0 | 4 | [opengameart](https://opengameart.org/content/four-post-apocalyptic-portraits) | `visages/opengameart/four-post-apocalyptic-portraits` |
 | Generic Charcters Graphics — Blue Derek & Green Doria | rh0 | CC0 | 6 | [opengameart](https://opengameart.org/content/generic-charcters-graphics-%E2%80%94-blue-derek-green-doria) | `visages/opengameart/generic-charcters-graphics-%E2%80%94-blue-derek-green-doria` |
 | Graveyard Goon | Admurin | CC0 | 1 | [opengameart](https://opengameart.org/content/graveyard-goon) | `visages/opengameart/graveyard-goon` |
+| Hachi Bases | Technopeasant | CC0 | 1 | [opengameart](https://opengameart.org/content/hachi-bases) | `visages/opengameart/hachi-bases` |
 | Half Body Portrait - Female Cloths | William.Thompsonj | CC0 | 1 | [opengameart](https://opengameart.org/content/half-body-portrait-female-cloths) | `visages/opengameart/half-body-portrait-female-cloths` |
 | Human RPG Character | Shepardskin | CC0 | 20 | [opengameart](https://opengameart.org/content/human-rpg-character) | `visages/opengameart/human-rpg-character` |
 | JS Actor - Brynhildr | JosephSeraph | CC-BY 3.0 | 10 | [opengameart](https://opengameart.org/content/js-actor-brynhildr) | `visages/opengameart/js-actor-brynhildr` |
 | JS Actor - Innkeeper | JosephSeraph | CC-BY 3.0 | 80 | [opengameart](https://opengameart.org/content/js-actor-innkeeper) | `visages/opengameart/js-actor-innkeeper` |
 | JS Actor - Lifa | JosephSeraph | CC-BY 3.0 | 10 | [opengameart](https://opengameart.org/content/js-actor-lifa) | `visages/opengameart/js-actor-lifa` |
 | JS Actors - Aeon Warriors | JosephSeraph | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/js-actors-aeon-warriors) | `visages/opengameart/js-actors-aeon-warriors` |
+| Knight | centrix | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/knight-1) | `visages/opengameart/knight-1` |
 | LPC Anime Portrait #2 | ZaPaper | CC-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/lpc-anime-portrait-2) | `visages/opengameart/lpc-anime-portrait-2` |
 | [LPC] Emotion | Baŝto | CC-BY-SA 3.0 / GPL 3.0 | 2 | [opengameart](https://opengameart.org/content/lpc-emotion) | `visages/opengameart/lpc-emotion` |
 | [LPC] Expressions | Curt | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/lpc-expressions) | `visages/opengameart/lpc-expressions` |
 | LPC Expressions | Dragontrainer | CC-BY-SA 3.0 / GPL 3.0 | 1 | [opengameart](https://opengameart.org/content/lpc-expressions-0) | `visages/opengameart/lpc-expressions-0` |
 | [LPC] Portraits Remix | Baŝto | CC-BY 4.0 | 29 | [opengameart](https://opengameart.org/content/lpc-portraits-remix) | `visages/opengameart/lpc-portraits-remix` |
+| manga girl | mcproject | CC0 | 1 | [opengameart](https://opengameart.org/content/manga-girl) | `visages/opengameart/manga-girl` |
+| Maru - Art Challenge | TAD | CC-BY 4.0 | 3 | [opengameart](https://opengameart.org/content/maru-art-challenge) | `visages/opengameart/maru-art-challenge` |
 | Mer RPG Character | Shepardskin | CC0 | 20 | [opengameart](https://opengameart.org/content/mer-rpg-character) | `visages/opengameart/mer-rpg-character` |
+| mermaid | Aeihu | CC-BY 3.0 | 16 | [opengameart](https://opengameart.org/content/mermaid) | `visages/opengameart/mermaid` |
 | Miniportrait bases | diamonddmgirl | CC0 | 1 | [opengameart](https://opengameart.org/content/miniportrait-bases) | `visages/opengameart/miniportrait-bases` |
 | Miscelaneous Wesnoth Portraits | fmunoz.geo | GPL 3.0 / GPL 2.0 / CC0 | 16 | [opengameart](https://opengameart.org/content/miscelaneous-wesnoth-portraits) | `visages/opengameart/miscelaneous-wesnoth-portraits` |
 | Modular Reticulan Portraits | surt | CC0 | 2 | [opengameart](https://opengameart.org/content/modular-reticulan-portraits) | `visages/opengameart/modular-reticulan-portraits` |
+| Mouse-Drawn Characters | XCVG | CC-BY 4.0 / CC-BY 3.0 / OGA-BY 3.0 | 245 | [opengameart](https://opengameart.org/content/mouse-drawn-characters) | `visages/opengameart/mouse-drawn-characters` |
 | Multi-part sprites and other objects | Syrsly | CC0 | 1 | [opengameart](https://opengameart.org/content/multi-part-sprites-and-other-objects) | `visages/opengameart/multi-part-sprites-and-other-objects` |
 | Nekomimi girl portrait | Cawfeecrow | CC0 | 1 | [opengameart](https://opengameart.org/content/nekomimi-girl-portrait) | `visages/opengameart/nekomimi-girl-portrait` |
 | NPC Faceset | Sevarihk | CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/npc-faceset) | `visages/opengameart/npc-faceset` |
@@ -107,7 +126,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Oracle Portrait | Justin Nichol | GPL 2.0 / GPL 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/oracle-portrait) | `visages/opengameart/oracle-portrait` |
 | Orange character sprite & face | Game Dev Alliance | CC-BY 4.0 | 3 | [opengameart](https://opengameart.org/content/orange-character-sprite-face) | `visages/opengameart/orange-character-sprite-face` |
 | Pebonius - Edited Faces | Pixel Archer | CC0 | 6 | [opengameart](https://opengameart.org/content/pebonius-edited-faces) | `visages/opengameart/pebonius-edited-faces` |
-| Pixel Art Alien Portrait | DustDFG | CC0 | 1 | [opengameart](https://opengameart.org/content/pixel-art-alien-portrait) | `visages/opengameart/pixel-art-alien-portrait` |
 | Pixel Art Faces | Sardonic | CC-BY 3.0 / CC-BY-SA 3.0 / OGA-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/pixel-art-faces) | `visages/opengameart/pixel-art-faces` |
 | Pixel-Art Portraits | Unnamed | CC-BY-SA 4.0 | 6 | [opengameart](https://opengameart.org/content/pixel-art-portraits) | `visages/opengameart/pixel-art-portraits` |
 | Pixel portrait of me (Zabin) | Zabin | CC0 | 2 | [opengameart](https://opengameart.org/content/pixel-portrait-of-me-zabin) | `visages/opengameart/pixel-portrait-of-me-zabin` |
@@ -120,8 +138,10 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Priest portrait - Female | bart | GPL 2.0 / GPL 3.0 / CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/priest-portrait-female) | `visages/opengameart/priest-portrait-female` |
 | Priest portrait - Male | bart | GPL 2.0 / GPL 3.0 / CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/priest-portrait-male) | `visages/opengameart/priest-portrait-male` |
 | Random Heads | Bleddyuffles | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/random-heads) | `visages/opengameart/random-heads` |
+| Red Haired Chick | Ironthunder | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/red-haired-chick) | `visages/opengameart/red-haired-chick` |
 | RPG portraits | Buch | CC0 | 1 | [opengameart](https://opengameart.org/content/rpg-portraits) | `visages/opengameart/rpg-portraits` |
 | Sabi Portrait | bloodywing | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/sabi-portrait) | `visages/opengameart/sabi-portrait` |
+| Sara OGA | TAD | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/sara-oga) | `visages/opengameart/sara-oga` |
 | Sara, Trevor, Puck Anime Portrait and Expressions | ZaPaper | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/sara-trevor-puck-anime-portrait-and-expressions) | `visages/opengameart/sara-trevor-puck-anime-portrait-and-expressions` |
 | Shieldmaiden Character Sprite and Busts | Sevarihk | CC-BY 4.0 | 6 | [opengameart](https://opengameart.org/content/shieldmaiden-character-sprite-and-busts) | `visages/opengameart/shieldmaiden-character-sprite-and-busts` |
 | Skeleton & Mummy (Portrait) | Toeholds | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/skeleton-mummy-portrait) | `visages/opengameart/skeleton-mummy-portrait` |
@@ -130,7 +150,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Sport players | Deevad | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/sport-players) | `visages/opengameart/sport-players` |
 | Strange guy | Buch | GPL 2.0 / GPL 3.0 / CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/strange-guy) | `visages/opengameart/strange-guy` |
 | strange hand drawn face set | justinknight93 | CC0 | 8 | [opengameart](https://opengameart.org/content/strange-hand-drawn-face-set) | `visages/opengameart/strange-hand-drawn-face-set` |
-| Survivor Portraits (Post-Apocalyptic Survival) | Gendgi | CC0 | 13 | [opengameart](https://opengameart.org/content/survivor-portraits-post-apocalyptic-survival) | `visages/opengameart/survivor-portraits-post-apocalyptic-survival` |
 | Template Portait Half-Body | CruzR | CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/template-portait-half-body) | `visages/opengameart/template-portait-half-body` |
 | Thief portrait - Female | bart | GPL 2.0 / GPL 3.0 / CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/thief-portrait-female) | `visages/opengameart/thief-portrait-female` |
 | Thief portrait - Male | bart | GPL 2.0 / GPL 3.0 / CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/thief-portrait-male) | `visages/opengameart/thief-portrait-male` |
@@ -140,6 +159,7 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Ugly pixel art faces | killerfishred | CC0 | 38 | [opengameart](https://opengameart.org/content/ugly-pixel-art-faces) | `visages/opengameart/ugly-pixel-art-faces` |
 | Undead Cowboy and Ghoul Portraits with talking | pyranostudios | OGA-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/undead-cowboy-and-ghoul-portraits-with-talking) | `visages/opengameart/undead-cowboy-and-ghoul-portraits-with-talking` |
 | unreleased scraps | pebonius | CC0 | 14 | [opengameart](https://opengameart.org/content/unreleased-scraps) | `visages/opengameart/unreleased-scraps` |
+| upper skull front view template | LeaRStudios | OGA-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/upper-skull-front-view-template) | `visages/opengameart/upper-skull-front-view-template` |
 | Wacky EGA style character portraits | Good_Punk | CC0 | 19 | [opengameart](https://opengameart.org/content/wacky-ega-style-character-portraits) | `visages/opengameart/wacky-ega-style-character-portraits` |
 | Warped Character Pro | ansimuz | CC0 | 8 | [opengameart](https://opengameart.org/content/warped-character-pro) | `visages/opengameart/warped-character-pro` |
 | Weltreich characters faces | Light Game Studio | CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/weltreich-characters-faces) | `visages/opengameart/weltreich-characters-faces` |
@@ -149,38 +169,101 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Yanya, Hayden, Gabolus and Bird Soldier Portraits | Spring Spring | CC-BY-SA 4.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/yanya-hayden-gabolus-and-bird-soldier-portraits) | `visages/opengameart/yanya-hayden-gabolus-and-bird-soldier-portraits` |
 | Young knight portrait | Deevad | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/young-knight-portrait) | `visages/opengameart/young-knight-portrait` |
 | Game Faces | 23 | conditions de l'auteur (SOURCE.txt) | 383 | [itch](https://23.itch.io/game-faces) | `visages/itch/23__game-faces` |
-| 1BIT Character Portraits - Urban | 5yvalia | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://5yvalia.itch.io/1bit-style-character-portraits-urban) | `visages/itch/5yvalia__1bit-style-character-portraits-urban` |
-| GB Style Character Portraits - Urban | 5yvalia | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://5yvalia.itch.io/gb-character-portraits-urban) | `visages/itch/5yvalia__gb-character-portraits-urban` |
+| Aivopiru Pixel Portraits | aivopiru | conditions de l'auteur (SOURCE.txt) | 52 | [itch](https://aivopiru.itch.io/pixelart-portrait-bases) | `visages/itch/aivopiru__pixelart-portrait-bases` |
+| Warped Character Portraits | ansimuz | conditions de l'auteur (SOURCE.txt) | 8 | [itch](https://ansimuz.itch.io/warped-character-portraits) | `visages/itch/ansimuz__warped-character-portraits` |
+| Applesauce's cute character asset pack! | applesauce-shwee | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://applesauce-shwee.itch.io/applesauces-cute-character-asset-pack) | `visages/itch/applesauce-shwee__applesauces-cute-character-asset-pack` |
+| Adopt Goldie for Free | artoellie | conditions de l'auteur (SOURCE.txt) | 11 | [itch](https://artoellie.itch.io/adopt-goldie-for-free) | `visages/itch/artoellie__adopt-goldie-for-free` |
+| Arcade Fighting Game Characters Portrait | bikegol | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://bikegol.itch.io/arcade-fighting-game-characters-portrait) | `visages/itch/bikegol__arcade-fighting-game-characters-portrait` |
+| Vintage Face Sets for RPGMaker VX Ace | brotatofarm | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://brotatofarm.itch.io/vintage-face-sets-for-rpgmaker-vx-ace) | `visages/itch/brotatofarm__vintage-face-sets-for-rpgmaker-vx-ace` |
+| 24 Free RPGMaker Faces | brysonultra | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://brysonultra.itch.io/24-free-rpgmaker-faces) | `visages/itch/brysonultra__24-free-rpgmaker-faces` |
+| Plain Face Asset Pack (FREE!) | catboxx-studio | conditions de l'auteur (SOURCE.txt) | 14 | [itch](https://catboxx-studio.itch.io/plain-face-asset-pack-free) | `visages/itch/catboxx-studio__plain-face-asset-pack-free` |
 | RPG Maker MV RTP Shoulder-Up Portraits | cazwolf | conditions de l'auteur (SOURCE.txt) | 80 | [itch](https://cazwolf.itch.io/rmmv-portraits) | `visages/itch/cazwolf__rmmv-portraits` |
 | Pixelart RPG Character Portraits | corwin-zx | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://corwin-zx.itch.io/pixelart-rpg-character-portraits) | `visages/itch/corwin-zx__pixelart-rpg-character-portraits` |
 | orange fox pixel art portraits | dani567 | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://dani567.itch.io/orange-fox-character) | `visages/itch/dani567__orange-fox-character` |
+| Portraits Collection (FREE) | datindie | conditions de l'auteur (SOURCE.txt) | 30 | [itch](https://datindie.itch.io/portraits-collections-free) | `visages/itch/datindie__portraits-collections-free` |
 | M&! RPG Maker MV/MZ/MVTrinity spritefaces | despairparty | conditions de l'auteur (SOURCE.txt) | 745 | [itch](https://despairparty.itch.io/rpgmaker-spriteface) | `visages/itch/despairparty__rpgmaker-spriteface` |
-| Robot Lowbit Animated Pixel Art Portraits | digx7 | conditions de l'auteur (SOURCE.txt) | 21 | [itch](https://digx7.itch.io/robot-lowbit-animated-pixel-art-portraits) | `visages/itch/digx7__robot-lowbit-animated-pixel-art-portraits` |
-| Ein&#039;s Universal Sci-Fi Portrait Pack | einflys | conditions de l'auteur (SOURCE.txt) | 75 | [itch](https://einflys.itch.io/eins-universal-sci-fi-portrait-pack) | `visages/itch/einflys__eins-universal-sci-fi-portrait-pack` |
-| Raccoon&#039;s Portrait Pack for RPG Maker MV & SRPG Studio | false-ages | conditions de l'auteur (SOURCE.txt) | 17 | [itch](https://false-ages.itch.io/srpg-studio-portrait-pack) | `visages/itch/false-ages__srpg-studio-portrait-pack` |
+| EverFace | efilheim | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://efilheim.itch.io/everface) | `visages/itch/efilheim__everface` |
+| Raccoon's Portrait Pack for RPG Maker MV & SRPG Studio | false-ages | conditions de l'auteur (SOURCE.txt) | 17 | [itch](https://false-ages.itch.io/srpg-studio-portrait-pack) | `visages/itch/false-ages__srpg-studio-portrait-pack` |
 | Stylized_Pirate_Portraits_Vol1 | fiveassests | conditions de l'auteur (SOURCE.txt) | 20 | [itch](https://fiveassests.itch.io/stylized-pirate-portraits-vol1) | `visages/itch/fiveassests__stylized-pirate-portraits-vol1` |
-| Noir Men Portraits — Free 2D Pack (PNG 1024) | gleolite | conditions de l'auteur (SOURCE.txt) | 19 | [itch](https://gleolite.itch.io/noir-men-portraits-free-2d-pack) | `visages/itch/gleolite__noir-men-portraits-free-2d-pack` |
+| Cursed Forest : 10 Fantasy Creature Tokens | fscibe | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://fscibe.itch.io/fantasy-tokens-cursed-forest) | `visages/itch/fscibe__fantasy-tokens-cursed-forest` |
+| Orange character sprite & face | gamedevalliance | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://gamedevalliance.itch.io/orange-character) | `visages/itch/gamedevalliance__orange-character` |
+| Characters Pixel Art: 001-012 | gurigraphics | conditions de l'auteur (SOURCE.txt) | 61 | [itch](https://gurigraphics.itch.io/characters-pixel-art-001-012) | `visages/itch/gurigraphics__characters-pixel-art-001-012` |
 | Facesets - Portraits | gurigraphics | conditions de l'auteur (SOURCE.txt) | 8 | [itch](https://gurigraphics.itch.io/faceset-portraits) | `visages/itch/gurigraphics__faceset-portraits` |
-| Noir 1-bit Portraits | jayjay99 | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://jayjay99.itch.io/noir-black-and-white-portraits) | `visages/itch/jayjay99__noir-black-and-white-portraits` |
+| Visual Novel Female Character Sprites [free] | gurigraphics | conditions de l'auteur (SOURCE.txt) | 19 | [itch](https://gurigraphics.itch.io/visual-novel-female-character-sprite) | `visages/itch/gurigraphics__visual-novel-female-character-sprite` |
 | Pixel Portraits (36x36) in the Gameboy Pallete | jayjay99 | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://jayjay99.itch.io/pixel-portraits-36x36) | `visages/itch/jayjay99__pixel-portraits-36x36` |
 | 50 Male Portraits | jazzzo | conditions de l'auteur (SOURCE.txt) | 54 | [itch](https://jazzzo.itch.io/50-male-portraits) | `visages/itch/jazzzo__50-male-portraits` |
 | Lemurs Fantasy Portraits | jonaspeheim | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://jonaspeheim.itch.io/lemurs-portraits) | `visages/itch/jonaspeheim__lemurs-portraits` |
+| Sloppy elements (Pixel Asset Pack Jam #8 / Portrait) | kia | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://kia.itch.io/sloppy-elements-pixel-asset-pack-jam-8-portrait) | `visages/itch/kia__sloppy-elements-pixel-asset-pack-jam-8-portrait` |
+| Portrait Artpack Fantasy | knurrkater | conditions de l'auteur (SOURCE.txt) | 464 | [itch](https://knurrkater.itch.io/artpack-portrait-fantasy) | `visages/itch/knurrkater__artpack-portrait-fantasy` |
+| Fox Asset Pack | kyukei-dot | conditions de l'auteur (SOURCE.txt) | 13 | [itch](https://kyukei-dot.itch.io/fox-asset-pack) | `visages/itch/kyukei-dot__fox-asset-pack` |
 | 21 Portraits | linou | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://linou.itch.io/portraits) | `visages/itch/linou__portraits` |
+| Pixel Avatars - Standart | lmaomonkey | conditions de l'auteur (SOURCE.txt) | 24 | [itch](https://lmaomonkey.itch.io/pixel-avatars) | `visages/itch/lmaomonkey__pixel-avatars` |
+| Pixel-Art Portrait Pack | loregret | conditions de l'auteur (SOURCE.txt) | 1609 | [itch](https://loregret.itch.io/pixel-art-portrait-pack) | `visages/itch/loregret__pixel-art-portrait-pack` |
+| Goblin Portrait Pack — 119 Full-Body Characters | lovelyassets | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://lovelyassets.itch.io/goblin-portrait-pack) | `visages/itch/lovelyassets__goblin-portrait-pack` |
+| Face elements (Doll assets) | maellemarylloup | conditions de l'auteur (SOURCE.txt) | 87 | [itch](https://maellemarylloup.itch.io/face-elements-doll-assets) | `visages/itch/maellemarylloup__face-elements-doll-assets` |
 | Fantasy Faces Mini Pack (6 Warriors, 144×144 PNG) | marcomyly | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://marcomyly.itch.io/fantasy-faces-mini-pack-6-warriors-144144-png) | `visages/itch/marcomyly__fantasy-faces-mini-pack-6-warriors-144144-png` |
+| FREE Black and White Characters | oddblotstudios | conditions de l'auteur (SOURCE.txt) | 14 | [itch](https://oddblotstudios.itch.io/free-black-and-white-characters) | `visages/itch/oddblotstudios__free-black-and-white-characters` |
+| Free Pixel Art Warrior Portrait "Jonath" | pixel-1992 | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://pixel-1992.itch.io/free-pixel-art-warrior-portrait-jonath) | `visages/itch/pixel-1992__free-pixel-art-warrior-portrait-jonath` |
 | FR14 — 50 Face Graphics (PNG) | pixelartmaterial | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://pixelartmaterial.itch.io/fr14-50-face-graphics-png) | `visages/itch/pixelartmaterial__fr14-50-face-graphics-png` |
 | FR16 — 50 Free Anime Fantasy Face Graphics (PNG) | pixelartmaterial | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://pixelartmaterial.itch.io/fr16-50-free-anime-fantasy) | `visages/itch/pixelartmaterial__fr16-50-free-anime-fantasy` |
+| FR23 — Free Harbor Town NPC Face Graphics x50 (PNG) | pixelartmaterial | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://pixelartmaterial.itch.io/fr23-free-harbor-town-npc-face-graphics-x50-png) | `visages/itch/pixelartmaterial__fr23-free-harbor-town-npc-face-graphics-x50-png` |
+| FREE RPG Portraits | pixelsos | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://pixelsos.itch.io/free-rpg-portraits) | `visages/itch/pixelsos__free-rpg-portraits` |
 | Yuki; Girl with Beret Art Assets | rainyvioletz | conditions de l'auteur (SOURCE.txt) | 5 | [itch](https://rainyvioletz.itch.io/yuki-girl-with-beret-art-assets) | `visages/itch/rainyvioletz__yuki-girl-with-beret-art-assets` |
 | 64x64 Fantasy Pixel Portraits | rangerfox | conditions de l'auteur (SOURCE.txt) | 19 | [itch](https://rangerfox.itch.io/64x64-fantasy-pixel-portraits) | `visages/itch/rangerfox__64x64-fantasy-pixel-portraits` |
 | Top-Down RPG Character Pack: Portraits & 32x32 Sprites Part 2 | snakerser | conditions de l'auteur (SOURCE.txt) | 68 | [itch](https://snakerser.itch.io/top-downcharactersportraitsandsprites2) | `visages/itch/snakerser__top-downcharactersportraitsandsprites2` |
+| Dragan (Version 2.0) | sraye | conditions de l'auteur (SOURCE.txt) | 8 | [itch](https://sraye.itch.io/dragan-visual-novel-sprite) | `visages/itch/sraye__dragan-visual-novel-sprite` |
 | RPG Maker VX Ace faceset + sprite / RTP style | sunsetfoam | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://sunsetfoam.itch.io/rpg-maker-vx-ace-faceset-sprite) | `visages/itch/sunsetfoam__rpg-maker-vx-ace-faceset-sprite` |
 | MONO Portraits Pack - 27 Free PixelArt Portraits | takio-4l3x | conditions de l'auteur (SOURCE.txt) | 29 | [itch](https://takio-4l3x.itch.io/mono-portraits-pack) | `visages/itch/takio-4l3x__mono-portraits-pack` |
 | GB Studio NPC Portraits | timbojay | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://timbojay.itch.io/gb-studio-npc-portraits) | `visages/itch/timbojay__gb-studio-npc-portraits` |
-| Sam the Tomboy! VN Character | vnparadise | conditions de l'auteur (SOURCE.txt) | 62 | [itch](https://vnparadise.itch.io/sam-the-tomboy) | `visages/itch/vnparadise__sam-the-tomboy` |
-| Sayaka the School Girl | vnparadise | conditions de l'auteur (SOURCE.txt) | 79 | [itch](https://vnparadise.itch.io/sayaka-the-school-girl) | `visages/itch/vnparadise__sayaka-the-school-girl` |
+| Character Portraits | v-ktor | conditions de l'auteur (SOURCE.txt) | 33 | [itch](https://v-ktor.itch.io/character-portraits) | `visages/itch/v-ktor__character-portraits` |
+| Dreadful Bosses — Free 3-Portrait Demo | waveex | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://waveex.itch.io/dreadful-bosses-free-3-portrait-demo) | `visages/itch/waveex__dreadful-bosses-free-3-portrait-demo` |
 | Faces of HOME — Free Visual Novel Character Pack | wonderweave | conditions de l'auteur (SOURCE.txt) | 17 | [itch](https://wonderweave.itch.io/faces-of-home-free-visual-novel-character-pack) | `visages/itch/wonderweave__faces-of-home-free-visual-novel-character-pack` |
 | Village Elders — Visual Novel Character Pack (Vol. 1) | wonderweave | conditions de l'auteur (SOURCE.txt) | 50 | [itch](https://wonderweave.itch.io/village-elders-painted-visual-novel-character-pack-vol-1) | `visages/itch/wonderweave__village-elders-painted-visual-novel-character-pack-vol-1` |
+| RPGMaker MV/MZ Free Facepacks 01 | zxlstudio | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://zxlstudio.itch.io/rpgmaker-free-facepacks) | `visages/itch/zxlstudio__rpgmaker-free-facepacks` |
+| RPGMaker MV/MZ Free Facepacks 02 | zxlstudio | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://zxlstudio.itch.io/rpgmaker-mvmz-free-facepacks-02) | `visages/itch/zxlstudio__rpgmaker-mvmz-free-facepacks-02` |
 
-## Personnages (sprites de carte, chibis, bases) — 176 packs, 7844 images
+## Expressions et morceaux de visage (yeux, bouches, générateurs, émotes, bulles) — 36 packs, 20370 images
+
+| Titre | Auteur | Licence | Images | Source | Dossier |
+|---|---|---|---|---|---|
+| 200x200 Deformed Body Horror Creature | DiCocco | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/200x200-deformed-body-horror-creature) | `expressions_et_morceaux/opengameart/200x200-deformed-body-horror-creature` |
+| Alot of Particles Bubble Wall special effect | JoesAlotofthings | CC-BY 4.0 | 5 | [opengameart](https://opengameart.org/content/alot-of-particles-bubble-wall-special-effect) | `expressions_et_morceaux/opengameart/alot-of-particles-bubble-wall-special-effect` |
+| animated emotion icons | kota | CC0 | 1 | [opengameart](https://opengameart.org/content/animated-emotion-icons) | `expressions_et_morceaux/opengameart/animated-emotion-icons` |
+| Animated particle effects #2 | para | CC0 | 33 | [opengameart](https://opengameart.org/content/animated-particle-effects-2) | `expressions_et_morceaux/opengameart/animated-particle-effects-2` |
+| Big Eyes Boy Game Character Sprites | bevouliin.com | CC0 | 68 | [opengameart](https://opengameart.org/content/big-eyes-boy-game-character-sprites) | `expressions_et_morceaux/opengameart/big-eyes-boy-game-character-sprites` |
+| Evil Ghost | Tivaseps | CC0 | 1 | [opengameart](https://opengameart.org/content/evil-ghost) | `expressions_et_morceaux/opengameart/evil-ghost` |
+| Eyes Sword Game Weapon | bevouliin.com | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/eyes-sword-game-weapon) | `expressions_et_morceaux/opengameart/eyes-sword-game-weapon` |
+| Facebuilder | Technopeasant | GPL 3.0 / GPL 2.0 | 87 | [opengameart](https://opengameart.org/content/facebuilder) | `expressions_et_morceaux/opengameart/facebuilder` |
+| Female Avatar | NatashaHaggard | CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/female-avatar) | `expressions_et_morceaux/opengameart/female-avatar` |
+| [LPC Expanded] Expressions | JaidynReiman | GPL 3.0 / CC-BY-SA 3.0 | 18467 | [opengameart](https://opengameart.org/content/lpc-expanded-expressions) | `expressions_et_morceaux/opengameart/lpc-expanded-expressions` |
+| Pixel Art Emotes | DustDFG | CC0 | 5 | [opengameart](https://opengameart.org/content/pixel-art-emotes) | `expressions_et_morceaux/opengameart/pixel-art-emotes` |
+| Smileys | Hapiel | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/smileys) | `expressions_et_morceaux/opengameart/smileys` |
+| SpirteSheet Generator | ElectricBrainUK | CC-BY-SA 3.0 / GPL 3.0 | 5 | [opengameart](https://opengameart.org/content/spirtesheet-generator) | `expressions_et_morceaux/opengameart/spirtesheet-generator` |
+| Stealthy Spell Icon | progformer | CC-BY 3.0 | 9 | [opengameart](https://opengameart.org/content/stealthy-spell-icon) | `expressions_et_morceaux/opengameart/stealthy-spell-icon` |
+| Tiny RPG - Emoji Pack I | tiopalada | CC0 | 32 | [opengameart](https://opengameart.org/content/tiny-rpg-emoji-pack-i) | `expressions_et_morceaux/opengameart/tiny-rpg-emoji-pack-i` |
+| Skull Expressions | aarupix | conditions de l'auteur (SOURCE.txt) | 120 | [itch](https://aarupix.itch.io/skull-expressions) | `expressions_et_morceaux/itch/aarupix__skull-expressions` |
+| Froggy Pride Emotes for Twitch & Discord | azurecoffin | conditions de l'auteur (SOURCE.txt) | 13 | [itch](https://azurecoffin.itch.io/gay-frogs) | `expressions_et_morceaux/itch/azurecoffin__gay-frogs` |
+| 500+ Emoji, Portrait, Icons Assets Pack - Monthly Updates | celerybib | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://celerybib.itch.io/500-emoji-pack) | `expressions_et_morceaux/itch/celerybib__500-emoji-pack` |
+| RPG Maker MV Gen Parts | corwin-zx | conditions de l'auteur (SOURCE.txt) | 120 | [itch](https://corwin-zx.itch.io/rpg-maker-mv-gen-parts) | `expressions_et_morceaux/itch/corwin-zx__rpg-maker-mv-gen-parts` |
+| Character Expression Template Kit | createdbyjerry | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://createdbyjerry.itch.io/character-expression-template-kit) | `expressions_et_morceaux/itch/createdbyjerry__character-expression-template-kit` |
+| [2K Ultra-HD] Dark Ice Dragon Girl - 18 Expressions & Multi-Stage Outfits Asset Pack | deitydou02 | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://deitydou02.itch.io/2k-ultra-hd-dark-ice-dragon-girl-18-expressions-2-stage-asset) | `expressions_et_morceaux/itch/deitydou02__2k-ultra-hd-dark-ice-dragon-girl-18-expressions-2-stage-as` |
+| GB Studio Emote Pack | dimmstudios | conditions de l'auteur (SOURCE.txt) | 176 | [itch](https://dimmstudios.itch.io/gb-studio-emote-pack) | `expressions_et_morceaux/itch/dimmstudios__gb-studio-emote-pack` |
+| Pixel Art Emotes | dustdfg | conditions de l'auteur (SOURCE.txt) | 5 | [itch](https://dustdfg.itch.io/pixel-art-emotes) | `expressions_et_morceaux/itch/dustdfg__pixel-art-emotes` |
+| Sprites / Emotes Game boy 16 x 16 | falchetbros | conditions de l'auteur (SOURCE.txt) | 20 | [itch](https://falchetbros.itch.io/sprites-emotes-game-boy-16-x-16) | `expressions_et_morceaux/itch/falchetbros__sprites-emotes-game-boy-16-x-16` |
+| TTRPG/VTT Character PNG – Dark-Skinned Woman in Black Dress (Transparent) – FREE | hatan-human | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://hatan-human.itch.io/ttrpgvtt-full-body-character-png-dark-skinned-woman-in-black-dress-1-expression) | `expressions_et_morceaux/itch/hatan-human__ttrpgvtt-full-body-character-png-dark-skinned-woman-in-bl` |
+| 【FREE Sample】Anime Fantasy Girl — FREE Sample Pack (10 Expressions) | kujira-fukurou | conditions de l'auteur (SOURCE.txt) | 12 | [itch](https://kujira-fukurou.itch.io/anime-fantasy-girl-free-sample-pack-10-expressions) | `expressions_et_morceaux/itch/kujira-fukurou__anime-fantasy-girl-free-sample-pack-10-expressions` |
+| Bubble Emotes / Part 1. | lowprivacy | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://lowprivacy.itch.io/bubble-emotes-lowprivacy) | `expressions_et_morceaux/itch/lowprivacy__bubble-emotes-lowprivacy` |
+| MV Edits | lunarrabbitfish | conditions de l'auteur (SOURCE.txt) | 5 | [itch](https://lunarrabbitfish.itch.io/mv-rtp-edits) | `expressions_et_morceaux/itch/lunarrabbitfish__mv-rtp-edits` |
+| Visual Novel & RPG Character Pack 1 - Free taster | pavelleczek | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://pavelleczek.itch.io/visual-novel-rpg-character-pack-1-free-taster) | `expressions_et_morceaux/itch/pavelleczek__visual-novel-rpg-character-pack-1-free-taster` |
+| GB Studio Emote Pack | reakain | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://reakain.itch.io/gb-studio-emote-pack) | `expressions_et_morceaux/itch/reakain__gb-studio-emote-pack` |
+| Owlish Emotes | roamingowl | conditions de l'auteur (SOURCE.txt) | 467 | [itch](https://roamingowl.itch.io/owlish-emotes) | `expressions_et_morceaux/itch/roamingowl__owlish-emotes` |
+| (Outdated) RPG Maker MZ Free Generator Parts P2 | somenewwork | conditions de l'auteur (SOURCE.txt) | 146 | [itch](https://somenewwork.itch.io/rpg-maker-mz-free-generator-parts-p2) | `expressions_et_morceaux/itch/somenewwork__rpg-maker-mz-free-generator-parts-p2` |
+| RPG Maker MZ Generator Pack EX | somenewwork | conditions de l'auteur (SOURCE.txt) | 366 | [itch](https://somenewwork.itch.io/rpg-maker-mz-generator-pack-ex) | `expressions_et_morceaux/itch/somenewwork__rpg-maker-mz-generator-pack-ex` |
+| Retro emotes | spiraledout | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://spiraledout.itch.io/retro-emotes) | `expressions_et_morceaux/itch/spiraledout__retro-emotes` |
+| Ultimate Modular Character Creator - 1,000+ Combinations! | thiff | conditions de l'auteur (SOURCE.txt) | 170 | [itch](https://thiff.itch.io/2d-character) | `expressions_et_morceaux/itch/thiff__2d-character` |
+| UnitForge | unitforge | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://unitforge.itch.io/unitforge) | `expressions_et_morceaux/itch/unitforge__unitforge` |
+
+## Personnages (sprites de carte, chibis, bases) — 183 packs, 9425 images
 
 | Titre | Auteur | Licence | Images | Source | Dossier |
 |---|---|---|---|---|---|
@@ -228,8 +311,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Half-Human NPCs | marionline | CC0 | 11 | [opengameart](https://opengameart.org/content/half-human-npcs) | `personnages/opengameart/half-human-npcs` |
 | Hand-Drawn Chibi Walking Bases | Spring Spring | CC0 | 2 | [opengameart](https://opengameart.org/content/hand-drawn-chibi-walking-bases) | `personnages/opengameart/hand-drawn-chibi-walking-bases` |
 | Hay | ScratchIO | CC0 | 1 | [opengameart](https://opengameart.org/content/hay) | `personnages/opengameart/hay` |
-| Human nano-cyborg for RPG maker mv | Puffolotti | CC0 | 5 | [opengameart](https://opengameart.org/content/human-nano-cyborg-for-rpg-maker-mv) | `personnages/opengameart/human-nano-cyborg-for-rpg-maker-mv` |
-| Human survivor for RPG maker mv | Puffolotti | CC0 | 5 | [opengameart](https://opengameart.org/content/human-survivor-for-rpg-maker-mv) | `personnages/opengameart/human-survivor-for-rpg-maker-mv` |
 | Jaziu | megupets | CC0 | 3 | [opengameart](https://opengameart.org/content/jaziu) | `personnages/opengameart/jaziu` |
 | Just another RPG character base | LokiF | CC0 | 1 | [opengameart](https://opengameart.org/content/just-another-rpg-character-base) | `personnages/opengameart/just-another-rpg-character-base` |
 | komato berserker for RPG maker MV | Puffolotti | CC0 | 5 | [opengameart](https://opengameart.org/content/komato-berserker-for-rpg-maker-mv) | `personnages/opengameart/komato-berserker-for-rpg-maker-mv` |
@@ -294,14 +375,10 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | SC GameMaterial - NEW 32x64 RPG Charset Template (Child) | sc19 | CC-BY-SA 4.0 | 1 | [opengameart](https://opengameart.org/content/sc-gamematerial-new-32x64-rpg-charset-template-child) | `personnages/opengameart/sc-gamematerial-new-32x64-rpg-charset-template-child` |
 | SC GameMaterial - NEW 32x64 RPG Charset Template (Female) | sc19 | CC-BY-SA 4.0 | 1 | [opengameart](https://opengameart.org/content/sc-gamematerial-new-32x64-rpg-charset-template-female) | `personnages/opengameart/sc-gamematerial-new-32x64-rpg-charset-template-female` |
 | SC GameMaterial - NEW 32x64 RPG Charset Template (Male) | sc19 | CC-BY-SA 4.0 | 1 | [opengameart](https://opengameart.org/content/sc-gamematerial-new-32x64-rpg-charset-template-male) | `personnages/opengameart/sc-gamematerial-new-32x64-rpg-charset-template-male` |
-| School Girl | diamonddmgirl | CC0 | 2 | [opengameart](https://opengameart.org/content/school-girl) | `personnages/opengameart/school-girl` |
 | Slashie | megupets | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/slashie) | `personnages/opengameart/slashie` |
 | Some RPG Dude | Kelvin Shadewing | CC-BY-SA 4.0 / GPL 3.0 | 1 | [opengameart](https://opengameart.org/content/some-rpg-dude) | `personnages/opengameart/some-rpg-dude` |
 | Spider FLARE sprite sheets | johndh | CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 | 3 | [opengameart](https://opengameart.org/content/spider-flare-sprite-sheets) | `personnages/opengameart/spider-flare-sprite-sheets` |
 | Spring VFX Pack | tiopalada | CC0 | 7 | [opengameart](https://opengameart.org/content/spring-vfx-pack) | `personnages/opengameart/spring-vfx-pack` |
-| Tasen commander for RPG maker MV | Puffolotti | CC0 | 5 | [opengameart](https://opengameart.org/content/tasen-commander-for-rpg-maker-mv) | `personnages/opengameart/tasen-commander-for-rpg-maker-mv` |
-| Tasen scout for RPG maker MV | Puffolotti | CC0 | 6 | [opengameart](https://opengameart.org/content/tasen-scout-for-rpg-maker-mv) | `personnages/opengameart/tasen-scout-for-rpg-maker-mv` |
-| Tasen soldier for RPG maker MV | Puffolotti | CC0 | 5 | [opengameart](https://opengameart.org/content/tasen-soldier-for-rpg-maker-mv) | `personnages/opengameart/tasen-soldier-for-rpg-maker-mv` |
 | Town Guards Vol.1 — 6 Characters (Complete Sample, ~64px) | hnnnnnnn | CC0 | 44 | [opengameart](https://opengameart.org/content/town-guards-vol1-%E2%80%94-6-characters-complete-sample-64px) | `personnages/opengameart/town-guards-vol1-%E2%80%94-6-characters-complete-sample-64px` |
 | Trainee Knight Character | Segel | CC0 | 70 | [opengameart](https://opengameart.org/content/trainee-knight-character) | `personnages/opengameart/trainee-knight-character` |
 | Tricolor NES RPG Character Sprite Sheets | ctske | CC-BY 4.0 / OGA-BY 3.0 | 9 | [opengameart](https://opengameart.org/content/tricolor-nes-rpg-character-sprite-sheets) | `personnages/opengameart/tricolor-nes-rpg-character-sprite-sheets` |
@@ -321,14 +398,19 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Aaron Sprites / Freebies 4 / 5 Creatures | aaronsprites | conditions de l'auteur (SOURCE.txt) | 160 | [itch](https://aaronsprites.itch.io/aaron-sprites-freebies-4) | `personnages/itch/aaronsprites__aaron-sprites-freebies-4` |
 | Aaron Sprites / Freebies 5 / 5 Creatures | aaronsprites | conditions de l'auteur (SOURCE.txt) | 160 | [itch](https://aaronsprites.itch.io/aaron-sprites-freebies-5) | `personnages/itch/aaronsprites__aaron-sprites-freebies-5` |
 | Aaron Sprites / Generation 0 / 27 Creatures | aaronsprites | conditions de l'auteur (SOURCE.txt) | 1504 | [itch](https://aaronsprites.itch.io/aaron-sprites-generation-0) | `personnages/itch/aaronsprites__aaron-sprites-generation-0` |
+| Admurin's Armory | admurin | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://admurin.itch.io/pixel-armory) | `personnages/itch/admurin__pixel-armory` |
 | Librarium Megapack III | aekashics | conditions de l'auteur (SOURCE.txt) | 43 | [itch](https://aekashics.itch.io/librarium-megapack-iii) | `personnages/itch/aekashics__librarium-megapack-iii` |
 | Flower Maiden | akaimochi | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://akaimochi.itch.io/flower-maiden) | `personnages/itch/akaimochi__flower-maiden` |
 | Basic Character Female 64 PRO  Free Version | angeler1234 | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://angeler1234.itch.io/basic-character-female-pack-for-free-64) | `personnages/itch/angeler1234__basic-character-female-pack-for-free-64` |
+| Tiny RPG Fantasy | ansimuz | conditions de l'auteur (SOURCE.txt) | 41 | [itch](https://ansimuz.itch.io/tiny-rpg-town) | `personnages/itch/ansimuz__tiny-rpg-town` |
 | Chibi character template Ver.2 | axulart | conditions de l'auteur (SOURCE.txt) | 13 | [itch](https://axulart.itch.io/chibi-character-template) | `personnages/itch/axulart__chibi-character-template` |
+| Custom RPG Maker VXA Sprites | bl4ckbyrd | conditions de l'auteur (SOURCE.txt) | 27 | [itch](https://bl4ckbyrd.itch.io/custom-rpg-maker-vxa-sprites) | `personnages/itch/bl4ckbyrd__custom-rpg-maker-vxa-sprites` |
 | Tall Female Character Sprite (RMMV) | brahp69 | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://brahp69.itch.io/tall-female-character-sprite) | `personnages/itch/brahp69__tall-female-character-sprite` |
+| PIXEL FANTASY RPG ICONS - RPG Maker MV/MZ RTP Replacement | cazwolf | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://cazwolf.itch.io/caz-pixel-rtp-replacement) | `personnages/itch/cazwolf__caz-pixel-rtp-replacement` |
 | "Gobbo" NPCs for RPG Maker | corwin-zx | conditions de l'auteur (SOURCE.txt) | 501 | [itch](https://corwin-zx.itch.io/gobbo-npc-for-rpg-maker) | `personnages/itch/corwin-zx__gobbo-npc-for-rpg-maker` |
 | Super Retro World • Free Characters Pack | farm-animal | conditions de l'auteur (SOURCE.txt) | 104 | [itch](https://farm-animal.itch.io/character-pack) | `personnages/itch/farm-animal__character-pack` |
 | Halloween2021 Collab Assets | finnuval | conditions de l'auteur (SOURCE.txt) | 32 | [itch](https://finnuval.itch.io/halloween2021-collab-assets) | `personnages/itch/finnuval__halloween2021-collab-assets` |
+| Fantasy RPG Chests 32 x 32 px for RPG Maker | franjatesa | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://franjatesa.itch.io/free-rpgmaker-chests) | `personnages/itch/franjatesa__free-rpgmaker-chests` |
 | RPG Maker MZ Free Material 02 | galacticgod | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://galacticgod.itch.io/rpg-maker-mz-free-material-02) | `personnages/itch/galacticgod__rpg-maker-mz-free-material-02` |
 | RPG Maker MZ Free Material 05 | galacticgod | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://galacticgod.itch.io/rpg-maker-mz-free-material-05) | `personnages/itch/galacticgod__rpg-maker-mz-free-material-05` |
 | RPG Maker MZ Free Material 06 | galacticgod | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://galacticgod.itch.io/rpg-maker-mz-free-material-06) | `personnages/itch/galacticgod__rpg-maker-mz-free-material-06` |
@@ -336,11 +418,13 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | RPG Maker NPC Character Set - Elderly Inn Keeper | galacticgod | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://galacticgod.itch.io/rpg-maker-npc-character-set-elderlyinnkeeper) | `personnages/itch/galacticgod__rpg-maker-npc-character-set-elderlyinnkeeper` |
 | RPG Maker NPC Character Set - Mad Scientist | galacticgod | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://galacticgod.itch.io/rpg-maker-npc-character-set-mad-scientist) | `personnages/itch/galacticgod__rpg-maker-npc-character-set-mad-scientist` |
 | RPG Maker NPC Character Set - Meat Butcher | galacticgod | conditions de l'auteur (SOURCE.txt) | 5 | [itch](https://galacticgod.itch.io/rpg-maker-npc-character-set-meat-butcher) | `personnages/itch/galacticgod__rpg-maker-npc-character-set-meat-butcher` |
+| FREE - 2D Pixel Art Male and Female Character - Sidescroller | gandalfhardcore | conditions de l'auteur (SOURCE.txt) | 359 | [itch](https://gandalfhardcore.itch.io/2d-pixel-art-male-and-female-character) | `personnages/itch/gandalfhardcore__2d-pixel-art-male-and-female-character` |
+| FREE - 2D Pixel Art Archer Character - Sidescroller | gandalfhardcore | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://gandalfhardcore.itch.io/pixel-art-archer-character) | `personnages/itch/gandalfhardcore__pixel-art-archer-character` |
 | Transmasc Asset Pack | gensuta | conditions de l'auteur (SOURCE.txt) | 34 | [itch](https://gensuta.itch.io/rpgmaker-transmasc-asset-pack) | `personnages/itch/gensuta__rpgmaker-transmasc-asset-pack` |
 | Shaved Styles Pack | gensuta | conditions de l'auteur (SOURCE.txt) | 120 | [itch](https://gensuta.itch.io/shaved-styles-pack) | `personnages/itch/gensuta__shaved-styles-pack` |
 | Adventurer Pack 2 - RPG Maker MV/MZ | goat-boy11 | conditions de l'auteur (SOURCE.txt) | 16 | [itch](https://goat-boy11.itch.io/adventurer-pack-2-rpg-maker-mvmz) | `personnages/itch/goat-boy11__adventurer-pack-2-rpg-maker-mvmz` |
 | RPG Maker MV Crusades characters | happyfox123 | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://happyfox123.itch.io/crusades-characters) | `personnages/itch/happyfox123__crusades-characters` |
-| Ferrum: Junkyard Heroes | haydeos | conditions de l'auteur (SOURCE.txt) | 32 | [itch](https://haydeos.itch.io/ferrum-junkyard-heroes) | `personnages/itch/haydeos__ferrum-junkyard-heroes` |
+| RPG Maker MV/MZ Stone Golem characters | happyfox123 | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://happyfox123.itch.io/rpg-maker-mvmz-stone-golem-characters) | `personnages/itch/happyfox123__rpg-maker-mvmz-stone-golem-characters` |
 | High Fantasy Heroes! | haydeos | conditions de l'auteur (SOURCE.txt) | 25 | [itch](https://haydeos.itch.io/high-fantasy-heroes) | `personnages/itch/haydeos__high-fantasy-heroes` |
 | NPC Life Assets | heosphorus | conditions de l'auteur (SOURCE.txt) | 147 | [itch](https://heosphorus.itch.io/asset-npc-lifes) | `personnages/itch/heosphorus__asset-npc-lifes` |
 | RPG Fantasy Boys I | jitsukoan | conditions de l'auteur (SOURCE.txt) | 362 | [itch](https://jitsukoan.itch.io/rpg-fantasy-boys) | `personnages/itch/jitsukoan__rpg-fantasy-boys` |
@@ -348,20 +432,26 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | RPG Fantasy Girls II | jitsukoan | conditions de l'auteur (SOURCE.txt) | 774 | [itch](https://jitsukoan.itch.io/rpg-fantasy-girls-ii) | `personnages/itch/jitsukoan__rpg-fantasy-girls-ii` |
 | RPG Fantasy Girls IV | jitsukoan | conditions de l'auteur (SOURCE.txt) | 700 | [itch](https://jitsukoan.itch.io/rpg-fantasy-girls-iv) | `personnages/itch/jitsukoan__rpg-fantasy-girls-iv` |
 | Turtle Pack | jitsukoan | conditions de l'auteur (SOURCE.txt) | 7 | [itch](https://jitsukoan.itch.io/turtle-pack) | `personnages/itch/jitsukoan__turtle-pack` |
-| Top Down Pixel Art Horror | kamisama887 | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://kamisama887.itch.io/lorenz-fries-school-horror) | `personnages/itch/kamisama887__lorenz-fries-school-horror` |
 | Fantasy NPC sprites package | kiddolink | conditions de l'auteur (SOURCE.txt) | 38 | [itch](https://kiddolink.itch.io/fantasy-npc-non-playable-characters-pack) | `personnages/itch/kiddolink__fantasy-npc-non-playable-characters-pack` |
+| Astrea - RPG Maker MV Resource Map | ladyluck | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://ladyluck.itch.io/astrea-rpg-maker-mv-resource-map) | `personnages/itch/ladyluck__astrea-rpg-maker-mv-resource-map` |
+| RPG Maker MV Free Characters | lanto | conditions de l'auteur (SOURCE.txt) | 530 | [itch](https://lanto.itch.io/rpg-maker-mv-free-characters) | `personnages/itch/lanto__rpg-maker-mv-free-characters` |
+| Martial Hero | luizmelo | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://luizmelo.itch.io/martial-hero) | `personnages/itch/luizmelo__martial-hero` |
 | Sirens: Gothic Character Pack (Free Zuri Sampler) | obsidiansirens | conditions de l'auteur (SOURCE.txt) | 79 | [itch](https://obsidiansirens.itch.io/sirens-gothic-character-pack-free-zuri-sampler) | `personnages/itch/obsidiansirens__sirens-gothic-character-pack-free-zuri-sampler` |
-| Pixlpix - Pixel Instant Photos | odrez | conditions de l'auteur (SOURCE.txt) | 12 | [itch](https://odrez.itch.io/pixlpix) | `personnages/itch/odrez__pixlpix` |
 | Crawling Depths | pingupollas | conditions de l'auteur (SOURCE.txt) | 57 | [itch](https://pingupollas.itch.io/crawling-depths) | `personnages/itch/pingupollas__crawling-depths` |
 | RPG Top Down Character Asset Pack | pixelserial | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://pixelserial.itch.io/rpg-top-down-character-asset-pack) | `personnages/itch/pixelserial__rpg-top-down-character-asset-pack` |
 | Aztec Asset Pack | sevarihk | conditions de l'auteur (SOURCE.txt) | 14 | [itch](https://sevarihk.itch.io/aztec-asset-pack) | `personnages/itch/sevarihk__aztec-asset-pack` |
 | PixelChars 01 - Free Starter Pack | slimelvl2 | conditions de l'auteur (SOURCE.txt) | 7 | [itch](https://slimelvl2.itch.io/pixelchars-01-freestarterpack) | `personnages/itch/slimelvl2__pixelchars-01-freestarterpack` |
 | Cute Jaiin | smashartist | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://smashartist.itch.io/cute-jaiin) | `personnages/itch/smashartist__cute-jaiin` |
 | Free NPCs | solaarnoble | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://solaarnoble.itch.io/free-npcs) | `personnages/itch/solaarnoble__free-npcs` |
+| Anthropomorphic NPCs – Free Sample Pack (RPG Maker MZ) | splitwing77 | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://splitwing77.itch.io/anthropomorphic-npcs-free-sample-pack-rpg-maker-mz) | `personnages/itch/splitwing77__anthropomorphic-npcs-free-sample-pack-rpg-maker-mz` |
 | Walk Sprite Base Pack | stormofsunbeams | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://stormofsunbeams.itch.io/walk-sprite-base-pack) | `personnages/itch/stormofsunbeams__walk-sprite-base-pack` |
-| Suit-and-tie investigators | subotai-khudozhnik | conditions de l'auteur (SOURCE.txt) | 30 | [itch](https://subotai-khudozhnik.itch.io/suit-and-tie-investigators) | `personnages/itch/subotai-khudozhnik__suit-and-tie-investigators` |
+| 16x16 Enchanted Forest Characters | superdark | conditions de l'auteur (SOURCE.txt) | 393 | [itch](https://superdark.itch.io/enchanted-forest-characters) | `personnages/itch/superdark__enchanted-forest-characters` |
+| 2D SL Character | szadiart | conditions de l'auteur (SOURCE.txt) | 15 | [itch](https://szadiart.itch.io/2d-soulslike-character) | `personnages/itch/szadiart__2d-soulslike-character` |
+| Multiple Boats in RPG Maker MZ: No Plugins | tomazellagames | conditions de l'auteur (SOURCE.txt) | 69 | [itch](https://tomazellagames.itch.io/two-boats) | `personnages/itch/tomazellagames__two-boats` |
+| Tiny Adventure Pack Plus | vryell | conditions de l'auteur (SOURCE.txt) | 210 | [itch](https://vryell.itch.io/tiny-adventure-pack-plus) | `personnages/itch/vryell__tiny-adventure-pack-plus` |
+| FREE - Knight 2D Pixel Art | xzany | conditions de l'auteur (SOURCE.txt) | 21 | [itch](https://xzany.itch.io/free-knight-2d-pixel-art) | `personnages/itch/xzany__free-knight-2d-pixel-art` |
 
-## Ennemis, monstres, boss (dont battlers de face) — 288 packs, 7641 images
+## Ennemis, monstres, boss — 278 packs, 8417 images
 
 | Titre | Auteur | Licence | Images | Source | Dossier |
 |---|---|---|---|---|---|
@@ -369,7 +459,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | 10 Fantasy RPG enemies | CharlesGabriel | CC-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 | 1 | [opengameart](https://opengameart.org/content/10-fantasy-rpg-enemies) | `ennemis/opengameart/10-fantasy-rpg-enemies` |
 | 10 More Fantasy RPG enemies (plus a boss) | CharlesGabriel | CC-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 | 1 | [opengameart](https://opengameart.org/content/10-more-fantasy-rpg-enemies-plus-a-boss) | `ennemis/opengameart/10-more-fantasy-rpg-enemies-plus-a-boss` |
 | 12 Public Domain Boss Sprites! | titleknown | CC0 | 24 | [opengameart](https://opengameart.org/content/12-public-domain-boss-sprites) | `ennemis/opengameart/12-public-domain-boss-sprites` |
-| 2 Color 80s VHS Adventure Battlers 1 | SdiviHall | CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/2-color-80s-vhs-adventure-battlers-1) | `ennemis/opengameart/2-color-80s-vhs-adventure-battlers-1` |
 | 200x200 Monochromatic Retro Creature | DiCocco | CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/200x200-monochromatic-retro-creature) | `ennemis/opengameart/200x200-monochromatic-retro-creature` |
 | 24x32 Supernatural Creatures | diamonddmgirl | CC-BY 4.0 / CC-BY 3.0 | 112 | [opengameart](https://opengameart.org/content/24x32-supernatural-creatures) | `ennemis/opengameart/24x32-supernatural-creatures` |
 | [2D animated pixelate character] Clarice, the Noctural Creature Hunter | jaymeehuynh | CC-BY 3.0 | 10 | [opengameart](https://opengameart.org/content/2d-animated-pixelate-character-clarice-the-noctural-creature-hunter) | `ennemis/opengameart/2d-animated-pixelate-character-clarice-the-noctural-creature` |
@@ -390,11 +479,8 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | a many-eyed monster | ArVexi1050 | CC0 | 1 | [opengameart](https://opengameart.org/content/a-many-eyed-monster) | `ennemis/opengameart/a-many-eyed-monster` |
 | Adventurer and Slime game Sprites | Segel | CC0 | 111 | [opengameart](https://opengameart.org/content/adventurer-and-slime-game-sprites) | `ennemis/opengameart/adventurer-and-slime-game-sprites` |
 | Alex's fun starter pack | Fooliery | CC0 | 33 | [opengameart](https://opengameart.org/content/alexs-fun-starter-pack) | `ennemis/opengameart/alexs-fun-starter-pack` |
-| Alien (The Revolution) | AntumDeluge | CC-BY-SA 3.0 | 6 | [opengameart](https://opengameart.org/content/alien-the-revolution) | `ennemis/opengameart/alien-the-revolution` |
 | Amabie Japanese Yokai | rapidpunches | CC-BY 4.0 | 19 | [opengameart](https://opengameart.org/content/amabie-japanese-yokai) | `ennemis/opengameart/amabie-japanese-yokai` |
 | Animal Enemies 10 Pack | OnixGames | CC0 | 66 | [opengameart](https://opengameart.org/content/animal-enemies-10-pack) | `ennemis/opengameart/animal-enemies-10-pack` |
-| Animated Cartoon Mechanic (Side Battler) | Shaneopolis | CC-BY 3.0 | 5 | [opengameart](https://opengameart.org/content/animated-cartoon-mechanic-side-battler) | `ennemis/opengameart/animated-cartoon-mechanic-side-battler` |
-| Animated Cartoon Ring Alien (Side Battler) | Shaneopolis | CC-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/animated-cartoon-ring-alien-side-battler) | `ennemis/opengameart/animated-cartoon-ring-alien-side-battler` |
 | Animated character pack - spritesheets | free sprites | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/animated-character-pack-spritesheets) | `ennemis/opengameart/animated-character-pack-spritesheets` |
 | Animated Ghost | VinnNo.0 | CC-BY-SA 3.0 / GPL 3.0 | 13 | [opengameart](https://opengameart.org/content/animated-ghost) | `ennemis/opengameart/animated-ghost` |
 | Animated Goblins | Calciumtrice | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/animated-goblins) | `ennemis/opengameart/animated-goblins` |
@@ -477,7 +563,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | JS Monster Set - Elementals III | JosephSeraph | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/js-monster-set-elementals-iii) | `ennemis/opengameart/js-monster-set-elementals-iii` |
 | JS Monsters - Aeon Monsters I | JosephSeraph | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/js-monsters-aeon-monsters-i) | `ennemis/opengameart/js-monsters-aeon-monsters-i` |
 | Kica's Enemy Pack | Fava Beans | CC0 | 10 | [opengameart](https://opengameart.org/content/kicas-enemy-pack) | `ennemis/opengameart/kicas-enemy-pack` |
-| Killbot (8 Directional) | patvanmackelberg | CC0 | 1 | [opengameart](https://opengameart.org/content/killbot-8-directional) | `ennemis/opengameart/killbot-8-directional` |
 | Kung Fu Battlers pixel art | CodyS | CC0 | 1 | [opengameart](https://opengameart.org/content/kung-fu-battlers-pixel-art) | `ennemis/opengameart/kung-fu-battlers-pixel-art` |
 | Kung-Fu Dragon | Spring Spring | CC-BY 3.0 / CC-BY 4.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 | 6 | [opengameart](https://opengameart.org/content/kung-fu-dragon) | `ennemis/opengameart/kung-fu-dragon` |
 | Land Monster Game Character - add enemy into your game | bevouliin.com | CC0 | 18 | [opengameart](https://opengameart.org/content/land-monster-game-character-add-enemy-into-your-game) | `ennemis/opengameart/land-monster-game-character-add-enemy-into-your-game` |
@@ -485,7 +570,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Land Torn Monster Sprites | bevouliin.com | CC0 | 5 | [opengameart](https://opengameart.org/content/land-torn-monster-sprites) | `ennemis/opengameart/land-torn-monster-sprites` |
 | Limbo Land Monster Sprites | bevouliin.com | CC0 | 7 | [opengameart](https://opengameart.org/content/limbo-land-monster-sprites) | `ennemis/opengameart/limbo-land-monster-sprites` |
 | Limbo Land Monster Sprites | bevouliin.com | CC0 | 5 | [opengameart](https://opengameart.org/content/limbo-land-monster-sprites-0) | `ennemis/opengameart/limbo-land-monster-sprites-0` |
-| Little alien guys | frip | CC-BY-SA 4.0 | 11 | [opengameart](https://opengameart.org/content/little-alien-guys) | `ennemis/opengameart/little-alien-guys` |
 | Little Grumpy Skull Sprites | bevouliin.com | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/little-grumpy-skull-sprites) | `ennemis/opengameart/little-grumpy-skull-sprites` |
 | Loyalty Lies Monsters - Air Monster 01 | Emerald | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/loyalty-lies-monsters-air-monster-01) | `ennemis/opengameart/loyalty-lies-monsters-air-monster-01` |
 | Loyalty Lies Monsters - Air Monster 02 | Emerald | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/loyalty-lies-monsters-air-monster-02) | `ennemis/opengameart/loyalty-lies-monsters-air-monster-02` |
@@ -514,7 +598,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | [LPC] Monsters | bluecarrot16 | CC-BY-SA 3.0 / GPL 3.0 | 11 | [opengameart](https://opengameart.org/content/lpc-monsters) | `ennemis/opengameart/lpc-monsters` |
 | [LPC] Spider | William.Thompsonj | CC-BY 4.0 / CC-BY 3.0 / GPL 3.0 / GPL 2.0 / OGA-BY 3.0 | 11 | [opengameart](https://opengameart.org/content/lpc-spider) | `ennemis/opengameart/lpc-spider` |
 | [LPC] Wolf Animation | William.Thompsonj | CC-BY 4.0 / CC-BY 3.0 / GPL 3.0 / GPL 2.0 / OGA-BY 3.0 | 7 | [opengameart](https://opengameart.org/content/lpc-wolf-animation) | `ennemis/opengameart/lpc-wolf-animation` |
-| Marshmallow with earphones | bevouliin.com | CC0 | 2 | [opengameart](https://opengameart.org/content/marshmallow-with-earphones) | `ennemis/opengameart/marshmallow-with-earphones` |
 | Minimare Rework | AntumDeluge | CC-BY 3.0 | 14 | [opengameart](https://opengameart.org/content/minimare-rework) | `ennemis/opengameart/minimare-rework` |
 | Monster | usama73041 | CC-BY 4.0 / CC-BY 3.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 / OGA-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/monster-7) | `ennemis/opengameart/monster-7` |
 | Monster Builder Pack | Kenney | CC0 | 360 | [opengameart](https://opengameart.org/content/monster-builder-pack) | `ennemis/opengameart/monster-builder-pack` |
@@ -557,10 +640,8 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Neybits | megupets | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/neybits) | `ennemis/opengameart/neybits` |
 | Nighthawking 2 Battlers | benamas | CC-BY-SA 4.0 | 24 | [opengameart](https://opengameart.org/content/nighthawking-2-battlers) | `ennemis/opengameart/nighthawking-2-battlers` |
 | NPC and Enemies | Refo | CC0 | 1 | [opengameart](https://opengameart.org/content/npc-and-enemies-0) | `ennemis/opengameart/npc-and-enemies-0` |
-| NPC Set 2- Victorian-era German Policeman | Spring Spring | CC-BY 3.0 / CC-BY-SA 3.0 / OGA-BY 3.0 / CC0 | 4 | [opengameart](https://opengameart.org/content/npc-set-2-victorian-era-german-policeman) | `ennemis/opengameart/npc-set-2-victorian-era-german-policeman` |
 | Observers | AntumDeluge | CC-BY 4.0 / CC-BY 3.0 / OGA-BY 3.0 | 5 | [opengameart](https://opengameart.org/content/observers) | `ennemis/opengameart/observers` |
 | Ogre | Julien Brightside | GPL 2.0 | 1 | [opengameart](https://opengameart.org/content/ogre-0) | `ennemis/opengameart/ogre-0` |
-| Oil Geyser | Spring Spring | CC0 | 2 | [opengameart](https://opengameart.org/content/oil-geyser) | `ennemis/opengameart/oil-geyser` |
 | Orc Monster for Rpg or Arpg | CookieEfedu | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/orc-monster-for-rpg-or-arpg) | `ennemis/opengameart/orc-monster-for-rpg-or-arpg` |
 | Painted battlers pack | gilgaphoenixignis | CC-BY 3.0 / CC-BY 4.0 | 12 | [opengameart](https://opengameart.org/content/painted-battlers-pack) | `ennemis/opengameart/painted-battlers-pack` |
 | Pixel Art Bosses | Admurin | CC-BY 4.0 | 57 | [opengameart](https://opengameart.org/content/pixel-art-bosses) | `ennemis/opengameart/pixel-art-bosses` |
@@ -574,7 +655,6 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Rat men, RPG Enemies | Beast | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/rat-men-rpg-enemies) | `ennemis/opengameart/rat-men-rpg-enemies` |
 | Red horned Bee Fly Game Sprites Character | bevouliin.com | CC0 | 3 | [opengameart](https://opengameart.org/content/red-horned-bee-fly-game-sprites-character) | `ennemis/opengameart/red-horned-bee-fly-game-sprites-character` |
 | Redshrike's RPG enemies, NES version | devurandom | CC-BY-SA 3.0 / GPL 3.0 | 1 | [opengameart](https://opengameart.org/content/redshrikes-rpg-enemies-nes-version) | `ennemis/opengameart/redshrikes-rpg-enemies-nes-version` |
-| Retro Demogorgon | SdiviHall | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/retro-demogorgon) | `ennemis/opengameart/retro-demogorgon` |
 | Rice Mage | Chibizilla | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/rice-mage) | `ennemis/opengameart/rice-mage` |
 | Rodents (Rat Rework) | AntumDeluge | CC-BY 3.0 / CC-BY-SA 3.0 | 4 | [opengameart](https://opengameart.org/content/rodents-rat-rework) | `ennemis/opengameart/rodents-rat-rework` |
 | Roguelike Bosses | Joe Williamson | CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/roguelike-bosses) | `ennemis/opengameart/roguelike-bosses` |
@@ -600,15 +680,10 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Stalagmite Monster | Some Weirdo | CC0 | 6 | [opengameart](https://opengameart.org/content/stalagmite-monster) | `ennemis/opengameart/stalagmite-monster` |
 | Steam monster | Blarumyrran | CC0 | 1 | [opengameart](https://opengameart.org/content/steam-monster) | `ennemis/opengameart/steam-monster` |
 | Stendhal Death | StendhalGame | CC-BY-SA 3.0 | 4 | [opengameart](https://opengameart.org/content/stendhal-death) | `ennemis/opengameart/stendhal-death` |
-| Super Dead Gunner: Cyber-tooth (enemy) | Emcee Flesher | OGA-BY 3.0 / CC0 | 3 | [opengameart](https://opengameart.org/content/super-dead-gunner-cyber-tooth-enemy) | `ennemis/opengameart/super-dead-gunner-cyber-tooth-enemy` |
-| Super Dead Gunner: FleaBot Enemy | Emcee Flesher | OGA-BY 3.0 / CC0 | 3 | [opengameart](https://opengameart.org/content/super-dead-gunner-fleabot-enemy) | `ennemis/opengameart/super-dead-gunner-fleabot-enemy` |
-| Super Dead Gunner: New Enemy (Grenade/Mortar guy) | Emcee Flesher | CC-BY 4.0 | 3 | [opengameart](https://opengameart.org/content/super-dead-gunner-new-enemy-grenademortar-guy) | `ennemis/opengameart/super-dead-gunner-new-enemy-grenademortar-guy` |
-| Super Dead Gunner: ReaperBot Enemy | Emcee Flesher | OGA-BY 3.0 / CC0 | 2 | [opengameart](https://opengameart.org/content/super-dead-gunner-reaperbot-enemy) | `ennemis/opengameart/super-dead-gunner-reaperbot-enemy` |
 | The Knight - Free Sprite | pzUH | CC0 | 88 | [opengameart](https://opengameart.org/content/the-knight-free-sprite) | `ennemis/opengameart/the-knight-free-sprite` |
 | The PTSD Demon Pack | Cougarmint | CC-BY 3.0 / OGA-BY 3.0 | 47 | [opengameart](https://opengameart.org/content/the-ptsd-demon-pack) | `ennemis/opengameart/the-ptsd-demon-pack` |
 | Tiny Dungeon | Kenney | CC0 | 136 | [opengameart](https://opengameart.org/content/tiny-dungeon) | `ennemis/opengameart/tiny-dungeon` |
 | Tiny Skelly (RPG Enemies Rework) | AntumDeluge | CC-BY 3.0 / OGA-BY 3.0 | 13 | [opengameart](https://opengameart.org/content/tiny-skelly-rpg-enemies-rework) | `ennemis/opengameart/tiny-skelly-rpg-enemies-rework` |
-| Tiny Town | Kenney | CC0 | 136 | [opengameart](https://opengameart.org/content/tiny-town) | `ennemis/opengameart/tiny-town` |
 | Top down gargant monster, animated | ? | CC-BY 3.0 | 48 | [opengameart](https://opengameart.org/content/top-down-gargant-monster-animated) | `ennemis/opengameart/top-down-gargant-monster-animated` |
 | Top-Down RPG Slime Creatures Pixel Art | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 19 | [opengameart](https://opengameart.org/content/top-down-rpg-slime-creatures-pixel-art) | `ennemis/opengameart/top-down-rpg-slime-creatures-pixel-art` |
 | Tower defense slime enemy | Tisroc | CC0 | 7 | [opengameart](https://opengameart.org/content/tower-defense-slime-enemy) | `ennemis/opengameart/tower-defense-slime-enemy` |
@@ -626,19 +701,24 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | Wolf Game Character | Segel | CC0 | 44 | [opengameart](https://opengameart.org/content/wolf-game-character) | `ennemis/opengameart/wolf-game-character` |
 | Zombie and Skeleton 32x48 | Reemax | CC0 | 1 | [opengameart](https://opengameart.org/content/zombie-and-skeleton-32x48) | `ennemis/opengameart/zombie-and-skeleton-32x48` |
 | Zombie Character | Segel | CC0 | 44 | [opengameart](https://opengameart.org/content/zombie-character) | `ennemis/opengameart/zombie-character` |
+| Aekashics Librarium - Librarium Animated Dragonbones Megapack | aekashics | conditions de l'auteur (SOURCE.txt) | 68 | [itch](https://aekashics.itch.io/librariumnimatedmegapack) | `ennemis/itch/aekashics__librariumnimatedmegapack` |
 | RPG Enemy Character Assets — Free Sample Pack (Rotating) | ainero | conditions de l'auteur (SOURCE.txt) | 41 | [itch](https://ainero.itch.io/rpg-enemy-assets-sample) | `ennemis/itch/ainero__rpg-enemy-assets-sample` |
 | Elemental Queers Portrait Pack | aubsickle | conditions de l'auteur (SOURCE.txt) | 214 | [itch](https://aubsickle.itch.io/elemental-queers-portrait-pack) | `ennemis/itch/aubsickle__elemental-queers-portrait-pack` |
+| Bringer Of Death (Free) | clembod | conditions de l'auteur (SOURCE.txt) | 114 | [itch](https://clembod.itch.io/bringer-of-death-free) | `ennemis/itch/clembod__bringer-of-death-free` |
 | RPG Maker MZ Free Orc Character Sprites & Faceset | galacticgod | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://galacticgod.itch.io/rpg-maker-mz-free-orc-character-sprites-faceset) | `ennemis/itch/galacticgod__rpg-maker-mz-free-orc-character-sprites-faceset` |
 | RPG Maker NPC Character Set - Orc | galacticgod | conditions de l'auteur (SOURCE.txt) | 3 | [itch](https://galacticgod.itch.io/rpg-maker-npc-character-set-orc) | `ennemis/itch/galacticgod__rpg-maker-npc-character-set-orc` |
 | Free Pixel Art Monster Portraits: 35 Portraits, 136 px | gegx | conditions de l'auteur (SOURCE.txt) | 35 | [itch](https://gegx.itch.io/monster-portraits-free) | `ennemis/itch/gegx__monster-portraits-free` |
 | RPG Maker MV Goblin characters | happyfox123 | conditions de l'auteur (SOURCE.txt) | 81 | [itch](https://happyfox123.itch.io/goblin-characters) | `ennemis/itch/happyfox123__goblin-characters` |
 | RPG Maker MV mimic characters | happyfox123 | conditions de l'auteur (SOURCE.txt) | 8 | [itch](https://happyfox123.itch.io/mimic-characters) | `ennemis/itch/happyfox123__mimic-characters` |
-| Hexany&#039;s Monster Menagerie | hexany-ives | conditions de l'auteur (SOURCE.txt) | 236 | [itch](https://hexany-ives.itch.io/hexanys-monster-menagerie) | `ennemis/itch/hexany-ives__hexanys-monster-menagerie` |
+| Hexany's Monster Menagerie | hexany-ives | conditions de l'auteur (SOURCE.txt) | 236 | [itch](https://hexany-ives.itch.io/hexanys-monster-menagerie) | `ennemis/itch/hexany-ives__hexanys-monster-menagerie` |
+| Holder - XP | holder-anibat | conditions de l'auteur (SOURCE.txt) | 252 | [itch](https://holder-anibat.itch.io/holder-legend-of-xp) | `ennemis/itch/holder-anibat__holder-legend-of-xp` |
 | Holder - Free Enemies | holder-anibat | conditions de l'auteur (SOURCE.txt) | 634 | [itch](https://holder-anibat.itch.io/holders-animated-battlers-free-enemies-pack-1) | `ennemis/itch/holder-anibat__holders-animated-battlers-free-enemies-pack-1` |
+| Minifantasy🧌Creatures | krishna-palacio | conditions de l'auteur (SOURCE.txt) | 494 | [itch](https://krishna-palacio.itch.io/minifantasy-creatures) | `ennemis/itch/krishna-palacio__minifantasy-creatures` |
 | [32x32] 31 RPG Battlers + 62 recolorings | limezu | conditions de l'auteur (SOURCE.txt) | 66 | [itch](https://limezu.itch.io/21rpg-battlers) | `ennemis/itch/limezu__21rpg-battlers` |
 | [32x32] 21 RPG Battlers + 42 recolorings [PT 2] | limezu | conditions de l'auteur (SOURCE.txt) | 51 | [itch](https://limezu.itch.io/32x32-21-rpg-battlers-42-recolorings-pt-2) | `ennemis/itch/limezu__32x32-21-rpg-battlers-42-recolorings-pt-2` |
 | RPG Fantasy Battlers | limezu | conditions de l'auteur (SOURCE.txt) | 46 | [itch](https://limezu.itch.io/fantasy-battlers) | `ennemis/itch/limezu__fantasy-battlers` |
 | [32x32+] 17 RPG Battlers + 33 recolorings [PT 3] | limezu | conditions de l'auteur (SOURCE.txt) | 53 | [itch](https://limezu.itch.io/rpg-battlers-3) | `ennemis/itch/limezu__rpg-battlers-3` |
+| Monsters Creatures Fantasy | luizmelo | conditions de l'auteur (SOURCE.txt) | 33 | [itch](https://luizmelo.itch.io/monsters-creatures-fantasy) | `ennemis/itch/luizmelo__monsters-creatures-fantasy` |
 | Cats and Only Cats! | marquise-2d | conditions de l'auteur (SOURCE.txt) | 94 | [itch](https://marquise-2d.itch.io/cats-and-only-cats) | `ennemis/itch/marquise-2d__cats-and-only-cats` |
 | Mega Elementals and Wisps 2D Battlers Package | ministerjay | conditions de l'auteur (SOURCE.txt) | 27 | [itch](https://ministerjay.itch.io/mega-elemental-and-wisps-2d-battlers-package) | `ennemis/itch/ministerjay__mega-elemental-and-wisps-2d-battlers-package` |
 | Free Fantasy Enemy Monster Asset Pack: Boss Expansion Vol.06 | miraeru | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://miraeru.itch.io/free-fantasy-enemy-monster-asset-pack-boss-expansion-vol06) | `ennemis/itch/miraeru__free-fantasy-enemy-monster-asset-pack-boss-expansion-vol06` |
@@ -666,13 +746,237 @@ Laissés de côté : les packs sans conditions écrites, les personnages de lice
 | JS Actors - Aeon Warriors Field & Battle Sprites | JosephSeraph | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/js-actors-aeon-warriors-field-battle-sprites) | `sv_battlers/opengameart/js-actors-aeon-warriors-field-battle-sprites` |
 | Lizardman | Madjestiko | CC-BY 4.0 | 6 | [opengameart](https://opengameart.org/content/lizardman-1) | `sv_battlers/opengameart/lizardman-1` |
 
+## Effets de sorts et animations (feu, glace, foudre, soins, auras, coups) — 197 packs, 23091 images
+
+| Titre | Auteur | Licence | Images | Source | Dossier |
+|---|---|---|---|---|---|
+| 🔥 Magic Flameblade - Pixel Art Animation | VoyPix | CC-BY 4.0 | 6 | [opengameart](https://opengameart.org/content/%F0%9F%94%A5-magic-flameblade-pixel-art-animation) | `effets_et_sorts/opengameart/%F0%9F%94%A5-magic-flameblade-pixel-art-animation` |
+| 12 Elemental Type Symbols/Icons | RogimonDev | CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/12-elemental-type-symbolsicons) | `effets_et_sorts/opengameart/12-elemental-type-symbolsicons` |
+| [1/5] Pixel Art - Magic girl - Idle, Walk | CatOnKeyboard | CC-BY 4.0 | 5 | [opengameart](https://opengameart.org/content/15-pixel-art-magic-girl-idle-walk) | `effets_et_sorts/opengameart/15-pixel-art-magic-girl-idle-walk` |
+| 16x18 Character Base Template Collage | CruzR | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/16x18-character-base-template-collage) | `effets_et_sorts/opengameart/16x18-character-base-template-collage` |
+| 2D Character / Monk | rehcub | CC0 | 6 | [opengameart](https://opengameart.org/content/2d-character-monk) | `effets_et_sorts/opengameart/2d-character-monk` |
+| 2D Pixel Fire Sprite Strip | Color Optimist | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/2d-pixel-fire-sprite-strip) | `effets_et_sorts/opengameart/2d-pixel-fire-sprite-strip` |
+| 4 elements 8x10px | Aldschutze | CC0 | 4 | [opengameart](https://opengameart.org/content/4-elements-8x10px) | `effets_et_sorts/opengameart/4-elements-8x10px` |
+| 48 Paladin Skills | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 48 | [opengameart](https://opengameart.org/content/48-paladin-skills) | `effets_et_sorts/opengameart/48-paladin-skills` |
+| 5x special effects - 2D | rubberduck | CC0 | 57 | [opengameart](https://opengameart.org/content/5x-special-effects-2d) | `effets_et_sorts/opengameart/5x-special-effects-2d` |
+| A few spell icons | Daft-Freak | CC-BY 4.0 | 4 | [opengameart](https://opengameart.org/content/a-few-spell-icons) | `effets_et_sorts/opengameart/a-few-spell-icons` |
+| Admurin's Skill Icons | Admurin | CC-BY-SA 4.0 | 1 | [opengameart](https://opengameart.org/content/admurins-skill-icons) | `effets_et_sorts/opengameart/admurins-skill-icons` |
+| Alot of Particles Flash in - Fade Out special effect | JoesAlotofthings | CC-BY 4.0 | 5 | [opengameart](https://opengameart.org/content/alot-of-particles-flash-in-fade-out-special-effect) | `effets_et_sorts/opengameart/alot-of-particles-flash-in-fade-out-special-effect` |
+| AlotofImpacts - Something Different - 15 Frame Dual Color Impact/explosion. Impacts-12of20 | JoesAlotofthings | CC-BY 4.0 | 3 | [opengameart](https://opengameart.org/content/alotofimpacts-something-different-15-frame-dual-color-impactexplosion-impacts-12of20) | `effets_et_sorts/opengameart/alotofimpacts-something-different-15-frame-dual-color-impact` |
+| Ancient Aztec Shaman | killyoverdrive | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/ancient-aztec-shaman) | `effets_et_sorts/opengameart/ancient-aztec-shaman` |
+| Angel Shield Effect | Cethiel | CC0 | 42 | [opengameart](https://opengameart.org/content/angel-shield-effect) | `effets_et_sorts/opengameart/angel-shield-effect` |
+| Angel Wings Effect | Cethiel | CC0 | 41 | [opengameart](https://opengameart.org/content/angel-wings-effect) | `effets_et_sorts/opengameart/angel-wings-effect` |
+| Animated Demonic Bows | ScratchIO | CC0 | 17 | [opengameart](https://opengameart.org/content/animated-demonic-bows) | `effets_et_sorts/opengameart/animated-demonic-bows` |
+| Animated Frost Bolt Triple | Varkalandar | CC-BY 4.0 / CC-BY 3.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 / OGA-BY 3.0 | 48 | [opengameart](https://opengameart.org/content/animated-frost-bolt-triple) | `effets_et_sorts/opengameart/animated-frost-bolt-triple` |
+| Animated OpenGameArt Splash Screen | AbiDrew | CC-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/animated-opengameart-splash-screen) | `effets_et_sorts/opengameart/animated-opengameart-splash-screen` |
+| Animated Transitions Pack | Screaming Brain Studios | CC0 | 1214 | [opengameart](https://opengameart.org/content/animated-transitions-pack) | `effets_et_sorts/opengameart/animated-transitions-pack` |
+| Animations - Blood, Hit and Both :D | Sinestesia | CC0 | 3 | [opengameart](https://opengameart.org/content/animations-blood-hit-and-both-d) | `effets_et_sorts/opengameart/animations-blood-hit-and-both-d` |
+| Another Pixel Explosion | Spring Spring | CC0 | 1 | [opengameart](https://opengameart.org/content/another-pixel-explosion) | `effets_et_sorts/opengameart/another-pixel-explosion` |
+| Arcane Magic Effect | Cethiel | CC0 | 42 | [opengameart](https://opengameart.org/content/arcane-magic-effect) | `effets_et_sorts/opengameart/arcane-magic-effect` |
+| Attack animation | bellow | CC-BY 3.0 | 13 | [opengameart](https://opengameart.org/content/attack-animation) | `effets_et_sorts/opengameart/attack-animation` |
+| barrier - sprite sheet | gfroad | CC0 | 1 | [opengameart](https://opengameart.org/content/barrier-sprite-sheet) | `effets_et_sorts/opengameart/barrier-sprite-sheet` |
+| Basic Pixel Animated Spells | beddedOtaku | CC0 | 9 | [opengameart](https://opengameart.org/content/basic-pixel-animated-spells) | `effets_et_sorts/opengameart/basic-pixel-animated-spells` |
+| Blood - Magic Effect | Cethiel | CC0 | 26 | [opengameart](https://opengameart.org/content/blood-magic-effect) | `effets_et_sorts/opengameart/blood-magic-effect` |
+| Camp Fire Animation for RPGs (finished) | Zabin | CC-BY-SA 3.0 | 4 | [opengameart](https://opengameart.org/content/camp-fire-animation-for-rpgs-finished) | `effets_et_sorts/opengameart/camp-fire-animation-for-rpgs-finished` |
+| Character Animations (Caveman) | Chasersgaming | CC0 | 2 | [opengameart](https://opengameart.org/content/character-animations-caveman) | `effets_et_sorts/opengameart/character-animations-caveman` |
+| Circles Glow | Buch | GPL 2.0 / GPL 3.0 / CC-BY-SA 3.0 | 4 | [opengameart](https://opengameart.org/content/circles-glow) | `effets_et_sorts/opengameart/circles-glow` |
+| Coffee | Aeynit | CC-BY 4.0 | 18 | [opengameart](https://opengameart.org/content/coffee) | `effets_et_sorts/opengameart/coffee` |
+| Cosmic Time - Magic Effect | Cethiel | CC0 | 26 | [opengameart](https://opengameart.org/content/cosmic-time-magic-effect) | `effets_et_sorts/opengameart/cosmic-time-magic-effect` |
+| Crazy Wizard | Merry Dream Games | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/crazy-wizard) | `effets_et_sorts/opengameart/crazy-wizard` |
+| Dark Magic Wizard Hikari | qubodup | CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/dark-magic-wizard-hikari) | `effets_et_sorts/opengameart/dark-magic-wizard-hikari` |
+| Demon/Devil Head | LoyalTopHat | CC0 | 2 | [opengameart](https://opengameart.org/content/demondevil-head) | `effets_et_sorts/opengameart/demondevil-head` |
+| Demon/Devil Summoning | LoyalTopHat | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/demondevil-summoning) | `effets_et_sorts/opengameart/demondevil-summoning` |
+| Double Slash Animation | MoikMellah | CC0 | 1 | [opengameart](https://opengameart.org/content/double-slash-animation) | `effets_et_sorts/opengameart/double-slash-animation` |
+| Earth Impact - Magic Effect | Cethiel | CC0 | 26 | [opengameart](https://opengameart.org/content/earth-impact-magic-effect) | `effets_et_sorts/opengameart/earth-impact-magic-effect` |
+| Elemental Weapons - Effect | Cethiel | CC0 | 74 | [opengameart](https://opengameart.org/content/elemental-weapons-effect) | `effets_et_sorts/opengameart/elemental-weapons-effect` |
+| Explosion effects and more | Soluna Software | CC-BY 3.0 / CC0 | 5 | [opengameart](https://opengameart.org/content/explosion-effects-and-more) | `effets_et_sorts/opengameart/explosion-effects-and-more` |
+| Extended LPC Magic pack | daneeklu | CC-BY-SA 3.0 / GPL 3.0 | 34 | [opengameart](https://opengameart.org/content/extended-lpc-magic-pack) | `effets_et_sorts/opengameart/extended-lpc-magic-pack` |
+| Fantasy RPG Icons 3 | Drummyfish | CC0 | 12 | [opengameart](https://opengameart.org/content/fantasy-rpg-icons-3) | `effets_et_sorts/opengameart/fantasy-rpg-icons-3` |
+| FIre and Spell Animations | ztn | CC0 | 439 | [opengameart](https://opengameart.org/content/fire-and-spell-animations) | `effets_et_sorts/opengameart/fire-and-spell-animations` |
+| Fire Aura (Compatible with FLARE) | astiar_rpg | CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/fire-aura-compatible-with-flare) | `effets_et_sorts/opengameart/fire-aura-compatible-with-flare` |
+| Fire Dragon Roller | Nineball | CC0 | 1 | [opengameart](https://opengameart.org/content/fire-dragon-roller) | `effets_et_sorts/opengameart/fire-dragon-roller` |
+| Fire Spell Explosion | Clint Bellanger | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/fire-spell-explosion) | `effets_et_sorts/opengameart/fire-spell-explosion` |
+| Fire Spell Icon Pack | beddedOtaku | CC0 | 13 | [opengameart](https://opengameart.org/content/fire-spell-icon-pack) | `effets_et_sorts/opengameart/fire-spell-icon-pack` |
+| fire trap rune animation - sprite sheet | gfroad | CC0 | 1 | [opengameart](https://opengameart.org/content/fire-trap-rune-animation-sprite-sheet) | `effets_et_sorts/opengameart/fire-trap-rune-animation-sprite-sheet` |
+| Fire Wrath - Magic Effect | Cethiel | CC0 | 27 | [opengameart](https://opengameart.org/content/fire-wrath-magic-effect) | `effets_et_sorts/opengameart/fire-wrath-magic-effect` |
+| Fireball Effect - 2 | Cethiel | CC0 | 25 | [opengameart](https://opengameart.org/content/fireball-effect-2) | `effets_et_sorts/opengameart/fireball-effect-2` |
+| Fireworks Effect Spritesheet | jellyfizh | CC0 | 1 | [opengameart](https://opengameart.org/content/fireworks-effect-spritesheet) | `effets_et_sorts/opengameart/fireworks-effect-spritesheet` |
+| FLARE Mod - Werewolf | VWolfdog | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/flare-mod-werewolf) | `effets_et_sorts/opengameart/flare-mod-werewolf` |
+| Gold Coins Animation -frame by frame- | Sinestesia | CC0 | 1 | [opengameart](https://opengameart.org/content/gold-coins-animation-frame-by-frame) | `effets_et_sorts/opengameart/gold-coins-animation-frame-by-frame` |
+| Gold Treasure icons | Clint Bellanger | CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/gold-treasure-icons) | `effets_et_sorts/opengameart/gold-treasure-icons` |
+| Gothicvania Magic Pack 9 | ansimuz | CC0 | 54 | [opengameart](https://opengameart.org/content/gothicvania-magic-pack-9) | `effets_et_sorts/opengameart/gothicvania-magic-pack-9` |
+| Hayden, the Malicious Little Puppydog | Spring Spring | CC-BY 3.0 / CC-BY-SA 3.0 | 8 | [opengameart](https://opengameart.org/content/hayden-the-malicious-little-puppydog) | `effets_et_sorts/opengameart/hayden-the-malicious-little-puppydog` |
+| Heart Achievement Effect Animation | jellyfizh | CC0 | 1 | [opengameart](https://opengameart.org/content/heart-achievement-effect-animation) | `effets_et_sorts/opengameart/heart-achievement-effect-animation` |
+| Ice Sparkles Overlay Effect | AntumDeluge | CC-BY 3.0 / OGA-BY 3.0 / OGA-BY 4.0 / CC-BY 4.0 | 1 | [opengameart](https://opengameart.org/content/ice-sparkles-overlay-effect) | `effets_et_sorts/opengameart/ice-sparkles-overlay-effect` |
+| Ice spell | nazzyc | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/ice-spell) | `effets_et_sorts/opengameart/ice-spell` |
+| Ice Spell Icons | HorrorPen | CC-BY 3.0 | 8 | [opengameart](https://opengameart.org/content/ice-spell-icons) | `effets_et_sorts/opengameart/ice-spell-icons` |
+| Icons | nazzyc | CC-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/icons) | `effets_et_sorts/opengameart/icons` |
+| Icons - Dark Magic | Cethiel | CC0 | 9 | [opengameart](https://opengameart.org/content/icons-dark-magic) | `effets_et_sorts/opengameart/icons-dark-magic` |
+| Light - Magic Effect | Cethiel | CC0 | 26 | [opengameart](https://opengameart.org/content/light-magic-effect) | `effets_et_sorts/opengameart/light-magic-effect` |
+| Lots of game effects | Soluna Software | CC0 | 5 | [opengameart](https://opengameart.org/content/lots-of-game-effects) | `effets_et_sorts/opengameart/lots-of-game-effects` |
+| [LPC] Jump! (expanded) | Death&#039;s Darling | CC-BY-SA 3.0 / GPL 3.0 / OGA-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/lpc-jump-expanded) | `effets_et_sorts/opengameart/lpc-jump-expanded` |
+| [LPC] Misc animations and items | ak-blanc | CC-BY-SA 3.0 / GPL 3.0 | 10 | [opengameart](https://opengameart.org/content/lpc-misc-animations-and-items) | `effets_et_sorts/opengameart/lpc-misc-animations-and-items` |
+| Magic and Smoke Effect | StumpyStrust | CC0 | 11 | [opengameart](https://opengameart.org/content/magic-and-smoke-effect) | `effets_et_sorts/opengameart/magic-and-smoke-effect` |
+| Magic spell icons | steefie92 | CC0 | 1 | [opengameart](https://opengameart.org/content/magic-spell-icons) | `effets_et_sorts/opengameart/magic-spell-icons` |
+| Magic Summoning Circle | City Building Game Art | CC0 | 1 | [opengameart](https://opengameart.org/content/magic-summoning-circle) | `effets_et_sorts/opengameart/magic-summoning-circle` |
+| Magical Orbs Pack | BorisMedvedev | CC0 | 9 | [opengameart](https://opengameart.org/content/magical-orbs-pack) | `effets_et_sorts/opengameart/magical-orbs-pack` |
+| Michael | Aezur | CC0 | 1 | [opengameart](https://opengameart.org/content/michael) | `effets_et_sorts/opengameart/michael` |
+| Modified And Cliped Magic, Skill & Item Icons | pauliuw | CC0 | 582 | [opengameart](https://opengameart.org/content/modified-and-cliped-magic-skill-item-icons) | `effets_et_sorts/opengameart/modified-and-cliped-magic-skill-item-icons` |
+| More Explosions | StumpyStrust | CC0 | 6 | [opengameart](https://opengameart.org/content/more-explosions) | `effets_et_sorts/opengameart/more-explosions` |
+| Multiple Colors of Sparkle Animations | VWolfdog | CC0 | 350 | [opengameart](https://opengameart.org/content/multiple-colors-of-sparkle-animations) | `effets_et_sorts/opengameart/multiple-colors-of-sparkle-animations` |
+| Nature - Magic Effect | Cethiel | CC0 | 25 | [opengameart](https://opengameart.org/content/nature-magic-effect) | `effets_et_sorts/opengameart/nature-magic-effect` |
+| Open book | Santoniche | CC-BY 4.0 | 2 | [opengameart](https://opengameart.org/content/open-book-1) | `effets_et_sorts/opengameart/open-book-1` |
+| Orbs Collection | Cethiel | CC0 | 19 | [opengameart](https://opengameart.org/content/orbs-collection) | `effets_et_sorts/opengameart/orbs-collection` |
+| Painterly Spell Icons part 1 | eleazzaar | CC-BY 3.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 | 81 | [opengameart](https://opengameart.org/content/painterly-spell-icons-part-1) | `effets_et_sorts/opengameart/painterly-spell-icons-part-1` |
+| Painterly Spell Icons part 2 | eleazzaar | CC-BY 3.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 / GPL 2.0 | 99 | [opengameart](https://opengameart.org/content/painterly-spell-icons-part-2) | `effets_et_sorts/opengameart/painterly-spell-icons-part-2` |
+| Painterly Spell Icons part 4 | eleazzaar | CC-BY 3.0 / CC-BY-SA 4.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 | 150 | [opengameart](https://opengameart.org/content/painterly-spell-icons-part-4) | `effets_et_sorts/opengameart/painterly-spell-icons-part-4` |
+| Particle Pack (80+ sprites) | Kenney | CC0 | 97 | [opengameart](https://opengameart.org/content/particle-pack-80-sprites) | `effets_et_sorts/opengameart/particle-pack-80-sprites` |
+| PickUp Items - Icons | Cethiel | CC0 | 9 | [opengameart](https://opengameart.org/content/pickup-items-icons) | `effets_et_sorts/opengameart/pickup-items-icons` |
+| Pixel Art Heal Skill Icons | DustDFG | CC0 | 1 | [opengameart](https://opengameart.org/content/pixel-art-heal-skill-icons) | `effets_et_sorts/opengameart/pixel-art-heal-skill-icons` |
+| Pixel Art Spells | DevWizard | CC0 | 22 | [opengameart](https://opengameart.org/content/pixel-art-spells) | `effets_et_sorts/opengameart/pixel-art-spells` |
+| Pixel art sword slash effect | tbbk | CC0 | 1 | [opengameart](https://opengameart.org/content/pixel-art-sword-slash-effect) | `effets_et_sorts/opengameart/pixel-art-sword-slash-effect` |
+| Pixel Mage | tbbk | CC0 | 1 | [opengameart](https://opengameart.org/content/pixel-mage) | `effets_et_sorts/opengameart/pixel-mage` |
+| Pure Projectile - Magic Effect | Cethiel | CC0 | 26 | [opengameart](https://opengameart.org/content/pure-projectile-magic-effect) | `effets_et_sorts/opengameart/pure-projectile-magic-effect` |
+| Radial lightning effect | 13rice | CC0 | 4 | [opengameart](https://opengameart.org/content/radial-lightning-effect) | `effets_et_sorts/opengameart/radial-lightning-effect` |
+| Resurrection Spell [SFX] | One Man Army | CC0 | 4 | [opengameart](https://opengameart.org/content/resurrection-spell-sfx) | `effets_et_sorts/opengameart/resurrection-spell-sfx` |
+| RPG Special Move Effects | Brett Post Script | CC-BY-SA 3.0 | 33 | [opengameart](https://opengameart.org/content/rpg-special-move-effects) | `effets_et_sorts/opengameart/rpg-special-move-effects` |
+| Shield Aura Effect | sholev | CC-BY 3.0 | 3 | [opengameart](https://opengameart.org/content/shield-aura-effect) | `effets_et_sorts/opengameart/shield-aura-effect` |
+| Shining coin Shining Health Shining Power Up Sprite Sheets | bevouliin.com | CC0 | 31 | [opengameart](https://opengameart.org/content/shining-coin-shining-health-shining-power-up-sprite-sheets) | `effets_et_sorts/opengameart/shining-coin-shining-health-shining-power-up-sprite-sheets` |
+| SImple spell effect | LetargicDev | CC0 | 7 | [opengameart](https://opengameart.org/content/simple-spell-effect) | `effets_et_sorts/opengameart/simple-spell-effect` |
+| Slash effect | MetaShinryu | CC0 | 4 | [opengameart](https://opengameart.org/content/slash-effect) | `effets_et_sorts/opengameart/slash-effect` |
+| Slash Effect Collection | MetaShinryu | CC0 | 49 | [opengameart](https://opengameart.org/content/slash-effect-collection) | `effets_et_sorts/opengameart/slash-effect-collection` |
+| Smoke Aura | Beast | CC0 | 94 | [opengameart](https://opengameart.org/content/smoke-aura) | `effets_et_sorts/opengameart/smoke-aura` |
+| Spell Animation Effects Pack 1 | The Retro Gaming Legacy | CC-BY-SA 3.0 | 18 | [opengameart](https://opengameart.org/content/spell-animation-effects-pack-1) | `effets_et_sorts/opengameart/spell-animation-effects-pack-1` |
+| Spell animation spritesheets | Unnamed | CC-BY 4.0 | 24 | [opengameart](https://opengameart.org/content/spell-animation-spritesheets) | `effets_et_sorts/opengameart/spell-animation-spritesheets` |
+| Spell Effects by StarsteelGaming | StarsteelGaming | CC0 | 23 | [opengameart](https://opengameart.org/content/spell-effects-by-starsteelgaming) | `effets_et_sorts/opengameart/spell-effects-by-starsteelgaming` |
+| Spell icon collection - part 1 | ? | CC-BY 3.0 | 38 | [opengameart](https://opengameart.org/content/spell-icon-collection-part-1) | `effets_et_sorts/opengameart/spell-icon-collection-part-1` |
+| Spell icon collection - part 2 | ? | CC-BY 3.0 | 28 | [opengameart](https://opengameart.org/content/spell-icon-collection-part-2) | `effets_et_sorts/opengameart/spell-icon-collection-part-2` |
+| Spell icon collection - part 3 | ? | CC-BY 3.0 | 38 | [opengameart](https://opengameart.org/content/spell-icon-collection-part-3) | `effets_et_sorts/opengameart/spell-icon-collection-part-3` |
+| Spell icon collection - part 4 | ? | CC-BY 3.0 | 36 | [opengameart](https://opengameart.org/content/spell-icon-collection-part-4) | `effets_et_sorts/opengameart/spell-icon-collection-part-4` |
+| spell set | Scribe | CC0 | 59 | [opengameart](https://opengameart.org/content/spell-set) | `effets_et_sorts/opengameart/spell-set` |
+| Spellbound Icon | Mumu | CC0 | 6 | [opengameart](https://opengameart.org/content/spellbound-icon) | `effets_et_sorts/opengameart/spellbound-icon` |
+| Technomages Book of Flames | Varkalandar | CC-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0 / GPL 2.0 / OGA-BY 3.0 | 2 | [opengameart](https://opengameart.org/content/technomages-book-of-flames) | `effets_et_sorts/opengameart/technomages-book-of-flames` |
+| teleport circle - sprite sheet | gfroad | CC0 | 1 | [opengameart](https://opengameart.org/content/teleport-circle-sprite-sheet) | `effets_et_sorts/opengameart/teleport-circle-sprite-sheet` |
+| The Last Element - Elemental beads | SCaydi | GPL 3.0 / GPL 2.0 | 1 | [opengameart](https://opengameart.org/content/the-last-element-elemental-beads) | `effets_et_sorts/opengameart/the-last-element-elemental-beads` |
+| Underworld Armor (Pixel-Art) | ScratchIO | CC0 | 1 | [opengameart](https://opengameart.org/content/underworld-armor-pixel-art) | `effets_et_sorts/opengameart/underworld-armor-pixel-art` |
+| Water Magic Effect | Cethiel | CC0 | 25 | [opengameart](https://opengameart.org/content/water-magic-effect) | `effets_et_sorts/opengameart/water-magic-effect` |
+| Weapon Slash - Effect | Cethiel | CC0 | 249 | [opengameart](https://opengameart.org/content/weapon-slash-effect) | `effets_et_sorts/opengameart/weapon-slash-effect` |
+| WGStudio - Fire Animation Loop | Retimer | CC-BY 3.0 | 652 | [opengameart](https://opengameart.org/content/wgstudio-fire-animation-loop) | `effets_et_sorts/opengameart/wgstudio-fire-animation-loop` |
+| Whirlwind | Spring Spring | CC-BY 3.0 / CC-BY-SA 3.0 | 1 | [opengameart](https://opengameart.org/content/whirlwind) | `effets_et_sorts/opengameart/whirlwind` |
+| Wizard Essentials | Creomoto | CC0 | 5 | [opengameart](https://opengameart.org/content/wizard-essentials) | `effets_et_sorts/opengameart/wizard-essentials` |
+| Wizzard animation | keeboii | CC0 | 1 | [opengameart](https://opengameart.org/content/wizzard-animation) | `effets_et_sorts/opengameart/wizzard-animation` |
+| Fantasy Knight - Free Pixelart Animated Character | aamatniekss | conditions de l'auteur (SOURCE.txt) | 242 | [itch](https://aamatniekss.itch.io/fantasy-knight-free-pixelart-animated-character) | `effets_et_sorts/itch/aamatniekss__fantasy-knight-free-pixelart-animated-character` |
+| º Animated Graveyard Goon º | admurin | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://admurin.itch.io/graveyard-goon) | `effets_et_sorts/itch/admurin__graveyard-goon` |
+| 40 Pixel Art Atmospheric VFX Pack | alenia-studios | conditions de l'auteur (SOURCE.txt) | 2480 | [itch](https://alenia-studios.itch.io/10-pixel-art-atmospheric-vfx-pack) | `effets_et_sorts/itch/alenia-studios__10-pixel-art-atmospheric-vfx-pack` |
+| RPG Maker MV Better Snow | alexxisaaps | conditions de l'auteur (SOURCE.txt) | 76 | [itch](https://alexxisaaps.itch.io/rpgmvbettersnow) | `effets_et_sorts/itch/alexxisaaps__rpgmvbettersnow` |
+| 750 Effect and FX Pixel All | bdragon1727 | conditions de l'auteur (SOURCE.txt) | 196 | [itch](https://bdragon1727.itch.io/750-effect-and-fx-pixel-all) | `effets_et_sorts/itch/bdragon1727__750-effect-and-fx-pixel-all` |
+| Art Of Scrolls | bigwander | conditions de l'auteur (SOURCE.txt) | 83 | [itch](https://bigwander.itch.io/the-art-of-scrolls) | `effets_et_sorts/itch/bigwander__the-art-of-scrolls` |
+| Dark Ritual starter pack | bigwander | conditions de l'auteur (SOURCE.txt) | 83 | [itch](https://bigwander.itch.io/the-dark-ritual) | `effets_et_sorts/itch/bigwander__the-dark-ritual` |
+| Tiny Tomes  (Only Sprites) | bigwander | conditions de l'auteur (SOURCE.txt) | 103 | [itch](https://bigwander.itch.io/tiny-tomes) | `effets_et_sorts/itch/bigwander__tiny-tomes` |
+| 32 Magic Books- Pixelart / Pixel Art sprite Magic Grimoire Pack for RPG fantasy | captainskolot | conditions de l'auteur (SOURCE.txt) | 41 | [itch](https://captainskolot.itch.io/magic-books-pixelart-pixel-art-sprite-grimoire-pack-for-rpg-fantasy) | `effets_et_sorts/itch/captainskolot__magic-books-pixelart-pixel-art-sprite-grimoire-pack-for` |
+| Attacks, Explosions and Misc pixel VFX pack [SPRITES][FREE] | combosmooth | conditions de l'auteur (SOURCE.txt) | 136 | [itch](https://combosmooth.itch.io/vfx-pack) | `effets_et_sorts/itch/combosmooth__vfx-pack` |
+| CC0 Hand-drawn Fantasy Icon Pack | comigo | conditions de l'auteur (SOURCE.txt) | 539 | [itch](https://comigo.itch.io/fantasy-icons-ink) | `effets_et_sorts/itch/comigo__fantasy-icons-ink` |
+| Flying Obelisk | creativekind | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://creativekind.itch.io/flying-obelisk) | `effets_et_sorts/itch/creativekind__flying-obelisk` |
+| BloodMoon Tower (Free) | creativekind | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://creativekind.itch.io/gif-bloodmoon-tower-free) | `effets_et_sorts/itch/creativekind__gif-bloodmoon-tower-free` |
+| Necromancer (Free) | creativekind | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://creativekind.itch.io/necromancer-free) | `effets_et_sorts/itch/creativekind__necromancer-free` |
+| Free NPC mage | creativekind | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://creativekind.itch.io/npc-mage-free) | `effets_et_sorts/itch/creativekind__npc-mage-free` |
+| TTrpg Legacy - Books and Papers #1 | ddant1100 | conditions de l'auteur (SOURCE.txt) | 115 | [itch](https://ddant1100.itch.io/ttrpg-legacy-books-and-papers-1) | `effets_et_sorts/itch/ddant1100__ttrpg-legacy-books-and-papers-1` |
+| 2D Pixel Art Totem Sprites | elthen | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://elthen.itch.io/2d) | `effets_et_sorts/itch/elthen__2d` |
+| 2D Pixel Art Portal Sprites | elthen | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://elthen.itch.io/2d-pixel-art-portal-sprites) | `effets_et_sorts/itch/elthen__2d-pixel-art-portal-sprites` |
+| Lucifer - Effects | foozlecc | conditions de l'auteur (SOURCE.txt) | 19 | [itch](https://foozlecc.itch.io/lucifer-effects) | `effets_et_sorts/itch/foozlecc__lucifer-effects` |
+| Pixel Magic Effects | foozlecc | conditions de l'auteur (SOURCE.txt) | 112 | [itch](https://foozlecc.itch.io/pixel-magic-sprite-effects) | `effets_et_sorts/itch/foozlecc__pixel-magic-sprite-effects` |
+| Fantasy Pixel Art Eggs | frostwindz | conditions de l'auteur (SOURCE.txt) | 21 | [itch](https://frostwindz.itch.io/fantasy-pixel-art-eggs) | `effets_et_sorts/itch/frostwindz__fantasy-pixel-art-eggs` |
+| Pixel Art VFX - Halloween | frostwindz | conditions de l'auteur (SOURCE.txt) | 81 | [itch](https://frostwindz.itch.io/pixel-art-animations-halloween) | `effets_et_sorts/itch/frostwindz__pixel-art-animations-halloween` |
+| Pixel Art Fantasy Animated Portal | frostwindz | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://frostwindz.itch.io/pixel-art-fantasy-animated-portal) | `effets_et_sorts/itch/frostwindz__pixel-art-fantasy-animated-portal` |
+| Pixel Art VFX - Lightning | frostwindz | conditions de l'auteur (SOURCE.txt) | 42 | [itch](https://frostwindz.itch.io/pixel-art-skill-animations-lightning) | `effets_et_sorts/itch/frostwindz__pixel-art-skill-animations-lightning` |
+| Animated Sigil | heosphorus | conditions de l'auteur (SOURCE.txt) | 223 | [itch](https://heosphorus.itch.io/animated-sigil) | `effets_et_sorts/itch/heosphorus__animated-sigil` |
+| Animated Speed Line | heosphorus | conditions de l'auteur (SOURCE.txt) | 44 | [itch](https://heosphorus.itch.io/speed-line) | `effets_et_sorts/itch/heosphorus__speed-line` |
+| Hitspark FX | jasontomlee | conditions de l'auteur (SOURCE.txt) | 20 | [itch](https://jasontomlee.itch.io/hitspark-fx) | `effets_et_sorts/itch/jasontomlee__hitspark-fx` |
+| Textures for particles 1 | jellyfish0 | conditions de l'auteur (SOURCE.txt) | 100 | [itch](https://jellyfish0.itch.io/textures-for-particles) | `effets_et_sorts/itch/jellyfish0__textures-for-particles` |
+| Textures for particles 2 | jellyfish0 | conditions de l'auteur (SOURCE.txt) | 62 | [itch](https://jellyfish0.itch.io/textures-for-particles-2) | `effets_et_sorts/itch/jellyfish0__textures-for-particles-2` |
+| Textures for particles 3 | jellyfish0 | conditions de l'auteur (SOURCE.txt) | 76 | [itch](https://jellyfish0.itch.io/textures-for-particles-3) | `effets_et_sorts/itch/jellyfish0__textures-for-particles-3` |
+| Joszs' Medieval Item Pack | joszs | conditions de l'auteur (SOURCE.txt) | 235 | [itch](https://joszs.itch.io/medieval-item-pack) | `effets_et_sorts/itch/joszs__medieval-item-pack` |
+| Vfx & Effects | jz-pixels | conditions de l'auteur (SOURCE.txt) | 11 | [itch](https://jz-pixels.itch.io/vfx-and-effects) | `effets_et_sorts/itch/jz-pixels__vfx-and-effects` |
+| Free Stylized Sprite VFX | kalponic-studio | conditions de l'auteur (SOURCE.txt) | 206 | [itch](https://kalponic-studio.itch.io/free-stylized-sprite-vfx) | `effets_et_sorts/itch/kalponic-studio__free-stylized-sprite-vfx` |
+| FREE Pixel Art Gems Pack - Animated | karsiori | conditions de l'auteur (SOURCE.txt) | 1547 | [itch](https://karsiori.itch.io/free-pixel-art-gem-pack) | `effets_et_sorts/itch/karsiori__free-pixel-art-gem-pack` |
+| [FREE] Pixel Art Lightning VFX | kekkorider | conditions de l'auteur (SOURCE.txt) | 1501 | [itch](https://kekkorider.itch.io/pixel-art-lightning-vfx) | `effets_et_sorts/itch/kekkorider__pixel-art-lightning-vfx` |
+| Fantasy Inventory — 50 Items / 32x32 | kelano-studio | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://kelano-studio.itch.io/fantasy-inventory-50-items-32x32) | `effets_et_sorts/itch/kelano-studio__fantasy-inventory-50-items-32x32` |
+| 13 Effekseer Explosions for RPG Maker MZ | kubataiga | conditions de l'auteur (SOURCE.txt) | 21 | [itch](https://kubataiga.itch.io/effectseer-explosions-xug) | `effets_et_sorts/itch/kubataiga__effectseer-explosions-xug` |
+| Fantasy Warrior | luizmelo | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://luizmelo.itch.io/fantasy-warrior) | `effets_et_sorts/itch/luizmelo__fantasy-warrior` |
+| zFree Charging Up Pixel Animation FX RPG Maker Ready | lvgames | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://lvgames.itch.io/free-charging-up-pixel-animation-fx-rpg-maker-ready) | `effets_et_sorts/itch/lvgames__free-charging-up-pixel-animation-fx-rpg-maker-ready` |
+| zFree Energy Beam Pixel Sprite Animation FX RPG Maker Ready | lvgames | conditions de l'auteur (SOURCE.txt) | 2 | [itch](https://lvgames.itch.io/free-energy-beam-pixel-sprite-animation-fx-rpg-maker-ready) | `effets_et_sorts/itch/lvgames__free-energy-beam-pixel-sprite-animation-fx-rpg-maker-ready` |
+| RPG MAKER MZ Animation - Gravity | manugamingcreations | conditions de l'auteur (SOURCE.txt) | 12 | [itch](https://manugamingcreations.itch.io/rpg-maker-mz-animation-gravity) | `effets_et_sorts/itch/manugamingcreations__rpg-maker-mz-animation-gravity` |
+| RPG MAKER MZ Animation - Hero Beam | manugamingcreations | conditions de l'auteur (SOURCE.txt) | 15 | [itch](https://manugamingcreations.itch.io/rpg-maker-mz-animation-hero-beam) | `effets_et_sorts/itch/manugamingcreations__rpg-maker-mz-animation-hero-beam` |
+| 20 Dark Fantasy Active Skills & Magic Abilities Icons (Vol. 09) | meng-xing | conditions de l'auteur (SOURCE.txt) | 20 | [itch](https://meng-xing.itch.io/20-dark-fantasy-active-skills-magic-abilities-icons) | `effets_et_sorts/itch/meng-xing__20-dark-fantasy-active-skills-magic-abilities-icons` |
+| Forest Monsters 2D Pixel Art | monopixelart | conditions de l'auteur (SOURCE.txt) | 14 | [itch](https://monopixelart.itch.io/forest-monsters-pixel-art) | `effets_et_sorts/itch/monopixelart__forest-monsters-pixel-art` |
+| Pixel Art Fire Ball | msfrantz | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://msfrantz.itch.io/free-fire-ball-pixel-art) | `effets_et_sorts/itch/msfrantz__free-fire-ball-pixel-art` |
+| PVFX Foundry — Free Pixel VFX Pack | nerijs | conditions de l'auteur (SOURCE.txt) | 88 | [itch](https://nerijs.itch.io/pvfx-foundry) | `effets_et_sorts/itch/nerijs__pvfx-foundry` |
+| Free Protagonist (Animated Character) | penzilla | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://penzilla.itch.io/protagonist-character) | `effets_et_sorts/itch/penzilla__protagonist-character` |
+| Fire Spell VFX Pack – Pixel Art Magic Effects | pinogames | conditions de l'auteur (SOURCE.txt) | 8 | [itch](https://pinogames.itch.io/fire-spell-vfx-pack-pixel-art-magic-effects) | `effets_et_sorts/itch/pinogames__fire-spell-vfx-pack-pixel-art-magic-effects` |
+| PIPOYA FREE VFX Bell | pipoya | conditions de l'auteur (SOURCE.txt) | 6 | [itch](https://pipoya.itch.io/pipoya-free-vfx-bell) | `effets_et_sorts/itch/pipoya__pipoya-free-vfx-bell` |
+| PIPOYA FREE VFX HEX Shield | pipoya | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://pipoya.itch.io/pipoya-free-vfx-hex-shield) | `effets_et_sorts/itch/pipoya__pipoya-free-vfx-hex-shield` |
+| PIPOYA FREE VFX Light Pillar | pipoya | conditions de l'auteur (SOURCE.txt) | 18 | [itch](https://pipoya.itch.io/pipoya-free-vfx-light-pillar) | `effets_et_sorts/itch/pipoya__pipoya-free-vfx-light-pillar` |
+| PIPOYA FREE VFX Time Magic | pipoya | conditions de l'auteur (SOURCE.txt) | 12 | [itch](https://pipoya.itch.io/pipoya-free-vfx-time-magic) | `effets_et_sorts/itch/pipoya__pipoya-free-vfx-time-magic` |
+| PIPOYA FREE VFX Warp Portal | pipoya | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://pipoya.itch.io/pipoya-free-vfx-warp-portal) | `effets_et_sorts/itch/pipoya__pipoya-free-vfx-warp-portal` |
+| 16x16 RPG Items: 100 Staves, Swords, Books | pixelcreations | conditions de l'auteur (SOURCE.txt) | 150 | [itch](https://pixelcreations.itch.io/rpg-items-16x16) | `effets_et_sorts/itch/pixelcreations__rpg-items-16x16` |
+| Medieval weapons pack | pixelhole | conditions de l'auteur (SOURCE.txt) | 25 | [itch](https://pixelhole.itch.io/medieval-weapons-pack) | `effets_et_sorts/itch/pixelhole__medieval-weapons-pack` |
+| Daily Doodles - Pixel Art Asset Pack #1 (37 sprites) | raventale | conditions de l'auteur (SOURCE.txt) | 74 | [itch](https://raventale.itch.io/daily-doodles-pixelart-asset-pack) | `effets_et_sorts/itch/raventale__daily-doodles-pixelart-asset-pack` |
+| Fire Column Pixel Art Effect | sanctumpixel | conditions de l'auteur (SOURCE.txt) | 14 | [itch](https://sanctumpixel.itch.io/fire-column-pixel-art-effect) | `effets_et_sorts/itch/sanctumpixel__fire-column-pixel-art-effect` |
+| Free Pixel Art Object Set - Breakable Pots | seliel-the-shaper | conditions de l'auteur (SOURCE.txt) | 5 | [itch](https://seliel-the-shaper.itch.io/breakable-pots) | `effets_et_sorts/itch/seliel-the-shaper__breakable-pots` |
+| Free Pixel Art Character - The Mana Seed "Character Base" | seliel-the-shaper | conditions de l'auteur (SOURCE.txt) | 361 | [itch](https://seliel-the-shaper.itch.io/character-base) | `effets_et_sorts/itch/seliel-the-shaper__character-base` |
+| Free Pixel Art Character - The Mana Seed "Farmer Sprite System" | seliel-the-shaper | conditions de l'auteur (SOURCE.txt) | 27 | [itch](https://seliel-the-shaper.itch.io/farmer-base) | `effets_et_sorts/itch/seliel-the-shaper__farmer-base` |
+| Moonroot Magic VFX Free Pack | serhan885 | conditions de l'auteur (SOURCE.txt) | 97 | [itch](https://serhan885.itch.io/moonroot-magic-vfx-free-pack) | `effets_et_sorts/itch/serhan885__moonroot-magic-vfx-free-pack` |
+| 8-Directional top-down character pack! | smallscaleint | conditions de l'auteur (SOURCE.txt) | 87 | [itch](https://smallscaleint.itch.io/8-directional-top-down-character-pack) | `effets_et_sorts/itch/smallscaleint__8-directional-top-down-character-pack` |
+| RPG Main Character | szadiart | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://szadiart.itch.io/rpg-main-character) | `effets_et_sorts/itch/szadiart__rpg-main-character` |
+| Spring VFX Pack | tiopalada | conditions de l'auteur (SOURCE.txt) | 67 | [itch](https://tiopalada.itch.io/spring-vfx) | `effets_et_sorts/itch/tiopalada__spring-vfx` |
+| Godot Water Splash VFX | tomazod | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://tomazod.itch.io/godot-splash-vfx) | `effets_et_sorts/itch/tomazod__godot-splash-vfx` |
+| Five Free Pixel Explosions | untiedgames | conditions de l'auteur (SOURCE.txt) | 361 | [itch](https://untiedgames.itch.io/five-free-pixel-explosions) | `effets_et_sorts/itch/untiedgames__five-free-pixel-explosions` |
+| Super Pixel Effects Gigapack | untiedgames | conditions de l'auteur (SOURCE.txt) | 5889 | [itch](https://untiedgames.itch.io/super-pixel-effects-gigapack) | `effets_et_sorts/itch/untiedgames__super-pixel-effects-gigapack` |
+| Super Pixel Effects Mini Pack 1 | untiedgames | conditions de l'auteur (SOURCE.txt) | 44 | [itch](https://untiedgames.itch.io/super-pixel-effects-mini-pack-1) | `effets_et_sorts/itch/untiedgames__super-pixel-effects-mini-pack-1` |
+| Super Pixel Fantasy FX Pack 3 | untiedgames | conditions de l'auteur (SOURCE.txt) | 320 | [itch](https://untiedgames.itch.io/super-pixel-fantasy-fx-pack-3) | `effets_et_sorts/itch/untiedgames__super-pixel-fantasy-fx-pack-3` |
+| Vivid Motion 23 Universal Status Effects | vivid-motion-assets | conditions de l'auteur (SOURCE.txt) | 374 | [itch](https://vivid-motion-assets.itch.io/vivid-motion-23universal-status-effects) | `effets_et_sorts/itch/vivid-motion-assets__vivid-motion-23universal-status-effects` |
+| Vivid Motion : 500+ Animated RPG Icons | vivid-motion-assets | conditions de l'auteur (SOURCE.txt) | 198 | [itch](https://vivid-motion-assets.itch.io/vivid-motion-500-animated-rpg-icons) | `effets_et_sorts/itch/vivid-motion-assets__vivid-motion-500-animated-rpg-icons` |
+| Vivid Motion: Combat Arcana Vol. 1 | vivid-motion-assets | conditions de l'auteur (SOURCE.txt) | 9 | [itch](https://vivid-motion-assets.itch.io/vivid-motion-combat-arcana-vol-1) | `effets_et_sorts/itch/vivid-motion-assets__vivid-motion-combat-arcana-vol-1` |
+| Vivid Motion: Elemental Arcana Vol. 1 | vivid-motion-assets | conditions de l'auteur (SOURCE.txt) | 27 | [itch](https://vivid-motion-assets.itch.io/vivid-motion-elemental-arcana-vol-1) | `effets_et_sorts/itch/vivid-motion-assets__vivid-motion-elemental-arcana-vol-1` |
+| Willibab's Simple Pixel Spell Effects | willibab | conditions de l'auteur (SOURCE.txt) | 13 | [itch](https://willibab.itch.io/simple-pixel-spell-effects) | `effets_et_sorts/itch/willibab__simple-pixel-spell-effects` |
+| Free GDevelop Particles Library | wishforge | conditions de l'auteur (SOURCE.txt) | 48 | [itch](https://wishforge.itch.io/free-gdevelop-particles-library) | `effets_et_sorts/itch/wishforge__free-gdevelop-particles-library` |
+| Pixel Art Necromancer Portratit | xarsdev | conditions de l'auteur (SOURCE.txt) | 1 | [itch](https://xarsdev.itch.io/necromancer-woman-portrait) | `effets_et_sorts/itch/xarsdev__necromancer-woman-portrait` |
+| Free Pixel Effects Pack #13 - Fireballs | xyezawr | conditions de l'auteur (SOURCE.txt) | 180 | [itch](https://xyezawr.itch.io/free-pixel-effects-pack-13-fireballs) | `effets_et_sorts/itch/xyezawr__free-pixel-effects-pack-13-fireballs` |
+| Free Pixel Effects Pack #16 - Mini Blood Splash 2 | xyezawr | conditions de l'auteur (SOURCE.txt) | 540 | [itch](https://xyezawr.itch.io/free-pixel-effects-pack-16-mini-blood-splash-2) | `effets_et_sorts/itch/xyezawr__free-pixel-effects-pack-16-mini-blood-splash-2` |
+| Free Pixel Effects Pack #12 - Mini Magick Shoots 3 | xyezawr | conditions de l'auteur (SOURCE.txt) | 90 | [itch](https://xyezawr.itch.io/gif-free-pixel-effects-pack-12-mini-magick-shoots-3) | `effets_et_sorts/itch/xyezawr__gif-free-pixel-effects-pack-12-mini-magick-shoots-3` |
+| Tiny Clans: Pack 1 | zneeke | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://zneeke.itch.io/tiny-clans-pack-1) | `effets_et_sorts/itch/zneeke__tiny-clans-pack-1` |
+| Tiny Clans: Pack 2 | zneeke | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://zneeke.itch.io/tiny-clans-pack-2) | `effets_et_sorts/itch/zneeke__tiny-clans-pack-2` |
+| Tiny Clans: Pack 3 | zneeke | conditions de l'auteur (SOURCE.txt) | 4 | [itch](https://zneeke.itch.io/tiny-clans-pack-3) | `effets_et_sorts/itch/zneeke__tiny-clans-pack-3` |
+
+## Icônes (compétences, objets, états) — 17 packs, 967 images
+
+| Titre | Auteur | Licence | Images | Source | Dossier |
+|---|---|---|---|---|---|
+| 30 Ability Icons | Curtis Merry | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/30-ability-icons) | `icones/opengameart/30-ability-icons` |
+| 48 Swordsman Skills Icon Pack | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 48 | [opengameart](https://opengameart.org/content/48-swordsman-skills-icon-pack) | `icones/opengameart/48-swordsman-skills-icon-pack` |
+| 48 Swordsman Skills Icons Pixel Art | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 48 | [opengameart](https://opengameart.org/content/48-swordsman-skills-icons-pixel-art) | `icones/opengameart/48-swordsman-skills-icons-pixel-art` |
+| Armor Icons by Equipment slot with transparency | Zabin | CC0 | 1 | [opengameart](https://opengameart.org/content/armor-icons-by-equipment-slot-with-transparency) | `icones/opengameart/armor-icons-by-equipment-slot-with-transparency` |
+| Basic RPG Item Icons (remix) | AntumDeluge | CC-BY 3.0 | 59 | [opengameart](https://opengameart.org/content/basic-rpg-item-icons-remix) | `icones/opengameart/basic-rpg-item-icons-remix` |
+| Board Game Info | Kenney | CC0 | 577 | [opengameart](https://opengameart.org/content/board-game-info) | `icones/opengameart/board-game-info` |
+| Character Portait Faces | FabinhoSC | CC0 | 19 | [opengameart](https://opengameart.org/content/character-portait-faces) | `icones/opengameart/character-portait-faces` |
+| Fantasy RPG Icons | Drummyfish | CC0 | 32 | [opengameart](https://opengameart.org/content/fantasy-rpg-icons-0) | `icones/opengameart/fantasy-rpg-icons-0` |
+| Fantasy RPG Icons 2 | Drummyfish | CC0 | 16 | [opengameart](https://opengameart.org/content/fantasy-rpg-icons-2) | `icones/opengameart/fantasy-rpg-icons-2` |
+| Free RPG Skill Icons for Crafter Blacksmith and Gnome | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 22 | [opengameart](https://opengameart.org/content/free-rpg-skill-icons-for-crafter-blacksmith-and-gnome) | `icones/opengameart/free-rpg-skill-icons-for-crafter-blacksmith-and-gnome` |
+| Free RPG Skill Icons for Knight | CraftPix.net 2D Game Assets | OGA-BY 3.0 | 20 | [opengameart](https://opengameart.org/content/free-rpg-skill-icons-for-knight) | `icones/opengameart/free-rpg-skill-icons-for-knight` |
+| Idylwild's Arcanum | Idylwild | CC0 | 51 | [opengameart](https://opengameart.org/content/idylwilds-arcanum) | `icones/opengameart/idylwilds-arcanum` |
+| Misc. RPG Icons | Keiffer | CC0 | 2 | [opengameart](https://opengameart.org/content/misc-rpg-icons) | `icones/opengameart/misc-rpg-icons` |
+| Occupational icons | Technopeasant | CC-BY 3.0 | 28 | [opengameart](https://opengameart.org/content/occupational-icons) | `icones/opengameart/occupational-icons` |
+| [Outdated/Archive] Fantasy Icon Pack | Ravenmore | CC-BY 3.0 | 38 | [opengameart](https://opengameart.org/content/outdatedarchive-fantasy-icon-pack) | `icones/opengameart/outdatedarchive-fantasy-icon-pack` |
+| Skull Medals from C42 | Flowly | CC-BY 3.0 | 4 | [opengameart](https://opengameart.org/content/skull-medals-from-c42) | `icones/opengameart/skull-medals-from-c42` |
+| Sword Icons (from "PixelTime" videos) | BizmasterStudios | CC-BY 3.0 | 1 | [opengameart](https://opengameart.org/content/sword-icons-from-pixeltime-videos) | `icones/opengameart/sword-icons-from-pixeltime-videos` |
+
 ## Autres (habillages de fenêtres, bulles, générateurs) — 8 packs, 1952 images
 
 | Titre | Auteur | Licence | Images | Source | Dossier |
 |---|---|---|---|---|---|
 | Casper Gaming Windowskins for RPG Maker MZ | casper-gaming | conditions de l'auteur (SOURCE.txt) | 10 | [itch](https://casper-gaming.itch.io/casper-gaming-windowskins) | `autres/itch/casper-gaming__casper-gaming-windowskins` |
 | Candymold Colour&sprite [RPG maker MV/MZ] | despairparty | conditions de l'auteur (SOURCE.txt) | 25 | [itch](https://despairparty.itch.io/rpg-maker-candymold) | `autres/itch/despairparty__rpg-maker-candymold` |
-| DJ990J&#039;s Generator bits | dj990j | conditions de l'auteur (SOURCE.txt) | 1082 | [itch](https://dj990j.itch.io/dj990js-generator-bits) | `autres/itch/dj990j__dj990js-generator-bits` |
+| DJ990J's Generator bits | dj990j | conditions de l'auteur (SOURCE.txt) | 1082 | [itch](https://dj990j.itch.io/dj990js-generator-bits) | `autres/itch/dj990j__dj990js-generator-bits` |
 | Sticker Critters – 2D Battlers & Cards for RPGs & TCGs | jkforge | conditions de l'auteur (SOURCE.txt) | 102 | [itch](https://jkforge.itch.io/sticker-critters-game-asset-pack) | `autres/itch/jkforge__sticker-critters-game-asset-pack` |
 | Character Portrait • Bubbles | mewki | conditions de l'auteur (SOURCE.txt) | 7 | [itch](https://mewki.itch.io/character-portrait-bubbles) | `autres/itch/mewki__character-portrait-bubbles` |
 | Fox Mood - Emotes | mewki | conditions de l'auteur (SOURCE.txt) | 24 | [itch](https://mewki.itch.io/fox-emotes) | `autres/itch/mewki__fox-emotes` |
