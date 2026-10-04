@@ -1,0 +1,9 @@
+Titre   : Astrea - RPG Maker MV Resource Map
+Auteur  : ladyluck
+Page    : https://ladyluck.itch.io/astrea-rpg-maker-mv-resource-map
+Licence : voir les conditions ci-dessous
+Images  : 1
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+You can download the JSON file below and import it to your project to use it, no need for credit, all donations appreciated. You must own RPG Maker MV to use it and it can only be using inside the software, be aware of that.

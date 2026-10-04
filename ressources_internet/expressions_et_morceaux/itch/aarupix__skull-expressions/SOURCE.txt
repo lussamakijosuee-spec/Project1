@@ -1,0 +1,13 @@
+Titre   : Skull Expressions
+Auteur  : aarupix
+Page    : https://aarupix.itch.io/skull-expressions
+Licence : voir les conditions ci-dessous
+Images  : 120
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+License
+This asset pack is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)
+ Commercial Use: You can use these assets in any project, including commercial games.Edits & Adaptations: You are fully welcome to modify, recolor, resize, or adapt this pixel art to fit your game's style.Attribution Required: You may use and share this work, as long as it is attributed to me as the original creator.
+How to Credit
+Please include my name and a link to this page in your game's credits:

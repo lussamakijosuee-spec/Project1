@@ -1,0 +1,10 @@
+Titre   : Admurin&#039;s Armory
+Auteur  : admurin
+Page    : https://admurin.itch.io/pixel-armory
+Licence : voir les conditions ci-dessous
+Images  : 1
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+You can use this asset in any game project, personal or commercial
+Credit not necessary but appreciated, if you do you can link to my ITCH profile 

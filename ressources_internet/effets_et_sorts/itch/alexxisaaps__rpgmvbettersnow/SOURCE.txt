@@ -1,0 +1,11 @@
+Titre   : RPG Maker MV Better Snow
+Auteur  : alexxisaaps
+Page    : https://alexxisaaps.itch.io/rpgmvbettersnow
+Licence : voir les conditions ci-dessous
+Images  : 76
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+✦ License
+Free to use in both commercial and non-commercial RPG Maker MV projects.
+Credit to alexxisaaps is appreciated but not required.

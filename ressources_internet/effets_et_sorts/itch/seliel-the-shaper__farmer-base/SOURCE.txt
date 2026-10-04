@@ -1,0 +1,10 @@
+Titre   : Free Pixel Art Character - The Mana Seed "Farmer Sprite System"
+Auteur  : seliel-the-shaper
+Page    : https://seliel-the-shaper.itch.io/farmer-base
+Licence : voir les conditions ci-dessous
+Images  : 27
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+If you want to use the Farmer Sprite System, but don't want to implement a full layered outfit-changing system into your game, you can just use the Farmer Sprite Customizer to whip up a character in minutes. This is a stand-alone app available for Windows and Mac (note: may not be compatible with ARM-based (M1-3) Macs) that lets you build a character using every element of the Farmer Sprite System, customize them with official Mana Seed color palettes, and then export them to a single flat sprite sheet, ready for animating! Maybe it's a small game that isn't worth the energy of building an outfit system, or you're using a game engine that has trouble with the concept, or maybe you just want some quick NPCs that don't hog so many resources. Whatever your situation, feel free to use the Farmer Sprite Customizer at no additional cost.
+Read the Mana Seed User License

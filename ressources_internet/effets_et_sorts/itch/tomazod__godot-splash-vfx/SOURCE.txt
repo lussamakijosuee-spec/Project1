@@ -1,0 +1,10 @@
+Titre   : Godot Water Splash VFX
+Auteur  : tomazod
+Page    : https://tomazod.itch.io/godot-splash-vfx
+Licence : voir les conditions ci-dessous
+Images  : 4
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+License: Creative Commons 0 (CC0)
+You can use this in your commercial games, change it, break it, or do whatever you want with it. No credit required (though I'd love to see what you make with it!).

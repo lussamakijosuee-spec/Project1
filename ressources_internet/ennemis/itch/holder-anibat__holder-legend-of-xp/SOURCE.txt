@@ -1,0 +1,11 @@
+Titre   : Holder - XP
+Auteur  : holder-anibat
+Page    : https://holder-anibat.itch.io/holder-legend-of-xp
+Licence : voir les conditions ci-dessous
+Images  : 252
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+Both actor and enemy animated battler sheets are formatted in the same way of 4  frames  and    14 rows.   All follow the same fundamentals in terms of what action is being done in each row. Therefore things such as swapping  characters is easy, even transform skills are seamless!
+Includes 14 rows of 13 poses and 1 credits section, 4  frames per pose:
+Credits

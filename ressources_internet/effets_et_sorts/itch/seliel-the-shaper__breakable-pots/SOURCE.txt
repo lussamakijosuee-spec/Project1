@@ -1,0 +1,10 @@
+Titre   : Free Pixel Art Object Set - Breakable Pots
+Auteur  : seliel-the-shaper
+Page    : https://seliel-the-shaper.itch.io/breakable-pots
+Licence : voir les conditions ci-dessous
+Images  : 5
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+&gt;&gt;&gt; NO AI USED IN ANY WAY &lt;&lt;&lt;This is a set of 3 unique pots, each with a 3-frame breaking animation, along with 6 small pot shards to use when creating your own particle animations. This asset comes in 4 different color swaps, and is ideal for use in a 16-bit top-down style RPG or adventure game. This asset is released free of charge, even for commercial use.
+Read the Mana Seed User License

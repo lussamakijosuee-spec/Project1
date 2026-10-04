@@ -1,0 +1,12 @@
+Titre   : 40 Pixel Art Atmospheric VFX Pack
+Auteur  : alenia-studios
+Page    : https://alenia-studios.itch.io/10-pixel-art-atmospheric-vfx-pack
+Licence : voir les conditions ci-dessous
+Images  : 2480
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+To create and polish these assets, I didn't use standard commercial animation software. The entire pack was developed and rendered using our own custom internal toolset&mdash;the Alenia Ecosystem&mdash;utilizing dedicated viewers like PixelView and processors like Alenia GifPreview to ensure seamless loops and pixel-perfect shading.
+License
+Standard Licensing: Alenia Studios Standard (CC BY 4.0 + Additional Terms)
+    Commercial Use: Allowed for games, videos, and projects.

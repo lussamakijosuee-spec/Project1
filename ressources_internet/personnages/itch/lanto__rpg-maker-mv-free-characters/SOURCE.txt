@@ -1,0 +1,10 @@
+Titre   : RPG Maker MV Free Characters
+Auteur  : lanto
+Page    : https://lanto.itch.io/rpg-maker-mv-free-characters
+Licence : voir les conditions ci-dessous
+Images  : 530
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+You can use them in any RPG Maker MV project, commercial and non-commercial.
+You can or can not give me credit for this but it is something that is always appreciated.

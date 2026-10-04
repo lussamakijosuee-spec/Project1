@@ -1,0 +1,9 @@
+Titre   : Custom RPG Maker VXA Sprites
+Auteur  : bl4ckbyrd
+Page    : https://bl4ckbyrd.itch.io/custom-rpg-maker-vxa-sprites
+Licence : voir les conditions ci-dessous
+Images  : 27
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+Anyways, feel free to use these in your game projects, non-commercial and commercial. Super important! Make sure you have the "$" at the very beginning of your file name or the images won't import into RPG Maker properly. Credit is appreciated, but I won't get upset if you don't. Just don't be a jerk and claim these creations as your own or post them online elsewhere without my permission.
