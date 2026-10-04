@@ -18,6 +18,11 @@
 Le Don n'est pas remis. Il **APPARAÎT**, de lui-même, la première fois qu'un marqué se sert
 vraiment de son âme.
 
+> 🆕 **L'autre chemin — le donjon de couverture** (JOKO, 2026-10-04) : *« si tu réussis le donjon
+> de couverture tu ressors automatiquement avec un don spirituel »* — réponse **A** : un **vrai
+> Don**, **seulement pour qui n'en a pas encore**, et **toujours un seul**. La règle d'or ne bouge
+> pas. Canon : [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md).
+
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
 ║   LA RÈGLE D'OR — ON N'EN A QU'UN.                                       ║
