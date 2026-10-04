@@ -1,0 +1,9 @@
+Titre   : Pixlpix - Pixel Instant Photos
+Auteur  : odrez
+Page    : https://odrez.itch.io/pixlpix
+Licence : voir les conditions ci-dessous
+Images  : 12
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+Contains 7 "photos" licensed under CC-BY 4.0

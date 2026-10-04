@@ -1,0 +1,13 @@
+Titre   : Crawling Depths
+Auteur  : pingupollas
+Page    : https://pingupollas.itch.io/crawling-depths
+Licence : voir les conditions ci-dessous
+Images  : 57
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+License
+This asset pack can be used for any purpose, including personal, commercial, or any other type of project. You are free to modify the files to fit your needs.
+You must give me credit for the graphics used, whether in their original form or modified.
+The credit should include my name and a link to my Itch.io page.
+If you have any questions or need a custom license, feel free to contact me!

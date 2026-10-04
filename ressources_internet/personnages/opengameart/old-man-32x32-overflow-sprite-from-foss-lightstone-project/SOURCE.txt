@@ -1,0 +1,7 @@
+Titre   : Old Man 32x32 Overflow Sprite from FOSS Lightstone Project
+Auteur  : Syrsly
+Licence : OGA-BY 3.0 / CC0
+Page    : https://opengameart.org/content/old-man-32x32-overflow-sprite-from-foss-lightstone-project
+Images  : 1
+
+CC0 : libre, sans condition. CC-BY / OGA-BY : citer l'auteur dans les crédits. CC-BY-SA : citer + partager les modifs sous la même licence. GPL : citer + garder la licence.
