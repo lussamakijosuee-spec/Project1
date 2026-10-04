@@ -1,0 +1,17 @@
+Titre   : RPG Enemy Character Assets — Free Sample Pack (Rotating)
+Auteur  : ainero
+Page    : https://ainero.itch.io/rpg-enemy-assets-sample
+Licence : voir les conditions ci-dessous
+Images  : 41
+
+Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
+
+AINERO Sample Pack License (Attribution Required)
+  Permitted: Use in commercial and non-commercial projects; edit/resize to fit your game.
+ Attribution (mandatory): Add a credit line in your game (credits screen, readme, or store page).
+ Credit format (choose one):
+ Streaming/Video: Allowed. Please include the credit in the video description where possible.
+You are licensed to use the exported PNG assets within the scope of the License above; you are not licensed to redistribute these assets (original or modified) as a competing pack or resell them in any form.
+A. Yes (Sample Pack only). Add a credit line in your game credits, readme, store page, or video description.
+Credit example:
+Q. Can I use the Sample Pack in a commercial game?
