@@ -1,9 +1,0 @@
-Titre   : Orange character sprite & face
-Auteur  : gamedevalliance
-Page    : https://gamedevalliance.itch.io/orange-character
-Licence : voir les conditions ci-dessous
-Images  : 3
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Please credit Baetorice / Béatrice Dutaret: https://twitter.com/baetorice

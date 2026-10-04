@@ -1,9 +1,0 @@
-Titre   : 2D Pixel Art Portal Sprites
-Auteur  : elthen
-Page    : https://elthen.itch.io/2d-pixel-art-portal-sprites
-Licence : voir les conditions ci-dessous
-Images  : 2
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Feel free to use the sprites in commercial/non-commercial projects! If you do, please consider tipping, or at least dropping a comment down below.  Happy developing!

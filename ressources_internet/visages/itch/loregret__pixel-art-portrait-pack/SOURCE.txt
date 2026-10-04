@@ -1,9 +1,0 @@
-Titre   : Pixel-Art Portrait Pack
-Auteur  : loregret
-Page    : https://loregret.itch.io/pixel-art-portrait-pack
-Licence : voir les conditions ci-dessous
-Images  : 1609
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-CC0 license. This pack contains 100 portraits. Aseprite project file is also included if you want to tinker them.

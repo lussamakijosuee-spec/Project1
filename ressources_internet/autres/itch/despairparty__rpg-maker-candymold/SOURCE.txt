@@ -1,9 +1,0 @@
-Titre   : Candymold Colour&sprite [RPG maker MV/MZ]
-Auteur  : despairparty
-Page    : https://despairparty.itch.io/rpg-maker-candymold
-Licence : voir les conditions ci-dessous
-Images  : 25
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Editing OKRedistribution OKCommercial games OKR-18 games OKSelling derivative materials OKDo not sell the material itself. It's free!The sprites are edits of RPG Maker Default Assets. You must own a copy of RPG Maker to use. 

@@ -1,7 +1,0 @@
-Titre   : [LPC] modular bodies and heads
-Auteur  : Baŝto
-Licence : CC-BY-SA 3.0 / GPL 3.0
-Page    : https://opengameart.org/content/lpc-modular-bodies-and-heads
-Images  : 36
-
-CC0 : libre, sans condition. CC-BY / OGA-BY : citer l'auteur dans les crédits. CC-BY-SA : citer + partager les modifs sous la même licence. GPL : citer + garder la licence.

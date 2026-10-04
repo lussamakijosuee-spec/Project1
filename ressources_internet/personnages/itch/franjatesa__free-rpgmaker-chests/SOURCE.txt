@@ -1,9 +1,0 @@
-Titre   : Fantasy RPG Chests 32 x 32 px for RPG Maker
-Auteur  : franjatesa
-Page    : https://franjatesa.itch.io/free-rpgmaker-chests
-Licence : voir les conditions ci-dessous
-Images  : 1
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-You can make use of it for any project you are working on, even comercial just give me credit (franjatesa).

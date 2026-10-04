@@ -1,9 +1,0 @@
-Titre   : NPC Life Assets
-Auteur  : heosphorus
-Page    : https://heosphorus.itch.io/asset-npc-lifes
-Licence : voir les conditions ci-dessous
-Images  : 147
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Game jam projects, prototypes, and commercial games.

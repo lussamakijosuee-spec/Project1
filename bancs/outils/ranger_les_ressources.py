@@ -19,8 +19,8 @@ licence (crédits à faire).
 
   img/faces       portraits carrés → visages 144 × 144, 8 par feuille (576 × 288)
   img/pictures    grands portraits (bustes, visual novel), hauteur ≤ 624
-  img/characters  feuilles MV 576 × 384 et persos seuls 144 × 192 (« $ »),
-                  et les feuilles 32 px (384 × 256 / 96 × 128) agrandies ×1,5
+  img/characters  feuilles MV 576 × 384 et persos seuls 144 × 192 (« $ »)
+                  (formats MV d'origine seulement : rien d'agrandi)
   img/sv_actors   feuilles 576 × 384 des packs de battlers vue de côté
   img/sv_enemies  un monstre par image (le jeu est en vue de côté)
   img/animations  bandes d'effets (cases carrées) → cases de 192, 5 par ligne
@@ -125,6 +125,34 @@ def morceaux(im, seuil=0.02):
     return n
 
 
+def couleurs(im):
+    """Nombre de couleurs des pixels visibles : le pixel art en a peu, le dessin
+    façon MV (RTP, générateur) en a des centaines."""
+    petit = im if max(im.size) <= 256 else im.resize((max(1, im.width * 256 // max(im.size)), max(1, im.height * 256 // max(im.size))), Image.NEAREST)
+    px = [p[:3] for p in petit.getdata() if p[3] > 128]
+    return len(set(px))
+
+
+def saturation(im):
+    """Saturation moyenne des pixels visibles : une vieille photo, un dessin au
+    trait noir et blanc en ont presque pas ; les visages et monstres MV, oui."""
+    petit = im.resize((64, max(1, im.height * 64 // im.width))) if im.width > 64 else im
+    hsv = petit.convert('RGB').convert('HSV')
+    a = list(petit.getchannel('A').getdata())
+    sv = [p[1] for p, al in zip(hsv.getdata(), a) if al > 128]
+    return sum(sv) / (255.0 * len(sv)) if sv else 0
+
+
+def remplissage(im):
+    return sum(im.getchannel('A').histogram()[129:]) / float(im.width * im.height)
+
+
+# JOKO, le 2026-10-04 : « vraiment MV, pas autre chose […] des trucs qui
+# ressemblent à ce que j'ai dans mon jeu ». Donc : formats MV d'origine (le MZ
+# a les mêmes), dessin façon MV, et JAMAIS de pixel art agrandi.
+DESSIN = 300
+
+
 poses = []      # (dossier, fichier, infos)
 
 
@@ -207,9 +235,9 @@ def visages_et_portraits():
             if (w, h) == (576, 288) and feuilles < 8:
                 feuilles += 1
                 poser('faces', PREFIXE + nom + '_MV%d' % feuilles, im, infos)
-            elif w == h and 48 <= w <= 1024 and len(visages) < LIMITE_PAR_PACK['faces'] and (transparence(im) < 0.05 or morceaux(im) <= 1):
+            elif w == h and 144 <= w <= 1024 and len(visages) < LIMITE_PAR_PACK['faces'] and (transparence(im) < 0.05 or morceaux(im) <= 1) and couleurs(im) >= DESSIN and saturation(im) >= 0.18:
                 visages.append(mise_a_l_echelle(im, 144, 144))
-            elif h >= 300 and 0.4 <= w / h <= 1.2 and len(portraits) < LIMITE_PAR_PACK['pictures'] and (transparence(im) < 0.05 or morceaux(im) <= 1):
+            elif h >= 300 and 0.4 <= w / h <= 1.2 and len(portraits) < LIMITE_PAR_PACK['pictures'] and (transparence(im) < 0.05 or morceaux(im) <= 1) and couleurs(im) >= DESSIN and saturation(im) >= 0.18:
                 if h > 624:
                     im = im.resize((round(w * 624 / h), 624), Image.LANCZOS)
                 portraits.append(im)
@@ -232,13 +260,14 @@ def personnages_et_battlers():
             if im is None:
                 continue
             w, h = im.size
-            if (w, h) in ((384, 256), (96, 128)):            # feuilles 32 px → ×1,5
-                im = im.resize((w * 3 // 2, h * 3 // 2), Image.NEAREST)
-                w, h = im.size
             if transparence(im) < 0.3:                      # une planche sur fond plein n'est pas un perso
                 continue
+            if remplissage(im) < 0.2 or couleurs(im) < 20:   # pièces de générateur (cheveux, armes), gemmes
+                continue
             if (w, h) == (576, 384):
-                dossier = 'sv_actors' if sv else 'characters'
+                # 9 × 6 poses de combat (54 petites silhouettes) = battler vue de côté ;
+                # 3 × 4 × 8 marches (gros personnages) = feuille de carte
+                dossier = 'sv_actors' if sv or morceaux(im, 0.002) > 30 else 'characters'
                 if n[dossier] < LIMITE_PAR_PACK[dossier]:
                     n[dossier] += 1
                     poser(dossier, PREFIXE + nom + '_%d' % n[dossier], im, infos)
@@ -268,8 +297,10 @@ def monstres():
                 continue
             if transparence(im) < 0.15 or morceaux(im) != 1:   # portrait sur fond, planche, chiffres
                 continue
-            if max(w, h) < 120:                             # pixel art : ×2, sans flou
-                im = im.resize((w * 2, h * 2), Image.NEAREST)
+            if max(w, h) < 120 or couleurs(im) < DESSIN:    # pixel art : pas le style du jeu
+                continue
+            if saturation(im) < 0.15:                       # dessin au trait, sans couleur
+                continue
             n += 1
             poser('sv_enemies', PREFIXE + nom + '_%d' % n, im, infos, os.path.relpath(f, pack))
 
@@ -285,9 +316,9 @@ def effets():
             if im is None:
                 continue
             w, h = im.size
-            if w > h and w % h == 0 and 3 <= w // h <= 30 and 24 <= h <= 256:
+            if w > h and w % h == 0 and 3 <= w // h <= 30 and 96 <= h <= 256:
                 cases = [im.crop((i * h, 0, (i + 1) * h, h)) for i in range(w // h)]
-            elif h > w and h % w == 0 and 3 <= h // w <= 30 and 24 <= w <= 256:
+            elif h > w and h % w == 0 and 3 <= h // w <= 30 and 96 <= w <= 256:
                 cases = [im.crop((0, i * w, w, (i + 1) * w)) for i in range(h // w)]
             else:
                 continue

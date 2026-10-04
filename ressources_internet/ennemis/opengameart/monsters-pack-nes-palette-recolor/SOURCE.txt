@@ -1,7 +1,0 @@
-Titre   : Monsters Pack - NES palette recolor
-Auteur  : ImogiaGames
-Licence : CC-BY 4.0
-Page    : https://opengameart.org/content/monsters-pack-nes-palette-recolor
-Images  : 153
-
-CC0 : libre, sans condition. CC-BY / OGA-BY : citer l'auteur dans les crédits. CC-BY-SA : citer + partager les modifs sous la même licence. GPL : citer + garder la licence.

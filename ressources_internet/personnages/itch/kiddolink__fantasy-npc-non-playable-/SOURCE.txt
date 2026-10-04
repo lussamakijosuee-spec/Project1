@@ -1,9 +1,0 @@
-Titre   : Fantasy NPC sprites package
-Auteur  : kiddolink
-Page    : https://kiddolink.itch.io/fantasy-npc-non-playable-characters-pack
-Licence : voir les conditions ci-dessous
-Images  : 38
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-License: Public Domain 

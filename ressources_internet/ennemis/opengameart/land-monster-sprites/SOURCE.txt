@@ -1,7 +1,0 @@
-Titre   : Land Monster Sprites
-Auteur  : bevouliin.com
-Licence : CC0
-Page    : https://opengameart.org/content/land-monster-sprites
-Images  : 5
-
-CC0 : libre, sans condition. CC-BY / OGA-BY : citer l'auteur dans les crédits. CC-BY-SA : citer + partager les modifs sous la même licence. GPL : citer + garder la licence.

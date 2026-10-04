@@ -1,9 +1,0 @@
-Titre   : Vintage Face Sets for RPGMaker VX Ace
-Auteur  : brotatofarm
-Page    : https://brotatofarm.itch.io/vintage-face-sets-for-rpgmaker-vx-ace
-Licence : voir les conditions ci-dessous
-Images  : 3
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-3 face sets  of 8 portraits each!  Each is made with public domain images sourced from the British Library; all I've done is format them for VX Ace. 

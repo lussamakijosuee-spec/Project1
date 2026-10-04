@@ -1,9 +1,0 @@
-Titre   : Textures for particles 1
-Auteur  : jellyfish0
-Page    : https://jellyfish0.itch.io/textures-for-particles
-Licence : voir les conditions ci-dessous
-Images  : 100
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-50 textures for particle systems. All on black background, 512x512 resolution. You can modify it to suit your own needs. Credit is not necessary.  

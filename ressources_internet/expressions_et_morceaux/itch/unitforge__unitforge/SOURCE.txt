@@ -1,9 +1,0 @@
-Titre   : UnitForge
-Auteur  : unitforge
-Page    : https://unitforge.itch.io/unitforge
-Licence : voir les conditions ci-dessous
-Images  : 4
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Everything runs in the browser, in English and Korean, and exported assets are free to use in your games.

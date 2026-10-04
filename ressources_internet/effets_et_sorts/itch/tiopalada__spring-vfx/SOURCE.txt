@@ -1,9 +1,0 @@
-Titre   : Spring VFX Pack
-Auteur  : tiopalada
-Page    : https://tiopalada.itch.io/spring-vfx
-Licence : voir les conditions ci-dessous
-Images  : 67
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Disclaimer: Since this pack is under CC0 you can use it for any end, but I would kindly ask anyone downloading this pack to refrain from using any of those resources to either feed LLM/AI models or to pull some cryptoshenanigans. Thank you.

@@ -1,7 +1,0 @@
-Titre   : 5 Monsters Pack (Idle, Move, Jump) [64x64]
-Auteur  : Lluc Entertainment
-Licence : CC-BY 4.0
-Page    : https://opengameart.org/content/5-monsters-pack-idle-move-jump-64x64
-Images  : 25
-
-CC0 : libre, sans condition. CC-BY / OGA-BY : citer l'auteur dans les crédits. CC-BY-SA : citer + partager les modifs sous la même licence. GPL : citer + garder la licence.

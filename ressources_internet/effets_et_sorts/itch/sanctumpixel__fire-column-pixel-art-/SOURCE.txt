@@ -1,9 +1,0 @@
-Titre   : Fire Column Pixel Art Effect
-Auteur  : sanctumpixel
-Page    : https://sanctumpixel.itch.io/fire-column-pixel-art-effect
-Licence : voir les conditions ci-dessous
-Images  : 14
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-- Use this asset on your game and sell your game. Credits are welcome but not required!
