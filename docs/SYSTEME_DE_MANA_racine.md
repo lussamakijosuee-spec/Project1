@@ -15,7 +15,7 @@ Au commencement, il n'existe pas « de la magie » mais **trois puits de réalit
 
 | Facette | Source primordiale | Élément (ID jeu) | Nature | Couleur |
 |---|---|---|---|---|
-| **LE CORPS** | **Mana Sombre** | 5 · `Mana Sombre` | Manifestation physique de **toutes les émotions et désirs enfouis**. Puissance brute et dévastatrice. | ⬛ Noir |
+| **LE CORPS** | **Mana Sombre** | 5 · `Mana Sombre` | ~~Manifestation physique de **toutes les émotions et désirs enfouis**.~~ ⚠️ *Remplacé le 2026-10-04 (JOKO : « existe plus ») : le corps est l'instinct, sans émotion ; l'émotion vient de l'âme — voir [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md).* Puissance brute et dévastatrice. | ⬛ Noir |
 | **L'ÂME** | **Âme / Mana Spirituelle** | 2 · `mana spirituelle` | L'**essence immortelle** de l'être. Énergie produite directement par l'âme. | 🟥 Cramoisi |
 | **L'ESPRIT** | **Mana Originel** | 6 · `Mana Originel` | Le **mental & la santé mentale** convertis en énergie créatrice. | 🟦 Cyan |
 
@@ -29,7 +29,8 @@ Au commencement, il n'existe pas « de la magie » mais **trois puits de réalit
 Chaque source primordiale a été raffinée par une civilisation en une branche secondaire. **C'est là que naissent les vrais sorts, capacités et éléments.**
 
 ### 🟪 MANA NÉGATIF — la branche du **Corps** (ID 4 · `mana négative`)
-- **Origine** : l'**Empire Vultric**, fondé par un joueur. Ils ont démontré que le Mana Sombre, longtemps cru **purement maléfique**, est en réalité un **concept fondamental** de la réalité.
+> ⚠️ **Remplacé le 2026-10-04** (JOKO : « existe plus ») : le mana négatif vient des **voies d'art des mouvements** créées par **le Premier** — voir [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md). L'ancienne version est gardée ci-dessous, barrée.
+- ~~**Origine** : l'**Empire Vultric**, fondé par un joueur. Ils ont démontré que le Mana Sombre, longtemps cru **purement maléfique**, est en réalité un **concept fondamental** de la réalité.~~
 - **Principe** : transformer ses **émotions et ses pensées sombres** en **puissance physique extraordinaire**.
 - **Force** : capacités physiques surhumaines, dégâts bruts.
 - **Contrepartie** : **inflige des blessures à l'utilisateur** et **draine ses PV**. Plus on frôle ses émotions les plus noires, plus on devient fort — au prix de son corps.
@@ -323,7 +324,7 @@ L'affinité dépend de la **nature de l'âme**, mais cette nature **évolue avec
 
 1. **L'Ère des Sources Brutes** : les premiers joueurs ne pouvaient toucher que les puits primordiaux. La plupart en mouraient. La magie était rare, terrifiante, presque mythique.
 2. **Le Culte des Sorcières des Étoiles** *(fondé par une joueuse)* : domestication de l'Esprit en **Mana Positif**. Naissance des **soins**, de l'**eau** et des sorts **cosmiques**. La magie devient enseignable.
-3. **L'Empire Vultric** *(fondé par un joueur)* : réhabilitation du **Mana Sombre**, longtemps cru maléfique. Création du **Mana Négatif** — la force par les émotions. La guerre change de visage.
+~~3. **L'Empire Vultric** *(fondé par un joueur)* : réhabilitation du **Mana Sombre**, longtemps cru maléfique. Création du **Mana Négatif** — la force par les émotions. La guerre change de visage.~~ ⚠️ *Remplacé le 2026-10-04 : voir `CANON_LA_GENESE.md`.*
 4. **Les Nécromanciens & Invocateurs** : maîtrise progressive de la **Mana Spirituelle**, au prix de traumas. On apprend à parler aux âmes.
 5. **L'Éveil du Mana Pur** : l'apparition des premiers **Transcendants**, et la légende du **Mana Semi-Parfait** (1/1000) qui défie la réalité.
 

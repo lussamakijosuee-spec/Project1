@@ -15,8 +15,12 @@
 
 ## 0. La règle, en une page
 
-Le Don n'est pas remis. Il **APPARAÎT**, de lui-même, la première fois qu'un marqué se sert
-vraiment de son âme.
+~~Le Don n'est pas remis. Il **APPARAÎT**, de lui-même, la première fois qu'un marqué se sert
+vraiment de son âme.~~
+
+> 🆕 **Le Don ne s'obtient QUE par le donjon de couverture** (JOKO, 2026-10-04) : *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »*. Réussir un donjon de couverture donne un **vrai Don** — seulement à qui n'en a pas encore, et **toujours un seul**. Voir [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md).
+> Le donjon a un **temps limité** : un échec te fait sortir, et il faut attendre **plusieurs mois**
+> la prochaine ouverture. La règle d'or (un seul Don) ne bouge pas.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
