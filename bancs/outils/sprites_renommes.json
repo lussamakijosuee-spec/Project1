@@ -180,6 +180,26 @@
    "ancien": "zm88vhgn",
    "nouveau": "$zm88vhgn",
    "fichiersTouches": 0
+  },
+  {
+   "ancien": "GoT-1",
+   "nouveau": "$GoT-1",
+   "fichiersTouches": 0
+  },
+  {
+   "ancien": "GoT-1B",
+   "nouveau": "$GoT-1B",
+   "fichiersTouches": 0
+  }
+ ],
+ "ajoutsALaMain": [
+  {
+   "date": "2026-10-14",
+   "noms": [
+    "GoT-1",
+    "GoT-1B"
+   ],
+   "pourquoi": "planches d'un seul personnage (144×240) demandées par JOKO ; les 10 autres signalées ne sont pas touchées"
   }
  ]
 }

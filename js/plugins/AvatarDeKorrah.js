@@ -2,9 +2,9 @@
 // AvatarDeKorrah.js
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ La PLACE de seiryu au combat : derrière Korrah, un peu
+ * @plugindesc v2.1 ■ La PLACE de seiryu au combat : derrière Korrah, un peu
  * plus haut, et il flotte. Il est un vrai combattant — ici on ne fait que
- * le poser au bon endroit.
+ * le poser au bon endroit. Tombé, il s'efface ; reformé, il réapparaît.
  * @author pour JOKO
  *
  * @param acteurPorteuse
@@ -40,6 +40,11 @@
  * @desc En pixels. 0 pour l'immobiliser.
  * @default 5
  *
+ * @param vitesseFondu
+ * @text Vitesse à laquelle il s'efface
+ * @desc Opacité perdue (ou regagnée) par image, sur 255. 8 ≈ une demi-seconde.
+ * @default 8
+ *
  * @help
  * ───────────────────────────────────────────────────────────────────────────
  * CE QUE FAIT CE GREFFON, ET CE QU'IL NE FAIT PAS
@@ -52,6 +57,9 @@
  * Or un Stand ne se met pas dans la file. Ce greffon ne fait plus qu'une
  * chose : le sortir du rang et le poser DERRIÈRE sa porteuse, un peu plus
  * haut, avec un flottement lent. Aucune règle de combat ne passe par ici.
+ *
+ * v2.1 — un Stand ne reste pas couché par terre : tombé, il s'EFFACE ; quand
+ * SeiryuLeFamilier le reforme, il réapparaît en fondu.
  *
  * ───────────────────────────────────────────────────────────────────────────
  * DEUX PIÈGES DE MV RENCONTRÉS ICI
@@ -80,6 +88,7 @@
     var DY = parseFloat(P['decalageY'] || -46);
     var ECHELLE = parseFloat(P['echelle'] || 0.85);
     var FLOTTE = parseFloat(P['flottement'] || 5);
+    var FONDU = Math.max(1, parseFloat(P['vitesseFondu'] || 8));
 
     function estLui(sp) {
         return !!(sp && sp._actor && sp._actor.actorId && sp._actor.actorId() === FAMILIER);
@@ -110,6 +119,16 @@
         if (!familier) { return; }
 
         if (familier.scale.x !== ECHELLE) { familier.scale.x = ECHELLE; familier.scale.y = ECHELLE; }
+
+        // Tombé, il s'efface ; reformé, il revient. (Une séquence d'action de
+        // Yanfly qui règle elle-même l'opacité garde la main.)
+        if (!familier._opacityChanging) {
+            var voulue = (familier._actor && familier._actor.isDead()) ? 0 : 255;
+            if (familier.opacity !== voulue) {
+                familier.opacity = voulue > familier.opacity
+                    ? Math.min(voulue, familier.opacity + FONDU) : Math.max(voulue, familier.opacity - FONDU);
+            }
+        }
         if (!porteuse) { return; }
 
         // ⚠ Piège 1 : `updateMove()` ramène le sprite vers son home à chaque
@@ -141,7 +160,7 @@
         },
         reglages: function () {
             return { porteuse: PORTEUSE, familier: FAMILIER, dx: DX, dy: DY,
-                     echelle: ECHELLE, flottement: FLOTTE };
+                     echelle: ECHELLE, flottement: FLOTTE, fondu: FONDU };
         }
     };
 })();

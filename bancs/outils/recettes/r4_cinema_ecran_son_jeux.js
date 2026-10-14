@@ -118,7 +118,7 @@ var jeux = [
     R('Course — arrivée', 'Contact avec l\'arrivée.', si(C.sw(SW.chrono), cat(A.stopMinuterie(), A.sw(SW.chrono, false), A.me('Victory1'), A.or(100), dire('Arrivé à temps !')))),
     R('Quiz — trois questions', 'Une bonne réponse = 1 point.',
         cat(A.vr(VAR.score, 0), dire('Combien de Sources ?'), choix(['Deux', 'Trois', 'Sept'], [[], A.vrAjout(VAR.score, 1), []]),
-            dire('Quel est le Don de Korrah ?'), choix(['Un Masque', 'Une Armure Volante', 'Un Arc'], [[], A.vrAjout(VAR.score, 1), []]),
+            dire('Qui a réuni les trois Sources ?'), choix(['La Mère', 'Le Premier', 'Le Père'], [[], A.vrAjout(VAR.score, 1), []]),
             dire('Qui manie l\'Arc ?'), choix(['Aël', 'ludwing', 'Vesper'], [A.vrAjout(VAR.score, 1), [], []]),
             dire('Score : \\V[' + VAR.score + '] / 3.'), si(C.vr(VAR.score, '=', 3), cat(A.or(150), A.me('Fanfare1'))))),
     R('Pari — miser un montant choisi', 'Doubler ou perdre.',

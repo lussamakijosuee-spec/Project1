@@ -469,7 +469,9 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
                     .reduce(function (n, m) { return n + m.hp / m.mhp; }, 0) / 4,
                 degats: carnet.degats, brut: carnet.brut, actions: carnet.actions, recus: carnet.recus, soiMeme: carnet.soiMeme, parCoup: carnet.parCoup,
                 pvGroupe: pvGroupe, ennemis: ennemis,
-                herosDAbord: carnet.toursVus ? carnet.herosDAbord / carnet.toursVus : 0
+                herosDAbord: carnet.toursVus ? carnet.herosDAbord / carnet.toursVus : 0,
+                // seiryu : ses chutes, les tours où Korrah n'avait pas l'Hiver, ses soins
+                seiryu: window.Seiryu && Seiryu.bilan ? Seiryu.bilan() : null
             };
             // on vide ce que les sprites n'afficheront jamais
             $gameParty.members().concat($gameTroop.members()).forEach(function (b) { b.clearDamagePopup(); b.clearAnimations && b.clearAnimations(); });
@@ -531,7 +533,7 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
         l.forEach(function (s) { console.log(String(s.estime).padStart(7) + '  #' + s.id + ' ' + s.nom + '  (type ' + s.stype + ', ' + s.pm + ' PM)  ' + s.formule); });
         await nav.close(); return;
     }
-    var NIVEAUX = [1, 6, 12, 20, 28, 36, 45, 52, 60, 70, 80, 89, 99];
+    var NIVEAUX = process.env.NIVEAUX ? process.env.NIVEAUX.split(',').map(Number) : [1, 6, 12, 20, 28, 36, 45, 52, 60, 70, 80, 89, 99];
     function rangPour(n) { return n >= 60 ? 'S' : n >= 45 ? 'A' : n >= 28 ? 'B' : n >= 12 ? 'C' : 'D'; }
     function lienPour(n) { return n >= 45 ? 3 : n >= 20 ? 2 : 1; }
     var pools = await page.evaluate(function () { var o = {}; Object.keys(window.__parRang).forEach(function (k) { o[k] = window.__parRang[k].length; }); o.bossParRang = {}; window.__parRang.BOSS.forEach(function (b) { o.bossParRang[b.rang] = (o.bossParRang[b.rang] || 0) + 1; }); return o; });
