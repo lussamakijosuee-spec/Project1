@@ -168,5 +168,8 @@ cinquième combattant.
 
 ## 8. Git
 
-Branche de travail : celle que la session désigne (elle change d'une session à l'autre). Pousser
-avec `git push -u origin <branche>`. Pas de pull request sans demande explicite.
+**Ce qui est pour le jeu va directement sur `main`, sans pull request.** JOKO, le 2026-10-14 :
+*« pas de pr (pour ce qui est pour le jeu.) Met sur le main directement »*. Je travaille sur la
+branche que la session désigne, puis je pousse aussi sur `main` en avance rapide
+(`git push origin HEAD:main`) — jamais en force : si `main` a bougé, je récupère d'abord ses
+commits. Pas de pull request sans demande explicite.
