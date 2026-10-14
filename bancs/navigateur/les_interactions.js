@@ -268,13 +268,24 @@ function ok(nom, cond, detail) {
                 var eva = Game_Action.prototype.itemEva;                // elle esquive tout…
                 Game_Action.prototype.itemEva = function (t) { return t === V ? 1 : 0; };
                 window.__evaVraie = eva;
-                window.__cibleVraie = Game_Party.prototype.randomTarget; // …et c'est elle qu'on vise
-                Game_Party.prototype.randomTarget = function () { return V; };
+                // …et c'est elle qu'on vise, quoi que l'IA des ennemis choisisse (sinon le banc
+                // dépend de leurs choix : un tour sans coup sur elle, c'est un tour sans contre)
+                window.__cibleVraie = Game_Action.prototype.makeTargets;
+                Game_Action.prototype.makeTargets = function () {
+                    var s = this.subject();
+                    if (s && s.isEnemy() && V.isAlive()) { return this.repeatTargets([V]); }
+                    return window.__cibleVraie.call(this);
+                };
             }
-            // la Vanne fait +50 à chaque tour : sans ça, la Rage enverrait ses coups sur ludwing
-            if (!window.__debutTourVrai) {
-                window.__debutTourVrai = BattleManager.startTurn;
-                BattleManager.startTurn = function () { $gameActors.actor(1)._colere = 0; return window.__debutTourVrai.apply(this, arguments); };
+            // la Vanne fait +50 (deux si ludwing agit deux fois) : sans ça, la Rage enverrait ses
+            // coups sur ludwing — le banc mesure le tour qu'elle garde, pas la Rage
+            if (!window.__debutActionVrai) {
+                window.__debutActionVrai = BattleManager.startAction;
+                BattleManager.startAction = function () {
+                    var V1 = $gameActors.actor(1);
+                    if (this._subject === V1) { V1._colere = 0; if (V1.isStateAffected(1001)) { V1.clearResult(); V1.eraseState(1001); } }
+                    return window.__debutActionVrai.apply(this, arguments);
+                };
             }
             window.__coups = [];
             var vrai = Game_Action.prototype.apply;
@@ -292,11 +303,14 @@ function ok(nom, cond, detail) {
         var r = await page.evaluate(function () {
             Game_Action.prototype.apply = window.__applyVrai;
             if (window.__evaVraie) { Game_Action.prototype.itemEva = window.__evaVraie; window.__evaVraie = null; }
-            if (window.__cibleVraie) { Game_Party.prototype.randomTarget = window.__cibleVraie; window.__cibleVraie = null; }
+            if (window.__cibleVraie) { Game_Action.prototype.makeTargets = window.__cibleVraie; window.__cibleVraie = null; }
             // seuls les tours commencés APRÈS la mise en place comptent, et seulement ceux qui sont finis
             var d = window.__debut, fin = $gameTroop.turnCount();
             var c = window.__coups.filter(function (x) { return x.t > d && x.t < fin; });
-            return { coups: c, tours: Math.max(0, fin - d - 1) };
+            return { coups: c, tours: Math.max(0, fin - d - 1),
+                     etat: 'tour ' + fin + ' (début ' + d + ') · en combat ' + $gameParty.inBattle() + ' · phase ' + BattleManager._phase
+                         + ' · sujet ' + (BattleManager._subject ? BattleManager._subject.name() : '—') + ' · évènement ' + $gameTroop.isEventRunning(),
+                     detail: window.__coups.map(function (x) { return 'T' + x.t + ':' + (x.forcee ? 'forcée ' : '') + x.quoi + '→' + x.sur; }).join(' ') };
         });
         await fermerCombat();
         return r;
@@ -305,7 +319,8 @@ function ok(nom, cond, detail) {
     var riposte = avec.coups.filter(function (c) { return c.sur === 'ludwing' && c.forcee; }).length;
     var siens = avec.coups.filter(function (c) { return c.sur === 'ennemi' && !c.forcee; }).length;
     ok('la Vanne : Vesper rend le coup à ludwing…', riposte >= 1, riposte + ' riposte(s) en ' + avec.tours + ' tours');
-    ok('…ET joue son tour à elle (son attaque sur l\'ennemi)', siens >= avec.tours && avec.tours >= 1, siens + ' attaque(s) à elle');
+    ok('…ET joue son tour à elle (son attaque sur l\'ennemi)', siens >= avec.tours && avec.tours >= 1, siens + ' attaque(s) à elle'
+        + (siens >= avec.tours && avec.tours >= 1 ? '' : ' · ' + avec.etat + ' · ' + avec.detail));
     var sans = await tour(false, false);
     var siensMV = sans.coups.filter(function (c) { return c.sur === 'ennemi' && !c.forcee; }).length;
     var ripMV = sans.coups.filter(function (c) { return c.sur === 'ludwing' && c.forcee; }).length;
@@ -315,7 +330,7 @@ function ok(nom, cond, detail) {
     var fl = await tour(true, true);
     var contres = fl.coups.filter(function (c) { return c.quoi === 131 && c.forcee; }).length;
     var siensF = fl.coups.filter(function (c) { return c.sur === 'ennemi' && !c.forcee; }).length;
-    ok('le Flow : elle esquive, contre-attaque…', contres >= 1, contres + ' contre(s) en ' + fl.tours + ' tours');
+    ok('le Flow : elle esquive, contre-attaque…', contres >= 1, contres + ' contre(s) en ' + fl.tours + ' tours' + (contres >= 1 ? '' : ' · ' + fl.etat + ' · ' + fl.detail));
     ok('…ET joue ses deux actions à elle', siensF >= 2 * fl.tours && fl.tours >= 1, siensF + ' action(s) à elle');
     var flMV = await tour(false, true);
     var siensFMV = flMV.coups.filter(function (c) { return c.sur === 'ennemi' && !c.forcee; }).length;
