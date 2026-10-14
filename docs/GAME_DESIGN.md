@@ -1,5 +1,11 @@
 # GAME DESIGN — *L'Empire aux Trois Têtes*
 
+> 🛑 **2026-10-14 — le lore se réduit à l'explication du mana.** JOKO : *« non plus de lore
+> complètement […] mon jeu sera plus un jeu pour pote entre potes […] pas un truc compliqué ou
+> sombre […] juste une explication du mana comme le premier on garde mais les don et couverture
+> on enlève »*. Ce document reste comme archive : ce qui n'est pas l'explication du mana n'est plus
+> une contrainte. Voir `INDEX.md`, « Le statut du lore ».
+
 > **Ce que ce document est.** L'extrait **implémentable** du lore : ce qui devient une valeur,
 > un état, une jauge, une formule ou un plugin. Rien d'autre. Pas de narration, pas d'ambiance,
 > pas de personnages secondaires sans mécanique.
@@ -32,6 +38,9 @@
 ## 1 · LES PERSONNAGES JOUABLES
 
 ### 1.1 · La règle du Don — commune aux quatre
+
+> 🛑 **Retiré** — JOKO, 2026-10-14 : *« les don et couverture on enlève »*. Plus de Don, pour
+> personne. Le paragraphe ci-dessous est gardé comme archive.
 
 🟩 **Un seul Don par personne.** Une **Arme**, **OU** un **Objet**, **OU** un **Avatar
 Spirituel**. Jamais deux, jamais de cumul. Ce que le porteur tient dans l'autre main est de

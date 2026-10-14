@@ -1,5 +1,12 @@
 # ⚔️🔮👤 LES DONS SPIRITUELS — le dossier complet
 
+> 🛑 **2026-10-14 — les Dons Spirituels sont retirés du lore.** JOKO : *« la partie don a
+> toujours été taboue pour moi […] les don et couverture on enlève »*. Le système était déjà
+> éteint dans le jeu depuis le 2026-09-24 (`DonsSpirituels`, `ObjetSpirituel`, `TraitsAme` :
+> `status:false`, fichiers gardés). Les 16 pièces restent dans la base, redécrites en équipement
+> ordinaire. **Ce dossier n'est plus qu'une archive.** Gardé : seiryu, l'Avatar de Korrah,
+> compagnon de combat — voir `SeiryuLeFamilier.js`.
+
 > **v3.0 — la correction.** La version précédente de ce dossier décrivait un système où Vesper,
 > Korrah et ludwing portaient **deux Dons** : leur Objet ou leur Avatar, **plus** une arme
 > spirituelle appelée « Manifestation ». C'était une invention, et elle contredisait la règle

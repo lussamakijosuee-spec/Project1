@@ -11,7 +11,23 @@
 | **Retrouver** une commande, un notetag, une formule exacte | **[`FICHE_COMMANDES_COMPLETE.md`](FICHE_COMMANDES_COMPLETE.md)** | le catalogue exhaustif (279 plugins balayés) |
 | **Comprendre** un système en profondeur (chiffres, prix, paliers) | **[`GUIDE_DEVELOPPEUR.md`](GUIDE_DEVELOPPEUR.md)** | le manuel des Trois Sources (tous les bonus/malus) |
 | **Ranger / activer** les plugins dans le bon ordre | **[`ORDRE_PLUGINS.md`](ORDRE_PLUGINS.md)** | ⚠️ l'ordre de chargement (à respecter) |
-| **Saisir le canon du mana** (le fond du jeu) | **[`../SYSTEME_DE_MANA.md`](../SYSTEME_DE_MANA.md)** | les règles du mana, à la source |
+| **Saisir le canon du mana** (le fond du jeu) | **[`SYSTEME_DE_MANA.md`](SYSTEME_DE_MANA.md)** · **[`CANON_LA_GENESE.md`](CANON_LA_GENESE.md)** | les règles du mana, et d'où il vient (les trois sources, le Premier) |
+
+## Le statut du lore (2026-10-14)
+
+JOKO : *« non plus de lore complètement en gros mon jeu sera plus un jeu pour pote entre potes si
+possible mais pas un truc compliqué ou sombre complètement juste une explication du mana comme le
+premier on garde mais les don et couverture on enlève »*.
+
+| | Documents |
+|---|---|
+| **Gardé — l'explication du mana** | [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md) (les trois sources, le Premier) · [`SYSTEME_DE_MANA.md`](SYSTEME_DE_MANA.md) (sources, éléments, affinités) |
+| **Retiré** | les **Dons Spirituels** ([`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md), chapitres 6 et 17 du système de mana) · la **couverture** (le donjon de couverture) — barrés, pas effacés |
+| **Archive, plus une contrainte** | [`lore.md`](lore.md) · [`EMPIRE_DU_CORPS.md`](EMPIRE_DU_CORPS.md) · [`CANON_LE_CORPS_ARTIFICIEL.md`](CANON_LE_CORPS_ARTIFICIEL.md) · [`personnages.md`](personnages.md) · [`scenario.md`](scenario.md) · [`perso-iris-et-joah.md`](perso-iris-et-joah.md) · le reste du [`GAME_DESIGN.md`](GAME_DESIGN.md) · les codex HTML |
+| **Pas encore tranché** | les trois **Codex** et leurs **chapitres** (dimensions, gardiens) · [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md) (la magie, mais aussi les cristaux et les hôtels) |
+
+Le ton : **un jeu entre potes, ni compliqué, ni sombre.** Gardé hors lore, comme mécanique de
+combat : **seiryu**, l'Avatar de Korrah — son Hiver passe par lui (`SeiryuLeFamilier.js`).
 
 ## Les trois docs « techniques » et comment elles s'emboîtent
 
@@ -33,7 +49,7 @@
 | [`PLUGIN_RoyaumeImperial.md`](PLUGIN_RoyaumeImperial.md) | `RoyaumeImperial` — le Domaine de ludwing, invocations libres, arsenal |
 | [`PLUGIN_FusionMana.md`](PLUGIN_FusionMana.md) | `FusionMana` — les 3 Fusions, gains/prix/escalade |
 | [`PLUGIN_DestinsParalleles.md`](PLUGIN_DestinsParalleles.md) | `DestinsParalleles` — les vies parallèles, dérive/chute/recrutement |
-| [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md) | **⚔️🔮👤 Le Don Spirituel & les Traits** — dossier complet : les 16 armes 501-516, les 4 reliques d'âme, toutes les compétences/états/animations, les 3 plugins (`DonsSpirituels` · `TraitsAme` · `ObjetSpirituel`) |
+| [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md) | 🛑 **archive** — le Don Spirituel, retiré du jeu (2026-09-24) puis du lore (2026-10-14) |
 
 ## Le reste du dossier `docs/`
 | Fichier | Contenu |
@@ -56,7 +72,7 @@
 
 ## Rappels ultra-rapides
 - Héros : **1** Vesper · **2** Korrah · **3** ludwing · **4** Aël. Var mentale = 10 + ID (11-14). Stock d'âmes = **var 15**.
-- Dons Spirituels : armes **501-516** (4 paliers × 4 héros) · reliques d'âme **68-71** — voir [`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md).
+- Dons Spirituels : **retirés** (2026-10-14). Les armes 501-516 et les reliques 68-71 restent dans la base, en équipement ordinaire.
 - 3 jauges : 🟣 Corruption (la Bête) · 🔴 Errance (l'Errant) · 🔵 Santé mentale (le Dément).
 - Interrupteurs réservés : 41 Fusion · 42 HUD · 95-98 chutes · 99 le Fond.
 - Compteurs : 826 skills · 426 ennemis · 516 troupes · 1000 états · 460 animations.
