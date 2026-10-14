@@ -21,9 +21,9 @@ JOKO, mot pour mot :
 | **On enlève** | les **Dons Spirituels** et la **couverture** (le donjon de couverture) — barrés ci-dessous, pas effacés |
 | **Le ton** | un jeu entre potes : ni compliqué, ni sombre |
 
-Pas encore tranché : les trois Codex et leurs chapitres (dimensions, gardiens) ne parlent ni de
-Don ni de couverture — ils restent tels quels en attendant que JOKO dise s'ils font partie de
-« l'explication du mana ».
+**Les trois Codex et leurs chapitres** (dimensions, gardiens) **sont gardés** : à la question
+« on les garde ou on les enlève ? », JOKO a répondu *« oui »* (2026-10-14) — lu comme « on les
+garde », puisqu'ils viennent du Premier.
 
 ---
 

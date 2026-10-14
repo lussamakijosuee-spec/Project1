@@ -25,7 +25,7 @@ F({ ev: 7, nom: 'Mirabelle', role: 'mage de quartier : recharge les lampes encha
     saisons: { 1: ['Le printemps, tout le monde veut un charme contre les moustiques. Ça ne marche pas. Je le vends quand même, avec un avertissement.'], 2: ['L\'été, je rafraîchis les caves. Deux pièces le sort. Les brasseurs m\'adorent.'], 3: ['L\'automne, les lampes. Toutes les lampes. Je dors quatre heures par nuit.'], 4: ['L\'hiver, je réchauffe des pierres. Une pierre chaude dans un lit, c\'est le vrai luxe.'] },
     discuter: ['La vraie magie, c\'est rare. Moi je fais de la magie de cuisine : un peu, souvent, bien.', K.MAGIE[2], 'Les nobles du manoir paient des mages de la capitale. Quand leurs sorts ratent, c\'est moi qu\'ils appellent. Par la porte de derrière.'],
     nouvelles: [K.LORD[1], K.MAGIE[3]],
-    perso: { titre: 'Votre Don ?', paliers: [[1, 'Une baguette ? Non. Une arme, comme tout le monde : une dague. Je coupe des herbes avec.'], [4, 'Ma magie ne vient pas du Don. Elle vient de ma mère, et de trente ans d\'erreurs. Le Don, c\'est le hasard. Le reste, c\'est du travail.']] },
+    perso: { titre: 'Votre magie ?', paliers: [[1, 'Une baguette ? Non. Juste mes mains, et une dague pour couper les herbes.'], [4, 'Ma magie vient de ma mère, et de trente ans d\'erreurs. Le talent, c\'est le hasard. Le reste, c\'est du travail.']] },
     options: [
         { titre: 'Un Éther (40 G)', cmds: paye(40, cat(A.se('Magic1'), A.objet(15, 1), P('Mirabelle', 'Voilà. Garde-le au frais, et ne le secoue pas.')), P('Mirabelle', 'Quarante. La magie a un prix, même la petite.')) },
         { titre: 'Un charme de lumière (60 G)', cmds: paye(60, cat(A.se('Magic2'), A.objet(63, 1), P('Mirabelle', 'Tiens. Pour les nuits où tu ne veux pas être seul dans le noir.')), P('Mirabelle', 'Soixante pièces. Je ne fais pas crédit, même aux héros.')) }
@@ -59,7 +59,7 @@ F({ ev: 12, nom: 'Oriane', role: 'apprentie enchanteresse de maître Aldebert', 
     premiere: 'Bonjour ! Oriane, apprentie ! … Attention, ne touche pas ce pot, il est peut-être en train d\'exploser. Non. Ça va.',
     bonjourTous: ['Bonjour !', '~Une odeur de brûlé flotte autour d\'elle.|Ce n\'est rien. Presque rien.'],
     saisons: { 1: ['J\'apprends les sorts de germination ! Maître Aldebert dit que je fais pousser surtout des mauvaises herbes.'], 2: ['L\'été, j\'ai fait geler une cruche d\'eau ! Et la table. Et la main du maître.'], 3: ['J\'enchante des lampes ! Enfin, j\'essaie. Il y en a une qui chante au lieu d\'éclairer.'], 4: ['L\'hiver, je m\'entraîne à faire des étincelles. Je ne sens plus mes sourcils.'] },
-    discuter: ['Le maître dit que j\'ai du talent et aucune prudence. C\'est un bon début, non ?', 'Mon Don, c\'est un objet ! Un anneau ! Je ne sais pas encore ce qu\'il fait. Il chauffe quand je mens.', K.MAGIE[5]],
+    discuter: ['Le maître dit que j\'ai du talent et aucune prudence. C\'est un bon début, non ?', 'Le maître m\'a confié un anneau ! Je ne sais pas encore ce qu\'il fait. Il chauffe quand je mens.', K.MAGIE[5]],
     nouvelles: [K.LORD[1], K.MAGIE[2]],
     perso: { titre: 'Pourquoi la magie ?', paliers: [[1, 'Parce que c\'est la plus belle chose du monde !'], [4, 'Mes parents voulaient que j\'épouse un marchand de laine. J\'ai fait brûler le contrat de mariage. Par accident. Enfin… presque par accident.']] },
     aurevoir: ['À bientôt ! Et éloigne-toi de ce pot.', 'Bonne journée !'] });

@@ -18,7 +18,7 @@ F({ carte: 41, ev: 3, nom: 'Gaudry', role: 'forgeron-armurier, père de Lise (la
     bonjour: { 1: ['La forge chauffe. Reviens dans une heure, ou achète maintenant.'], 2: ['~Il frappe l\'enclume, trois coups, puis relève la tête.|Oui ?'], 3: ['Je ferme bientôt. Fais vite.'] }, bonjourTous: ['Oui ?'],
     saisons: { 1: ['Le printemps, les recrues viennent acheter leur première armure. Je leur vends la plus solide. Ils veulent la plus brillante.'], 2: ['L\'été, la forge est un enfer. Je travaille la nuit, quand je peux.'], 3: ['L\'automne, les soldats du lord passent commande. Cent pointes de lance. Payées à la saison prochaine. Peut-être.'], 4: ['L\'hiver, je répare. Les armures brisées racontent toutes la même histoire.'] },
     blesse: 'Tu saignes sur mon comptoir. Montre ton armure. … Elle t\'a sauvé la vie. Et toi tu l\'as mal attachée.',
-    discuter: ['Un Don d\'arme, ça ne s\'use pas. Mais une armure, si. C\'est pour ça que les forgerons existent encore.', 'Les enchanteurs du marché veulent graver des runes sur mes lames. Une bonne lame n\'a pas besoin qu\'on lui chante des chansons.', 'Les soldats du lord ne paient qu\'avec des promesses. J\'ai un tonneau plein de promesses. Il ne pèse rien.'],
+    discuter: ['Une bonne lame, ça dure une vie. Une armure, non. C\'est pour ça que les forgerons ont toujours du travail.', 'Les enchanteurs du marché veulent graver des runes sur mes lames. Une bonne lame n\'a pas besoin qu\'on lui chante des chansons.', 'Les soldats du lord ne paient qu\'avec des promesses. J\'ai un tonneau plein de promesses. Il ne pèse rien.'],
     nouvelles: [K.LORD[2], K.LORD[3]],
     perso: { titre: 'Et Lise ?', paliers: [[1, 'Ma fille ? Elle travaille avec moi. Elle a de bonnes mains.'], [4, 'Elle veut partir à l\'aventure. Comme sa mère. Sa mère n\'est jamais revenue. Je lui ai dit non. Elle y va quand même, au bar, écouter les mercenaires. Je le sais.'], [7, '~Il pose son marteau.|Si elle part un jour… Je lui forgerai la meilleure armure de ma vie. Et je ne dormirai plus jamais.']] },
     options: [{ titre: 'Voir la marchandise', garder: 'boutique' }],
@@ -27,7 +27,7 @@ F({ carte: 41, ev: 4, nom: 'Renaud', role: 'mercenaire client de la forge, le jo
     premiere: 'Tu viens acheter aussi ? Prends pas le plastron du fond, je l\'ai vu en premier.',
     bonjourTous: ['Salut.', '~Il soupèse une épée, la repose, la reprend.|Hm ? Salut.'],
     saisons: K.SAISON,
-    discuter: ['Gaudry fait les meilleures armures de la région. Et les plus chères. Il appelle ça « la qualité ». J\'appelle ça « ma paie du mois ».', 'Mon Don, c\'est une masse. Je n\'ai besoin d\'aucune épée. Je viens quand même regarder les épées. On a le droit de rêver.'],
+    discuter: ['Gaudry fait les meilleures armures de la région. Et les plus chères. Il appelle ça « la qualité ». J\'appelle ça « ma paie du mois ».', 'Moi, je me bats à la masse. Je n\'ai besoin d\'aucune épée. Je viens quand même regarder les épées. On a le droit de rêver.'],
     nouvelles: [K.LORD[2], 'Le tableau du bar a des contrats. Des petits. Les gros, les soldats du lord les prennent et ne les finissent pas.'],
     aurevoir: ['Salut.', 'Et pas touche au plastron.'] });
 F({ carte: 41, ev: 6, nom: 'Clarisse', role: 'chasseuse, cliente de la forge, le jour', voix: 'froide, efficace, n\'aime pas perdre son temps.', passage: true,

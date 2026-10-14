@@ -20,7 +20,7 @@ F({ ev: 16, nom: 'Jonas', role: 'recrue de la garde, fils de pêcheur', voix: 't
     premiere: 'Jonas. Recrue. Mon père voulait que je sois pêcheur. Je suis garde. On ne se parle plus beaucoup.',
     bonjourTous: ['Salut.', 'Garde Jonas, à… enfin, bonjour.'],
     saisons: LAC,
-    discuter: ['La garde paie un peu mieux que la pêche. Et on ne se noie pas. En général.', 'Mon Don, c\'est une épée. Mon père a eu un harpon. On a tous une arme. On l\'utilise pas pareil.', K.DUR[1]],
+    discuter: ['La garde paie un peu mieux que la pêche. Et on ne se noie pas. En général.', 'Moi, c\'est l\'épée. Mon père, c\'était le harpon. On a tous une arme. On l\'utilise pas pareil.', K.DUR[1]],
     nouvelles: [K.LORD[5], K.LORD[4]],
     perso: { titre: 'Et ton père ?', paliers: [[1, 'Il pêche.'], [4, 'Il m\'a dit que je trahissais le lac. Je lui ai dit que le lac avait pris mon grand-père et mon oncle. Il n\'a rien répondu. Il est sorti pêcher.']] },
     aurevoir: ['Salut.', 'Si tu vois mon père… non, rien.'] });
@@ -44,7 +44,7 @@ F({ ev: 19, nom: 'Sora', role: 'petite fille qui ramasse des coquillages', voix:
     premiere: 'T\'as vu ce coquillage ? Il est violet ! Enfin, un peu violet. Tu veux le voir ? Non ? Je m\'appelle Sora !',
     bonjourTous: ['Coucou !', '~Elle a les poches pleines de coquillages qui tintent.|Salut !'],
     saisons: { 1: ['Au printemps, la plage est pleine de trésors ! Enfin, de coquillages.'], 2: ['L\'été, je nage jusqu\'au rocher. Maman dit non. Je nage quand même.'], 3: ['L\'automne, les vagues ramènent des choses bizarres. Une botte, une fois. Sans le pied.'], 4: ['L\'hiver, le lac gèle au bord. Je glisse. Maman dit non.'] },
-    discuter: ['Quand je serai grande, je veux un Don objet. Comme une boîte à musique magique. Ou un Avatar ! Un Avatar, ce serait le mieux.', 'Maëlle m\'apprend à écouter le vent. Il dit rien, le vent. Mais je fais semblant.', 'Tu savais que les poissons dorment les yeux ouverts ? Moi j\'ai essayé. Ça pique.'],
+    discuter: ['Quand je serai grande, je veux une boîte à musique magique. Ou un dragon ! Un dragon, ce serait le mieux.', 'Maëlle m\'apprend à écouter le vent. Il dit rien, le vent. Mais je fais semblant.', 'Tu savais que les poissons dorment les yeux ouverts ? Moi j\'ai essayé. Ça pique.'],
     nouvelles: ['Le monsieur au masque, au bout de la plage, il parle tout seul. Maman dit de pas y aller. Alors j\'y vais pas. Presque.'],
     perso: { titre: 'Tes coquillages ?', paliers: [[1, 'J\'en ai cent-douze ! Enfin, cent-dix. J\'en ai mangé deux. C\'était pas des coquillages.'], [3, 'Je les garde pour papa. Il reviendra de la pêche un jour, et je lui montrerai. Ça fait longtemps qu\'il pêche.']] },
     options: [{ titre: 'Accepter un coquillage', cmds: cat(A.se('Item1'), P('Sora', 'Tiens ! C\'est le plus violet. Enfin, le deuxième plus violet. Le premier, c\'est pour papa.'), H.affinite(1)) }],

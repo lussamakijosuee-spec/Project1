@@ -44,8 +44,9 @@ justifie. Si je ne peux pas la citer, je pose la question — même si ça coupe
 réponse me paraît évidente.
 
 Depuis le 2026-10-14, l'univers lui-même est réduit : je n'**ajoute** pas de lore, et rien de
-sombre ni de compliqué. Ce qui reste à trancher (les trois Codex et leurs chapitres, la Parole et
-ses cristaux) est listé dans `docs/INDEX.md`.
+sombre ni de compliqué. Les trois Codex et leurs chapitres sont gardés ; ce qui reste à trancher
+(la Parole et ses cristaux) est listé dans `docs/INDEX.md`. Les habitants ne parlent plus de Dons
+(fiches `bancs/outils/habitants/`, réécrites le 2026-10-14).
 
 Et quand une phrase est ambiguë (« il a 3 niveaux » : trois paliers ou trois états ?), **je ne
 tranche pas tout seul**. Je demande, ou j'expose les deux lectures.

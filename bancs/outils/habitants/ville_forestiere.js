@@ -21,10 +21,10 @@ F(K.garde(12, 'Oswin', { role: 'jeune garde de la porte nord, s\'ennuie', voix: 
     premiere: 'Salut. Oswin. Tu veux passer ? Passe. Tu veux parler ? Par pitié, parle.',
     discuter: ['Au manoir, les gardes mangent de la viande tous les jours. Ici, on mange de la poussière.', 'J\'ai compté les pavés de la porte. Cent quarante-deux. Hier j\'en comptais cent quarante et un. Je crois que je deviens fou.'],
     perso: { titre: 'Le manoir ?', paliers: [[1, 'Je veux y être muté. Brunehaut dit que je suis trop bête. C\'est une qualité, pour garder des nobles.'], [4, 'J\'ai écrit trois demandes. Jehan, l\'écrivain du bar, les a écrites pour moi. On ne m\'a jamais répondu.']] } }));
-F(K.garde(14, 'Arno', { role: 'recrue, vient de recevoir son Don', voix: 'nerveux, fier, parle trop vite.',
+F(K.garde(14, 'Arno', { role: 'recrue, vient de recevoir sa première lance', voix: 'nerveux, fier, parle trop vite.',
     premiere: 'Recrue Arno, à vos ordres ! Enfin… pas à vos ordres. À ceux du sergent. Mais bonjour !',
-    discuter: ['J\'ai reçu mon Don le mois dernier. Une lance. Une vraie. Elle est apparue, comme ça, dans mes mains. J\'en ai encore des frissons.', 'Le sergent dit qu\'un Don ne fait pas un soldat. Il a raison. Mais ça aide.'],
-    perso: { titre: 'Ton Don ?', paliers: [[1, 'Une lance ! … Bon, comme presque tout le monde. Mais c\'est MA lance.'], [3, 'Au fond, j\'espérais un Avatar. Tout le monde l\'espère. Deux sur cent. J\'étais pas dans les deux.'], [6, 'La nuit, parfois, je la fais apparaître juste pour la regarder. C\'est bête. C\'est la seule chose au monde qui soit vraiment à moi.']] } }));
+    discuter: ['J\'ai reçu ma lance le mois dernier. Une vraie, de la garde, avec mon nom gravé dessus. J\'en ai encore des frissons.', 'Le sergent dit qu\'une lance ne fait pas un soldat. Il a raison. Mais ça aide.'],
+    perso: { titre: 'Ta lance ?', paliers: [[1, 'Une lance ! … Bon, comme presque toute la garde. Mais c\'est MA lance.'], [3, 'Au fond, j\'espérais une épée. Comme les grands. Le sergent dit qu\'on commence tous par la lance.'], [6, 'La nuit, parfois, je la sors juste pour la regarder. C\'est bête. C\'est la seule chose au monde qui soit vraiment à moi.']] } }));
 F(K.garde(30, 'Sergent Doran', { role: 'sergent de la garde, suit la ronde que JOKO lui a tracée', voix: 'autoritaire, bourru, protège ses hommes.', tags: ['<Vie: fixe>'],
     premiere: 'Sergent Doran. Cette ville, c\'est ma ronde. Tu marches dedans, tu marches sous mes yeux.',
     discuter: ['J\'ai douze hommes pour une ville entière. Le lord en a quarante pour un manoir. Fais le calcul.', 'Mes gars sont payés en retard, mal nourris et mal équipés. Et ils tiennent. Je suis fier d\'eux. Le dis à personne.'],
@@ -79,7 +79,7 @@ F({ ev: 27, nom: 'Gaston', role: 'paysan, râle contre les taxes, finit ses jour
     premiere: 'Gaston. Paysan. Enfin, paysan pour le lord : je cultive, il récolte.',
     bonjour: { 1: ['Debout depuis quatre heures. Et toi, tu te promènes.'], 2: ['Hm. Encore une journée à nourrir des gens qui me méprisent.'], 3: ['Je vais au bar. Viens si tu veux. Tu paies si tu viens.'] }, bonjourTous: ['Quoi ?'],
     saisons: K.SAISON,
-    discuter: ['Trois récoltes sur quatre vont au lord. La quatrième, les corbeaux. Moi, je mange ce qui tombe.', 'Mon Don ? Une serpe. Comme mon père. Une arme, qu\'ils disent. Moi je coupe du blé avec.', K.DUR[2]],
+    discuter: ['Trois récoltes sur quatre vont au lord. La quatrième, les corbeaux. Moi, je mange ce qui tombe.', 'Mon arme ? Une serpe. Comme mon père. Une arme, qu\'ils disent. Moi je coupe du blé avec.', K.DUR[2]],
     nouvelles: [K.LORD[0], K.LORD[2], K.LORD[5]],
     perso: { titre: 'Votre ferme ?', paliers: [[1, 'Elle est au lord. J\'y habite, c\'est tout.'], [4, 'Ma femme est morte en couches, avec le petit. J\'ai continué à labourer le lendemain. Le lord ne donne pas de jour pour ça.']] },
     aurevoir: ['Ouais.', 'Va, va.'] });
@@ -120,7 +120,7 @@ F({ ev: 40, nom: 'Kaze', role: 'bretteur de passage', voix: 'laconique, précis,
     premiere: '~Il ne te regarde pas, mais tu sens qu\'il t\'a vu arriver depuis longtemps.|Kaze. De passage.',
     bonjourTous: ['…', 'Hm. Toi.'],
     saisons: { 1: ['La neige fond. Les routes rouvrent. Je repars bientôt.'], 2: ['Trop de monde, l\'été.'], 3: ['Le vent tourne.'], 4: ['On ne voyage pas l\'hiver. On attend.'] },
-    discuter: ['Ma lame est un Don. Elle ne s\'use pas. Moi, si.', 'On m\'a proposé d\'entrer au service du lord. J\'ai refusé. Je ne sers pas ceux qui ne se battent pas eux-mêmes.', 'Tu tiens bien ton arme. Mieux que la plupart.'],
+    discuter: ['Ma lame ne s\'use pas. Moi, si.', 'On m\'a proposé d\'entrer au service du lord. J\'ai refusé. Je ne sers pas ceux qui ne se battent pas eux-mêmes.', 'Tu tiens bien ton arme. Mieux que la plupart.'],
     nouvelles: [K.LORD[4]],
     perso: { titre: 'Pourquoi voyager ?', paliers: [[1, 'Parce que.'], [5, 'Je cherche quelqu\'un qui se bat mieux que moi. Pour apprendre. Ou pour finir.']] },
     aurevoir: ['Hm.', 'Garde ta garde haute.'] });
