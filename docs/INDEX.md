@@ -21,7 +21,7 @@ premier on garde mais les don et couverture on enlève »*.
 
 | | Documents |
 |---|---|
-| **Gardé — l'explication du mana** | [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md) (les trois sources, le Premier, les trois **Codex** et leurs **chapitres** — réponse « oui » de JOKO le 2026-10-14) · [`SYSTEME_DE_MANA.md`](SYSTEME_DE_MANA.md) (sources, éléments, affinités) |
+| **Gardé — l'explication du mana** | [`CANON_LA_GENESE.md`](CANON_LA_GENESE.md) (les trois sources, le Premier, les trois **Codex** et leurs **chapitres** — JOKO, 2026-10-14 : *« On garde »*) · [`SYSTEME_DE_MANA.md`](SYSTEME_DE_MANA.md) (sources, éléments, affinités) |
 | **Retiré** | les **Dons Spirituels** ([`DONS_SPIRITUELS.md`](DONS_SPIRITUELS.md), chapitres 6 et 17 du système de mana) · la **couverture** (le donjon de couverture) — barrés, pas effacés |
 | **Archive, plus une contrainte** | [`lore.md`](lore.md) · [`EMPIRE_DU_CORPS.md`](EMPIRE_DU_CORPS.md) · [`CANON_LE_CORPS_ARTIFICIEL.md`](CANON_LE_CORPS_ARTIFICIEL.md) · [`personnages.md`](personnages.md) · [`scenario.md`](scenario.md) · [`perso-iris-et-joah.md`](perso-iris-et-joah.md) · le reste du [`GAME_DESIGN.md`](GAME_DESIGN.md) · les codex HTML |
 | **Pas encore tranché** | [`CANON_LA_PAROLE.md`](CANON_LA_PAROLE.md) (la magie, mais aussi les cristaux et les hôtels) |
