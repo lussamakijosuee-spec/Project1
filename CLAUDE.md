@@ -147,6 +147,11 @@ cinquième combattant.
 | ludwing | l'âme et l'ombre — Royaume Impérial | `PorteurDAmes.js`, `RoyaumeImperial.js` |
 | Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
 
+**Les interactions** (`LesInteractions.js`, 2026-10-14) : une compétence lancée sur un allié le fait
+réagir. JOKO a choisi *« A2, B1, 2, 3, 4 ET C1 »* : des compétences prévues pour ça, toutes les
+réactions, et **c'est lui qui remplit le tableau** dans le gestionnaire de plugins. Je n'y écris pas
+de répliques ni de réactions sans lui — ce sont ses personnages.
+
 **Pièges de MV rencontrés ici :**
 
 - `Math.max(eval(formule), 0)` — une formule négative fait **0 dégât**, jamais un soin ;
@@ -170,6 +175,10 @@ cinquième combattant.
   fige aussi leurs tours ;
 - `BattleManager.queueForceAction` **vide les résultats de tout le monde** : lancé pendant un coup,
   il efface l'« esquive » et les popups. Le lancer à `onAllActionsEnd`.
+- `Game_Battler.forceAction` **efface les actions prévues** de celui qu'on force : une riposte ou une
+  contre-attaque avant son tour lui mangeait son tour. Passer par `Interactions.forcer`, qui les rend ;
+- l'**Attaque** est du type 1 : l'État de Flow (état 87, qui scelle 1, 2 et 3) la scelle — dans le
+  Flow, Vesper frappe avec ses arts et ses Arts Sereins.
 
 ---
 

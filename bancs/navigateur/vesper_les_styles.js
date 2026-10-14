@@ -17,7 +17,7 @@
  *                Convergence → Sang Perçant ×2 sans défense, Supernova +2 ;
  *   · GARDE      −15 % par coup du même type jusqu'à −75 %, la Garde boit PM
  *                et PT de plus en plus, l'armure cède, l'Arme de Sang ;
- *   · COLÈRE     +10 par coup (×0,5 / ×1,5 / ×1), la Vanne de ludwing, la Rage
+ *   · COLÈRE     +10 par coup (×0,5 / ×1,5 / ×1), la Vanne de ludwing (LesInteractions), la Rage
  *                (×1,5, et ludwing prend 60 % de ses coups à cible unique) ;
  *   · UN VRAI COMBAT, laissé tourner, sans erreur.
  *
@@ -254,16 +254,17 @@ function ok(nom, cond, detail) {
         __vider(); __style('garde');
         var ami = new Game_Action(L); ami.setAttack(); a.clearResult(); ami.executeDamage(a, 100);
         out.parAmi = StylesVesper.colere();
-        // la Vanne : ludwing vise un autre allié — c'est Vesper qui la prend
+        // la Vanne (LesInteractions, 2026-10-14) : ludwing choisit sa cible ; sur Vesper, +50 × son Style
         __vider(); __style('garde'); L.setMp(L.mmp);
         out.vannePeut = L.canUse($dataSkills[VANNE]);
-        var v = new Game_Action(L); v.setSkill(VANNE); v.setTarget($gameParty.members().indexOf($gameActors.actor(2)));
-        var cibles = v.makeTargets();
-        out.vanneCible = cibles.map(function (c) { return c.name(); }).join(',');
-        cibles.forEach(function (c) { __jouer(v, c); });
+        var v = new Game_Action(L); v.setSkill(VANNE); v.setTarget($gameParty.members().indexOf(a));
+        out.vanneCible = v.makeTargets().map(function (c) { return c.name(); }).join(',');
+        __jouer(v, a); L._interactionsEnAttente = [];
         out.vanneGarde = StylesVesper.colere();
-        __vider(); __style('lame'); __jouer(v, a); out.vanneLame = StylesVesper.colere();
-        __vider(); __style('saignee'); __jouer(v, a); out.vanneSang = StylesVesper.colere();
+        __vider(); __style('lame'); __jouer(v, a); L._interactionsEnAttente = []; out.vanneLame = StylesVesper.colere();
+        __vider(); __style('saignee'); __jouer(v, a); L._interactionsEnAttente = []; out.vanneSang = StylesVesper.colere();
+        // contre-épreuve : sur Korrah, pas de Colère pour Vesper
+        __vider(); var k = $gameActors.actor(2); __jouer(v, k); L._interactionsEnAttente = []; out.vanneKorrah = StylesVesper.colere();
         // à 100 : la Rage
         __vider(); __style('lame');
         var d0 = __degats(1, E);
@@ -272,7 +273,6 @@ function ok(nom, cond, detail) {
         out.colereRage = StylesVesper.colere();
         __style('lame');
         out.ratioRage = __degats(1, E) / d0;
-        out.vanneEnRage = !L.canUse($dataSkills[VANNE]);
         // en Rage, ses coups à cible unique : ludwing 60 % du temps
         function part(skillId) {
             var lud = 0, N = 1000;
@@ -298,12 +298,12 @@ function ok(nom, cond, detail) {
     ok('coup reçu en Garde : +10', co.parCoup.garde === 10, '+' + co.parCoup.garde);
     ok('un coup d\'allié ne l\'énerve pas (contre-épreuve)', co.parAmi === 0, '+' + co.parAmi);
     ok('ludwing peut lancer sa Vanne', co.vannePeut);
-    ok('la Vanne vise Vesper, quelle que soit la cible choisie', co.vanneCible === co.nomV, co.vanneCible);
+    ok('la Vanne vise l\'allié choisi', co.vanneCible === co.nomV, co.vanneCible);
     ok('Vanne : +50 en Garde, +25 en Lame, +75 en Sang', co.vanneGarde === 50 && co.vanneLame === 25 && co.vanneSang === 75,
         co.vanneGarde + ' · ' + co.vanneLame + ' · ' + co.vanneSang);
     ok('à 100 : 💢 la Rage', co.rage && co.colereRage === 100);
     ok('en Rage : ×1,5 de dégâts', Math.abs(co.ratioRage - 1.5) < 0.01, '×' + co.ratioRage.toFixed(2));
-    ok('en Rage, ludwing n\'a plus de Vanne à lancer', co.vanneEnRage);
+    ok('la Vanne sur Korrah n\'énerve pas Vesper (contre-épreuve)', co.vanneKorrah === 0, '+' + co.vanneKorrah);
     ok('en Rage : ludwing prend ~60 % de ses coups à cible unique', Math.abs(co.partRage - 0.6) < 0.05, Math.round(co.partRage * 100) + ' % sur 1000');
     ok('…jamais sur un coup de zone (contre-épreuve)', co.partToutLeMonde === 0, Math.round(co.partToutLeMonde * 100) + ' %');
     ok('la Rage finie, la Colère retombe à 0 et ludwing est tranquille', co.apres === 0 && co.partCalme === 0,

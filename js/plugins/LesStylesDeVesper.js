@@ -27,11 +27,6 @@
  * @type number
  * @default 10
  *
- * @param colereParVanne
- * @text Colère par Vanne de ludwing
- * @type number
- * @default 50
- *
  * @param multLame
  * @text Colère gagnée en Lame (×)
  * @desc « Plus contrôlée, moins apte à la colère. »
@@ -200,8 +195,9 @@
  *      l'adaptation) se fige en arme : un seul coup qui rend tout.
  *
  *  💢 LA COLÈRE — une jauge de 0 à 100 (elle remplace la « maîtrise de soi »
- *  de l'ancienne santé mentale). +10 par coup reçu, +50 quand ludwing lui
- *  lance une vanne (« Vanne à Vesper »). À 100 : la Rage, 2 tours. Elle
+ *  de l'ancienne santé mentale). +10 par coup reçu ; les interactions la
+ *  font monter aussi (LesInteractions.js : la Vanne de ludwing, +50 — et il
+ *  se prend un coup). À 100 : la Rage, 2 tours. Elle
  *  frappe 50 % plus fort, +25 % de critiques — et ses coups à cible unique
  *  visent ludwing 60 % du temps. Tu la pilotes toujours.
  * ═══════════════════════════════════════════════════════════════════════════
@@ -211,7 +207,7 @@
     var P = PluginManager.parameters('LesStylesDeVesper');
     function num(k, d) { var v = P[k]; return (v === undefined || v === '') ? d : Number(v); }
     var VESPER = num('acteur', 1), LUDWING = num('ludwing', 3);
-    var C_COUP = num('colereParCoup', 10), C_VANNE = num('colereParVanne', 50);
+    var C_COUP = num('colereParCoup', 10);
     var MULT = { lame: num('multLame', 0.5), sang: num('multSang', 1.5), garde: num('multGarde', 1) };
     var ETAT_RAGE = num('etatRage', 1001), RAGE_DEG = num('rageDegats', 150) / 100, RAGE_LUD = num('rageLudwing', 60) / 100;
     var TYPE_ARTS = num('typeArts', 24);
@@ -300,10 +296,6 @@
             if (skill.meta && skill.meta.StyleVesper && sansSortie(this)) { return false; }
             if (tag(skill, 'FlowVesper') && this.isStateAffected(ETAT_EPUISE)) { return false; }
             if (tag(skill, 'ArmeDeSang') && (this._sangEncaisse || 0) < this.mhp * SEUIL_ARME) { return false; }
-        }
-        if (tag(skill, 'VanneVesper')) {
-            var v = dansLeCombat(VESPER);
-            if (!v || v.isStateAffected(ETAT_RAGE) || v.isStateAffected(ETAT_BERSERK)) { return false; }
         }
         return true;
     };
@@ -433,14 +425,10 @@
         _ajoute.call(this, id);
     };
 
-    // ── les cibles : la Rage (ludwing), la Vanne, la Supernova ──────────────
+    // ── les cibles : la Rage (ludwing), la Supernova ────────────────────────
     var _cibles = Game_Action.prototype.makeTargets;
     Game_Action.prototype.makeTargets = function () {
         var u = this.subject(), it = this.item();
-        if (tag(it, 'VanneVesper')) {
-            var v = dansLeCombat(VESPER);
-            if (v) { return [v]; }
-        }
         var t = _cibles.call(this);
         if (!enCombat() || !estVesper(u) || !it) { return t; }
         // ✶ Supernova après la Convergence : deux éclats de plus
@@ -464,11 +452,6 @@
         var u = this.subject(), it = this.item();
         _applique.call(this, target);
         if (!enCombat() || !it) { return; }
-        // la Vanne de ludwing
-        if (tag(it, 'VanneVesper') && estVesper(target)) {
-            journal('\\C[2]💢 « ' + target.name() + ', t\'as vu ta tête ? »\\C[0]');
-            gagnerColere(target, C_VANNE);
-        }
         if (!estVesper(u)) {
             // ☯ 2A : chaque esquive déclenche une contre-attaque — le coup qu'elle a
             // esquivé (EVA du Flow), ou que la Zone a dévié (note de l'état 87).
@@ -503,8 +486,10 @@
         var v = enCombat() && this.isEnemy && this.isEnemy() ? dansLeCombat(VESPER) : null;
         if (v && v._contreEnAttente === this) {
             v._contreEnAttente = null;
-            if (v.isStateAffected(ETAT_FLOW) && v.canMove() && this.isAlive() && BattleManager.queueForceAction) {
-                BattleManager.queueForceAction(v, CONTRE, this);
+            if (v.isStateAffected(ETAT_FLOW) && v.canMove() && this.isAlive()) {
+                // sans lui coûter les actions qu'elle avait prévues (LesInteractions)
+                if (window.Interactions) { Interactions.forcer(v, CONTRE, this.index()); }
+                else if (BattleManager.queueForceAction) { BattleManager.queueForceAction(v, CONTRE, this); }
             }
         }
         if (!estVesper(this)) { return; }
@@ -625,6 +610,8 @@
     window.StylesVesper = {
         style: function () { return style(vesper()); },
         colere: function () { var a = vesper(); return a ? colere(a) : 0; },
+        /** Pour les interactions : n de Colère (× son Style), la Rage à 100. */
+        gagnerColere: function (b, n) { if (estVesper(b)) { gagnerColere(b, n); } },
         poserColere: function (n) { var a = vesper(); if (a) { a._colere = Math.max(0, Math.min(100, n)); if (n >= 100) { entrerEnRage(a); } } },
         adaptation: function () { var a = vesper(); return a ? JSON.parse(JSON.stringify(a._adapt || {})) : {}; },
         sangEncaisse: function () { var a = vesper(); return a ? (a._sangEncaisse || 0) : 0; },
