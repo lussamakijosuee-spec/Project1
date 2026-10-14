@@ -16,7 +16,11 @@
  *   · seul ce qui est visuel est sauté : animations, attentes, popups.
  *
  * Les héros jouent comme un joueur raisonnable — pas un joueur parfait :
- *   · Vesper marque, absorbe, change de Style, rend le sang quand elle faiblit ;
+ *   · Vesper (depuis le 2026-10-14, LesStylesDeVesper) : en Sang elle marque,
+ *     absorbe, converge et rend le sang ; en Garde elle relâche l'Arme de Sang
+ *     avant que l'armure cède ; sous 20 % elle entre dans le Flow (Lame, deux
+ *     actions par tour) ; en Rage elle passe en Sang pour le Berserker.
+ *     VESPER_STYLE=lame|sang|garde fige le Style qu'elle préfère (auto sinon) ;
  *   · Aël passe un Contrat, voile un groupe, ferme une Porte sur le plus
  *     dangereux, puis lance ses Paroles aux frais de son partenaire — et tire
  *     la Flèche que le Miracle lui a donnée ;
@@ -238,19 +242,57 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
             var c = cibleFocus(); if (!c) { return; }
             poser(a, meilleurCoup(a, c), c);
         }
+        /** Vesper et ses trois Styles. Un joueur saisit toutes ses actions d'un
+         *  coup : dans le Flow, deux — la première version n'en posait qu'une. */
         function vesper(a) {
+            var n = Math.max(1, a.makeActionTimes()), faites = [];
+            for (var i = 0; i < n; i++) { a._actions = []; vesperUne(a); if (a._actions[0]) { faites.push(a._actions[0]); } }
+            a._actions = faites;
+        }
+        var ULTIS_VESPER = [1138, 1140, 1143, 813, 26, 126, 1301];
+        /** ludwing lui lance sa Vanne quand elle est en Sang : la Rage, puis le
+         *  Berserker — ce qu'un joueur fait exprès. Pas en Lame ni en Garde. */
+        function vanneUtile(l) {
+            var v = $gameActors.actor(1), SV = window.StylesVesper;
+            if (!SV || !v || !v.isAlive() || $gameParty.battleMembers().indexOf(v) < 0) { return false; }
+            var pref = window.__styleVesper || 'auto';
+            if (pref !== 'auto' && pref !== 'sang') { return false; }
+            return SV.style() === 'sang' && SV.colere() >= 25 && l.canUse($dataSkills[1302]);
+        }
+        function vesperUne(a) {
             var c = cibleFocus(); if (!c) { return; }
-            var P = window.PacteDeSang, pct = P.pct(), hp = a.hp / a.mhp;
-            // Style, gratuit
-            if (hp < 0.45 && pct >= 0.30) { P.changerStyle('saignee'); }
-            else if (hp < 0.30 && pct < 0.30 && a.tp < 30) { P.changerStyle('garde'); }
-            else { P.changerStyle('lame'); }
-            if (a.canUse($dataSkills[1143]) && ((hp < 0.40 && pct > 0) || (hp < 0.25))) { poser(a, 1143, c); return; }
-            if (!c.isStateAffected(P.dette) && pct < 1.0) {
-                if ($gameTroop.aliveMembers().length >= 2 && a.canUse($dataSkills[1140])) { poser(a, 1140, c); return; }
-                if (a.canUse($dataSkills[1138])) { poser(a, 1138, c); return; }
+            var P = window.PacteDeSang, SV = window.StylesVesper, E = SV.etats, hp = a.hp / a.mhp;
+            var pref = window.__styleVesper || 'auto';
+            var verrou = a.isStateAffected(E.flow) || a.isStateAffected(E.berserker);
+            if (!verrou) {
+                // les ultimes qui la sauvent : en Rage, le Berserker ; sous 20 %, le Flow
+                if (a.isStateAffected(E.rage) && (pref === 'auto' || pref === 'sang')) {
+                    P.changerStyle('saignee');
+                    if (a.canUse($dataSkills[26])) { poser(a, 26, a); return; }
+                }
+                if (hp <= 0.2 && (pref === 'auto' || pref === 'lame')) {
+                    P.changerStyle('lame');
+                    if (a.canUse($dataSkills[126])) { poser(a, 126, a); return; }
+                }
+                // auto : la Garde quand elle faiblit, le Sang contre un groupe (ou Masque prêt), la Lame contre un seul
+                var nb = $gameTroop.aliveMembers().length;
+                var s = pref === 'auto' ? (hp < 0.45 ? 'garde' : (nb >= 2 || P.pct() >= 0.30 ? 'saignee' : 'lame')) : (pref === 'sang' ? 'saignee' : pref);
+                P.changerStyle(s);
             }
-            poser(a, meilleurCoup(a, c, function (s) { return s.id === 1138 || s.id === 1140 || s.id === 1143; }), c);
+            var st = SV.style();
+            // 🛡 l'Arme de Sang : assez encaissé, ou l'armure va céder
+            if (st === 'garde' && a.canUse($dataSkills[1301]) && (SV.sangEncaisse() >= a.mhp * 0.5 || a.mp < a.mmp * 0.25)) { poser(a, 1301, c); return; }
+            if (st === 'sang') {
+                if (!a.isStateAffected(E.berserker) && a.canUse($dataSkills[1143]) && ((hp < 0.40 && P.pct() > 0) || hp < 0.25)) { poser(a, 1143, c); return; }
+                if (a.isStateAffected(E.convergence) && a.canUse($dataSkills[1299])) { poser(a, 1299, c); return; }
+                if (!c.isStateAffected(P.dette) && P.pct() < 1.0) {
+                    if ($gameTroop.aliveMembers().length >= 2 && a.canUse($dataSkills[1140])) { poser(a, 1140, c); return; }
+                    if (a.canUse($dataSkills[1138])) { poser(a, 1138, c); return; }
+                }
+                // ✶ la Convergence, quand le Sang Perçant suivra (24 PT)
+                if (!a.isStateAffected(E.convergence) && a.tp >= 24 && a.canUse($dataSkills[813])) { poser(a, 813, a); return; }
+            }
+            poser(a, meilleurCoup(a, c, function (s) { return ULTIS_VESPER.indexOf(s.id) >= 0; }), c);
         }
         function ael(a) {
             var B = window.BibliothequeAel;
@@ -306,6 +348,8 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
                     carnet.parCoup[cle] = (carnet.parCoup[cle] || 0) + Math.min(value, target.hp);
                 }
                 if (u && u.isEnemy() && target.isActor()) { carnet.recus += Math.min(value, target.hp); }
+                // 💢 ce que Vesper, en Rage, met sur ludwing
+                if (u && u.isActor() && u.actorId() === 1 && target.isActor() && target.actorId() === 3) { carnet.vesper.surLudwing += Math.min(value, target.hp); }
             }
             return vraiDegats.call(this, target, value);
         };
@@ -392,6 +436,7 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
                 if (!a.canMove()) { return; }
                 if (a.actorId() === 6) { a.makeActions(); return; }
                 if (a.actorId() === 1) { vesper(a); }
+                else if (a.actorId() === 3 && vanneUtile(a)) { poser(a, 1302, $gameActors.actor(1)); }
                 else if (a.actorId() === 4) { ael(a); }
                 else { generique(a); }
             });
@@ -416,6 +461,16 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
             if (carnet && premierHeros !== null && premierEnnemi !== null) { carnet.herosDAbord += premierHeros < premierEnnemi ? 1 : 0; carnet.toursVus++; }
             BattleManager._actionBattlers = [];
             if (!fini()) { BattleManager.endTurn(); evenements(); }
+            // Vesper, tour par tour : son Style, ses états
+            var v1 = $gameActors.actor(1);
+            if (carnet && v1 && window.StylesVesper && $gameParty.battleMembers().indexOf(v1) >= 0) {
+                var cv = carnet.vesper, SE = StylesVesper.etats;
+                if (v1.isAlive()) { cv.styles[StylesVesper.style()] = (cv.styles[StylesVesper.style()] || 0) + 1; } else { cv.toursMorte++; }
+                if (v1.isStateAffected(SE.rage)) { cv.rage++; }
+                if (v1.isStateAffected(SE.flow)) { cv.flow++; }
+                if (v1.isStateAffected(SE.berserker)) { cv.berserker++; }
+                if (v1.isStateAffected(SE.brisee)) { cv.brisee++; }
+            }
             if (window.__trace) {
                 window.__trace.push('— fin du tour ' + t + ' · ennemis ' + $gameTroop.members().map(function (e) { return e.hp + '/' + e.mhp + (e.isHidden() ? ' (caché)' : ''); }).join(', ')
                     + ' · héros ' + $gameParty.members().map(function (m) { return m.name() + ' ' + m.hp + (m.states().length ? ' [' + m.states().map(function (s) { return s.name; }).join(',') + ']' : '') + (m.canMove() ? '' : ' (immobile)'); }).join(' / '));
@@ -447,7 +502,8 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
             //   passage d'un sprite. Sans affichage, on la crée nous-mêmes.
             $gameParty.members().concat($gameTroop.members()).forEach(function (b) { b.clearDamagePopup(); });
             $gameTemp._forceActionQueue = undefined;
-            carnet = { degats: {}, brut: {}, actions: {}, recus: 0, soiMeme: {}, parCoup: {}, herosDAbord: 0, toursVus: 0 };
+            carnet = { degats: {}, brut: {}, actions: {}, recus: 0, soiMeme: {}, parCoup: {}, herosDAbord: 0, toursVus: 0,
+                       vesper: { styles: {}, rage: 0, flow: 0, berserker: 0, brisee: 0, toursMorte: 0, surLudwing: 0 } };
             var pvGroupe = $gameParty.members().filter(function (m) { return m.actorId() !== 6; }).reduce(function (n, m) { return n + m.mhp; }, 0);
             var mediane = function (l) { l = l.slice().sort(function (x, y) { return x - y; }); return l.length ? l[Math.floor(l.length / 2)] : 0; };
             var ennemis = { nombre: $gameTroop.members().length,
@@ -471,7 +527,9 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
                 pvGroupe: pvGroupe, ennemis: ennemis,
                 herosDAbord: carnet.toursVus ? carnet.herosDAbord / carnet.toursVus : 0,
                 // seiryu : ses chutes, les tours où Korrah n'avait pas l'Hiver, ses soins
-                seiryu: window.Seiryu && Seiryu.bilan ? Seiryu.bilan() : null
+                seiryu: window.Seiryu && Seiryu.bilan ? Seiryu.bilan() : null,
+                // Vesper : tours par Style, Rage / Flow / Berserker / armure brisée, ce que ludwing a pris
+                vesper: carnet.vesper
             };
             // on vide ce que les sprites n'afficheront jamais
             $gameParty.members().concat($gameTroop.members()).forEach(function (b) { b.clearDamagePopup(); b.clearAnimations && b.clearAnimations(); });
@@ -513,6 +571,10 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
         console.log('réglage essayé :', process.env.MULT);
     }
     var reglage = await page.evaluate(function () { return window.EquilibreDesCombats ? JSON.parse(JSON.stringify(window.EquilibreDesCombats.mult)) : null; });
+    if (process.env.VESPER_STYLE) {
+        await page.evaluate(function (s) { window.__styleVesper = s; }, process.env.VESPER_STYLE);
+        console.log('Vesper joue en :', process.env.VESPER_STYLE);
+    }
 
     // Mode diagnostic : DIAG=troupe,niveau → un seul combat, commenté coup par coup.
     if (process.env.DIAG) {
@@ -546,7 +608,7 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
     }
     var listes = await page.evaluate(function () { return window.__parRang; });
 
-    var resultats = { date: new Date().toISOString(), reglage: reglage, niveaux: [] };
+    var resultats = { date: new Date().toISOString(), reglage: reglage, styleVesper: process.env.VESPER_STYLE || 'auto', niveaux: [] };
     for (var i = 0; i < NIVEAUX.length; i++) {
         var n = NIVEAUX[i], rang = rangPour(n);
         var profil = await page.evaluate(function (x) { return window.__profil(x); }, n);

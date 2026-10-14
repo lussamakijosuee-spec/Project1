@@ -161,6 +161,10 @@ function typesOuverts(a) {
     // Les compétences que sa propre classe lui apprend : de quoi poser un état.
     var sait = {};
     (cl.learnings || []).forEach(function (l) { sait[l.skillId] = true; });
+    // …et celles que l'acteur ou sa classe ajoutent par un trait 43 « Ajouter une
+    // compétence ». Sans ça, le Berserker et l'État de Flow de Vesper (2026-10-14)
+    // passaient pour « qu'aucune classe n'apprend » — et leurs branches pour mortes.
+    [a.traits, cl.traits].forEach(function (tr) { (tr || []).forEach(function (t) { if (t.code === 43) { sait[t.dataId] = true; } }); });
 
     function noter(t, texte) { (conditions[t] = conditions[t] || []).push(texte); }
     [[Weapons, 'arme'], [Armors, 'armure'], [States, 'état']].forEach(function (src) {

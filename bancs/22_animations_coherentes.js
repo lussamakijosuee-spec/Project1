@@ -163,7 +163,10 @@ ok('Combustion (221) brûle : −12 % PV / tour, et ne protège plus de la magie
 // contre-épreuves
 ok('contre-épreuve : une « Brûlure » qui donne ATQ ×1,5 serait attrapée', bons({ traits: [{ code: 21, dataId: 2, value: 1.5 }] }).length === 1);
 ok('contre-épreuve : « Frénésie » ATQ ×1,6 / DÉF ×0,7 n\'est pas un mal, la règle la laisse', !NOM_DE_MAL.test('Frénésie Sanguinaire'));
-ok('rien n\'a été supprimé : 239 états nommés, 1 000 cases', St.filter(function (s) { return s && s.name; }).length === 239 && St.length === 1001);
+// 2026-10-14 : quatre états ajoutés pour Vesper (1001 Rage, 1002 Épuisement du Flow, 1003 Armure Brisée,
+// 1004 Convergence). « Rien de supprimé » : on ne descend jamais sous ce que la base contenait.
+var nommes = St.filter(function (s) { return s && s.name; }).length;
+ok('rien n\'a été supprimé : au moins 239 états nommés, au moins 1 000 cases', nommes >= 239 && St.length >= 1001, nommes + ' nommés · ' + (St.length - 1) + ' cases');
 
 console.log('\n' + '═'.repeat(74) + '\n   ' + vert + ' contrôles passés · ' + rouge + ' échec(s)\n' + '═'.repeat(74));
 process.exit(rouge ? 1 : 0);

@@ -142,7 +142,7 @@ cinquième combattant.
 
 | Héros | Sa branche | Ce qui la porte |
 |---|---|---|
-| Vesper | sang — le Pacte, trois Styles *(façon Arlecchino)* | `LePacteDeSang.js` |
+| Vesper | trois Styles, trois kits — **Lame** (arts d'armes selon l'arme tenue, État de Flow), **Sang** (le Pacte façon Arlecchino, Berserker), **Garde** (adaptation, Arme de Sang) — et sa **Colère** (la Vanne de ludwing) | `LePacteDeSang.js`, `LesStylesDeVesper.js` |
 | Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** | `SeiryuLeFamilier.js` |
 | ludwing | l'âme et l'ombre — Royaume Impérial | `PorteurDAmes.js`, `RoyaumeImperial.js` |
 | Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
@@ -163,6 +163,13 @@ cinquième combattant.
   un code qui pose un état hors de ce chemin doit faire `clearResult()` d'abord ;
 - un message d'état s'affiche **collé au nom** (`nom + message1`) : pas de `%1`, il faut écrire
   `" surchauffe !"`.
+- YEP_BattleEngineCore **remet `repeats` à 1** au chargement : les coups d'une compétence à
+  `<target action>` sont ses lignes `action effect`. Pour frapper deux fois, doubler la liste des
+  cibles (`numRepeats`) ;
+- chez YEP, les états « fin de tour » **s'usent dans `regenerateAll`** : un banc qui la neutralise
+  fige aussi leurs tours ;
+- `BattleManager.queueForceAction` **vide les résultats de tout le monde** : lancé pendant un coup,
+  il efface l'« esquive » et les popups. Le lancer à `onAllActionsEnd`.
 
 ---
 

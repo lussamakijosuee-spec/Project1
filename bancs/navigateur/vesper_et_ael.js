@@ -1,5 +1,7 @@
 /*
  * BANC NAVIGATEUR — VESPER (LE PACTE, LES STYLES) ET AËL (LA BIBLIOTHÈQUE)
+ * (Pacte v2.0, 2026-10-14 : ni Pacte ni Masque en Lame ; ce que font les kits
+ *  et les ultimes de chaque Style : vesper_les_styles.js)
  * ---------------------------------------------------------------------------
  * JOKO : « Vesper V1 juste comme Arlecchino ET 3 parfait, et Aël parfait
  * tout — fais extrêmement attention pour que ce soit bien et jouable. »
@@ -54,7 +56,8 @@ function ok(nom, cond, detail) {
 
         out.types = a.addedSkillTypes().indexOf(22) >= 0 && [1265, 1266, 1267].every(function (i) { return a.hasSkill(i) || a.isLearnedSkill(i) || a.skills().some(function (s) { return s.id === i; }); });
         a.setMp(a.mmp); a.setTp(100);
-        PacteDeSang.changerStyle('lame');
+        // v2.0 (2026-10-14) : en Lame, ni Pacte ni Masque — le Pacte se joue en Garde et en Sang.
+        PacteDeSang.changerStyle('garde');
 
         // ① inscrire, puis ② absorber
         frappe(1138, e);
@@ -65,28 +68,32 @@ function ok(nom, cond, detail) {
         out.detteApres = e.isStateAffected(PacteDeSang.dette);
         out.pacteApresAbsorb = PacteDeSang.pct();
         out.masque = PacteDeSang.masque();
+        // contre-épreuve : en Lame, le même coup n'absorbe rien
+        PacteDeSang.poser(0); frappe(1138, e);
+        PacteDeSang.changerStyle('lame'); frappe(1, e);
+        out.lameAbsorbe = { dette: e.isStateAffected(PacteDeSang.dette), pacte: PacteDeSang.pct() };
+        e.removeState(PacteDeSang.dette);
 
-        // ③ le Masque : +0,6 × 1,5 (Lame) × Pacte%
-        PacteDeSang.poser(1.0);
-        var avecMasque = degats(1, e);
-        out.ratioLame = avecMasque / sansMasque;
-        // Depuis le 2026-09-26 chaque Style porte ses propres traits (Lame : ATQ ×1,3…) : le
-        // Masque se mesure donc dans SON Style, Pacte vide contre Pacte plein.
-        PacteDeSang.changerStyle('saignee'); PacteDeSang.poser(0);
-        var sansMasqueSaignee = degats(1, e);
-        PacteDeSang.poser(1.0);
-        out.ratioSaignee = degats(1, e) / sansMasqueSaignee;
-        PacteDeSang.changerStyle('lame');
-        // consommation : 10 % en Lame
-        PacteDeSang.poser(1.0);
-        var p0 = PacteDeSang.pacte();
-        a.setHp(Math.floor(a.mhp * 0.5)); var hpL = a.hp;
-        var act = new Game_Action(a); act.setAttack(); jouer(act, e);
-        out.consoLame = 1 - PacteDeSang.pacte() / p0;
-        out.lameNeBoitPas = a.hp <= hpL;
+        // ③ le Masque, mesuré dans SON Style (chacun porte ses traits) : Pacte vide contre Pacte plein
+        function ratio(s) { PacteDeSang.changerStyle(s); PacteDeSang.poser(0); var d0 = degats(1, e); PacteDeSang.poser(1.0); var d1 = degats(1, e); return { r: d1 / d0, masque: PacteDeSang.masque() }; }
+        out.ratioGarde = ratio('garde');
+        out.ratioSang = ratio('saignee');
+        out.ratioLame = ratio('lame');
+        // consommation : 7,5 % en Garde, 10 % en Sang, rien en Lame
+        function conso(s) {
+            PacteDeSang.changerStyle(s); PacteDeSang.poser(1.0); e.removeState(PacteDeSang.dette);
+            var p0 = PacteDeSang.pacte(); a.setHp(Math.floor(a.mhp * 0.5)); var hp = a.hp;
+            var act = new Game_Action(a); act.setAttack(); jouer(act, e);
+            return { c: 1 - PacteDeSang.pacte() / p0, soin: a.hp - hp };
+        }
+        out.consoGarde = conso('garde');
+        out.consoSang = conso('saignee');
+        out.consoLame = conso('lame');
         // sous le seuil : pas de Masque (contre-épreuve)
+        PacteDeSang.changerStyle('garde'); PacteDeSang.poser(0);
+        var baseGarde = degats(1, e);
         PacteDeSang.poser(0.2);
-        out.ratioSousSeuil = degats(1, e) / sansMasque;
+        out.ratioSousSeuil = degats(1, e) / baseGarde;
 
         // ④ les soins
         a.setHp(Math.floor(a.mhp * 0.5)); PacteDeSang.poser(0.5);
@@ -100,6 +107,12 @@ function ok(nom, cond, detail) {
         $gameParty.gainItem($dataItems[1], 1);
         var hp2 = a.hp, it = new Game_Action(a); it.setItem(1); it.apply(a);
         out.potion = a.hp - hp2;
+        // v2.0 : en Lame, elle a posé son Pacte — les soins passent (soinsEnLame)
+        PacteDeSang.changerStyle('lame'); PacteDeSang.poser(0.5);
+        var hpL = a.hp, paL = PacteDeSang.pacte(); a.gainHp(1000);
+        out.soinLame = { hp: a.hp - hpL, pacte: paL - PacteDeSang.pacte(), soignable: PacteDeSang.soignable(a) };
+        PacteDeSang.changerStyle('garde'); out.soignableGarde = PacteDeSang.soignable(a);
+        a.setHp(Math.floor(a.mhp * 0.5));
 
         // ⑤ Rendre le Sang : le soin d'abord, le coup (et son recul) ensuite
         a.setHp(Math.floor(a.mhp * 0.2)); PacteDeSang.poser(1.2);
@@ -110,8 +123,8 @@ function ok(nom, cond, detail) {
         Game_Battler.prototype.gainHp = vg;
         out.rendre = { soin: soinVu, attendu: Math.floor(pr * 0.5 + a.atk * 1.5), pacte: PacteDeSang.pacte(), vivante: a.isAlive(), hp0: hp3, hp: a.hp };
 
-        // Le recul du mana négatif : pas sur la part du Masque
-        PacteDeSang.changerStyle('lame'); a.setHp(a.mhp); a.setTp(100);
+        // Le recul du mana négatif : pas sur la part du Masque (en Garde : ni vol de vie, ni Masque coupé)
+        PacteDeSang.changerStyle('garde'); a.setHp(a.mhp); a.setTp(100); e.removeState(PacteDeSang.dette);
         PacteDeSang.poser(0);
         var sans = new Game_Action(a); sans.setSkill(1139);
         var dSans = sans.makeDamageValue(e, false);
@@ -122,62 +135,58 @@ function ok(nom, cond, detail) {
         BattleManager._subject = null; BattleManager._action = null;
         out.recul = { base: dSans, total: dAvec, perdu: hr - a.hp, surLaBase: Math.floor(dSans * 0.15), surLeTotal: Math.floor(dAvec * 0.15) };
 
-        // Saignée : le Pacte consommé revient en PV
-        PacteDeSang.changerStyle('saignee'); PacteDeSang.poser(1.0); a.setHp(Math.floor(a.mhp * 0.5));
+        // Sang : le Pacte consommé revient en PV
+        PacteDeSang.changerStyle('saignee'); PacteDeSang.poser(1.0); a.setHp(Math.floor(a.mhp * 0.5)); e.removeState(PacteDeSang.dette);
         var hp4 = a.hp, p4 = PacteDeSang.pacte();
         var s2 = new Game_Action(a); s2.setAttack(); jouer(s2, e);
         out.saignee = { soin: a.hp - hp4, brule: p4 - PacteDeSang.pacte() };
 
-        // Garde : −40 %, Réserve, Libération qui inscrit
+        // Garde : plus de −40 % ni de Réserve (l'adaptation les remplace), mais DÉF ×1,4
         PacteDeSang.changerStyle('lame');
         var ea = new Game_Action(e); ea.setAttack();
         var coupLame = ea.makeDamageValue(a, false);
-        PacteDeSang.changerStyle('garde');
+        PacteDeSang.changerStyle('garde'); PacteDeSang.poser(0);
         var coupGarde = ea.makeDamageValue(a, false);
-        out.garde = { lame: coupLame, garde: coupGarde, reserve: PacteDeSang.reserve() };
-        e.removeState(PacteDeSang.dette);
         var sansRes = new Game_Action(a); sansRes.setAttack();
-        var base = sansRes.makeDamageValue(e, false);            // consomme la Réserve
-        out.liberation = { bonus: base - Math.floor(sansMasque), reserveApres: PacteDeSang.reserve() };
-        PacteDeSang.changerStyle('garde');
-        ea.makeDamageValue(a, false);
-        var lib = new Game_Action(a); lib.setAttack(); jouer(lib, e);
-        out.libInscrit = e.isStateAffected(PacteDeSang.dette);
+        out.garde = { lame: coupLame, garde: coupGarde, reserve: PacteDeSang.reserve(), apres: sansRes.makeDamageValue(e, false), base: degats(1, e) };
         PacteDeSang.changerStyle('lame');
         return out;
     });
     ok('Vesper ouvre « style » et connaît ses trois Styles', v.types);
     ok('Première Entaille inscrit la Dette', v.dette);
     ok('…sans l\'absorber dans le même geste', v.pacteApresMarque === 0);
-    ok('le coup suivant absorbe : Pacte = 65 %', !v.detteApres && Math.abs(v.pacteApresAbsorb - 0.65) < 0.01,
+    ok('le coup suivant absorbe (Garde) : Pacte = 65 %', !v.detteApres && Math.abs(v.pacteApresAbsorb - 0.65) < 0.01,
         Math.round(v.pacteApresAbsorb * 100) + ' %');
     ok('le Masque Rouge s\'allume (≥ 30 %)', v.masque);
-    ok('Masque en Lame, Pacte 100 % : ×1,90', Math.abs(v.ratioLame - 1.9) < 0.02, '×' + v.ratioLame.toFixed(2));
-    ok('Masque en Saignée : ×1,30', Math.abs(v.ratioSaignee - 1.3) < 0.02, '×' + v.ratioSaignee.toFixed(2));
+    ok('en Lame, le coup n\'absorbe rien : la Dette reste, Pacte 0 (contre-épreuve)', v.lameAbsorbe.dette && v.lameAbsorbe.pacte === 0,
+        Math.round(v.lameAbsorbe.pacte * 100) + ' %');
+    ok('Masque en Garde, Pacte 100 % : ×1,60', Math.abs(v.ratioGarde.r - 1.6) < 0.02, '×' + v.ratioGarde.r.toFixed(2));
+    ok('Masque en Sang : ×1,90 (la plus agressive)', Math.abs(v.ratioSang.r - 1.9) < 0.02, '×' + v.ratioSang.r.toFixed(2));
+    ok('en Lame, pas de Masque même à 100 % (« son masque s\'enlève »)', Math.abs(v.ratioLame.r - 1) < 0.01 && !v.ratioLame.masque,
+        '×' + v.ratioLame.r.toFixed(2));
     ok('sous 30 %, pas de Masque (contre-épreuve)', Math.abs(v.ratioSousSeuil - 1) < 0.01, '×' + v.ratioSousSeuil.toFixed(2));
-    ok('en Lame, chaque coup brûle 10 % du Pacte', Math.abs(v.consoLame - 0.10) < 0.01, Math.round(v.consoLame * 1000) / 10 + ' %');
-    ok('en Lame, le sang qu\'elle boit ne lui revient pas (Arlecchino)', v.lameNeBoitPas);
+    ok('en Garde, chaque coup consomme 7,5 % du Pacte', Math.abs(v.consoGarde.c - 0.075) < 0.01, Math.round(v.consoGarde.c * 1000) / 10 + ' %');
+    ok('…sans qu\'il lui revienne (Arlecchino)', v.consoGarde.soin <= 0, '+' + v.consoGarde.soin + ' PV');
+    ok('en Sang, 10 % par coup', Math.abs(v.consoSang.c - 0.10) < 0.01, Math.round(v.consoSang.c * 1000) / 10 + ' %');
+    ok('en Lame, rien ne se consomme (contre-épreuve)', v.consoLame.c === 0, Math.round(v.consoLame.c * 1000) / 10 + ' %');
     ok('un soin rembourse le Pacte, pas les PV', v.soinAvecPacte.hp === 0 && v.soinAvecPacte.pacte === 1000,
         '+' + v.soinAvecPacte.hp + ' PV · −' + v.soinAvecPacte.pacte + ' au Pacte');
     ok('sans Pacte, en combat, on ne la soigne pas (Arlecchino)', v.soinSansPacte === 0);
     ok('une potion non plus', v.potion === 0, '+' + v.potion);
+    ok('en Lame, le Pacte est posé : le soin passe tel quel', v.soinLame.hp === 1000 && v.soinLame.pacte === 0 && v.soinLame.soignable,
+        '+' + v.soinLame.hp + ' PV · Pacte −' + v.soinLame.pacte);
+    ok('…et en Garde, non (contre-épreuve)', !v.soignableGarde);
     ok('Rendre le Sang : ½ Pacte + 150 % ATQ, et le Pacte s\'efface', v.rendre.soin === v.rendre.attendu && v.rendre.pacte === 0,
         '+' + v.rendre.soin + ' PV (attendu ' + v.rendre.attendu + ')');
     ok('…et le recul ne la tue plus avant le soin', v.rendre.vivante && v.rendre.hp > v.rendre.hp0,
         v.rendre.hp0 + ' → ' + v.rendre.hp + ' PV');
-    ok('le recul (15 %) porte sur la base, pas sur la part du Masque', Math.abs(v.recul.perdu - v.recul.surLaBase) <= 2,
+    ok('le recul (15 %) porte sur la base, pas sur la part du Masque', v.recul.total > v.recul.base && Math.abs(v.recul.perdu - v.recul.surLaBase) <= 2,
         'perdu ' + v.recul.perdu + ' · base ' + v.recul.surLaBase + ' · sur le total ç\'aurait été ' + v.recul.surLeTotal);
-    ok('Saignée : le Pacte brûlé revient, et la Voie du Sang boit pour elle', v.saignee.brule > 0 && v.saignee.soin > v.saignee.brule,
+    ok('Sang : le Pacte brûlé revient, et la Voie du Sang boit pour elle', v.saignee.brule > 0 && v.saignee.soin > v.saignee.brule,
         '+' + v.saignee.soin + ' PV (dont ' + v.saignee.brule + ' de Pacte)');
-    // La Garde bloque 40 % du coup (ce qui est bloqué devient Réserve) ET, depuis le 2026-09-26,
-    // porte DÉF ×1,4 : on mesure le blocage sur le coup tel qu'il arrive, pas contre la Lame.
-    ok('Garde : −40 % de dégâts reçus, le bloqué en Réserve', Math.abs(v.garde.garde / (v.garde.garde + v.garde.reserve) - 0.6) < 0.02,
-        (v.garde.garde + v.garde.reserve) + ' → ' + v.garde.garde + ' (Réserve ' + v.garde.reserve + ')');
-    ok('…et la Garde encaisse mieux que la Lame (DÉF ×1,4 contre ×0,85)', v.garde.garde < v.garde.lame, 'Lame ' + v.garde.lame + ' · Garde ' + v.garde.garde);
-    ok('…et le bloqué part en Réserve', v.garde.reserve > 0, v.garde.reserve + '');
-    ok('la Libération ajoute la Réserve au coup suivant, puis la vide', v.liberation.bonus > 0 && v.liberation.reserveApres === 0,
-        '+' + v.liberation.bonus);
-    ok('la Libération inscrit la Dette', v.libInscrit);
+    ok('la Garde encaisse mieux que la Lame (DÉF ×1,4 contre ×0,85)', v.garde.garde < v.garde.lame, 'Lame ' + v.garde.lame + ' · Garde ' + v.garde.garde);
+    ok('plus de Réserve ni de Libération (remplacées par l\'adaptation)', v.garde.reserve === 0 && v.garde.apres === v.garde.base,
+        'Réserve ' + v.garde.reserve + ' · coup suivant ' + v.garde.apres + ' = ' + v.garde.base);
 
     // ── Les Styles ne font pas perdre le tour ────────────────────────────
     console.log('\n── LES STYLES, SANS PERDRE LE TOUR ' + '─'.repeat(38));
