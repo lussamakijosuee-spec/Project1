@@ -2,8 +2,8 @@
  * CE QUE TOUT LE MONDE SAIT — le fonds commun des conversations.
  * Réponses de JOKO (2026-09-27) :
  *   · la magie est courante mais modeste (lampes enchantées, petits sorts,
- *     fioles), et tout le monde connaît les Dons Spirituels (une arme pour
- *     presque tous, un objet parfois, un Avatar très rarement) ;
+ *     fioles). Les Dons Spirituels, cités ici d'abord, sont retirés du lore
+ *     le 2026-10-14 : plus personne n'en parle ;
  *   · le peuple parle du lord et des nobles — la suite du lore viendra ;
  *   · le monde est dur mais ordinaire (misère, dettes, soldats qui se
  *     servent, morts au travail), dit sans complaisance ;
@@ -31,9 +31,9 @@ var LORD = [
 ];
 var MAGIE = [
     'Ma lampe enchantée faiblit. Faudra la faire recharger au marché. Deux pièces, pour une lumière qui en vaut une.',
-    'Mon fils a reçu son Don : une arme, comme presque tout le monde. Une hachette. Il voulait un Avatar. Ils veulent tous un Avatar.',
-    'Un Avatar ? Deux sur cent, qu\'on dit. J\'en ai jamais vu un. Et j\'espère ne jamais en voir un en colère.',
-    'Ma voisine a reçu un objet, pas une arme. Elle ne dit pas ce que ça fait. Ça la rend insupportable.',
+    'Mon fils a eu sa première hachette. Il voulait une épée. Ils veulent tous une épée.',
+    'Un vrai mage de combat ? J\'en ai jamais vu un. Et j\'espère ne jamais en voir un en colère.',
+    'Ma voisine a acheté un charme au marché. Elle ne dit pas ce que ça fait. Ça la rend insupportable.',
     'Les fioles du marché, c\'est de l\'eau, du miel et un mot bien placé. Parfois ça marche. Souvent, c\'est le miel.',
     'Mon grand-père allumait le feu d\'un claquement de doigts. Moi, j\'ai des allumettes. On a perdu quelque chose en route.'
 ];
@@ -138,7 +138,7 @@ function garde(ev, nom, o) {
         discuter: (o.discuter || []).concat([
             'La ronde, c\'est marcher en rond. Le nom dit tout.',
             'On nous paie en retard depuis que le lord reçoit ses nobles.',
-            'Mon Don ? Une lance. Comme la moitié de la garde. L\'autre moitié a des épées. Personne n\'a d\'Avatar, sinon on ne serait pas gardes.'
+            'Une lance, comme la moitié de la garde. L\'autre moitié a des épées. Le sergent dit que c\'est pour faire joli dans les rangs.'
         ]),
         nouvelles: (o.nouvelles || []).concat([LORD[2], LORD[5], LORD[4]]),
         perso: o.perso,

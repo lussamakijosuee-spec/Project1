@@ -2,7 +2,27 @@
 
 > **Canon dicté par JOKO le 2026-10-04.** Transcrit **sans rien ajouter** : seule l'orthographe
 > est corrigée, aucune idée n'est changée ni complétée. Son texte d'origine, mot pour mot, est en
-> bas de page. Les questions encore ouvertes sont juste avant.
+> bas de page, suivi de ses réponses.
+
+---
+
+## 🆕 2026-10-14 — les Dons et la couverture sont retirés
+
+JOKO, mot pour mot :
+
+> *« la partie don a toujours été taboue pour moi mais au final non plus de lore complètement en
+> gros mon jeu sera plus un jeu pour pote entre potes si possible mais pas un truc compliqué ou
+> sombre complètement juste une explication du mana comme le premier on garde mais les don et
+> couverture on enlève »*
+
+| | |
+|---|---|
+| **On garde** | l'explication du mana : les trois sources (la Mère, le Père, la Fille) et **le Premier** |
+| **On enlève** | les **Dons Spirituels** et la **couverture** (le donjon de couverture) — barrés ci-dessous, pas effacés |
+| **Le ton** | un jeu entre potes : ni compliqué, ni sombre |
+
+**Les trois Codex et leurs chapitres** (dimensions, gardiens) **sont gardés** — JOKO, le
+2026-10-14 : *« On garde »*.
 
 ---
 
@@ -25,12 +45,12 @@ contradictoire avec une autre.
 | L'ancienne règle « le Corps (Mana Sombre) est la manifestation de toutes les émotions et désirs enfouis » | *« existe plus »* | Remplacée par ce texte : le corps est l'**instinct, sans émotion** ; l'**émotion vient de l'âme**. Marquée comme remplacée dans `SYSTEME_DE_MANA.md`. |
 | L'ancienne origine du Mana Négatif « l'Empire Vultric, fondé par un joueur » | *« existe plus »* | Remplacée : ce sont les **voies d'art des mouvements** du **Premier** qui permettent de projeter et d'utiliser le mana négatif. Marquée comme remplacée. |
 | Le Premier, expliqué ou mystère ? | *« c'est une légende »* | Son histoire est racontée, mais comme une légende du monde, incertaine (voir ci-dessus). |
-| La récompense du donjon de couverture | *« tu ressors automatiquement avec un don spirituel »* · *« A »* | C'est un **vrai Don Spirituel** — seulement pour quelqu'un qui n'en a pas encore, et toujours **un seul**. Ajouté à la règle des Dons. |
+| ~~La récompense du donjon de couverture~~ | ~~*« tu ressors automatiquement avec un don spirituel »* · *« A »*~~ | **Retiré le 2026-10-14** (plus de Dons, plus de couverture). |
 | Le mot « Codex » déjà pris par le livre en jeu | *« Non car le codex change de nom pour le livre de Dieu »* — puis : *« Le codex absolu »* | Le **Codex absolu** est appelé **« le Livre de Dieu »**. Le livre en jeu (`CODEX`) ne change pas. |
 | « Perfection », vrai nom du Codex absolu ? | *« non »*, puis *« perfection est effacé »* | Retiré des vrais noms : Éternité, Odin, Surpassement. |
-| Comment on obtient un Don | *« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »* | Le Don Spirituel s'obtient **uniquement** en réussissant un **donjon de couverture**. L'ancienne règle « il apparaît de lui-même » est barrée dans les documents des Dons. |
-| Le temps dans le donjon de couverture | *« le donjon a un temps limité ; si tu échoues ça te sort et tu devras attendre plusieurs mois pour une nouvelle ouverture de couverture »* | Ajouté au récit, section « Les Codex ». |
-| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »*, puis *« Couverture du savoir »* | Le **Royaume Vastos** (*« Le royaume vastos »*) possède la couverture « savoir oublié » et le chapitre « la découverte », tous deux du Codex de l'ignorance. |
+| ~~Comment on obtient un Don~~ | ~~*« on ne naît pas avec des dons, on peut QUE l'obtenir par le donjon »*~~ | **Retiré le 2026-10-14** : il n'y a plus de Don du tout. |
+| ~~Le temps dans le donjon de couverture~~ | ~~*« le donjon a un temps limité ; si tu échoues ça te sort et tu devras attendre plusieurs mois pour une nouvelle ouverture de couverture »*~~ | **Retiré le 2026-10-14** avec la couverture. |
+| Qui possède quoi | *« l'État possède une couverture et un chapitre, celui de la découverte »*, puis *« Couverture du savoir »* | Le **Royaume Vastos** (*« Le royaume vastos »*) possède le chapitre « la découverte » du Codex de l'ignorance. ~~Et la couverture « savoir oublié ».~~ *(Couverture retirée le 2026-10-14.)* |
 
 ---
 
@@ -164,18 +184,20 @@ de la soif**, **le Codex du désespoir** et **le Codex de l'ignorance**. Il a vo
 les noms pour voiler leur vrai nom, donc le vrai livre et son pouvoir.
 
 > **Vrais noms** (texte de JOKO, recopié tel quel) : *« éternité pour celui de la mère son livre,
-> Odin pour celui du père, perfection et celui de la fille surpassement »* — voir la question
-> ouverte n°2.
+> Odin pour celui du père, perfection et celui de la fille surpassement »* — « perfection » est
+> effacé (réponse de JOKO, 2026-10-04) : Éternité, Odin, Surpassement.
 
 Voilés, ils ont perdu leur véritable puissance et ne sont plus que des donjons. Il déchira chaque
-livre en quatre : la couverture et les trois chapitres à l'intérieur. Chaque chapitre possède une
-épreuve, ou plutôt un monde à lui seul, car le Premier a créé une dimension dans chaque chapitre,
-et un donjon pour la couverture. Il faut aller de la couverture jusqu'au dernier chapitre pour
+livre en quatre : ~~la couverture et~~ les trois chapitres à l'intérieur. Chaque chapitre possède une
+épreuve, ou plutôt un monde à lui seul, car le Premier a créé une dimension dans chaque chapitre~~,
+et un donjon pour la couverture~~. Il faut aller ~~de la couverture~~ jusqu'au dernier chapitre pour
 accéder à **la clé du voile** et récupérer le vrai pouvoir.
+
+*(La couverture est retirée le 2026-10-14 — voir en tête de page.)*
 
 | | Codex de la soif | Codex de l'ignorance | Codex du désespoir |
 |---|---|---|---|
-| **Couverture** | l'entrée de la chair | savoir oublié | dépassement des règles |
+| ~~**Couverture**~~ | ~~l'entrée de la chair~~ | ~~savoir oublié~~ | ~~dépassement des règles~~ |
 | **Chapitre 1** | le cycle | la découverte | courage |
 | **Chapitre 2** | l'adaptation | l'apprentissage | amour |
 | **Chapitre 3** | l'évolution | la maîtrise | détermination |
@@ -183,17 +205,19 @@ accéder à **la clé du voile** et récupérer le vrai pouvoir.
 **Les chapitres.** Il n'y a pas de limite de temps dans ces dimensions. Le seul moyen de réussir,
 c'est de battre le **gardien du chapitre** ; il n'y a pas d'autre moyen.
 
-**La couverture** est plus complexe : c'est un donjon plus qu'un monde. Pour une raison encore
+~~**La couverture** est plus complexe : c'est un donjon plus qu'un monde. Pour une raison encore
 inconnue, le Premier a laissé la porte ouverte pour sortir du donjon. Il y a **deux étages** dans
 un donjon de couverture, et si tu réussis le donjon de couverture, **tu ressors automatiquement
 avec un Don Spirituel** — *seulement si tu n'en as pas encore, et toujours un seul* (réponse « A »
-de JOKO, le 2026-10-04). **On ne naît pas avec un Don : c'est le seul moyen de l'obtenir.**
+de JOKO, le 2026-10-04). **On ne naît pas avec un Don : c'est le seul moyen de l'obtenir.**~~
 
-Le donjon de couverture a un **temps limité**. Si tu échoues, il te sort, et tu dois **attendre
-plusieurs mois** pour une nouvelle ouverture de la couverture.
+~~Le donjon de couverture a un **temps limité**. Si tu échoues, il te sort, et tu dois **attendre
+plusieurs mois** pour une nouvelle ouverture de la couverture.~~
 
-**L'État — le Royaume Vastos —** possède **une couverture** et **un chapitre** du **Codex de l'ignorance** : la couverture
-du savoir (**« savoir oublié »**) et le chapitre de **la découverte** (le chapitre 1).
+*(Retiré le 2026-10-14 : ni Dons, ni couverture.)*
+
+**L'État — le Royaume Vastos —** possède ~~**une couverture** et~~ **un chapitre** du **Codex de l'ignorance** : ~~la couverture
+du savoir (**« savoir oublié »**) et~~ le chapitre de **la découverte** (le chapitre 1).
 
 ---
 

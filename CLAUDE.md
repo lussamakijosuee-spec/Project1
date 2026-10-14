@@ -8,6 +8,14 @@ totalement personnel et pour mes potes, je ne cherche pas à faire ça à une co
 Les références aux mangas et animés sont donc bienvenues comme inspiration de gameplay ; on ne
 calibre pas pour un public, on calibre pour que ce soit fun entre amis.
 
+**Un jeu entre potes, ni compliqué ni sombre.** JOKO, le 2026-10-14 : *« non plus de lore
+complètement en gros mon jeu sera plus un jeu pour pote entre potes si possible mais pas un truc
+compliqué ou sombre complètement juste une explication du mana comme le premier on garde mais les
+don et couverture on enlève »*. Le lore se réduit à **l'explication du mana** (`docs/CANON_LA_GENESE.md`
+— les trois sources, le Premier — et `docs/SYSTEME_DE_MANA.md`). Les **Dons Spirituels** et la
+**couverture** sont retirés. Le reste des documents de lore est une archive, plus une contrainte
+(`docs/INDEX.md`, « Le statut du lore »).
+
 **Quand JOKO dit « fais », il veut que je fasse — pas que je devine.** *« je suis un peu trop vague
 dans mes propos […] je veux que tu fasses, pas que tu devines. »* Ce qu'il écrit noir sur blanc
 s'exécute ; ce qu'il ne précise pas (un chiffre, une durée) devient un **paramètre réglable**, avec
@@ -34,6 +42,11 @@ Deux fois dans ce projet, j'ai inventé du lore en croyant le compléter :
 Avant d'écrire une ligne qui touche à l'univers, je dois pouvoir **citer la phrase de JOKO** qui la
 justifie. Si je ne peux pas la citer, je pose la question — même si ça coupe l'élan, même si la
 réponse me paraît évidente.
+
+Depuis le 2026-10-14, l'univers lui-même est réduit : je n'**ajoute** pas de lore, et rien de
+sombre ni de compliqué. Les trois Codex et leurs chapitres sont gardés ; ce qui reste à trancher
+(la Parole et ses cristaux) est listé dans `docs/INDEX.md`. Les habitants ne parlent plus de Dons
+(fiches `bancs/outils/habitants/`, réécrites le 2026-10-14).
 
 Et quand une phrase est ambiguë (« il a 3 niveaux » : trois paliers ou trois états ?), **je ne
 tranche pas tout seul**. Je demande, ou j'expose les deux lectures.
@@ -74,9 +87,9 @@ Une pièce qui n'a plus sa place dans un système est **renommée et redécrite*
 
 | | |
 |---|---|
-| **Classe 5 « familié »** | le personnage-Stand de JOKO. Interdit d'y toucher. |
+| **Classe 5 « familié »** | seiryu, le personnage-Stand de JOKO. Sa classe (statistiques, apprentissages) ne se touche pas. Son comportement est dans `SeiryuLeFamilier.js` : depuis le 2026-10-14, tombé sous un coup il disparaît 2 tours, et **sans lui Korrah perd l'Hiver** (types 6 et 21) — `bancs/navigateur/seiryu_et_lhiver.js`. |
 | **Les ennemis** | JOKO a dit de les laisser hors des passes d'équilibrage joueur. |
-| **Les sprites et les images** | jamais d'asset externe : licence invérifiable. On remappe sur les 2 555 sprites du projet. |
+| **Les sprites, les images et les sons** | je n'ajoute **jamais** d'asset externe de moi-même. Le 2026-10-04, JOKO a installé lui-même ~5 600 ressources d'internet (préfixe `Z_Net_`, dans `img/` et `audio/`) : elles sont à lui, et leurs licences sont dans `ressources_internet/INSTALLES.md` et `INSTALLES_SONS.md` — les CC-BY demandent l'auteur dans les crédits. |
 | **Les formules « à caractère »** | pourcentage de PV max, aléatoire, dépendant d'une variable : c'est l'identité d'une compétence, pas son équilibre. |
 | **Les cartes et les événements** | on n'y pose rien. Le level design appartient à JOKO. |
 
@@ -122,15 +135,17 @@ Trois bugs sont passés à travers des tests écrits trop vite :
 **Équipement** (`etypeId`) — 1 Arme · 2 Bouclier · 3 Tête · 4 Corps · **5 Accessoire** ·
 6 talisement · **7 Ame**
 
-**Le Don Spirituel — un seul par personne** :
-⚔️ Arme (80 %) → slot Arme · 🔮 Objet (18 %) → Accessoire · 👤 **Avatar Spirituel** (2 %) → Âme
+**Les Dons Spirituels sont retirés** — du jeu le 2026-09-24 (`DonsSpirituels`, `ObjetSpirituel`,
+`TraitsAme` éteints, fichiers gardés), du lore le 2026-10-14. Les 16 pièces restent dans la base,
+redécrites en équipement ordinaire. Gardé : **seiryu**, l'Avatar de Korrah (acteur 6, classe 5),
+cinquième combattant.
 
-| Héros | Son unique Don | Trait |
+| Héros | Sa branche | Ce qui la porte |
 |---|---|---|
-| Vesper | le Masque *(objet)* | sang |
-| Korrah | l'Armure Volante *(avatar)* | change + hiver *(via l'Avatar)* |
-| ludwing | l'Amulette *(objet)* | ames |
-| Aël | l'Arc *(arme)* | miracle |
+| Vesper | trois Styles, trois kits — **Lame** (arts d'armes selon l'arme tenue, État de Flow), **Sang** (le Pacte façon Arlecchino, Berserker), **Garde** (adaptation, Arme de Sang) — et sa **Colère** (la Vanne de ludwing) | `LePacteDeSang.js`, `LesStylesDeVesper.js` |
+| Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** | `SeiryuLeFamilier.js` |
+| ludwing | l'âme et l'ombre — Royaume Impérial | `PorteurDAmes.js`, `RoyaumeImperial.js` |
+| Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
 
 **Pièges de MV rencontrés ici :**
 
@@ -142,11 +157,26 @@ Trois bugs sont passés à travers des tests écrits trop vite :
 - MV n'applique `numRepeats()` que dans son propre enchaînement : une action jouée à la main (celle
   de l'Avatar) doit boucler elle-même ;
 - les métadonnées gardent l'espace après le `:` — `<Forme: objet>` donne `" objet"`, il faut
-  `trim()`.
+  `trim()` ;
+- un état retiré pendant une action **ne peut pas être reposé** dans la même action
+  (`_result.isStateRemoved`) : `addState` refuse en silence. MV vide le résultat avant chaque coup ;
+  un code qui pose un état hors de ce chemin doit faire `clearResult()` d'abord ;
+- un message d'état s'affiche **collé au nom** (`nom + message1`) : pas de `%1`, il faut écrire
+  `" surchauffe !"`.
+- YEP_BattleEngineCore **remet `repeats` à 1** au chargement : les coups d'une compétence à
+  `<target action>` sont ses lignes `action effect`. Pour frapper deux fois, doubler la liste des
+  cibles (`numRepeats`) ;
+- chez YEP, les états « fin de tour » **s'usent dans `regenerateAll`** : un banc qui la neutralise
+  fige aussi leurs tours ;
+- `BattleManager.queueForceAction` **vide les résultats de tout le monde** : lancé pendant un coup,
+  il efface l'« esquive » et les popups. Le lancer à `onAllActionsEnd`.
 
 ---
 
 ## 8. Git
 
-Branche de travail : `claude/spiritual-weapons-objects-96tc6b`. Pousser avec
-`git push -u origin <branche>`. Pas de pull request sans demande explicite.
+**Ce qui est pour le jeu va directement sur `main`, sans pull request.** JOKO, le 2026-10-14 :
+*« pas de pr (pour ce qui est pour le jeu.) Met sur le main directement »*. Je travaille sur la
+branche que la session désigne, puis je pousse aussi sur `main` en avance rapide
+(`git push origin HEAD:main`) — jamais en force : si `main` a bougé, je récupère d'abord ses
+commits. Pas de pull request sans demande explicite.

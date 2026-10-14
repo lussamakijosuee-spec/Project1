@@ -1,11 +1,12 @@
 //=============================================================================
-// LePacteDeSang.js — v1.0
+// LePacteDeSang.js — v2.0
 // Vesper : la Dette, le Pacte, le Masque Rouge — et ses trois Styles.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Vesper, comme Arlecchino : elle inscrit une Dette de
+ * @plugindesc v2.0 ■ Vesper, comme Arlecchino : elle inscrit une Dette de
  * Sang, l'absorbe en Pacte, frappe sous le Masque Rouge, et ne se soigne
- * qu'en rendant le sang. Plus trois Styles qu'on change sans perdre le tour.
+ * qu'en rendant le sang. Plus trois Styles qu'on change sans perdre le tour
+ * (leurs kits et leurs ultimes : LesStylesDeVesper.js).
  * @author pour JOKO
  *
  * @param acteur
@@ -48,6 +49,13 @@
  * @default true
  * @desc Comme Arlecchino : seuls « Rendre le Sang » et le Style Saignée la
  * soignent. Les soins des autres remboursent d'abord le Pacte.
+ *
+ * @param soinsEnLame
+ * @text En Lame, on la soigne normalement ?
+ * @type boolean
+ * @default true
+ * @desc v2.0 : en Lame elle a posé son Pacte (« pas son don, même son masque
+ * s'enlève ») — la Dette ne boit plus les soins, ils passent tels quels.
  *
  * @param etatStyleLame
  * @text État — Style Lame
@@ -116,14 +124,19 @@
  *     Frappe, puis efface le Pacte et la soigne : 50 % du Pacte + 150 % ATQ.
  *
  *  LES TROIS STYLES — gratuits, sans perdre le tour (<StyleVesper: …>)
- *     ⚔ LAME     ATQ ×1,3, critiques +20 %, DÉF ×0,85 (traits de l'état 234) ;
- *                le Masque frappe ×1,5 plus fort en plus, mais brûle 10 % par coup.
- *     🛡 GARDE    DÉF et MDF ×1,4, elle attire les coups, ATQ ×0,85 (état 235) ;
- *                −40 % de dégâts reçus ; ce qu'elle bloque s'accumule en
- *                RÉSERVE, relâchée sur son coup suivant — qui inscrit la Dette.
- *     🩸 SAIGNÉE  20 % des dégâts qu'elle inflige lui reviennent, +5 % PV par
- *                tour, AGI ×1,15 (état 236) ; le Masque frappe deux fois moins
- *                fort, mais chaque part de Pacte consommée lui revient en PV.
+ *  v2.0 (JOKO, 2026-10-14) : chaque Style a son kit et ses ultimes — c'est
+ *  LesStylesDeVesper.js qui les tient. Ici, ce que le Style fait au Pacte :
+ *     ⚔ LAME     ses armes et ses poings, rien d'autre : NI PACTE NI MASQUE.
+ *                La Dette ne s'absorbe pas, le Masque Rouge ne joue pas, et
+ *                les soins passent normalement (soinsEnLame).
+ *                ATQ ×1,3, critiques +20 %, DÉF ×0,85 (état 234).
+ *     🛡 GARDE    le Masque normal (×1, 7,5 % consommés par coup). DÉF et MDF
+ *                ×1,4, elle attire les coups (état 235). L'adaptation et
+ *                l'Arme de Sang remplacent l'ancienne Réserve.
+ *     🩸 SANG     (l'ancienne Saignée, clé interne « saignee ») la plus
+ *                agressive : Masque ×1,5, 10 % consommés par coup qui lui
+ *                reviennent en PV, 20 % des dégâts qu'elle inflige aussi,
+ *                +5 % PV par tour, AGI ×1,15 (état 236).
  *     (JOKO, 2026-09-26 : « je ne ressens pas la différence en jeu » — avant, hors
  *      Masque, seule la Garde changeait quelque chose.)
  *
@@ -155,6 +168,9 @@
     var K = parseFloat(P['bonusMasque'] || 0.6);
     var CONSO = parseFloat(P['consommation'] || 7.5) / 100;
     var BLOQUE = String(P['soinsBloques'] || 'true') === 'true';
+    var SOINS_LAME = String(P['soinsEnLame'] || 'true') === 'true';
+    /** En Lame (v2.0), le Pacte est posé : les soins passent tels quels. */
+    function pacteEnSuspens(a) { return SOINS_LAME && style(a) === 'lame'; }
     var ETAT_STYLE = {
         lame: parseInt(P['etatStyleLame'] || 234, 10),
         garde: parseInt(P['etatStyleGarde'] || 235, 10),
@@ -167,7 +183,7 @@
         saignee: parseInt(P['animStyleSaignee'] || 435, 10)
     };
     var STYLES = ['lame', 'garde', 'saignee'];
-    var NOM_STYLE = { lame: '⚔ Lame', garde: '🛡 Garde', saignee: '🩸 Saignée' };
+    var NOM_STYLE = { lame: '⚔ Lame', garde: '🛡 Garde', saignee: '🩸 Sang' };
     var TYPES_MASQUE = [10, 5];                   // sang, BERSEK
     var RESERVE_MAX = 0.30;                       // de ses PV max
 
@@ -181,7 +197,8 @@
     function pacte(a) { return Math.max(0, a._pacte || 0); }
     function pactePct(a) { return a.mhp > 0 ? pacte(a) / a.mhp : 0; }
     function poserPacte(a, v) { a._pacte = Math.max(0, Math.min(Math.floor(v), Math.floor(CAP * a.mhp))); }
-    function masque(a) { return pactePct(a) >= SEUIL; }
+    // v2.0 : en Lame, le Masque est retiré — elle ne frappe qu'avec ses armes.
+    function masque(a) { return style(a) !== 'lame' && pactePct(a) >= SEUIL; }
     function style(a) { return (a && a._styleVesper) || 'lame'; }
     function tag(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
     function sousMasque(action) {
@@ -238,16 +255,17 @@
         var touche = target.result() && target.result().isHit();
 
         if (target.isEnemy() && touche) {
-            // Absorber : tout coup de Vesper qui n'est PAS celui qui inscrit.
-            if (avaitDette && !tag(it, 'InscritDette')) {
+            // Absorber : tout coup de Vesper qui n'est PAS celui qui inscrit — sauf en
+            // Lame, où il n'y a ni Pacte ni Masque.
+            if (avaitDette && !tag(it, 'InscritDette') && style(u) !== 'lame') {
                 target.removeState(DETTE);
                 var av = pactePct(u);
                 poserPacte(u, pacte(u) + ABSORB * u.mhp);
                 journal('\\C[18]🩸 ' + u.name() + ' absorbe la Dette — Pacte ' + Math.round(pactePct(u) * 100) + ' %'
                     + (av < SEUIL && masque(u) ? ' · MASQUE ROUGE' : '') + '\\C[0]');
             }
-            // Inscrire : les techniques qui marquent, et la Libération de la Garde.
-            if (tag(it, 'InscritDette') || this._liberation) {
+            // Inscrire : les techniques qui marquent.
+            if (tag(it, 'InscritDette')) {
                 target.addState(DETTE);
             }
         }
@@ -256,7 +274,9 @@
         if (it && it.meta && it.meta.StyleVesper) { changerStyle(u, String(it.meta.StyleVesper).trim().toLowerCase()); }
     };
 
-    // ── ③ le Masque Rouge, la Réserve de la Garde ───────────────────────────
+    // ── ③ le Masque Rouge ───────────────────────────────────────────────────
+    // v2.0 : la Réserve et la Libération de la Garde sont remplacées par
+    // l'adaptation et l'Arme de Sang (LesStylesDeVesper.js).
     var _valeur = Game_Action.prototype.makeDamageValue;
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _valeur.call(this, target, critical);
@@ -266,23 +286,11 @@
         if (estVesper(u) && v > 0 && target && target.isEnemy && target.isEnemy()) {
             var s = style(u);
             if (masque(u) && sousMasque(this)) {
-                var k = K * (s === 'lame' ? 1.5 : (s === 'saignee' ? 0.5 : 1));
+                var k = K * (s === 'saignee' ? 1.5 : 1);
                 var base = v;
                 v = Math.floor(v * (1 + k * pactePct(u)));
                 this._partMasque = v - base;       // cette part-là ne recule pas (voir executeDamage)
             }
-            if ((u._reserve || 0) > 0) {
-                v += Math.floor(u._reserve);
-                u._reserve = 0;
-                this._liberation = true;
-                journal('\\C[6]🛡 Libération : la Garde rend ce qu\'elle a bloqué.\\C[0]');
-            }
-        }
-        // Elle est frappée, en Garde
-        if (estVesper(target) && v > 0 && style(target) === 'garde') {
-            var bloque = Math.floor(v * 0.40);
-            v -= bloque;
-            target._reserve = Math.min((target._reserve || 0) + bloque, Math.floor(target.mhp * RESERVE_MAX));
         }
         return v;
     };
@@ -291,7 +299,7 @@
     var _degats = Game_Action.prototype.executeHpDamage;
     Game_Action.prototype.executeHpDamage = function (target, value) {
         var u = this.subject();
-        var soinSurVesper = estVesper(target) && enCombat() && value < 0 && !target._soinAutorise;
+        var soinSurVesper = estVesper(target) && enCombat() && value < 0 && !target._soinAutorise && !pacteEnSuspens(target);
         _degats.call(this, target, value);
         if (soinSurVesper) {
             // Le soin a été bu par la Dette (voir gainHp) : on n'affiche pas un
@@ -303,7 +311,7 @@
             // Garde se voyait. La Saignée boit maintenant à chaque coup, Masque ou pas (réglable).
             if (style(u) === 'saignee' && VOL_SAIGNEE > 0) { soigner(u, Math.floor(value * VOL_SAIGNEE)); }
             if (masque(u) && sousMasque(this)) {
-                var part = style(u) === 'lame' ? 0.10 : CONSO;
+                var part = style(u) === 'saignee' ? 0.10 : CONSO;
                 var brule = Math.floor(pacte(u) * part);
                 poserPacte(u, pacte(u) - brule);
                 if (style(u) === 'saignee' && brule > 0) { soigner(u, brule); }
@@ -343,7 +351,7 @@
                 value = -Math.floor(-value * this._ratioRecul);
                 if (value === 0) { return; }
             }
-            if (value > 0 && !this._soinAutorise) {
+            if (value > 0 && !this._soinAutorise && !pacteEnSuspens(this)) {
                 var sonAction = BattleManager._subject === this && BattleManager._action
                     && BattleManager._action.isSkill && BattleManager._action.isSkill();
                 if (sonAction) {
@@ -421,8 +429,8 @@
         this.contents.fontSize = 17;
         this.contents.outlineColor = 'rgba(0,0,0,0.9)';
         this.changeTextColor('#ffffff');
-        var t = '🩸 ' + Math.round(p * 100) + ' %' + (masque(a) ? ' · MASQUE' : '') + ' · ' + NOM_STYLE[style(a)];
-        if ((a._reserve || 0) > 0) { t += ' · ' + a._reserve; }
+        var t = (style(a) === 'lame' ? '⚔ sans Masque' : '🩸 ' + Math.round(p * 100) + ' %' + (masque(a) ? ' · MASQUE' : ''))
+            + ' · ' + NOM_STYLE[style(a)];
         this.drawText(t, 4, 2, la - 8, 'left');
         this.resetTextColor();
     };
@@ -451,7 +459,7 @@
         poser: function (pct) { var a = $gameActors.actor(VESPER); if (a) { poserPacte(a, pct * a.mhp); } },
         changerStyle: function (s) { changerStyle($gameActors.actor(VESPER), s); },
         /** Un soin extérieur lui rend-il quelque chose ? Pour les IA alliées. */
-        soignable: function (b) { return !(estVesper(b) && enCombat() && (BLOQUE || pacte(b) > 0)); },
+        soignable: function (b) { return !(estVesper(b) && enCombat() && !pacteEnSuspens(b) && (BLOQUE || pacte(b) > 0)); },
         dette: DETTE
     };
 })();

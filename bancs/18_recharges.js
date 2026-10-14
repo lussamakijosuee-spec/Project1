@@ -177,8 +177,10 @@ function controles(base) {
 
     // 4 · Le contrôle en sens inverse : on ne bride pas ce qui se bride tout seul.
     //     C'est l'erreur qui a failli passer sur « Dragon de la Nuit Sanglante ».
+    //     Sauf un ultime (<Ulti>) : sa recharge fait son rang. Le 2026-10-14, Jugement de Soi
+    //     (33 % de PV) partait 12 tours sur 15 — l'équipe lui rendait ses PV à chaque tour.
     var bridees = arme.filter(function (o) {
-        return litLignes(o.s.note, RE_COOLDOWN) > 0 && lancers(o.s) < LIBRE;
+        return litLignes(o.s.note, RE_COOLDOWN) > 0 && lancers(o.s) < LIBRE && !/<\s*Ulti\s*>/i.test(o.s.note || '');
     });
     r.push(['aucune recharge sur une compétence que son propre coût limite déjà',
         bridees.length === 0,

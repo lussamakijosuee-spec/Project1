@@ -131,16 +131,27 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     //   Ce qu'on vérifie ici, c'est le seiryu qui a appris : palier Dressé.
     //   Le Sauvage a son propre contrôle dans bancs/navigateur/lavatar_obeit.js.
     await page.evaluate(function () { window.Seiryu.experience(window.Seiryu.seuils.dresse); });
+    // v3 (JOKO : « un soutien réel ») : au complet et sans garde sur le
+    // groupe, il COUVRE d'abord ; une fois le groupe couvert, il frappe.
     var libre = await page.evaluate(function () {
         var s = $gameActors.actor(6);
         window.Seiryu.posture('libre');
         $gameParty.members().forEach(function (a) { a.recoverAll(); });
         s.clearActions(); s.makeActions();
         var a = s.currentAction();
-        return { posture: window.Seiryu.posture(), skill: a && a.item() ? a.item().name : null };
+        var r = { posture: window.Seiryu.posture(), skill: a && a.item() ? a.item().name : null };
+        $gameParty.members().forEach(function (m) { m.addState(229); });
+        s.clearActions(); s.makeActions();
+        var b = s.currentAction();
+        r.ensuite = b && b.item() ? b.item().name : null;
+        r.frappe = b && b.item() ? b.item().damage.type === 1 : false;
+        $gameParty.members().forEach(function (m) { m.removeState(229); });
+        return r;
     });
-    v('au complet et en posture LIBRE, il frappe avec SES techniques',
-        !!libre.skill && libre.skill !== 'Attaque', 'il choisit « ' + libre.skill + ' »');
+    v('au complet et en posture LIBRE, il couvre d\'abord le groupe',
+        libre.skill === 'Le Souffle Qui Couvre', 'il choisit « ' + libre.skill + ' »');
+    v('le groupe couvert, il frappe avec SES techniques',
+        libre.frappe && libre.ensuite !== 'Attaque', 'il choisit « ' + libre.ensuite + ' »');
 
     var soigne = await page.evaluate(function () {
         var s = $gameActors.actor(6);

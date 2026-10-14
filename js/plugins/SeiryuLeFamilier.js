@@ -2,8 +2,9 @@
 // SeiryuLeFamilier.js
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ seiryu entre au combat comme CINQUIÈME COMBATTANT : ses
+ * @plugindesc v3.0 ■ seiryu entre au combat comme CINQUIÈME COMBATTANT : ses
  * propres PV, son propre tour, ses propres coups. Il protège et il soigne.
+ * Tombé, il se reforme en 2 tours — et sans lui, Korrah n'a plus l'Hiver.
  * @author pour JOKO
  *
  * @param acteurPorteuse
@@ -29,8 +30,8 @@
  *
  * @param seuilSoin
  * @text Sous quel pourcentage de PV il soigne
- * @desc En posture LIBRE. 0,40 = il soigne un allié tombé sous 40 % de sa vie.
- * @default 0.40
+ * @desc En posture LIBRE. 0,55 = il soigne un allié tombé sous 55 % de sa vie.
+ * @default 0.55
  *
  * @param seuilUrgence
  * @text Le seuil d'urgence
@@ -74,6 +75,28 @@
  * @text Tours de protection ciblée
  * @type number
  * @default 3
+ *
+ * @param === L'HIVER (v3) ===
+ * @default
+ *
+ * @param toursAbsence
+ * @text Tours pour se reformer
+ * @type number
+ * @min 0
+ * @default 2
+ * @desc Tombé sous un coup, seiryu disparaît pendant ce nombre de tours de
+ * combat, puis revient tout seul. 0 = il revient à la fin du tour.
+ *
+ * @param pvRetour
+ * @text PV à son retour (0 à 1)
+ * @default 0.5
+ * @desc 0,5 = il se reforme avec la moitié de sa vie.
+ *
+ * @param typesLies
+ * @text Types que Korrah perd sans lui
+ * @default 6, 21
+ * @desc Numéros des types de compétence, séparés par des virgules.
+ * 6 = hiver · 21 = avatar (ses ordres : sans lui, personne pour obéir).
  *
  * @help
  * ───────────────────────────────────────────────────────────────────────────
@@ -156,6 +179,28 @@
  * Commandes :  SEIRYU experience <n>  ·  SEIRYU palier <1|2|3>  ·  SEIRYU oublier
  *
  * ───────────────────────────────────────────────────────────────────────────
+ * v3 — L'HIVER PASSE PAR LUI
+ * ───────────────────────────────────────────────────────────────────────────
+ *
+ * JOKO, le 2026-10-14 : « Seiryu doit être plus utile et un soutien réel avec
+ * qui hiver est vraiment lié. Seiryu, quand il meurt d'une attaque, il prend
+ * 2 tours pour réapparaître ; pendant sa disparition Korrah ne peut plus
+ * utiliser ses capacités hiver. »
+ *
+ *   · TOMBÉ SOUS UN COUP — il se dissipe (son image s'efface) et se reforme
+ *     à la fin du 2e tour qui suit, avec `pvRetour` de sa vie. Avant la v3 il
+ *     revenait dès l'action suivante : il était presque immortel.
+ *   · RIEN NE LE RAMÈNE PLUS TÔT — ni objet, ni sort de résurrection.
+ *   · PENDANT SON ABSENCE — les compétences de Korrah des types `typesLies`
+ *     (hiver, et ses ordres d'Avatar) sont grisées : MV les refuse.
+ *   · S'IL S'ÉTEINT AVEC ELLE — rien ne change : il revient quand elle se
+ *     relève. Et si son absence finit pendant qu'elle est à terre, il attend
+ *     qu'elle se relève.
+ *
+ * Un tour, c'est un tour de combat (tout le monde a joué). Tombé au tour 3,
+ * il manque les tours 4 et 5 et revient pour le tour 6.
+ *
+ * ───────────────────────────────────────────────────────────────────────────
  * CE QU'IL SAIT FAIRE
  * ───────────────────────────────────────────────────────────────────────────
  *
@@ -166,7 +211,8 @@
  * Mesuré : ses coups les plus forts font ~110 dégâts là où les héros en font
  * 2 000 à 3 200. Il ne tuera rien. Ce n'est pas un défaut — c'est ce que JOKO
  * a demandé. Sa valeur est ailleurs : il soigne, il couvre, et il encaisse à
- * la place de qui faiblit.
+ * la place de qui faiblit. Ses soins comptent la vie de qui les reçoit (v3) :
+ * ils pèsent autant au niveau 89 qu'au niveau 10.
  *
  * ───────────────────────────────────────────────────────────────────────────
  * TROIS PIÈGES DE MV RENCONTRÉS ICI
@@ -192,7 +238,7 @@
     var PORTEUSE = parseInt(P['acteurPorteuse'] || 2, 10);
     var FAMILIER = parseInt(P['acteurFamilier'] || 6, 10);
     var POSTURE_DEF = String(P['postureDefaut'] || 'libre');
-    var SEUIL_SOIN = parseFloat(P['seuilSoin'] || 0.40);
+    var SEUIL_SOIN = parseFloat(P['seuilSoin'] || 0.55);
     var SEUIL_URGENCE = parseFloat(P['seuilUrgence'] || 0.25);
     var TOMBE_AVEC = String(P['tombeAvecElle'] || 'true') === 'true';
     var PALIER_DRESSE = parseInt(P['palierDresse'] || 60, 10);
@@ -200,6 +246,10 @@
     var OBEIT_SAUVAGE = parseFloat(P['obeissanceSauvage'] === undefined || P['obeissanceSauvage'] === '' ? 0.25 : P['obeissanceSauvage']);
     var ETAT_AILE = parseInt(P['etatAile'] || 232, 10);
     var TOURS_AILE = parseInt(P['toursAile'] || 3, 10);
+    var TOURS_ABSENCE = Math.max(0, parseInt(P['toursAbsence'] === undefined || P['toursAbsence'] === '' ? 2 : P['toursAbsence'], 10) || 0);
+    var PV_RETOUR = Math.min(1, Math.max(0.01, parseFloat(P['pvRetour'] || 0.5)));
+    var TYPES_LIES = String(P['typesLies'] === undefined || P['typesLies'] === '' ? '6, 21' : P['typesLies'])
+        .split(',').map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
 
     var POSTURES = ['libre', 'agressif', 'garde'];
     var NOMS_PALIER = { 1: 'Sauvage', 2: 'Dressé', 3: 'Lié' };
@@ -281,7 +331,13 @@
             return m ? m.experience : 0;
         },
         memoire: memoire,
-        seuils: { dresse: PALIER_DRESSE, lie: PALIER_LIE }
+        seuils: { dresse: PALIER_DRESSE, lie: PALIER_LIE },
+        // v3 — l'absence et ce qu'elle coûte
+        absence: function () { var a = absence(); return a ? { depuis: a.depuis, retour: a.retour, fini: !!a.fini } : null; },
+        sansLui: function () { return sansLui(); },
+        typesLies: TYPES_LIES.slice(),
+        reglages: function () { return { toursAbsence: TOURS_ABSENCE, pvRetour: PV_RETOUR, typesLies: TYPES_LIES.slice() }; },
+        bilan: function () { var b = bilan(); return b ? JSON.parse(JSON.stringify(b)) : null; }
     };
 
     //=========================================================================
@@ -318,14 +374,22 @@
     function faireSortir() {
         if (!$gameParty || !$gameParty._seiryuEntre) { return; }
         $gameParty._seiryuEntre = false;
+        $gameParty._seiryuAbsence = null;
         $gameParty.removeActor(FAMILIER);
     }
 
     var _setup = BattleManager.setup;
     BattleManager.setup = function (troopId, canEscape, canLose) {
         // ⚠ Piège 2 : on l'ajoute pour le combat, et pour le combat seulement.
+        // v3 : Korrah entre à terre ? Il entre aussi, éteint avec elle — sinon,
+        // relevée en plein combat, elle n'aurait jamais l'Hiver.
         var k = elle();
-        if (k && consciente(k)) { faireEntrer(); }
+        if (k && faireEntrer()) {
+            // chaque combat repart de zéro : pas d'absence, un bilan neuf
+            $gameParty._seiryuAbsence = null;
+            $gameParty._seiryuBilan = { morts: 0, toursSansLui: 0, soins: 0, encaisse: 0 };
+            if (!consciente(k) && TOMBE_AVEC) { eteindre(lui()); }
+        }
         _setup.call(this, troopId, canEscape, canLose);
     };
 
@@ -470,9 +534,11 @@
         if (couvrir.length && !a.isStateAffected(228) && (p === 'garde' || faibles.length)) {
             return poser(a, couvrir[0]);
         }
-        // La garde de groupe, si personne ne la porte encore.
+        // La garde de groupe, si personne ne la porte encore. v3 : en posture
+        // LIBRE aussi — personne à soigner, il couvre au lieu de frapper pour
+        // une centaine de dégâts. Seul « Assaut » le fait frapper d'abord.
         var gg = utilisables(a, GARDE_GROUPE);
-        if (gg.length && p === 'garde') {
+        if (gg.length && p !== 'agressif') {
             var deja = $gameParty.aliveMembers().some(function (m) { return m.isStateAffected(229); });
             if (!deja) { return poser(a, gg[0]); }
         }
@@ -513,11 +579,19 @@
     //=========================================================================
     var _degatsPV = Game_Action.prototype.executeHpDamage;
     Game_Action.prototype.executeHpDamage = function (target, value) {
+        var avantSoin = target ? target.hp : 0;
         _degatsPV.call(this, target, value);
+        // ce que ses soins ont VRAIMENT rendu (sans le surplus au-delà du max)
+        if (value < 0 && $gameParty && $gameParty.inBattle() && target) {
+            var su = this.subject(), bs = bilan();
+            if (bs && su && su.isActor() && su.actorId() === FAMILIER) { bs.soins += Math.max(0, target.hp - avantSoin); }
+        }
         if (!(value > 0) || !$gameParty || !$gameParty.inBattle()) { return; }
         var u = this.subject(), m = memoire();
         if (!u || !m || !target) { return; }
         try {
+            var b = bilan();
+            if (b && target.isActor() && target.actorId() === FAMILIER && u.isEnemy()) { b.encaisse += value; }
             // qui fait mal au groupe
             if (u.isEnemy() && target.isActor()) {
                 var k = u.enemyId();
@@ -700,26 +774,111 @@
     };
 
     //=========================================================================
-    // IL S'ÉTEINT AVEC ELLE
+    // v3 — IL TOMBE, IL SE REFORME ; SANS LUI, PAS D'HIVER
     //=========================================================================
+    function absence() { return ($gameParty && $gameParty._seiryuAbsence) || null; }
+    function bilan() { return ($gameParty && $gameParty._seiryuBilan) || null; }
+
+    /** En combat, seiryu n'est pas là pour elle : à terre, ou jamais entré. */
+    function sansLui() {
+        if (!$gameParty || !$gameParty.inBattle() || !$gameParty._seiryuEntre) { return false; }
+        var s = lui();
+        return !s || s.isDead();
+    }
+
+    // Korrah ne peut plus lancer l'Hiver (ni donner d'ordre) tant qu'il manque.
+    var _conditions = Game_BattlerBase.prototype.meetsSkillConditions;
+    Game_BattlerBase.prototype.meetsSkillConditions = function (skill) {
+        if (!_conditions.call(this, skill)) { return false; }
+        if (skill && this.isActor && this.isActor() && this.actorId() === PORTEUSE
+            && TYPES_LIES.indexOf(skill.stypeId) >= 0 && sansLui()) { return false; }
+        return true;
+    };
+
+    function eteindre(s) {
+        if (!s || s.isDead()) { return; }
+        // ⚠ MV refuse de reposer un état retiré dans la même action
+        //   (`_result.isStateRemoved`) : revenu à l'instant, il ne s'éteindrait
+        //   pas avant la fin du tour. On vide son résultat, comme MV le fait
+        //   avant chaque coup.
+        s.clearResult();
+        s._seiryuSEteint = true;              // ce n'est pas un coup : pas d'absence
+        try { s.addState(s.deathStateId()); } finally { s._seiryuSEteint = false; }
+    }
+
+    function revenir(s, pct, texte) {
+        s._seiryuRetour = true;
+        try { s.removeState(s.deathStateId()); } finally { s._seiryuRetour = false; }
+        s.setHp(Math.max(1, Math.floor(s.mhp * pct)));
+        $gameParty._seiryuAbsence = null;
+        journal('\\C[23]✦ ' + s.name() + ' ' + texte + '\\C[0]');
+    }
+
+    // Tombé sous un coup (et pas éteint avec elle) : l'absence commence.
+    var _ajoute = Game_Battler.prototype.addState;
+    Game_Battler.prototype.addState = function (stateId) {
+        var vivant = this.isAlive();
+        _ajoute.call(this, stateId);
+        if (!vivant || !this.isDead() || !this.isActor() || this.actorId() !== FAMILIER) { return; }
+        if (!$gameParty || !$gameParty.inBattle() || !$gameParty._seiryuEntre || this._seiryuSEteint) { return; }
+        var t = $gameTroop.turnCount();
+        $gameParty._seiryuAbsence = { depuis: t, retour: t + TOURS_ABSENCE, vu: null, fini: false };
+        var b = bilan(); if (b) { b.morts++; }
+        journal('\\C[8]✦ ' + this.name() + ' se dissipe — Korrah perd l\'Hiver. Il se reforme dans '
+            + TOURS_ABSENCE + ' tour' + (TOURS_ABSENCE > 1 ? 's' : '') + '.\\C[0]');
+    };
+
+    // Rien ne le ramène avant l'heure : ni objet, ni sort, ni refresh qui
+    // lui rendrait des PV (MV retire l'état de mort dès que hp > 0).
+    var _retire = Game_Battler.prototype.removeState;
+    Game_Battler.prototype.removeState = function (stateId) {
+        if (this.isActor() && this.actorId() === FAMILIER && stateId === this.deathStateId()
+            && !this._seiryuRetour && this.isDead() && absence() && $gameParty.inBattle()) {
+            this._hp = 0;
+            return;
+        }
+        return _retire.call(this, stateId);
+    };
+
+    /** Une fois par tour de combat : le compte à rebours de son retour. */
+    function compterLesTours() {
+        var a = absence();
+        if (!a || !$gameParty.inBattle()) { return; }
+        var s = lui();
+        if (s && s.isAlive()) { $gameParty._seiryuAbsence = null; return; }   // relevé par d'autres voies
+        var t = $gameTroop.turnCount();
+        // ⚠ YEP_BattleEngineCore rappelle endTurn tant que les popups jouent :
+        //   on ne compte qu'une fois par tour.
+        if (a.vu === t) { return; }
+        a.vu = t;
+        var k = elle(), b = bilan();
+        if (b && k && consciente(k)) { b.toursSansLui++; }
+        if (t >= a.retour) { a.fini = true; return; }
+        var reste = a.retour - t;
+        journal('\\C[8]✦ seiryu se reforme… encore ' + reste + ' tour' + (reste > 1 ? 's' : '') + '.\\C[0]');
+    }
+
     // ⚠ Piège 3 : s'il survit au groupe entier, MV ne déclare pas la défaite.
     function verifierLeLien() {
-        if (!TOMBE_AVEC || !$gameParty || !$gameParty.inBattle()) { return; }
+        if (!$gameParty || !$gameParty.inBattle()) { return; }
         var s = lui(), k = elle();
         if (!s || !k || !$gameParty._seiryuEntre) { return; }
-        if (!consciente(k) && s.isAlive()) {
+        if (TOMBE_AVEC && !consciente(k) && s.isAlive()) {
             journal('\\C[8]' + s.name() + " s'éteint avec elle.\\C[0]");
-            s.addState(s.deathStateId());
-        } else if (consciente(k) && s.isDead()) {
+            eteindre(s);
+            return;
+        }
+        if (consciente(k) && s.isDead()) {
+            var a = absence();
+            if (a && !a.fini) { return; }                // il n'a pas fini de se reformer
+            if (a) { revenir(s, PV_RETOUR, 'se reforme — l\'Hiver revient à Korrah.'); }
             // elle rouvre les yeux : il revient, mais pas à pleine vie
-            s.removeState(s.deathStateId());
-            s.setHp(Math.max(1, Math.floor(s.mhp * 0.25)));
-            journal('\\C[23]✦ ' + s.name() + ' revient avec elle.\\C[0]');
+            else { revenir(s, 0.25, 'revient avec elle.'); }
         }
     }
     var _finTour = BattleManager.endTurn;
     BattleManager.endTurn = function () {
-        try { verifierLeLien(); } catch (e) { }
+        try { compterLesTours(); verifierLeLien(); } catch (e) { }
         _finTour.call(this);
     };
     var _finAction = BattleManager.endAction;

@@ -11,7 +11,7 @@ Ce que JOKO a fixé le 27/09 :
 
 | Sujet | Décision |
 |---|---|
-| Magie | courante mais modeste (lampes enchantées, petits sorts, fioles) ; tout le monde connaît les Dons |
+| Magie | courante mais modeste (lampes enchantées, petits sorts, fioles) ; plus personne ne parle des Dons (retirés du lore le 2026-10-14) |
 | De quoi on parle | du lord et des nobles, en **ragots vagues** : taxes, soldats, fêtes, invités. Aucun mystère inventé ; la suite du lore viendra de JOKO |
 | Ton | dur mais ordinaire : misère, dettes, soldats qui se servent, morts au travail |
 | Croyances | aucune pour l'instant : personne ne prie, personne ne jure par un dieu |

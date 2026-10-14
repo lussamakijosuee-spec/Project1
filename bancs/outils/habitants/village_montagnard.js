@@ -33,7 +33,7 @@ F({ ev: 24, nom: 'Sire Aubry', role: 'chevalier au service du lord', voix: 'nobl
     premiere: 'Sire Aubry, chevalier du lord. Vous pouvez m\'appeler « sire ». Tout le monde le fait. Personne ne le pense.',
     bonjourTous: ['Voyageur.', '~Il ajuste son gant sans te regarder.|Oui ?'],
     saisons: { 1: ['Le printemps : tournois. On se bat pour rien devant des gens qui n\'ont jamais tenu une épée.'], 2: ['L\'été, j\'escorte les carrosses des nobles. Je mange leur poussière avec dignité.'], 3: ['La chasse du lord. On rabat le gibier. Je suis chevalier, je rabats du gibier.'], 4: ['L\'hiver, au manoir, on joue aux échecs. Je perds exprès contre les invités. C\'est de la diplomatie.'] },
-    discuter: ['Mon Don est une épée. Une vraie lame de chevalier. Elle mérite de meilleures batailles que celles qu\'on me donne.', 'Les soldats en ville ne sont pas sous mes ordres. Ils boivent sans payer. Si c\'était mes hommes, ils paieraient.', 'Un chevalier jure de protéger les faibles. J\'escorte les riches. Je n\'ai pas encore trouvé comment concilier les deux.'],
+    discuter: ['Mon épée est une vraie lame de chevalier. Elle mérite de meilleures batailles que celles qu\'on me donne.', 'Les soldats en ville ne sont pas sous mes ordres. Ils boivent sans payer. Si c\'était mes hommes, ils paieraient.', 'Un chevalier jure de protéger les faibles. J\'escorte les riches. Je n\'ai pas encore trouvé comment concilier les deux.'],
     nouvelles: ['Le lord prépare une grande fête. Tournoi, banquet, feux. J\'ai été désigné pour perdre élégamment contre un baron.', K.LORD[1]],
     perso: { titre: 'Votre serment ?', paliers: [[1, 'Je sers le lord.'], [4, 'J\'ai juré de servir le lord. Pas ses invités. Mais les invités ont des exigences, et le lord leur dit oui.'], [7, '~Il baisse la voix.|J\'ai été fait chevalier pour avoir tenu un pont, seul, contre des bandits. Aujourd\'hui je tiens des portes de salon. Je me demande parfois ce qu\'est devenu le garçon du pont.']] },
     aurevoir: ['Allez en paix.', 'Et tenez-vous loin des soldats.'] });
@@ -49,7 +49,7 @@ F({ ev: 27, nom: 'Lila', role: 'bergère, jeune, farouche', voix: 'méfiante, di
     premiere: 'Tu es avec les soldats ? Non ? Tant mieux. Lila. Bergère.',
     bonjourTous: ['Salut.', '~Elle garde une main sur son bâton.|Oui ?'],
     saisons: MONT,
-    discuter: ['Un soldat a voulu m\'aider à porter un agneau. J\'ai compris ce qu\'il voulait. Mon bâton aussi.', 'Mon Don ? Un bâton, justement. Une arme, qu\'ils disent. Pour moi c\'est un bâton de berger. Il n\'a jamais cassé.'],
+    discuter: ['Un soldat a voulu m\'aider à porter un agneau. J\'ai compris ce qu\'il voulait. Mon bâton aussi.', 'Mon arme ? Un bâton, justement. Une arme, qu\'ils disent. Pour moi c\'est un bâton de berger. Il n\'a jamais cassé.'],
     nouvelles: [K.LORD[4], 'Les soldats dorment dans nos bergeries. Les moutons dehors, les soldats dedans. Les moutons ont perdu au change.'],
     perso: { titre: 'Pourquoi méfiante ?', paliers: [[1, 'Parce que.'], [4, 'Ma sœur est partie servir au manoir. Elle écrit une fois par saison. Sa dernière lettre était… trop polie. Elle n\'écrit jamais poliment.']] },
     aurevoir: ['Salut.', 'Fais attention aux soldats.'] });
@@ -65,7 +65,7 @@ F({ ev: 36, nom: 'Mei', role: 'herboriste des montagnes', voix: 'calme, précise
     premiere: 'Mei. Je cueille ce qui pousse là où personne ne monte.',
     bonjourTous: ['Bonjour.', '~Elle trie des herbes dans un panier.|Hm ? Bonjour.'],
     saisons: { 1: ['Les premières fleurs des cimes. Elles soignent la fièvre et la mélancolie. Enfin, la fièvre.'], 2: ['L\'été, je dors là-haut, avec les herbes. Il fait bon, sous les étoiles.'], 3: ['L\'automne, les racines. Il faut creuser. Les racines ne se donnent pas.'], 4: ['L\'hiver, je sèche, je broie, je mélange. La montagne dort, moi pas.'] },
-    discuter: ['Une herbe, c\'est une petite magie qui ne demande rien. Pas de Don, pas de formule. Juste savoir où regarder.', 'Les soldats m\'achètent des herbes contre la fatigue. Ils marchent beaucoup, dans ces montagnes. Ils ont surtout des ampoules.', K.MAGIE[4]],
+    discuter: ['Une herbe, c\'est une petite magie qui ne demande rien. Pas de mana, pas de formule. Juste savoir où regarder.', 'Les soldats m\'achètent des herbes contre la fatigue. Ils marchent beaucoup, dans ces montagnes. Ils ont surtout des ampoules.', K.MAGIE[4]],
     nouvelles: [K.LORD[7], 'Le guérisseur du manoir m\'a commandé des herbes de sommeil. Les nobles dorment mal. Trop de vin.'],
     perso: { titre: 'Vous vivez seule ?', paliers: [[1, 'Avec la montagne.'], [4, 'Ma famille venait de loin, de l\'autre côté du col. Ils sont retournés là-bas. Moi je suis restée. La montagne m\'a gardée.']] },
     options: [{ titre: 'Acheter des herbes', cmds: K.boutique([['objet', 3], ['objet', 59]]) }],

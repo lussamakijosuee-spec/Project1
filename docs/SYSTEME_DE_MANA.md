@@ -130,6 +130,11 @@ OMBRE ◄──► LUMIÈRE   (s'opposent mutuellement)
 
 ## 6. LE DON SPIRITUEL
 
+> 🛑 **Retiré du lore et du jeu** — JOKO, 2026-10-14 : *« les don et couverture on enlève »*.
+> Ce chapitre reste comme archive : rien de ce qu'il décrit n'existe plus dans le jeu (le système
+> est éteint depuis le 2026-09-24). Seule exception, gardée par JOKO : **seiryu**, l'Avatar de
+> Korrah, compagnon de combat (`SeiryuLeFamilier.js`) — son Hiver passe par lui.
+
 > 📦 **Le dossier complet** — toutes les données récupérables (les 16 armes 501-516, les 4 reliques
 > d'âme, les compétences, les états, les animations, les 3 plugins et leurs réglages) :
 > **[`docs/DONS_SPIRITUELS.md`](docs/DONS_SPIRITUELS.md)**.
@@ -452,6 +457,11 @@ Ce monde est **numérique**. Cela a des conséquences concrètes sur les règles
 ---
 
 ## 17. LE DON SPIRITUEL — ÉVOLUTION
+
+> 🛑 **Retiré du lore et du jeu** — JOKO, 2026-10-14 : *« les don et couverture on enlève »*.
+> Ce chapitre reste comme archive : rien de ce qu'il décrit n'existe plus dans le jeu (le système
+> est éteint depuis le 2026-09-24). Seule exception, gardée par JOKO : **seiryu**, l'Avatar de
+> Korrah, compagnon de combat (`SeiryuLeFamilier.js`) — son Hiver passe par lui.
 
 > *Chapitre 6 dit **ce qu'est** un Don et quelles formes il prend. Celui-ci dit **comment il grandit**.*
 

@@ -11,7 +11,7 @@ Ce que JOKO a fixé le 27/09 :
 
 | Sujet | Décision |
 |---|---|
-| Magie | courante mais modeste (lampes enchantées, petits sorts, fioles) ; tout le monde connaît les Dons |
+| Magie | courante mais modeste (lampes enchantées, petits sorts, fioles) ; plus personne ne parle des Dons (retirés du lore le 2026-10-14) |
 | De quoi on parle | du lord et des nobles, en **ragots vagues** : taxes, soldats, fêtes, invités. Aucun mystère inventé ; la suite du lore viendra de JOKO |
 | Ton | dur mais ordinaire : misère, dettes, soldats qui se servent, morts au travail |
 | Croyances | aucune pour l'instant : personne ne prie, personne ne jure par un dieu |
@@ -159,7 +159,7 @@ l'habitant ; tes boutiques, tes quêtes et tes commentaires d'origine sont gard�
 |---|---|---|---|---|
 | 11 | **Brunehaut** — garde de la porte nord | sèche, sarcastique, dévisage les voyageurs. | — | « Pourquoi garde ? » (2 paliers) |
 | 12 | **Oswin** — jeune garde de la porte nord, s'ennuie | jeune, las, rêve d'être muté au manoir. | — | « Le manoir ? » (2 paliers) |
-| 14 | **Arno** — recrue, vient de recevoir son Don | nerveux, fier, parle trop vite. | — | « Ton Don ? » (3 paliers) |
+| 14 | **Arno** — recrue, vient de recevoir sa première lance | nerveux, fier, parle trop vite. | — | « Ta lance ? » (3 paliers) |
 | 25 | **Élise** — jeune femme, se promène avec Tomas (la ronde tracée par JOKO) | vive, impatiente, rêve d'ailleurs. | — | « Et Tomas ? » (2 paliers) |
 | 26 | **Tomas** — jeune homme, se promène avec Élise | posé, casanier, amoureux, un peu inquiet. | — | « Et Élise ? » (2 paliers) |
 | 27 | **Gaston** — paysan, râle contre les taxes, finit ses journées au bar | grognon, fataliste, drôle malgré lui. | le soir au bar | « Votre ferme ? » (2 paliers) |
@@ -184,7 +184,7 @@ l'habitant ; tes boutiques, tes quêtes et tes commentaires d'origine sont gard�
 | év. | Qui | Sa voix | Quand | Ce qu'il propose |
 |---|---|---|---|---|
 | 6 | **Bertrand** — marchand de primeurs | crieur, blagueur, vante ses légumes comme des bijoux. | — | « Les affaires ? » (2 paliers) · Acheter |
-| 7 | **Mirabelle** — mage de quartier : recharge les lampes enchantées, vend de petits sorts | pétillante, affairée, parle vite de choses compliquées. | — | « Votre Don ? » (2 paliers) · Un Éther (40 G) · Un charme de lumière (60 G) |
+| 7 | **Mirabelle** — mage de quartier : recharge les lampes enchantées, vend de petits sorts | pétillante, affairée, parle vite de choses compliquées. | — | « Votre magie ? » (2 paliers) · Un Éther (40 G) · Un charme de lumière (60 G) |
 | 8 | **Gustave** — fromager | lent, gourmand, parle de fromage avec émotion. | — | « Votre femme ? » (2 paliers) |
 | 10 | **Rose** — fleuriste | douce, rêveuse, un peu triste. | — | « Pourquoi triste ? » (2 paliers) |
 | 11 | **Tian** — marchand d'épices venu de loin | cérémonieux, patient, proverbes étranges. | — | « Votre pays ? » (2 paliers) |
