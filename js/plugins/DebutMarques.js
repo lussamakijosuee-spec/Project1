@@ -1,16 +1,34 @@
 //=============================================================================
-// DebutMarques.js — v1.0 · Le début façon Fear & Hunger : choisis TON marqué
+// DebutMarques.js — v1.1 · Le début façon Fear & Hunger : choisis TON marqué
 // RPG Maker MV · by JOKO · commande : DEBUT choisir (dans l'événement d'intro)
 //=============================================================================
 /*:
  * @plugindesc v1.0 ■ Choisis un des 4 marqués avant de commencer. Les trois
  * autres vivent leur vie (DestinsParalleles). Discours d'entrée inclus.
  * @author JOKO
+ *
+ * @param auDebut
+ * @text Choix dès la nouvelle partie
+ * @desc Oui : la sélection s'ouvre toute seule au début d'une nouvelle
+ * partie, avant tout autre événement. Non : seulement par DEBUT choisir.
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ *
  * @help  DEBUT choisir  — ouvre la sélection (à mettre au tout début du jeu).
  *  ANTI-BOUCLE : une fois le choix fait, la commande ne refait RIEN
  *  (même en Démarrage automatique). DEBUT reset — pour re-choisir (test).
  *  Le choix : retire les 3 autres du groupe, santé mentale de tous à 8
  *  (normale — elle bougera selon les choix), et joue le discours du marqué.
+ *
+ *  v1.1 (2026-10-17) — JOKO : le choix se fait « dès la nouvelle partie ».
+ *  Plus besoin de poser DEBUT choisir : à la première carte d'une nouvelle
+ *  partie, la sélection s'ouvre avant tout événement automatique. Une
+ *  ancienne sauvegarde ne redemande rien et garde son groupe.
+ *  Les trois autres reviennent par les rencontres sur la route : un
+ *  événement qui appelle l'événement commun « Rencontre — héros N »
+ *  (201 Vesper, 202 Korrah, 203 ludwing, 204 Aël).
  */
 (function () {
     'use strict';
@@ -55,12 +73,55 @@
                 else if (!$gameParty.members().some(function (m) { return m.actorId() === i; })) $gameParty.addActor(i);
             });
             var a = $gameActors.actor(id), F = FICHES[id];
-            $gameMessage.add('\\C[18]★ ' + a.name() + '\\C[0] — ' + F.titre);
-            $gameMessage.add('\\C[23]Force :\\C[0] ' + F.force);
-            $gameMessage.add('\\C[2]Gouffre :\\C[0] ' + F.faille);
-            F.mots.forEach(function (m) { $gameMessage.add(m); });
-            $gameMessage.add('\\C[8]Les trois autres vivront leur vie. Vous les recroiserez.\\C[0]');
+            var lignes = ['\\C[18]★ ' + a.name() + '\\C[0] — ' + F.titre,
+                          '\\C[23]Force :\\C[0] ' + F.force,
+                          '\\C[2]Gouffre :\\C[0] ' + F.faille]
+                .concat(F.mots)
+                .concat(['\\C[8]Les trois autres vivront leur vie. Vous les recroiserez.\\C[0]']);
+            // v1.1 : MV vide le message juste APRÈS ce rappel (terminateMessage) —
+            // un $gameMessage.add ici n'apparaissait jamais. Le discours passe
+            // donc par l'interpréteur, qui l'affiche une fois le choix refermé,
+            // par messages de 4 lignes (YEP_MessageCore jette les lignes en trop).
+            var rangs = ($gameSystem.messageRows && $gameSystem.messageRows()) || 4;
+            var liste = [];
+            for (var i = 0; i < lignes.length; i += rangs) {
+                liste.push({ code: 101, indent: 0, parameters: ['', 0, 0, 2] });
+                lignes.slice(i, i + rangs).forEach(function (l) { liste.push({ code: 401, indent: 0, parameters: [l] }); });
+            }
+            liste.push({ code: 0, indent: 0, parameters: [] });
+            itp.setupChild(liste, itp._eventId);
         });
         this.setWaitMode('message');
+    };
+
+    // v1.1 — le choix dès la nouvelle partie.
+    // Seule une NOUVELLE partie porte la marque : une ancienne sauvegarde ne
+    // l'a pas, elle ne redemande rien et garde son groupe.
+    var AU_DEBUT = String(PluginManager.parameters('DebutMarques').auDebut || 'true') !== 'false';
+
+    // Les bancs d'essai (Chromium piloté par Playwright : navigator.webdriver)
+    // partent de l'équipe complète : la sélection ne s'y ouvre pas d'elle-même.
+    // Un banc qui veut la tester pose $gameSystem._debutAFaire = true.
+    var PILOTE = typeof navigator !== 'undefined' && navigator.webdriver === true;
+
+    var _setupNewGame = DataManager.setupNewGame;
+    DataManager.setupNewGame = function () {
+        _setupNewGame.call(this);
+        if (AU_DEBUT && !PILOTE) $gameSystem._debutAFaire = true;
+    };
+
+    // Avant les événements automatiques de la carte et les événements communs
+    // automatiques : la sélection passe en premier.
+    var _setupStartingEvent = Game_Map.prototype.setupStartingEvent;
+    Game_Map.prototype.setupStartingEvent = function () {
+        if ($gameSystem._debutAFaire && !$gameSystem._debutFait) {
+            $gameSystem._debutAFaire = false;
+            this._interpreter.setup([
+                { code: 356, indent: 0, parameters: ['DEBUT choisir'] },
+                { code: 0, indent: 0, parameters: [] }
+            ], 0);
+            return true;
+        }
+        return _setupStartingEvent.call(this);
     };
 })();
