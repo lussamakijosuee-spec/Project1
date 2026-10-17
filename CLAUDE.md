@@ -158,6 +158,19 @@ de répliques ni de réactions sans lui — ce sont ses personnages.
 (`navigator.webdriver`), il ne s'ouvre pas tout seul : les bancs partent de l'équipe complète ; un
 banc qui veut le tester pose `$gameSystem._debutAFaire = true`.
 
+**Le Studio** (`studio/`, lancé par `STUDIO.bat`, 2026-10-17) : les outils de JOKO dans le
+navigateur, servis par `studio/serveur.js` (Node, sans dépendance) sur http://localhost:8765.
+**Cinématiques** : une scène = un événement commun **601-699** nommé « 🎬 nom » (séparateur 600),
+sa source dans `studio/scenes/<id>.json` ; aperçu dans le vrai jeu (iframe, sans rien écrire) ;
+écriture refusée tant que `RPGMV.exe` tourne, copie de `CommonEvents.json` avant chaque écriture
+(Documents\RPG Maker\Sauvegardes du Studio). **Ressources** : `img/` + `audio/` du jeu et
+Documents\RPG Maker, « jamais cité » par le nom, copie dans le jeu sans jamais écraser. Les scènes
+de `studio/scenes/` sont à JOKO : je n'en écris pas sans lui.
+
+**Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
+le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
+`les_outils_de_scene` y fait 7 échecs de minutage, les mêmes sur la version d'avant — pas un bug.
+
 **Pièges de MV rencontrés ici :**
 
 - `Math.max(eval(formule), 0)` — une formule négative fait **0 dégât**, jamais un soin ;
@@ -188,7 +201,12 @@ banc qui veut le tester pose `$gameSystem._debutAFaire = true`.
 - un `$gameMessage.add` fait **dans le rappel d'un choix** n'apparaît jamais : MV vide le message
   juste après (`terminateMessage`). Passer par l'interpréteur (`setupChild`) ;
 - **YEP_MessageCore jette les lignes au-delà de 4** dans un même message : découper en messages de
-  4 lignes.
+  4 lignes ;
+- **MOG_TimeSystem ignore « Teinter l'écran »** (commande 223) tant que `$gameMap._timesys_tintscreen`
+  est vrai — sur toute carte où l'heure colore l'écran. Couper d'abord (`_timesys_tintscreen = false`,
+  `$gameSystem.tint_screen(false)`), rendre la main ensuite (`startTint($gameSystem.set_tint_phase(), n)`) ;
+- un tableau créé **hors du jeu** (une autre page, une iframe parente) n'a pas `Array.prototype.clone`
+  de MV : GALV_TimedMessagePopups plante sur `this._params.clone`. Passer par `W.JSON.parse` du jeu.
 
 ---
 

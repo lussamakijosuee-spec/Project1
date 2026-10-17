@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio de cinématiques</title>
+<link rel="stylesheet" href="/pages/studio.css">
+<style>
+  #app { display: grid; grid-template-columns: 230px minmax(360px, 1fr) 380px; gap: 12px; padding: 12px; height: calc(100vh - 56px); box-sizing: border-box; }
+  #app > * { min-height: 0; overflow: auto; }
+  .colonne { background: var(--panneau); border: 1px solid var(--bord); border-radius: 10px; padding: 12px; }
+  #listeScenes button.scene { display: block; width: 100%; text-align: left; margin: 0 0 6px; }
+  #listeScenes button.scene.active { border-color: var(--accent); background: var(--accent-doux); }
+  #listeScenes .num { color: var(--discret); font-size: 12px; }
+  #entete { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: end; margin-bottom: 10px; }
+  #entete .ligne { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; }
+  #actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  #palette { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 8px 0 12px; }
+  #palette .groupe { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  #palette .groupe > span { font-size: 12px; color: var(--discret); margin-right: 2px; width: 100%; }
+  #palette button { font-size: 13px; padding: 4px 8px; }
+  #etapes { list-style: none; margin: 0; padding: 0; }
+  #etapes li { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; padding: 8px 10px; margin-bottom: 6px; border: 1px solid var(--bord); border-radius: 8px; background: var(--fond); cursor: pointer; }
+  #etapes li.choisie { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  #etapes li .n { color: var(--discret); font-size: 12px; text-align: right; }
+  #etapes li .res { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #etapes li .outils { display: flex; gap: 2px; }
+  #etapes li .outils button { padding: 2px 6px; font-size: 12px; }
+  #etapes li.vide { cursor: default; color: var(--discret); justify-content: center; display: block; text-align: center; }
+  #editeur h2 { margin-top: 0; }
+  .champ { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .champ > label { font-size: 12px; color: var(--discret); }
+  .rangee { display: flex; gap: 8px; }
+  .rangee > .champ { flex: 1; }
+  .visages { display: grid; grid-template-columns: repeat(4, 72px); gap: 4px; margin-top: 4px; }
+  .visages div { width: 72px; height: 72px; background-size: 288px 144px; border: 2px solid transparent; border-radius: 4px; cursor: pointer; background-color: #0003; }
+  .visages div.choisi { border-color: var(--accent); }
+  .apercuImage { max-width: 100%; max-height: 160px; margin-top: 6px; border: 1px solid var(--bord); background: repeating-conic-gradient(#8883 0% 25%, transparent 0% 50%) 50% / 16px 16px; }
+  .route { list-style: none; padding: 0; margin: 4px 0; }
+  .route li { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .route li select, .route li input { flex: 1; min-width: 0; }
+  #modale { position: fixed; inset: 0; background: #000c; display: none; align-items: center; justify-content: center; z-index: 10; }
+  #modale.ouverte { display: flex; }
+  #modale .cadre { background: var(--panneau); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 96vw; }
+  #modale iframe { width: 816px; height: 624px; max-width: calc(96vw - 24px); max-height: calc(96vh - 90px); border: 0; background: #000; border-radius: 6px; }
+  #modale .barre { display: flex; gap: 8px; align-items: center; }
+  #modale .barre .etat { flex: 1; color: var(--discret); font-size: 13px; }
+  @media (max-width: 1100px) { #app { grid-template-columns: 1fr; height: auto; } }
+</style>
+</head>
+<body>
+<header class="barre-studio">
+  <a href="/" class="retour">← Studio</a>
+  <h1>🎬 Studio de cinématiques</h1>
+  <span id="titreJeu" class="discret"></span>
+  <span id="etatEditeur" class="pastille">…</span>
+</header>
+
+<div id="app">
+  <aside class="colonne" id="listeScenes">
+    <button id="nouvelle" class="principal" style="width:100%;margin-bottom:10px">＋ Nouvelle scène</button>
+    <div id="scenes"></div>
+    <p class="discret petit">Chaque scène devient un <b>événement commun</b> (601 à 699). Dans RPG Maker, un événement → « Appeler l'événement commun » → 🎬 ta scène.</p>
+  </aside>
+
+  <main class="colonne">
+    <div id="entete">
+      <div class="ligne">
+        <div class="champ" style="flex:2;min-width:180px"><label>Nom de la scène</label><input id="nomScene" placeholder="Ex. : Korrah retrouve Vesper"></div>
+        <div class="champ" style="flex:2;min-width:180px"><label>Carte où se joue la scène (pour choisir les personnages)</label><select id="carteScene"></select></div>
+      </div>
+      <div id="actions">
+        <button id="btnApercu" title="Joue la scène dans le vrai jeu, sans rien écrire">▶ Aperçu</button>
+        <button id="btnEnvoyer" class="principal" title="Écrit la scène dans le jeu (événement commun)">💾 Envoyer dans le jeu</button>
+      </div>
+      <div class="ligne" style="grid-column:1/-1">
+        <div class="champ"><label>Aperçu : le joueur démarre sur la carte</label><select id="apCarte"></select></div>
+        <div class="champ" style="width:70px"><label>x</label><input id="apX" type="number" min="0"></div>
+        <div class="champ" style="width:70px"><label>y</label><input id="apY" type="number" min="0"></div>
+        <div class="champ" style="flex:1;min-width:200px"><label>« Cet événement », c'est… (celui qui lancera la scène)</label><select id="apEv"></select></div>
+      </div>
+    </div>
+
+    <div id="palette"></div>
+    <ol id="etapes"></ol>
+  </main>
+
+  <aside class="colonne" id="editeur"></aside>
+</div>
+
+<div id="modale">
+  <div class="cadre">
+    <iframe id="jeu" title="Aperçu dans le jeu"></iframe>
+    <div class="barre">
+      <span class="etat" id="etatApercu"></span>
+      <button id="btnRejouer">↻ Rejouer</button>
+      <button id="btnFermer">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+'use strict';
+// ════════════════════════════════════════════════════════════════════════════
+//  Les données du projet, la scène en cours
+// ════════════════════════════════════════════════════════════════════════════
+var P = null;                 // /api/projet
+var CARTES = {};              // id → /api/carte
+var scene = null;             // la scène en cours
+var choisie = -1;             // l'étape sélectionnée
+var LIGNES = 4;               // lignes par message (YEP_MessageCore)
+
+function $(id) { return document.getElementById(id); }
+function el(tag, attrs, enfants) {
+  var e = document.createElement(tag);
+  for (var k in (attrs || {})) {
+    if (k === 'texte') e.textContent = attrs[k];
+    else if (k.indexOf('on') === 0) e.addEventListener(k.slice(2), attrs[k]);
+    else if (k === 'style') e.style.cssText = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  (enfants || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+  return e;
+}
+function toast(msg, erreur) {
+  var t = $('toast'); t.textContent = msg; t.className = 'toast visible' + (erreur ? ' erreur' : '');
+  clearTimeout(toast._t); toast._t = setTimeout(function () { t.className = 'toast'; }, erreur ? 9000 : 6000);
+}
+function api(url, corps) {
+  return fetch(url, corps ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) } : {})
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.erreur || ('Erreur ' + r.status)); return j; }); });
+}
+function nomActeur(id) { var a = P.acteurs.find(function (x) { return x.id === Number(id); }); return a ? a.nom : '?'; }
+function ceParNom(debut) { var c = P.evenementsCommuns.find(function (x) { return x.nom.indexOf(debut) === 0; }); return c ? c.id : 0; }
+function carteDeScene() { return CARTES[scene.carte] || null; }
+function chargerCarte(id) {
+  if (!id || CARTES[id]) return Promise.resolve(CARTES[id]);
+  return api('/api/carte?id=' + id).then(function (c) { CARTES[id] = c; return c; }).catch(function () { return null; });
+}
+function nomCible(c) {
+  c = Number(c);
+  if (c === -1) return 'le joueur';
+  if (c === 0) return 'cet événement';
+  var carte = carteDeScene(), ev = carte && carte.evenements.find(function (e) { return e.id === c; });
+  return ev ? ('#' + c + ' ' + ev.nom) : ('événement ' + c);
+}
+function nouvelleScene() {
+  return { version: 1, ce: null, nom: '', carte: P.depart.carte,
+           apercu: { carte: P.depart.carte, x: P.depart.x, y: P.depart.y, evenement: 0 },
+           etapes: [TYPES.cinema.defaut('debut'), TYPES.cinema.defaut('fin')] };
+}
+function sauverBrouillon() { try { localStorage.setItem('studio.cinematique', JSON.stringify(scene)); } catch (e) {} }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Les briques de l'éditeur de formulaire
+// ════════════════════════════════════════════════════════════════════════════
+function champ(label, controle, aide) {
+  return el('div', { class: 'champ' }, [el('label', { texte: label }), controle, aide ? el('span', { class: 'discret petit', texte: aide }) : null]);
+}
+function rangee() { return el('div', { class: 'rangee' }, Array.prototype.slice.call(arguments)); }
+function maj() { sauverBrouillon(); dessinerEtapes(); }
+function texte(e, cle, label, attrs) {
+  var i = el('input', Object.assign({ value: e[cle] == null ? '' : e[cle] }, attrs || {}));
+  i.addEventListener('input', function () { e[cle] = i.value; maj(); });
+  return champ(label, i);
+}
+function nombre(e, cle, label, min, max, pas, aide) {
+  var i = el('input', { type: 'number', value: e[cle], min: min, max: max, step: pas || 1 });
+  i.addEventListener('input', function () { var v = Number(i.value); if (!isNaN(v)) { e[cle] = v; maj(); } });
+  return champ(label, i, aide);
+}
+function zone(e, cle, label, aide) {
+  var t = el('textarea', { rows: 5 }); t.value = e[cle] || '';
+  t.addEventListener('input', function () { e[cle] = t.value; maj(); });
+  return champ(label, t, aide);
+}
+function caseACocher(e, cle, label) {
+  var i = el('input', { type: 'checkbox' }); i.checked = !!e[cle];
+  i.addEventListener('change', function () { e[cle] = i.checked; maj(); });
+  return el('label', { class: 'coche' }, [i, ' ' + label]);
+}
+function liste(e, cle, label, options, apres) {
+  var s = el('select');
+  options.forEach(function (o) { var op = el('option', { value: o[0], texte: o[1] }); s.appendChild(op); });
+  s.value = typeof e[cle] === 'boolean' ? (e[cle] ? '1' : '0') : String(e[cle]);
+  s.addEventListener('change', function () { var v = s.value; e[cle] = (/^-?\d+$/.test(v) ? Number(v) : v); maj(); if (apres) apres(); });
+  return champ(label, s);
+}
+function optionsCibles(avecJoueur) {
+  var o = [];
+  if (avecJoueur !== false) o.push([-1, '🧍 Le joueur']);
+  o.push([0, '📍 Cet événement (celui qui lance la scène)']);
+  var c = carteDeScene();
+  if (c) c.evenements.forEach(function (ev) { o.push([ev.id, '#' + ev.id + ' · ' + (ev.nom || 'sans nom') + '  (' + ev.x + ', ' + ev.y + ')' + (ev.image && ev.image.perso ? '  — ' + ev.image.perso : '')]); });
+  return o;
+}
+function choixSon(e, canal, label) {
+  var noms = P.sons[canal] || [];
+  var s = el('select'); s.appendChild(el('option', { value: '', texte: '— choisir —' }));
+  noms.forEach(function (n) { s.appendChild(el('option', { value: n, texte: n })); });
+  s.value = e.nom || '';
+  s.addEventListener('change', function () { e.nom = s.value; maj(); });
+  var b = el('button', { texte: '▶', title: 'Écouter', onclick: function () { ecouter(canal, e.nom, e.volume, e.pitch); } });
+  var stop = el('button', { texte: '■', title: 'Arrêter', onclick: function () { ecouter(); } });
+  return champ(label, el('div', { class: 'rangee' }, [s, b, stop]));
+}
+var audio = null;
+function ecouter(canal, nom, volume, pitch) {
+  if (audio) { audio.pause(); audio = null; }
+  if (!canal || !nom) return;
+  audio = new Audio('/jeu/audio/' + canal + '/' + encodeURIComponent(nom) + '.ogg');
+  audio.volume = Math.max(0, Math.min(1, (volume == null ? 90 : volume) / 100));
+  audio.playbackRate = Math.max(0.5, Math.min(1.5, (pitch || 100) / 100));
+  audio.play().catch(function () { toast('Impossible de lire ce son.', true); });
+}
+function choixVisage(e) {
+  var s = el('select'); s.appendChild(el('option', { value: '', texte: '— aucun visage —' }));
+  P.visages.forEach(function (n) { s.appendChild(el('option', { value: n, texte: n })); });
+  s.value = e.visage.fichier || '';
+  var grille = el('div', { class: 'visages' });
+  function dessiner() {
+    grille.innerHTML = '';
+    if (!e.visage.fichier) return;
+    for (var i = 0; i < 8; i++) (function (i) {
+      var d = el('div', { title: 'Visage ' + i, style: 'background-image:url("/jeu/img/faces/' + encodeURIComponent(e.visage.fichier) + '.png");background-position:-' + (i % 4 * 72) + 'px -' + (Math.floor(i / 4) * 72) + 'px' });
+      if (i === e.visage.index) d.className = 'choisi';
+      d.addEventListener('click', function () { e.visage.index = i; maj(); dessiner(); });
+      grille.appendChild(d);
+    })(i);
+  }
+  s.addEventListener('change', function () { e.visage.fichier = s.value; e.visage.index = 0; maj(); dessiner(); });
+  dessiner();
+  return champ('Visage', el('div', {}, [s, grille]));
+}
+function choixImage(e) {
+  var s = el('select'); s.appendChild(el('option', { value: '', texte: '— choisir —' }));
+  P.images.forEach(function (n) { s.appendChild(el('option', { value: n, texte: n })); });
+  s.value = e.fichier || '';
+  var img = el('img', { class: 'apercuImage', alt: '' });
+  function voir() { img.style.display = e.fichier ? '' : 'none'; if (e.fichier) img.src = '/jeu/img/pictures/' + encodeURIComponent(e.fichier) + '.png'; }
+  s.addEventListener('change', function () { e.fichier = s.value; maj(); voir(); });
+  voir();
+  return champ('Image (img/pictures)', el('div', {}, [s, img]));
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Les étapes : ce qu'elles affichent, ce qu'on y règle, ce qu'elles écrivent
+//  (une commande MV = { code, indent, parameters })
+// ════════════════════════════════════════════════════════════════════════════
+function cmd(code, parameters) { return { code: code, indent: 0, parameters: parameters || [] }; }
+function lignesDe(t) {
+  var l = String(t || '').replace(/\r/g, '').split('\n');
+  while (l.length > 1 && !l[l.length - 1].trim()) l.pop();
+  return l;
+}
+var DIRS = [[2, '⬇ bas'], [4, '⬅ gauche'], [6, '➡ droite'], [8, '⬆ haut']];
+var BULLES = [[1, '❗ Surprise'], [2, '❓ Question'], [3, '🎵 Musique'], [4, '❤ Cœur'], [5, '💢 Colère'], [6, '💧 Gêne'], [7, '🌀 Agacement'], [8, '… Silence'], [9, '💡 Idée'], [10, '💤 Sommeil']];
+var TEINTES = {
+  normale: [0, 0, 0, 0], soir: [68, -34, -34, 0], nuit: [-68, -68, 0, 68], sepia: [34, -34, -68, 170],
+  rouge: [68, -68, -68, 0], gris: [0, 0, 0, 255], reve: [34, 0, 68, 34], noir: [-255, -255, -255, 0]
+};
+var ROUTE = {
+  marche:    { titre: 'Marcher', faire: function (a) { var c = { 2: 1, 4: 2, 6: 3, 8: 4 }[a.dir]; var r = []; for (var i = 0; i < Math.max(1, a.n | 0); i++) r.push({ code: c }); return r; }, dire: function (a) { return (a.n || 1) + ' pas ' + DIRS.find(function (d) { return d[0] === a.dir; })[1].slice(2); } },
+  regarde:   { titre: 'Se tourner', faire: function (a) { return [{ code: { 2: 16, 4: 17, 6: 18, 8: 19 }[a.dir] }]; }, dire: function (a) { return 'se tourne ' + DIRS.find(function (d) { return d[0] === a.dir; })[1].slice(2); } },
+  versJoueur:{ titre: 'Regarder le joueur', faire: function () { return [{ code: 25 }]; }, dire: function () { return 'regarde le joueur'; } },
+  dosJoueur: { titre: 'Tourner le dos au joueur', faire: function () { return [{ code: 26 }]; }, dire: function () { return 'tourne le dos'; } },
+  versLeJoueurPas: { titre: 'Avancer vers le joueur', faire: function (a) { var r = []; for (var i = 0; i < Math.max(1, a.n | 0); i++) r.push({ code: 10 }); return r; }, dire: function (a) { return (a.n || 1) + ' pas vers le joueur'; } },
+  saute:     { titre: 'Sauter', faire: function (a) { return [{ code: 14, parameters: [a.x | 0, a.y | 0] }]; }, dire: function (a) { return 'saute (' + (a.x | 0) + ', ' + (a.y | 0) + ')'; } },
+  pause:     { titre: 'Pause', faire: function (a) { return [{ code: 15, parameters: [Math.round((a.s || 0.5) * 60)] }]; }, dire: function (a) { return 'pause ' + (a.s || 0.5) + ' s'; } },
+  vitesse:   { titre: 'Vitesse', faire: function (a) { return [{ code: 29, parameters: [a.v || 4] }]; }, dire: function (a) { return 'vitesse ' + (a.v || 4); } },
+  traverse:  { titre: 'Traverser les obstacles', faire: function (a) { return [{ code: a.on ? 37 : 38 }]; }, dire: function (a) { return a.on ? 'traverse' : 'ne traverse plus'; } },
+  invisible: { titre: 'Invisible / visible', faire: function (a) { return [{ code: a.on ? 39 : 40 }]; }, dire: function (a) { return a.on ? 'devient invisible' : 'redevient visible'; } },
+  opacite:   { titre: 'Opacité', faire: function (a) { return [{ code: 42, parameters: [a.o == null ? 255 : a.o] }]; }, dire: function (a) { return 'opacité ' + (a.o == null ? 255 : a.o); } }
+};
+function actionParDefaut(type) {
+  return { marche: { a: 'marche', dir: 2, n: 1 }, regarde: { a: 'regarde', dir: 2 }, versJoueur: { a: 'versJoueur' }, dosJoueur: { a: 'dosJoueur' },
+           versLeJoueurPas: { a: 'versLeJoueurPas', n: 1 }, saute: { a: 'saute', x: 0, y: 0 }, pause: { a: 'pause', s: 0.5 }, vitesse: { a: 'vitesse', v: 4 },
+           traverse: { a: 'traverse', on: true }, invisible: { a: 'invisible', on: true }, opacite: { a: 'opacite', o: 128 } }[type];
+}
+
+var TYPES = {
+  dialogue: {
+    groupe: 'Parole', icone: '💬', titre: 'Dialogue',
+    defaut: function () { var a = P.acteurs[0]; return { type: 'dialogue', acteur: a ? a.id : 0, nom: '', visage: { fichier: a ? a.visage : '', index: a ? a.indexVisage : 0 }, texte: '', position: 2, fond: 0 }; },
+    resume: function (e) { var qui = e.acteur ? nomActeur(e.acteur) : (e.nom || 'Narrateur'); return qui + ' : « ' + (lignesDe(e.texte).join(' ').slice(0, 90) || '…') + ' »'; },
+    formulaire: function (e, zoneForm) {
+      var options = [[0, '— personne / narrateur —']].concat(P.acteurs.map(function (a) { return [a.id, a.nom]; }));
+      zoneForm.appendChild(liste(e, 'acteur', 'Qui parle', options, function () {
+        var a = P.acteurs.find(function (x) { return x.id === e.acteur; });
+        if (a) { e.visage = { fichier: a.visage, index: a.indexVisage }; e.nom = ''; }
+        afficherEditeur();
+      }));
+      if (!e.acteur) zoneForm.appendChild(texte(e, 'nom', 'Nom affiché (vide = pas de nom)'));
+      zoneForm.appendChild(choixVisage(e));
+      zoneForm.appendChild(zone(e, 'texte', 'Ce qu\'il dit', 'Une ligne par ligne de la boîte. Au-delà de ' + LIGNES + ' lignes, la suite passe dans une nouvelle boîte. Les codes MV marchent : \\C[2] couleur, \\N[1] nom d\'un héros, \\. pause.'));
+      zoneForm.appendChild(rangee(
+        liste(e, 'position', 'Position', [[2, 'En bas'], [1, 'Au milieu'], [0, 'En haut']]),
+        liste(e, 'fond', 'Fond', [[0, 'Fenêtre'], [1, 'Assombri'], [2, 'Transparent']])));
+    },
+    commandes: function (e) {
+      var nom = e.acteur ? '\\n<\\N[' + e.acteur + ']>' : (e.nom ? '\\n<' + e.nom + '>' : '');
+      var l = lignesDe(e.texte), r = [];
+      for (var i = 0; i < l.length; i += LIGNES) {
+        r.push(cmd(101, [e.visage.fichier || '', e.visage.index || 0, e.fond, e.position]));
+        l.slice(i, i + LIGNES).forEach(function (t, k) { r.push(cmd(401, [(k === 0 ? nom : '') + t])); });
+      }
+      return r;
+    },
+    verifier: function (e) { return lignesDe(e.texte).join('').trim() ? '' : 'un dialogue est vide'; }
+  },
+  defilant: {
+    groupe: 'Parole', icone: '📜', titre: 'Texte qui défile',
+    defaut: function () { return { type: 'defilant', texte: '', vitesse: 2, sansAvance: false }; },
+    resume: function (e) { return 'Texte qui défile : « ' + (lignesDe(e.texte).join(' ').slice(0, 80) || '…') + ' »'; },
+    formulaire: function (e, f) {
+      f.appendChild(zone(e, 'texte', 'Le texte', 'Comme un prologue : il monte à l\'écran.'));
+      f.appendChild(rangee(nombre(e, 'vitesse', 'Vitesse (1 à 8)', 1, 8), el('div', { class: 'champ' }, [el('label', { texte: ' ' }), caseACocher(e, 'sansAvance', 'Interdire l\'avance rapide')])));
+    },
+    commandes: function (e) { return [cmd(105, [e.vitesse, !!e.sansAvance])].concat(lignesDe(e.texte).map(function (t) { return cmd(405, [t]); })); },
+    verifier: function (e) { return lignesDe(e.texte).join('').trim() ? '' : 'un texte qui défile est vide'; }
+  },
+  deplacer: {
+    groupe: 'Personnages', icone: '🚶', titre: 'Déplacer',
+    defaut: function () { return { type: 'deplacer', cible: -1, actions: [actionParDefaut('marche')], attendre: true, passerSiBloque: true }; },
+    resume: function (e) { return nomCible(e.cible) + ' : ' + (e.actions.map(function (a) { return ROUTE[a.a].dire(a); }).join(', ') || 'rien') + (e.attendre ? '' : '  (sans attendre)'); },
+    formulaire: function (e, f) {
+      f.appendChild(liste(e, 'cible', 'Qui bouge', optionsCibles()));
+      var ul = el('ul', { class: 'route' });
+      function dessiner() {
+        ul.innerHTML = '';
+        e.actions.forEach(function (a, i) {
+          var type = el('select');
+          Object.keys(ROUTE).forEach(function (k) { type.appendChild(el('option', { value: k, texte: ROUTE[k].titre })); });
+          type.value = a.a;
+          type.addEventListener('change', function () { e.actions[i] = actionParDefaut(type.value); maj(); dessiner(); });
+          var reglages = [];
+          function num(cle, min, max, pas, titre) { var x = el('input', { type: 'number', value: a[cle], min: min, max: max, step: pas || 1, title: titre, style: 'max-width:70px' }); x.addEventListener('input', function () { a[cle] = Number(x.value); maj(); }); return x; }
+          function dir() { var s = el('select'); DIRS.forEach(function (d) { s.appendChild(el('option', { value: d[0], texte: d[1] })); }); s.value = a.dir; s.addEventListener('change', function () { a.dir = Number(s.value); maj(); }); return s; }
+          function oui() { var s = el('select'); s.appendChild(el('option', { value: '1', texte: 'oui' })); s.appendChild(el('option', { value: '0', texte: 'non' })); s.value = a.on ? '1' : '0'; s.addEventListener('change', function () { a.on = s.value === '1'; maj(); }); return s; }
+          if (a.a === 'marche') reglages = [dir(), num('n', 1, 99, 1, 'pas')];
+          if (a.a === 'regarde') reglages = [dir()];
+          if (a.a === 'versLeJoueurPas') reglages = [num('n', 1, 99, 1, 'pas')];
+          if (a.a === 'saute') reglages = [num('x', -20, 20, 1, 'x'), num('y', -20, 20, 1, 'y')];
+          if (a.a === 'pause') reglages = [num('s', 0.1, 30, 0.1, 'secondes')];
+          if (a.a === 'vitesse') reglages = [num('v', 1, 6, 1, '1 très lent … 4 normal … 6 très rapide')];
+          if (a.a === 'traverse' || a.a === 'invisible') reglages = [oui()];
+          if (a.a === 'opacite') reglages = [num('o', 0, 255, 5, '0 invisible, 255 opaque')];
+          var suppr = el('button', { texte: '✕', title: 'Retirer', onclick: function () { e.actions.splice(i, 1); maj(); dessiner(); } });
+          ul.appendChild(el('li', {}, [type].concat(reglages).concat([suppr])));
+        });
+        ul.appendChild(el('li', {}, [el('button', { texte: '＋ ajouter un mouvement', onclick: function () { e.actions.push(actionParDefaut('marche')); maj(); dessiner(); } })]));
+      }
+      dessiner();
+      f.appendChild(champ('Les mouvements, dans l\'ordre', ul));
+      f.appendChild(caseACocher(e, 'attendre', 'La scène attend la fin du déplacement'));
+      f.appendChild(el('br'));
+      f.appendChild(caseACocher(e, 'passerSiBloque', 'S\'il est bloqué, il saute ce pas (la scène ne reste jamais coincée)'));
+    },
+    commandes: function (e) {
+      var route = [];
+      e.actions.forEach(function (a) { route = route.concat(ROUTE[a.a].faire(a)); });
+      route = route.map(function (r) { return { code: r.code, indent: null, parameters: r.parameters || [] }; });
+      var tout = route.concat([{ code: 0, parameters: [] }]);
+      return [cmd(205, [e.cible, { list: tout, repeat: false, skippable: !!e.passerSiBloque, wait: !!e.attendre }])]
+        .concat(route.map(function (r) { return cmd(505, [r]); }));
+    },
+    verifier: function (e) { return e.actions.length ? '' : 'un déplacement n\'a aucun mouvement'; }
+  },
+  bulle: {
+    groupe: 'Personnages', icone: '❗', titre: 'Bulle d\'émotion',
+    defaut: function () { return { type: 'bulle', cible: -1, bulle: 1, attendre: true }; },
+    resume: function (e) { return 'Bulle ' + BULLES.find(function (b) { return b[0] === e.bulle; })[1] + ' sur ' + nomCible(e.cible); },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'cible', 'Sur qui', optionsCibles())); f.appendChild(liste(e, 'bulle', 'Quelle bulle', BULLES)); f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin de la bulle')); },
+    commandes: function (e) { return [cmd(213, [e.cible, e.bulle, !!e.attendre])]; }
+  },
+  animation: {
+    groupe: 'Personnages', icone: '✨', titre: 'Animation',
+    defaut: function () { return { type: 'animation', cible: -1, anim: (P.animations[0] || { id: 1 }).id, attendre: true }; },
+    resume: function (e) { var a = P.animations.find(function (x) { return x.id === e.anim; }); return 'Animation « ' + (a ? a.nom : e.anim) + ' » sur ' + nomCible(e.cible); },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'cible', 'Sur qui', optionsCibles())); f.appendChild(liste(e, 'anim', 'Quelle animation', P.animations.map(function (a) { return [a.id, a.id + ' · ' + a.nom]; }))); f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin de l\'animation')); },
+    commandes: function (e) { return [cmd(212, [e.cible, e.anim, !!e.attendre])]; }
+  },
+  icone: {
+    groupe: 'Personnages', icone: '⭐', titre: 'Icône au-dessus',
+    defaut: function () { return { type: 'icone', cible: -1, icone: 87, duree: 90, attendre: false }; },
+    resume: function (e) { return 'Icône ' + e.icone + ' au-dessus de ' + nomCible(e.cible) + ' (' + (e.duree / 60).toFixed(1) + ' s)'; },
+    formulaire: function (e, f) {
+      f.appendChild(liste(e, 'cible', 'Au-dessus de qui', optionsCibles()));
+      var apercu = el('div', { style: 'width:32px;height:32px;background:url(/jeu/img/system/IconSet.png);border:1px solid var(--bord)' });
+      function voir() { apercu.style.backgroundPosition = '-' + (e.icone % 16 * 32) + 'px -' + (Math.floor(e.icone / 16) * 32) + 'px'; }
+      var n = nombre(e, 'icone', 'Numéro de l\'icône (IconSet)', 1, 9999); n.querySelector('input').addEventListener('input', voir); voir();
+      f.appendChild(rangee(n, champ('Aperçu', apercu)));
+      f.appendChild(nombre(e, 'duree', 'Durée (images, 60 = 1 s)', 10, 6000));
+      f.appendChild(caseACocher(e, 'attendre', 'La scène attend'));
+    },
+    commandes: function (e) { var q = e.cible === -1 ? 'joueur' : (e.cible === 0 ? 'ici' : e.cible); return [cmd(356, ['SCENE icone ' + q + ' ' + e.icone + ' ' + e.duree + (e.attendre ? ' attendre' : '')])]; }
+  },
+  equipe: {
+    groupe: 'Personnages', icone: '🤝', titre: 'Équipe',
+    defaut: function () { return { type: 'equipe', action: 'ajouter', acteur: (P.acteurs[0] || { id: 1 }).id }; },
+    resume: function (e) { return nomActeur(e.acteur) + (e.action === 'ajouter' ? ' rejoint l\'équipe' : ' quitte l\'équipe'); },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'action', 'Ce qui se passe', [['ajouter', 'Rejoint l\'équipe'], ['retirer', 'Quitte l\'équipe']])); f.appendChild(liste(e, 'acteur', 'Qui', P.acteurs.map(function (a) { return [a.id, a.nom]; }))); },
+    commandes: function (e) { return [cmd(129, [e.acteur, e.action === 'ajouter' ? 0 : 1, false])]; }
+  },
+  cinema: {
+    groupe: 'Mise en scène', icone: '🎬', titre: 'Début / fin de cinématique',
+    defaut: function (quoi) { return { type: 'cinema', quoi: quoi || 'debut' }; },
+    resume: function (e) { return e.quoi === 'debut' ? 'Début de cinématique — le joueur ne bouge plus, l\'interface se cache' : 'Fin de cinématique — tout revient'; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'quoi', 'Moment', [['debut', 'Début de cinématique'], ['fin', 'Fin de cinématique']])); f.appendChild(el('p', { class: 'discret petit', texte: 'Appelle tes recettes « ✎ Cinématiques · Début / Fin de cinématique » (événements communs 1354 et 1355) : interface cachée, temps arrêté, PNJ figés, et tout revient à la fin.' })); },
+    commandes: function (e) {
+      var id = ceParNom(e.quoi === 'debut' ? '✎ Cinématiques · Début de cinématique' : '✎ Cinématiques · Fin de cinématique');
+      return id ? [cmd(117, [id])] : [cmd(356, [e.quoi === 'debut' ? 'SCENE debut' : 'SCENE fin'])];
+    }
+  },
+  camera: {
+    groupe: 'Mise en scène', icone: '🎥', titre: 'Caméra',
+    defaut: function () { return { type: 'camera', mode: 'evenement', ev: 1, x: 0, y: 0, duree: 45, attendre: true }; },
+    resume: function (e) { var ou = e.mode === 'joueur' ? 'revient sur le joueur' : e.mode === 'case' ? 'vers la case (' + e.x + ', ' + e.y + ')' : e.mode === 'ici' ? 'vers cet événement' : 'vers ' + nomCible(e.ev); return 'Caméra ' + ou + ' en ' + (e.duree / 60).toFixed(1) + ' s'; },
+    formulaire: function (e, f) {
+      f.appendChild(liste(e, 'mode', 'La caméra va', [['evenement', 'vers un personnage'], ['ici', 'vers cet événement'], ['case', 'vers une case'], ['joueur', 'revenir sur le joueur']], afficherEditeur));
+      if (e.mode === 'evenement') f.appendChild(liste(e, 'ev', 'Lequel', optionsCibles(false).filter(function (o) { return o[0] > 0; }).concat(e.ev ? [] : [[1, '#1']])));
+      if (e.mode === 'case') f.appendChild(rangee(nombre(e, 'x', 'x', 0, 999), nombre(e, 'y', 'y', 0, 999)));
+      f.appendChild(nombre(e, 'duree', 'Durée du glissement (images, 60 = 1 s)', 1, 6000));
+      f.appendChild(caseACocher(e, 'attendre', 'La scène attend l\'arrivée de la caméra'));
+    },
+    commandes: function (e) {
+      var ou = e.mode === 'joueur' ? 'joueur' : e.mode === 'case' ? 'case ' + e.x + ' ' + e.y : e.mode === 'ici' ? 'ici' : String(e.ev);
+      return [cmd(356, ['SCENE camera ' + ou + ' ' + e.duree + (e.attendre ? ' attendre' : '')])];
+    }
+  },
+  barres: {
+    groupe: 'Mise en scène', icone: '🎞', titre: 'Bandes de cinéma',
+    defaut: function () { return { type: 'barres', on: 1, hauteur: 64 }; },
+    resume: function (e) { return e.on ? 'Bandes de cinéma (' + e.hauteur + ' px)' : 'Les bandes de cinéma repartent'; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'on', 'Les bandes', [[1, 'arrivent'], [0, 'repartent']])); if (e.on) f.appendChild(nombre(e, 'hauteur', 'Hauteur (px)', 8, 300)); },
+    commandes: function (e) { return [cmd(356, [e.on ? 'SCENE barres ' + e.hauteur : 'SCENE barres off'])]; }
+  },
+  attendreTous: {
+    groupe: 'Mise en scène', icone: '⏳', titre: 'Attendre tout le monde',
+    defaut: function () { return { type: 'attendreTous' }; },
+    resume: function () { return 'Attendre que plus personne ne bouge'; },
+    formulaire: function (e, f) { f.appendChild(el('p', { class: 'discret', texte: 'Utile après plusieurs déplacements lancés sans attendre : la scène reprend quand tout le monde est arrivé.' })); },
+    commandes: function () { return [cmd(356, ['SCENE attendre'])]; }
+  },
+  passer: {
+    groupe: 'Mise en scène', icone: '⏭', titre: 'Permettre de passer',
+    defaut: function () { return { type: 'passer' }; },
+    resume: function () { return 'À partir d\'ici, maintenir Échap passe la scène'; },
+    formulaire: function (e, f) { f.appendChild(el('p', { class: 'discret', texte: 'Le joueur qui maintient Échap saute à la fin de la scène — juste avant ta dernière « Fin de cinématique », pour que tout revienne en place.' })); },
+    commandes: function () { return [cmd(356, ['SCENE passer FIN_SCENE'])]; }
+  },
+  bloc: {
+    groupe: 'Mise en scène', icone: '🧩', titre: 'Bloc tout prêt',
+    defaut: function () { return { type: 'bloc', ce: ceParNom('✎ Cinématiques · Tremblement') || ceParNom('✎ Cinématiques') || 1 }; },
+    resume: function (e) { var c = P.evenementsCommuns.find(function (x) { return x.id === e.ce; }); return 'Bloc : ' + (c ? c.nom.replace(/^✎ /, '') : 'événement commun ' + e.ce); },
+    formulaire: function (e, f) {
+      var cine = P.evenementsCommuns.filter(function (c) { return c.nom.indexOf('✎ Cinématiques') === 0; });
+      var autres = P.evenementsCommuns.filter(function (c) { return c.nom.indexOf('✎ Cinématiques') !== 0 && c.nom.indexOf('🎬') !== 0; });
+      var s = el('select');
+      var g1 = el('optgroup', { label: 'Tes 36 recettes de cinématique' }); cine.forEach(function (c) { g1.appendChild(el('option', { value: c.id, texte: c.nom.replace('✎ Cinématiques · ', '') })); });
+      var g2 = el('optgroup', { label: 'Tous les autres événements communs' }); autres.forEach(function (c) { g2.appendChild(el('option', { value: c.id, texte: c.id + ' · ' + c.nom })); });
+      s.appendChild(g1); s.appendChild(g2); s.value = String(e.ce);
+      s.addEventListener('change', function () { e.ce = Number(s.value); maj(); });
+      f.appendChild(champ('Quel bloc', s, 'Le bloc est appelé tel quel (« Appeler l\'événement commun ») : le modifier dans RPG Maker change toutes les scènes qui l\'utilisent.'));
+    },
+    commandes: function (e) { return [cmd(117, [e.ce])]; }
+  },
+  fondu: {
+    groupe: 'Écran', icone: '🌑', titre: 'Fondu',
+    defaut: function () { return { type: 'fondu', sens: 'noir' }; },
+    resume: function (e) { return e.sens === 'noir' ? 'L\'écran s\'éteint (fondu au noir)' : 'L\'écran se rallume'; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'sens', 'L\'écran', [['noir', 's\'éteint (fondu au noir)'], ['retour', 'se rallume']])); },
+    commandes: function (e) { return [cmd(e.sens === 'noir' ? 221 : 222)]; }
+  },
+  teinte: {
+    groupe: 'Écran', icone: '🎨', titre: 'Teinte',
+    defaut: function () { return { type: 'teinte', modele: 'soir', duree: 60, attendre: true }; },
+    resume: function (e) { return 'Teinte de l\'écran : ' + e.modele + ' en ' + (e.duree / 60).toFixed(1) + ' s'; },
+    formulaire: function (e, f) {
+      f.appendChild(liste(e, 'modele', 'Ambiance', [['normale', 'Normale (retour, l\'heure reprend la main)'], ['soir', 'Soir'], ['nuit', 'Nuit'], ['sepia', 'Sépia (souvenir)'], ['rouge', 'Rouge (colère, sang)'], ['gris', 'Noir et blanc'], ['reve', 'Rêve'], ['noir', 'Noir total']]));
+      f.appendChild(nombre(e, 'duree', 'Durée (images, 60 = 1 s)', 1, 6000)); f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin'));
+      f.appendChild(el('p', { class: 'discret petit', texte: 'Sur une carte où l\'heure colore l\'écran (MOG_TimeSystem), « Teinter l\'écran » est ignoré : le Studio met la couleur de l\'heure en pause pendant ta teinte. Termine par « Normale » pour la lui rendre.' }));
+    },
+    commandes: function (e) {
+      // MOG_TimeSystem ignore la commande 223 tant que $gameMap._timesys_tintscreen est vrai.
+      if (e.modele === 'normale') {
+        var r = [cmd(355, ['if ($gameMap._studioTeinte) { $gameMap._studioTeinte = false; $gameMap._timesys_tintscreen = true; $gameSystem.tint_screen(true); $gameScreen.startTint($gameSystem.set_tint_phase(), ' + e.duree + '); } else { $gameScreen.startTint([0, 0, 0, 0], ' + e.duree + '); }'])];
+        if (e.attendre) r.push(cmd(230, [e.duree]));
+        return r;
+      }
+      return [cmd(355, ['if ($gameMap._timesys_tintscreen && $gameSystem.tint_screen) { $gameMap._studioTeinte = true; $gameMap._timesys_tintscreen = false; $gameSystem.tint_screen(false); }']),
+              cmd(223, [TEINTES[e.modele].slice(), e.duree, !!e.attendre])];
+    }
+  },
+  flash: {
+    groupe: 'Écran', icone: '⚡', titre: 'Flash',
+    defaut: function () { return { type: 'flash', couleur: '#ffffff', force: 170, duree: 20, attendre: false }; },
+    resume: function (e) { return 'Flash ' + e.couleur + ' (' + e.duree + ' images)'; },
+    formulaire: function (e, f) { var c = el('input', { type: 'color', value: e.couleur }); c.addEventListener('input', function () { e.couleur = c.value; maj(); }); f.appendChild(champ('Couleur', c)); f.appendChild(nombre(e, 'force', 'Force (0 à 255)', 0, 255, 5)); f.appendChild(nombre(e, 'duree', 'Durée (images)', 1, 600)); f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin')); },
+    commandes: function (e) { var h = e.couleur.replace('#', ''); return [cmd(224, [[parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16), e.force], e.duree, !!e.attendre])]; }
+  },
+  tremblement: {
+    groupe: 'Écran', icone: '〰', titre: 'Tremblement',
+    defaut: function () { return { type: 'tremblement', force: 5, vitesse: 5, duree: 60, attendre: true }; },
+    resume: function (e) { return 'Tremblement (force ' + e.force + ', ' + (e.duree / 60).toFixed(1) + ' s)'; },
+    formulaire: function (e, f) { f.appendChild(rangee(nombre(e, 'force', 'Force (1 à 9)', 1, 9), nombre(e, 'vitesse', 'Vitesse (1 à 9)', 1, 9))); f.appendChild(nombre(e, 'duree', 'Durée (images, 60 = 1 s)', 1, 6000)); f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin')); },
+    commandes: function (e) { return [cmd(225, [e.force, e.vitesse, e.duree, !!e.attendre])]; }
+  },
+  son: {
+    groupe: 'Son', icone: '🎵', titre: 'Musique / son',
+    defaut: function () { return { type: 'son', canal: 'bgm', nom: '', volume: 90, pitch: 100, pan: 0 }; },
+    resume: function (e) { return ({ bgm: 'Musique', bgs: 'Ambiance', me: 'Jingle', se: 'Bruitage' })[e.canal] + ' : ' + (e.nom || '— à choisir —'); },
+    formulaire: function (e, f) {
+      f.appendChild(liste(e, 'canal', 'Quoi', [['bgm', 'Musique (boucle)'], ['bgs', 'Ambiance (pluie, vent…)'], ['me', 'Jingle (court, une fois)'], ['se', 'Bruitage']], function () { e.nom = ''; afficherEditeur(); }));
+      f.appendChild(choixSon(e, e.canal, 'Fichier'));
+      f.appendChild(rangee(nombre(e, 'volume', 'Volume', 0, 100, 5), nombre(e, 'pitch', 'Hauteur', 50, 150, 5), nombre(e, 'pan', 'Gauche / droite', -100, 100, 10)));
+    },
+    commandes: function (e) { return [cmd({ bgm: 241, bgs: 245, me: 249, se: 250 }[e.canal], [{ name: e.nom, volume: e.volume, pitch: e.pitch, pan: e.pan }])]; },
+    verifier: function (e) { return e.nom ? '' : 'un son n\'a pas de fichier'; }
+  },
+  arretSon: {
+    groupe: 'Son', icone: '🔇', titre: 'Arrêter la musique',
+    defaut: function () { return { type: 'arretSon', canal: 'bgm', secondes: 2 }; },
+    resume: function (e) { return (e.canal === 'bgm' ? 'La musique' : 'L\'ambiance') + ' s\'éteint en ' + e.secondes + ' s'; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'canal', 'Quoi', [['bgm', 'La musique'], ['bgs', 'L\'ambiance']])); f.appendChild(nombre(e, 'secondes', 'En combien de secondes', 0, 60)); },
+    commandes: function (e) { return [cmd(e.canal === 'bgm' ? 242 : 246, [e.secondes])]; }
+  },
+  attente: {
+    groupe: 'Temps', icone: '⏱', titre: 'Attendre',
+    defaut: function () { return { type: 'attente', secondes: 1 }; },
+    resume: function (e) { return 'Attendre ' + e.secondes + ' s'; },
+    formulaire: function (e, f) { f.appendChild(nombre(e, 'secondes', 'Secondes', 0.1, 600, 0.1)); },
+    commandes: function (e) { return [cmd(230, [Math.max(1, Math.round(e.secondes * 60))])]; }
+  },
+  image: {
+    groupe: 'Images', icone: '🖼', titre: 'Afficher une image',
+    defaut: function () { return { type: 'image', numero: 1, fichier: '', centre: 1, x: 408, y: 312, zoom: 100, opacite: 255 }; },
+    resume: function (e) { return 'Image n°' + e.numero + ' : ' + (e.fichier || '— à choisir —'); },
+    formulaire: function (e, f) {
+      f.appendChild(choixImage(e));
+      f.appendChild(rangee(nombre(e, 'numero', 'Numéro (1 à 100)', 1, 100), liste(e, 'centre', 'Point d\'ancrage', [[1, 'Centre'], [0, 'Coin haut-gauche']])));
+      f.appendChild(rangee(nombre(e, 'x', 'x', -2000, 2000), nombre(e, 'y', 'y', -2000, 2000)));
+      f.appendChild(rangee(nombre(e, 'zoom', 'Zoom %', 1, 2000, 5), nombre(e, 'opacite', 'Opacité', 0, 255, 5)));
+      f.appendChild(el('p', { class: 'discret petit', texte: 'L\'écran fait 816 × 624 : le centre est à (408, 312).' }));
+    },
+    commandes: function (e) { return [cmd(231, [e.numero, e.fichier, e.centre ? 1 : 0, 0, e.x, e.y, e.zoom, e.zoom, e.opacite, 0])]; },
+    verifier: function (e) { return e.fichier ? '' : 'une image n\'a pas de fichier'; }
+  },
+  bougerImage: {
+    groupe: 'Images', icone: '↗', titre: 'Déplacer une image',
+    defaut: function () { return { type: 'bougerImage', numero: 1, centre: 1, x: 408, y: 312, zoom: 100, opacite: 255, duree: 60, attendre: true }; },
+    resume: function (e) { return 'Image n°' + e.numero + ' → (' + e.x + ', ' + e.y + '), opacité ' + e.opacite + ' en ' + (e.duree / 60).toFixed(1) + ' s'; },
+    formulaire: function (e, f) {
+      f.appendChild(rangee(nombre(e, 'numero', 'Numéro', 1, 100), liste(e, 'centre', 'Ancrage', [[1, 'Centre'], [0, 'Coin haut-gauche']])));
+      f.appendChild(rangee(nombre(e, 'x', 'x', -2000, 2000), nombre(e, 'y', 'y', -2000, 2000)));
+      f.appendChild(rangee(nombre(e, 'zoom', 'Zoom %', 1, 2000, 5), nombre(e, 'opacite', 'Opacité', 0, 255, 5)));
+      f.appendChild(nombre(e, 'duree', 'Durée (images, 60 = 1 s)', 1, 6000));
+      f.appendChild(caseACocher(e, 'attendre', 'Attendre la fin'));
+      f.appendChild(el('p', { class: 'discret petit', texte: 'Astuce : opacité 0 = l\'image disparaît en fondu.' }));
+    },
+    commandes: function (e) { return [cmd(232, [e.numero, 0, e.centre ? 1 : 0, 0, e.x, e.y, e.zoom, e.zoom, e.opacite, 0, e.duree, !!e.attendre])]; }
+  },
+  effacerImage: {
+    groupe: 'Images', icone: '🧽', titre: 'Effacer une image',
+    defaut: function () { return { type: 'effacerImage', numero: 1 }; },
+    resume: function (e) { return 'Effacer l\'image n°' + e.numero; },
+    formulaire: function (e, f) { f.appendChild(nombre(e, 'numero', 'Numéro', 1, 100)); },
+    commandes: function (e) { return [cmd(235, [e.numero])]; }
+  },
+  interrupteur: {
+    groupe: 'Jeu', icone: '🔘', titre: 'Interrupteur',
+    defaut: function () { return { type: 'interrupteur', id: 1, valeur: 1 }; },
+    resume: function (e) { var s = P.interrupteurs[e.id - 1]; return 'Interrupteur ' + e.id + (s && s.nom ? ' « ' + s.nom + ' »' : '') + ' → ' + (e.valeur ? 'ON' : 'OFF'); },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'id', 'Lequel', P.interrupteurs.map(function (s) { return [s.id, String(s.id).padStart(4, '0') + ' · ' + s.nom]; }))); f.appendChild(liste(e, 'valeur', 'Valeur', [[1, 'ON'], [0, 'OFF']])); },
+    commandes: function (e) { return [cmd(121, [e.id, e.id, e.valeur ? 0 : 1])]; }
+  },
+  variable: {
+    groupe: 'Jeu', icone: '🔢', titre: 'Variable',
+    defaut: function () { return { type: 'variable', id: 1, op: 0, valeur: 1 }; },
+    resume: function (e) { var v = P.variables[e.id - 1]; return 'Variable ' + e.id + (v && v.nom ? ' « ' + v.nom + ' »' : '') + ' ' + ['=', '+=', '-='][e.op] + ' ' + e.valeur; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'id', 'Laquelle', P.variables.map(function (v) { return [v.id, String(v.id).padStart(4, '0') + ' · ' + v.nom]; }))); f.appendChild(rangee(liste(e, 'op', 'Opération', [[0, '= (mettre à)'], [1, '+ (ajouter)'], [2, '− (retirer)']]), nombre(e, 'valeur', 'Valeur', -99999999, 99999999))); },
+    commandes: function (e) { return [cmd(122, [e.id, e.id, e.op, 0, e.valeur])]; }
+  },
+  teleporter: {
+    groupe: 'Jeu', icone: '🌀', titre: 'Téléporter le joueur',
+    defaut: function () { return { type: 'teleporter', carte: scene.carte, x: 0, y: 0, dir: 0, fondu: 0 }; },
+    resume: function (e) { var c = P.cartes.find(function (m) { return m.id === e.carte; }); return 'Téléporter vers ' + (c ? c.nom : 'carte ' + e.carte) + ' (' + e.x + ', ' + e.y + ')'; },
+    formulaire: function (e, f) { f.appendChild(liste(e, 'carte', 'Carte', P.cartes.map(function (m) { return [m.id, String(m.id).padStart(3, '0') + ' · ' + m.nom]; }))); f.appendChild(rangee(nombre(e, 'x', 'x', 0, 999), nombre(e, 'y', 'y', 0, 999))); f.appendChild(rangee(liste(e, 'dir', 'Regarde vers', [[0, 'comme avant'], [2, 'le bas'], [4, 'la gauche'], [6, 'la droite'], [8, 'le haut']]), liste(e, 'fondu', 'Transition', [[0, 'Noir'], [1, 'Blanc'], [2, 'Aucune']]))); },
+    commandes: function (e) { return [cmd(201, [0, e.carte, e.x, e.y, e.dir, e.fondu])]; }
+  },
+  note: {
+    groupe: 'Jeu', icone: '📝', titre: 'Note',
+    defaut: function () { return { type: 'note', texte: '' }; },
+    resume: function (e) { return 'Note : ' + (lignesDe(e.texte).join(' ').slice(0, 90) || '…'); },
+    formulaire: function (e, f) { f.appendChild(zone(e, 'texte', 'Une note pour toi', 'Elle apparaît en vert dans RPG Maker, le jeu l\'ignore.')); },
+    commandes: function (e) { var l = lignesDe(e.texte); return [cmd(108, [l[0] || ''])].concat(l.slice(1).map(function (t) { return cmd(408, [t]); })); }
+  }
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  La scène → la liste de commandes de l'événement commun
+// ════════════════════════════════════════════════════════════════════════════
+function construire(s) {
+  var erreurs = [];
+  var etapes = s.etapes.slice();
+  var liste = [cmd(108, ['🎬 ' + (s.nom || 'Scène') + ' — faite avec le Studio de cinématiques'])];
+  var aPasser = etapes.some(function (e) { return e.type === 'passer'; });
+  var derniereFin = -1;
+  etapes.forEach(function (e, i) { if (e.type === 'cinema' && e.quoi === 'fin') derniereFin = i; });
+  etapes.forEach(function (e, i) {
+    var T = TYPES[e.type];
+    if (T.verifier) { var m = T.verifier(e); if (m) erreurs.push('Étape ' + (i + 1) + ' : ' + m); }
+    if (aPasser && i === derniereFin) liste.push(cmd(118, ['FIN_SCENE']));
+    liste = liste.concat(T.commandes(e));
+  });
+  if (aPasser && derniereFin < 0) liste.push(cmd(118, ['FIN_SCENE']));
+  liste.push(cmd(0));
+  return { liste: liste, erreurs: erreurs };
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Affichage
+// ════════════════════════════════════════════════════════════════════════════
+function dessinerPalette() {
+  var pal = $('palette'); pal.innerHTML = '';
+  var groupes = {};
+  Object.keys(TYPES).forEach(function (k) { var g = TYPES[k].groupe; (groupes[g] = groupes[g] || []).push(k); });
+  Object.keys(groupes).forEach(function (g) {
+    var div = el('div', { class: 'groupe' }, [el('span', { texte: g })]);
+    groupes[g].forEach(function (k) {
+      div.appendChild(el('button', { texte: TYPES[k].icone + ' ' + TYPES[k].titre, title: 'Ajouter : ' + TYPES[k].titre, onclick: function () { ajouter(k); } }));
+    });
+    pal.appendChild(div);
+  });
+}
+function ajouter(k) {
+  var e = TYPES[k].defaut();
+  var ou;
+  if (choisie >= 0) ou = choisie + 1;
+  else { var der = scene.etapes[scene.etapes.length - 1]; ou = (der && der.type === 'cinema' && der.quoi === 'fin') ? scene.etapes.length - 1 : scene.etapes.length; }
+  scene.etapes.splice(ou, 0, e);
+  choisie = ou; maj(); afficherEditeur();
+}
+function dessinerEtapes() {
+  var ol = $('etapes'); ol.innerHTML = '';
+  if (!scene.etapes.length) ol.appendChild(el('li', { class: 'vide', texte: 'La scène est vide : ajoute une étape avec les boutons ci-dessus.' }));
+  scene.etapes.forEach(function (e, i) {
+    var T = TYPES[e.type];
+    var li = el('li', { class: i === choisie ? 'choisie' : '' }, [
+      el('span', { class: 'n', texte: String(i + 1) }),
+      el('span', { class: 'res', title: T.resume(e), texte: T.icone + '  ' + T.resume(e) }),
+      el('span', { class: 'outils' }, [
+        el('button', { texte: '↑', title: 'Monter', onclick: function (ev) { ev.stopPropagation(); bouger(i, -1); } }),
+        el('button', { texte: '↓', title: 'Descendre', onclick: function (ev) { ev.stopPropagation(); bouger(i, 1); } }),
+        el('button', { texte: '⧉', title: 'Dupliquer', onclick: function (ev) { ev.stopPropagation(); scene.etapes.splice(i + 1, 0, JSON.parse(JSON.stringify(e))); choisie = i + 1; maj(); afficherEditeur(); } }),
+        el('button', { texte: '✕', title: 'Retirer cette étape', onclick: function (ev) { ev.stopPropagation(); scene.etapes.splice(i, 1); choisie = Math.min(choisie, scene.etapes.length - 1); maj(); afficherEditeur(); } })
+      ])
+    ]);
+    li.addEventListener('click', function () { choisie = i; dessinerEtapes(); afficherEditeur(); });
+    ol.appendChild(li);
+  });
+}
+function bouger(i, d) {
+  var j = i + d; if (j < 0 || j >= scene.etapes.length) return;
+  var t = scene.etapes[i]; scene.etapes[i] = scene.etapes[j]; scene.etapes[j] = t;
+  choisie = j; maj(); afficherEditeur();
+}
+function afficherEditeur() {
+  var ed = $('editeur'); ed.innerHTML = '';
+  var e = scene.etapes[choisie];
+  if (!e) {
+    ed.appendChild(el('h2', { texte: 'Comment ça marche' }));
+    ed.appendChild(el('ol', { class: 'aide' }, [
+      el('li', { texte: 'Donne un nom à la scène et choisis la carte où elle se joue.' }),
+      el('li', { texte: 'Ajoute des étapes avec les boutons (dialogue, déplacement, caméra, musique…). Clique sur une étape pour la régler ici.' }),
+      el('li', { texte: '▶ Aperçu : la scène se joue dans le vrai jeu, sans rien écrire. Clique dans le jeu pour faire avancer les dialogues.' }),
+      el('li', { texte: '💾 Envoyer dans le jeu (RPG Maker fermé) : elle devient un événement commun « 🎬 nom ».' }),
+      el('li', { texte: 'Dans RPG Maker, sur ton événement : « Appeler l\'événement commun » → ta scène.' })
+    ]));
+    return;
+  }
+  var T = TYPES[e.type];
+  ed.appendChild(el('h2', { texte: T.icone + ' ' + T.titre + ' — étape ' + (choisie + 1) }));
+  var f = el('div'); ed.appendChild(f);
+  T.formulaire(e, f);
+}
+function dessinerScenes() {
+  var d = $('scenes'); d.innerHTML = '';
+  if (!P.scenes.length) d.appendChild(el('p', { class: 'discret petit', texte: 'Aucune scène envoyée pour l\'instant.' }));
+  P.scenes.forEach(function (s) {
+    d.appendChild(el('button', { class: 'scene' + (scene && scene.ce === s.id ? ' active' : ''), onclick: function () { ouvrir(s.id); } },
+      [el('div', { texte: '🎬 ' + s.nom }), el('div', { class: 'num', texte: 'événement commun ' + s.id + ' · ' + s.etapes + ' étapes' })]));
+  });
+}
+function remplirEntete() {
+  $('nomScene').value = scene.nom || '';
+  var optsCartes = P.cartes.map(function (m) { return el('option', { value: m.id, texte: String(m.id).padStart(3, '0') + ' · ' + m.nom }); });
+  $('carteScene').innerHTML = ''; optsCartes.forEach(function (o) { $('carteScene').appendChild(o.cloneNode(true)); });
+  $('apCarte').innerHTML = ''; optsCartes.forEach(function (o) { $('apCarte').appendChild(o); });
+  $('carteScene').value = String(scene.carte); $('apCarte').value = String(scene.apercu.carte);
+  $('apX').value = scene.apercu.x; $('apY').value = scene.apercu.y;
+  remplirEvApercu();
+}
+function remplirEvApercu() {
+  var s = $('apEv'); s.innerHTML = '';
+  s.appendChild(el('option', { value: 0, texte: '— aucun (la scène lancée seule) —' }));
+  var c = CARTES[scene.apercu.carte];
+  if (c && scene.apercu.carte === scene.carte) c.evenements.forEach(function (ev) { s.appendChild(el('option', { value: ev.id, texte: '#' + ev.id + ' · ' + (ev.nom || 'sans nom') })); });
+  s.value = String(scene.apercu.evenement || 0);
+}
+function tout() { remplirEntete(); dessinerScenes(); dessinerEtapes(); afficherEditeur(); }
+function ouvrir(id) {
+  api('/api/scene?id=' + id).then(function (s) {
+    scene = s; choisie = -1;
+    return Promise.all([chargerCarte(scene.carte), chargerCarte(scene.apercu.carte)]);
+  }).then(function () { sauverBrouillon(); tout(); }).catch(function (e) { toast(e.message, true); });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Aperçu dans le vrai jeu (sans rien écrire)
+// ════════════════════════════════════════════════════════════════════════════
+function attendreQue(test, delai) {
+  var t0 = Date.now();
+  return new Promise(function (ok, ko) {
+    (function boucle() {
+      var r; try { r = test(); } catch (e) { r = false; }
+      if (r) return ok(r);
+      if (Date.now() - t0 > delai) return ko(new Error('Le jeu ne répond pas.'));
+      setTimeout(boucle, 150);
+    })();
+  });
+}
+var dernierAp = null;
+function apercu() {
+  var b = construire(scene);
+  if (b.erreurs.length) { toast('À corriger d\'abord — ' + b.erreurs.join(' · '), true); return; }
+  dernierAp = b.liste;
+  $('modale').className = 'ouverte';
+  lancerApercu();
+}
+function lancerApercu() {
+  var f = $('jeu');
+  $('etatApercu').textContent = 'Le jeu démarre…';
+  f.src = '/jeu/index.html?apercu=' + Date.now();
+  var W;
+  attendreQue(function () {
+    W = f.contentWindow;
+    var s = W && W.SceneManager && W.SceneManager._scene;
+    return s && s.constructor === W.Scene_Title && W.$dataSystem && W.$dataCommonEvents && s._commandWindow && s._commandWindow.openness === 255;
+  }, 90000).then(function () {
+    $('etatApercu').textContent = 'Arrivée sur la carte…';
+    W.DataManager.setupNewGame();
+    W.$gameSystem._debutAFaire = false; W.$gameSystem._debutFait = true;      // pas de choix du héros dans un aperçu
+    W.$gamePlayer.reserveTransfer(scene.apercu.carte, scene.apercu.x, scene.apercu.y, 2, 0);
+    W.SceneManager.goto(W.Scene_Map);
+    return attendreQue(function () {
+      var s = W.SceneManager._scene;
+      return s && s.constructor === W.Scene_Map && s.isActive() && !W.SceneManager.isSceneChanging() && W.$gameMap.mapId() === scene.apercu.carte && !W.$gameMap.isEventRunning();
+    }, 30000);
+  }).then(function () {
+    // les listes doivent naître DANS le jeu : MV ajoute Array.prototype.clone, et les
+    // plugins s'en servent (GALV_TimedMessagePopups). Un tableau venu de cette page ne l'a pas.
+    W.$gameMap._interpreter.setup(W.JSON.parse(JSON.stringify(dernierAp)), Number(scene.apercu.evenement) || 0);
+    $('etatApercu').textContent = 'La scène se joue. Clique dans le jeu (ou Entrée) pour faire avancer les dialogues.';
+    f.focus();
+  }).catch(function (e) { $('etatApercu').textContent = e.message; });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Envoyer dans le jeu
+// ════════════════════════════════════════════════════════════════════════════
+function envoyer() {
+  if (!(scene.nom || '').trim()) { toast('Donne un nom à la scène d\'abord.', true); $('nomScene').focus(); return; }
+  var b = construire(scene);
+  if (b.erreurs.length) { toast('À corriger d\'abord — ' + b.erreurs.join(' · '), true); return; }
+  $('btnEnvoyer').disabled = true;
+  api('/api/enregistrer', { scene: scene, liste: b.liste }).then(function (r) {
+    scene.ce = r.ce; sauverBrouillon();
+    toast('✅ Écrite dans l\'événement commun ' + r.ce + ' « ' + r.nom + ' ». Ouvre RPG Maker : un événement → « Appeler l\'événement commun » → ta scène.');
+    return api('/api/projet').then(function (p) { P = p; dessinerScenes(); });
+  }).catch(function (e) { toast(e.message, true); }).then(function () { $('btnEnvoyer').disabled = false; });
+}
+function surveillerEditeur() {
+  api('/api/editeur').then(function (r) {
+    var p = $('etatEditeur');
+    p.textContent = r.ouvert ? '⚠ RPG Maker est ouvert — ferme-le pour envoyer' : '✓ RPG Maker fermé';
+    p.className = 'pastille ' + (r.ouvert ? 'alerte' : 'ok');
+  }).catch(function () {});
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Démarrage
+// ════════════════════════════════════════════════════════════════════════════
+api('/api/projet').then(function (p) {
+  P = p; LIGNES = p.lignesParMessage || 4;
+  $('titreJeu').textContent = p.titre;
+  var brouillon = null;
+  try { brouillon = JSON.parse(localStorage.getItem('studio.cinematique') || 'null'); } catch (e) {}
+  scene = (brouillon && brouillon.version === 1 && Array.isArray(brouillon.etapes)) ? brouillon : nouvelleScene();
+  scene.etapes = scene.etapes.filter(function (e) { return TYPES[e.type]; });
+  dessinerPalette();
+  return Promise.all([chargerCarte(scene.carte), chargerCarte(scene.apercu.carte)]);
+}).then(function () {
+  tout();
+  $('nomScene').addEventListener('input', function () { scene.nom = $('nomScene').value; sauverBrouillon(); });
+  $('carteScene').addEventListener('change', function () {
+    scene.carte = Number($('carteScene').value);
+    chargerCarte(scene.carte).then(function () {
+      if (scene.apercu.carte !== scene.carte) { scene.apercu.carte = scene.carte; scene.apercu.evenement = 0; $('apCarte').value = String(scene.carte); }
+      remplirEvApercu(); maj(); afficherEditeur();
+    });
+  });
+  $('apCarte').addEventListener('change', function () { scene.apercu.carte = Number($('apCarte').value); scene.apercu.evenement = 0; chargerCarte(scene.apercu.carte).then(function () { remplirEvApercu(); sauverBrouillon(); }); });
+  $('apX').addEventListener('input', function () { scene.apercu.x = Number($('apX').value) || 0; sauverBrouillon(); });
+  $('apY').addEventListener('input', function () { scene.apercu.y = Number($('apY').value) || 0; sauverBrouillon(); });
+  $('apEv').addEventListener('change', function () { scene.apercu.evenement = Number($('apEv').value); sauverBrouillon(); });
+  $('nouvelle').addEventListener('click', function () {
+    if (scene.etapes.length > 2 && !scene.ce && !confirm('La scène en cours n\'a pas été envoyée dans le jeu. Commencer une nouvelle scène quand même ?')) return;
+    scene = nouvelleScene(); choisie = -1;
+    chargerCarte(scene.carte).then(function () { sauverBrouillon(); tout(); });
+  });
+  $('btnApercu').addEventListener('click', apercu);
+  $('btnEnvoyer').addEventListener('click', envoyer);
+  $('btnRejouer').addEventListener('click', lancerApercu);
+  $('btnFermer').addEventListener('click', function () { $('modale').className = ''; $('jeu').src = 'about:blank'; });
+  surveillerEditeur(); setInterval(surveillerEditeur, 5000);
+}).catch(function (e) { toast('Le Studio ne trouve pas le projet : ' + e.message, true); });
+
+// pour les essais automatiques
+window.Studio = { construire: function () { return construire(scene); }, scene: function () { return scene; }, TYPES: TYPES };
+</script>
+</body>
+</html>

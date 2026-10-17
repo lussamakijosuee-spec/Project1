@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Studio</title>
+<link rel="stylesheet" href="/pages/studio.css">
+<style>
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+  .outils { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 18px; }
+  .outil { display: block; text-decoration: none; color: inherit; background: var(--panneau); border: 1px solid var(--bord); border-radius: 12px; padding: 16px; }
+  .outil:hover { border-color: var(--accent); }
+  .outil .ic { font-size: 28px; }
+  .outil h2 { margin: 6px 0; }
+  .outil.bientot { opacity: .55; pointer-events: none; }
+</style>
+</head>
+<body>
+<header class="barre-studio"><h1>🛠 Le Studio</h1><span id="titre" class="discret"></span></header>
+<main>
+  <p>Les outils de ton jeu, dans le navigateur. Ils lisent ton projet directement : ce que tu fais dans RPG Maker apparaît ici, et inversement.</p>
+  <div class="outils">
+    <a class="outil" href="/cinematiques">
+      <div class="ic">🎬</div><h2>Cinématiques</h2>
+      <p class="discret">Écris une scène étape par étape (dialogues, déplacements, caméra, musique, effets), regarde-la dans le vrai jeu, puis envoie-la dans RPG Maker.</p>
+    </a>
+    <a class="outil" href="/ressources" id="lienRessources">
+      <div class="ic">🗂</div><h2>Ressources</h2>
+      <p class="discret">Toutes tes images et tes sons, avec aperçu et recherche : ce que le jeu utilise, ce qui dort, et ce qui attend dans Documents\RPG Maker.</p>
+    </a>
+  </div>
+  <p class="discret petit" style="margin-top:24px">Pour fermer le Studio : ferme la fenêtre noire « Studio » ouverte par STUDIO.bat.</p>
+</main>
+<script>
+fetch('/api/projet').then(function (r) { return r.json(); }).then(function (p) { document.getElementById('titre').textContent = p.titre; });
+fetch('/ressources', { method: 'HEAD' }).then(function (r) { if (!r.ok) document.getElementById('lienRessources').classList.add('bientot'); });
+</script>
+</body>
+</html>

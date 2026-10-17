@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · Ressources</title>
+<link rel="stylesheet" href="/pages/studio.css">
+<style>
+  #app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 12px; padding: 12px; height: calc(100vh - 56px); }
+  #app > * { min-height: 0; overflow: auto; }
+  .colonne { background: var(--panneau); border: 1px solid var(--bord); border-radius: 10px; padding: 12px; }
+  #filtres { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 10px; position: sticky; top: -12px; background: var(--panneau); padding: 6px 0 8px; z-index: 2; }
+  #filtres .champ { display: flex; flex-direction: column; gap: 3px; }
+  #filtres label { font-size: 12px; color: var(--discret); }
+  .onglets { display: flex; gap: 4px; }
+  .onglets button.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+  #compte { color: var(--discret); font-size: 13px; margin: 0 0 8px; }
+  #grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .carte { border: 1px solid var(--bord); border-radius: 8px; overflow: hidden; cursor: pointer; background: var(--fond); display: flex; flex-direction: column; }
+  .carte.choisie { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .carte .vignette { height: 110px; display: flex; align-items: center; justify-content: center; background: repeating-conic-gradient(#8882 0% 25%, transparent 0% 50%) 50% / 14px 14px; font-size: 34px; }
+  .carte .vignette img { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
+  .carte .legende { padding: 5px 7px; font-size: 12px; }
+  .carte .nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .etiquette { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--bord); color: var(--discret); }
+  .etiquette.oui { color: var(--ok); border-color: var(--ok); }
+  .etiquette.non { color: var(--alerte); border-color: var(--alerte); }
+  #plus { margin: 12px auto; display: block; }
+  #detail img.grand { max-width: 100%; border: 1px solid var(--bord); background: repeating-conic-gradient(#8882 0% 25%, transparent 0% 50%) 50% / 16px 16px; image-rendering: pixelated; }
+  #detail dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13px; }
+  #detail dt { color: var(--discret); }
+  #detail dd { margin: 0; word-break: break-all; }
+  #detail .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  @media (max-width: 900px) { #app { grid-template-columns: 1fr; height: auto; } }
+</style>
+</head>
+<body>
+<header class="barre-studio">
+  <a href="/" class="retour">← Studio</a>
+  <h1>🗂 Ressources</h1>
+  <span id="titre" class="discret"></span>
+  <button id="rafraichir" style="margin-left:auto" title="Relire les dossiers (après avoir ajouté des fichiers)">↻ Relire</button>
+</header>
+<div id="app">
+  <main class="colonne">
+    <div id="filtres">
+      <div class="champ"><label>Où</label>
+        <div class="onglets"><button id="ongletJeu" class="actif">Dans le jeu</button><button id="ongletBiblio">Dans Documents\RPG Maker</button></div></div>
+      <div class="champ" style="flex:1;min-width:160px"><label>Chercher</label><input id="recherche" placeholder="nom, dossier… (ex. : dragon, forest, sword)"></div>
+      <div class="champ"><label>Type</label><select id="type"></select></div>
+      <div class="champ"><label>État</label><select id="etat"></select></div>
+    </div>
+    <p id="compte">Lecture des dossiers… (une dizaine de secondes la première fois)</p>
+    <div id="grille"></div>
+    <button id="plus" style="display:none">Afficher plus</button>
+  </main>
+  <aside class="colonne" id="detail">
+    <h2>Mode d'emploi</h2>
+    <ul class="aide">
+      <li><b>Dans le jeu</b> : tout ce qui est dans <code>img/</code> et <code>audio/</code>. « Jamais cité » = le nom du fichier n'apparaît nulle part dans ta base ni dans tes plugins : il dort.</li>
+      <li><b>Dans Documents\RPG Maker</b> : tout ce que tu as téléchargé. « Déjà dans le jeu » = un fichier du même nom est déjà copié.</li>
+      <li>Clique sur une carte pour la voir en grand, l'écouter, copier son nom, ou la <b>copier dans le jeu</b> (sans jamais écraser un fichier).</li>
+    </ul>
+  </aside>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+'use strict';
+var R = null, source = 'jeu', filtres = [], affiches = 0, PAGE = 240, choisi = null, audio = null;
+function $(id) { return document.getElementById(id); }
+function el(tag, attrs, enfants) {
+  var e = document.createElement(tag);
+  for (var k in (attrs || {})) { if (k === 'texte') e.textContent = attrs[k]; else if (k.indexOf('on') === 0) e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); }
+  (enfants || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+  return e;
+}
+function toast(msg, erreur) { var t = $('toast'); t.textContent = msg; t.className = 'toast visible' + (erreur ? ' erreur' : ''); clearTimeout(toast._t); toast._t = setTimeout(function () { t.className = 'toast'; }, erreur ? 9000 : 6000); }
+function taille(o) { return o > 1048576 ? (o / 1048576).toFixed(1) + ' Mo' : Math.max(1, Math.round(o / 1024)) + ' Ko'; }
+function enc(chemin) { return chemin.split('/').map(encodeURIComponent).join('/'); }
+function estSon(ext) { return ['.ogg', '.m4a', '.mp3', '.wav'].indexOf(ext) >= 0; }
+
+// une entrée, quelle que soit sa source : { nom, dossier, ext, url, son, etat, item }
+function entreeJeu(i) {
+  var ext = i.x.indexOf('.ogg') >= 0 ? '.ogg' : i.x[0];
+  return { nom: i.n.split('/').pop(), dossier: i.c, ext: ext, url: '/jeu/' + enc(i.c + '/' + i.n + ext), son: estSon(ext), etat: i.u ? 'utilise' : 'dort', item: i, cherche: (i.c + '/' + i.n).toLowerCase() };
+}
+function entreeBiblio(i) {
+  var parts = i.p.split('/');
+  return { nom: parts[parts.length - 1].replace(/\.[^.]+$/, ''), dossier: parts.slice(0, -1).join('/'), ext: i.x, url: '/bibliotheque/' + enc(i.p), son: estSon(i.x), etat: i.d ? 'deja' : 'nouveau', item: i, cherche: i.p.toLowerCase() };
+}
+
+function remplirFiltres() {
+  var t = $('type'), e = $('etat');
+  t.innerHTML = ''; e.innerHTML = '';
+  if (source === 'jeu') {
+    t.appendChild(el('option', { value: '', texte: 'Tout' }));
+    R.categories.forEach(function (c) { t.appendChild(el('option', { value: c, texte: c })); });
+    [['', 'Tout'], ['dort', 'Jamais cité (il dort)'], ['utilise', 'Utilisé']].forEach(function (o) { e.appendChild(el('option', { value: o[0], texte: o[1] })); });
+  } else {
+    [['', 'Tout'], ['image', 'Images'], ['son', 'Sons (MV : .ogg / .m4a)'], ['mp3', 'Sons à convertir (.mp3 / .wav)']].forEach(function (o) { t.appendChild(el('option', { value: o[0], texte: o[1] })); });
+    R.dossiers.forEach(function (d) { t.appendChild(el('option', { value: 'dossier:' + d, texte: '📁 ' + d })); });
+    [['', 'Tout'], ['nouveau', 'Pas encore dans le jeu'], ['deja', 'Déjà dans le jeu']].forEach(function (o) { e.appendChild(el('option', { value: o[0], texte: o[1] })); });
+  }
+}
+function filtrer() {
+  var q = $('recherche').value.trim().toLowerCase().split(/\s+/).filter(Boolean), t = $('type').value, e = $('etat').value;
+  var base = source === 'jeu' ? R.jeu.map(entreeJeu) : R.bibliotheque.map(entreeBiblio);
+  filtres = base.filter(function (x) {
+    if (e && x.etat !== e) return false;
+    if (t) {
+      if (source === 'jeu' && x.dossier !== t) return false;
+      if (t === 'image' && x.son) return false;
+      if (t === 'son' && !(x.ext === '.ogg' || x.ext === '.m4a')) return false;
+      if (t === 'mp3' && !(x.ext === '.mp3' || x.ext === '.wav')) return false;
+      if (t.indexOf('dossier:') === 0 && x.item.p.indexOf(t.slice(8) + '/') !== 0) return false;
+    }
+    return q.every(function (m) { return x.cherche.indexOf(m) >= 0; });
+  });
+  var nbDort = filtres.filter(function (x) { return x.etat === 'dort' || x.etat === 'nouveau'; }).length;
+  $('compte').textContent = filtres.length.toLocaleString('fr') + ' fichier(s)' + (source === 'jeu' ? ' · ' + nbDort.toLocaleString('fr') + ' jamais cité(s)' : ' · ' + nbDort.toLocaleString('fr') + ' pas encore dans le jeu');
+  $('grille').innerHTML = ''; affiches = 0; afficherPlus();
+}
+function afficherPlus() {
+  var g = $('grille');
+  filtres.slice(affiches, affiches + PAGE).forEach(function (x) {
+    var vign = x.son ? el('div', { class: 'vignette', texte: x.ext === '.mp3' || x.ext === '.wav' ? '🎧' : '🎵' })
+                     : el('div', { class: 'vignette' }, [el('img', { src: x.url, loading: 'lazy', alt: '' })]);
+    var etiq = { utilise: ['oui', 'utilisé'], dort: ['non', 'jamais cité'], deja: ['oui', 'déjà dans le jeu'], nouveau: ['', 'pas encore dans le jeu'] }[x.etat];
+    var c = el('div', { class: 'carte', title: x.dossier + '/' + x.nom + x.ext }, [vign, el('div', { class: 'legende' }, [
+      el('div', { class: 'nom', texte: x.nom }), el('div', { class: 'nom discret', texte: x.dossier }), el('span', { class: 'etiquette ' + etiq[0], texte: etiq[1] })])]);
+    c.addEventListener('click', function () { document.querySelectorAll('.carte.choisie').forEach(function (n) { n.classList.remove('choisie'); }); c.classList.add('choisie'); detail(x); });
+    g.appendChild(c);
+  });
+  affiches += PAGE;
+  $('plus').style.display = affiches < filtres.length ? '' : 'none';
+  $('plus').textContent = 'Afficher plus (' + (filtres.length - Math.min(affiches, filtres.length)).toLocaleString('fr') + ' restants)';
+}
+function detail(x) {
+  choisi = x;
+  var d = $('detail'); d.innerHTML = '';
+  if (audio) { audio.pause(); audio = null; }
+  d.appendChild(el('h2', { texte: x.nom }));
+  if (x.son) {
+    var a = el('audio', { controls: '', src: x.url, style: 'width:100%' }); d.appendChild(a);
+  } else {
+    var img = el('img', { class: 'grand', src: x.url, alt: x.nom }); d.appendChild(img);
+    img.addEventListener('load', function () { dims.textContent = img.naturalWidth + ' × ' + img.naturalHeight + ' px'; });
+  }
+  var dims = el('dd', { texte: x.son ? '—' : '…' });
+  d.appendChild(el('dl', {}, [
+    el('dt', { texte: 'Dossier' }), el('dd', { texte: x.dossier }),
+    el('dt', { texte: 'Fichier' }), el('dd', { texte: x.nom + x.ext }),
+    el('dt', { texte: 'Taille' }), el('dd', { texte: taille(x.item.t) }),
+    el('dt', { texte: 'Image' }), dims,
+    el('dt', { texte: 'État' }), el('dd', { texte: { utilise: 'cité dans ta base ou tes plugins', dort: 'jamais cité : il dort', deja: 'un fichier du même nom est déjà dans le jeu', nouveau: 'pas encore dans le jeu' }[x.etat] })
+  ]));
+  var actions = el('div', { class: 'actions' });
+  actions.appendChild(el('button', { texte: '📋 Copier le nom (pour RPG Maker)', onclick: function () {
+    navigator.clipboard.writeText(x.nom).then(function () { toast('« ' + x.nom + ' » copié.'); }, function () { toast('Copie refusée par le navigateur.', true); });
+  } }));
+  if (source === 'bibliotheque') {
+    var peut = x.son ? (x.ext === '.ogg' || x.ext === '.m4a') : x.ext === '.png';
+    if (!peut) {
+      actions.appendChild(el('p', { class: 'discret petit', texte: x.son ? 'RPG Maker MV ne lit pas les ' + x.ext + ' : il faut d\'abord le convertir en .ogg.' : 'RPG Maker MV ne lit que les .png pour les images.' }));
+    } else {
+      var cat = el('select');
+      R.categories.filter(function (c) { return x.son ? c.indexOf('audio/') === 0 : c.indexOf('img/') === 0; })
+        .forEach(function (c) { cat.appendChild(el('option', { value: c, texte: c })); });
+      cat.value = x.item.g && Array.prototype.some.call(cat.options, function (o) { return o.value === x.item.g; }) ? x.item.g : (x.son ? 'audio/se' : 'img/pictures');
+      var bouton = el('button', { class: 'principal', texte: '➕ Copier dans le jeu', onclick: function () {
+        bouton.disabled = true;
+        fetch('/api/copier', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ p: x.item.p, c: cat.value }) })
+          .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.erreur); return j; }); })
+          .then(function (j) { x.item.d = true; x.etat = 'deja'; toast('✅ Copié : ' + j.copies.join(' + ') + '. Il apparaît dans RPG Maker (rouvre la fenêtre de choix si elle était ouverte).'); detail(x); })
+          .catch(function (e) { toast(e.message, true); bouton.disabled = false; });
+      } });
+      actions.appendChild(el('label', { class: 'discret petit', texte: 'Dans quel dossier du jeu (proposé d\'après son chemin) :' }));
+      actions.appendChild(cat); actions.appendChild(bouton);
+    }
+  }
+  d.appendChild(actions);
+}
+function charger(rafraichir) {
+  $('compte').textContent = 'Lecture des dossiers… (une dizaine de secondes la première fois)';
+  return fetch('/api/ressources' + (rafraichir ? '?rafraichir=1' : '')).then(function (r) { return r.json(); }).then(function (r) { R = r; remplirFiltres(); filtrer(); });
+}
+function choisirSource(s) {
+  source = s; $('ongletJeu').className = s === 'jeu' ? 'actif' : ''; $('ongletBiblio').className = s === 'bibliotheque' ? 'actif' : '';
+  remplirFiltres(); filtrer();
+}
+fetch('/api/projet').then(function (r) { return r.json(); }).then(function (p) { $('titre').textContent = p.titre; });
+charger(false).catch(function (e) { $('compte').textContent = 'Erreur : ' + e.message; });
+var minuteur;
+$('recherche').addEventListener('input', function () { clearTimeout(minuteur); minuteur = setTimeout(filtrer, 200); });
+$('type').addEventListener('change', filtrer);
+$('etat').addEventListener('change', filtrer);
+$('plus').addEventListener('click', afficherPlus);
+$('ongletJeu').addEventListener('click', function () { choisirSource('jeu'); });
+$('ongletBiblio').addEventListener('click', function () { choisirSource('bibliotheque'); });
+$('rafraichir').addEventListener('click', function () { charger(true); });
+</script>
+</body>
+</html>
