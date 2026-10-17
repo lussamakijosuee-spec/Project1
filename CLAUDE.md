@@ -152,6 +152,12 @@ réagir. JOKO a choisi *« A2, B1, 2, 3, 4 ET C1 »* : des compétences prévues
 réactions, et **c'est lui qui remplit le tableau** dans le gestionnaire de plugins. Je n'y écris pas
 de répliques ni de réactions sans lui — ce sont ses personnages.
 
+**Le choix du héros** (`DebutMarques.js` v1.1, 2026-10-17) : il s'ouvre **dès la nouvelle partie**
+(JOKO), les trois autres reviennent par les rencontres « Rencontre — héros N » (événements communs
+201-204), et le texte de présentation est **à JOKO** (il le réécrit). Sous Playwright
+(`navigator.webdriver`), il ne s'ouvre pas tout seul : les bancs partent de l'équipe complète ; un
+banc qui veut le tester pose `$gameSystem._debutAFaire = true`.
+
 **Pièges de MV rencontrés ici :**
 
 - `Math.max(eval(formule), 0)` — une formule négative fait **0 dégât**, jamais un soin ;
@@ -179,6 +185,10 @@ de répliques ni de réactions sans lui — ce sont ses personnages.
   contre-attaque avant son tour lui mangeait son tour. Passer par `Interactions.forcer`, qui les rend ;
 - l'**Attaque** est du type 1 : l'État de Flow (état 87, qui scelle 1, 2 et 3) la scelle — dans le
   Flow, Vesper frappe avec ses arts et ses Arts Sereins.
+- un `$gameMessage.add` fait **dans le rappel d'un choix** n'apparaît jamais : MV vide le message
+  juste après (`terminateMessage`). Passer par l'interpréteur (`setupChild`) ;
+- **YEP_MessageCore jette les lignes au-delà de 4** dans un même message : découper en messages de
+  4 lignes.
 
 ---
 
