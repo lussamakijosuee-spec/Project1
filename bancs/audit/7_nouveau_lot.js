@@ -116,7 +116,8 @@ function dmg(s){try{const v=eval(`(function(a,b){return ${s.damage.formula};})`)
 // elle se paie sur la vie, par le notetag <HP Cost: n%> de YEP_SkillCore.
 // Compter ces compétences comme « gratuites » les faisait passer pour des
 // attaques sans prix — 46 d'un coup, dont une à 8 508 de dégâts.
-const coute=s=>(s.mpCost||0)+(s.tpCost||0)>0||/<HP Cost:/i.test(s.note||'');
+// Les attaques combinées (2026-10-18) se paient par héros : <unison item actor mp/tp cost>.
+const coute=s=>(s.mpCost||0)+(s.tpCost||0)>0||/<HP Cost:|<\s*unison\s+item\s+actor\s+(mp|tp)\s+cost\s*:[^>]*[1-9]/i.test(s.note||'');
 const payantes=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&coute(s))
   .map(dmg).filter(v=>v!==null).sort((a,b)=>a-b);
 const gratuites=[...app].map(i=>S[i]).filter(s=>s&&s.name&&s.damage.type===1&&!coute(s))

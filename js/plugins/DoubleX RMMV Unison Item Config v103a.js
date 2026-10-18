@@ -372,6 +372,8 @@
  *        depuis la v1.00b seul <unison item param actors> marchait, et il
  *        mélangeait les huit. mhp mmp atk def mat mdf agi luk choisissent
  *        maintenant une statistique (règle : <unison item atk rule: max>).
+ *     9. <unison item actor learn: t, t> (l'exemple de la doc, avec l'espace)
+ *        lisait « t » puis « f » : le partenaire n'avait pas à la connaître.
  *============================================================================*/
 var DoubleX_RMMV = DoubleX_RMMV || {};
 DoubleX_RMMV["Unison Item Config"] = 'v1.03a';
@@ -521,7 +523,7 @@ DoubleX_RMMV.Unison_Item = {
             if (line.match(SLs)) {
                 if (uIASLs.length > 0) { return; }
                 RegExp.$1.trim().split(/,/).forEach(function(id) {
-                    uIASLs.push(id === 't');
+                    uIASLs.push(id.trim() === 't');   // [JOKO] 9. « t, t » : l'espace faisait lire « f »
                 });
             } else if (line.match(fAs)) {
                 func = RegExp.$1;

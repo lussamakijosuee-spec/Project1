@@ -215,10 +215,12 @@ var SABOTAGES = [
         premiereOffensive(b).damage.formula = 'Math.floor(a.atk * 2 + b.def * 3)';
     }, /décroissent quand la défense monte/],
     ['une compétence rangée dans un type que rien n\'ouvre', function (b) {
-        // Le type 25 n'a pas de nom et n'est ouvert par personne (le 6 est devenu
-        // « hiver », ouvert par l'Avatar de Korrah ; le 24 est devenu « arts »,
-        // ouvert par Vesper le 2026-10-14 — le sabotage ne mordait plus).
-        premiereOffensive(b).stypeId = 25;
+        // Le premier type que RIEN n'ouvre, calculé : un numéro écrit en dur cessait de
+        // mordre dès que JOKO ouvrait le type (le 6 devenu « hiver », le 24 « arts » le
+        // 2026-10-14, le 25 « Combo » le 2026-10-18).
+        var ouverts = typesOuverts(b), libre = 0;
+        for (var t = 1; t < b.System.skillTypes.length && !libre; t++) { if (!ouverts[t]) { libre = t; } }
+        premiereOffensive(b).stypeId = libre;
     }, /enfermée dans un type/],
     ['l\'Amulette privée de ses types d\'Ombre', function (b) {
         // Le vrai piège : si on ne lisait que Classes.json, ce sabotage passerait

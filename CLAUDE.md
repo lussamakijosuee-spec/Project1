@@ -188,8 +188,19 @@ max>` — `<unison item param actors>` mélange les huit. **Le jeu se bat en tou
 YEP_X_BattleSysCTB est chargé mais inactif) : le lanceur doit être **avant** son partenaire dans
 l'équipe, et l'action du partenaire est prise pour le tour. En CTB (`setBattleSys CTB`), le
 partenaire doit jouer juste après, ou `<async unison item>`. Le combat automatique (donc seiryu) ne
-la choisit jamais ; `<Instantané>` (CombatTactique) redonne toujours la main. **Aucune attaque combinée n'existe dans la base** : c'est JOKO qui les choisit.
-Crédits : DoubleX. Banc : `navigateur/les_attaques_combinees.js`.
+la choisit jamais ; `<Instantané>` (CombatTactique) redonne toujours la main. Le journal affiche
+le **nom** de la compétence, comme pour toutes (YEP « Show Action Text » coupé). Crédits : DoubleX.
+Banc : `navigateur/les_attaques_combinees.js`.
+
+**Les six duos** (JOKO, 2026-10-18 : *« Oui, crée les 6 duos avec les réglages par défaut : menu
+Combo, niveau 20, ×1,15, le premier des deux dans l'équipe lance. »*) : compétences **1303 à 1308**
+(Lame de Givre, La Lame et son Ombre, Feu Attisé, Nuit d'Hiver, Ciel d'Orage, Crépuscule — noms
+provisoires, à JOKO), type **25 « Combo »** ouvert sur les classes 1 à 4 (pas seiryu), apprises au
+niveau 20 dans les deux classes (`<unison item actor learn: t, t>`). Puissance = somme des **coups de
+référence** des deux héros (leur meilleur coup ordinaire, sans incantation ni recharge, de la même
+portée) × 1,15 ; coût = ce que coûtent ces deux coups, chacun le sien. Deux éléments
+(`<Multiple Elements>`, règle du jeu « Multiplier ») : −2 points de bouclier sur une double
+faiblesse. Nuit d'Hiver et Crépuscule portent 2 tours de recharge (la règle de `18_recharges`).
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

@@ -93,9 +93,22 @@ Math.random = function () {
     return ((_graine >>> 0) % 1000000) / 1000000;
 };
 
+/** Les héros d'une attaque combinée (DoubleX Unison, 2026-10-18) : [] pour une compétence normale. */
+function duo(s) {
+    var m = /<\s*unison\s+item\s+actors\s*:\s*([\d\s,]+)>/i.exec(s.note || '');
+    return m ? m[1].split(',').map(function (x) { return +x; }).filter(function (x) { return x > 0; }) : [];
+}
 /** Le coût réel, en fraction des ressources du héros — PV, PM et TP confondus. */
 function coutReel(s) {
     var n = s.note || '', m;
+    // Une attaque combinée : chaque héros paie SA part (<unison item actor mp/tp cost>) ;
+    // le frein, c'est celui qui s'épuise le plus vite.
+    var heros = duo(s);
+    if (heros.length > 1) {
+        var lire = function (re) { var x = re.exec(n); return x ? x[1].split(',').map(function (v) { return +v || 0; }) : []; };
+        var pm = lire(/<\s*unison\s+item\s+actor\s+mp\s+cost\s*:\s*([\d\s,]+)>/i), pt = lire(/<\s*unison\s+item\s+actor\s+tp\s+cost\s*:\s*([\d\s,]+)>/i);
+        return Math.max.apply(null, heros.map(function (h, i) { return (pm[i] || 0) / MMP + (pt[i] || 0) / 100; }));
+    }
     var hp = 0, mp = s.mpCost || 0, tp = s.tpCost || 0;
     if ((m = /<\s*HP Cost\s*:\s*(\d+)\s*[%％]\s*>/i.exec(n))) { hp += MHP * parseInt(m[1], 10) / 100; }
     else if ((m = /<\s*HP Cost\s*:\s*(\d+)\s*>/i.exec(n))) { hp += parseInt(m[1], 10); }
@@ -130,6 +143,8 @@ function arsenal(base) {
             var s = base[l.skillId];
             if (!s || !s.name) { return; }
             var d = degats(s);
+            // une attaque combinée prend le tour de CHAQUE héros : ses dégâts par tour de héros
+            if (duo(s).length > 1) { d = Math.floor(d / duo(s).length); }
             if (d > 0) { out.push({ s: s, id: l.skillId, d: d }); }
         });
     });

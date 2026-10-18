@@ -132,13 +132,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return {
             plugins: ['DoubleX RMMV Unison Item Config v103a', 'DoubleX RMMV Unison Item Default v100g', 'DoubleX RMMV Unison Item YEP_X_BattleSysCTB v100c']
                 .map(function (n) { return $plugins.some(function (p) { return p.name === n && p.status; }); }),
-            dansLaBase: $dataSkills.concat($dataItems).filter(function (d) { return d && d.meta && d.meta.unisonItemActors && d.meta.unisonItemActors.length > 1; }).length,
+            dansLaBase: $dataSkills.concat($dataItems).filter(function (d) { return d && d.meta && d.meta.unisonItemActors && d.meta.unisonItemActors.length > 1; }).map(function (d) { return d.id; }),
             systeme: $gameSystem.getBattleSystem(),
             equipe: $gameParty.members().map(function (m) { return m.name(); }).join(', ')
         };
     });
     V('les trois plugins sont chargés (Config, Default, module CTB)', base.plugins.every(Boolean), JSON.stringify(base.plugins));
-    V('aucune compétence ni objet de la base n\'est une attaque combinée (rien n\'est créé sans JOKO)', base.dansLaBase === 0, base.dansLaBase);
+    // JOKO, 2026-10-18 : « Oui, crée les 6 duos avec les réglages par défaut » — 1303 à 1308, rien d'autre
+    V('la base a les six duos de JOKO (1303 à 1308), et aucune autre attaque combinée', base.dansLaBase.join(',') === '1303,1304,1305,1306,1307,1308', base.dansLaBase.join(', '));
     V('le jeu se bat en tour par tour', base.systeme === 'dtb', base.systeme + ' · équipe ' + base.equipe);
 
     // ─────────────────────────────────────────────────────────────────────
@@ -360,6 +361,109 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('CTB, version qui se prépare à deux (<async unison item>) : elle part', as.lancees.length >= 1, as.lancees.join(' · ') + ' · ' + as.tours + ' tours · phase ' + as.phase + ' · ' + as.saisis);
     V('…les deux s\'avancent et finissent leur tour', (as.mouvements.Vesper || 0) >= 1 && (as.mouvements.Korrah || 0) >= 1 && /Vesper/.test(as.finsDeTour) && /Korrah/.test(as.finsDeTour),
         JSON.stringify(as.mouvements) + ' · ' + as.finsDeTour);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // JOKO, 2026-10-18 : « Oui, crée les 6 duos avec les réglages par défaut : menu Combo,
+    // niveau 20, ×1,15, le premier des deux dans l'équipe lance. »
+    console.log('\n── ⑤ les six duos de la base ──');
+    var DUOS = [1303, 1304, 1305, 1306, 1307, 1308];
+    var six = await sur('⑤', async function () {
+        await combat(1);
+        await attendre('function () { return BattleManager._phase === "input"; }');
+        var r = await ev(function (DUOS) {
+            var r = {}, M = function (id) { return $gameActors.actor(id); }, E = $gameTroop.members()[0];
+            var heros = [1, 2, 3, 4].map(M);
+            heros.forEach(function (h) { h.recoverAll(); h.setTp(100); });
+            r.fiches = DUOS.map(function (id) {
+                var s = $dataSkills[id], ids = s.meta.unisonItemActors;
+                var a = new Game_Action(M(ids[0])); a.setSkill(id);
+                return { id: id, type: s.stypeId, acteurs: ids.slice().sort().join('+'), apprendre: (s.meta.unisonItemActorLearn || []).join(','), elements: a.getItemElements().length };
+            });
+            r.typeNom = $dataSystem.skillTypes[25];
+            r.connues = heros.map(function (h) {
+                var les3 = DUOS.filter(function (id) { return $dataSkills[id].meta.unisonItemActors.indexOf(h.actorId()) >= 0; });
+                return h.name() + ':' + les3.filter(function (id) { return h.isLearnedSkill(id); }).length + '/' + les3.length + (h.addedSkillTypes().indexOf(25) >= 0 ? ' menu' : ' SANS MENU');
+            });
+            var S6 = M(6); r.seiryu = S6 ? (S6.addedSkillTypes().indexOf(25) >= 0 || DUOS.some(function (id) { return S6.isLearnedSkill(id); })) : false;
+            // qui lance quoi, dans l'ordre de l'équipe
+            function lanceurs() { return DUOS.map(function (id) { return $dataSkills[id].name + ' : ' + $gameParty.members().filter(function (m) { return m.canUse($dataSkills[id]); }).map(function (m) { return m.name(); }).join('/'); }); }
+            r.ordre = $gameParty.members().map(function (m) { return m.name(); }).join(', ');
+            r.lanceurs = lanceurs();
+            // contre-épreuve : Korrah passe devant Vesper — c'est elle qui lance Lame de Givre
+            var iV = M(1).index(), iK = M(2).index();
+            $gameParty.swapOrder(iV, iK);
+            r.korrahDevant = $gameParty.members().filter(function (m) { return m.canUse($dataSkills[1303]); }).map(function (m) { return m.name(); }).join('/');
+            $gameParty.swapOrder(iV, iK);
+            // les deux doivent la connaître : Korrah l'oublie, Vesper ne peut plus la lancer
+            M(2).forgetSkill(1303); r.oubli = M(1).canUse($dataSkills[1303]); M(2).learnSkill(1303); r.reapprise = M(1).canUse($dataSkills[1303]);
+            // chacun paie son coût (La Lame et son Ombre : Vesper 30 PT, ludwing 42 PM)
+            heros.forEach(function (h) { h.recoverAll(); h.setTp(100); });
+            var tp = M(1).tp, mp = M(3).mp; M(1).useItem($dataSkills[1304]); r.couts = [tp - M(1).tp, mp - M(3).mp];
+            // ce que chacun apporte : l'ATQ de Vesper et la MAG de Korrah ; la MAG moyenne de Korrah et ludwing
+            M(1)._unisonItem = $dataSkills[1303]; r.lame = [M(1).atk, M(1).mat]; M(1)._unisonItem = null;
+            r.lameAttendu = [M(1).atk, M(2).mat];
+            M(3)._unisonItem = $dataSkills[1306]; r.nuit = M(3).mat; M(3)._unisonItem = null;
+            r.nuitAttendu = Math.round((M(2).mat + M(3).mat) / 2);
+            // les dégâts, contre l'ennemi de la troupe 1
+            E.addParam(0, 9999999); E.recoverAll();
+            r.degats = DUOS.map(function (id) { var a = new Game_Action(M($dataSkills[id].meta.unisonItemActors[0])); a.setSkill(id); return a.makeDamageValue(E, false); });
+            // les deux éléments retirent deux points de bouclier (ennemi qui craint Physique ET Glace)
+            var hit = Game_Action.prototype.itemHit, eva = Game_Action.prototype.itemEva;
+            Game_Action.prototype.itemHit = function () { return 1; }; Game_Action.prototype.itemEva = function () { return 0; };
+            var traits = $dataEnemies[E.enemyId()].traits, n0 = traits.length;
+            traits.push({ code: 11, dataId: 1, value: 2 }, { code: 11, dataId: 13, value: 2 });
+            r.bouclierMax = E._mSh; E._sh = E._mSh; var avant = E._sh;
+            var a = new Game_Action(M(1)); a.setSkill(1303); a.apply(E);
+            r.bouclier = avant + ' → ' + E._sh + (E.isStateAffected(1005) ? ' · brisé' : '');
+            r.bouclierMoins = avant - E._sh;
+            traits.splice(n0); E.removeState(1005);
+            Game_Action.prototype.itemHit = hit; Game_Action.prototype.itemEva = eva;
+            return r;
+        }, DUOS);
+        await retour();
+        return r;
+    });
+    if (six) {
+        var paires = six.fiches.map(function (f) { return f.acteurs; }).sort().join(' ');
+        V('six duos, un par paire de héros (Vesper, Korrah, ludwing, Aël)', paires === '1+2 1+3 1+4 2+3 2+4 3+4', paires);
+        V('tous dans le type 25 « Combo », les deux héros doivent la connaître, deux éléments chacun',
+            six.typeNom === 'Combo' && six.fiches.every(function (f) { return f.type === 25 && f.apprendre === 'true,true' && f.elements === 2; }), JSON.stringify(six.fiches.map(function (f) { return f.id + ':' + f.type + '/' + f.apprendre + '/' + f.elements; })));
+        V('dès la nouvelle partie (niveau 89), chaque héros connaît ses trois duos et voit le menu Combo', six.connues.every(function (c) { return /3\/3 menu$/.test(c); }), six.connues.join(' · '));
+        V('seiryu n\'a ni le menu ni les duos (sa classe n\'est pas touchée)', six.seiryu === false);
+        var attendus = ['Lame de Givre : Vesper', 'La Lame et son Ombre : Vesper', 'Feu Attisé : Vesper', "Nuit d'Hiver : ludwing", "Ciel d'Orage : Aël", 'Crépuscule : ludwing'];
+        V('le premier des deux dans l\'équipe lance (' + six.ordre + ')', JSON.stringify(six.lanceurs) === JSON.stringify(attendus), six.lanceurs.join(' · '));
+        V('…Korrah passée devant Vesper : c\'est elle qui lance Lame de Givre (contre-épreuve)', six.korrahDevant === 'Korrah', six.korrahDevant);
+        V('Korrah l\'oublie : Vesper ne peut plus lancer Lame de Givre ; réapprise, de nouveau (l\'original lisait « t, t » comme « t, f »)', six.oubli === false && six.reapprise === true, JSON.stringify([six.oubli, six.reapprise]));
+        V('chacun paie : Vesper 30 PT, ludwing 42 PM (La Lame et son Ombre)', six.couts[0] === 30 && six.couts[1] === 42, six.couts.join(' / '));
+        V('Lame de Givre : l\'ATQ de Vesper et la MAG de Korrah', six.lame[0] === six.lameAttendu[0] && six.lame[1] === six.lameAttendu[1], six.lame.join(' / ') + ' (attendu ' + six.lameAttendu.join(' / ') + ')');
+        V('Nuit d\'Hiver : la MAG moyenne de Korrah et ludwing', six.nuit === six.nuitAttendu, six.nuit + ' (attendu ' + six.nuitAttendu + ')');
+        V('chaque duo fait des dégâts', six.degats.every(function (d) { return d > 0; }), six.degats.join(' · '));
+        V('un ennemi qui craint les deux éléments perd deux points de bouclier d\'un coup', six.bouclierMoins === 2, 'bouclier ' + six.bouclier + ' (max ' + six.bouclierMax + ')');
+    }
+    var vrai = await sur('⑤ vrai combat', async function () {
+        await ev(function () { window.__u = { S: 1303, lancees: [], mouvements: {}, actionsK: [], finsDeTour: [], enCours: false, textes: [] }; T.saisis = [];
+            // le journal du jeu : le NOM de la compétence (YEP « Show Action Text » coupé, SimpleMsgSideView)
+            if (!window.__journal) { window.__journal = true; ['addText', 'addItemNameText'].forEach(function (f) { var o = Window_BattleLog.prototype[f]; if (!o) return; Window_BattleLog.prototype[f] = function (t) { if (window.__u.textes && /Lame de Givre/.test(String(t))) window.__u.textes.push(String(t)); return o.apply(this, arguments); }; }); } });
+        await combat(1);
+        await costauds();
+        await ev(function () {
+            T.choix = function (a) { a.setTp(100); var t = $gameTroop.turnCount(); return (a.actorId() === 1 && t === 0 && a.canUse($dataSkills[1303])) ? 1303 : 0; };
+            $gameActors.actor(2).setTp(100);
+        });
+        await jouer('function () { return $gameTroop.turnCount() >= window.__u.debut + 2 || !$gameParty.inBattle(); }');
+        var r = await ev(function () { var u = window.__u; return { lancees: u.lancees, mouvements: u.mouvements, actionsK: u.actionsK, saisis: T.saisis, textes: u.textes }; });
+        await ev(function () { T.choix = function () { return 0; }; });
+        await retour();
+        return r;
+    });
+    if (vrai) {
+        var v0 = vrai.saisis.filter(function (s) { return s.indexOf('T0:') === 0; }).map(function (s) { return s.slice(3); });
+        V('vrai combat : Vesper lance Lame de Givre, Korrah ne reçoit pas de commande et ne joue pas en plus',
+            vrai.lancees.length === 1 && /Vesper/.test(vrai.lancees[0]) && v0.indexOf('Korrah') < 0 && vrai.actionsK.filter(function (s) { return s.indexOf('T1 ') === 0; }).length === 0,
+            vrai.lancees.join(' · ') + ' · commandes ' + v0.join(', ') + ' · Korrah ' + (vrai.actionsK.join(' · ') || '—'));
+        V('…les deux s\'avancent, et le nom « Lame de Givre » s\'affiche comme pour toute compétence', (vrai.mouvements.Vesper || 0) >= 1 && (vrai.mouvements.Korrah || 0) >= 1 && vrai.textes.length >= 1,
+            JSON.stringify(vrai.mouvements) + ' · ' + (vrai.textes[0] || 'rien'));
     }
 
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');

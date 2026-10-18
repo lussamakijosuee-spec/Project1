@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-10-14. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-18. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -34,6 +34,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ◑ | 5 · BERSEK | 4 | à condition : en lançant « 🩸 Berserker » → état « 🩸 Berserker » |
 | ✔ | 10 · sang | 7 | ouvert |
 | ◑ | 19 · Arts Sereins | 3 | à condition : en lançant « ☯ Art Serein : État de Flow » → état « ☯ État de Flow » |
+| ✔ | 25 · Combo | 3 | ouvert |
 
 > **7 compétences de Vesper attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
@@ -161,6 +162,14 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 129 | Chirurgie du Vide | 10 PM | dégâts PV `Math.floor(a.atk * 9 * 200 / (200 + b.def))` | 369 | `<Voie: vide>` `<NomOrigine: Chirurgie du Vide>` ⚠ `<HorsFamille>` `<Style: lame>` |
 | 1 | 131 | Frappe de l'Instant Juste | — | dégâts PV `Math.floor(a.atk * 16 * 200 / (200 + b.def))` | 21 | `<Voie: onde>` `<HorsFamille>` `<Style: lame>` |
 
+### Type 25 — Combo
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 20 | 1303 | Lame de Givre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 33.35 * 200 / (200 + b.mdf))` | 224 | `<unison item actors: 1, 2>` `<unison item actor learn: t, t>` `<unison item actor tp cost: 30, 30>` `<unison item atk actors: 1>` `<unison item mat actors: 2>` `<Multiple Elements: 13>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1304 | La Lame et son Ombre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 26.45 * 200 / (200 + b.mdf))` | 250 | `<unison item actors: 1, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 0, 42>` `<unison item actor tp cost: 30, 0>` `<unison item atk actors: 1>` `<unison item mat actors: 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1305 | Feu Attisé | — | dégâts PV *FEU* `Math.floor(a.atk * 12.65 * 200 / (200 + b.def) + a.mat * 27.6 * 200 / (200 + b.mdf))` | 167 | `<unison item actors: 1, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 35, 46>` `<unison item atk actors: 1>` `<unison item mat actors: 4>` `<Multiple Elements: 10>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+
 ### Ses états passifs
 
 | # | État | Traits | Ouvre |
@@ -200,6 +209,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 3 · ult | 5 | ouvert |
 | ✔ | 6 · hiver | 14 | ouvert |
 | ✔ | 21 · avatar | 14 | ouvert |
+| ✔ | 25 · Combo | 3 | ouvert |
 
 ### Type 1 — capacité
 
@@ -329,6 +339,14 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 85 | 1257 | Avatar — Unisson | — | **coquille** — rien | 404 | `<AvatarOrdre: 1253>` `<AvatarNiveau: 3>` `<HorsFamille>` |
 | 85 | 1258 | Avatar — Rends-le | — | **coquille** — rien | 232 | `<AvatarOrdre: 1254>` `<AvatarNiveau: 3>` `<HorsFamille>` |
 
+### Type 25 — Combo
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 20 | 1303 | Lame de Givre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 33.35 * 200 / (200 + b.mdf))` | 224 | `<unison item actors: 1, 2>` `<unison item actor learn: t, t>` `<unison item actor tp cost: 30, 30>` `<unison item atk actors: 1>` `<unison item mat actors: 2>` `<Multiple Elements: 13>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1307 | Ciel d'Orage | — | dégâts PV *FOUDRE* `Math.floor(a.mat * 51.75 * 200 / (200 + b.mdf))` | 219 | `<unison item actors: 2, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 46>` `<unison item mat actors: 2, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+
 ### Ses états passifs
 
 | # | État | Traits | Ouvre |
@@ -370,6 +388,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✘ | 16 · ombre de griffe | 1 | **INVISIBLE** — seul chemin : état « griffe hurleur d'ame » — que rien ne pose, hors d'atteinte |
 | ✘ | 17 · ombre de arc | 1 | **INVISIBLE** — seul chemin : état « arc d'ombre » — que rien ne pose, hors d'atteinte |
 | ◑ | 18 · ombre de arme a feu | 1 | à condition : en équipant arme « Fusil à Pompe Éternel » |
+| ✔ | 25 · Combo | 3 | ouvert |
 
 > **5 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
@@ -552,6 +571,14 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 1 | 119 | Balle Corrompue | 15 PT | dégâts PV *mana négative * `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Mana Sombre » 50% | 253 | `<Voie: vide>` |
 
+### Type 25 — Combo
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 20 | 1304 | La Lame et son Ombre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 26.45 * 200 / (200 + b.mdf))` | 250 | `<unison item actors: 1, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 0, 42>` `<unison item actor tp cost: 30, 0>` `<unison item atk actors: 1>` `<unison item mat actors: 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+
 ### Ses états passifs
 
 | # | État | Traits | Ouvre |
@@ -588,6 +615,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 3 · ult | 8 | ouvert |
 | ✔ | 20 · miracle | 1 | ouvert |
 | ✔ | 23 · portes | 8 | ouvert |
+| ✔ | 25 · Combo | 3 | ouvert |
 
 ### Type 1 — capacité
 
@@ -711,6 +739,14 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 35 | 1275 | Porte — le Gouffre | 18 PM | dégâts PV `Math.floor(a.mat * 16 * 200 / (200 + b.mdf * 0.5))` | 102 | `<Cooldown: 2>` `<HorsFamille>` |
 | 50 | 1277 | Porte — la Fermeture | 30 PM | **coquille** — rien | 101 | `<PorteFermee: 3>` `<Cooldown: 5>` `<HorsFamille>` |
 
+### Type 25 — Combo
+
+| Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
+|---|---|---|---|---|---|---|
+| 20 | 1305 | Feu Attisé | — | dégâts PV *FEU* `Math.floor(a.atk * 12.65 * 200 / (200 + b.def) + a.mat * 27.6 * 200 / (200 + b.mdf))` | 167 | `<unison item actors: 1, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 35, 46>` `<unison item atk actors: 1>` `<unison item mat actors: 4>` `<Multiple Elements: 10>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1307 | Ciel d'Orage | — | dégâts PV *FOUDRE* `Math.floor(a.mat * 51.75 * 200 / (200 + b.mdf))` | 219 | `<unison item actors: 2, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 46>` `<unison item mat actors: 2, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+
 ### Ses états passifs
 
 | # | État | Traits | Ouvre |
@@ -805,7 +841,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 
 ## Le compte
 
-- **377** entrées d'apprentissage sur les quatre héros ;
+- **389** entrées d'apprentissage sur les quatre héros ;
 - **10** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **12** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **27** ne font rien du tout (ni dégâts, ni effet) ;
