@@ -178,6 +178,19 @@ bouclier) et `degatsBrise` 1.5 ; l'état **1005 « 💥 Brisé »** (immobilise,
 coups ni à l'immobilisation). **Aucune fiche d'ennemi n'est modifiée.** Crédits exigés : Astfgl
 (Pierre MATEO) et Yanfly. Banc : `navigateur/le_bouclier_et_la_brise.js`.
 
+**Les attaques combinées** (DoubleX Unison Item, 2026-10-18 : `DoubleX RMMV Unison Item Config
+v103a.js`, `… Default v100g.js`, `… YEP_X_BattleSysCTB v100c.js`) : copies corrigées, originaux dans
+Documents\RPG Maker\3 Systèmes et plugins\Plugins du forum, corrections `[JOKO]`. Une compétence
+devient combinée avec `<unison item actors: 1, 2>` ; coûts `<unison item actor mp cost: 10, 20>` ;
+statistique empruntée **une à la fois** : `<unison item atk actors: 1, 2>` (moyenne, entière),
+`<unison item mat actors: 4>` (la MAG d'Aël quel que soit le lanceur), règle `<unison item atk rule:
+max>` — `<unison item param actors>` mélange les huit. **Le jeu se bat en tour par tour** (`dtb`,
+YEP_X_BattleSysCTB est chargé mais inactif) : le lanceur doit être **avant** son partenaire dans
+l'équipe, et l'action du partenaire est prise pour le tour. En CTB (`setBattleSys CTB`), le
+partenaire doit jouer juste après, ou `<async unison item>`. Le combat automatique (donc seiryu) ne
+la choisit jamais ; `<Instantané>` (CombatTactique) redonne toujours la main. **Aucune attaque combinée n'existe dans la base** : c'est JOKO qui les choisit.
+Crédits : DoubleX. Banc : `navigateur/les_attaques_combinees.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
@@ -225,7 +238,14 @@ lourd tourne en même temps : les lancer seuls.
   comme l'état 2 du jeu) **s'enlève à l'instant où il est posé** : la brisure ne doit avoir ni ça, ni
   « Retirer aux dégâts » ;
 - une compétence créée **en mémoire** n'a pas `multipleElements` : YEP_ElementCore lit
-  `<Multiple Elements>` au chargement de la base seulement.
+  `<Multiple Elements>` au chargement de la base seulement ;
+- `SeiryuLeFamilier` pose **`Game_Actor.prototype.canInput`**, qui rappelle le `canInput` de
+  Game_BattlerBase **de son moment** : un plugin chargé après qui ne réécrit que Game_BattlerBase
+  n'est jamais lu chez les héros (la réservation de DoubleX Unison ne l'était pas). Le poser aussi sur
+  Game_Actor ;
+- un banc qui saisit les commandes lui-même doit passer par les fenêtres (`commandAttack`,
+  `onSelectAction`, `onEnemyOk`) : tant qu'une fenêtre de commande reste active, Scene_Battle
+  n'appelle plus `BattleManager.update` et le combat se fige sans erreur.
 
 ---
 
