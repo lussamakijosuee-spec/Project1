@@ -155,7 +155,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     var soigne = await page.evaluate(function () {
         var s = $gameActors.actor(6);
-        // ⚠ ludwing, pas Vesper : Vesper ne se soigne plus en combat (Arlecchino).
+        // ⚠ ludwing, pas Vesper : Vesper a sa règle à elle (le Pacte), vue juste après.
         var v = $gameParty.members().filter(function (a) { return a.actorId() === 3; })[0];
         v.setHp(Math.floor(v.mhp * 0.2));          // ludwing à 20 %
         s.clearActions(); s.makeActions();
@@ -165,19 +165,42 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var r = { skill: it ? it.name : null, soin: it ? it.damage.type === 3 : false,
                   cible: cible ? cible.name() : null, pv: Math.round(v.hp / v.mhp * 100) };
         v.recoverAll();
-        // … et Vesper à 20 % : il ne gaspille PAS son soin sur elle
+        // … et Vesper à 20 %, dans deux Styles. Depuis les Styles (v2.0) :
+        //   · en LAME, elle a posé son Pacte — un soin passe tel quel
+        //     (soinsEnLame) : il peut la soigner ;
+        //   · en GARDE avec un Pacte, un soin rembourse sa Dette et ne rend
+        //     rien (Arlecchino) : il ne gaspille pas son tour sur elle.
+        var P = window.PacteDeSang;
         var ve = $gameParty.members().filter(function (x) { return x.actorId() === 1; })[0];
-        ve.setHp(Math.floor(ve.mhp * 0.2));
-        s.clearActions(); s.makeActions();
-        var b = s.currentAction(), cb = b ? b.makeTargets()[0] : null;
-        r.vesper = { soin: b && b.item() ? b.item().damage.type === 3 : false, cible: cb ? cb.name() : null };
-        ve.recoverAll();
+        var surVesper = function (style, pacte) {
+            P.changerStyle(style); P.poser(pacte);
+            ve.setHp(Math.floor(ve.mhp * 0.2));
+            s.clearActions(); s.makeActions();
+            var b = s.currentAction(), cb = b ? b.makeTargets()[0] : null;
+            var o = { style: P.style(), pacte: Math.round(P.pct() * 100), soignable: P.soignable(ve),
+                      skill: b && b.item() ? b.item().name : null,
+                      soin: b && b.item() ? b.item().damage.type === 3 : false, cible: cb ? cb.name() : null };
+            ve.recoverAll();
+            return o;
+        };
+        var style0 = P.style();
+        r.lame = surVesper('lame', 0);
+        r.garde = surVesper('garde', 0.5);
+        P.poser(0); P.changerStyle(style0);
         return r;
     });
     v('un allié tombe à 20 %, il SOIGNE au lieu de frapper', soigne.soin === true && soigne.cible === 'ludwing',
         'ludwing à ' + soigne.pv + ' % → il choisit « ' + soigne.skill + ' » sur ' + soigne.cible);
-    v('mais pas Vesper : on ne la soigne pas, il ne gaspille pas son tour', !(soigne.vesper.soin && soigne.vesper.cible === 'Vesper'),
-        'Vesper à 20 % → ' + (soigne.vesper.soin ? 'soin sur ' + soigne.vesper.cible : 'il fait autre chose'));
+    var dit = function (o) {
+        return 'Vesper à 20 %, style « ' + o.style + ' », Pacte ' + o.pacte + ' % → ' +
+            (o.soin ? '« ' + o.skill + ' » sur ' + o.cible : 'il fait autre chose (« ' + o.skill + ' »)');
+    };
+    v('Vesper en LAME (Pacte posé) : il la soigne', soigne.lame.style === 'lame' && soigne.lame.soin && soigne.lame.cible === 'Vesper',
+        dit(soigne.lame));
+    v('Vesper en GARDE avec un Pacte : il ne gaspille pas son soin sur elle',
+        soigne.garde.style === 'garde' && soigne.garde.pacte > 0 && soigne.garde.soignable === false &&
+        !(soigne.garde.soin && soigne.garde.cible === 'Vesper'),
+        dit(soigne.garde));
 
     var garde = await page.evaluate(function () {
         var s = $gameActors.actor(6);
