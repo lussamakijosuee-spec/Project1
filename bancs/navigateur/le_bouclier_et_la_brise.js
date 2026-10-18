@@ -16,6 +16,12 @@
  *     nouvelle partie repart de zéro
  *   ④ un vrai combat : les héros frappent la faiblesse, l'ennemi est brisé, il perd
  *     son tour, le bouclier revient, il est brisé à nouveau
+ *   ⑤ les réglages de JOKO (2026-10-18) : « boucliers par rang (D 2, C 3, B 4, A 5,
+ *     S 6, boss 8), l'état Brisé (perd son tour, +50 % de dégâts), l'affichage avec
+ *     icônes » — la règle par rang (sans rang : aucun ; <mSh> écrit passe avant),
+ *     l'état 1005 tel qu'il doit être, ×1,5 sur les dégâts et pas sur les soins, le
+ *     nom entier et le chiffre qui suit le combat ; puis un vrai combat sur les VRAIES
+ *     données (troupe 1, rang D, état 1005) : rien n'est posé en mémoire côté ennemi
  *
  *   node bancs/navigateur/le_bouclier_et_la_brise.js
  */
@@ -103,7 +109,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return { ids: ids, nom: $dataEnemies[ids[0]].name, avecBalise: sansBouclier, plugin: $plugins.some(function (p) { return p.name === 'AstfglSCB' && p.status; }) };
     }, TROUPE);
     V('le plugin est chargé (AstfglSCB, actif)', base.plugin);
-    V('aucun ennemi de la base n\'a de bouclier (rien n\'est touché sans JOKO)', base.avecBalise === 0, base.avecBalise + ' balise(s) <mSh>');
+    V('aucune fiche d\'ennemi n\'est touchée : pas une balise <mSh> (la règle par rang fait tout)', base.avecBalise === 0, base.avecBalise + ' balise(s) <mSh>');
 
     // ─────────────────────────────────────────────────────────────────────
     console.log('\n── ① sans bouclier, rien ne change ──');
@@ -148,8 +154,12 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await ev(function (ids) { T.rendre(ids[0]); }, base.ids);
     var t2 = ce.dessin.traits.filter(function (x) { return x.texte !== undefined; }), i2 = ce.dessin.traits.filter(function (x) { return x.icone !== undefined; });
     V('contre-épreuve : avec <mSh: num = 2>, il a 2 boucliers', ce.sh === 2 && ce.max === 2 && ce.affichage === true, JSON.stringify([ce.sh, ce.max, ce.affichage]));
-    V('…son nom affiche « [2] » et sa faiblesse découverte a une icône', t2.length === 1 && /^\[2\]/.test(t2[0].texte) && i2.length >= 1 && i2.every(function (x) { return x.icone > 0; }),
-        JSON.stringify(t2) + ' · icônes ' + JSON.stringify(i2.map(function (x) { return x.icone; })));
+    // réglage de JOKO : le bouclier en icône (128) avec son chiffre, le nom à côté ; sous le
+    // nom, chaque faiblesse : son icône si elle est découverte (feu = 64), « ? » (93) sinon
+    var icones2 = i2.map(function (x) { return x.icone; });
+    V('…son bouclier s\'affiche (icône 128 et « 2 »), la faiblesse découverte a son icône (feu 64), les autres « ? » (93)',
+        t2.some(function (x) { return x.texte === '2'; }) && t2.some(function (x) { return x.texte.indexOf(base.nom) === 0; }) && icones2[0] === 128 && icones2.indexOf(64) > 0 && icones2.every(function (x) { return x > 0; }),
+        JSON.stringify(t2) + ' · icônes ' + JSON.stringify(icones2));
 
     // ─────────────────────────────────────────────────────────────────────
     console.log('\n── ② les règles du bouclier ──');
@@ -278,6 +288,90 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('les héros frappent sa faiblesse : il est brisé', vrai.cassures >= 1, vrai.cassures + ' fois · ' + vrai.journal);
     V('brisé, il perd son tour (aucune action pendant la brisure)', vrai.agitBrise === 0 && vrai.toursPerdus >= 1, vrai.toursPerdus + ' tour(s) perdu(s), ' + vrai.agitBrise + ' action(s) brisé');
     V('la brisure passe : bouclier plein, et il est brisé à nouveau', vrai.recharges >= 1 && vrai.cassures >= 2, vrai.recharges + ' recharge(s), ' + vrai.cassures + ' brisure(s) en ' + vrai.tours + ' tours');
+
+    // ─────────────────────────────────────────────────────────────────────
+    console.log('\n── ⑤ les réglages de JOKO ──');
+    var reg = await ev(function () {
+        var r = { rangs: {} }, rangDe = EquilibreDesCombats.rangDe;
+        ['D', 'C', 'B', 'A', 'S', 'BOSS', null].forEach(function (k) {
+            var d = $dataEnemies.find(function (e) { return e && e.name && rangDe(e) === k; });
+            var E = new Game_Enemy(d.id, 0, 0);
+            r.rangs[k || 'sans rang'] = E.checkShieldDisplay() === 'none' ? 'aucun' : E._mSh;
+        });
+        // un <mSh> écrit sur la fiche passe avant la règle
+        var s = $dataEnemies.find(function (e) { return e && e.name && rangDe(e) === 'S'; });
+        T.bouclier(s.id, 1); r.ecrit = new Game_Enemy(s.id, 0, 0)._mSh; T.rendre(s.id);
+        var st = $dataStates[1005];
+        r.etat = { nom: st.name, restriction: st.restriction, fin: st.autoRemovalTiming, tours: st.minTurns + '-' + st.maxTurns, coups: st.removeByDamage, immobilise: st.removeByRestriction, finCombat: st.removeAtBattleEnd };
+        var p = PluginManager.parameters('AstfglSCB'); r.param = { etat: p.defaultState, mode: p.mode, icone: p.baseIcon, inconnue: p.defautWeaknessIcon, degats: p.degatsBrise };
+        // ×1,5 : le même coup avant et pendant la brisure, sur un vrai ennemi de rang D
+        var dD = $dataEnemies.find(function (e) { return e && e.name && rangDe(e) === 'D'; });
+        var E = new Game_Enemy(dD.id, 0, 0); E.addParam(0, 9999999); E.recoverAll();
+        var faible = 0; for (var i = 1; i < $dataSystem.elements.length; i++) { if (E.elementRate(i) > 1) { faible = i; break; } }
+        var A = $gameActors.actor(1);
+        var coup = T.skill('', { damage: { type: 1, elementId: faible, formula: '100', variance: 0, critical: false } });
+        var soin = T.skill('', { damage: { type: 3, elementId: faible, formula: '100', variance: 0, critical: false } });
+        T.frapper(A, E, coup); r.avant = E.result().hpDamage; T.frapper(A, E, soin); r.soinAvant = E.result().hpDamage;
+        var n = 0; while (E._sh > 0 && n++ < 20) T.frapper(A, E, coup);
+        r.brisePar1005 = E.isStateAffected(1005);
+        T.frapper(A, E, coup); r.pendant = E.result().hpDamage; T.frapper(A, E, soin); r.soinPendant = E.result().hpDamage;
+        return r;
+    });
+    V('boucliers par rang : D 2, C 3, B 4, A 5, S 6, boss 8 ; sans rang : aucun',
+        JSON.stringify(reg.rangs) === JSON.stringify({ D: 2, C: 3, B: 4, A: 5, S: 6, BOSS: 8, 'sans rang': 'aucun' }), JSON.stringify(reg.rangs));
+    V('un <mSh> écrit sur la fiche passe avant la règle', reg.ecrit === 1, reg.ecrit);
+    V('l\'état 1005 « Brisé » : immobilise, 1 tour en fin de tour, ne part ni aux coups ni à l\'immobilisation',
+        reg.etat.restriction === 4 && reg.etat.fin === 2 && reg.etat.tours === '1-1' && !reg.etat.coups && !reg.etat.immobilise && reg.etat.finCombat, JSON.stringify(reg.etat));
+    V('le plugin pose l\'état 1005, bouclier en icône (128), « ? » = 93, ×1,5', reg.param.etat === '1005' && reg.param.mode === '1' && reg.param.icone === '128' && reg.param.inconnue === '93' && reg.param.degats === '1.5', JSON.stringify(reg.param));
+    V('brisé, il prend ×1,5 sur le même coup', reg.brisePar1005 && reg.pendant === Math.round(reg.avant * 1.5), reg.avant + ' → ' + reg.pendant);
+    V('…mais un soin reste un soin, sans bonus', reg.soinAvant < 0 && reg.soinPendant === reg.soinAvant, reg.soinAvant + ' → ' + reg.soinPendant);
+
+    // l'affichage, sur un vrai ennemi de rang D en combat (troupe 1)
+    await combat(1);
+    var aff = await ev(function () {
+        var E = $gameTroop.members()[0], A = $gameActors.actor(1), r = {};
+        var w = new Window_EnemyVisualSelect(); w.setBattler(E); w._showEnemyName = true;
+        var traits = []; var dt = w.drawText;
+        w.drawText = function (t, x, y, l) { traits.push({ t: String(t), x: x, l: l }); return dt.apply(this, arguments); };
+        w.update();
+        var nom = traits.find(function (x) { return x.t === E.name(); });
+        r.nomEntier = !!nom && w.textWidth(E.name()) <= nom.l - nom.x; r.chiffreAvant = (traits.find(function (x) { return /^\d+$/.test(x.t); }) || {}).t;
+        var faible = 0; for (var i = 1; i < $dataSystem.elements.length; i++) { if (E.elementRate(i) > 1) { faible = i; break; } }
+        var coup = T.skill('', { damage: { type: 1, elementId: faible, formula: '1', variance: 0, critical: false } });
+        traits.length = 0; T.frapper(A, E, coup); w.update();
+        r.chiffreApres = (traits.find(function (x) { return /^\d+$/.test(x.t); }) || {}).t; r.sh = E._sh;
+        return r;
+    });
+    await retour();
+    V('le nom est entier, malgré l\'icône du bouclier devant', aff.nomEntier);
+    V('le chiffre du bouclier suit le combat (la fenêtre se redessine)', aff.chiffreAvant === '2' && aff.chiffreApres === '1' && aff.sh === 1, aff.chiffreAvant + ' → ' + aff.chiffreApres);
+
+    // un vrai combat sur les VRAIES données : troupe 1 (rang D), état 1005, rien en mémoire côté ennemi
+    await ev(function () {
+        var d = $dataEnemies[$dataTroops[1].members[0].enemyId], E = new Game_Enemy(d.id, 0, 0), faible = 0;
+        for (var i = 1; i < $dataSystem.elements.length; i++) { if (E.elementRate(i) > 1) { faible = i; break; } }
+        window.__vb = { brise: 1005, feu: T.skill('', { damage: { type: 1, elementId: faible, formula: '1', variance: 0, critical: false } }), cassures: 0, recharges: 0, agitBrise: 0, toursPerdus: 0, actionsCible: 0, journal: [] };
+    });
+    await combat(1);
+    await ev(function () {
+        $gameTroop.members().forEach(function (e) { e.addParam(0, 9999999); e.recoverAll(); });
+        $gameParty.members().forEach(function (a) { a.addParam(0, 9999999); a.recoverAll(); });
+        window.__vb.debut = $gameTroop.turnCount(); window.__vb.shDepart = $gameTroop.members()[0]._sh;
+    });
+    for (var lot2 = 0; lot2 < 60; lot2++) {
+        var fini2 = await ev(function () {
+            var v = window.__vb;
+            function fin() { return (v.cassures >= 2 && v.recharges >= 1) || $gameTroop.turnCount() >= v.debut + 8 || !$gameParty.inBattle(); }
+            for (var i = 0; i < 600 && !fin(); i++) { SceneManager.updateInputData(); SceneManager.changeScene(); SceneManager.updateScene(); }
+            return fin();
+        });
+        if (fini2) break;
+    }
+    var reel = await ev(function () { var v = window.__vb; return { depart: v.shDepart, cassures: v.cassures, recharges: v.recharges, agitBrise: v.agitBrise, toursPerdus: v.toursPerdus, tours: $gameTroop.turnCount() - v.debut, journal: v.journal.join(' · ') }; });
+    await retour();
+    V('vrai combat, vraies données : la chauve-souris (rang D) entre avec 2 boucliers', reel.depart === 2, reel.depart);
+    V('…elle est brisée par l\'état 1005 et perd son tour', reel.cassures >= 1 && reel.agitBrise === 0 && reel.toursPerdus >= 1, reel.cassures + ' brisure(s), ' + reel.toursPerdus + ' tour(s) perdu(s), ' + reel.agitBrise + ' action(s) brisée · ' + reel.journal);
+    V('…puis son bouclier revient et elle est brisée à nouveau', reel.recharges >= 1 && reel.cassures >= 2, reel.recharges + ' recharge(s) en ' + reel.tours + ' tours');
 
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 3).join(' | ') || 'rien');
     console.log('\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)');

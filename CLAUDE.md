@@ -170,14 +170,20 @@ de `studio/scenes/` sont à JOKO : je n'en écris pas sans lui.
 **Le bouclier et la brisure** (`AstfglSCB.js`, 2026-10-18) : le Shield and Break d'Astfgl (façon
 Octopath), **copie corrigée** pour le jeu — l'original est gardé dans Documents\RPG Maker\3 Systèmes
 et plugins\Plugins du forum ; chaque correction est marquée `[JOKO]`. Un ennemi n'a de bouclier
-**que** s'il a `<mSh: …>` ou si `Astfgl.regleBouclier` lui en donne un : sans ça, le plugin ne le
-touche pas et son nom s'affiche comme avec Yanfly. Au 2026-10-18 **aucun ennemi n'en a** : JOKO
-choisit d'abord les réglages (combien par rang, l'état « Brisé », l'affichage). Crédits exigés :
-Astfgl (Pierre MATEO) et Yanfly. Banc : `navigateur/le_bouclier_et_la_brise.js`.
+**que** s'il a `<mSh: …>` ou si la règle par rang lui en donne un : sans ça, le plugin ne le touche
+pas et son nom s'affiche comme avec Yanfly. Réglages de JOKO (2026-10-18) : *« boucliers par rang
+(D 2, C 3, B 4, A 5, S 6, boss 8), l'état Brisé (perd son tour, +50 % de dégâts), l'affichage avec
+icônes »* — paramètres `boucliersParRang` (boss = la règle d'EquilibreDesCombats, sans rang = aucun
+bouclier) et `degatsBrise` 1.5 ; l'état **1005 « 💥 Brisé »** (immobilise, 1 tour, ne part ni aux
+coups ni à l'immobilisation). **Aucune fiche d'ennemi n'est modifiée.** Crédits exigés : Astfgl
+(Pierre MATEO) et Yanfly. Banc : `navigateur/le_bouclier_et_la_brise.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
-`les_outils_de_scene` y fait 7 échecs de minutage, les mêmes sur la version d'avant — pas un bug.
+`les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
+s'efface » (opacité ~200/255 au moment de la mesure), les mêmes sur la version d'avant — pas des bugs.
+Les bancs qui jugent en temps réel (`jouer`, `le_combat_tactique`…) échouent aussi si un autre banc
+lourd tourne en même temps : les lancer seuls.
 
 **Pièges de MV rencontrés ici :**
 

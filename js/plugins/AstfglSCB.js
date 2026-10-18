@@ -88,6 +88,18 @@
  * @default true
  * @desc If this parameter is set to false, discovered weaknesses will be reset at battle end.
  *
+ * @param boucliersParRang
+ * @text [JOKO] Boucliers par rang
+ * @default D: 2, C: 3, B: 4, A: 5, S: 6, BOSS: 8
+ * @desc Le rang vient de <Rang: X> sur l'ennemi ; BOSS = un ennemi à <Meca…:> ou <Phases:>
+ * (la même règle qu'EquilibreDesCombats). Un rang absent = pas de bouclier.
+ *
+ * @param degatsBrise
+ * @text [JOKO] Dégâts reçus brisé (×)
+ * @default 1.5
+ * @desc Les dégâts de PV qu'un ennemi brisé reçoit sont multipliés par ce nombre.
+ * 1 = aucun bonus.
+ *
  *
  * @help 
  *Allows you to set up a shield and break system similar to Octopath traveler's
@@ -223,7 +235,31 @@ var showWeaknesses = eval(PluginManager.parameters("AstfglSCB").showWeaknesses)
 var wIArray =  eval(PluginManager.parameters("AstfglSCB").wIArray)
 var defautWeaknessIcon = eval(PluginManager.parameters("AstfglSCB").defautWeaknessIcon)
 var globalMode = eval(PluginManager.parameters("AstfglSCB").globalMode)
-var saveWeakness = eval(PluginManager.parameters("AstfglSCB").saveWeakness) 
+var saveWeakness = eval(PluginManager.parameters("AstfglSCB").saveWeakness)
+
+// [JOKO 2026-10-18] JOKO : « boucliers par rang (D 2, C 3, B 4, A 5, S 6, boss 8), l'état
+// Brisé (perd son tour, +50 % de dégâts) ». Les fiches d'ennemis ne sont pas touchées :
+// le nombre vient de cette règle. Un <mSh: …> écrit sur un ennemi passe avant la règle.
+var boucliersParRang = {};
+String(PluginManager.parameters("AstfglSCB").boucliersParRang || '').split(',').forEach(function(paire) {
+	var m = /^\s*([A-Za-z]+)\s*:\s*(\d+)\s*$/.exec(paire);
+	if (m) {boucliersParRang[m[1].toUpperCase()] = Number(m[2])}
+});
+var degatsBrise = Number(PluginManager.parameters("AstfglSCB").degatsBrise || 1) || 1;
+function rangDe(donnees) {
+	// la même règle qu'EquilibreDesCombats, pour qu'un « boss » soit le même partout
+	if (window.EquilibreDesCombats && EquilibreDesCombats.rangDe) {return EquilibreDesCombats.rangDe(donnees)}
+	var note = (donnees && donnees.note) || '';
+	if (/<\s*(Meca\w*|Phases)\s*:/i.test(note)) {return 'BOSS'}
+	var m = /<\s*Rang\s*:\s*([^>]*)>/i.exec(note);
+	return m ? String(m[1]).trim().toUpperCase() : null;
+}
+if (Object.keys(boucliersParRang).length) {
+	Astfgl.regleBouclier = function(battler) {
+		if (!battler.isEnemy()) {return 0}
+		return boucliersParRang[rangDe($dataEnemies[battler._enemyId])] || 0;
+	};
+}
 
 //Weakness setup
 var _aliasGAI = Game_Actor.prototype.initialize
@@ -433,6 +469,18 @@ Game_Battler.prototype.etatDeBrise = function() {
 	return st
 }
 
+// [JOKO] brisé, il encaisse plus : les dégâts de PV (et le drain de PV) sont multipliés
+// par « Dégâts reçus brisé » — pas les soins, pas les PM
+var _aliasGAED = Game_Action.prototype.executeDamage
+Game_Action.prototype.executeDamage = function(target, value) {
+	if (degatsBrise !== 1 && value > 0 && target._sh === 0 && target._mSh
+		&& (this.item().damage.type === 1 || this.item().damage.type === 5)
+		&& target.isStateAffected(target.etatDeBrise())) {
+		value = Math.round(value * degatsBrise);
+	}
+	return _aliasGAED.call(this, target, value);
+}
+
 // [JOKO] quand l'état de brisure s'en va, le bouclier se recharge (avant : il fallait une
 // balise <Custom Remove Effect> dans l'état, sinon le bouclier restait à 0 tout le combat)
 var _aliasGBRS = Game_Battler.prototype.removeState
@@ -564,6 +612,8 @@ Window_EnemyVisualSelect.prototype.updateWindowSize = function() {
       this._nameTextWidth = this.textWidth(this._battler.name());
     }
     var textWidth = this._nameTextWidth;
+    // [JOKO] la place du bouclier devant le nom (l'icône, ou « [n] ») : sans ça, le nom était coupé
+    textWidth += (mode === 1) ? 40 : this.textWidth('[' + this._battler._mSh + ']');
     textWidth += this.textPadding() * 2;
     var width = Math.max(spriteWidth, textWidth, num) + this.standardPadding() * 2;
     width = Math.ceil(width);
@@ -577,6 +627,18 @@ Window_EnemyVisualSelect.prototype.updateWindowSize = function() {
     this._requestRefresh = true;
     this.makeWindowBoundaries();
 };
+
+// [JOKO] la fenêtre du nom ne se redessinait que si le NOM changeait : le chiffre du bouclier
+// et les faiblesses découvertes restaient figés. On la redessine quand l'un d'eux bouge.
+var _aliasWEVSUBN = Window_EnemyVisualSelect.prototype.updateBattlerName
+Window_EnemyVisualSelect.prototype.updateBattlerName = function() {
+	_aliasWEVSUBN.call(this);
+	var b = this._battler;
+	if (!b || globalMode === 1 || b.checkShieldDisplay() === "none") {return}
+	var connues = Astfgl.enemies.disWeak[b._enemyId] || [];
+	var signe = b._sh + '/' + connues.join('');
+	if (this._astfglSigne !== signe) {this._astfglSigne = signe; this._requestRefresh = true}
+}
 
 // Accessory functions
 Game_Battler.prototype.modMaxSh = function (num) {
