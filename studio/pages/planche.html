@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · Planche d'expressions</title>
+<link rel="stylesheet" href="/pages/studio.css">
+<style>
+  #app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 12px; padding: 12px; max-width: 1100px; margin: 0 auto; align-items: start; }
+  .colonne { background: var(--panneau); border: 1px solid var(--bord); border-radius: 10px; padding: 12px; min-width: 0; }
+  #planche { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; max-width: 576px; margin: 4px 0 12px;
+             border: 1px solid var(--bord); background: repeating-conic-gradient(#8882 0% 25%, transparent 0% 50%) 50% / 16px 16px; }
+  .case { position: relative; aspect-ratio: 1; outline: 1px dashed var(--bord); outline-offset: -1px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; }
+  .case img { width: 100%; height: 100%; image-rendering: pixelated; display: block; pointer-events: none; }
+  .case.pleine { cursor: grab; outline-style: solid; }
+  .case.survol { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--accent-doux); }
+  .case.tiree { opacity: .4; }
+  .case .numero { position: absolute; left: 4px; top: 2px; font-size: 11px; color: var(--discret); text-shadow: 0 0 3px var(--panneau); }
+  .case .invite { color: var(--discret); font-size: 12px; text-align: center; padding: 8px; }
+  .case .vider { position: absolute; right: 3px; top: 3px; padding: 0 6px; line-height: 18px; font-size: 13px; opacity: 0; }
+  .case:hover .vider, .case .vider:focus { opacity: 1; }
+  .outils { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  #refus { margin: 10px 0 0; padding: 0; list-style: none; }
+  #refus li { color: var(--alerte); border: 1px solid var(--alerte); border-radius: 8px; padding: 6px 10px; margin-bottom: 6px; font-size: 13px; }
+  .nomFichier { display: flex; align-items: center; gap: 6px; margin: 4px 0 10px; }
+  #btnEnregistrer { width: 100%; }
+  #resultat { font-size: 13px; }
+  #resultat code { word-break: break-all; }
+  #rendu { display: none; }
+  aside h2 + .discret { margin-top: -6px; }
+  @media (max-width: 900px) { #app { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="barre-studio">
+  <a href="/" class="retour">← Studio</a>
+  <h1>😊 Planche d'expressions</h1>
+  <span id="titre" class="discret"></span>
+  <span id="etatEditeur" class="pastille">…</span>
+</header>
+<div id="app">
+  <main class="colonne">
+    <h2>La planche <span class="discret petit">— 4 × 2 cases de 144 × 144, comme dans RPG Maker</span></h2>
+    <div id="planche"></div>
+    <div class="outils">
+      <button id="btnAjouter">📂 Choisir des visages…</button>
+      <button id="btnVider">Vider la planche</button>
+      <span id="compte" class="discret petit"></span>
+      <input type="file" id="fichiers" accept="image/png,.png" multiple hidden>
+    </div>
+    <ul id="refus"></ul>
+  </main>
+  <aside class="colonne">
+    <h2>Enregistrer</h2>
+    <label class="discret petit" for="nom">Nom du fichier, dans img/faces du jeu</label>
+    <div class="nomFichier"><input id="nom" placeholder="ex. Vesper_expressions" autocomplete="off" spellcheck="false"><span class="discret">.png</span></div>
+    <button id="btnEnregistrer" class="principal">💾 Enregistrer dans le jeu</button>
+    <p id="resultat" class="discret"></p>
+    <h2>Mode d'emploi</h2>
+    <ul class="aide">
+      <li>Dans le générateur de RPG Maker, exporte chaque expression en <b>visage</b> (144 × 144).</li>
+      <li><b>Glisse les PNG</b> sur la planche, ou clique sur une case vide. Plusieurs fichiers d'un coup se rangent <b>par nom</b> (1, 2, 3…) dans les cases libres.</li>
+      <li><b>Glisse une case sur une autre</b> pour les échanger ; le <b>×</b> d'une case la vide. Une case vide reste transparente.</li>
+      <li>Une image d'une autre taille est <b>refusée</b> : rien n'est redimensionné.</li>
+      <li>« Enregistrer » écrit la planche dans <code>img/faces</code>. Un fichier qui existe n'est <b>jamais remplacé</b> : le Studio propose un autre nom. Ferme RPG Maker avant.</li>
+      <li>Dans RPG Maker, la case en haut à gauche est l'index 0, celle en bas à droite l'index 7.</li>
+    </ul>
+  </aside>
+</div>
+<canvas id="rendu" width="576" height="288"></canvas>
+<div id="toast" class="toast"></div>
+<script>
+'use strict';
+var CASE = 144, COLONNES = 4, RANGEES = 2, NB = COLONNES * RANGEES;
+var cases = [];                 // NB entrées : null ou { img, nom, url }
+var caseCible = null;           // la case choisie par un clic, pour le sélecteur de fichiers
+var caseTiree = null;           // la case qu'on fait glisser
+for (var i = 0; i < NB; i++) cases.push(null);
+
+function $(id) { return document.getElementById(id); }
+function el(tag, attrs, enfants) {
+  var e = document.createElement(tag);
+  for (var k in (attrs || {})) { if (k === 'texte') e.textContent = attrs[k]; else if (k.indexOf('on') === 0) e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); }
+  (enfants || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+  return e;
+}
+function toast(msg, erreur) { var t = $('toast'); t.textContent = msg; t.className = 'toast visible' + (erreur ? ' erreur' : ''); clearTimeout(toast._t); toast._t = setTimeout(function () { t.className = 'toast'; }, erreur ? 9000 : 6000); }
+function api(url, corps) {
+  return fetch(url, corps ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) } : {})
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok) { var e = new Error(j.erreur || ('Erreur ' + r.status)); e.propose = j.propose; throw e; } return j; }); });
+}
+
+// ── la planche à l'écran, et la même dans le canvas (ce qui sera écrit) ────
+function dessiner() {
+  var p = $('planche'); p.innerHTML = '';
+  cases.forEach(function (c, i) {
+    var d = el('div', { class: 'case' + (c ? ' pleine' : ''), 'data-case': i, title: c ? c.nom + ' — glisse sur une autre case pour échanger' : 'Case ' + (i + 1) + ' : clique ou dépose un visage' });
+    d.appendChild(el('span', { class: 'numero', texte: String(i + 1) }));
+    if (c) {
+      d.draggable = true;
+      d.appendChild(el('img', { src: c.url, alt: c.nom }));
+      d.appendChild(el('button', { class: 'vider', title: 'Vider cette case', 'aria-label': 'Vider la case ' + (i + 1), texte: '×', onclick: function (ev) { ev.stopPropagation(); vider(i); } }));
+    } else {
+      d.appendChild(el('span', { class: 'invite', texte: '＋ visage' }));
+    }
+    d.addEventListener('click', function () { if (!cases[i]) { caseCible = i; $('fichiers').click(); } });
+    d.addEventListener('dragstart', function (ev) { caseTiree = i; ev.dataTransfer.effectAllowed = 'move'; ev.dataTransfer.setData('text/plain', 'case:' + i); d.classList.add('tiree'); });
+    d.addEventListener('dragend', function () { caseTiree = null; d.classList.remove('tiree'); });
+    d.addEventListener('dragover', function (ev) { ev.preventDefault(); d.classList.add('survol'); });
+    d.addEventListener('dragleave', function () { d.classList.remove('survol'); });
+    d.addEventListener('drop', function (ev) {
+      ev.preventDefault(); ev.stopPropagation(); d.classList.remove('survol');
+      if (ev.dataTransfer.files && ev.dataTransfer.files.length) return ajouter(ev.dataTransfer.files, i);
+      var depuis = caseTiree;
+      if (depuis === null) { var t = /^case:(\d)$/.exec(ev.dataTransfer.getData('text/plain') || ''); if (t) depuis = Number(t[1]); }
+      if (depuis !== null && depuis !== i) { var x = cases[depuis]; cases[depuis] = cases[i]; cases[i] = x; dessiner(); }
+    });
+    p.appendChild(d);
+  });
+  var n = cases.filter(Boolean).length;
+  $('compte').textContent = n + ' / ' + NB + ' case' + (n > 1 ? 's' : '') + ' remplie' + (n > 1 ? 's' : '');
+  assembler();
+}
+function assembler() {
+  var cv = $('rendu'), ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.imageSmoothingEnabled = false;
+  cases.forEach(function (c, i) { if (c) ctx.drawImage(c.img, (i % COLONNES) * CASE, Math.floor(i / COLONNES) * CASE); });
+  return cv;
+}
+function vider(i) {
+  if (cases[i]) URL.revokeObjectURL(cases[i].url);
+  cases[i] = null; dessiner();
+}
+
+// ── les fichiers : un PNG de 144×144, sinon refusé avec la raison ──────────
+function refuser(msg) { $('refus').appendChild(el('li', { texte: msg })); }
+function lire(fichier) {
+  return new Promise(function (ok) {
+    if (!/\.png$/i.test(fichier.name) && fichier.type !== 'image/png')
+      return ok({ refus: '« ' + fichier.name + ' » n\'est pas un PNG : RPG Maker MV ne lit que les .png.' });
+    var url = URL.createObjectURL(fichier), img = new Image();
+    img.onload = function () {
+      if (img.naturalWidth !== CASE || img.naturalHeight !== CASE) {
+        URL.revokeObjectURL(url);
+        return ok({ refus: '« ' + fichier.name + ' » fait ' + img.naturalWidth + ' × ' + img.naturalHeight + ' px : un visage fait ' + CASE + ' × ' + CASE + '. Il n\'est pas redimensionné — exporte-le du générateur en taille normale.' });
+      }
+      ok({ img: img, nom: fichier.name, url: url });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); ok({ refus: '« ' + fichier.name + ' » est illisible.' }); };
+    img.src = url;
+  });
+}
+function ajouter(liste, depart) {
+  $('refus').innerHTML = '';
+  var fichiers = Array.prototype.slice.call(liste).sort(function (a, b) { return a.name.localeCompare(b.name, 'fr', { numeric: true }); });
+  return Promise.all(fichiers.map(lire)).then(function (lus) {
+    var premiere = typeof depart === 'number';
+    lus.forEach(function (v) {
+      if (v.refus) return refuser(v.refus);
+      var place = -1;
+      if (premiere) { place = depart; premiere = false; }          // la case visée reçoit le premier, même pleine
+      else for (var k = 0; k < NB; k++) { var j = (typeof depart === 'number' ? depart + k : k) % NB; if (!cases[j]) { place = j; break; } }
+      if (place < 0) { URL.revokeObjectURL(v.url); return refuser('« ' + v.nom + ' » : la planche est pleine (' + NB + ' cases). Vide une case d\'abord.'); }
+      if (cases[place]) URL.revokeObjectURL(cases[place].url);
+      cases[place] = v;
+    });
+    dessiner();
+  });
+}
+$('btnAjouter').addEventListener('click', function () { caseCible = null; $('fichiers').click(); });
+$('fichiers').addEventListener('change', function () {
+  var f = this.files; if (f && f.length) ajouter(f, caseCible === null ? undefined : caseCible);
+  caseCible = null; this.value = '';
+});
+$('btnVider').addEventListener('click', function () { for (var i = 0; i < NB; i++) if (cases[i]) URL.revokeObjectURL(cases[i].url); cases = cases.map(function () { return null; }); $('refus').innerHTML = ''; dessiner(); });
+// un fichier lâché à côté de la planche ne doit pas remplacer la page
+document.addEventListener('dragover', function (ev) { ev.preventDefault(); });
+document.addEventListener('drop', function (ev) { ev.preventDefault(); if (ev.dataTransfer.files && ev.dataTransfer.files.length) ajouter(ev.dataTransfer.files); });
+
+// ── enregistrer ─────────────────────────────────────────────────────────────
+function enregistrer() {
+  if (!cases.some(Boolean)) { toast('La planche est vide : dépose au moins un visage.', true); return; }
+  var nom = $('nom').value.trim();
+  if (!nom) { toast('Donne un nom à la planche d\'abord.', true); $('nom').focus(); return; }
+  $('btnEnregistrer').disabled = true;
+  api('/api/planche', { nom: nom, png: assembler().toDataURL('image/png') }).then(function (r) {
+    $('resultat').innerHTML = '';
+    $('resultat').appendChild(el('span', {}, ['✅ Écrite : ', el('code', { texte: r.fichier }), '. Dans RPG Maker, choisis le visage « ' + r.nom + ' », cases 0 à 7.']));
+    toast('✅ Planche écrite : ' + r.fichier);
+  }).catch(function (e) {
+    toast(e.message, true);
+    $('resultat').textContent = e.message;
+    if (e.propose) { $('nom').value = e.propose; $('nom').focus(); $('nom').select(); $('resultat').textContent += ' Le nom proposé est dans la case : clique à nouveau sur « Enregistrer ».'; }
+  }).then(function () { $('btnEnregistrer').disabled = false; });
+}
+$('btnEnregistrer').addEventListener('click', enregistrer);
+$('nom').addEventListener('keydown', function (ev) { if (ev.key === 'Enter') enregistrer(); });
+
+function surveillerEditeur() {
+  api('/api/editeur').then(function (r) {
+    var p = $('etatEditeur');
+    p.textContent = r.ouvert ? '⚠ RPG Maker est ouvert — ferme-le pour enregistrer' : '✓ RPG Maker fermé';
+    p.className = 'pastille ' + (r.ouvert ? 'alerte' : 'ok');
+  }).catch(function () {});
+}
+api('/api/projet').then(function (p) { $('titre').textContent = p.titre; }).catch(function () {});
+surveillerEditeur(); setInterval(surveillerEditeur, 5000);
+dessiner();
+</script>
+</body>
+</html>

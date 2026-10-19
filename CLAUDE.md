@@ -165,7 +165,12 @@ sa source dans `studio/scenes/<id>.json` ; aperçu dans le vrai jeu (iframe, san
 écriture refusée tant que `RPGMV.exe` tourne, copie de `CommonEvents.json` avant chaque écriture
 (Documents\RPG Maker\Sauvegardes du Studio). **Ressources** : `img/` + `audio/` du jeu et
 Documents\RPG Maker, « jamais cité » par le nom, copie dans le jeu sans jamais écraser. Les scènes
-de `studio/scenes/` sont à JOKO : je n'en écris pas sans lui.
+de `studio/scenes/` sont à JOKO : je n'en écris pas sans lui. **Planche d'expressions**
+(`/planche`, 2026-10-19) : jusqu'à 8 visages 144×144 du générateur, assemblés dans le navigateur
+en une planche MV 576×288 (une autre taille est refusée, jamais redimensionnée), écrite dans
+`img/faces` sous le nom choisi — jamais par-dessus un fichier (un autre nom est proposé), jamais
+tant que `RPGMV.exe` tourne (`STUDIO_EDITEUR` change le programme cherché, pour les bancs). Banc :
+`navigateur/la_planche_dexpressions.js`.
 
 **Le bouclier et la brisure** (`AstfglSCB.js`, 2026-10-18) : le Shield and Break d'Astfgl (façon
 Octopath), **copie corrigée** pour le jeu — l'original est gardé dans Documents\RPG Maker\3 Systèmes

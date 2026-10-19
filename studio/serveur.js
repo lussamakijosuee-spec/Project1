@@ -3,12 +3,15 @@
 //  Lancement : double-clic sur STUDIO.bat (à la racine du projet)
 //
 //  Il LIT tout le projet (data/, img/, audio/) et Documents\RPG Maker, et
-//  n'ÉCRIT qu'à trois endroits :
+//  n'ÉCRIT qu'à quatre endroits :
 //    · data/CommonEvents.json — les événements communs 600 à 699 (les scènes)
 //    · studio/scenes/          — la source de chaque scène, pour la rouvrir
 //    · img/ et audio/          — un fichier copié depuis Documents\RPG Maker,
 //                                quand tu cliques « Copier dans le jeu » (jamais
 //                                par-dessus un fichier qui existe)
+//    · img/faces/              — une planche d'expressions (576×288), quand tu
+//                                cliques « Enregistrer » (jamais par-dessus un
+//                                fichier qui existe)
 //  Avant chaque écriture : une copie de CommonEvents.json dans
 //  Documents\RPG Maker\Sauvegardes du Studio. Et rien ne s'écrit tant que
 //  RPG Maker est ouvert : en enregistrant, l'éditeur écraserait la scène.
@@ -108,10 +111,13 @@ function listeScenes() {
 }
 
 // ── RPG Maker est-il ouvert ? ───────────────────────────────────────────────
+// STUDIO_EDITEUR ne sert qu'aux bancs : il remplace le nom du programme cherché,
+// pour vérifier le refus (un programme qui tourne) comme l'écriture (aucun).
+var EDITEUR = process.env.STUDIO_EDITEUR || 'RPGMV.exe';
 function editeurOuvert(rappel) {
     if (process.platform !== 'win32') return rappel(false);
-    execFile('tasklist', ['/FI', 'IMAGENAME eq RPGMV.exe', '/NH'], { windowsHide: true }, function (err, sortie) {
-        rappel(!err && /RPGMV\.exe/i.test(String(sortie)));
+    execFile('tasklist', ['/FI', 'IMAGENAME eq ' + EDITEUR, '/NH'], { windowsHide: true }, function (err, sortie) {
+        rappel(!err && String(sortie).toLowerCase().indexOf(EDITEUR.toLowerCase()) >= 0);
     });
 }
 
@@ -299,6 +305,61 @@ function copier(demande) {
     return { copies: copies };
 }
 
+// ── la planche d'expressions : 8 visages de 144×144 assemblés dans la page ──
+// Le navigateur assemble ; ici on vérifie ce qu'il envoie (un vrai PNG, à la
+// taille d'une planche MV) et on l'écrit dans img/faces sans rien remplacer.
+var FACES = path.join(RACINE, 'img', 'faces');
+var PLANCHE = { largeur: 576, hauteur: 288 };
+function erreurAvecCode(message, code, extra) {
+    var e = new Error(message); e.code = code;
+    for (var k in (extra || {})) e[k] = extra[k];
+    return e;
+}
+function nomDePlanche(brut) {
+    var nom = String(brut || '').trim().replace(/\.png$/i, '').trim();
+    if (!nom) throw erreurAvecCode('Donne un nom à la planche.', 400);
+    if (nom.length > 80) throw erreurAvecCode('Nom trop long (80 caractères au plus).', 400);
+    if (/[<>:"\/\\|?*\x00-\x1f]/.test(nom)) throw erreurAvecCode('Un nom de fichier ne peut pas contenir < > : " / \\ | ? *', 400);
+    if (/^\./.test(nom) || /[. ]$/.test(nom)) throw erreurAvecCode('Un nom ne peut ni commencer par un point, ni finir par un point ou une espace.', 400);
+    if (/^(con|prn|aux|nul|com\d|lpt\d)$/i.test(nom)) throw erreurAvecCode('« ' + nom + ' » est un nom réservé par Windows.', 400);
+    return nom;
+}
+function existeDansFaces(nom) {
+    // insensible à la casse : « Vesper » et « vesper » sont le même fichier sous Windows
+    var cible = (nom + '.png').toLowerCase();
+    return fs.readdirSync(FACES).some(function (f) { return f.toLowerCase() === cible; });
+}
+function nomLibre(nom) {
+    // « Vesper » → « Vesper_2 » ; « Vesper_2 » → « Vesper_3 »
+    var m = /^(.*)_(\d+)$/.exec(nom), base = m ? m[1] : nom, depart = m ? Number(m[2]) + 1 : 2;
+    for (var n = depart; n < depart + 1000; n++) if (!existeDansFaces(base + '_' + n)) return base + '_' + n;
+    return null;
+}
+function ecrirePlanche(demande) {
+    var nom = nomDePlanche(demande.nom);
+    var m = /^data:image\/png;base64,([A-Za-z0-9+\/=]+)$/.exec(String(demande.png || ''));
+    if (!m) throw erreurAvecCode('La planche n\'est pas un PNG.', 400);
+    var png = Buffer.from(m[1], 'base64');
+    var signature = '89504e470d0a1a0a';
+    if (png.length < 24 || png.toString('hex', 0, 8) !== signature || png.toString('ascii', 12, 16) !== 'IHDR')
+        throw erreurAvecCode('La planche n\'est pas un PNG lisible.', 400);
+    var l = png.readUInt32BE(16), h = png.readUInt32BE(20);
+    if (l !== PLANCHE.largeur || h !== PLANCHE.hauteur)
+        throw erreurAvecCode('La planche fait ' + l + ' × ' + h + ' : une planche de visages MV fait ' + PLANCHE.largeur + ' × ' + PLANCHE.hauteur + '.', 400);
+    if (!fs.existsSync(FACES)) throw erreurAvecCode('Le dossier img/faces est introuvable.', 500);
+    var fichier = nom + '.png';
+    var deja = function () {
+        var propose = nomLibre(nom);
+        return erreurAvecCode('« ' + fichier + ' » existe déjà dans img/faces : rien n\'est remplacé.' +
+            (propose ? ' Nom libre proposé : « ' + propose + ' ».' : ''), 409, { propose: propose });
+    };
+    if (existeDansFaces(nom)) throw deja();
+    try { fs.writeFileSync(path.join(FACES, fichier), png, { flag: 'wx' }); }      // wx : jamais par-dessus
+    catch (e) { if (e.code === 'EEXIST') throw deja(); throw e; }
+    cacheRessources = null;
+    return { fichier: 'img/faces/' + fichier, nom: nom, octets: png.length };
+}
+
 // ── le serveur ──────────────────────────────────────────────────────────────
 function envoyerJSON(res, code, objet) {
     var corps = Buffer.from(JSON.stringify(objet));
@@ -330,6 +391,7 @@ var serveur = http.createServer(function (req, res) {
         if (chemin === '/') return servirFichier(res, PAGES, 'accueil.html');
         if (chemin === '/cinematiques') return servirFichier(res, PAGES, 'cinematiques.html');
         if (chemin === '/ressources') return servirFichier(res, PAGES, 'ressources.html');
+        if (chemin === '/planche') return servirFichier(res, PAGES, 'planche.html');
         if (chemin.indexOf('/pages/') === 0) return servirFichier(res, PAGES, chemin.slice(7));
         if (chemin.indexOf('/jeu/') === 0) return servirFichier(res, RACINE, chemin.slice(5));
         if (chemin.indexOf('/bibliotheque/') === 0) return servirFichier(res, BIBLIO, chemin.slice(14));
@@ -340,6 +402,17 @@ var serveur = http.createServer(function (req, res) {
                 if (err) return envoyerJSON(res, 400, { erreur: 'Demande illisible.' });
                 try { envoyerJSON(res, 200, copier(demande)); }
                 catch (e) { envoyerJSON(res, 400, { erreur: e.message }); }
+            });
+        }
+
+        if (chemin === '/api/planche' && req.method === 'POST') {
+            return lireCorps(req, function (err, demande) {
+                if (err) return envoyerJSON(res, 400, { erreur: 'Demande illisible.' });
+                editeurOuvert(function (ouvert) {
+                    if (ouvert) return envoyerJSON(res, 409, { erreur: 'RPG Maker est ouvert : ferme-le d\'abord, puis enregistre à nouveau.' });
+                    try { envoyerJSON(res, 200, ecrirePlanche(demande)); }
+                    catch (e) { envoyerJSON(res, typeof e.code === 'number' ? e.code : 500, { erreur: e.message, propose: e.propose || null }); }
+                });
             });
         }
 
@@ -383,4 +456,4 @@ serveur.listen(PORT, '127.0.0.1', function () {
 });
 }
 
-module.exports = { enregistrer: enregistrer, ecrireCE: ecrireCE, projet: projet, carte: carte, ressources: ressources, copier: copier, categorieProposee: categorieProposee };
+module.exports = { enregistrer: enregistrer, ecrireCE: ecrireCE, projet: projet, carte: carte, ressources: ressources, copier: copier, categorieProposee: categorieProposee, ecrirePlanche: ecrirePlanche };
