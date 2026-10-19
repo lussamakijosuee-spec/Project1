@@ -1,9 +1,0 @@
-Titre   : Multiple Boats in RPG Maker MZ: No Plugins
-Auteur  : tomazellagames
-Page    : https://tomazellagames.itch.io/two-boats
-Licence : voir les conditions ci-dessous
-Images  : 69
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-Free to use in any project, commercial or not. No credit required, but a mention is always appreciated!

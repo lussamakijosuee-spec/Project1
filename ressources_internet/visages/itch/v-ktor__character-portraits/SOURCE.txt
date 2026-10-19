@@ -1,9 +1,0 @@
-Titre   : Character Portraits
-Auteur  : v-ktor
-Page    : https://v-ktor.itch.io/character-portraits
-Licence : voir les conditions ci-dessous
-Images  : 33
-
-Conditions écrites par l'auteur sur sa page (recopiées telles quelles) :
-
-License: CC-BY 4.0 (http://creativecommons.org/licenses/by/4.0/)
