@@ -144,7 +144,7 @@ cinquième combattant.
 |---|---|---|
 | Vesper | trois Styles, trois kits — **Lame** (arts d'armes selon l'arme tenue, État de Flow), **Sang** (le Pacte façon Arlecchino, Berserker), **Garde** (adaptation, Arme de Sang) — et sa **Colère** (la Vanne de ludwing) | `LePacteDeSang.js`, `LesStylesDeVesper.js` |
 | Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** ; deux corps : l'Hiver **confie son froid à seiryu**, et **Change** prend la place d'un allié | `SeiryuLeFamilier.js`, `LeFroidConfie.js` |
-| ludwing | l'âme et l'ombre — Royaume Impérial | `PorteurDAmes.js`, `RoyaumeImperial.js` |
+| ludwing | l'âme et l'ombre — Royaume Impérial ; le stratège : les âmes sont sa **monnaie** (Registre) | `PorteurDAmes.js`, `RoyaumeImperial.js`, `LeRegistre.js` |
 | Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
 
 **Les interactions** (`LesInteractions.js`, 2026-10-14) : une compétence lancée sur un allié le fait
@@ -222,6 +222,23 @@ codé que dans `TraitsAme`, éteint — échange sa place avec l'allié (rendue 
 reprend ce que **les ennemis** ont posé, et détourne sur elle les coups ennemis ciblés sur lui
 pendant 3 tours (245). Tous les chiffres sont des réglages du gestionnaire. La classe 5 n'est pas
 touchée. Banc : `navigateur/le_froid_confie.js`.
+
+**Le Registre** (`LeRegistre.js`, 2026-10-19, le rework de ludwing) : JOKO a choisi *« Piste 1, le
+Registre : les âmes deviennent sa monnaie, il les gagne en prenant (morts, drains) et les dépense
+pour tout (invocations, copies choisies, mises, Royaume), un seul Domaine où tout est gratuit »*, et
+décrit le personnage *« comme Megumi ou Shikamaru […] Orochimaru […] beaucoup plus de ruse que les
+autres »* — un stratège, pas le plus fort. **Gagner** (variable 15, compteur ✦ Âmes = état 247) :
++1 par mort (PorteurDAmes ; +1 de plus quand c'est lui qui tue, LouCopySystem), +2 si le mort était
+**👁 Marqué** (213), +1 par drain à lui qui touche (+1 sur un Marqué) ; la technique d'un Marqué est
+copiée dès la première fois. **Dépenser** : invocations (type 8, ouvert sur la classe 3) ; la branche
+**Copies** (type 26, en combat, seulement s'il a des copies) — 2 âmes, ni PM ni PT, moitié de
+puissance, consommée ; mises : Roulette du Destin jusqu'à 5 âmes (+1 au seuil de la variable 5,
+1 chance sur 30 chacune), Arme d'Ombre jusqu'à 3 (un tirage de plus de la variable 41 par âme, le
+meilleur gardé) — les événements communs 1 et 22 ne sont **pas** modifiés, la mise s'ajoute à leur
+tirage. **Le Domaine** = l'état 198 (Ténèbres Impériales) : copies gratuites et gardées, mises au
+maximum offertes, invocations jamais grisées (InvocationAmes les grisait faute d'âmes malgré
+RoyaumeImperial) ; `LouCopySystem` pointe sur 198 (il attendait l'état 39, que rien ne pose). Le
+Royaume Impérial (71) reste tel que JOKO l'a écrit. Banc : `navigateur/le_registre.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

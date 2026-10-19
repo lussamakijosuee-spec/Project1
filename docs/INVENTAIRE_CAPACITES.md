@@ -378,7 +378,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | ✔ | 2 · Spéciale | 17 | ouvert |
 | ✔ | 3 · ult | 2 | ouvert |
 | ✘ | 4 · JACKPOT | 5 | **INVISIBLE** — seul chemin : état « JACKPOT » — que rien ne pose, hors d'atteinte |
-| ✘ | 8 · invocation | 2 | **INVISIBLE** — seul chemin : état « Royaume Impérial » — que rien ne pose, hors d'atteinte |
+| ✔ | 8 · invocation | 2 | ouvert |
 | ✔ | 9 · ame | 9 | ouvert |
 | ◑ | 11 · ombre d'épeé | 1 | à condition : en équipant arme « Épée d'Ombre » |
 | ◑ | 12 · ombre de dague | 1 | à condition : en équipant arme « Dague d'Ombre » |
@@ -392,7 +392,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 
 > **5 compétences de ludwing attendent leur condition.** Elles ne sont pas mortes : la branche s'ouvre dès que la condition est remplie, et la colonne « État » dit laquelle.
 
-> **10 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
+> **8 compétences de ludwing ne sont accessibles nulle part.** Elles s'apprennent, et rien — ni classe, ni état posable, ni équipement portable — n'ouvre leur type.
 
 ### Type 1 — capacité
 
@@ -484,9 +484,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 50 | Pari Téméraire | 10 PM | dégâts PV *Physique* `((Math.random()<0.5)?(a.luk*12):(a.luk*2)) - b.def` | 21 | `<NoParole>` `<Cooldown: 2>` |
 | 1 | 51 | Danse de l'Euphorie | 12 PM | boost AGI 5t · boost ATQ 5t · boost CHA 5t | 40 | `<Parole: origine>` |
 
-### ✘ Type 8 — invocation  *(INVISIBLE)*
-
-*INVISIBLE — seul chemin : état « Royaume Impérial » — que rien ne pose, hors d'atteinte*
+### Type 8 — invocation
 
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
@@ -842,7 +840,7 @@ Les états pilotés par ces jauges, avec leur condition réelle :
 ## Le compte
 
 - **389** entrées d'apprentissage sur les quatre héros ;
-- **10** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
+- **8** sont invisibles en jeu : aucun chemin n'ouvre leur type ;
 - **12** s'ouvrent sous condition — elles marchent, la colonne « État » dit par où ;
 - **27** ne font rien du tout (ni dégâts, ni effet) ;
 - **5** balises différentes sont écrites sans qu'aucun plugin actif ne les lise,

@@ -45,7 +45,8 @@ function ok(nom, cond, detail) {
             var glace = a.skills().filter(function (s) { return [13, 22].indexOf(s.damage.elementId) >= 0; });
             out.push({
                 nom: a.name(), combat: combat, orbe: orbe,
-                glaceHorsHiver: glace.filter(function (s) { return s.stypeId !== 6 && s.stypeId !== 3 && !(s.meta && s.meta.Avatar !== undefined); })
+                // les duos (type 25) restent dans « Combo » : JOKO, 2026-10-18, « menu Combo »
+                glaceHorsHiver: glace.filter(function (s) { return s.stypeId !== 6 && s.stypeId !== 3 && s.stypeId !== 25 && !(s.meta && s.meta.Avatar !== undefined); })
                     .map(function (s) { return s.id + ' ' + s.name; }),
                 glaceEnHiver: glace.filter(function (s) { return s.stypeId === 6; }).length,
                 invisibles: a.skills().filter(function (s) { return !s.stypeId; }).map(function (s) { return s.id + ' ' + s.name; })
