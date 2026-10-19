@@ -8,7 +8,7 @@
  * Ce banc vérifie, dans le vrai moteur et dans les deux sens :
  *
  *   1. la jauge monte du coût exact en PM, et SEULEMENT avec l'Hiver de Korrah ;
- *   2. seiryu chargé : soins ×1,5, coups de glace ×1,5 qui engourdissent,
+ *   2. seiryu chargé : soins ×1,25, coups de glace ×1,5 qui engourdissent,
  *      gardes +1 tour et « le froid mord » — et rien sans assez de froid ;
  *   3. « Rends-le » vide toute la jauge : dégâts × (1 + froid ÷ 50), Gelure ;
  *   4. Le Froid Rendu demande la jauge pleine, et ne coûte plus de PM ;
@@ -166,7 +166,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return r;
     });
     var rs = c.soin1 / c.soin0;
-    v('soin chargé ×1,5', Math.abs(rs - 1.5) < 0.01, c.soin0 + ' → ' + c.soin1 + ' PV (×' + rs.toFixed(3) + ')');
+    v('soin chargé ×' + String(j.reglages.bonusSoin).replace('.', ',') + ' (le réglage)', j.reglages.bonusSoin === 1.25 && Math.abs(rs - j.reglages.bonusSoin) < 0.01,
+        c.soin0 + ' → ' + c.soin1 + ' PV (×' + rs.toFixed(3) + ')');
     v('il a pris 25 de froid, pas plus', c.j0 === 0 && c.j1 === 75, '100 → ' + c.j1);
     var attendu = c.coup0 * 1.5 * (c.taux4 ? c.taux13 / c.taux4 : 1);
     v('coup chargé : de glace, ×1,5', c.taux4 > 0 && Math.abs(c.coup1 - attendu) <= 2 && JSON.stringify(c.elements) === '[13]',

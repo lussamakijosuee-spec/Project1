@@ -211,7 +211,8 @@ faiblesse. Nuit d'Hiver et Crépuscule portent 2 tours de recharge (la règle de
 le froid confié : Korrah joue deux corps avec seiryu, ses sorts d'Hiver chargent seiryu, et « change »
 devient l'échange de place »*, puis *« Oui, écris tout comme listé »*. Chaque compétence d'Hiver confie
 à seiryu **autant de froid que de PM payés** (jauge 0-100, état 243 et son compteur). Chacune de ses
-actions en prend 25 : soins ×1,5, gardes +1 tour et **❄ Le froid mord** (246 : qui frappe le protégé
+actions en prend 25 : soins ×1,25 (JOKO : *« Baisse les soins chargés de seiryu à ×1,25 au lieu de
+×1,5 »*), gardes +1 tour et **❄ Le froid mord** (246 : qui frappe le protégé
 s'engourdit), coups de glace ×1,5 qui engourdissent — il reste un soutien, sous le plus petit Hiver de
 Korrah. L'ordre **« Rends-le »** vide tout (dégâts × (1 + froid ÷ 50), Gelure dès 50). **Le Froid
 Rendu** (800) coûte la jauge pleine + 100 PT, 0 PM (`<FroidConfie: 100>`). Tombé **chargé**, le froid

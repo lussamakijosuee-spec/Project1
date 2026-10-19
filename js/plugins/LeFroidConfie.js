@@ -46,7 +46,8 @@
  *
  * @param bonusSoin
  * @text Soins chargés (multiplicateur)
- * @default 1.5
+ * @desc JOKO, 2026-10-19 : ×1,25 (au lieu de ×1,5).
+ * @default 1.25
  *
  * @param bonusCoup
  * @text Coups chargés (multiplicateur)
@@ -198,7 +199,7 @@
     var nb = function (k, d) { var v = P[k]; return (v === undefined || v === '' || isNaN(Number(v))) ? d : Number(v); };
     var PORTEUSE = nb('acteurPorteuse', 2), FAMILIER = nb('acteurFamilier', 6), TYPE_HIVER = nb('typeHiver', 6);
     var PAR_PM = nb('froidParPM', 1), PLAFOND = nb('plafond', 100), CHARGE = nb('charge', 25);
-    var BONUS_SOIN = nb('bonusSoin', 1.5), BONUS_COUP = nb('bonusCoup', 1.5), TOURS_GARDE = nb('toursGarde', 1);
+    var BONUS_SOIN = nb('bonusSoin', 1.25), BONUS_COUP = nb('bonusCoup', 1.5), TOURS_GARDE = nb('toursGarde', 1);
     var GARDES = String(P['gardes'] === undefined || P['gardes'] === '' ? '1261, 1262, 1252, 471' : P['gardes'])
         .split(',').map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
     var RENDS_LE = nb('rendsLe', 1254), ORDRE_RENDS_LE = nb('ordreRendsLe', 1258);
