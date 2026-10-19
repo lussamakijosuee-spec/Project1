@@ -231,8 +231,10 @@ autres »* — un stratège, pas le plus fort. **Gagner** (variable 15, compteur
 +1 par mort (PorteurDAmes ; +1 de plus quand c'est lui qui tue, LouCopySystem), +2 si le mort était
 **👁 Marqué** (213), +1 par drain à lui qui touche (+1 sur un Marqué) ; la technique d'un Marqué est
 copiée dès la première fois. **Dépenser** : invocations (type 8, ouvert sur la classe 3) ; la branche
-**Copies** (type 26, en combat, seulement s'il a des copies) — 2 âmes, ni PM ni PT, moitié de
-puissance, consommée ; mises : Roulette du Destin jusqu'à 5 âmes (+1 au seuil de la variable 5,
+**Copies** (type 26, en combat, seulement s'il a des copies) — 2 âmes, ni PM ni PT, consommée,
+et **« à sa mesure »** (JOKO : *« chaque copie frappe 50 % de son Ombre — Nuit, avec l'élément et les
+effets de la technique volée »* ; réglages `puissanceCopie`, `referenceCopie` 1224 — Copie d'Âme, au
+hasard, reste à moitié de ses stats) ; mises : Roulette du Destin jusqu'à 5 âmes (+1 au seuil de la variable 5,
 1 chance sur 30 chacune), Arme d'Ombre jusqu'à 3 (un tirage de plus de la variable 41 par âme, le
 meilleur gardé) — les événements communs 1 et 22 ne sont **pas** modifiés, la mise s'ajoute à leur
 tirage. **Le Domaine** = l'état 198 (Ténèbres Impériales) : copies gratuites et gardées, mises au

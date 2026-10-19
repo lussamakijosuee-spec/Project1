@@ -53,6 +53,19 @@
  * @type number
  * @default 2
  *
+ * @param puissanceCopie
+ * @text Puissance d'une copie choisie (%)
+ * @desc « À sa mesure » (JOKO, 2026-10-19) : ce % de sa compétence de référence, avec
+ * l'élément et les effets de la technique volée.
+ * @type number
+ * @default 50
+ *
+ * @param referenceCopie
+ * @text Compétence de référence des copies
+ * @desc Ombre — Nuit (1224, 46 PM).
+ * @type skill
+ * @default 1224
+ *
  * @param roulette
  * @text La Roulette du Destin
  * @type skill
@@ -132,9 +145,13 @@
  * DÉPENSER :
  *   · invocations (type 8, ouvert sur sa classe) : <Invocation: n>, InvocationAmes ;
  *   · COPIES CHOISIES : la branche `typeCopies` liste ses techniques copiées.
- *     Chacune coûte coutCopie âmes (aucun PM, aucun PT), frappe à la puissance
- *     réduite de LouCopySystem, et se consomme — « copie d'Âme » (65) reste,
- *     au hasard et gratuite ;
+ *     Chacune coûte coutCopie âmes (aucun PM, aucun PT) et se consomme. Elle frappe
+ *     « à sa mesure » (JOKO : « Réglage A, à sa mesure : chaque copie frappe 50 %
+ *     de son Ombre — Nuit, avec l'élément et les effets de la technique volée ») :
+ *     puissanceCopie % de la compétence referenceCopie sur la même cible, comptée
+ *     sans élément, puis multipliée par le taux de l'élément de la copie. Ses effets
+ *     (états, baisses) sont ceux de la technique. « copie d'Âme » (65) reste au
+ *     hasard, gratuite, à la puissance réduite de LouCopySystem ;
  *   · MISES : la Roulette du Destin mise jusqu'à miseRoulette âmes (+1 chance
  *     sur 30 chacune, au premier tirage) ; l'Arme d'Ombre jusqu'à miseArme (un
  *     tirage de plus chacune, le meilleur gardé). Il mise ce qu'il a, jusqu'au
@@ -159,6 +176,7 @@
     var MARQUE = nb('etatMarque', 213), BONUS_MORT = nb('bonusMortMarque', 2);
     var GAIN_DRAIN = nb('gainDrain', 1), BONUS_DRAIN = nb('bonusDrainMarque', 1);
     var TYPE_COPIES = nb('typeCopies', 26), COUT_COPIE = nb('coutCopie', 2);
+    var PUISSANCE_COPIE = nb('puissanceCopie', 50), REFERENCE = nb('referenceCopie', 1224);
     var ROULETTE = nb('roulette', 14), MISE_ROULETTE = nb('miseRoulette', 5), EV_ROULETTE = nb('evRoulette', 1), SEUIL = nb('seuilRoulette', 5);
     var ARME = nb('armeOmbre', 111), MISE_ARME = nb('miseArme', 3), EV_ARME = nb('evArme', 22), TIRAGE = nb('tirageArme', 41);
     var DOMAINE = nb('etatDomaine', 198), COMPTEUR = nb('etatCompteur', 247);
@@ -196,7 +214,8 @@
         domaine: enDomaine,
         reglages: function () {
             return { bonusMortMarque: BONUS_MORT, gainDrain: GAIN_DRAIN, bonusDrainMarque: BONUS_DRAIN, coutCopie: COUT_COPIE,
-                     miseRoulette: MISE_ROULETTE, miseArme: MISE_ARME, typeCopies: TYPE_COPIES, etatDomaine: DOMAINE, maxCopies: MAX_COPIES };
+                     miseRoulette: MISE_ROULETTE, miseArme: MISE_ARME, typeCopies: TYPE_COPIES, etatDomaine: DOMAINE, maxCopies: MAX_COPIES,
+                     puissanceCopie: PUISSANCE_COPIE, referenceCopie: REFERENCE };
         }
     };
 
@@ -224,6 +243,7 @@
     };
     var _finAction = BattleManager.endAction;
     BattleManager.endAction = function () {
+        if (this._subject) { this._subject._registreCopie = 0; }       // la copie collée ne vaut que pour son action
         _finAction.call(this);
         try { afficher(); } catch (e) { }
     };
@@ -338,7 +358,7 @@
         _paie.call(this, skill);
         if (copie) {
             var dom = enDomaine();
-            this._louCopyWeaken = true;                // LouCopySystem réduit les dégâts, et remet à zéro en fin d'action
+            this._registreCopie = skill.id;            // « à sa mesure » : voir makeDamageValue plus bas
             if (!dom) {
                 var slots = this._louCopiedSkills, i = slots.indexOf(skill.id);
                 if (i >= 0) { slots.splice(i, 1); }
@@ -351,6 +371,24 @@
         if (!estLui(this) || !skill) { return; }
         if (skill.id === ROULETTE) { miser(MISE_ROULETTE, 'roulette', 'chacune ajoute une chance'); }
         else if (skill.id === ARME) { miser(MISE_ARME, 'arme', 'un tirage de plus chacune'); }
+    };
+
+    //=========================================================================
+    // LA COPIE COLLÉE — « à sa mesure »
+    //=========================================================================
+    // La technique volée garde son élément, ses effets, sa portée ; sa force, c'est
+    // puissanceCopie % de SA compétence de référence sur la même cible, comptée
+    // sans élément (une cible insensible à l'ombre ne rend pas la copie nulle).
+    var _valeurDegats = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (target, critical) {
+        var u = this.subject(), it = this.item();
+        var mesure = !!(u && u._registreCopie && it && this.isSkill() && u._registreCopie === it.id
+            && it.damage && (it.damage.type === 1 || it.damage.type === 5) && $dataSkills[REFERENCE]);
+        if (!mesure) { return _valeurDegats.call(this, target, critical); }
+        var ref = new Game_Action(u); ref.setSkill(REFERENCE);
+        ref.calcElementRate = function () { return 1; };
+        var base = _valeurDegats.call(ref, target, critical);
+        return Math.round(base * PUISSANCE_COPIE / 100 * this.calcElementRate(target));
     };
 
     //=========================================================================

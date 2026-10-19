@@ -12,7 +12,7 @@
  *      (+1, +1 sur un Marqué) — pas ses coups qui ne drainent pas ;
  *   3. les invocations sont dans son menu, et coûtent leurs âmes ;
  *   4. les copies : la branche n'apparaît qu'avec des copies, elles n'y sont
- *      que là, coûtent 2 âmes et rien d'autre, frappent à moitié, se consomment ;
+ *      que là, coûtent 2 âmes et rien d'autre, frappent « à sa mesure » (50 % d'Ombre — Nuit, élément de la copie), se consomment ;
  *      un Marqué se laisse copier dès la première fois, pas un autre ;
  *   5. les mises : la Roulette (seuil +1 par âme) et l'Arme d'Ombre (un tirage de
  *      plus par âme, le meilleur gardé) — sans âme, rien ne change ;
@@ -154,14 +154,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         r.couts = { pm: l.skillMpCost(sk), pt: l.skillTpCost(sk) };
         __ames(1); r.a1 = l.canUse(sk);
         __ames(2); r.a2 = l.canUse(sk);
-        // la puissance : moitié (LouCopySystem), sans hasard
-        var vari = sk.damage.variance, crit = sk.damage.critical; sk.damage.variance = 0; sk.damage.critical = false;
+        // la puissance « à sa mesure » : 50 % d'Ombre — Nuit (sans élément) × l'élément de la copie
+        var ref = $dataSkills[1224], sauve = [sk.damage.variance, sk.damage.critical, ref.damage.variance, ref.damage.critical];
+        sk.damage.variance = 0; sk.damage.critical = false; ref.damage.variance = 0; ref.damage.critical = false;
         __solide(e);
         var a0 = new Game_Action(l); a0.setSkill(id); var plein = a0.makeDamageValue(e, false);
+        var rn = new Game_Action(l); rn.setSkill(1224); rn.calcElementRate = function () { return 1; };
+        var neutre = rn.makeDamageValue(e, false);
         l.paySkillCost(sk);
-        r.apres = { ames: __ames(), gardee: l._louCopiedSkills.indexOf(id) >= 0, affaiblie: !!l._louCopyWeaken };
-        var a1 = new Game_Action(l); a1.setSkill(id); r.ratio = a1.makeDamageValue(e, false) / plein;
-        l._louCopyWeaken = false; sk.damage.variance = vari; sk.damage.critical = crit;
+        r.apres = { ames: __ames(), gardee: l._louCopiedSkills.indexOf(id) >= 0, collee: l._registreCopie === id, affaiblie: !!l._louCopyWeaken };
+        var a1 = new Game_Action(l); a1.setSkill(id);
+        r.mesure = { valeur: a1.makeDamageValue(e, false), attendu: Math.round(neutre * 0.5 * a1.calcElementRate(e)), sansRegle: plein };
+        // la copie au hasard de « copie d'Âme » (65) garde la règle de LouCopySystem : ses stats, à moitié
+        l._registreCopie = 0; l._louCopyWeaken = true;
+        var a2 = new Game_Action(l); a2.setSkill(id); r.hasard = { valeur: a2.makeDamageValue(e, false), attendu: Math.floor(plein * 0.5) };
+        l._louCopyWeaken = false;
+        sk.damage.variance = sauve[0]; sk.damage.critical = sauve[1]; ref.damage.variance = sauve[2]; ref.damage.critical = sauve[3];
         r.brancheVide = l.addedSkillTypes().indexOf(26) >= 0;
         // un Marqué se laisse copier dès sa première technique — un autre non
         var id2 = __techEnnemie[1] || __techEnnemie[0];
@@ -186,8 +194,10 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('contre-épreuve : la copie n\'est pas dans sa branche d\'origine', !cp.ailleurs);
     v('elle ne coûte ni PM ni PT', cp.couts.pm === 0 && cp.couts.pt === 0, JSON.stringify(cp.couts));
     v('1 âme : impossible ; 2 : possible', !cp.a1 && cp.a2);
-    v('collée : 2 âmes, copie consommée', cp.apres.ames === 0 && !cp.apres.gardee, JSON.stringify(cp.apres));
-    v('elle frappe à moitié (réglage de LouCopySystem)', Math.abs(cp.ratio - 0.5) < 0.02, '×' + cp.ratio.toFixed(3));
+    v('collée : 2 âmes, copie consommée', cp.apres.ames === 0 && !cp.apres.gardee && cp.apres.collee && !cp.apres.affaiblie, JSON.stringify(cp.apres));
+    v('« à sa mesure » : 50 % d\'Ombre — Nuit, avec l\'élément de la copie', Math.abs(cp.mesure.valeur - cp.mesure.attendu) <= 1 && cp.mesure.valeur > cp.mesure.sansRegle,
+        cp.mesure.valeur + ' (attendu ' + cp.mesure.attendu + ' ; ' + cp.mesure.sansRegle + ' avec ses stats à 100 %)');
+    v('contre-épreuve : « copie d\'Âme », au hasard, reste à moitié de ses stats', cp.hasard.valeur === cp.hasard.attendu, cp.hasard.valeur + ' / ' + cp.hasard.attendu);
     v('plus de copie : la branche s\'en va', !cp.brancheVide);
     v('un ennemi Marqué : copié dès sa première technique', cp.marque, cp.erreurAction || '');
     v('contre-épreuve : un ennemi non Marqué, première fois — rien', !cp.nonMarque);
@@ -241,7 +251,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var id = __techEnnemie[0], sk = $dataSkills[id];
         l._louCopiedSkills = [id]; __ames(0);
         r.copie = l.canUse(sk); l.paySkillCost(sk); r.copieApres = { ames: __ames(), gardee: l._louCopiedSkills.indexOf(id) >= 0 };
-        l._louCopyWeaken = false;
+        l._louCopyWeaken = false; l._registreCopie = 0;
         l.paySkillCost($dataSkills[14]); r.mise = JSON.stringify($gameTemp._registreMise) + ' · ' + __ames();
         $gameTemp._registreMise = null;
         __ames(0); r.invocation = l.canUse($dataSkills[124]);
