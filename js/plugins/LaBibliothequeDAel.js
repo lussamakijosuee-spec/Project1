@@ -1,11 +1,11 @@
 //=============================================================================
-// LaBibliothequeDAel.js — v1.0
-// Aël : la Lecture et le Miracle, le Contrat, les Portes.
+// LaBibliothequeDAel.js — v2.0
+// Aël : le livre (court et juste), la Parole lue, et le Miracle par l'histoire.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Aël, dans l'esprit de Béatrice : elle LIT l'ennemi tant
- * qu'elle dépense peu, et le Miracle lui donne la Flèche qui le touche. Le
- * Contrat fait payer son mana par un autre. Les Portes contrôlent le combat.
+ * @plugindesc v2.0 ■ Aël : chaque petite Parole écrit une page de son livre ;
+ * livre plein, son ultime est LUE — elle part tout de suite, sans son prix.
+ * Le Miracle n'arrive que par l'histoire (un interrupteur).
  * @author pour JOKO
  *
  * @param acteur
@@ -13,22 +13,77 @@
  * @type actor
  * @default 4
  *
- * @param gainLecture
- * @text Lecture gagnée par action économe (%)
+ * @param === LE LIVRE ===
+ * @default
+ *
+ * @param pages
+ * @text Pages du livre
  * @type number
- * @default 25
- * @desc « C'est lent » : 25 % = quatre actions pour un Miracle.
+ * @min 1
+ * @default 3
+ * @desc Livre plein à tant de pages : sa prochaine ultime est lue.
  *
  * @param seuilPM
- * @text PM au-delà desquels elle « perd le fil »
+ * @text Une petite Parole coûte au plus (PM)
  * @type number
  * @default 20
- * @desc Payer plus que ça DE SA POCHE efface toute la Lecture en cours.
+ * @desc Une compétence de 1 à tant de PM écrit une page (et lit l'ennemi, après le Miracle). Plus chère : elle n'écrit rien, et efface la lecture.
+ *
+ * @param typeUltime
+ * @text Branche des ultimes
+ * @type number
+ * @default 3
+ * @desc Le type de compétence dont la prochaine est lue quand le livre est plein (3 = « ult »).
+ *
+ * @param sansIncantation
+ * @text Lue, elle part tout de suite
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc La Parole lue n'incante pas (CielDAel lui donne une charge de 0, comme sous le bon ciel).
+ *
+ * @param sansPrix
+ * @text Lue, elle part sans son prix
+ * @type boolean
+ * @on Oui
+ * @off Non
+ * @default true
+ * @desc Ni PV, ni les états qu'elle se pose elle-même après (voir « États du prix »).
+ *
+ * @param etatsPrix
+ * @text États du prix
+ * @default 193,218
+ * @desc Ceux que la Parole lue ne lui pose pas : 193 Doute Paralysant (Éclat de Conviction), 218 Surcharge (CielDAel).
+ *
+ * @param === LE MIRACLE ===
+ * @default
+ *
+ * @param interrupteurMiracle
+ * @text Interrupteur du Miracle
+ * @type switch
+ * @default 27
+ * @desc Allumé par l'événement de l'histoire. Éteint : ni Lecture, ni Miracle, branche « miracle » cachée. 0 = toujours là.
+ *
+ * @param typeMiracle
+ * @text Branche « miracle »
+ * @type number
+ * @default 20
+ * @desc Cachée tant que l'interrupteur est éteint (rien n'est désappris).
+ *
+ * @param gainLecture
+ * @text Lecture gagnée par petite Parole (%)
+ * @type number
+ * @default 25
+ * @desc « C'est lent » : 25 % = quatre petites Paroles pour un Miracle.
  *
  * @param flechesIds
- * @text Flèches de Miracle (élément:compétence)
+ * @text Pages du Miracle (élément:compétence)
  * @default 29:1268,14:1269,3:1270,9:1271,12:1272
  * @desc Le Crépuscule d'abord : en cas d'égalité, c'est lui qu'elle trouve.
+ *
+ * @param === LE CONTRAT ET LES PORTES ===
+ * @default
  *
  * @param etatContrat
  * @text État — Sous Contrat (l'allié)
@@ -46,44 +101,65 @@
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
- *  AËL — « un personnage un peu à la Béatrice »                         JOKO
+ *  AËL — LE LIVRE                                                       JOKO
  * ═══════════════════════════════════════════════════════════════════════════
- *  Le canon (SYSTEME_DE_MANA, GAME_DESIGN §1.4) : « Miracle — développe de
- *  nouvelles techniques en temps réel. C'est lent. Elle doit économiser son
- *  mana : trop en dépenser lui fait perdre l'effet en cours de route. Ce
- *  qu'elle développe se matérialise en flèches. » Et contre un ennemi faible
- *  au mana positif — le Crépuscule en particulier.
+ *  JOKO, le 2026-10-19 : « le livre qui se remplit quand elle dit court et
+ *  juste, l'ultime le plus rapide, le Miracle seulement par l'histoire,
+ *  Contrats et Portes sortis de sa boucle ».
  *
- *  A · LA LECTURE ET LE MIRACLE
- *     Chaque action où elle paie ≤ 20 PM de sa poche fait monter de 25 % la
- *     Lecture de l'ennemi qu'elle vise. Payer davantage : la Lecture tombe à
- *     zéro partout. À 100 % : MIRACLE. Elle cherche, parmi le Crépuscule, la
- *     Lumière, l'Esprit, l'Eau et la Foudre, ce qui blesse le plus cet ennemi,
- *     apprend la Flèche de Miracle de cet élément — pour toujours — et la tire
- *     aussitôt, gratuitement. S'il résiste à tout : elle ne trouve pas la
- *     faille, et recommence.
+ *  Son profil : « en ultime, elle est la meilleure — et la plus rapide à le
+ *  sortir. » Le canon de la Parole : « dire court et juste bat presque
+ *  toujours dire long et tremblant », et les Paroles écrites « agissent sans
+ *  être récitées ».
  *
- *  B · LE CONTRAT
- *     « Le Contrat » lie Aël à un allié : tant qu'il tient, c'est LUI qui paie
- *     ses PM (et il encaisse 15 % de moins, elle le couvre). Ce qu'il paie ne
- *     compte pas dans la Lecture : c'est comme ça qu'elle lance gros sans
- *     perdre le fil. Seule, elle force le Contrat sur un ennemi et puise dans
- *     SES PM à lui.
+ *  A · LE LIVRE
+ *     Chaque compétence qu'elle lance pour 1 à 20 PM écrit une page — sur un
+ *     ennemi, un allié ou elle-même. L'Attaque, la Garde, ce qui est gratuit
+ *     n'écrivent rien ; une Parole plus chère n'écrit rien non plus, sans
+ *     rien effacer. C'est le PRIX de la Parole qui compte, pas qui le paie :
+ *     le Contrat ne remplit pas le livre. Vide au début et à la fin du combat.
  *
- *  C · LES PORTES
+ *  B · LA PAROLE LUE
+ *     Livre plein (3 pages) : sa prochaine compétence de la branche « ult »
+ *     est lue. Elle part tout de suite (pas d'incantation), sans PV et sans
+ *     les états du prix (Doute Paralysant, Surcharge). Même puissance, même
+ *     coût en PM, même recharge. Le livre se vide. Sans livre plein, ses
+ *     ultimes marchent comme avant.
+ *
+ *  C · LE MIRACLE — SEULEMENT PAR L'HISTOIRE
+ *     Tant que l'interrupteur 27 est éteint : ni Lecture, ni Miracle, et la
+ *     branche « miracle » est cachée. Allumé par l'événement de JOKO : chaque
+ *     petite Parole lit l'ennemi visé (+25 %) ; une Parole de plus de 20 PM
+ *     efface la lecture (« elle perd le fil ») ; à 100 %, une page s'écrit
+ *     d'elle-même — la technique de l'élément qui le blesse le plus,
+ *     apprise pour toujours et lancée aussitôt, gratuitement.
+ *
+ *  D · LE CONTRAT ET LES PORTES — gardés, hors de la boucle
+ *     Ils font ce qu'ils faisaient. Une Porte à 20 PM ou moins écrit une page
+ *     comme n'importe quelle petite Parole. Le Contrat paie toujours ses PM.
  *     le Voile (précision −40 % à tous) · l'Oubli (ATQ/MAG −40 %) · le Gouffre
  *     (perce la moitié de la DÉF.M) · les Pieux de Cristal (ignorent toute
  *     défense, 30 % de cristalliser) · la Fermeture (retire un ennemi trois
  *     tours — pas un rang S, pas un boss à mécaniques, pas le dernier debout)
  *     · l'Allègement (un allié : AGI ×1,5, esquive +20 %).
+ *
+ *  À charger APRÈS CielDAel (la Parole lue passe avant son incantation).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 (function () {
     'use strict';
     var P = PluginManager.parameters('LaBibliothequeDAel');
     var AEL = parseInt(P['acteur'] || 4, 10);
-    var GAIN = parseFloat(P['gainLecture'] || 25) / 100;
+    var PAGES = Math.max(1, parseInt(P['pages'] || 3, 10));
     var SEUIL_PM = parseInt(P['seuilPM'] || 20, 10);
+    var TYPE_ULT = parseInt(P['typeUltime'] || 3, 10);
+    var SANS_INCANTATION = String(P['sansIncantation'] || 'true') !== 'false';
+    var SANS_PRIX = String(P['sansPrix'] || 'true') !== 'false';
+    var ETATS_PRIX = String(P['etatsPrix'] || '193,218').split(',')
+        .map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
+    var INTER_MIRACLE = parseInt(P['interrupteurMiracle'] || 0, 10);
+    var TYPE_MIRACLE = parseInt(P['typeMiracle'] || 20, 10);
+    var GAIN = parseFloat(P['gainLecture'] || 25) / 100;
     var FLECHES = String(P['flechesIds'] || '29:1268,14:1269,3:1270,9:1271,12:1272').split(',')
         .map(function (x) { var t = x.split(':'); return { el: parseInt(t[0], 10), id: parseInt(t[1], 10) }; })
         .filter(function (x) { return x.el > 0 && x.id > 0; });
@@ -96,9 +172,18 @@
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
     function journal(t) { var w = SceneManager._scene && SceneManager._scene._logWindow; if (w) { w.push('addText', t); } }
     function tag(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
+    function miracleOuvert() { return INTER_MIRACLE <= 0 || !!($gameSwitches && $gameSwitches.value(INTER_MIRACLE)); }
+
+    /** 'petite' (1 à 20 PM), 'longue' (plus), ou '' (gratuit, objet). Le prix, pas qui paie. */
+    function taille(b, item) {
+        if (!DataManager.isSkill(item)) { return ''; }
+        var c = b.skillMpCost(item);
+        if (c <= 0) { return ''; }
+        return c <= SEUIL_PM ? 'petite' : 'longue';
+    }
 
     // ═════════════════════════════════════════════════════════════════════
-    // B · LE CONTRAT — qui paie ses PM
+    // D · LE CONTRAT — qui paie ses PM (inchangé)
     // ═════════════════════════════════════════════════════════════════════
     function partenaire(a) {
         var c = a && a._contrat;
@@ -125,26 +210,77 @@
     var _payer = Game_BattlerBase.prototype.paySkillCost;
     Game_BattlerBase.prototype.paySkillCost = function (skill) {
         if (!estAel(this)) { return _payer.call(this, skill); }
-        if (this._miracleGratuit) { this._miracleGratuit = false; this._pmDeSaPoche = 0; return; }
+        if (this._miracleGratuit) { this._miracleGratuit = false; return; }
         var cout = this.skillMpCost(skill), b = partenaire(this);
         if (b && cout > 0 && b.mp >= cout) {
             b.gainMp(-cout);
             this._tp -= this.skillTpCost(skill);
-            this._pmDeSaPoche = 0;
             return;
         }
-        var avant = this._mp;
         _payer.call(this, skill);
-        this._pmDeSaPoche = Math.max(0, avant - this._mp);
     };
 
     // ═════════════════════════════════════════════════════════════════════
-    // A · LA LECTURE ET LE MIRACLE
+    // A · LE LIVRE
+    // ═════════════════════════════════════════════════════════════════════
+    function pages(a) { return (a && a._livreAel) || 0; }
+    function ecrire(a) {
+        if (pages(a) >= PAGES) { return; }
+        a._livreAel = pages(a) + 1;
+        if (a._livreAel >= PAGES) { journal('\\C[14]📖 Le livre de ' + a.name() + ' est plein.\\C[0]'); }
+    }
+
+    // ═════════════════════════════════════════════════════════════════════
+    // B · LA PAROLE LUE
+    // ═════════════════════════════════════════════════════════════════════
+    // Décidée au moment où elle agit, AVANT CielDAel (chargé plus haut) :
+    // c'est lui qui lit _paroleLue pour ne pas l'incanter.
+    var _startAction = BattleManager.startAction;
+    BattleManager.startAction = function () {
+        var a = this._subject;
+        if (estAel(a) && !a._incantation && !a._incantationRompue && pages(a) >= PAGES) {
+            var act = a.currentAction(), it = act && act.item();
+            if (act && act.isSkill() && it && it.stypeId === TYPE_ULT && a.canUse(it)) {
+                a._paroleLue = it.id;
+                a._livreAel = 0;
+                journal('\\C[14]📖 ' + a.name() + ' lit « ' + it.name + ' » dans son livre.\\C[0]');
+            }
+        }
+        _startAction.call(this);
+    };
+    Game_Battler.prototype.paroleLue = function (item) {
+        return SANS_INCANTATION && !!item && this._paroleLue === item.id;
+    };
+
+    // Sans son prix : ni PV…
+    var _coutPV = Game_BattlerBase.prototype.skillHpCost;
+    if (_coutPV) {
+        Game_BattlerBase.prototype.skillHpCost = function (skill) {
+            if (SANS_PRIX && estAel(this) && skill && this._paroleLue === skill.id) { return 0; }
+            return _coutPV.call(this, skill);
+        };
+    }
+    // … ni les états qu'elle se pose elle-même après.
+    var _poser = Game_Battler.prototype.addState;
+    Game_Battler.prototype.addState = function (stateId) {
+        if (SANS_PRIX && estAel(this) && this._paroleLue && ETATS_PRIX.indexOf(stateId) >= 0) { return; }
+        _poser.call(this, stateId);
+    };
+
+    var _finAction = BattleManager.endAction;
+    BattleManager.endAction = function () {
+        var a = this._subject;
+        if (estAel(a)) { a._paroleLue = 0; }
+        _finAction.call(this);
+    };
+
+    // ═════════════════════════════════════════════════════════════════════
+    // C · LE MIRACLE — seulement par l'histoire
     // ═════════════════════════════════════════════════════════════════════
     function lecture(e) { return (e && e._lectureAel) || 0; }
     function toutEffacer() { $gameTroop.members().forEach(function (e) { e._lectureAel = 0; }); }
 
-    /** La meilleure Flèche contre cet ennemi — ou null s'il résiste à tout. */
+    /** La meilleure technique contre cet ennemi — ou null s'il résiste à tout. */
     function flecheContre(e) {
         var best = null, taux = -1;
         FLECHES.forEach(function (f) {
@@ -167,34 +303,50 @@
         BattleManager.queueForceAction(a, sk.id, e.index());
     }
 
-    // La Lecture se joue au moment où elle agit (le coût vient d'être payé).
-    var _useItem = Game_Battler.prototype.useItem;
-    Game_Battler.prototype.useItem = function (item) {
-        var eraitGratuit = estAel(this) && this._miracleGratuit;
-        if (estAel(this)) { this._pmDeSaPoche = 0; }
-        _useItem.call(this, item);
-        if (!estAel(this) || !enCombat() || eraitGratuit) { return; }
-        if ((this._pmDeSaPoche || 0) > SEUIL_PM) {
-            var enCours = $gameTroop.members().some(function (e) { return lecture(e) > 0; });
-            toutEffacer();
-            if (enCours) { journal('\\C[8]📖 ' + this.name() + ' dépense trop — elle perd le fil.\\C[0]'); }
-            return;
-        }
-        var act = this.currentAction(), cible = null;
-        if (act && act.isForOpponent() && act.isForOne()) {
+    function lire(a, item) {
+        var act = a.currentAction(), cible = null;
+        if (act && act.item() === item && act.isForOpponent() && act.isForOne()) {
             cible = $gameTroop.members()[act._targetIndex];
             if (cible && !cible.isAlive()) { cible = null; }
         }
-        if (!cible) { cible = $gameTroop.members()[this._focusAel]; }
+        if (!cible) { cible = $gameTroop.members()[a._focusAel]; }
         if (!cible || !cible.isAlive()) { cible = $gameTroop.aliveMembers()[0]; }
         if (!cible) { return; }
-        this._focusAel = $gameTroop.members().indexOf(cible);
+        a._focusAel = $gameTroop.members().indexOf(cible);
         cible._lectureAel = Math.min(1, lecture(cible) + GAIN);
-        if (cible._lectureAel >= 1 - 1e-9) { miracle(this, cible); }
+        if (cible._lectureAel >= 1 - 1e-9) { miracle(a, cible); }
+    }
+
+    // Le livre et la Lecture se jouent quand elle agit (le coût vient d'être payé).
+    var _useItem = Game_Battler.prototype.useItem;
+    Game_Battler.prototype.useItem = function (item) {
+        var ici = estAel(this) && enCombat();
+        var gratuit = ici && this._miracleGratuit;
+        var dejaPaye = ici && item && this._payeeDejaPour === item.id;   // CielDAel : la Parole qui part après l'incantation
+        _useItem.call(this, item);
+        if (!ici || gratuit || dejaPaye) { return; }
+        var t = taille(this, item);
+        if (t === 'petite' && !this._paroleLue) { ecrire(this); }
+        if (!miracleOuvert()) { return; }
+        if (t === 'longue') {
+            var enCours = $gameTroop.members().some(function (e) { return lecture(e) > 0; });
+            toutEffacer();
+            if (enCours) { journal('\\C[8]📖 ' + this.name() + ' dit trop long — elle perd le fil.\\C[0]'); }
+        } else if (t === 'petite') {
+            lire(this, item);
+        }
+    };
+
+    // La branche « miracle » n'existe pas avant l'histoire.
+    var _types = Game_Actor.prototype.addedSkillTypes;
+    Game_Actor.prototype.addedSkillTypes = function () {
+        var t = _types.call(this);
+        if (estAel(this) && !miracleOuvert()) { t = t.filter(function (x) { return x !== TYPE_MIRACLE; }); }
+        return t;
     };
 
     // ═════════════════════════════════════════════════════════════════════
-    // Les effets des Portes et des Contrats
+    // D · Les effets des Portes et des Contrats (inchangés)
     // ═════════════════════════════════════════════════════════════════════
     function estBoss(e) {
         var n = (e.enemy() && e.enemy().note) || '';
@@ -246,56 +398,64 @@
         });
     };
 
-    // Fin de combat : on rompt, on efface.
+    // Début et fin de combat : le livre est vide, on rompt, on efface.
+    var _debut = BattleManager.setup;
+    BattleManager.setup = function (troopId, canEscape, canLose) {
+        var a = ael();
+        if (a) { a._livreAel = 0; a._paroleLue = 0; }
+        return _debut.apply(this, arguments);
+    };
     var _fin = BattleManager.endBattle;
     BattleManager.endBattle = function (result) {
         var a = ael();
-        if (a) { rompre(a); a._focusAel = 0; a._miracleGratuit = false; }
+        if (a) { rompre(a); a._focusAel = 0; a._miracleGratuit = false; a._livreAel = 0; a._paroleLue = 0; }
         return _fin.call(this, result);
     };
 
     // ═════════════════════════════════════════════════════════════════════
-    // À l'écran : la Lecture et le Contrat
+    // À l'écran : le livre (et la Lecture, après le Miracle ; le Contrat)
     // ═════════════════════════════════════════════════════════════════════
-    function Window_Lecture() { this.initialize.apply(this, arguments); }
-    Window_Lecture.prototype = Object.create(Window_Base.prototype);
-    Window_Lecture.prototype.constructor = Window_Lecture;
-    Window_Lecture.prototype.initialize = function (x, y) {
+    function Window_Livre() { this.initialize.apply(this, arguments); }
+    Window_Livre.prototype = Object.create(Window_Base.prototype);
+    Window_Livre.prototype.constructor = Window_Livre;
+    Window_Livre.prototype.initialize = function (x, y) {
         Window_Base.prototype.initialize.call(this, x, y, 330, this.fittingHeight(1));
         this.opacity = 0; this._cle = ''; this.refresh();
     };
-    Window_Lecture.prototype.refresh = function () {
-        this.contents.clear();
+    Window_Livre.prototype.texte = function () {
         var a = ael();
-        if (!a || $gameParty.battleMembers().indexOf(a) < 0) { return; }
-        var e = $gameTroop.members()[a._focusAel || 0];
-        var p = e && e.isAlive() ? lecture(e) : 0, la = this.contentsWidth();
-        this.contents.fillRect(0, 8, la, 20, 'rgba(0,0,0,0.55)');
-        this.contents.gradientFillRect(0, 8, Math.floor(la * p), 20, '#3a4a9a', '#c8b6ff', false);
+        if (!a || $gameParty.battleMembers().indexOf(a) < 0) { return ''; }
+        var n = pages(a), t = '📖 ';
+        for (var i = 0; i < PAGES; i++) { t += i < n ? '■' : '□'; }   // dans la police du jeu (mplus), ▮▯ n'y sont pas sûrs
+        if (miracleOuvert()) {
+            var e = $gameTroop.members()[a._focusAel || 0];
+            if (e && e.isAlive() && lecture(e) > 0) { t += ' · ' + e.name() + ' ' + Math.round(lecture(e) * 100) + ' %'; }
+        }
+        var b = partenaire(a);
+        if (b) { t += ' · Contrat : ' + b.name(); }
+        return t;
+    };
+    Window_Livre.prototype.refresh = function () {
+        this.contents.clear();
+        var t = this.texte();
+        if (!t) { return; }
         this.contents.fontSize = 17;
         this.contents.outlineColor = 'rgba(0,0,0,0.9)';
-        this.changeTextColor('#ffffff');
-        var b = partenaire(a);
-        var t = '📖 ' + Math.round(p * 100) + ' %' + (e && e.isAlive() ? ' ' + e.name() : '') + (b ? ' · Contrat : ' + b.name() : '');
-        this.drawText(t, 4, 2, la - 8, 'left');
+        this.changeTextColor(pages(ael()) >= PAGES ? '#ffd54a' : '#ffffff');
+        this.drawText(t, 4, 2, this.contentsWidth() - 8, 'left');
         this.resetTextColor();
     };
-    Window_Lecture.prototype.update = function () {
+    Window_Livre.prototype.update = function () {
         Window_Base.prototype.update.call(this);
-        var a = ael(), cle = '';
-        if (a) {
-            var e = $gameTroop.members()[a._focusAel || 0];
-            var b = partenaire(a);
-            cle = (a._focusAel || 0) + '/' + lecture(e) + '/' + (b ? b.name() : '');
-        }
-        if (cle !== this._cle) { this._cle = cle; this.refresh(); }
+        var t = this.texte();
+        if (t !== this._cle) { this._cle = t; this.refresh(); }
     };
     var _fenetres = Scene_Battle.prototype.createAllWindows;
     Scene_Battle.prototype.createAllWindows = function () {
         _fenetres.call(this);
         var sw = this._statusWindow;
         var y = sw ? sw.y - 56 : Graphics.boxHeight - 240;
-        this._fenetreLecture = new Window_Lecture(300, y);
+        this._fenetreLecture = new Window_Livre(300, y);
         this.addChild(this._fenetreLecture);
     };
 
@@ -304,6 +464,9 @@
     // ═════════════════════════════════════════════════════════════════════
     window.BibliothequeAel = {
         lecture: lecture,
+        pages: function () { return pages(ael()); },
+        pagesMax: PAGES,
+        miracleOuvert: miracleOuvert,
         flecheContre: function (e) { var t = flecheContre(e); return t ? { id: t.fleche.id, el: t.fleche.el, taux: t.taux } : null; },
         partenaire: function () { return partenaire(ael()); },
         estBoss: estBoss,

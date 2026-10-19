@@ -234,7 +234,10 @@ function ok(nom, cond, detail) {
         }
         a.setMp(a.mmp);
         out.types = a.addedSkillTypes().indexOf(23) >= 0;
-        // A · la Lecture monte quand elle dépense peu
+        // A · la Lecture monte quand elle dépense peu. Depuis la v2.0 (JOKO, 2026-10-19 :
+        //     « le Miracle seulement par l'histoire »), elle n'existe qu'après l'événement
+        //     qui allume l'interrupteur 27 : on se place après lui (le_livre_dael vérifie l'avant).
+        $gameSwitches.setValue(27, true);
         e._lectureAel = 0;
         agir(1273, e); out.l1 = BibliothequeAel.lecture(e);   // Voile, 12 PM
         agir(1274, e); out.l2 = BibliothequeAel.lecture(e);   // Oubli, 15 PM
@@ -259,7 +262,8 @@ function ok(nom, cond, detail) {
         dur.elementRate = function () { return 0.5; };
         out.resistant = BibliothequeAel.flecheContre(dur);
 
-        // B · le Contrat : Korrah paie, et la Lecture tient
+        // B · le Contrat : Korrah paie — mais, hors de la boucle depuis la v2.0, il ne
+        //     protège plus la Lecture : c'est le prix de la Parole qui compte, pas qui paie
         var k = $gameActors.actor(2); k.setMp(k.mmp);
         agir(1279, k);
         out.partenaire = BibliothequeAel.partenaire() ? BibliothequeAel.partenaire().name() : null;
@@ -292,6 +296,7 @@ function ok(nom, cond, detail) {
         var s = $dataEnemies.filter(function (x) { return x && /<Rang:\s*S>/i.test(x.note || ''); })[0];
         out.bossImmunise = BibliothequeAel.estBoss(new Game_Enemy(s.id, 0, 0));
         out.pasBoss = BibliothequeAel.estBoss(e);
+        $gameSwitches.setValue(27, false);
         return out;
     });
     ok('Aël ouvre « portes »', l.types);
@@ -304,8 +309,9 @@ function ok(nom, cond, detail) {
     ok('un ennemi qui résiste à tout : pas de faille (contre-épreuve)', l.resistant === null);
     ok('le Contrat lie Korrah', l.partenaire === 'Korrah');
     ok('c\'est Korrah qui paie les 30 PM', l.contrat.ael === 0 && l.contrat.korrah === 30, 'Aël −' + l.contrat.ael + ' · Korrah −' + l.contrat.korrah);
-    ok('…et la Lecture ne tombe pas : le 1er garde 50 %, le visé prend +25 %',
-        Math.abs(l.contrat.lecture - 0.5) < 0.001 && Math.abs(l.contrat.lecture2 - 0.25) < 0.001,
+    // JOKO, 2026-10-19 : « Contrats et Portes sortis de sa boucle » — une Parole de 30 PM reste longue.
+    ok('…mais la Lecture tombe quand même : une Parole de 30 PM est longue, qui que ce soit qui paie',
+        l.contrat.lecture === 0 && l.contrat.lecture2 === 0,
         Math.round(l.contrat.lecture * 100) + ' % · ' + Math.round(l.contrat.lecture2 * 100) + ' %');
     ok('Korrah est couverte (Sous Contrat)', l.protegeK);
     ok('Contrat Forcé : l\'ennemi paie', l.force.ennemi === 18 && l.force.ael === 0, 'ennemi −' + l.force.ennemi + ' · Aël −' + l.force.ael);

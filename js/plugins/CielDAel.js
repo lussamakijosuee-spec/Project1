@@ -312,9 +312,12 @@
                 return;
             }
 
-            // ④ Elle lance une Parole longue : on annonce au lieu de frapper
+            // ④ Elle lance une Parole longue : on annonce au lieu de frapper.
+            //   [raccord LaBibliothequeDAel v2] une Parole LUE dans son livre
+            //   a une charge de 0, comme sous le bon ciel : elle part tout de suite.
             var action = sujet.currentAction();
-            if (action && action.isSkill() && chargeReelle(action.item()) > 0) {
+            var lue = action && sujet.paroleLue && sujet.paroleLue(action.item());
+            if (action && action.isSkill() && !lue && chargeReelle(action.item()) > 0) {
                 annoncer(sujet, action);
                 sujet.removeCurrentAction();
                 this._phase = 'turn';

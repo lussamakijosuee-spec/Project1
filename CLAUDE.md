@@ -145,7 +145,7 @@ cinquième combattant.
 | Vesper | trois Styles, trois kits — **Lame** (arts d'armes selon l'arme tenue, État de Flow), **Sang** (le Pacte façon Arlecchino, Berserker), **Garde** (adaptation, Arme de Sang) — et sa **Colère** (la Vanne de ludwing) | `LePacteDeSang.js`, `LesStylesDeVesper.js` |
 | Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** ; deux corps : l'Hiver **confie son froid à seiryu**, et **Change** prend la place d'un allié | `SeiryuLeFamilier.js`, `LeFroidConfie.js` |
 | ludwing | l'âme et l'ombre — Royaume Impérial ; le stratège : les âmes sont sa **monnaie** (Registre) | `PorteurDAmes.js`, `RoyaumeImperial.js`, `LeRegistre.js` |
-| Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
+| Aël | le **livre** : chaque petite Parole écrit une page ; livre plein, son ultime est **lue** (tout de suite, sans son prix) ; le **Miracle** n'arrive que par l'histoire (interrupteur 27) | `LaBibliothequeDAel.js`, `CielDAel.js` |
 
 **Les interactions** (`LesInteractions.js`, 2026-10-14) : une compétence lancée sur un allié le fait
 réagir. JOKO a choisi *« A2, B1, 2, 3, 4 ET C1 »* : des compétences prévues pour ça, toutes les
@@ -241,6 +241,23 @@ tirage. **Le Domaine** = l'état 198 (Ténèbres Impériales) : copies gratuites
 maximum offertes, invocations jamais grisées (InvocationAmes les grisait faute d'âmes malgré
 RoyaumeImperial) ; `LouCopySystem` pointe sur 198 (il attendait l'état 39, que rien ne pose). Le
 Royaume Impérial (71) reste tel que JOKO l'a écrit. Banc : `navigateur/le_registre.js`.
+
+**Le livre** (`LaBibliothequeDAel.js` v2.0, 2026-10-19, le rework d'Aël) : JOKO a validé *« le livre
+de 3 pages, la Parole lue (sans incantation, sans son prix), le Miracle derrière l'interrupteur 27,
+Contrats et Portes gardés hors de la boucle, la ligne dans les 8 ultimes »*. D'après son profil
+(*« en ultime, elle est la meilleure — et la plus rapide à le sortir »*) et son canon de la Parole
+(*« dire court et juste bat presque toujours dire long et tremblant »* ; les Paroles écrites
+*« agissent sans être récitées »*). Elle passe son test **seule** (le donjon d'entrée) : le livre ne
+dépend donc pas des alliés. **Une page** par compétence de **1 à 20 PM** (le prix, pas qui paie : le
+Contrat ne remplit rien ; l'Attaque, la Garde, le gratuit, les objets n'écrivent rien ; plus cher
+n'écrit rien, sans effacer). **Livre plein** (3) : sa prochaine compétence de la branche « ult »
+(type 3) est **lue** — elle part tout de suite (`CielDAel` lui donne une charge de 0, comme sous le
+bon ciel), sans PV ni les états du prix (193 Doute Paralysant, 218 Surcharge), au plein prix en PM,
+avec sa recharge. La Parole Originelle (818) garde son prix de lucidité. **Le Miracle** (son Trait,
+*« développe de nouvelles techniques en temps réel »*) n'existe qu'une fois l'**interrupteur 27**
+« Miracle d'Aël » allumé par l'événement de JOKO : avant, ni Lecture ni branche « miracle » (cachée,
+rien de désappris) ; après, la Lecture d'avant, au prix de la Parole. Contrats et Portes : intacts.
+Banc : `navigateur/le_livre_dael.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
