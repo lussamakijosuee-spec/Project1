@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-10-18. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-19. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -308,7 +308,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 24 | le Monde Gelé | 100 PM + 50 PT | pose « Monde Gelé » 100% · script commun 6 | 232 | `<ParoleL: 5>` `<Trait: gel>` |
 | 1 | 90 | Instant Gelé | 12 PM | pose « le monde court » 100% | 223 | `<Parole>` `<Trait: gel>` |
 | 1 | 91 | Zéro Absolu | 12 PM | pose « le monde prolonger » 100% | 231 | `<Parole>` `<Trait: gel>` |
-| 1 | 800 | Le Froid Rendu | 1000 PM + 100 PT | drain PV *GLACE* `Math.floor(a.mat * 3.2 * 200 / (200 + b.mdf))` · pose « Monde Gelé » 100% | 232 | `<ParoleL: 5>` `<Trait: gel>` |
+| 1 | 800 | Le Froid Rendu | 100 PT | drain PV *GLACE* `Math.floor(a.mat * 3.2 * 200 / (200 + b.mdf))` · pose « Monde Gelé » 100% | 232 | `<ParoleL: 5>` `<Trait: gel>` `<FroidConfie: 100>` |
 | 3 | 1150 | Parole n°13 Souffle Court | 14 PM | dégâts PV *GLACE* `Math.floor(a.mat * 8.4 * 200 / (200 + b.mdf))` · pose « ❄ Engourdissement » 60% | 385 | `<NomOrigine: Souffle Court>` ⚠ |
 | 6 | 1211 | Parole n°13 Glace — Givre | 10 PM | dégâts PV *GLACE* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 385 | `<ParoleL: 3>` `<NomOrigine: Glace — Givre>` ⚠ |
 | 13 | 1152 | Parole n°13 Gel de Surface | 32 PM | dégâts PV *GLACE* `Math.floor(a.mat * 8.4 * 200 / (200 + b.mdf))` · pose « ❄ Engourdissement » 50% | 387 | `<NomOrigine: Gel de Surface>` ⚠ |
@@ -344,7 +344,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 20 | 1303 | Lame de Givre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 33.35 * 200 / (200 + b.mdf))` | 224 | `<unison item actors: 1, 2>` `<unison item actor learn: t, t>` `<unison item actor tp cost: 30, 30>` `<unison item atk actors: 1>` `<unison item mat actors: 2>` `<Multiple Elements: 13>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
-| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` `<Cooldown: 2>` |
 | 20 | 1307 | Ciel d'Orage | — | dégâts PV *FOUDRE* `Math.floor(a.mat * 51.75 * 200 / (200 + b.mdf))` | 219 | `<unison item actors: 2, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 46>` `<unison item mat actors: 2, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
 
 ### Ses états passifs
@@ -576,8 +576,8 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 20 | 1304 | La Lame et son Ombre | — | dégâts PV *Physique* `Math.floor(a.atk * 28.75 * 200 / (200 + b.def) + a.mat * 26.45 * 200 / (200 + b.mdf))` | 250 | `<unison item actors: 1, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 0, 42>` `<unison item actor tp cost: 30, 0>` `<unison item atk actors: 1>` `<unison item mat actors: 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
-| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
-| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1306 | Nuit d'Hiver | — | dégâts PV *GLACE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 258 | `<unison item actors: 2, 3>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 42>` `<unison item mat actors: 2, 3>` `<Multiple Elements: 15>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` `<Cooldown: 2>` |
+| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` `<Cooldown: 2>` |
 
 ### Ses états passifs
 
@@ -745,7 +745,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 |---|---|---|---|---|---|---|
 | 20 | 1305 | Feu Attisé | — | dégâts PV *FEU* `Math.floor(a.atk * 12.65 * 200 / (200 + b.def) + a.mat * 27.6 * 200 / (200 + b.mdf))` | 167 | `<unison item actors: 1, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 35, 46>` `<unison item atk actors: 1>` `<unison item mat actors: 4>` `<Multiple Elements: 10>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
 | 20 | 1307 | Ciel d'Orage | — | dégâts PV *FOUDRE* `Math.floor(a.mat * 51.75 * 200 / (200 + b.mdf))` | 219 | `<unison item actors: 2, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 62, 46>` `<unison item mat actors: 2, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
-| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` |
+| 20 | 1308 | Crépuscule | — | dégâts PV *OMBRE* `Math.floor(a.mat * 54.05 * 200 / (200 + b.mdf))` | 256 | `<unison item actors: 3, 4>` `<unison item actor learn: t, t>` `<unison item actor mp cost: 42, 40>` `<unison item mat actors: 3, 4>` `<Multiple Elements: 14>` `<Combo: JOKO 2026-10-18 — somme des deux coups de référence × 1.15>` `<Cooldown: 2>` |
 
 ### Ses états passifs
 

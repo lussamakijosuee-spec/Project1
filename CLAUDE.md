@@ -143,7 +143,7 @@ cinquième combattant.
 | Héros | Sa branche | Ce qui la porte |
 |---|---|---|
 | Vesper | trois Styles, trois kits — **Lame** (arts d'armes selon l'arme tenue, État de Flow), **Sang** (le Pacte façon Arlecchino, Berserker), **Garde** (adaptation, Arme de Sang) — et sa **Colère** (la Vanne de ludwing) | `LePacteDeSang.js`, `LesStylesDeVesper.js` |
-| Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** | `SeiryuLeFamilier.js` |
+| Korrah | hiver *(type 6)* + avatar *(type 21)* — **seulement tant que seiryu est là** ; deux corps : l'Hiver **confie son froid à seiryu**, et **Change** prend la place d'un allié | `SeiryuLeFamilier.js`, `LeFroidConfie.js` |
 | ludwing | l'âme et l'ombre — Royaume Impérial | `PorteurDAmes.js`, `RoyaumeImperial.js` |
 | Aël | miracle — Lecture, Contrat, Portes | `LaBibliothequeDAel.js` |
 
@@ -207,6 +207,21 @@ portée) × 1,15 ; coût = ce que coûtent ces deux coups, chacun le sien. Deux 
 (`<Multiple Elements>`, règle du jeu « Multiplier ») : −2 points de bouclier sur une double
 faiblesse. Nuit d'Hiver et Crépuscule portent 2 tours de recharge (la règle de `18_recharges`).
 
+**Le froid confié** (`LeFroidConfie.js`, 2026-10-19, le rework de Korrah) : JOKO a choisi *« Piste 1,
+le froid confié : Korrah joue deux corps avec seiryu, ses sorts d'Hiver chargent seiryu, et « change »
+devient l'échange de place »*, puis *« Oui, écris tout comme listé »*. Chaque compétence d'Hiver confie
+à seiryu **autant de froid que de PM payés** (jauge 0-100, état 243 et son compteur). Chacune de ses
+actions en prend 25 : soins ×1,5, gardes +1 tour et **❄ Le froid mord** (246 : qui frappe le protégé
+s'engourdit), coups de glace ×1,5 qui engourdissent — il reste un soutien, sous le plus petit Hiver de
+Korrah. L'ordre **« Rends-le »** vide tout (dégâts × (1 + froid ÷ 50), Gelure dès 50). **Le Froid
+Rendu** (800) coûte la jauge pleine + 100 PT, 0 PM (`<FroidConfie: 100>`). Tombé **chargé**, le froid
+**revient sur elle** : Engourdissement, et dès 60 **❄ Saisie** (244) — un tour perdu, celui-ci si elle
+n'a pas joué, sinon le suivant ; éteint avec elle, il se perd. **Change** (438) — son effet n'était
+codé que dans `TraitsAme`, éteint — échange sa place avec l'allié (rendue en fin de combat), lui
+reprend ce que **les ennemis** ont posé, et détourne sur elle les coups ennemis ciblés sur lui
+pendant 3 tours (245). Tous les chiffres sont des réglages du gestionnaire. La classe 5 n'est pas
+touchée. Banc : `navigateur/le_froid_confie.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
@@ -259,6 +274,10 @@ lourd tourne en même temps : les lancer seuls.
   Game_BattlerBase **de son moment** : un plugin chargé après qui ne réécrit que Game_BattlerBase
   n'est jamais lu chez les héros (la réservation de DoubleX Unison ne l'était pas). Le poser aussi sur
   Game_Actor ;
+- YEP_BattleEngineCore donne un **tour gratuit** (`_freeStateTurn`) à un état « fin d'action »
+  posé sur le combattant **en train d'agir** : il dure un tour de plus que sur un autre. Pour un
+  état qui doit faire perdre exactement un tour, prendre « fin de tour » et régler la durée selon
+  que la cible a déjà joué (`BattleManager._performedBattlers`) ;
 - un banc qui saisit les commandes lui-même doit passer par les fenêtres (`commandAttack`,
   `onSelectAction`, `onEnemyOk`) : tant qu'une fenêtre de commande reste active, Scene_Battle
   n'appelle plus `BattleManager.update` et le combat se fige sans erreur.
