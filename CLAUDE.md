@@ -223,6 +223,19 @@ reprend ce que **les ennemis** ont posé, et détourne sur elle les coups ennemi
 pendant 3 tours (245). Tous les chiffres sont des réglages du gestionnaire. La classe 5 n'est pas
 touchée. Banc : `navigateur/le_froid_confie.js`.
 
+**Ses capacités** (`LeFroidConfie.js` v1.1, 2026-10-20) : JOKO veut des capacités de base *« beaucoup
+plus intéressantes […] pas forcément bordélique »*, un héros à la fois, et a validé pour Korrah
+*« seiryu suit le coup, +50 % sur l'engourdi, seiryu en profite aussi, Ralentir confie son froid,
+Elle Prend Ta Place prend sa place »*. Cinq balises, sur dix fiches (noms, formules, coûts et
+niveaux inchangés) : `<SeiryuSuit>` (Pas de Côté, Traverser, Trois Fois Avant Lui — quand son
+action est finie, seiryu avec ≥ 25 de froid frappe la même cible de son coup chargé, sans perdre son
+tour), `<SurEngourdi>` (Trait Foudroyant, Contre-Prise, Fil de Foudre — +50 % sur un ❄ engourdi,
+réglage `bonusEngourdi`), `<ADeux>` (Prise de Position, Le Souffle Retenu — seiryu reçoit aussi ce
+qu'elle se donne), `<ConfieFroid>` (Ralentir — confie son coût comme l'Hiver), `<APlace>` (Elle
+Prend Ta Place — 🔄 À sa place `toursAPlace` = 2 tours, sans échange de rang ni d'états). La boucle :
+Ralentir et les coups chargés de seiryu engourdissent, ses capacités frappent les engourdis, et
+seiryu chargé suit ses coups. Banc : `navigateur/les_capacites_de_korrah.js`.
+
 **Le Registre** (`LeRegistre.js`, 2026-10-19, le rework de ludwing) : JOKO a choisi *« Piste 1, le
 Registre : les âmes deviennent sa monnaie, il les gagne en prenant (morts, drains) et les dépense
 pour tout (invocations, copies choisies, mises, Royaume), un seul Domaine où tout est gratuit »*, et

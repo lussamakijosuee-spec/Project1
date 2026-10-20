@@ -2,9 +2,10 @@
 // LeFroidConfie.js
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Korrah joue deux corps : l'Hiver qu'elle lance, elle le
+ * @plugindesc v1.1 ■ Korrah joue deux corps : l'Hiver qu'elle lance, elle le
  * CONFIE à seiryu, qui le dépense pour soigner, couvrir et engourdir plus
  * fort. Tombé chargé, le froid revient sur elle. Et « Change » prend la place.
+ * v1.1 : ses capacités de base parlent à seiryu.
  * @author pour JOKO
  *
  * @param acteurPorteuse
@@ -108,6 +109,20 @@
  * @type number
  * @default 3
  *
+ * @param === SES CAPACITÉS (v1.1) ===
+ * @default
+ *
+ * @param bonusEngourdi
+ * @text <SurEngourdi> : dégâts en plus sur un engourdi (%)
+ * @type number
+ * @default 50
+ *
+ * @param toursAPlace
+ * @text <APlace> : tours où elle prend sa place
+ * @desc 2 = jusqu'à la fin du tour suivant (Change en donne toursPlace).
+ * @type number
+ * @default 2
+ *
  * @param === LES ÉTATS ===
  * @default
  *
@@ -189,6 +204,21 @@
  *      « et ce qui allait avec » ; pas ce que ses alliés ou lui-même ont posé ;
  *   3. pendant `toursPlace` tours, tout coup ennemi qui le vise la frappe, elle.
  *
+ * SES CAPACITÉS (v1.1) — JOKO, le 2026-10-20 : « Oui, écris les 10 capacités de
+ * Korrah comme listé : seiryu suit le coup, +50 % sur l'engourdi, seiryu en
+ * profite aussi, Ralentir confie son froid, Elle Prend Ta Place prend sa place. »
+ * Cinq balises, sur les capacités de Korrah :
+ *   <SeiryuSuit>   quand son action est finie, si seiryu est là avec au moins
+ *                  `charge` de froid, il frappe la même cible : son coup chargé
+ *                  (glace, × bonusCoup, engourdit), qui prend `charge` de froid.
+ *                  Ça ne lui coûte pas son tour.
+ *   <SurEngourdi>  + bonusEngourdi % de dégâts sur un ennemi ❄ engourdi.
+ *   <ADeux>        ce qu'elle se donne à elle-même, seiryu l'a aussi.
+ *   <ConfieFroid>  confie son coût en PM en froid à seiryu, comme l'Hiver.
+ *   <APlace>       sur un allié : elle prend sa place `toursAPlace` tours — les
+ *                  coups ennemis ciblés sur lui la frappent (🔄 À sa place),
+ *                  sans échanger de rang ni reprendre ses états (ça, c'est Change).
+ *
  * Pour un banc : window.FroidConfie.jauge() / .poser(n) / .reglages().
  */
 
@@ -209,6 +239,7 @@
     var ETAT_JAUGE = nb('etatJauge', 243), ETAT_SAISIE = nb('etatSaisie', 244), ETAT_PLACE = nb('etatPlace', 245);
     var ETAT_MORD = nb('etatMord', 246), ETAT_ENGOURDI = nb('etatEngourdi', 211), ETAT_GELURE = nb('etatGelure', 94);
     var GLACE = nb('elementGlace', 13);
+    var BONUS_ENGOURDI = nb('bonusEngourdi', 50), TOURS_A_PLACE = nb('toursAPlace', 2);
 
     //=========================================================================
     // OUTILS
@@ -266,7 +297,7 @@
         reglages: function () {
             return { froidParPM: PAR_PM, plafond: PLAFOND, charge: CHARGE, bonusSoin: BONUS_SOIN, bonusCoup: BONUS_COUP,
                      gardes: GARDES.slice(), toursGarde: TOURS_GARDE, diviseurRendsLe: DIVISEUR, seuilGelure: SEUIL_GELURE,
-                     seuilSaisie: SEUIL_SAISIE, toursPlace: TOURS_PLACE };
+                     seuilSaisie: SEUIL_SAISIE, toursPlace: TOURS_PLACE, bonusEngourdi: BONUS_ENGOURDI, toursAPlace: TOURS_A_PLACE };
         }
     };
 
@@ -284,7 +315,7 @@
     //=========================================================================
     var _paie = Game_BattlerBase.prototype.paySkillCost;
     Game_BattlerBase.prototype.paySkillCost = function (skill) {
-        var sienne = estActeur(this, PORTEUSE) && enCombat() && skill && skill.stypeId === TYPE_HIVER;
+        var sienne = estActeur(this, PORTEUSE) && enCombat() && skill && (skill.stypeId === TYPE_HIVER || balise(skill, 'ConfieFroid'));
         var pm = sienne ? this.skillMpCost(skill) : 0;
         _paie.call(this, skill);
         if (!sienne) { return; }
@@ -537,4 +568,71 @@
             journal('\\C[23]❄ Le froid mord ' + u.name() + '.\\C[0]');
         }
     };
+
+    //=========================================================================
+    // SES CAPACITÉS (v1.1) — chacune parle à seiryu
+    //=========================================================================
+    function balise(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
+
+    // <SurEngourdi> : plus fort sur un ennemi ❄ engourdi (par le froid de seiryu, Ralentir…)
+    var _valeurCapacite = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (target, critical) {
+        var v = _valeurCapacite.call(this, target, critical);
+        if (v > 0 && estActeur(this.subject(), PORTEUSE) && balise(this.item(), 'SurEngourdi')
+            && target && target.isStateAffected(ETAT_ENGOURDI)) {
+            return Math.round(v * (1 + BONUS_ENGOURDI / 100));
+        }
+        return v;
+    };
+
+    var _applyCapacite = Game_Action.prototype.apply;
+    Game_Action.prototype.apply = function (target) {
+        _applyCapacite.call(this, target);
+        var u = this.subject(), it = this.item();
+        if (!estActeur(u, PORTEUSE) || !enCombat() || !target || !this.isSkill()) { return; }
+        // <ADeux> : ce qu'elle se donne, seiryu l'a aussi (une fois par action)
+        if (balise(it, 'ADeux') && target === u && !this._aDeuxFait && laPourElle()) {
+            this._aDeuxFait = true;
+            var s = lui();
+            s.clearResult();
+            _applyCapacite.call(this, s);          // la chaîne d'avant : pas de récursion ici
+            journal('\\C[23]❄ ' + s.name() + ' en profite aussi.\\C[0]');
+        }
+        // <APlace> : elle prend sa place — les coups ciblés sur lui la frappent
+        if (balise(it, 'APlace') && target.isActor && target.isActor() && target !== u && target.isAlive()) {
+            $gameParty.members().forEach(function (m) { if (m !== target && m.isStateAffected(ETAT_PLACE)) { m.eraseState(ETAT_PLACE); } });
+            target.addState(ETAT_PLACE);
+            if (target.isStateAffected(ETAT_PLACE)) {
+                target._stateTurns[ETAT_PLACE] = TOURS_A_PLACE;
+                journal('\\C[23]🔄 ' + u.name() + ' prend la place de ' + target.name() + '.\\C[0]');
+            }
+        }
+        // <SeiryuSuit> : on retient la cible ; il frappe quand son action à elle est finie
+        if (balise(it, 'SeiryuSuit') && target.isEnemy && target.isEnemy()) { u._seiryuSuit = target; }
+    };
+
+    /** seiryu suit le coup : son coup chargé, sur la même cible, sans prendre son tour. */
+    function suivre(k) {
+        var e = k._seiryuSuit, s = lui();
+        k._seiryuSuit = null;
+        if (!e || !e.isAlive() || $gameTroop.members().indexOf(e) < 0) { return; }   // un ennemi d'un autre combat : rien
+        if (!laPourElle() || !s.canMove() || jauge() < CHARGE) { return; }
+        var act = new Game_Action(s);
+        act.setAttack();
+        e.clearResult();
+        act.apply(e);                              // decider : CHARGE de froid, glace × bonusCoup, engourdit
+        var r = e.result();
+        e.startDamagePopup();
+        if (e.isDead()) { e.performCollapse(); }
+        journal('\\C[23]❄ ' + s.name() + ' suit le coup' + (r.isHit() ? ' : ' + r.hpDamage + ' dégâts.' : ', et manque.') + '\\C[0]');
+        if (BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
+    }
+    var _finAction = BattleManager.endAction;
+    BattleManager.endAction = function () {
+        var k = this._subject;
+        if (estActeur(k, PORTEUSE) && k._seiryuSuit) { suivre(k); }
+        _finAction.call(this);
+    };
+
+    window.FroidConfie.suivre = suivre;            // pour un banc
 })();
