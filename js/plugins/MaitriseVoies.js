@@ -198,6 +198,27 @@
  * @off Non
  * @default true
  *
+ * @param --- LA RÈGLE POUR TOUS ---
+ * @default
+ *
+ * @param reglePourTous
+ * @text La Voie d'un héros ne va qu'à ses mouvements
+ * @type boolean
+ * @on Oui
+ * @off Non (comme avant)
+ * @default true
+ * @desc [JOKO 2026-10-20] « Les dons ne t'écartent pas du système. » Sa Voie par défaut ne se colle plus à ses Paroles, à ses techniques de l'âme ni aux objets.
+ *
+ * @param typesAme
+ * @text Types de compétence de l'âme
+ * @default 8, 9
+ * @desc Séparés par des virgules. 8 invocation, 9 ame : ce sont des techniques de l'âme, pas des mouvements.
+ *
+ * @param elementsAme
+ * @text Éléments de l'âme
+ * @default 2
+ * @desc Séparés par des virgules. 2 = mana spirituelle (les « Parole n°2 »).
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LES 5 VOIES DE LA MAÎTRISE  (le Corps)                             by JOKO
@@ -214,6 +235,12 @@
  *  Un acteur/ennemi/classe peut aussi déclarer une voie PAR DÉFAUT, qui
  *  s'applique à ses techniques de Maîtrise non taguées :
  *      <VoieDefaut: onde>
+ *
+ *  LA RÈGLE POUR TOUS (reglePourTous, JOKO 2026-10-20) : chez un HÉROS, la
+ *  Voie par défaut ne va qu'à ce qu'il fait avec son corps. Une Parole se
+ *  dit (LaParole), une technique de l'âme (typesAme, elementsAme) se croit,
+ *  un objet s'utilise : aucun ne prend sa Voie. Une Voie écrite sur la
+ *  compétence reste la sienne. Les ennemis ne changent pas.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  LES COUPS SIGNATURE
@@ -297,6 +324,14 @@
     var MAST_SCALE   = N('masteryScale', 0.5) / 100;
     var MAST_CAP     = N('masteryCap', 40);
     var SHOW_LOG     = String(P['showLog'] || 'true') === 'true';
+    // [JOKO 2026-10-20] La règle pour tous.
+    var REGLE        = String(P['reglePourTous'] || 'true') !== 'false';
+    var liste = function (k, d) {
+        return String(P[k] === undefined ? d : P[k]).split(',').map(function (x) { return parseInt(x, 10); })
+            .filter(function (x) { return !isNaN(x); });
+    };
+    var TYPES_AME    = liste('typesAme', '8, 9');
+    var ELEMENTS_AME = liste('elementsAme', '2');
 
     // --- Voies inspirées d'anime (extensions) ---
     var ECLAIR_CRIT  = N('eclairCrit', 0.5);          // + chance de critique
@@ -383,13 +418,27 @@
         return m;
     }
 
+    // [JOKO 2026-10-20] « Les dons ne t'écartent pas du système. » Ce qu'un
+    // héros ne fait pas avec son corps ne prend pas sa Voie par défaut : la
+    // Parole se dit, la technique de l'âme se croit, l'objet s'utilise.
+    // Avant, ses 17 à 57 Paroles portaient sa Voie : celles d'Aël armaient le
+    // Renvoi, celles de Korrah l'Éclat Noir, ludwing et Vesper s'y soignaient.
+    function horsDuCorps(item) {
+        if (!item || !DataManager.isSkill(item)) return true;
+        if (window.LaParole && LaParole.estParole && LaParole.estParole(item)) return true;
+        if (TYPES_AME.indexOf(item.stypeId) >= 0) return true;
+        return !!item.damage && ELEMENTS_AME.indexOf(item.damage.elementId) >= 0;
+    }
+
     function actionVoie(action) {
         var item = action.item();
         if (item && item.meta && item.meta.Voie) {
             var v = normVoie(item.meta.Voie);
             if (v) return v;
         }
-        var metas = metasOf(action.subject());
+        var sujet = action.subject();
+        if (REGLE && sujet && sujet.isActor && sujet.isActor() && horsDuCorps(item)) return '';
+        var metas = metasOf(sujet);
         for (var i = 0; i < metas.length; i++) {
             if (metas[i] && metas[i].VoieDefaut) {
                 var d = normVoie(metas[i].VoieDefaut);

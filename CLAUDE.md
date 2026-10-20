@@ -299,7 +299,25 @@ début du tour, elles partent en dernier (`makeActionOrders`) ; un coup de 15 % 
 **Pas d'état posé** (`etatLongue` 0) : le 227 d'Aël fragilise. `FusionElements` est **éteint** (sa
 fusion de n'importe quels deux sorts, avec 10 collisions, est remplacée) ; `ParolesSysteme` garde son
 ratage pour les **ennemis** seulement (`HerosSansRatage`). Aucune fiche n'est modifiée. Banc :
-`navigateur/la_parole.js`.
+`navigateur/la_parole.js`. Les degrés, pour JOKO, sont des maths : *« la formule basique où tu
+l'envoies juste […] où tu additionnes […] où tu multiplies. Et t'as la formule où tu amplifies. C'est
+tout. »* ; fusionner, c'est *« une technique d'eau avec une technique de vent pour trouver une
+nouvelle technique »* (Eau + Vent n'est pas dans ses 6 fusions : exemple ou ajout, à lui demander).
+
+**La règle pour tous** (`MaitriseVoies` « reglePourTous », 2026-10-20) : JOKO — *« Les dons ne
+t'écartent pas du système. Les dons te rajoutent une carte en plus avec le système »*, comme le Nen
+de Hunter x Hunter, *« même Donovano […] respecte la règle »*. Le sang de Vesper est un mouvement
+(une attaque de sang n'a pas de formule ; un sort sang + feu se dit), les âmes de ludwing sont du
+spirituel (les runes de son collier), la glace de Korrah passe par la Parole (ses 14 sorts d'Hiver
+en sont). Dans le jeu : la Voie par défaut d'un héros (`<VoieDefaut:>`) ne va plus qu'à ses
+mouvements — ni à ses Paroles (`LaParole.estParole`), ni à ses techniques de l'âme (types 8, 9,
+élément 2), ni aux objets ; une `<Voie:>` écrite reste la sienne ; les ennemis (215 fiches ont une
+Voie par défaut) ne changent pas. Avant, ses Paroles portaient sa Voie : le Renvoi d'Aël, l'Éclat
+Noir de Korrah (ses Paroles y perdent ~25 % en moyenne), les soins de ludwing et de Vesper. La
+direction acceptée pour la suite (*« totalement d'accord »*) : le positif **prépare**, le sombre
+**enchaîne**, le spirituel **marque** ; une monnaie par art (PM, PT, PV — changer les coûts reste
+une modification en masse, §2) ; une seule chose à l'écran par art. Banc :
+`navigateur/la_regle_pour_tous.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

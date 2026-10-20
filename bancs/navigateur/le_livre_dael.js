@@ -228,12 +228,21 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             var s = this._subject;
             if (s && s.isActor() && s.actorId() === 4 && window.__mesure && !window.__mesure.fin) {
                 window.__mesure.fin = { hp: s.hp, mp: s.mp, ennemis: $gameTroop.members().reduce(function (t, e) { return t + e.hp; }, 0),
+                    lumiere: window.__lumiere || 0,
                     incante: !!s._incantation, etat227: s.isStateAffected(227), surcharge: s.isStateAffected(218),
                     doute: s.isStateAffected(193), pages: BibliothequeAel.pages(), tour: $gameTroop.turnCount() };
             }
             return ea.apply(this, arguments);
         };
         window.__journal = [];
+        // ElementsVivants : une Parole de Lumière soigne une fois sur quatre l'allié le plus blessé —
+        // Aël, qui vient de payer ses PV. Ce soin passe par addText ; on le compte pour juger le prix.
+        var addText = Window_BattleLog.prototype.addText;
+        Window_BattleLog.prototype.addText = function (t) {
+            var m = /La Lumière révèle et répare Aël \(\+(\d+) PV\)/.exec(String(t));
+            if (m && window.__mesure && !window.__mesure.fin) { window.__lumiere = (window.__lumiere || 0) + Number(m[1]); }
+            return addText.apply(this, arguments);
+        };
         // on écoute la file du journal (push), pas son affichage : il peut être encore en attente
         var push = Window_BattleLog.prototype.push;
         Window_BattleLog.prototype.push = function (nom, t) {
@@ -243,7 +252,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     });
 
     async function essai(parole, plein) {
-        await page.evaluate(function (o) { window.__parole = o.p; window.__livrePlein = o.plein; window.__mesure = null; window.__journal = []; }, { p: parole, plein: plein });
+        await page.evaluate(function (o) { window.__parole = o.p; window.__livrePlein = o.plein; window.__mesure = null; window.__journal = []; window.__lumiere = 0; }, { p: parole, plein: plein });
         await ouvrirCombat();
         await page.evaluate(function () {
             $gameTroop.members().forEach(function (e) { e.addParam(0, 9999999); e.recoverAll(); });
@@ -286,9 +295,10 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     var D = await essai(457, false);
     var fd = D.m && D.m.fin;
-    var perdu = fd ? D.m.hp0 - fd.hp : -1;
+    var perdu = fd ? D.m.hp0 - fd.hp + fd.lumiere : -1;
     v('contre-épreuve, sans livre : son prix en PV et Doute Paralysant, comme avant', !!fd && perdu > 0 && perdu === D.m.coutPV && fd.doute,
-        perdu + ' PV perdus pour un prix de ' + (D.m && D.m.coutPV) + ' · Doute ' + (fd && fd.doute));
+        perdu + ' PV payés pour un prix de ' + (D.m && D.m.coutPV) + (fd && fd.lumiere ? ' (puis ' + fd.lumiere + ' rendus par la Lumière)' : '') +
+        ' · Doute ' + (fd && fd.doute));
 
     console.log('');
     v('aucune erreur JavaScript', err.length === 0, err.slice(0, 3).join(' | ') || 'rien');
