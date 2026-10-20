@@ -76,6 +76,12 @@
  * @type boolean
  * @default true
  *
+ * @param HerosSansRatage
+ * @text Les héros ne ratent pas en silence
+ * @type boolean
+ * @default true
+ * @desc [JOKO 2026-10-20] LaParole : le seul risque d'un héros est celui qu'on voit (une longue qui se brise). Les ennemis gardent ce système.
+ *
  * @help
  * ============================================================================
  *  SYSTÈME DE PAROLES v2 — la lucidité gouverne la magie            by JOKO
@@ -130,6 +136,7 @@ var Paroles = Paroles || {};
     var SAN_COST    = String(P['SanityCostOnFail'] || 'true') === 'true';
     var SHOW_HELP   = String(P['ShowHelpInfo'] || 'true') === 'true';
     var SHOW_LOG    = String(P['ShowLog'] || 'true') === 'true';
+    var HEROS_OK    = String(P['HerosSansRatage'] || 'true') !== 'false';   // [JOKO 2026-10-20]
 
     function enabled() {
         if (ENABLE_SW > 0 && (!$gameSwitches || !$gameSwitches.value(ENABLE_SW))) return false;
@@ -225,6 +232,8 @@ var Paroles = Paroles || {};
         var info = paroleInfo(this.item());
         if (!info) { this._paroleState = 'na'; return; }
         if (info.origine) { this._paroleState = 'ok'; return; }
+        // [JOKO 2026-10-20] LaParole : un héros ne rate pas en silence.
+        if (HEROS_OK && this.subject() && this.subject().isActor && this.subject().isActor()) { this._paroleState = 'ok'; return; }
 
         var subj = this.subject();
         var L = info.L;
@@ -277,6 +286,7 @@ var Paroles = Paroles || {};
             if (_updateHelp) _updateHelp.call(this);              // élément + description (ManaVisualEX)
             var s = this.item();
             if (!s || !this._helpWindow) return;
+            if (HEROS_OK) return;                                  // [JOKO 2026-10-20] LaParole écrit sa propre ligne
             var info = paroleInfo(s);
             if (!info) return;
 

@@ -278,6 +278,29 @@ avec sa recharge. La Parole Originelle (818) garde son prix de lucidité. **Le M
 rien de désappris) ; après, la Lecture d'avant, au prix de la Parole. Contrats et Portes : intacts.
 Banc : `navigateur/le_livre_dael.js`.
 
+**Un mana par art** (JOKO, 2026-10-20) : *« Pour les paroles, tu peux utiliser que le mana positif. Et
+pour les mouvements, tu peux utiliser que le mana sombre. Et pour le spirituel […] que le mana
+spirituel. C'est tout. »* — son ancien calculateur (mot de passe 3, 4 ou 2) est caduc (*« C'était
+avant »*). Les trois arts du Premier (Genèse) : la Parole (Esprit, réciter), la Maîtrise (Corps,
+mouvoir — à faire), le Symbole (Âme — à faire). JOKO veut des systèmes *« beaucoup plus approfondis
+[…] plus maniables »* pour un jeu *« assez stratégique »*.
+
+**La Parole** (`LaParole.js`, 2026-10-20) : JOKO a validé *« la phrase commune, les degrés, les longues
+en fin de tour, mes 6 fusions par les Paroles de Fusion »*. **Est une Parole** : une compétence de
+héros au mana positif — les 40 Paroles des échelles (1186-1225, 5 degrés par élément : simple,
+double, amplifiée, fusion, dernier degré) et « Parole n°X » si X n'est pas 2, 4, 5, 6, 7 ; seiryu ne
+récite pas (`acteursExclus`). **La phrase commune** : une Parole d'élément fondamental (8-15) le laisse
+en suspens, affiché, jusqu'à la fin du tour suivant ; la **Double** le complète en frappant avec les
+deux éléments (règle « Multiplier », boucliers compris), la **Fusion** le fond si la paire est l'une
+des **6 de JOKO** (Vapeur, Lave, Plante, Givre, Métal, Crépuscule — plus aucune « collision » de la
+somme), ×1,5 ; compléter referme la phrase. **Fusion et dernier degré sont longues** : annoncées au
+début du tour, elles partent en dernier (`makeActionOrders`) ; un coup de 15 % des PV, un cumul de
+30 % ou un état qui immobilise la brise (×0,5) ; le dernier degré ne se redit pas au tour suivant.
+**Pas d'état posé** (`etatLongue` 0) : le 227 d'Aël fragilise. `FusionElements` est **éteint** (sa
+fusion de n'importe quels deux sorts, avec 10 collisions, est remplacée) ; `ParolesSysteme` garde son
+ratage pour les **ennemis** seulement (`HerosSansRatage`). Aucune fiche n'est modifiée. Banc :
+`navigateur/la_parole.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
