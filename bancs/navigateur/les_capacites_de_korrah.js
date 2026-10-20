@@ -4,6 +4,8 @@
  * JOKO, le 2026-10-20 : « Oui, écris les 10 capacités de Korrah comme listé :
  * seiryu suit le coup, +50 % sur l'engourdi, seiryu en profite aussi, Ralentir
  * confie son froid, Elle Prend Ta Place prend sa place. Puis banc et mesure. »
+ * Puis le deuxième paquet (v1.2) : « seiryu suit le coup, +50 % sur l'engourdi,
+ * seiryu en profite aussi, et elle reprend du froid pour engourdir. »
  *
  * Ce banc vérifie, dans le vrai moteur et dans les deux sens :
  *   1. les réglages, et les balises et lignes des 10 fiches ;
@@ -17,7 +19,9 @@
  *      ennemis ciblés sur l'allié vont à Korrah, une seule place à la fois ;
  *   6. <SeiryuSuit> : il suit avec son coup chargé (25 de froid, glace,
  *      engourdit) — pas sans froid, pas après une capacité sans balise ;
- *   7. un vrai combat laissé tourner : Pas de Côté, seiryu suit, le journal le dit.
+ *   7. un vrai combat laissé tourner : Pas de Côté, seiryu suit, le journal le dit ;
+ *   8. le deuxième paquet : <ReprendFroid> (25 de froid repris, le coup engourdit ;
+ *      rien sans froid), et une capacité de chaque famille sur ses nouvelles fiches.
  *
  *   node <scratchpad>/serveur_bancs.js . 8899   (ou npx http-server -p 8899 -c-1 .)
  *   node bancs/navigateur/les_capacites_de_korrah.js
@@ -65,14 +69,16 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('1) Les réglages et les fiches');
     var d = await page.evaluate(function () {
         var liste = { 1106: 'SeiryuSuit', 1098: 'SeiryuSuit', 1108: 'SeiryuSuit', 1107: 'SurEngourdi', 1154: 'SurEngourdi',
-                      1110: 'SurEngourdi', 1151: 'ADeux', 1100: 'ADeux', 1241: 'ConfieFroid', 1156: 'APlace' };
+                      1110: 'SurEngourdi', 1151: 'ADeux', 1100: 'ADeux', 1241: 'ConfieFroid', 1156: 'APlace',
+                      1153: 'SeiryuSuit', 1243: 'SeiryuSuit', 1158: 'SeiryuSuit', 1109: 'SurEngourdi', 155: 'SurEngourdi',
+                      156: 'ADeux', 1079: 'ADeux', 1111: 'ADeux', 1099: 'ReprendFroid', 1101: 'ReprendFroid' };
         var balises = Object.keys(liste).filter(function (id) { return $dataSkills[id].meta[liste[id]] === true; }).length;
         var lignes = Object.keys(liste).filter(function (id) { return $dataSkills[id].description.split('\n').length === 2; }).length;
         return { r: FroidConfie.reglages(), balises: balises, lignes: lignes };
     });
     v('réglages : +50 % sur l\'engourdi, la place 2 tours, soins chargés toujours ×1,25', d.r.bonusEngourdi === 50 && d.r.toursAPlace === 2 && d.r.bonusSoin === 1.25);
-    v('les 10 fiches portent leur balise', d.balises === 10, d.balises + ' / 10');
-    v('…et leur ligne de description', d.lignes === 10, d.lignes + ' / 10');
+    v('les 20 fiches portent leur balise', d.balises === 20, d.balises + ' / 20');
+    v('…et leur ligne de description', d.lignes === 20, d.lignes + ' / 20');
 
     await ouvrirCombat();
     await page.evaluate(function () {
@@ -218,6 +224,40 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…et il engourdit', s6.engourdi);
     v('…le journal le dit', /seiryu suit le coup : \d+ dégâts/.test(s6.journal), s6.journal);
     v('contre-épreuve : sans 25 de froid, il ne suit pas', s6.sansFroid.hp === 0 && s6.sansFroid.jauge === 10, JSON.stringify(s6.sansFroid));
+
+    // ── 8 · le deuxième paquet ─────────────────────────────────────────
+    console.log('\n8) Le deuxième paquet');
+    var p8 = await page.evaluate(function () {
+        var k = __k(), s = __s(), e = $gameTroop.members()[0], r = {};
+        e.recoverAll(); e.removeState(211); FroidConfie.poser(100); __journal.length = 0;
+        var act = __agir(k, 1099, e);                       // Paume Immobile
+        r.reprend = { jauge: FroidConfie.jauge(), engourdi: e.isStateAffected(211), touche: e.result().isHit(),
+            journal: __journal.filter(function (t) { return /reprend 25 de froid/.test(t); })[0] || '' };
+        e.recoverAll(); e.removeState(211); FroidConfie.poser(10);
+        __agir(k, 1101, e);                                 // Point Creux, sans assez de froid
+        r.sansFroid = { jauge: FroidConfie.jauge(), engourdi: e.isStateAffected(211) };
+        e.removeState(211); FroidConfie.poser(100);
+        __agir(k, 1109, e); r.instantSansEngourdi = FroidConfie.jauge();   // Instant Foudroyant ne reprend rien
+        var i0 = __degats(k, 1109, e); e.addState(211); var i1 = __degats(k, 1109, e); e.removeState(211);
+        r.instant = i1 / i0;
+        [k, s].forEach(function (x) { x.clearBuffs(); });
+        __agir(k, 156, k); r.contreSort = s.isBuffAffected(4) && s.isBuffAffected(5);
+        [k, s].forEach(function (x) { x.clearBuffs(); });
+        __agir(k, 1111, k); r.charge = s.isBuffAffected(6) && s.isBuffAffected(7);
+        [k, s].forEach(function (x) { x.clearBuffs(); });
+        k._seiryuSuit = null; __agir(k, 1243, e); r.sceller = k._seiryuSuit === e; k._seiryuSuit = null;
+        FroidConfie.poser(0);
+        return r;
+    });
+    v('Paume Immobile reprend 25 de froid à seiryu', p8.reprend.jauge === 75, p8.reprend.jauge + '/100');
+    v('…et le coup engourdit à coup sûr', p8.reprend.touche && p8.reprend.engourdi);
+    v('…le journal le dit', /reprend 25 de froid/.test(p8.reprend.journal), p8.reprend.journal);
+    v('contre-épreuve : Point Creux avec 10 de froid ne reprend rien et n\'engourdit pas', p8.sansFroid.jauge === 10 && !p8.sansFroid.engourdi, JSON.stringify(p8.sansFroid));
+    v('contre-épreuve : Instant Foudroyant ne reprend pas de froid', p8.instantSansEngourdi === 100);
+    v('Instant Foudroyant : ×1,5 sur un engourdi', Math.abs(p8.instant - 1.5) < 0.01, p8.instant.toFixed(3));
+    v('Contre-Sort : seiryu a aussi MAG et DÉF.M', p8.contreSort);
+    v('Charge Statique : seiryu a aussi AGI et Chance', p8.charge);
+    v('Sceller la Voix (sans dégâts) prépare quand même seiryu', p8.sceller);
 
     await page.evaluate(function () { Math.random = window.__alea; });
     await fermerCombat();

@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-10-19. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-20. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -225,42 +225,42 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 73 | Mots de Réconfort | 12 PM | PV 10% +0 | 41 | `<Post-Damage Eval>` |
 | 1 | 140 | Parole n°3 Verdict de l'Équilibre | 24 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 480 | `<ParoleL: 4>` `<NomOrigine: Verdict de l'Équilibre>` ⚠ |
 | 1 | 461 | revelation | — | **coquille** — rien | 405 | `<Regard>` |
-| 4 | 1106 | Pas de Côté | 12 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 7.8 * 200 / (200 + b.def))` · boost AGI 4t | 381 | `<Voie: eclair>` |
+| 4 | 1106 | Pas de Côté | 12 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 7.8 * 200 / (200 + b.def))` · boost AGI 4t | 381 | `<Voie: eclair>` `<SeiryuSuit>` |
 | 5 | 151 | Parole n°3 Éclat Positif | 10 PM | dégâts PV *mana positive* `Math.floor(a.mat * 8.7 * 200 / (200 + b.mdf))` | 122 | `<ParoleL: 3>` `<NomOrigine: Éclat Positif>` ⚠ |
 | 5 | 1230 | Délier | 14 PM | retire « ⛓ Ancrage » 100% | 404 | — |
-| 8 | 1151 | Prise de Position | 16 PM | boost AGI 5t · boost DÉF 5t | 404 | — |
+| 8 | 1151 | Prise de Position | 16 PM | boost AGI 5t · boost DÉF 5t | 404 | `<ADeux>` |
 | 10 | 152 | Barrière Magique | 9% PV | boost MDF 4t | 42 | `<ParoleL: 4>` |
-| 11 | 1107 | Trait Foudroyant | 24 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 11 * 200 / (200 + b.def))` | 384 | `<Voie: eclair>` |
-| 12 | 1098 | Traverser | 18 PM | dégâts PV *Physique* `Math.floor(a.atk * 11 * 200 / (200 + b.def * 0.3))` | 405 | `<Perce-Armure>` `<Voie: vide>` |
+| 11 | 1107 | Trait Foudroyant | 24 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 11 * 200 / (200 + b.def))` | 384 | `<Voie: eclair>` `<SurEngourdi>` |
+| 12 | 1098 | Traverser | 18 PM | dégâts PV *Physique* `Math.floor(a.atk * 11 * 200 / (200 + b.def * 0.3))` | 405 | `<Perce-Armure>` `<Voie: vide>` `<SeiryuSuit>` |
 | 13 | 1236 | Accélérer | 28 PM | boost AGI 4t | 381 | — |
 | 15 | 153 | Parole n°4 Faille Négative | 14 PT | dégâts PV *mana négative * `Math.floor(a.mat * 10 * 200 / (200 + b.mdf))` | 493 | `<ParoleL: 3>` `<NomOrigine: Faille Négative>` ⚠ |
 | 16 | 1206 | Parole n°12 Foudre — Étincelle | 10 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 381 | `<ParoleL: 3>` `<NomOrigine: Foudre — Étincelle>` ⚠ |
-| 17 | 1108 | Trois Fois Avant Lui | 30 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 5.6 * 200 / (200 + b.def))` | 382 | `<Voie: eclair>` |
-| 18 | 1099 | Paume Immobile | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 14 * 200 / (200 + b.def * 0.25))` | 1 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 2>` |
-| 18 | 1153 | Lecture du Geste | 20 PM | dégâts PV *Physique* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` · malus ATQ 4t | 2 | — |
+| 17 | 1108 | Trois Fois Avant Lui | 30 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 5.6 * 200 / (200 + b.def))` | 382 | `<Voie: eclair>` `<SeiryuSuit>` |
+| 18 | 1099 | Paume Immobile | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 14 * 200 / (200 + b.def * 0.25))` | 1 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 2>` `<ReprendFroid>` |
+| 18 | 1153 | Lecture du Geste | 20 PM | dégâts PV *Physique* `Math.floor(a.atk * 13 * 200 / (200 + b.def))` · malus ATQ 4t | 2 | `<SeiryuSuit>` |
 | 20 | 154 | Analyse Tactique | 16 PM | malus ATQ 3t · malus MAT 3t | 51 | — |
 | 20 | 1122 | Éclat Bref | 16 PT | dégâts PV *mana négative * `Math.floor(a.atk * 11 * 200 / (200 + b.def))` | 64 | `<Voie: flash>` |
-| 22 | 1241 | Ralentir | 20 PM | pose « ❄ Engourdissement » 80% | 385 | — |
-| 23 | 1154 | Contre-Prise | 28 PM | dégâts PV *Physique* `Math.floor(a.atk * 16 * 200 / (200 + b.def))` · pose « ⛓ Ancrage » 50% | 21 | — |
-| 24 | 1109 | Instant Foudroyant | 48 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 20 * 200 / (200 + b.def))` | 383 | `<Voie: eclair>` |
-| 25 | 155 | Parole n°3 Vague Équilibrée | 26 PM | dégâts PV *mana positive* `Math.floor(a.mat * 6.5 * 200 / (200 + b.mdf))` | 84 | `<ParoleL: 4>` `<NomOrigine: Vague Équilibrée>` ⚠ |
-| 25 | 1100 | Le Souffle Retenu | 12 PM | boost MAT 5t · boost MDF 5t · PT +25 | 51 | `<Voie: vide>` |
-| 30 | 156 | Contre-Sort | 12 PM | boost MAT 4t · boost MDF 4t | 52 | `<ParoleL: 3>` |
-| 30 | 1110 | Fil de Foudre | 38 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 10 * 200 / (200 + b.def))` | 384 | `<Voie: eclair>` |
-| 30 | 1243 | Sceller la Voix | 30 PM | pose « 🔇 Silence Runique » 75% | 415 | — |
-| 31 | 1101 | Point Creux | 44 PM | dégâts PV *Physique* `Math.floor(a.atk * 17 * 200 / (200 + b.def * 0.2))` · pose « ⛓ Ancrage » 50% | 64 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 3>` `<Nerf 2026-09-25: a.atk * 22 * → a.atk * 17 * — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ |
-| 32 | 1079 | Prendre l'Élan | 16 PM | pose « 🛡 Posture de Fer » 100% · PT +30 | 437 | `<Voie: onde>` |
+| 22 | 1241 | Ralentir | 20 PM | pose « ❄ Engourdissement » 80% | 385 | `<ConfieFroid>` |
+| 23 | 1154 | Contre-Prise | 28 PM | dégâts PV *Physique* `Math.floor(a.atk * 16 * 200 / (200 + b.def))` · pose « ⛓ Ancrage » 50% | 21 | `<SurEngourdi>` |
+| 24 | 1109 | Instant Foudroyant | 48 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 20 * 200 / (200 + b.def))` | 383 | `<Voie: eclair>` `<SurEngourdi>` |
+| 25 | 155 | Parole n°3 Vague Équilibrée | 26 PM | dégâts PV *mana positive* `Math.floor(a.mat * 6.5 * 200 / (200 + b.mdf))` | 84 | `<ParoleL: 4>` `<NomOrigine: Vague Équilibrée>` ⚠ `<SurEngourdi>` |
+| 25 | 1100 | Le Souffle Retenu | 12 PM | boost MAT 5t · boost MDF 5t · PT +25 | 51 | `<Voie: vide>` `<ADeux>` |
+| 30 | 156 | Contre-Sort | 12 PM | boost MAT 4t · boost MDF 4t | 52 | `<ParoleL: 3>` `<ADeux>` |
+| 30 | 1110 | Fil de Foudre | 38 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 10 * 200 / (200 + b.def))` | 384 | `<Voie: eclair>` `<SurEngourdi>` |
+| 30 | 1243 | Sceller la Voix | 30 PM | pose « 🔇 Silence Runique » 75% | 415 | `<SeiryuSuit>` |
+| 31 | 1101 | Point Creux | 44 PM | dégâts PV *Physique* `Math.floor(a.atk * 17 * 200 / (200 + b.def * 0.2))` · pose « ⛓ Ancrage » 50% | 64 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 3>` `<Nerf 2026-09-25: a.atk * 22 * → a.atk * 17 * — était au-dessus de ×2,5 la médiane du héros contre le boss médian>` ⚠ `<ReprendFroid>` |
+| 32 | 1079 | Prendre l'Élan | 16 PM | pose « 🛡 Posture de Fer » 100% · PT +30 | 437 | `<Voie: onde>` `<ADeux>` |
 | 33 | 1123 | Distorsion | 28 PT | dégâts PV *mana négative * `Math.floor(a.atk * 17 * 200 / (200 + b.def))` | 430 | `<Voie: flash>` |
-| 33 | 1156 | Elle Prend Ta Place | 24 PM | PV 20% +0 · retire « 👁 Marqué » 100% | 404 | — |
+| 33 | 1156 | Elle Prend Ta Place | 24 PM | PV 20% +0 · retire « 👁 Marqué » 100% | 404 | `<APlace>` |
 | 35 | 157 | Parole n°4 Jugement Dual | 30 PT | dégâts PV *mana négative * `Math.floor(a.mat * 29 * 200 / (200 + b.mdf))` | 493 | `<ParoleL: 4>` `<NomOrigine: Jugement Dual>` ⚠ |
 | 37 | 1102 | Rien de Visible | 40 PM | dégâts PV *Physique* `Math.floor(a.atk * 9.4 * 200 / (200 + b.def * 0.35))` | 407 | `<Perce-Armure>` `<Voie: vide>` |
-| 37 | 1111 | Charge Statique | 20 PM | boost AGI 5t · boost CHA 5t | 51 | `<Voie: eclair>` |
+| 37 | 1111 | Charge Statique | 20 PM | boost AGI 5t · boost CHA 5t | 51 | `<Voie: eclair>` `<ADeux>` |
 | 37 | 1207 | Parole n°12 Foudre — Arc | 22 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 40% | 382 | `<ParoleL: 4>` `<NomOrigine: Foudre — Arc>` ⚠ |
 | 38 | 1157 | Angle Parfait | 34 PM | dégâts PV *Physique* `Math.floor(a.atk * 19 * 200 / (200 + b.def * 0.3))` | 369 | `<Perce-Armure>` `<Voie: vide>` `<Cooldown: 2>` |
 | 38 | 1195 | Parole n°9 Eau — Océan | 62 PM | dégâts PV *EAU* `Math.floor(a.mat * 18 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 50% | 425 | `<ParoleL: 5>` `<NomOrigine: Eau — Océan>` ⚠ |
 | 43 | 1103 | L'Immobile | 50 PM | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 24 * 100 / (200 + b.def + b.mdf))` · pose « 🌀 Vertige » 60% | 418 | `<Voie: vide>` |
 | 43 | 1112 | Coup de Grâce Éclair | 26 PM | dégâts PV *FOUDRE* `Math.floor(a.atk * 22 * 200 / (200 + b.def) * (b.hp / b.mhp < 0.35 ? 1.8 : 1))` | 381 | `<Exécution>` `<Voie: eclair>` |
-| 43 | 1158 | Trois Temps | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 6.8 * 200 / (200 + b.def))` | 371 | — |
+| 43 | 1158 | Trois Temps | 30 PM | dégâts PV *Physique* `Math.floor(a.atk * 6.8 * 200 / (200 + b.def))` | 371 | `<SeiryuSuit>` |
 | 44 | 1205 | Parole n°11 Terre — Séisme | 62 PM | dégâts PV *TERRE* `Math.floor(a.mat * 18 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 50% | 431 | `<ParoleL: 5>` `<NomOrigine: Terre — Séisme>` ⚠ |
 | 47 | 1124 | Éclat Noir | 50 PT | dégâts PV *mana négative * `Math.floor(a.atk * 24 * 200 / (200 + b.def))` | 445 | `<Voie: flash>` `<Nerf 2026-09-25: a.atk * 29 * → a.atk * 24 * — ×2,98 en moyenne pour 50 PT>` ⚠ |
 | 50 | 1104 | Vider le Geste | 20 PM | dégâts PV *Physique* `Math.floor(a.atk * 17 * 200 / (200 + b.def))` | 371 | `<Voie: vide>` |

@@ -2,10 +2,10 @@
 // LeFroidConfie.js
 //=============================================================================
 /*:
- * @plugindesc v1.1 ■ Korrah joue deux corps : l'Hiver qu'elle lance, elle le
+ * @plugindesc v1.2 ■ Korrah joue deux corps : l'Hiver qu'elle lance, elle le
  * CONFIE à seiryu, qui le dépense pour soigner, couvrir et engourdir plus
  * fort. Tombé chargé, le froid revient sur elle. Et « Change » prend la place.
- * v1.1 : ses capacités de base parlent à seiryu.
+ * v1.1-1.2 : ses capacités de base parlent à seiryu.
  * @author pour JOKO
  *
  * @param acteurPorteuse
@@ -218,6 +218,10 @@
  *   <APlace>       sur un allié : elle prend sa place `toursAPlace` tours — les
  *                  coups ennemis ciblés sur lui la frappent (🔄 À sa place),
  *                  sans échanger de rang ni reprendre ses états (ça, c'est Change).
+ *   <ReprendFroid> (v1.2, JOKO 2026-10-20 : « elle reprend du froid pour
+ *                  engourdir ») si seiryu a au moins `charge` de froid, elle le
+ *                  lui reprend (une fois par action) : ce que le coup touche
+ *                  s'engourdit à coup sûr. Pas de dégâts en plus.
  *
  * Pour un banc : window.FroidConfie.jauge() / .poser(n) / .reglages().
  */
@@ -609,6 +613,19 @@
         }
         // <SeiryuSuit> : on retient la cible ; il frappe quand son action à elle est finie
         if (balise(it, 'SeiryuSuit') && target.isEnemy && target.isEnemy()) { u._seiryuSuit = target; }
+        // <ReprendFroid> : elle reprend du froid à seiryu (une fois par action), et le coup engourdit
+        if (balise(it, 'ReprendFroid') && target.isEnemy && target.isEnemy()) {
+            if (this._reprisFroid === undefined) {
+                this._reprisFroid = laPourElle() && jauge() >= CHARGE;
+                if (this._reprisFroid) {
+                    poser(jauge() - CHARGE);
+                    journal('\\C[23]❄ ' + u.name() + ' reprend ' + CHARGE + ' de froid à ' + lui().name()
+                        + ' (' + jauge() + '/' + PLAFOND + ').\\C[0]');
+                }
+            }
+            var rr = target.result();
+            if (this._reprisFroid && rr.isHit() && rr.hpDamage > 0 && target.isAlive()) { target.addState(ETAT_ENGOURDI); }
+        }
     };
 
     /** seiryu suit le coup : son coup chargé, sur la même cible, sans prendre son tour. */

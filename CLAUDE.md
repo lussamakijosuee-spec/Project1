@@ -234,7 +234,13 @@ réglage `bonusEngourdi`), `<ADeux>` (Prise de Position, Le Souffle Retenu — s
 qu'elle se donne), `<ConfieFroid>` (Ralentir — confie son coût comme l'Hiver), `<APlace>` (Elle
 Prend Ta Place — 🔄 À sa place `toursAPlace` = 2 tours, sans échange de rang ni d'états). La boucle :
 Ralentir et les coups chargés de seiryu engourdissent, ses capacités frappent les engourdis, et
-seiryu chargé suit ses coups. Banc : `navigateur/les_capacites_de_korrah.js`.
+seiryu chargé suit ses coups. **Deuxième paquet** (v1.2, même jour : *« seiryu suit le coup, +50 % sur
+l'engourdi, seiryu en profite aussi, et elle reprend du froid pour engourdir »*) : `<SeiryuSuit>`
+Lecture du Geste, Sceller la Voix, Trois Temps ; `<SurEngourdi>` Instant Foudroyant, Vague
+Équilibrée ; `<ADeux>` Contre-Sort, Prendre l'Élan, Charge Statique ; et une balise neuve,
+`<ReprendFroid>` (Paume Immobile, Point Creux) — elle reprend `charge` (25) de froid à seiryu, une
+fois par action, et ce que le coup touche s'engourdit à coup sûr, sans dégâts en plus. 20 fiches en
+tout. Banc : `navigateur/les_capacites_de_korrah.js`.
 
 **Le Registre** (`LeRegistre.js`, 2026-10-19, le rework de ludwing) : JOKO a choisi *« Piste 1, le
 Registre : les âmes deviennent sa monnaie, il les gagne en prenant (morts, drains) et les dépense
