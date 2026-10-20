@@ -319,6 +319,43 @@ direction acceptée pour la suite (*« totalement d'accord »*) : le positif **p
 une modification en masse, §2) ; une seule chose à l'écran par art. Banc :
 `navigateur/la_regle_pour_tous.js`.
 
+**Ça doit se sentir** (JOKO, après avoir joué, 2026-10-20) : *« j'ai rien senti de différence […]
+vraiment zéro diff »*. Cause mesurée : **le journal de combat est muet** — `SimpleMsgSideView`
+(vue de côté) ne garde aucune ligne d'`addText` ; les messages de LaParole, LeFroidConfie, LeRegistre,
+MaitriseVoies… ne s'affichent jamais. Ce qui doit se voir passe par **`CombatTactique.annoncer(b,
+texte, couleur)`** (texte flottant au-dessus du combattant), une **icône d'état avec compteur**
+(YEP_BuffsStatesCore `setStateCounter` ; un héros n'affiche que **2 icônes**, par priorité ; un ennemi
+une à la fois, en boucle), ou l'ordre des tours. Autres constats : `Window_Phrase` (LaParole) est posée
+exactement sur `Window_Pacte` (LePacteDeSang, 0,388) ; la 5ᵉ rangée de statut (seiryu) est hors champ.
+Les **PT** ne sont pas une monnaie ici : l'Attaque (tpGain 100 × TCR ~2,4) remplit la jauge, la Relique 46
+la garde d'un combat à l'autre — payer les mouvements en PT ne coûterait rien (et casserait le froid de
+Korrah et le livre d'Aël, calculés sur les PM). **Les manas** (JOKO) : *« il n'y a plus âme et mana
+originel et mana sombre, c'est que mana négatif, mana positif et mana spirituel »* — 5 = 4, 7 = 2.
+
+**Le Mouvement** (`LeMouvement.js`, 2026-10-20 ; JOKO : *« D'abord, fais les mouvements, finis le
+rework mouvement »*, sur la direction qu'il a validée : *« totalement d'accord »*). **Est un mouvement** :
+une compétence de héros qui prend une Voie (`Voies.voieDe`, jamais une Parole ni l'âme) et qui est
+physique, ou porte `<Voie:>`, ou est au mana négatif (4, 5) ; pas le type 21 (seiryu bouge). Après un
+mouvement, le héros est dans la **posture** de sa Voie (états **248-256**, une icône chacun, priorité 98,
+le flux en chiffre). **Le flux** : une autre Voie → +1 et ×1,15 ; même Voie, autre technique → rien ; la
+même technique → ×0,85, flux 0 ; au flux 3, **le geste juste** ×1,5, flux 0. **Le geste faux** : un coup
+de 15 % des PV max, un état qui immobilise, une Parole / l'âme / un objet → plus de posture ; la Garde (2)
+et un ordre à seiryu (type 21) la gardent. **En premier** : dans le flux (dès 1), un mouvement part avant tout le monde (`makeActionOrders`,
+après LaParole). Tout s'annonce au-dessus du héros ; MaitriseVoies annonce aussi le Reflux, le Renvoi,
+l'Éclat Noir et le Point Final manqué. Les **coûts ne changent pas** (pas de PT). Banc :
+`navigateur/le_mouvement.js`.
+
+**Le Spirituel** (`LeSpirituel.js`, 2026-10-20 ; JOKO : *« mana spirituel, c'est plus de soi, émotion de
+soi, volonté »*, *« les runes, les marquages »*, *« finis le rework spirituel »*). **Est du spirituel** : une
+compétence de héros d'élément 2 ou 7, ou de type 8 / 9. **La marque** (état **257** « ᛟ Marque de l'âme »,
+icône 175, 3 tours, le nombre en chiffre) : chaque coup qui touche un ennemi en écrit une, qui garde
+40 % des dégâts (sans dégâts : 2 × MAG) ; 3 au plus. Quand l'ennemi **agit**, toutes éclatent d'un coup —
+par un vrai coup du marqueur (`executeDamage` : une mise à mort compte l'âme et le Marqué), sans drain, et sans
+que le Renvoi ou le Reflux de l'ennemi ne la renvoient ; s'il **tombe** marqué, qui a écrit reprend 8 % de ses PV max par marque. **La volonté** :
+ses techniques (dégâts et soins) × (1 + 0,5 × PV manquants + 0,25 par allié tombé), ×1,75 au plus. Les
+ennemis n'écrivent pas. 23 des 37 techniques de l'âme se paient déjà en PV ; les 12 en PM ne sont pas
+touchées. Banc : `navigateur/le_spirituel.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il

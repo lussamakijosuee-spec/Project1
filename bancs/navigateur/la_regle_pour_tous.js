@@ -116,7 +116,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('1) Les réglages');
     v('reglePourTous : oui', r.reglages.reglePourTous === 'true', r.reglages.reglePourTous);
-    v('techniques de l\'âme : types 8, 9 · élément 2', r.reglages.typesAme === '8, 9' && r.reglages.elementsAme === '2',
+    v('techniques de l\'âme : types 8, 9 · éléments 2 et 7 (JOKO : « mana spirituel » seulement)', r.reglages.typesAme === '8, 9' && r.reglages.elementsAme === '2, 7',
       r.reglages.typesAme + ' · ' + r.reglages.elementsAme);
 
     console.log('\n2) Une Parole ne prend plus la Voie du héros');

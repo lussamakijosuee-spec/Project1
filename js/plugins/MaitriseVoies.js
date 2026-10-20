@@ -216,8 +216,8 @@
  *
  * @param elementsAme
  * @text Éléments de l'âme
- * @default 2
- * @desc Séparés par des virgules. 2 = mana spirituelle (les « Parole n°2 »).
+ * @default 2, 7
+ * @desc Séparés par des virgules. 2 = mana spirituelle (les « Parole n°2 »), 7 = AME (les « Parole n°7 ») : pour JOKO, l'âme est le mana spirituel.
  *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
@@ -331,7 +331,7 @@
             .filter(function (x) { return !isNaN(x); });
     };
     var TYPES_AME    = liste('typesAme', '8, 9');
-    var ELEMENTS_AME = liste('elementsAme', '2');
+    var ELEMENTS_AME = liste('elementsAme', '2, 7');
 
     // --- Voies inspirées d'anime (extensions) ---
     var ECLAIR_CRIT  = N('eclairCrit', 0.5);          // + chance de critique
@@ -361,6 +361,12 @@
     // 5 voies canoniques + 4 voies anime.
     var VOIES = ['forge', 'onde', 'source', 'miroir', 'vide',
                  'eclair', 'domaine', 'flash', 'sang'];
+
+    // [JOKO 2026-10-20] « j'ai rien senti de différence » : le journal de combat est muet dans ce jeu
+    // (SimpleMsgSideView n'en garde aucune ligne). Les effets qui comptent s'annoncent au-dessus du combattant.
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) CombatTactique.annoncer(b, texte, couleur);
+    }
 
     function log(text) {
         if (!SHOW_LOG) return;
@@ -402,6 +408,8 @@
         }
     };
     window.Voies = Voies;
+    // La Voie que prend une action (« » si aucune) — LeMouvement s'en sert pour la posture.
+    Voies.voieDe = function (action) { return action ? actionVoie(action) : ''; };
 
     //=========================================================================
     // VOIE D'UNE ACTION : notetag skill <Voie:>, sinon <VoieDefaut:> du lanceur
@@ -533,6 +541,7 @@
                     var self = Math.max(1, Math.floor(subject.mhp * FORGE_WHIFF));
                     subject.gainHp(-self); subject.startDamagePopup(); subject.clearResult();
                     log((subject.name ? subject.name() : 'Le lanceur') + ' rate le Point Final et se déchire (-' + self + ' PV).');
+                    annonce(subject, '🔨 Point Final manqué', '#ff8a6a');
                     if (subject.isDead()) subject.performCollapse();
                 }
                 break;
@@ -585,6 +594,7 @@
                     this._voieFlash = false;
                     if ($gameScreen) $gameScreen.startFlash([20, 20, 40, 200], 20);
                     log('✦ ' + (subject.name ? subject.name() : 'Le lanceur') + ' — ÉCLAT NOIR ! La frappe se distord.');
+                    annonce(target, '✦ ÉCLAT NOIR ×' + String(FLASH_MULT).replace('.', ','), '#c9a0ff');
                     // le prix : la distorsion revient dans le bras
                     if (FLASH_CC > 0 && subject.isAlive()) {
                         var cc = Math.max(1, Math.floor(subject.mhp * FLASH_CC * Voies.scale(subject, 'flash')));
@@ -634,6 +644,7 @@
                 // large) : on lisait « Korrah renvoie l'attaque : Gargal, le
                 // Premier Croc frapp ». Mêmes mots, deux lignes, rien de coupé.
                 log((target.name ? target.name() : 'La cible') + ' renvoie l\'attaque.');
+                annonce(target, '🛡 Renvoi !', '#9ee8ff');
                 log((attacker.name ? attacker.name() : 'l\'agresseur') + ' frappe sa propre image (-' + back + ' PV).');
                 if (attacker.isDead()) attacker.performCollapse();
             }
@@ -670,6 +681,7 @@
             attacker.gainHp(-counter); attacker.startDamagePopup(); attacker.clearResult();
             // Même raison qu'au Renvoi : deux noms ne tiennent pas sur une ligne.
             log((target.name ? target.name() : 'La cible') + ' retourne la force : Reflux !');
+            annonce(target, '🌊 Reflux !', '#7ec8ff');
             log((attacker.name ? attacker.name() : 'l\'agresseur') + ' encaisse -' + counter + ' PV.');
             if (attacker.isDead()) attacker.performCollapse();
         }

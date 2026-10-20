@@ -86,7 +86,13 @@ function verdict(t, passe, detail) {
 
     // ── 2. Les Voies gardent leurs effets, et ne prélèvent plus rien ─────────
     await page.evaluate(function () { BattleManager.setup(1, false, true); SceneManager.goto(Scene_Battle); });
-    await page.waitForTimeout(5000);
+    // Attendre le vrai début du combat, pas 5 s fixes : sur un PC lent, le combat n'était parfois pas lancé,
+    // les héros n'avaient pas encore leur liste de popups (YEP), et un coup plantait sur « _damagePopup.push ».
+    await page.waitForFunction(function () {
+        return SceneManager._scene instanceof Scene_Battle && !SceneManager.isSceneChanging() &&
+            $gameParty.battleMembers().every(function (a) { return Array.isArray(a._damagePopup); });
+    }, null, { timeout: 120000 });
+    await page.waitForTimeout(1000);
 
     var essai = await page.evaluate(function () {
         var o = { lignes: [], erreurs: [] };

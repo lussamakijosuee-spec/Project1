@@ -119,10 +119,16 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var faible = 0; for (var i = 1; i < $dataSystem.elements.length; i++) { if (E.elementRate(i) > 1) { faible = i; break; } }
         if (!faible) { $dataEnemies[E.enemyId()].traits.push({ code: 11, dataId: 8, value: 2 }); faible = 8; r.faibleAjoutee = true; }
         r.faible = faible;
-        var etatsAvant = E.states().length;
+        // La marque de l'âme (LeSpirituel, état 257) n'est pas l'affaire du bouclier : un coup d'un héros au
+        // mana spirituel l'écrit, bouclier ou pas. On compte tout le reste.
+        var horsMarque = function () { return E.states().filter(function (s) { return s.id !== 257; }); };
+        var etatsAvant = horsMarque().map(function (s) { return s.id; });
         var coup = T.skill('', { damage: { type: 1, elementId: faible, formula: '1', variance: 0, critical: false } });
         for (var k = 0; k < 5; k++) T.frapper(A, E, coup);
-        r.etatsPoses = E.states().length - etatsAvant;
+        var nouveaux = horsMarque().filter(function (s) { return etatsAvant.indexOf(s.id) < 0; });
+        r.etatsPoses = nouveaux.length;
+        r.etatsNoms = nouveaux.map(function (s) { return s.id + ' ' + s.name; }).join(', ');
+        r.marque = E.isStateAffected(257);
         r.affichage = E.checkShieldDisplay();
         r.decouverte = (Astfgl.enemies.disWeak[E.enemyId()] || [])[faible] || 0;
         r.dessin = T.dessin(E);
@@ -130,7 +136,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return r;
     });
     V('un ennemi sans bouclier : « none »', un.affichage === 'none', un.affichage);
-    V('5 coups sur sa faiblesse : aucun état posé, pas de brisure', un.etatsPoses === 0, un.etatsPoses + ' état(s)');
+    V('5 coups sur sa faiblesse : aucun état posé, pas de brisure', un.etatsPoses === 0,
+        un.etatsPoses + ' état(s)' + (un.etatsNoms ? ' : ' + un.etatsNoms : '') + ' · faiblesse ' + un.faible + (un.marque ? ' (marque de l\'âme écrite, hors bouclier)' : ''));
     V('…et sa faiblesse n\'est pas notée (le plugin ne le regarde pas)', un.decouverte === 0, String(un.decouverte));
     var textes = un.dessin.traits.filter(function (x) { return x.texte !== undefined; }), icones = un.dessin.traits.filter(function (x) { return x.icone !== undefined; });
     V('son nom s\'affiche comme avec Yanfly : sans crochets, sur la même ligne, sans icône',
