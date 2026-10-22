@@ -105,6 +105,39 @@
  * @text <Lecture> : son prochain mouvement sur l'ennemi lu ×
  * @default 1.5
  *
+ * @param === LES VERBES DU CORPS ===
+ * @default
+ *
+ * @param finitParFlux
+ * @text <Finit> : + par point de flux (le flux est vidé)
+ * @default 0.3
+ *
+ * @param reprise
+ * @text <Reprise> : la même technique une 2ᵉ fois ×
+ * @default 1.2
+ * @desc La 3ᵉ fois de suite : le geste juste (×1,5). Au lieu de s'user (×0,85).
+ *
+ * @param entreDeux
+ * @text <Entre> : sur un ennemi qui a déjà agi ce tour ×
+ * @default 1.5
+ *
+ * @param coupDeGrace
+ * @text <Grace> : sur un ennemi à bout ×
+ * @default 1.5
+ *
+ * @param seuilGrace
+ * @text <Grace> : « à bout » = sous (% des PV max)
+ * @type number
+ * @default 25
+ *
+ * @param immobile
+ * @text <Immobile> : pas touché depuis sa dernière action ×
+ * @default 1.5
+ *
+ * @param accumuleParRiposte
+ * @text <Accumule> : + par riposte depuis la dernière fois
+ * @default 0.15
+ *
  * @help
  * ============================================================================
  *  LE MOUVEMENT — le corps qui enchaîne                          pour JOKO
@@ -150,6 +183,20 @@
  *  geste juste peut tomber sur la Parole ; le mouvement d'après compte comme
  *  une autre Voie. <Lecture> (Lecture du Corps, Œil du Stratège, Analyse
  *  Tactique) : l'ennemi est lu, son prochain mouvement sur lui frappe ×1,5.
+ *
+ *  LES VERBES DU CORPS (2026-10-22, « Oui rework tout ») — une balise sur une
+ *  capacité, une ligne dans sa description ; chacun vient du nom que JOKO lui
+ *  a donné, et reste dans la règle du corps (un mouvement, payé en PT) :
+ *   <Ouvre>     — entrer en posture avec de l'élan : flux 1 tout de suite ;
+ *   <Finit>     — tout le flux dans un coup : ×(1 + 0,3 par point), flux 0 ;
+ *   <Reprise>   — la même technique ne s'use pas : 2ᵉ fois ×1,2, 3ᵉ ×1,5 ;
+ *   <Sur>       — ne rate jamais, ne s'use pas en la répétant ;
+ *   <Entre>     — ×1,5 sur un ennemi qui a déjà agi ce tour (« entre son geste
+ *                 et le suivant ») ;
+ *   <Grace>     — ×1,5 sur un ennemi sous 25 % de ses PV ;
+ *   <Immobile>  — ×1,5 si on ne l'a pas touchée depuis sa dernière action ;
+ *   <Accumule>  — ×(1 + 0,15 par riposte de Vesper depuis la dernière fois) ;
+ *   <EclatNoir> — (MaitriseVoies) l'Éclat Noir est sûr quand le flux est à 2.
  * ============================================================================
  */
 
@@ -187,6 +234,13 @@ var LeMouvement = LeMouvement || {};
     var APRES      = nombre('apresRiposte', 1.5);
     var PENSER     = liste('penserJuste', '2');
     var LU         = nombre('luDavance', 1.5);
+    var FINIT      = nombre('finitParFlux', 0.3);
+    var REPRISE    = nombre('reprise', 1.2);
+    var ENTRE      = nombre('entreDeux', 1.5);
+    var GRACE      = nombre('coupDeGrace', 1.5);
+    var SEUIL_GRACE = nombre('seuilGrace', 25) / 100;
+    var IMMOBILE   = nombre('immobile', 1.5);
+    var ACCUMULE   = nombre('accumuleParRiposte', 0.15);
 
     var NOMS = { forge: 'Forge', onde: 'Onde', source: 'Source', miroir: 'Miroir', vide: 'Vide',
                  eclair: 'Éclair', domaine: 'Domaine', flash: 'Flash', sang: 'Sang' };
@@ -243,12 +297,16 @@ var LeMouvement = LeMouvement || {};
         afficher(b);
         if (texte && avait) { annonce(b, texte, '#ff8080'); }
     }
-    function remettre(b) { b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0; }
+    function remettre(b) {
+        b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0;
+        b._reprise = 0; b._touche = false; b._ripostesCompte = 0;
+    }
 
     //=========================================================================
     // Au départ de l'action : le flux bouge, la puissance est fixée
     //=========================================================================
     function estParole(it) { return !!(window.LesTroisArts && LesTroisArts.art(it) === 'parole'); }
+    function balise(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
     function penseJuste(b) { return heros(b) && PENSER.indexOf(b.actorId()) >= 0; }
     function cibleUnique(action) {
         if (!action.isForOpponent() || !action.isForOne() || !(action._targetIndex >= 0)) { return null; }
@@ -274,13 +332,26 @@ var LeMouvement = LeMouvement || {};
             if (!neutre(action)) { lacher(b, '✗ Flux rompu'); }
             return;
         }
-        var id = action.item().id, avant = b._mvtVoie, mult = 1, texte, couleur = COULEURS[v];
+        var it = action.item(), id = it.id, avant = b._mvtVoie, mult = 1, texte, couleur = COULEURS[v];
         var change = v !== avant || !!b._mvtPense;          // après une Parole, Korrah change de Voie
+        var repete = !!avant && b._mvtDernier === id;
         b._mvtPense = false;
+        action._fluxAvant = b._mvtFlux || 0;
+        if (!repete) { b._reprise = 0; }
         if (!avant) {
-            b._mvtFlux = 0;
-            texte = '◆ Posture : ' + NOMS[v];
-        } else if (b._mvtDernier === id) {
+            b._mvtFlux = balise(it, 'Ouvre') ? 1 : 0;      // <Ouvre> : on entre en posture avec de l'élan
+            texte = '◆ Posture : ' + NOMS[v] + (b._mvtFlux ? ' · élan' : '');
+        } else if (balise(it, 'Finit') && b._mvtFlux > 0) {
+            mult = 1 + FINIT * b._mvtFlux; b._mvtFlux = 0;  // <Finit> : tout le flux dans un coup
+            texte = '⚑ Final ×' + chiffre(mult); couleur = '#ffd84a';
+        } else if (repete && balise(it, 'Reprise')) {
+            b._reprise = (b._reprise || 0) + 1;              // <Reprise> : le deuxième ×1,2, le troisième ×1,5
+            mult = b._reprise >= 2 ? BONUS_GESTE : REPRISE;
+            if (b._reprise >= 2) { b._reprise = 0; }
+            texte = '🔨 Reprise ×' + chiffre(mult);
+        } else if (repete && balise(it, 'Sur')) {
+            texte = '◆ ' + NOMS[v] + (b._mvtFlux > 0 ? ' · flux ' + b._mvtFlux : '');   // <Sur> : rien ne s'use
+        } else if (repete) {
             mult = MALUS; b._mvtFlux = 0;
             texte = '↺ Répété ×' + chiffre(MALUS); couleur = '#b0b0b0';
         } else if (change) {
@@ -304,6 +375,20 @@ var LeMouvement = LeMouvement || {};
             c._luPar = 0; mult *= LU;
             annonce(c, '◎ Lu d\'avance ×' + chiffre(LU), '#9ad0ff');
         }
+        // Les verbes qui lisent la cible ou le corps
+        if (c && balise(it, 'Entre') && (BattleManager._performedBattlers || []).indexOf(c) >= 0) {
+            mult *= ENTRE; annonce(c, '◐ Entre deux ×' + chiffre(ENTRE), '#b8b8d0');
+        }
+        if (c && balise(it, 'Grace') && c.hp <= c.mhp * SEUIL_GRACE) {
+            mult *= GRACE; annonce(c, '⚡ Coup de grâce ×' + chiffre(GRACE), '#ffe066');
+        }
+        if (balise(it, 'Immobile') && !b._touche) {
+            mult *= IMMOBILE; annonce(b, '◯ Immobile ×' + chiffre(IMMOBILE), '#b8b8d0');
+        }
+        if (balise(it, 'Accumule') && b._ripostesCompte > 0) {
+            var k = 1 + ACCUMULE * b._ripostesCompte; b._ripostesCompte = 0;
+            mult *= k; annonce(b, '🌊 Toute la force ×' + chiffre(k), '#7ec8ff');
+        }
         action._mvtMult = mult;
         annonce(b, texte, couleur);
     }
@@ -315,6 +400,7 @@ var LeMouvement = LeMouvement || {};
     LeMouvement.riposte = function (b) {
         if (!heros(b) || CONTRE.indexOf(b.actorId()) < 0) { return 1; }
         b._riposte = true;
+        b._ripostesCompte = (b._ripostesCompte || 0) + 1;   // <Accumule> : la force gardée
         if (!b._mvtVoie) { return 1; }                      // hors posture : la riposte part, sans flux
         b._mvtFlux++;
         var k = 1;
@@ -327,6 +413,16 @@ var LeMouvement = LeMouvement || {};
         }
         afficher(b);
         return k;
+    };
+
+    // <Sur> : « rien qui rate, jamais »
+    var _touche = Game_Action.prototype.itemHit;
+    Game_Action.prototype.itemHit = function (target) {
+        return balise(this.item(), 'Sur') && heros(this.subject()) ? 1 : _touche.call(this, target);
+    };
+    var _esquive = Game_Action.prototype.itemEva;
+    Game_Action.prototype.itemEva = function (target) {
+        return balise(this.item(), 'Sur') && heros(this.subject()) ? 0 : _esquive.call(this, target);
     };
 
     var _appliquer = Game_Action.prototype.apply;
@@ -356,7 +452,7 @@ var LeMouvement = LeMouvement || {};
     BattleManager.endAction = function () {
         var b = this._subject;
         if (heros(b) && b._mvtVoie && b.isAlive()) { afficher(b); }
-        if (heros(b)) { b._riposte = false; }               // « après la riposte » ne vaut que pour l'action suivante
+        if (heros(b)) { b._riposte = false; b._touche = false; }   // « après la riposte », « immobile » : jusqu'à l'action suivante
         _fin.call(this);
     };
 
@@ -378,6 +474,7 @@ var LeMouvement = LeMouvement || {};
     var _degats = Game_Battler.prototype.onDamage;
     Game_Battler.prototype.onDamage = function (value) {
         _degats.call(this, value);
+        if (heros(this) && enCombat() && value > 0) { this._touche = true; }      // <Immobile> : touché depuis sa dernière action
         if (heros(this) && this._mvtVoie && enCombat() && value >= (this.mhp || 1) * SEUIL) {
             var avait = this._mvtFlux > 0;
             lacher(this, '✗ Geste faux : flux brisé');

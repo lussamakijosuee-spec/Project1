@@ -487,6 +487,9 @@
         } else if (voie === 'flash') {
             // L'Éclat Noir : la frappe se distord parfois en coup dévastateur.
             var chance = Math.min(0.9, FLASH_CHANCE * Voies.scale(subject, 'flash'));
+            // [2026-10-22] <EclatNoir> (Korrah, « rien ne se passe comme prévu, sauf le résultat ») :
+            // lancée avec un flux de 2 ou plus (LeMouvement), l'Éclat Noir est sûr.
+            if (this.item() && this.item().meta && this.item().meta.EclatNoir !== undefined && (this._fluxAvant || 0) >= 2) { chance = 1; }
             if (Math.random() < chance) {
                 this._voieFlash = true;
                 value = Math.floor(value * FLASH_MULT);

@@ -417,6 +417,29 @@ phrase qu'elle a commencée ne la referme pas (Double puis Fusion sur le même �
 Fusion s'annoncent maintenant au-dessus de qui parle. Les dons ne sont pas touchés. Banc :
 `navigateur/les_signatures.js`.
 
+**Les verbes des trois arts** (2026-10-22 ; JOKO : *« Oui rework tout »*, *« Extrêmement développé et
+extrêmement intéressant surtout jouable et dans les règles »*). Chaque capacité reworkée reçoit **un verbe de
+SON art**, tiré du nom ou de la description que JOKO lui a donnés, et **une ligne de description** (noms,
+formules, coûts, niveaux inchangés ; tous les chiffres sont des réglages). **Corps** (LeMouvement) :
+`<Ouvre>` (posture avec 1 de flux), `<Finit>` (tout le flux dans le coup, ×1,3 par point), `<Reprise>`
+(répétée : ×1,2 puis ×1,5 au lieu de s'user), `<Sur>` (ne rate pas, ne s'use pas), `<Entre>` (×1,5 sur un
+ennemi qui a déjà agi ce tour), `<Grace>` (×1,5 sous 25 % de PV), `<Immobile>` (×1,5 si pas touchée depuis
+sa dernière action), `<Accumule>` (+15 % par riposte de Vesper gardée), `<EclatNoir>` (MaitriseVoies :
+sûr avec 2 de flux). **Parole** (LaParole) : `<Reste>` (la phrase tient un tour de plus), `<Assez>` (ferme la
+phrase : son élément, ×1,5), `<MotJuste>` (l'élément fondamental qui marche le mieux, laissé en suspens),
+`<Suspend: n>` (le ciel d'Aël prête son élément), `<Viens>` (sa Parole suivante à une cible les prend tous),
+`<Pars>` (l'ennemi passe en dernier), `<Nomme>` (la prochaine Parole sur lui ×1,3). **Écrit** (LEcrit) :
+`<Cercle>` (ses écrits sur la cible ne coûtent rien tant qu'il attend), `<Referme>` (il part, tout part),
+`<Sceau: n>` (n % : l'ennemi perd sa prochaine action ; pas un boss), `<Pret>` (qui frappe l'allié referme
+les pièges de ludwing), `<Symbole>` (compte double dans la résonance), `<Appat>` (Vannes : les ennemis
+touchés frappent celui qui les a provoqués). **Premier paquet, 37 capacités** — Vesper : Le Point Final,
+Exécution, Reprise du Marteau, Trempe, Cri de Fureur, Grande Marée, Enclume, Le Sang Répond, Brise-Garde, et
+Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*, 7 % PV) ; Korrah : Le Creux Entre
+Deux, Coup de Grâce Éclair, L'Immobile, Éclat Noir, Maîtrise, Angle Impossible, Vider le Geste, Focalisation ;
+ludwing : Vannes, Tracer le Cercle, Territoire Scellé, La Règle du Lieu, Faire Douter, Ombre Prêtée, Le
+Symbole, Âme d'Ombre ; Aël : « Reste. », Lumière Tenue, « Assez. », « Pars. », « Viens. », Le Mot Juste, ses
+trois ciels, Volée Nommée, Pluie Nommée. Banc : `navigateur/les_verbes.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il

@@ -68,6 +68,17 @@
  * @text Pour elle : dégâts ×
  * @default 1.2
  *
+ * @param === LES VERBES DE LA PAROLE ===
+ * @default
+ *
+ * @param assez
+ * @text <Assez> : fermer la phrase d'un coup ×
+ * @default 1.5
+ *
+ * @param nomme
+ * @text <Nomme> : la prochaine Parole sur l'ennemi nommé ×
+ * @default 1.3
+ *
  * @param === LES LONGUES ===
  * @default
  *
@@ -133,6 +144,17 @@
  *
  *  Double, Fusion et « pour elle » s'annoncent au-dessus de qui parle.
  *
+ *  LES VERBES DE LA PAROLE (2026-10-22, « Oui rework tout ») — le mot fait ce
+ *  qu'il dit, dans la phrase commune ; une balise, une ligne de description :
+ *   <Reste>     — la phrase en suspens tient un tour de plus ;
+ *   <Assez>     — ferme la phrase d'un coup : frappe avec son élément, ×1,5 ;
+ *   <MotJuste>  — frappe avec l'élément fondamental qui marche le mieux sur la
+ *                 cible, et le laisse en suspens ;
+ *   <Suspend: n> — laisse l'élément n en suspens (le ciel d'Aël le prête) ;
+ *   <Viens>     — sa prochaine Parole à une cible les prend tous ;
+ *   <Pars>      — l'ennemi touché passe en dernier (ce tour, ou le suivant) ;
+ *   <Nomme>     — l'ennemi touché est nommé : la prochaine Parole sur lui ×1,3.
+ *
  *  Les ennemis ne changent pas. Le ratage caché de ParolesSysteme est coupé
  *  pour les héros (son réglage HerosSansRatage).
  *
@@ -152,6 +174,7 @@
     var ETAT = nb('etatLongue', 227);
     var POUR_ELLE = String(P['pourElle'] === undefined ? '4' : P['pourElle']).split(',').map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
     var BONUS_ELLE = nb('bonusPourElle', 1.2);
+    var ASSEZ = nb('assez', 1.5), NOMME = nb('nomme', 1.3);
     var FUSIONS = {};
     String(P['fusions'] || '8+9=17, 8+11=19, 9+11=20, 9+13=22, 11+12=23, 14+15=29').split(',').forEach(function (x) {
         var m = /^\s*(\d+)\s*\+\s*(\d+)\s*=\s*(\d+)\s*$/.exec(x);
@@ -270,10 +293,80 @@
         journal('\\C[16]' + nomEl(el) + ' reste en suspens.\\C[0]');
     }
 
+    //=========================================================================
+    // LES VERBES DE LA PAROLE (2026-10-22, « Oui rework tout ») — les mots
+    // d'Aël font ce qu'ils disent, toujours dans la phrase commune.
+    //=========================================================================
+    function balise(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
+    function meilleurElement(cible) {
+        var best = 8, taux = -1;
+        for (var e = 8; e <= 15; e++) { var r = cible.elementRate(e); if (r > taux + 1e-9) { taux = r; best = e; } }
+        return best;
+    }
+    /** Décidé au premier coup, après la phrase : ce que le mot fait de la phrase. */
+    function verbes(act, cible) {
+        var u = act.subject(), it = act.item();
+        if (!heros(u) || !act.isSkill() || !estParole(it)) { return; }
+        var p = phraseActive();
+        if (balise(it, 'Assez') && p) {                          // « Assez. » : on ferme la phrase, d'un coup
+            act._paroleElements = [p.el];
+            act._paroleMult *= ASSEZ;
+            phrase = null;
+            annonce(u, '« Assez. » — ' + nomEl(p.el) + ' ×' + String(ASSEZ).replace('.', ','), '#ffe08a');
+        }
+        if (balise(it, 'MotJuste') && cible && cible.isEnemy()) { // Le Mot Juste : l'élément qui marche
+            var el = meilleurElement(cible);
+            act._paroleElements = [el];
+            dire(el, u);
+            annonce(u, '✦ Le mot juste : ' + nomEl(el), '#ffe08a');
+        }
+        if (balise(it, 'Suspend')) {                             // le ciel prête son élément à la phrase
+            var s = parseInt(it.meta.Suspend, 10);
+            if (fondamental(s)) { dire(s, u); annonce(u, nomEl(s) + ' en suspens', '#9ad0ff'); }
+        }
+        if (balise(it, 'Reste') && phraseActive()) {              // « Reste. » : la phrase tient un tour de plus
+            phrase.tour = tour() + 1;
+            annonce(u, '« Reste. » — la phrase tient', '#ffe08a');
+        }
+        if (balise(it, 'Viens')) {                               // « Viens. » : sa prochaine Parole les prend tous
+            u._viens = tour();
+            annonce(u, '« Viens. » — tous au même point', '#ffe08a');
+        }
+    }
+    /** Après le coup : ce que le mot laisse sur la cible. */
+    function apres(act, cible) {
+        var u = act.subject(), it = act.item();
+        if (!heros(u) || !act.isSkill() || !cible || !cible.isEnemy() || !cible.result().isHit()) { return; }
+        if (balise(it, 'Nomme') && cible.isAlive()) {             // la flèche nommée : la prochaine Parole sur lui ×1,3
+            cible._nomme = true;
+            annonce(cible, '✦ Nommé', '#ffe08a');
+        }
+        if (balise(it, 'Pars') && cible.isAlive()) {              // « Pars. » : il passe en dernier
+            var l = BattleManager._actionBattlers || [], i = l.indexOf(cible);
+            if (i >= 0) { l.splice(i, 1); l.push(cible); } else { cible._pars = tour() + 1; }
+            annonce(cible, '« Pars. » — en dernier', '#ffe08a');
+        }
+    }
+
     var _apply = Game_Action.prototype.apply;
     Game_Action.prototype.apply = function (target) {
-        if (this._paroleDecidee === undefined && enCombat()) { this._paroleDecidee = true; decider(this); }
+        if (this._paroleDecidee === undefined && enCombat()) { this._paroleDecidee = true; decider(this); verbes(this, target); }
         _apply.call(this, target);
+        if (enCombat()) { apres(this, target); }
+    };
+
+    // « Viens. » : la prochaine Parole à une cible les prend tous (jusqu'à la fin du tour suivant).
+    var _cibles = Game_Action.prototype.makeTargets;
+    Game_Action.prototype.makeTargets = function () {
+        var u = this.subject();
+        if (enCombat() && heros(u) && u._viens !== undefined && u._viens !== null && this.isSkill() && estParole(this.item()) &&
+            this.isForOpponent() && this.isForOne() && !balise(this.item(), 'Viens')) {
+            var vivant = tour() <= u._viens + 1;
+            u._viens = null;
+            var tous = this.opponentsUnit().aliveMembers();
+            if (vivant && tous.length > 1) { annonce(u, '« Viens. » — sur tous', '#ffe08a'); return tous; }
+        }
+        return _cibles.call(this);
     };
 
     // Les éléments d'une Double ou d'une Fusion — pour les dégâts (YEP_ElementCore)
@@ -298,6 +391,13 @@
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _valeur.call(this, target, critical);
         if (this._paroleMult && this._paroleMult !== 1) { v = Math.round(v * this._paroleMult); }
+        // Un ennemi nommé : la prochaine Parole d'un héros sur lui ×1,3, une fois.
+        var it = this.item();
+        if (v > 0 && target && target._nomme && heros(this.subject()) && estParole(it) && !balise(it, 'Nomme')) {
+            target._nomme = false;
+            v = Math.round(v * NOMME);
+            annonce(target, '✦ Nommé ×' + String(NOMME).replace('.', ','), '#ffe08a');
+        }
         return v;
     };
 
@@ -312,9 +412,14 @@
     var _ordres = BattleManager.makeActionOrders;
     BattleManager.makeActionOrders = function () {
         _ordres.call(this);
-        var avant = [], apres = [];
-        (this._actionBattlers || []).forEach(function (b) { (tientUneLongue(b) ? apres : avant).push(b); });
-        this._actionBattlers = avant.concat(apres);
+        var avant = [], fin = [];
+        // une Longue part en dernier ; un ennemi à qui on a dit « Pars. » après qu'il a agi, au tour suivant aussi
+        (this._actionBattlers || []).forEach(function (b) {
+            var pars = b && b._pars && b._pars === tour();
+            if (pars) { b._pars = 0; }
+            (tientUneLongue(b) || pars ? fin : avant).push(b);
+        });
+        this._actionBattlers = avant.concat(fin);
     };
 
     var _debutTour = BattleManager.startTurn;

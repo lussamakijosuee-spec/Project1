@@ -122,6 +122,20 @@
  *  quand cet ennemi le frappe (ᛟ Piège !) : il écrit, il provoque (Vannes),
  *  il attend. Et chaque écrit qui part a 1 chance sur 4 de rester écrit (🍀).
  *
+ *  LES VERBES DE L'ÉCRIT (2026-10-22, « Oui rework tout ») — une balise, une
+ *  ligne de description ; chacun vient du nom que JOKO a donné à la capacité :
+ *   <Cercle>   — tant que cet écrit attend sur une cible, ses autres écrits sur
+ *                elle ne coûtent pas de PV (« À partir d'ici, c'est chez toi ») ;
+ *   <Referme>  — quand il part, tous ses autres écrits partent avec lui
+ *                (« Rien n'échappe ») ;
+ *   <Sceau: n> — quand il part, n % de chances que l'ennemi perde sa prochaine
+ *                action (pas un boss : rang S, <Phases>, <Meca…>) ;
+ *   <Pret>     — écrit sur un allié : jusqu'à la fin du tour suivant, qui frappe
+ *                cet allié referme les pièges de ludwing comme s'il le frappait ;
+ *   <Symbole>  — compte pour deux dans la résonance ;
+ *   <Appat>    — (n'importe quel art) les ennemis touchés frappent celui qui les
+ *                a provoqués, jusqu'à la fin du tour suivant (Vannes).
+ *
  *  Les ennemis n'écrivent pas. Tous les chiffres sont des réglages.
  * ============================================================================
  */
@@ -212,8 +226,12 @@ var LEcrit = LEcrit || {};
     Game_Action.prototype.apply = function (target) {
         if (target && doitEcrire(this)) { ecrire(this, target); return; }
         _appliquer.call(this, target);
-        var it = this.item();
-        if (enCombat() && it && it.id === ACTIVER && target === this.subject()) { activer(this.subject()); }
+        var it = this.item(), u = this.subject();
+        if (enCombat() && it && it.id === ACTIVER && target === u) { activer(u); }
+        if (enCombat() && balise(it, 'Appat') && heros(u) && target && target.isEnemy() && target.isAlive() && target.result().isHit()) {
+            target._appat = { acteur: u.actorId(), jusque: tour() + 1 };
+            annonce(target, '◉ Appâté', '#e080ff');
+        }
     };
     // Les événements communs d'un écrit attendent son activation.
     var _global = Game_Action.prototype.applyGlobal;
@@ -243,21 +261,94 @@ var LEcrit = LEcrit || {};
         if (anim > 0) { c.startAnimation(anim, false, 0); }
         c.clearResult();
         a.apply(c);
+        var touche = c.result().isHit();
         c.startDamagePopup();
         if (c.isDead()) { c.performCollapse(); }
         a.applyGlobal();
+        // <Sceau: n> : n % de chances qu'il perde sa prochaine action (pas un boss)
+        if (balise(sk, 'Sceau') && touche && c.isEnemy() && c.isAlive() && !estBoss(c) &&
+            Math.random() * 100 < (parseInt(sk.meta.Sceau, 10) || 100)) { sceller(c); }
+        // <Pret> : l'allié porte un morceau de son ombre — qui le frappe referme ses pièges
+        if (balise(sk, 'Pret') && c.isActor() && c.isAlive()) {
+            c._ombreDe = { acteur: b.actorId(), jusque: tour() + 1 };
+            annonce(c, 'ᛟ Ombre prêtée', '#e080ff');
+        }
         return true;
     }
+    function balise(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
+    function tour() { return $gameTroop ? $gameTroop.turnCount() : 0; }
+    function estBoss(e) {
+        var n = (e.enemy() && e.enemy().note) || '';
+        return /<\s*Rang\s*:\s*S\s*>/i.test(n) || /<\s*(Meca\w*|Phases)\s*:/i.test(n);
+    }
+    function sceller(c) {
+        var l = BattleManager._actionBattlers || [], i = l.indexOf(c);
+        if (i >= 0) { l.splice(i, 1); c.clearActions(); } else { c._scelle = tour() + 1; }
+        annonce(c, 'ᛟ Scellé : il perd son tour', '#e080ff');
+    }
+    var _ordres = BattleManager.makeActionOrders;
+    BattleManager.makeActionOrders = function () {
+        _ordres.call(this);
+        var t = tour();
+        this._actionBattlers = (this._actionBattlers || []).filter(function (b) {
+            if (b && b._scelle && b._scelle === t) { b._scelle = 0; b.clearActions(); return false; }
+            return true;
+        });
+    };
+
+    // <Cercle> : tant qu'il attend sur une cible, ses autres écrits sur elle ne coûtent pas de PV.
+    function cibleDe(a) {
+        if (!a.isForOpponent() || !a.isForOne() || !(a._targetIndex >= 0)) { return null; }
+        return $gameTroop.members()[a._targetIndex] || null;
+    }
+    function dansLeCercle(b, c) {
+        return ecritsDe(b).some(function (m) { return m.cible === c && balise($dataSkills[m.competence], 'Cercle'); });
+    }
+    var _payer = Game_BattlerBase.prototype.paySkillCost;
+    Game_BattlerBase.prototype.paySkillCost = function (skill) {
+        var a = enCombat() && heros(this) && this.currentAction ? this.currentAction() : null;
+        var c = a && a.item() === skill && doitEcrire(a) ? cibleDe(a) : null;
+        this._cercleGratuit = !!(c && dansLeCercle(this, c));
+        if (this._cercleGratuit) { annonce(this, 'ᛟ Dans le cercle : gratuit', '#e080ff'); }
+        _payer.call(this, skill);
+        this._cercleGratuit = false;
+    };
+    var _coutPV = Game_BattlerBase.prototype.skillHpCost;
+    if (_coutPV) {
+        Game_BattlerBase.prototype.skillHpCost = function (skill) { return this._cercleGratuit ? 0 : _coutPV.call(this, skill); };
+    }
+
+    // <Appat> (Vannes) : les ennemis touchés frappent celui qui les a provoqués, jusqu'à la fin du tour suivant.
+    var _cibles = Game_Action.prototype.makeTargets;
+    Game_Action.prototype.makeTargets = function () {
+        var s = this.subject(), ap = s && s._appat;
+        if (enCombat() && ap && s.isEnemy() && tour() <= ap.jusque && this.isForOpponent() && this.isForOne()) {
+            var h = $gameActors.actor(ap.acteur);
+            if (h && h.isAlive() && $gameParty.battleMembers().indexOf(h) >= 0) { return [h]; }
+        }
+        return _cibles.call(this);
+    };
     /** Fait partir ces écrits de b, ensemble (la résonance) ; la chance de ludwing en garde. */
     function partir(b, liste) {
-        var n = liste.filter(function (m) { return valide(b, m); }).length;
-        var reso = 1 + RESO * Math.max(0, n - 1), partis = 0, restent = [];
+        // <Symbole> compte double dans la résonance
+        var n = liste.filter(function (m) { return valide(b, m); })
+            .reduce(function (t, m) { return t + (balise($dataSkills[m.competence], 'Symbole') ? 2 : 1); }, 0);
+        var reso = 1 + RESO * Math.max(0, n - 1), partis = 0, restent = [], referme = false;
         liste.forEach(function (m) {
             if (declencher(b, m, reso)) {
                 partis++;
+                if (balise($dataSkills[m.competence], 'Referme')) { referme = true; }
                 if (CHANCEUX.indexOf(b.actorId()) >= 0 && m.cible.isAlive() && Math.random() < CHANCE) { restent.push(m); }
             }
         });
+        // <Referme> : quand il part, tous ses autres écrits partent avec lui
+        if (referme && !b._refermant && ecritsDe(b).length) {
+            b._refermant = true;
+            var reste = ecritsDe(b).slice(); b._ecrits = [];
+            annonce(b, 'ᛟ Tout se referme', '#e080ff');
+            partis += partir(b, reste);
+            b._refermant = false;
+        }
         restent.forEach(function (m) { b._ecrits.push(m); annonce(m.cible, '🍀 Toujours écrit', '#a0ffa0'); });
         liste.forEach(function (m) { montrer(m.cible); });
         if (partis > 1) { annonce(b, 'ᛟ Résonance ×' + chiffre(reso), '#ff9ad8'); }
@@ -282,7 +373,13 @@ var LEcrit = LEcrit || {};
         var s = this._subject;
         if (s && s.isEnemy && s.isEnemy() && enCombat()) {
             var vises = this._allTargets || this._targets || [];
-            s._piegeVise = $gameParty.battleMembers().filter(function (a) { return PIEGE.indexOf(a.actorId()) >= 0 && vises.indexOf(a) >= 0; });
+            var t = tour();
+            s._piegeVise = $gameParty.battleMembers().filter(function (a) {
+                if (PIEGE.indexOf(a.actorId()) < 0) { return false; }
+                if (vises.indexOf(a) >= 0) { return true; }
+                // <Pret> : frapper l'allié qui porte son ombre, c'est le frapper lui
+                return vises.some(function (v) { return v && v._ombreDe && v._ombreDe.acteur === a.actorId() && t <= v._ombreDe.jusque; });
+            });
         }
     };
     var _finAction = BattleManager.endAction;
