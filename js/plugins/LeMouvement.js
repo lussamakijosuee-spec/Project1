@@ -155,6 +155,12 @@
  * @text <ToutOuRien> : face ×
  * @default 0.25
  *
+ * @param leurre
+ * @text <Leurre> : esquive en plus (%) jusqu'à sa prochaine action
+ * @type number
+ * @default 30
+ * @desc ludwing esquive déjà 35 % des coups : +30 % le porte à 65 % pour un tour.
+ *
  * @param chanceux
  * @text <ToutOuRien> : ceux qui tirent deux fois
  * @default 3
@@ -224,7 +230,9 @@
  *   <Lache>     — ×1,5, mais elle encaisse ×1,5 jusqu'à sa prochaine action ;
  *   <Premier>   — part toujours avant tout le monde ;
  *   <NeufVoies> — +10 % par Voie déjà prise dans ce combat ;
- *   <ToutOuRien> — pile ×2, face ×0,25 ; ludwing tire deux fois.
+ *   <ToutOuRien> — pile ×2, face ×0,25 ; ludwing tire deux fois ;
+ *   <Leurre>    — esquive +30 % jusqu'à sa prochaine action (« il n'y a plus
+ *                 moyen de savoir lequel est lui »).
  * ============================================================================
  */
 
@@ -274,6 +282,7 @@ var LeMouvement = LeMouvement || {};
     var TOUT       = nombre('tout', 2);
     var RIEN       = nombre('rien', 0.25);
     var CHANCEUX_TOR = liste('chanceux', '3');
+    var LEURRE     = nombre('leurre', 30) / 100;
 
     var NOMS = { forge: 'Forge', onde: 'Onde', source: 'Source', miroir: 'Miroir', vide: 'Vide',
                  eclair: 'Éclair', domaine: 'Domaine', flash: 'Flash', sang: 'Sang' };
@@ -332,7 +341,7 @@ var LeMouvement = LeMouvement || {};
     }
     function remettre(b) {
         b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0;
-        b._reprise = 0; b._touche = false; b._ripostesCompte = 0; b._lache = false; b._voiesVues = {};
+        b._reprise = 0; b._touche = false; b._ripostesCompte = 0; b._lache = false; b._leurre = false; b._voiesVues = {};
     }
 
     //=========================================================================
@@ -360,6 +369,7 @@ var LeMouvement = LeMouvement || {};
 
     function decider(b, action) {
         b._lache = false;                                   // <Lache> : sa garde se referme quand elle agit à nouveau
+        b._leurre = false;                                  // <Leurre> : les ombres se dissipent quand il agit à nouveau
         var v = voieDuMouvement(action);
         if (!v) {
             if (penseJuste(b) && b._mvtVoie && estParole(action.item())) { penser(b, action); return; }
@@ -435,6 +445,11 @@ var LeMouvement = LeMouvement || {};
             mult *= LACHE; b._lache = true;
             annonce(b, '✋ Garde lâchée ×' + chiffre(LACHE), '#ff8a6a');
         }
+        // <Leurre> : jusqu'à sa prochaine action, on ne sait plus lequel est lui
+        if (balise(it, 'Leurre')) {
+            b._leurre = true;
+            annonce(b, '👥 Leurre : esquive +' + Math.round(LEURRE * 100) + ' %', '#b8b8d0');
+        }
         // <ToutOuRien> : pile ou face — le chanceux tire deux fois et garde le meilleur
         if (balise(it, 'ToutOuRien')) {
             var tirage = Math.random();
@@ -476,7 +491,9 @@ var LeMouvement = LeMouvement || {};
     };
     var _esquive = Game_Action.prototype.itemEva;
     Game_Action.prototype.itemEva = function (target) {
-        return balise(this.item(), 'Sur') && heros(this.subject()) ? 0 : _esquive.call(this, target);
+        if (balise(this.item(), 'Sur') && heros(this.subject())) { return 0; }
+        var e = _esquive.call(this, target);
+        return target && target._leurre && heros(target) && enCombat() ? Math.min(0.95, e + LEURRE) : e;
     };
 
     var _appliquer = Game_Action.prototype.apply;

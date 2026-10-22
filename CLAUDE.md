@@ -444,8 +444,14 @@ Voie déjà prise dans le combat ; `<ToutOuRien>` pile ×2, face ×0,25, ludwing
 s'arme aussi en frappant) — Vesper : Marteau à Deux Mains (`Lache`), Ouvrir, Tout Ce Qui Coule, Faille
 d'Armure, Garde Sereine ; Korrah : Prendre l'Élan, Plus Vite que le Geste, Carnage des Neuf Voies, Verdict de
 l'Équilibre (`Assez`) ; ludwing : Tout ou Rien, Contre-Éclat, Contre Totale, Ce Qui Ne Devrait Pas Toucher
-(`Sur`) ; Aël : La Parole Tenue (`Reste`). Une description déjà sur deux lignes n'est jamais écrasée. Banc :
-`navigateur/les_verbes.js`.
+(`Sur`) ; Aël : La Parole Tenue (`Reste`). Une description déjà sur deux lignes n'est jamais écrasée.
+**Troisième paquet, 11** (verbes neufs : `<Avec>` — Parole — frappe aussi avec l'élément en suspens et laisse
+la phrase ouverte, *« une flèche, un mot : les deux partent ensemble »* ; `<Leurre>` — corps — esquive +30 %
+jusqu'à sa prochaine action, *« il n'y a plus moyen de savoir lequel est lui »* ; ludwing esquive déjà 35 %) —
+Vesper : Vague Basse, Prix du Sang (`Lache`), Coup Furieux, Onde de Rage ; Korrah : Éclat Bref, Rien de Visible ;
+ludwing : Ombres Multiples, Sept Éclats (`Reprise`), Lame d'Envers (`Sur`), Porte Entrouverte (`Reste`) ; Aël :
+Trait Clair. **62 capacités** portent un verbe des trois arts (plus les 28 de Korrah liées à seiryu et les 8
+des signatures). Banc : `navigateur/les_verbes.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

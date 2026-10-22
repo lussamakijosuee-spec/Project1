@@ -153,7 +153,9 @@
  *   <Suspend: n> — laisse l'élément n en suspens (le ciel d'Aël le prête) ;
  *   <Viens>     — sa prochaine Parole à une cible les prend tous ;
  *   <Pars>      — l'ennemi touché passe en dernier (ce tour, ou le suivant) ;
- *   <Nomme>     — l'ennemi touché est nommé : la prochaine Parole sur lui ×1,3.
+ *   <Nomme>     — l'ennemi touché est nommé : la prochaine Parole sur lui ×1,3 ;
+ *   <Avec>      — frappe aussi avec l'élément en suspens, et la phrase reste
+ *                 ouverte (« une flèche, un mot : les deux partent ensemble »).
  *
  *  Les ennemis ne changent pas. Le ratage caché de ParolesSysteme est coupé
  *  pour les héros (son réglage HerosSansRatage).
@@ -304,9 +306,17 @@
         return best;
     }
     /** Décidé au premier coup, après la phrase : ce que le mot fait de la phrase. */
-    function verbes(act, cible) {
+    function verbes(act, cible, avant) {
         var u = act.subject(), it = act.item();
         if (!heros(u) || !act.isSkill() || !estParole(it)) { return; }
+        // <Avec> (Trait Clair, « une flèche, un mot : les deux partent ensemble ») : la Parole frappe aussi avec
+        // l'élément en suspens, et la phrase reste ouverte (son propre élément ne la remplace pas).
+        var elA = it.damage ? it.damage.elementId : 0;
+        if (balise(it, 'Avec') && avant && avant.el !== elA) {
+            act._paroleElements = fondamental(elA) ? [elA, avant.el] : [avant.el];
+            phrase = { el: avant.el, tour: avant.tour, par: avant.par };
+            annonce(u, 'Avec · ' + nomEl(avant.el), '#ffe08a');
+        }
         var p = phraseActive();
         if (balise(it, 'Assez') && p) {                          // « Assez. » : on ferme la phrase, d'un coup
             act._paroleElements = [p.el];
@@ -350,7 +360,12 @@
 
     var _apply = Game_Action.prototype.apply;
     Game_Action.prototype.apply = function (target) {
-        if (this._paroleDecidee === undefined && enCombat()) { this._paroleDecidee = true; decider(this); verbes(this, target); }
+        if (this._paroleDecidee === undefined && enCombat()) {
+            this._paroleDecidee = true;
+            var pa = phraseActive(), avant = pa ? { el: pa.el, tour: pa.tour, par: pa.par } : null;
+            decider(this);
+            verbes(this, target, avant);
+        }
         _apply.call(this, target);
         if (enCombat()) { apres(this, target); }
     };

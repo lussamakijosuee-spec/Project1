@@ -523,7 +523,12 @@ function ok(nom, cond, detail) {
         window.__debut = $gameTroop.turnCount();
     });
     try {
-        await page.waitForFunction(function () { return $gameTroop.turnCount() >= window.__debut + 3 || !$gameParty.inBattle(); }, null, { timeout: 300000, polling: 500 });
+        // La Garde boit en FIN de tour : au début du 3ᵉ tour, seuls deux tours sont finis. On attend les trois gorgées
+        // (ou la fin du combat), pas un compteur de tours qui vient de bouger (2026-10-23 : ce contrôle échouait au hasard).
+        await page.waitForFunction(function () {
+            var bu = window.__journal.filter(function (l) { return /La Garde boit/.test(l); }).length;
+            return ($gameTroop.turnCount() >= window.__debut + 3 && bu >= 3) || !$gameParty.inBattle();
+        }, null, { timeout: 300000, polling: 500 });
     } catch (e) { }
     var garde = await page.evaluate(function () {
         return { tour: $gameTroop.turnCount() - window.__debut, boit: window.__journal.filter(function (l) { return /La Garde boit/.test(l); }).length,

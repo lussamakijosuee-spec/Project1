@@ -222,6 +222,23 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         remettre(lud); lud._voieReflux = null; jouer(lud, 1128, e); D.contreEclat = lud._voieReflux;
         ves._voieReflux = null; lud._voieReflux = null;
         out.deux = D;
+
+        // ── TROISIÈME PAQUET ──────────────────────────────────────────────
+        var T3 = {};
+        T3.balises = [tag(1075, 'Entre'), tag(1136, 'Lache'), tag(143, 'Ouvre'), tag(145, 'Finit'), tag(1122, 'Ouvre'), tag(1102, 'Entre'),
+                      tag(1172, 'Leurre'), tag(1126, 'Reprise'), tag(1168, 'Sur'), tag(1163, 'Reste'), tag(1174, 'Avec')];
+        // Trait Clair <Avec> : la flèche part avec l'élément en suspens, la phrase reste
+        LaParole.poser(8, 'Vesper'); var tc = parler(ael, 1174, e);
+        T3.avec = { el: tc._paroleElements, phrase: LaParole.phrase() };
+        LaParole.poser(8, 'Vesper'); parler(ael, 1216, e); T3.avecContre = LaParole.phrase();
+        LaParole.poser(0);
+        // Ombres Multiples <Leurre> : esquive +50 % jusqu'à sa prochaine action
+        remettre(lud); jouer(lud, 1172, e);
+        var coupL = new Game_Action(e); coupL.setAttack();
+        var avecL = coupL.itemEva(lud); lud._leurre = false; var sansL = coupL.itemEva(lud);
+        T3.leurre = { avec: avecL, sans: sansL };
+        lud._leurre = true; jouer(lud, 1066, e); T3.leurreApres = lud._leurre;
+        out.trois = T3;
         return out;
     });
 
@@ -280,6 +297,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('Carnage des Neuf Voies : 3 Voies déjà prises → ×1,3 ; dans un combat neuf, rien', D.neuf.join() === '◆ 3 Voies ×1,3' && D.neufContre.length === 0, D.neuf.join() + ' / ' + D.neufContre.join());
     v('Tout ou Rien : ludwing tire deux fois et garde pile (×2) ; un autre garde face (×0,25)', D.tout === 2 && D.rien === 0.25, D.tout + ' / ' + D.rien);
     v('Garde Sereine (Vesper) et Contre-Éclat (ludwing) arment la riposte en frappant', D.gardeSereine === 1 && D.contreEclat === 1);
+
+    var T3 = r.trois;
+    console.log('\n5) Le troisième paquet');
+    v('les 11 balises sont posées', T3.balises.every(Boolean), JSON.stringify(T3.balises));
+    v('Trait Clair : Lumière ET le Feu en suspens, et la phrase de Vesper reste', JSON.stringify(T3.avec.el) === '[14,8]' && T3.avec.phrase && T3.avec.phrase.el === 8 && T3.avec.phrase.par === 'Vesper', JSON.stringify(T3.avec));
+    v('…contre-épreuve : Lumière — Lueur remplace la phrase', T3.avecContre && T3.avecContre.el === 14, JSON.stringify(T3.avecContre));
+    v('Ombres Multiples : esquive +30 % sur ludwing', Math.abs(T3.leurre.avec - T3.leurre.sans - 0.3) < 1e-9, JSON.stringify(T3.leurre));
+    v('…jusqu\'à sa prochaine action', T3.leurreApres === false);
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
