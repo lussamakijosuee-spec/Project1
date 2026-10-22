@@ -162,6 +162,8 @@
     /** Une Parole de l'Esprit : au mana positif, et seulement lui. */
     function estParole(item) {
         if (!item || !DataManager.isSkill(item)) { return false; }
+        // [JOKO 2026-10-22] Une seule règle pour les trois arts : LesTroisArts la porte.
+        if (window.LesTroisArts && LesTroisArts.art) { return LesTroisArts.art(item) === 'parole'; }
         if (degre(item)) { return true; }
         var m = /^Parole n°\s*(\d+)/.exec(item.name || '');
         if (m) { return AUTRES_MANAS.indexOf(+m[1]) < 0; }

@@ -46,10 +46,18 @@ function controles(base) {
     r.push(['aucune compétence ne pointe plus sur un élément replié (5, 6)', restes === 0, restes + ' restante(s)']);
 
     // 2 · chaque source paie dans SA monnaie, et pas dans une autre
+    //     ⚠ Depuis le 2026-10-22 (LesTroisArts), c'est l'ART qui donne le mana d'une compétence de
+    //     héros : un coup physique ou une <Voie:> est un mouvement, il se paie en PT même si sa fiche
+    //     porte l'élément 3. Le prix par art est contrôlé par bancs/navigateur/les_trois_arts.js.
+    var ART_DE = { 2: 'ecrit', 3: 'parole', 4: 'mouvement' };
+    function artFiche(k) { var m = /<\s*Art\s*:\s*([a-zé]+)/i.exec(k.note || ''); return m ? m[1].toLowerCase().replace('é', 'e') : ''; }
+    function mouvement(k) { return k.hitType === 1 || /<\s*Voie\s*:/i.test(k.note || ''); }
     [[2, 'pv', 'PV'], [3, 'pm', 'PM'], [4, 'pt', 'PT']].forEach(function (c) {
         var elem = c[0], champ = c[1];
         var liste = deLaSource(elem).filter(function (k) {
-            var p = paye(k);
+            var p = paye(k), t = artFiche(k);
+            if (t && t !== ART_DE[elem]) { return false; }         // <Art:> sur la fiche décide
+            if (!t && elem === 3 && mouvement(k)) { return false; }
             return p.pm || p.pt || p.pv;                 // les gratuites sont hors sujet
         });
         var fautives = liste.filter(function (k) {
@@ -136,7 +144,7 @@ controles(base()).forEach(function (c) {
 var SABOTAGES = [
     ['une compétence repointée sur l\'élément 5', function (b) { b.skills[1].damage.elementId = 5; }, /élément replié/],
     ['l\'Âme payée en PM', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 2 && RE_HP.test(x.note || ''); })[0]; k.mpCost = 10; }, /l'Âme \(élém 2\)/],
-    ['l\'Esprit payé en PT', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 3 && x.mpCost > 0; })[0]; k.tpCost = 5; }, /l'Esprit \(élém 3\)/],
+    ['l\'Esprit payé en PT', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 3 && x.mpCost > 0 && x.hitType !== 1 && !/<\s*Voie\s*:/i.test(x.note || ''); })[0]; k.tpCost = 5; }, /l'Esprit \(élém 3\)/],
     ['le Corps payé en PM', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 4 && x.tpCost > 0; })[0]; k.mpCost = 5; }, /le Corps \(élém 4\)/],
     ['un prix de vie à 80 %', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 2 && RE_HP.test(x.note || ''); })[0]; k.note = k.note.replace(RE_HP, '<HP Cost: 80%>'); }, /pourcentage/],
     ['une compétence de Mana Pur repointée ailleurs', function (b) { var k = b.skills.filter(function (x) { return x && x.damage && x.damage.elementId === 7; })[0]; k.damage.elementId = 4; }, /Mana Pur \(7, 16\)/],

@@ -246,18 +246,18 @@ var SABOTAGES = [
         base[1].note = (base[1].note || '') + '\n<Cooldown: 3>';
     }, /compétence que le plugin ignore/],
     ['la recharge retirée de la plus forte compétence libre', function (base) {
-        base[1105].note = String(base[1105].note).replace(/<\s*Cooldown\s*:\s*\d+\s*>/i, '');
+        base[68].note = String(base[68].note).replace(/<\s*Cooldown\s*:\s*\d+\s*>/i, '');   // 2026-10-22 : Le Creux Entre Deux se paie en PT, Annihilation des Ténèbres a pris le relais
     }, /qu'aucune ressource ne freine porte une recharge/],
     ['une recharge posée sur le coup de désespoir à 1 lancer', function (base) {
         // Le cas réel évité de justesse : « Dragon de la Nuit Sanglante ».
         base[59].note = (base[59].note || '') + '\n<Cooldown: 4>';
     }, /son propre coût limite déjà/],
     ['la ligne d\'explication écrite entre chevrons', function (base) {
-        base[1105].note = String(base[1105].note)
-            .replace(/^recharge posee.*$/m, '<recharge posee le 2026-09-18 : 11234 degats>');
+        base[68].note = String(base[68].note)
+            .replace(/^recharge pos.*$/m, '<recharge posee le 2026-09-18 : 11234 degats>');
     }, /métadonnée parasite/],
     ['une recharge allongée à 12 tours', function (base) {
-        base[1101].note = String(base[1101].note).replace(/<Cooldown:\s*\d+>/i, '<Cooldown: 12>');
+        base[68].note = String(base[68].note).replace(/<Cooldown:\s*\d+>/i, '<Cooldown: 12>');
     }, /ne dépasse 5 tours/]
 ];
 console.log('\n2) Contre-épreuve — chaque sabotage doit faire tomber SON contrôle');

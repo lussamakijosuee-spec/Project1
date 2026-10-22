@@ -180,7 +180,8 @@ function ok(nom, cond, detail) {
         '+' + v.rendre.soin + ' PV (attendu ' + v.rendre.attendu + ')');
     ok('…et le recul ne la tue plus avant le soin', v.rendre.vivante && v.rendre.hp > v.rendre.hp0,
         v.rendre.hp0 + ' → ' + v.rendre.hp + ' PV');
-    ok('le recul (15 %) porte sur la base, pas sur la part du Masque', v.recul.total > v.recul.base && Math.abs(v.recul.perdu - v.recul.surLaBase) <= 2,
+    // 2026-10-22 — JOKO : le corps se paie en PT, « et rien d'autre » (09-17) ; le recul du négatif est à 0 (ManaAffinity).
+    ok('le mana négatif ne brûle plus la chair : aucun recul, même avec le Masque', v.recul.total > v.recul.base && v.recul.perdu === 0,
         'perdu ' + v.recul.perdu + ' · base ' + v.recul.surLaBase + ' · sur le total ç\'aurait été ' + v.recul.surLeTotal);
     ok('Sang : le Pacte brûlé revient, et la Voie du Sang boit pour elle', v.saignee.brule > 0 && v.saignee.soin > v.saignee.brule,
         '+' + v.saignee.soin + ' PV (dont ' + v.saignee.brule + ' de Pacte)');

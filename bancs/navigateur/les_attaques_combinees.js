@@ -378,7 +378,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             r.fiches = DUOS.map(function (id) {
                 var s = $dataSkills[id], ids = s.meta.unisonItemActors;
                 var a = new Game_Action(M(ids[0])); a.setSkill(id);
-                return { id: id, type: s.stypeId, acteurs: ids.slice().sort().join('+'), apprendre: (s.meta.unisonItemActorLearn || []).join(','), elements: a.getItemElements().length };
+                return { id: id, type: s.stypeId, acteurs: ids.slice().sort().join('+'), apprendre: (s.meta.unisonItemActorLearn || []).join(','), elements: a.getItemElements().filter(function (x) { return x < 2 || x > 7; }).length };   // sans le mana de l'art (LesTroisArts, 2026-10-22)
             });
             r.typeNom = $dataSystem.skillTypes[25];
             r.connues = heros.map(function (h) {

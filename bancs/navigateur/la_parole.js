@@ -148,19 +148,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('contre-épreuve : seiryu ne récite pas — Lumière reste en suspens', r3.seiryu && r3.seiryu.el === 14, JSON.stringify(r3.seiryu));
 
     // ── 4 · la Double ──────────────────────────────────────────────────
+    // Depuis le 2026-10-22, LesTroisArts ajoute à toute Parole de héros son mana (le positif, 3) :
+    // la phrase se lit sur les éléments fondamentaux, sans les manas (contrôlé dans les_trois_arts.js).
+    await page.evaluate(function () { window.__sansMana = function (x) { return x < 2 || x > 7; }; });
     console.log('\n4) La Double : deux éléments');
     var r4 = await page.evaluate(function () {
         var ael = $gameActors.actor(4), e = $gameTroop.members()[0], r = {};
         LaParole.poser(8, 'Vesper'); __journal.length = 0;
         var act = __agir(ael, 1197, e);                            // Vent — Rafale (double)
-        r.elements = act.getItemElements(); r.phrase = LaParole.phrase();
+        r.elements = act.getItemElements().filter(__sansMana); r.phrase = LaParole.phrase();
         r.journal = __journal.filter(function (t) { return /Double/.test(t); })[0] || '';
         LaParole.poser(10, 'Aël');
         act = __agir(ael, 1197, e);                                // même élément : rien
-        r.meme = act.getItemElements(); r.phraseMeme = LaParole.phrase();
+        r.meme = act.getItemElements().filter(__sansMana); r.phraseMeme = LaParole.phrase();
         LaParole.poser(0);
         act = __agir(ael, 1197, e);                                // rien en suspens
-        r.vide = act.getItemElements();
+        r.vide = act.getItemElements().filter(__sansMana);
         return r;
     });
     v('avec Feu en suspens, Vent — Rafale frappe Vent ET Feu', JSON.stringify(r4.elements) === '[10,8]', JSON.stringify(r4.elements));
@@ -179,16 +182,16 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var v0 = base.makeDamageValue(e, false), t0 = e.elementRate(15);
         LaParole.poser(14, 'Aël'); __journal.length = 0;
         var act = __agir(lud, 1224, e);                            // Ombre — Nuit (fusion)
-        r.elements = act.getItemElements(); r.mult = act._paroleMult; r.phrase = LaParole.phrase();
+        r.elements = act.getItemElements().filter(__sansMana); r.mult = act._paroleMult; r.phrase = LaParole.phrase();
         var v1 = act.makeDamageValue(e, false), t1 = e.elementRate(29);
         r.ratio = (v1 / v0) / (t1 / t0);
         r.journal = __journal.filter(function (t) { return /FUSION/.test(t); })[0] || '';
         // une autre paire : rien
         LaParole.poser(10, 'Aël');
-        act = __agir(lud, 1224, e); r.autre = act.getItemElements(); r.autrePhrase = LaParole.phrase();
+        act = __agir(lud, 1224, e); r.autre = act.getItemElements().filter(__sansMana); r.autrePhrase = LaParole.phrase();
         // une Simple ne fusionne pas, même avec la bonne paire
         LaParole.poser(9, 'Vesper');
-        act = __agir(ves, 1186, e); r.simple = act.getItemElements(); r.simplePhrase = LaParole.phrase();
+        act = __agir(ves, 1186, e); r.simple = act.getItemElements().filter(__sansMana); r.simplePhrase = LaParole.phrase();
         LaParole.poser(0);
         return r;
     });
@@ -253,7 +256,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             var r = ap.apply(this, arguments);
             var s = this.subject();
             if (s && s.isActor && s.isActor() && s.actorId() === 3 && this.item() && this.item().id === 1224 && !window.__lud) {
-                window.__lud = { elements: this.getItemElements(), mult: this._paroleMult };
+                window.__lud = { elements: this.getItemElements().filter(__sansMana), mult: this._paroleMult };
             }
             return r;
         };

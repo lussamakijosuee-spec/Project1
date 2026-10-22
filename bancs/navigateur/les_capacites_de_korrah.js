@@ -101,7 +101,10 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             if (nom === 'addText') { window.__journal.push(String(t).replace(/\\C\[\d+\]/g, '')); }
             return push.apply(this, arguments);
         };
-        $gameParty.members().forEach(function (x) { x.setMp(x.mmp); });
+        $gameParty.members().forEach(function (x) { x.setMp(x.mmp); x.setTp(100); });
+        // 2026-10-22 : ses mouvements se paient en PT (LesTroisArts) ; ce banc juge les liens avec seiryu,
+        // pas la barre (contrôlée par les_trois_arts) : les PT ne manquent jamais ici.
+        Game_BattlerBase.prototype.skillTpCost = function () { return 0; };
         $gameTroop.members().forEach(function (e) { e.addParam(0, 9999999); e.recoverAll(); });
         window.__alea = Math.random; Math.random = function () { return 0.5; };
     });

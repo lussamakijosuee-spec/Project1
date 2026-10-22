@@ -433,6 +433,8 @@
     // Renvoi, celles de Korrah l'Éclat Noir, ludwing et Vesper s'y soignaient.
     function horsDuCorps(item) {
         if (!item || !DataManager.isSkill(item)) return true;
+        // [JOKO 2026-10-22] Une seule règle pour les trois arts : seul un mouvement prend la Voie du héros.
+        if (window.LesTroisArts && LesTroisArts.art) return LesTroisArts.art(item) !== 'mouvement';
         if (window.LaParole && LaParole.estParole && LaParole.estParole(item)) return true;
         if (TYPES_AME.indexOf(item.stypeId) >= 0) return true;
         return !!item.damage && ELEMENTS_AME.indexOf(item.damage.elementId) >= 0;

@@ -108,11 +108,18 @@
     };
 
     // ── la mise à mort : on récolte l'âme, et elle pèse ────────────────────
+    // ⚠ [2026-10-22] YEP_BattleEngineCore rend les cibles IMMORTELLES pendant toute l'action
+    // (« immortal: targets, true » dans sa séquence par défaut) : l'ennemi reste à 0 PV sans
+    // mourir jusqu'à la fin du coup. On ne lisait que isDead() : l'âme d'une mise à mort n'était
+    // jamais comptée. À 0 PV sous l'immortalité, il est tombé ; et « vivait » exige des PV, pour
+    // qu'un deuxième coup sur le même corps ne compte pas deux âmes.
+    function tombe(t) { return t.isDead() || (t.hp <= 0 && !!t.isImmortal && t.isImmortal()); }
+    window.Porteur.tombe = tombe;
     var _exec = Game_Action.prototype.executeDamage;
     Game_Action.prototype.executeDamage = function (target, value) {
-        var vivait = target && target.isEnemy && target.isEnemy() && target.isAlive();
+        var vivait = target && target.isEnemy && target.isEnemy() && target.isAlive() && target.hp > 0;
         _exec.call(this, target, value);
-        if (!vivait || !target.isDead()) { return; }
+        if (!vivait || !tombe(target)) { return; }
         var s = this.subject();
         if (!s || !s.isActor || !s.isActor()) { return; }
 

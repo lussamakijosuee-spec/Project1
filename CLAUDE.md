@@ -316,7 +316,8 @@ Voie par défaut) ne changent pas. Avant, ses Paroles portaient sa Voie : le Ren
 Noir de Korrah (ses Paroles y perdent ~25 % en moyenne), les soins de ludwing et de Vesper. La
 direction acceptée pour la suite (*« totalement d'accord »*) : le positif **prépare**, le sombre
 **enchaîne**, le spirituel **marque** ; une monnaie par art (PM, PT, PV — changer les coûts reste
-une modification en masse, §2) ; une seule chose à l'écran par art. Banc :
+une modification en masse, §2) ; une seule chose à l'écran par art. Corrigée le 2026-10-22 : c'est
+l'**âme** qui prépare (elle écrit), la Parole **calcule** (voir « Les trois arts »). Banc :
 `navigateur/la_regle_pour_tous.js`.
 
 **Ça doit se sentir** (JOKO, après avoir joué, 2026-10-20) : *« j'ai rien senti de différence […]
@@ -327,9 +328,8 @@ texte, couleur)`** (texte flottant au-dessus du combattant), une **icône d'éta
 (YEP_BuffsStatesCore `setStateCounter` ; un héros n'affiche que **2 icônes**, par priorité ; un ennemi
 une à la fois, en boucle), ou l'ordre des tours. Autres constats : `Window_Phrase` (LaParole) est posée
 exactement sur `Window_Pacte` (LePacteDeSang, 0,388) ; la 5ᵉ rangée de statut (seiryu) est hors champ.
-Les **PT** ne sont pas une monnaie ici : l'Attaque (tpGain 100 × TCR ~2,4) remplit la jauge, la Relique 46
-la garde d'un combat à l'autre — payer les mouvements en PT ne coûterait rien (et casserait le froid de
-Korrah et le livre d'Aël, calculés sur les PM). **Les manas** (JOKO) : *« il n'y a plus âme et mana
+Les **PT** n'étaient pas une monnaie : l'Attaque (tpGain 100 × TCR ~2,4) remplissait la jauge, la Relique 46
+la gardait d'un combat à l'autre — réglé le 2026-10-22 (« Les trois arts », plus bas). **Les manas** (JOKO) : *« il n'y a plus âme et mana
 originel et mana sombre, c'est que mana négatif, mana positif et mana spirituel »* — 5 = 4, 7 = 2.
 
 **Le Mouvement** (`LeMouvement.js`, 2026-10-20 ; JOKO : *« D'abord, fais les mouvements, finis le
@@ -342,8 +342,8 @@ même technique → ×0,85, flux 0 ; au flux 3, **le geste juste** ×1,5, flux 0
 de 15 % des PV max, un état qui immobilise, une Parole / l'âme / un objet → plus de posture ; la Garde (2)
 et un ordre à seiryu (type 21) la gardent. **En premier** : dans le flux (dès 1), un mouvement part avant tout le monde (`makeActionOrders`,
 après LaParole). Tout s'annonce au-dessus du héros ; MaitriseVoies annonce aussi le Reflux, le Renvoi,
-l'Éclat Noir et le Point Final manqué. Les **coûts ne changent pas** (pas de PT). Banc :
-`navigateur/le_mouvement.js`.
+l'Éclat Noir et le Point Final manqué. Depuis le 2026-10-22, « est un mouvement » = l'art de
+LesTroisArts, et les mouvements se paient en PT. Banc : `navigateur/le_mouvement.js`.
 
 **Le Spirituel** (`LeSpirituel.js`, 2026-10-20 ; JOKO : *« mana spirituel, c'est plus de soi, émotion de
 soi, volonté »*, *« les runes, les marquages »*, *« finis le rework spirituel »*). **Est du spirituel** : une
@@ -354,7 +354,49 @@ par un vrai coup du marqueur (`executeDamage` : une mise à mort compte l'âme e
 que le Renvoi ou le Reflux de l'ennemi ne la renvoient ; s'il **tombe** marqué, qui a écrit reprend 8 % de ses PV max par marque. **La volonté** :
 ses techniques (dégâts et soins) × (1 + 0,5 × PV manquants + 0,25 par allié tombé), ×1,75 au plus. Les
 ennemis n'écrivent pas. 23 des 37 techniques de l'âme se paient déjà en PV ; les 12 en PM ne sont pas
-touchées. Banc : `navigateur/le_spirituel.js`.
+touchées. Banc : `navigateur/le_spirituel.js`. **Éteint le 2026-10-22** (gardé) : remplacé par L'Écrit.
+
+**Les trois arts** (`LesTroisArts.js`, 2026-10-22). JOKO a voulu qu'on comprenne avant de faire (*« resete
+tout et fait comme ça devait être de base mais avant ça tu dois comprendre »*), puis : *« Spirituelle c'est
+plus comme les symboles le fait de écrire ou préparer des écrits le système de Full Metal Alchemist »*,
+*« Oui pour les runes »*, *« Oui la volonté l'âme la détermination »*, et *« B pour l'écrit et oui pour le 2
+et je t'autorise à tout même les capacités littéralement tout sauf les dons »*. La Genèse : les trois
+arts du Premier — les mathématiques du mana (la **Parole**, l'Esprit), les voies d'art des mouvements (le
+**Mouvement**, le Corps), l'écriture des âmes (l'**Écrit**, l'Âme) ; *« le corps attaqua l'âme, l'âme attaqua
+l'esprit et l'esprit attaqua le corps »*. Trois rapports au temps : le corps **maintenant** (PT), l'esprit
+**ce tour-ci** (PM), l'âme **plus tard** (PV). **L'art d'une compétence de héros**, dans l'ordre : `<Art: parole
+| mouvement | ecrit | aucun>` sur la fiche ; aucun art pour les types 21, 22, 23 et 2, 6, 461, 480 ; une
+rune → écrit ; les échelles 1186-1225 → Parole ; « Parole n°X » → n°2 / 7 écrit, n°4 / 5 mouvement, sinon
+Parole ; types 8, 9, éléments 2, 7 → écrit ; `<Voie:>`, éléments 4, 5, coup physique, types du corps (5, 10-19,
+24), frappe physique → mouvement ; `<Parole>`, sort magique, soin → Parole ; sinon aucun (le soutien).
+LaParole, LeMouvement et MaitriseVoies demandent l'art ici : une seule règle. **Le triangle** : sur une
+compétence de héros, les éléments de mana sont remplacés par celui de l'art (`getItemElements` : dégâts et
+boucliers) — un mouvement de Feu frappe en Feu et en négatif ; ▲ / ▼ s'annoncent sur l'ennemi ; l'aide dit
+`【PAROLE · FEU】`. **Le prix suit l'art** : 88 capacités réécrites (mouvement : ses PM en PT, même chiffre ;
+écrit : PM → PV au tiers, ou seulement le PV qu'il avait déjà ; Parole : ses PT en PM ; un PV hors ultime
+retiré). **Toute capacité a un art** : les 41 de soutien qui n'en avaient pas reçoivent `<Art:>` — ludwing
+écrit d'abord (les cercles du Domaine 1114-1117 « À partir d'ici, c'est chez toi », Marquer la Cible, Faire
+Douter, Ombre Prêtée, Lotus des Ténèbres, Âme d'Ombre), Aël parle (Halo seul est écrit), Vesper bouge (ses
+gardes ; L'Équilibre Tenu est écrit), Korrah bouge (prises, postures) et parle (ordres de l'esprit, Ralentir
+qui confie ses PM) ; restent sans art Fuir, revelation, VUE et les pièces des dons (438, 818, 14, 111, 69).
+**« Sauf les dons »** : les types ouverts par l'acteur ou par son don (4, 5, 6, 8-24, 26) et 71, 810,
+438 ne changent pas ; ni 15, 18, 96, 148, 1173, dont un ennemi se sert. Recharges (règle de `18_recharges`) :
+retirées sur 8 mouvements que leurs PT limitent, posée sur Annihilation des Ténèbres (68). **La barre de PT**
+(JOKO : *« oui pour le 2 »*) : l'Attaque rend 20 PT (× TCR ~2,4 ≈ 47), les Reliques 44-46 ne les gardent plus.
+**Éteints** : FusionMana, ElementsVivants, LeSpirituel ; ManaAffinity : recul 0 / 0, `elPur` 99 (7 est le
+spirituel). Les 9 Voies de MaitriseVoies restent (les styles du corps ; le Masque de Vesper boit le drain du
+Sang). Banc : `navigateur/les_trois_arts.js`.
+
+**L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
+(l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
+allié, soi), état **257 « ᛟ Écrit »** (le nombre en chiffre, ne s'use pas). **« ᛟ Activer »** (compétence
+**1309**, type 1, `<Instantané>`, apprise au niveau 1 par les classes 1-4 ; un héros d'une partie déjà
+commencée la reçoit au premier combat) fait partir **tous** ses écrits d'un coup, dans l'ordre, **×1,25**
+(`bonusEcrit`) ; grisée sans écrit. 3 écrits en attente au plus par héros (`ecritsMax`). Un ennemi tombé
+emporte ses écrits. **Déjà écrits** (partent tout de suite) : les dons — types 8, 9, 26 (*« les runes sur son
+collier »*, ludwing), une fiche `<DejaEcrit>` (Aspiration des Âmes Damnées, 70 : son collier) — les attaques à plusieurs (`<Combo>`, unisson) et la Parole lue d'Aël. **La volonté**
+(de LeSpirituel) : tout ce qui est de l'âme × (1 + 0,5 × PV manquants + 0,25 par allié tombé), ×1,75 au plus.
+Activer garde la posture du Mouvement. Banc : `navigateur/l_ecrit.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
@@ -412,6 +454,10 @@ lourd tourne en même temps : les lancer seuls.
   posé sur le combattant **en train d'agir** : il dure un tour de plus que sur un autre. Pour un
   état qui doit faire perdre exactement un tour, prendre « fin de tour » et régler la durée selon
   que la cible a déjà joué (`BattleManager._performedBattlers`) ;
+- YEP_BattleEngineCore rend les cibles **immortelles pendant toute l'action** (« immortal: targets, true »
+  dans sa séquence par défaut) : un ennemi tué reste à 0 PV sans `isDead()` jusqu'à la fin du coup. Un
+  code qui compte une mise à mort dans `executeDamage` doit lire « 0 PV et immortel » (PorteurDAmes et
+  le Marqué de LeRegistre ne comptaient jamais l'âme d'une mise à mort — corrigé le 2026-10-22) ;
 - un banc qui saisit les commandes lui-même doit passer par les fenêtres (`commandAttack`,
   `onSelectAction`, `onEnemyOk`) : tant qu'une fenêtre de commande reste active, Scene_Battle
   n'appelle plus `BattleManager.update` et le combat se fige sans erreur.

@@ -33,7 +33,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 var SOCLES = ['LoreCanon', 'JadeEntitePlunging', 'Lore_SanteMentale', 'Errance',
     'CorruptionAme', 'Surpassement', 'RangsPuissance'];
 // Ce qui reste du mana, et qui doit tourner sans eux.
-var RESTENT = ['Voies', 'Fusion', 'Paroles'];
+// 2026-10-22 — JOKO : « resete tout et fait comme ça devait être de base » : FusionMana (Chair d'Âme…, qui tirait
+// encore vers les Chutes) est éteint ; les trois arts tiennent le mana (LesTroisArts, L'Écrit).
+var RESTENT = ['Voies', 'Paroles', 'LesTroisArts', 'LEcrit'];
 
 var ok = 0, ko = 0;
 function verdict(t, passe, detail) {
@@ -106,6 +108,8 @@ function verdict(t, passe, detail) {
         for (var i = 1; i < $dataSkills.length; i++) {
             var s = $dataSkills[i];
             if (!s || !s.name || !s.meta || !s.meta.Voie) { continue; }
+            // 2026-10-22 : une fiche à <Voie:> peut être un écrit (les cercles du Domaine de ludwing) — il ne part pas tout de suite
+            if (window.LesTroisArts && LesTroisArts.art(s) !== 'mouvement') { continue; }
             var v = String(s.meta.Voie).toLowerCase().trim();
             if (!parVoie[v] && s.damage && s.damage.type === 1) { parVoie[v] = s; }
         }

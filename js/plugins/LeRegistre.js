@@ -254,10 +254,12 @@
     // Un Marqué qui tombe paie sa dette. (Les morts clairent les états : on regarde AVANT.)
     var _degats = Game_Action.prototype.executeDamage;
     Game_Action.prototype.executeDamage = function (target, value) {
-        var marque = !!(target && target.isEnemy && target.isEnemy() && target.isAlive() && target.isStateAffected(MARQUE));
+        // ⚠ [2026-10-22] YEP rend la cible immortelle pendant l'action : à 0 PV, elle est tombée (PorteurDAmes).
+        var marque = !!(target && target.isEnemy && target.isEnemy() && target.isAlive() && target.hp > 0 && target.isStateAffected(MARQUE));
         _degats.call(this, target, value);
         var u = this.subject();
-        if (marque && target.isDead() && enCombat() && u && u.isActor && u.isActor()) {
+        var tombe = target.isDead() || (target.hp <= 0 && !!target.isImmortal && target.isImmortal());
+        if (marque && tombe && enCombat() && u && u.isActor && u.isActor()) {
             ajouter(BONUS_MORT, target.name() + ' était Marqué, il paie sa dette');
         }
     };

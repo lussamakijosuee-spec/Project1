@@ -158,6 +158,8 @@ var LeMouvement = LeMouvement || {};
         if (TYPES_EXCL.indexOf(it.stypeId) >= 0) { return ''; }
         var v = Voies.voieDe(action);
         if (!v || !POSTURES[v]) { return ''; }
+        // [JOKO 2026-10-22] Une seule règle pour les trois arts : LesTroisArts la porte.
+        if (window.LesTroisArts && LesTroisArts.art) { return LesTroisArts.art(it) === 'mouvement' ? v : ''; }
         var ecrite = it.meta && it.meta.Voie !== undefined;
         var corps = !!it.damage && CORPS.indexOf(it.damage.elementId) >= 0;
         return (ecrite || it.hitType === 1 || corps) ? v : '';

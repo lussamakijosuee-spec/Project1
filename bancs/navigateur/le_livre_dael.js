@@ -103,9 +103,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         r.attaque = __agir(1, e);                  // l'Attaque
         r.garde = __agir(2, a);                    // la Garde
         r.gratuit = __agir(12, k);                 // Encouragement, 0 PM
-        r.etau = __agir(1118, e);                  // Étau, 40 PM : rien, et rien d'effacé
+        r.etau = __agir(1182, e);                  // Le Mot Juste, 40 PM : rien, et rien d'effacé
         r.comete = __agir(170, e);                 // Comète, 20 PM tout juste
-        r.couts = { rayon: a.skillMpCost($dataSkills[166]), etau: a.skillMpCost($dataSkills[1118]), comete: a.skillMpCost($dataSkills[170]) };
+        r.couts = { rayon: a.skillMpCost($dataSkills[166]), etau: a.skillMpCost($dataSkills[1182]), comete: a.skillMpCost($dataSkills[170]) };
         r.ecran2 = SceneManager._scene._fenetreLecture.texte();
         r.voile = __agir(1273, e);                 // Porte — le Voile, 12 PM : une Porte écrit
         r.plein = __agir(166, e);                  // déjà plein : reste à 3
@@ -128,7 +128,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('le combat commence livre vide', l.depart === 0, String(l.depart));
     v('Rayon Stellaire (10 PM) écrit une page', l.rayon === 1, l.rayon + ' · coûts ' + JSON.stringify(l.couts));
     v('contre-épreuve : l\'Attaque, la Garde et une Parole gratuite n\'écrivent rien', l.attaque === 1 && l.garde === 1 && l.gratuit === 1);
-    v('contre-épreuve : Étau (40 PM) n\'écrit rien, et n\'efface rien', l.etau === 1);
+    v('contre-épreuve : Le Mot Juste (40 PM) n\'écrit rien, et n\'efface rien', l.etau === 1);
     v('Comète (20 PM tout juste) écrit', l.comete === 2);
     v('à l\'écran : 📖 ■■□', l.ecran2.indexOf('📖 ■■□') === 0, l.ecran2);
     v('une Porte pas chère écrit comme une petite Parole', l.voile === 3);
@@ -172,7 +172,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         e._lectureAel = 0;
         __agir(166, e); r.l1 = BibliothequeAel.lecture(e);
         r.ecran = SceneManager._scene._fenetreLecture.texte();
-        __agir(1118, e); r.l2 = BibliothequeAel.lecture(e);      // Étau, 40 PM : elle perd le fil
+        __agir(1182, e); r.l2 = BibliothequeAel.lecture(e);      // Le Mot Juste, 40 PM : elle perd le fil
+                                                                 // (Étau, l'ancien exemple, est un mouvement payé en PT depuis le 2026-10-22)
         $gameTemp._forceActionQueue = undefined;
         for (var i = 0; i < 4; i++) { __agir(166, e); }
         var t = BibliothequeAel.flecheContre(e);
