@@ -438,7 +438,14 @@ Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*,
 Deux, Coup de Grâce Éclair, L'Immobile, Éclat Noir, Maîtrise, Angle Impossible, Vider le Geste, Focalisation ;
 ludwing : Vannes, Tracer le Cercle, Territoire Scellé, La Règle du Lieu, Faire Douter, Ombre Prêtée, Le
 Symbole, Âme d'Ombre ; Aël : « Reste. », Lumière Tenue, « Assez. », « Pars. », « Viens. », Le Mot Juste, ses
-trois ciels, Volée Nommée, Pluie Nommée. Banc : `navigateur/les_verbes.js`.
+trois ciels, Volée Nommée, Pluie Nommée. **Deuxième paquet, 14** (verbes neufs du corps : `<Lache>` ×1,5 mais
+elle encaisse ×1,5 jusqu'à sa prochaine action ; `<Premier>` part avant tout le monde ; `<NeufVoies>` +10 % par
+Voie déjà prise dans le combat ; `<ToutOuRien>` pile ×2, face ×0,25, ludwing tire deux fois ; et `<Riposte>`
+s'arme aussi en frappant) — Vesper : Marteau à Deux Mains (`Lache`), Ouvrir, Tout Ce Qui Coule, Faille
+d'Armure, Garde Sereine ; Korrah : Prendre l'Élan, Plus Vite que le Geste, Carnage des Neuf Voies, Verdict de
+l'Équilibre (`Assez`) ; ludwing : Tout ou Rien, Contre-Éclat, Contre Totale, Ce Qui Ne Devrait Pas Toucher
+(`Sur`) ; Aël : La Parole Tenue (`Reste`). Une description déjà sur deux lignes n'est jamais écrasée. Banc :
+`navigateur/les_verbes.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

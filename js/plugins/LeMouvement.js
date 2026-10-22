@@ -138,6 +138,28 @@
  * @text <Accumule> : + par riposte depuis la dernière fois
  * @default 0.15
  *
+ * @param neufVoiesParVoie
+ * @text <NeufVoies> : + par Voie déjà prise dans le combat
+ * @default 0.1
+ *
+ * @param lache
+ * @text <Lache> : ses dégâts ×, et ceux qu'elle reçoit ×
+ * @default 1.5
+ * @desc Jusqu'à sa prochaine action.
+ *
+ * @param tout
+ * @text <ToutOuRien> : pile ×
+ * @default 2
+ *
+ * @param rien
+ * @text <ToutOuRien> : face ×
+ * @default 0.25
+ *
+ * @param chanceux
+ * @text <ToutOuRien> : ceux qui tirent deux fois
+ * @default 3
+ * @desc ludwing (3), « le plus CHANCEUX du groupe, littéralement ».
+ *
  * @help
  * ============================================================================
  *  LE MOUVEMENT — le corps qui enchaîne                          pour JOKO
@@ -196,7 +218,13 @@
  *   <Grace>     — ×1,5 sur un ennemi sous 25 % de ses PV ;
  *   <Immobile>  — ×1,5 si on ne l'a pas touchée depuis sa dernière action ;
  *   <Accumule>  — ×(1 + 0,15 par riposte de Vesper depuis la dernière fois) ;
- *   <EclatNoir> — (MaitriseVoies) l'Éclat Noir est sûr quand le flux est à 2.
+ *   <EclatNoir> — (MaitriseVoies) l'Éclat Noir est sûr quand le flux est à 2 ;
+ *   <Riposte>   — arme une riposte (sur soi ou en frappant) : le prochain qui
+ *                 frappe reçoit ce qu'il a donné ;
+ *   <Lache>     — ×1,5, mais elle encaisse ×1,5 jusqu'à sa prochaine action ;
+ *   <Premier>   — part toujours avant tout le monde ;
+ *   <NeufVoies> — +10 % par Voie déjà prise dans ce combat ;
+ *   <ToutOuRien> — pile ×2, face ×0,25 ; ludwing tire deux fois.
  * ============================================================================
  */
 
@@ -241,6 +269,11 @@ var LeMouvement = LeMouvement || {};
     var SEUIL_GRACE = nombre('seuilGrace', 25) / 100;
     var IMMOBILE   = nombre('immobile', 1.5);
     var ACCUMULE   = nombre('accumuleParRiposte', 0.15);
+    var NEUF       = nombre('neufVoiesParVoie', 0.1);
+    var LACHE      = nombre('lache', 1.5);
+    var TOUT       = nombre('tout', 2);
+    var RIEN       = nombre('rien', 0.25);
+    var CHANCEUX_TOR = liste('chanceux', '3');
 
     var NOMS = { forge: 'Forge', onde: 'Onde', source: 'Source', miroir: 'Miroir', vide: 'Vide',
                  eclair: 'Éclair', domaine: 'Domaine', flash: 'Flash', sang: 'Sang' };
@@ -299,7 +332,7 @@ var LeMouvement = LeMouvement || {};
     }
     function remettre(b) {
         b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0;
-        b._reprise = 0; b._touche = false; b._ripostesCompte = 0;
+        b._reprise = 0; b._touche = false; b._ripostesCompte = 0; b._lache = false; b._voiesVues = {};
     }
 
     //=========================================================================
@@ -326,6 +359,7 @@ var LeMouvement = LeMouvement || {};
     }
 
     function decider(b, action) {
+        b._lache = false;                                   // <Lache> : sa garde se referme quand elle agit à nouveau
         var v = voieDuMouvement(action);
         if (!v) {
             if (penseJuste(b) && b._mvtVoie && estParole(action.item())) { penser(b, action); return; }
@@ -389,6 +423,26 @@ var LeMouvement = LeMouvement || {};
             var k = 1 + ACCUMULE * b._ripostesCompte; b._ripostesCompte = 0;
             mult *= k; annonce(b, '🌊 Toute la force ×' + chiffre(k), '#7ec8ff');
         }
+        // <NeufVoies> : chaque Voie déjà prise dans ce combat compte (celle-ci comprise une fois prise)
+        var vues = b._voiesVues || (b._voiesVues = {});
+        if (balise(it, 'NeufVoies')) {
+            var nv = Object.keys(vues).length;
+            if (nv > 0) { var kv = 1 + NEUF * nv; mult *= kv; annonce(b, '◆ ' + nv + ' Voie' + (nv > 1 ? 's' : '') + ' ×' + chiffre(kv), couleur); }
+        }
+        vues[v] = 1;
+        // <Lache> : tout dans le bras, la garde ouverte jusqu'à sa prochaine action
+        if (balise(it, 'Lache')) {
+            mult *= LACHE; b._lache = true;
+            annonce(b, '✋ Garde lâchée ×' + chiffre(LACHE), '#ff8a6a');
+        }
+        // <ToutOuRien> : pile ou face — le chanceux tire deux fois et garde le meilleur
+        if (balise(it, 'ToutOuRien')) {
+            var tirage = Math.random();
+            if (CHANCEUX_TOR.indexOf(b.actorId()) >= 0) { tirage = Math.min(tirage, Math.random()); }
+            var gagne = tirage < 0.5;
+            mult *= gagne ? TOUT : RIEN;
+            annonce(b, gagne ? '🎲 Tout ×' + chiffre(TOUT) : '🎲 Rien ×' + chiffre(RIEN), gagne ? '#a0ffa0' : '#b0b0b0');
+        }
         action._mvtMult = mult;
         annonce(b, texte, couleur);
     }
@@ -430,7 +484,8 @@ var LeMouvement = LeMouvement || {};
         _appliquer.call(this, target);
         var it = this.item(), u = this.subject();
         if (!enCombat() || !it || !heros(u) || !it.meta) { return; }
-        if (it.meta.Riposte !== undefined && target === u) {
+        if (it.meta.Riposte !== undefined && !this._riposteArmee) {   // sur soi ou en frappant : une fois par action
+            this._riposteArmee = true;
             u._voieReflux = RIPOSTE;
             annonce(u, '⚔ Riposte prête', '#ffb070');
         }
@@ -461,6 +516,9 @@ var LeMouvement = LeMouvement || {};
         var v = _valeur.call(this, target, critical);
         if (this._mvtMult && this._mvtMult !== 1 && v !== 0) { v = Math.round(v * this._mvtMult); }
         var it = this.item(), u = this.subject();
+        if (v > 0 && target && target._lache && heros(target) && enCombat()) {
+            v = Math.round(v * LACHE);                       // la garde lâchée : elle encaisse plus fort
+        }
         if (v !== 0 && it && it.meta && it.meta.ApresRiposte !== undefined && u && u._riposte) {
             v = Math.round(v * APRES);
             if (!this._apresVu) { this._apresVu = true; annonce(u, '⚔ Après la riposte ×' + chiffre(APRES), '#ffb070'); }
@@ -494,8 +552,11 @@ var LeMouvement = LeMouvement || {};
     // En premier : dans le flux, le mouvement part avant tout le monde
     //=========================================================================
     function dansLeFlux(b) {
-        if (PREMIER <= 0 || !heros(b) || !(b._mvtFlux >= PREMIER)) { return false; }
-        return !!voieDuMouvement(b.currentAction && b.currentAction());
+        if (!heros(b)) { return false; }
+        var a = b.currentAction && b.currentAction();
+        if (a && balise(a.item(), 'Premier') && voieDuMouvement(a)) { return true; }   // <Premier> : toujours
+        if (PREMIER <= 0 || !(b._mvtFlux >= PREMIER)) { return false; }
+        return !!voieDuMouvement(a);
     }
     var _ordres = BattleManager.makeActionOrders;
     BattleManager.makeActionOrders = function () {

@@ -61,7 +61,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             BattleManager.endAction(); BattleManager._subject = null;
             return act;
         }
-        function remettre(h) { h._mvtVoie = ''; h._mvtFlux = 0; h._mvtDernier = 0; h._mvtPense = false; h._riposte = false; h._reprise = 0; h._touche = false; h._ripostesCompte = 0; h._ctAnnonces = []; }
+        function remettre(h) { h._mvtVoie = ''; h._mvtFlux = 0; h._mvtDernier = 0; h._mvtPense = false; h._riposte = false; h._reprise = 0; h._touche = false; h._ripostesCompte = 0; h._voiesVues = {}; h._lache = false; h._ctAnnonces = []; }
         function tag(id, nom) { return new RegExp('<' + nom + '[:>]').test($dataSkills[id].note); }
 
         // ── CORPS ──────────────────────────────────────────────────────────
@@ -72,7 +72,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         remettre(ves); jouer(ves, 1066, e); C.finitContre = jouer(ves, 1068, e)._mvtMult;
         remettre(ves); jouer(ves, 1066, e);
         C.reprise = [jouer(ves, 1072, e)._mvtMult, jouer(ves, 1072, e)._mvtMult, jouer(ves, 1072, e)._mvtMult];   // Reprise du Marteau
-        remettre(ves); jouer(ves, 1069, e); C.repriseContre = jouer(ves, 1069, e)._mvtMult;
+        remettre(ves); jouer(ves, 1066, e); C.repriseContre = jouer(ves, 1066, e)._mvtMult;
         remettre(kor); jouer(kor, 1160, e); C.sur = jouer(kor, 1160, e)._mvtMult;                   // Maîtrise <Sur>
         var aSur = new Game_Action(kor); aSur.setSkill(1160); C.surTouche = [aSur.itemHit(e), aSur.itemEva(e)];
         remettre(kor); jouer(kor, 1157, e); C.surContre = jouer(kor, 1157, e)._mvtMult;
@@ -186,6 +186,42 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         W.balises = [tag(1114, 'Cercle'), tag(1115, 'Referme'), tag(1116, 'Sceau'), tag(1242, 'Sceau'), tag(1166, 'Pret'), tag(1170, 'Symbole'), tag(13, 'Appat')];
         W.saignee = { art: LesTroisArts.art($dataSkills[1134]), pv: /<HP Cost: 7%>/.test($dataSkills[1134].note), pt: $dataSkills[1134].tpCost };
         out.ecrit = W;
+
+        // ── DEUXIÈME PAQUET ───────────────────────────────────────────────
+        var D = {};
+        D.balises = [tag(1069, 'Lache'), tag(1130, 'Ouvre'), tag(1137, 'Finit'), tag(447, 'Entre'), tag(448, 'Riposte'), tag(1079, 'Ouvre'),
+                     tag(1113, 'Premier'), tag(816, 'NeufVoies'), tag(140, 'Assez'), tag(454, 'ToutOuRien'), tag(1128, 'Riposte'),
+                     tag(812, 'Riposte'), tag(1129, 'Sur'), tag(1185, 'Reste')];
+        // Marteau à Deux Mains : ×1,5, la garde ouverte (elle encaisse ×1,5) jusqu'à sa prochaine action
+        remettre(ves); D.lache = jouer(ves, 1069, e)._mvtMult; D.lacheOuverte = ves._lache;
+        var coup = function () { var a = new Game_Action(e); a.setAttack(); return a.makeDamageValue(ves, false); };
+        var ouverte = coup(); ves._lache = false; var fermee = coup();
+        D.lacheRatio = ouverte / fermee; D.lacheExact = ouverte === Math.round(fermee * 1.5);
+        ves._lache = true; jouer(ves, 1066, e); D.lacheApres = ves._lache;
+        // Plus Vite que le Geste : avant tout le monde, même avant un ennemi en Garde (+2000 de vitesse)
+        function quiCommence(h, id) {
+            var g = new Game_Action(e); g.setGuard(); e._actions = [g]; e2._actions = [];
+            var a = new Game_Action(h); a.setSkill(id); a.setTarget(1); h._actions = [a];
+            $gameParty.members().forEach(function (m) { if (m !== h) { m._actions = []; } });
+            BattleManager.makeActionOrders();
+            return BattleManager._actionBattlers[0] ? BattleManager._actionBattlers[0].name() : '';
+        }
+        remettre(kor); D.premier = quiCommence(kor, 1113); D.premierContre = quiCommence(kor, 1112); D.ennemiNom = e.name();
+        BattleManager._actionBattlers = [];
+        // Carnage des Neuf Voies : +10 % par Voie déjà prise
+        remettre(kor); jouer(kor, 1106, e); jouer(kor, 1098, e); jouer(kor, 1122, e); kor._ctAnnonces = [];
+        jouer(kor, 816, e); D.neuf = annonces(kor).filter(function (t) { return /Voies? ×/.test(t); });
+        remettre(kor); jouer(kor, 816, e); D.neufContre = annonces(kor).filter(function (t) { return /Voies? ×/.test(t); });
+        // Tout ou Rien : ludwing tire deux fois (0,6 puis 0,3 → pile) ; Vesper une seule (0,6 → face)
+        function suite(t) { var s = t.slice(); Math.random = function () { return s.length ? s.shift() : 0.5; }; }
+        remettre(lud); suite([0.6, 0.3]); D.tout = jouer(lud, 454, e)._mvtMult;
+        remettre(ves); suite([0.6, 0.3]); D.rien = jouer(ves, 454, e)._mvtMult;
+        Math.random = function () { return 0.5; };
+        // Garde Sereine, Contre-Éclat : la riposte s'arme aussi en frappant
+        remettre(ves); jouer(ves, 448, e); D.gardeSereine = ves._voieReflux;
+        remettre(lud); lud._voieReflux = null; jouer(lud, 1128, e); D.contreEclat = lud._voieReflux;
+        ves._voieReflux = null; lud._voieReflux = null;
+        out.deux = D;
         return out;
     });
 
@@ -195,7 +231,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('<Ouvre> (Trempe) : posture avec 1 de flux ; contre-épreuve, Frappe Pleine : 0', C.ouvre === 1 && C.ouvreContre === 0);
     v('<Finit> (Le Point Final) : flux 2 → ×1,6 et flux 0 ; sans flux, ×1', Math.abs(C.finit - 1.6) < 1e-9 && C.finitFlux === 0 && C.finitContre === 1, C.finit + ' / ' + C.finitContre);
     v('<Reprise> (Reprise du Marteau) : ×1,2 puis ×1,5 en la répétant', Math.abs(C.reprise[1] - 1.2) < 1e-9 && Math.abs(C.reprise[2] - 1.5) < 1e-9, JSON.stringify(C.reprise));
-    v('…contre-épreuve : Marteau à Deux Mains répété s\'use (×0,85)', Math.abs(C.repriseContre - 0.85) < 1e-9);
+    v('…contre-épreuve : Frappe Pleine répétée s\'use (×0,85)', Math.abs(C.repriseContre - 0.85) < 1e-9);
     v('<Sur> (Maîtrise) : répétée sans s\'user, ne rate pas', C.sur === 1 && C.surTouche[0] === 1 && C.surTouche[1] === 0, C.sur + ' · ' + JSON.stringify(C.surTouche));
     v('…contre-épreuve : Angle Parfait répété s\'use', Math.abs(C.surContre - 0.85) < 1e-9);
     v('<Entre> (Le Creux Entre Deux) : ×1,5 sur un ennemi qui a déjà agi ; pas sinon', Math.abs(C.entre - 1.5) < 1e-9 && C.entreContre === 1, C.entre + ' / ' + C.entreContre);
@@ -232,6 +268,18 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('Le Symbole compte pour deux : avec un autre écrit, résonance ×1,3 (au lieu de ×1,15)', W.symbole.join() === 'ᛟ Résonance ×1,3' && W.symboleContre.join() === 'ᛟ Résonance ×1,15', W.symbole.join() + ' / ' + W.symboleContre.join());
     v('Vannes : l\'ennemi provoqué frappe ludwing au lieu d\'Aël ; un autre non', W.appat.join() === 'ludwing' && W.appatContre.join() !== 'ludwing', W.appat.join() + ' / ' + W.appatContre.join());
     v('Saignée Continue est devenue un écrit de Vesper, payé en PV', W.saignee.art === 'ecrit' && W.saignee.pv && W.saignee.pt === 0);
+
+    var D = r.deux;
+    console.log('\n4) Le deuxième paquet');
+    v('les 14 balises sont posées', D.balises.every(Boolean), JSON.stringify(D.balises));
+    v('Marteau à Deux Mains : ×1,5, et elle encaisse ×1,5 tant que sa garde est lâchée', Math.abs(D.lache - 1.5) < 1e-9 && D.lacheOuverte && D.lacheExact,
+      D.lache + ' · encaisse ×' + D.lacheRatio.toFixed(3));
+    v('…sa garde se referme à son action suivante', D.lacheApres === false);
+    v('Plus Vite que le Geste part avant tout le monde, même un ennemi en Garde', D.premier === 'Korrah', D.premier);
+    v('…contre-épreuve : Coup de Grâce Éclair, sans flux, ne passe pas devant', D.premierContre !== 'Korrah', D.premierContre);
+    v('Carnage des Neuf Voies : 3 Voies déjà prises → ×1,3 ; dans un combat neuf, rien', D.neuf.join() === '◆ 3 Voies ×1,3' && D.neufContre.length === 0, D.neuf.join() + ' / ' + D.neufContre.join());
+    v('Tout ou Rien : ludwing tire deux fois et garde pile (×2) ; un autre garde face (×0,25)', D.tout === 2 && D.rien === 0.25, D.tout + ' / ' + D.rien);
+    v('Garde Sereine (Vesper) et Contre-Éclat (ludwing) arment la riposte en frappant', D.gardeSereine === 1 && D.contreEclat === 1);
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
