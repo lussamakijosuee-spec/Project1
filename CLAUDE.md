@@ -396,7 +396,26 @@ commencée la reçoit au premier combat) fait partir **tous** ses écrits d'un c
 emporte ses écrits. **Déjà écrits** (partent tout de suite) : les dons — types 8, 9, 26 (*« les runes sur son
 collier »*, ludwing), une fiche `<DejaEcrit>` (Aspiration des Âmes Damnées, 70 : son collier) — les attaques à plusieurs (`<Combo>`, unisson) et la Parole lue d'Aël. **La volonté**
 (de LeSpirituel) : tout ce qui est de l'âme × (1 + 0,5 × PV manquants + 0,25 par allié tombé), ×1,75 au plus.
-Activer garde la posture du Mouvement. Banc : `navigateur/l_ecrit.js`.
+Activer garde la posture du Mouvement. **La résonance** : des écrits qui partent ensemble, chacun +15 % par autre
+(trois : ×1,3). Banc : `navigateur/l_ecrit.js`.
+
+**Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
+Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
+réglage. **Vesper, le contre-temps** (*« spécialiste de la CONTRE-ATTAQUE »*, LeMouvement `contreTemps`) : une
+riposte qui part pendant le tour ennemi (Reflux, Renvoi — MaitriseVoies appelle `LeMouvement.riposte`) fait
+monter son flux ; au 3, la riposte est un geste juste ×1,5 ; un coup de 15 % qui brise sa posture passe
+avant. `<Riposte>` (Garde Haute, Garde Écarlate) arme une riposte qui rend ce qu'elle reçoit ;
+`<ApresRiposte>` (Le Coup qu'On Garde, Contre-Courant, Ressac) ×1,5 si elle a riposté depuis sa dernière
+action. **Korrah, penser juste** (*« frapper juste ET penser juste »*, `penserJuste`) : dans une posture, sa
+Parole ne rompt rien — flux +1, ×1,15, le geste juste peut tomber sur elle ; le mouvement d'après compte
+comme une autre Voie. `<Lecture>` (Lecture du Corps, Œil du Stratège, Analyse Tactique) : l'ennemi est lu, son
+prochain mouvement sur lui ×1,5. **ludwing, le piège et la chance** (*« maître du rage-bait »*, *« le plus
+CHANCEUX du groupe, littéralement »*, LEcrit `acteursPiege`, `acteursChance`) : ses écrits sur un ennemi partent
+tout seuls quand cet ennemi le frappe (ᛟ Piège !) ; chaque écrit qui part a 1 chance sur 4 de rester écrit
+(🍀). **Aël, pour elle** (*« oser dire et faire des choses pour ELLE »*, LaParole `pourElle`) : compléter une
+phrase qu'elle a commencée ne la referme pas (Double puis Fusion sur le même élément), ×1,2 ; Double et
+Fusion s'annoncent maintenant au-dessus de qui parle. Les dons ne sont pas touchés. Banc :
+`navigateur/les_signatures.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

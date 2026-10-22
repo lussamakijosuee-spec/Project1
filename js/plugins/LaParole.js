@@ -56,6 +56,18 @@
  * @default 1
  * @desc Les deux éléments jouent déjà ensemble (règle « Multiplier »).
  *
+ * @param === AËL : POUR ELLE ===
+ * @default
+ *
+ * @param pourElle
+ * @text Ceux pour qui leur propre phrase reste ouverte
+ * @default 4
+ * @desc Aël (4) — son gouffre : « oser dire et faire des choses pour ELLE ». Quand elle complète une phrase qu'elle a commencée, la phrase reste (elle peut la compléter encore) et frappe × bonusPourElle.
+ *
+ * @param bonusPourElle
+ * @text Pour elle : dégâts ×
+ * @default 1.2
+ *
  * @param === LES LONGUES ===
  * @default
  *
@@ -112,6 +124,15 @@
  *  part à × brisee. Le dernier degré ne se redit pas au tour suivant
  *  (« On ne la prononce pas deux fois de suite »).
  *
+ *  AËL, POUR ELLE (2026-10-22 ; JOKO : « rendre les vraiment intéressant et
+ *  original » ; son profil : « oser dire et faire des choses pour ELLE, pas
+ *  seulement pour ses amis ») — quand elle complète une phrase qu'ELLE a
+ *  commencée, la phrase ne se referme pas : son élément reste en suspens, et
+ *  elle peut enchaîner (une Double, puis une Fusion sur le même élément).
+ *  ×1,2. Compléter la phrase d'un ami la referme, comme pour tout le monde.
+ *
+ *  Double, Fusion et « pour elle » s'annoncent au-dessus de qui parle.
+ *
  *  Les ennemis ne changent pas. Le ratage caché de ParolesSysteme est coupé
  *  pour les héros (son réglage HerosSansRatage).
  *
@@ -129,6 +150,8 @@
     var BONUS_FUSION = nb('bonusFusion', 1.5), BONUS_DOUBLE = nb('bonusDouble', 1);
     var SEUIL_COUP = nb('seuilCoup', 15) / 100, SEUIL_CUMUL = nb('seuilCumul', 30) / 100, BRISEE = nb('brisee', 0.5);
     var ETAT = nb('etatLongue', 227);
+    var POUR_ELLE = String(P['pourElle'] === undefined ? '4' : P['pourElle']).split(',').map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
+    var BONUS_ELLE = nb('bonusPourElle', 1.2);
     var FUSIONS = {};
     String(P['fusions'] || '8+9=17, 8+11=19, 9+11=20, 9+13=22, 11+12=23, 14+15=29').split(',').forEach(function (x) {
         var m = /^\s*(\d+)\s*\+\s*(\d+)\s*=\s*(\d+)\s*$/.exec(x);
@@ -144,6 +167,16 @@
     function tour() { return $gameTroop ? $gameTroop.turnCount() : 0; }
     function journal(t) { var w = SceneManager._scene && SceneManager._scene._logWindow; if (w) { w.push('addText', t); } }
     function heros(b) { return !!(b && b.isActor && b.isActor() && EXCLUS.indexOf(b.actorId()) < 0); }
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur); }
+    }
+    /** Aël complète sa propre phrase : elle reste ouverte, et la Parole frappe plus fort. */
+    function pourElle(act, u, p) {
+        if (POUR_ELLE.indexOf(u.actorId()) < 0 || p.par !== u.name()) { phrase = null; return; }
+        act._paroleMult *= BONUS_ELLE;
+        phrase = { el: p.el, tour: tour(), par: p.par };
+        annonce(u, '✦ Pour elle — la phrase reste', '#ffe08a');
+    }
     function nomEl(id) {
         var s = String(($dataSystem && $dataSystem.elements[id]) || '').trim();
         return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '?';
@@ -216,8 +249,9 @@
         if (d === 'double' && p && p.el !== el) {
             act._paroleElements = [el, p.el];
             act._paroleMult *= BONUS_DOUBLE;
-            phrase = null;
             journal('\\C[17]✦ Double — ' + nomEl(el) + ' et ' + nomEl(p.el) + '.\\C[0]');
+            annonce(u, '✦ Double · ' + nomEl(el) + ' + ' + nomEl(p.el), '#9ad0ff');
+            pourElle(act, u, p);
             return;
         }
         if (d === 'fusion' && p) {
@@ -225,9 +259,10 @@
             if (f) {
                 act._paroleElements = [f];
                 act._paroleMult *= BONUS_FUSION;
-                phrase = null;
                 journal('\\C[17]✦ FUSION — ' + nomEl(p.el) + ' + ' + nomEl(el) + ' = ' + nomEl(f) + ' !\\C[0]');
+                annonce(u, '✦ FUSION · ' + nomEl(f), '#9ad0ff');
                 if ($gameScreen) { $gameScreen.startFlash([200, 220, 255, 130], 24); }
+                pourElle(act, u, p);
                 return;
             }
         }

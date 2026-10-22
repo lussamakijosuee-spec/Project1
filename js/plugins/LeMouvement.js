@@ -75,6 +75,36 @@
  * @default 1
  * @desc Un héros dont le flux atteint ce chiffre et qui lance un mouvement agit avant tout le monde.
  *
+ * @param === VESPER : LE CONTRE-TEMPS ===
+ * @default
+ *
+ * @param contreTemps
+ * @text Ceux dont la riposte fait monter le flux
+ * @default 1
+ * @desc Vesper (1) — « spécialiste de la CONTRE-ATTAQUE ». Un Reflux ou un Renvoi qui part pendant le tour ennemi : flux +1 ; au 3, la riposte est un geste juste.
+ *
+ * @param riposte
+ * @text <Riposte> : rend (× les dégâts reçus)
+ * @default 1
+ * @desc Une compétence <Riposte> arme une riposte : le prochain qui frappe reçoit ce qu'il a donné.
+ *
+ * @param apresRiposte
+ * @text <ApresRiposte> : dégâts ×
+ * @default 1.5
+ * @desc Si elle a riposté depuis sa dernière action.
+ *
+ * @param === KORRAH : PENSER JUSTE ===
+ * @default
+ *
+ * @param penserJuste
+ * @text Ceux pour qui une Parole est une étape du flux
+ * @default 2
+ * @desc Korrah (2) — « frapper juste ET penser juste ». Dans une posture, sa Parole ne rompt rien : flux +1 (×1,15), le geste juste peut tomber sur elle.
+ *
+ * @param luDavance
+ * @text <Lecture> : son prochain mouvement sur l'ennemi lu ×
+ * @default 1.5
+ *
  * @help
  * ============================================================================
  *  LE MOUVEMENT — le corps qui enchaîne                          pour JOKO
@@ -104,7 +134,22 @@
  *  C'est l'inverse des longues Paroles, qui partent en dernier.
  *
  *  Tout s'annonce au-dessus du héros (le journal de combat est muet ici).
- *  Les ennemis ne changent pas. Aucune fiche n'est modifiée.
+ *  Les ennemis ne changent pas.
+ *
+ *  LES SIGNATURES (2026-10-22, JOKO : « rendre les vraiment intéressant et
+ *  original »), tirées de leurs profils :
+ *  VESPER, LE CONTRE-TEMPS — « spécialiste de la CONTRE-ATTAQUE ». Quand une
+ *  riposte part pendant le tour ennemi (le Reflux de l'Onde, le Renvoi du
+ *  Miroir, une <Riposte>), son flux monte de 1 ; au 3, la riposte est un
+ *  GESTE JUSTE (×1,5). Elle enchaîne pendant qu'on la frappe — tant que le
+ *  coup reçu ne brise pas sa posture. <Riposte> (ses gardes) arme une riposte
+ *  qui rend ce qu'elle reçoit ; <ApresRiposte> frappe ×1,5 si elle a riposté
+ *  depuis sa dernière action.
+ *  KORRAH, PENSER JUSTE — « frapper juste ET penser juste ». Dans une posture,
+ *  sa Parole ne rompt pas le flux : c'est un pas de plus (+1, ×1,15), et le
+ *  geste juste peut tomber sur la Parole ; le mouvement d'après compte comme
+ *  une autre Voie. <Lecture> (Lecture du Corps, Œil du Stratège, Analyse
+ *  Tactique) : l'ennemi est lu, son prochain mouvement sur lui frappe ×1,5.
  * ============================================================================
  */
 
@@ -137,6 +182,11 @@ var LeMouvement = LeMouvement || {};
     var MALUS      = nombre('malusRepete', 0.85);
     var SEUIL      = nombre('seuilBrise', 15) / 100;
     var PREMIER    = nombre('premierDesFlux', 1);
+    var CONTRE     = liste('contreTemps', '1');
+    var RIPOSTE    = nombre('riposte', 1);
+    var APRES      = nombre('apresRiposte', 1.5);
+    var PENSER     = liste('penserJuste', '2');
+    var LU         = nombre('luDavance', 1.5);
 
     var NOMS = { forge: 'Forge', onde: 'Onde', source: 'Source', miroir: 'Miroir', vide: 'Vide',
                  eclair: 'Éclair', domaine: 'Domaine', flash: 'Flash', sang: 'Sang' };
@@ -189,29 +239,51 @@ var LeMouvement = LeMouvement || {};
     function lacher(b, texte) {
         if (!b || !b._mvtVoie) { return; }
         var avait = b._mvtFlux > 0;
-        b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0;
+        b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false;
         afficher(b);
         if (texte && avait) { annonce(b, texte, '#ff8080'); }
     }
-    function remettre(b) { b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; }
+    function remettre(b) { b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0; }
 
     //=========================================================================
     // Au départ de l'action : le flux bouge, la puissance est fixée
     //=========================================================================
+    function estParole(it) { return !!(window.LesTroisArts && LesTroisArts.art(it) === 'parole'); }
+    function penseJuste(b) { return heros(b) && PENSER.indexOf(b.actorId()) >= 0; }
+    function cibleUnique(action) {
+        if (!action.isForOpponent() || !action.isForOne() || !(action._targetIndex >= 0)) { return null; }
+        return $gameTroop.members()[action._targetIndex] || null;
+    }
+    // Korrah : une Parole dans sa posture est un pas du flux, pas une rupture.
+    function penser(b, action) {
+        b._mvtFlux++; b._mvtPense = true; b._mvtDernier = action.item().id;
+        var mult = BONUS, texte = '✎ Penser juste · flux ' + b._mvtFlux, couleur = '#9ad0ff';
+        if (b._mvtFlux >= GESTE) {
+            mult = BONUS_GESTE; b._mvtFlux = 0;
+            texte = '✦ PENSER JUSTE ×' + chiffre(BONUS_GESTE); couleur = '#ffd84a';
+            if ($gameScreen) { $gameScreen.startFlash([200, 230, 255, 140], 18); }
+        }
+        action._mvtMult = mult;
+        annonce(b, texte, couleur);
+    }
+
     function decider(b, action) {
         var v = voieDuMouvement(action);
         if (!v) {
+            if (penseJuste(b) && b._mvtVoie && estParole(action.item())) { penser(b, action); return; }
             if (!neutre(action)) { lacher(b, '✗ Flux rompu'); }
             return;
         }
         var id = action.item().id, avant = b._mvtVoie, mult = 1, texte, couleur = COULEURS[v];
+        var change = v !== avant || !!b._mvtPense;          // après une Parole, Korrah change de Voie
+        b._mvtPense = false;
         if (!avant) {
             b._mvtFlux = 0;
             texte = '◆ Posture : ' + NOMS[v];
         } else if (b._mvtDernier === id) {
             mult = MALUS; b._mvtFlux = 0;
             texte = '↺ Répété ×' + chiffre(MALUS); couleur = '#b0b0b0';
-        } else if (v !== avant) {
+        } else if (change) {
             b._mvtFlux++;
             if (b._mvtFlux >= GESTE) {
                 mult = BONUS_GESTE; b._mvtFlux = 0;
@@ -226,9 +298,51 @@ var LeMouvement = LeMouvement || {};
             texte = '◆ ' + NOMS[v] + (b._mvtFlux > 0 ? ' · flux ' + b._mvtFlux : '');
         }
         b._mvtVoie = v; b._mvtDernier = id;
+        // Korrah a lu cet ennemi : ce mouvement-ci tombe juste.
+        var c = cibleUnique(action);
+        if (c && c._luPar === b.actorId()) {
+            c._luPar = 0; mult *= LU;
+            annonce(c, '◎ Lu d\'avance ×' + chiffre(LU), '#9ad0ff');
+        }
         action._mvtMult = mult;
         annonce(b, texte, couleur);
     }
+
+    //=========================================================================
+    // Les signatures : la riposte de Vesper, la lecture de Korrah
+    //=========================================================================
+    /** Appelée par MaitriseVoies quand un Reflux ou un Renvoi part : le multiplicateur de la riposte. */
+    LeMouvement.riposte = function (b) {
+        if (!heros(b) || CONTRE.indexOf(b.actorId()) < 0) { return 1; }
+        b._riposte = true;
+        if (!b._mvtVoie) { return 1; }                      // hors posture : la riposte part, sans flux
+        b._mvtFlux++;
+        var k = 1;
+        if (b._mvtFlux >= GESTE) {
+            b._mvtFlux = 0; k = BONUS_GESTE;
+            annonce(b, '✦ GESTE JUSTE · contre-temps', '#ffd84a');
+            if ($gameScreen) { $gameScreen.startFlash([255, 230, 140, 140], 18); }
+        } else {
+            annonce(b, '⚔ Contre-temps · flux ' + b._mvtFlux, '#ffb070');
+        }
+        afficher(b);
+        return k;
+    };
+
+    var _appliquer = Game_Action.prototype.apply;
+    Game_Action.prototype.apply = function (target) {
+        _appliquer.call(this, target);
+        var it = this.item(), u = this.subject();
+        if (!enCombat() || !it || !heros(u) || !it.meta) { return; }
+        if (it.meta.Riposte !== undefined && target === u) {
+            u._voieReflux = RIPOSTE;
+            annonce(u, '⚔ Riposte prête', '#ffb070');
+        }
+        if (it.meta.Lecture !== undefined && target && target.isEnemy() && target.result().isHit()) {
+            target._luPar = u.actorId();
+            annonce(target, '◎ Lu', '#9ad0ff');
+        }
+    };
 
     var _debut = BattleManager.startAction;
     BattleManager.startAction = function () {
@@ -242,6 +356,7 @@ var LeMouvement = LeMouvement || {};
     BattleManager.endAction = function () {
         var b = this._subject;
         if (heros(b) && b._mvtVoie && b.isAlive()) { afficher(b); }
+        if (heros(b)) { b._riposte = false; }               // « après la riposte » ne vaut que pour l'action suivante
         _fin.call(this);
     };
 
@@ -249,6 +364,11 @@ var LeMouvement = LeMouvement || {};
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _valeur.call(this, target, critical);
         if (this._mvtMult && this._mvtMult !== 1 && v !== 0) { v = Math.round(v * this._mvtMult); }
+        var it = this.item(), u = this.subject();
+        if (v !== 0 && it && it.meta && it.meta.ApresRiposte !== undefined && u && u._riposte) {
+            v = Math.round(v * APRES);
+            if (!this._apresVu) { this._apresVu = true; annonce(u, '⚔ Après la riposte ×' + chiffre(APRES), '#ffb070'); }
+        }
         return v;
     };
 

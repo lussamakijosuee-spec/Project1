@@ -112,7 +112,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         out.pret = lud.canUse(sk);
         hp0 = e.hp;
         lancer(lud, ACT, lud);
-        out.activer = { perdu: hp0 - e.hp, attendu: 2 * Math.round(ref * 1.25), ref: ref, reste: L.ecrits(lud).length,
+        // ×1,25 préparé, ×1,15 de résonance (deux ensemble)
+        out.activer = { perdu: hp0 - e.hp, attendu: 2 * Math.round(ref * 1.25 * 1.15), ref: ref, reste: L.ecrits(lud).length,
                         etat: e.isStateAffected(ETAT), annonce: annonces(lud) };
         // un soin écrit sur toute l'équipe : rien tout de suite, tout à l'activation
         nettoyer();
@@ -167,7 +168,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('\n4) Activer');
     v('grisé sans écrit, possible avec', !r.grise && r.pret);
     var a = r.activer;
-    v('deux écrits partent d\'un coup, chacun ×1,25', Math.abs(a.perdu - a.attendu) <= 2, a.perdu + ' / ' + a.attendu + ' (un coup lancé : ' + a.ref + ')');
+    v('deux écrits partent d\'un coup, chacun ×1,25 et ×1,15 de résonance', Math.abs(a.perdu - a.attendu) <= 2, a.perdu + ' / ' + a.attendu + ' (un coup lancé : ' + a.ref + ')');
     v('il n\'en reste rien : ni écrit, ni état ; « ᛟ Activé ×2 » au-dessus de ludwing', a.reste === 0 && !a.etat && a.annonce.some(function (t) { return /Activé ×2/.test(t); }), a.annonce.join(' | '));
     v('un soin écrit sur l\'équipe ne soigne pas tout de suite', r.soin.tout_de_suite === 1 && r.soin.ecrits >= 4 && r.soin.chiffreAel === 1, JSON.stringify(r.soin));
     v('…il soigne à l\'activation', r.soin.apres > 1, String(r.soin.apres));
@@ -208,7 +209,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     } catch (x) { }
     var vrai = await page.evaluate(function () { return { n: window.__n, vus: window.__vus, tour: $gameTroop.turnCount() }; });
     v('le combat a tourné (' + vrai.n + ' choix de ludwing, tour ' + vrai.tour + ')', vrai.n >= 4);
-    v('ludwing a écrit, puis activé : « ᛟ Écrit » et « ᛟ Activé ×2 »', vrai.vus.indexOf('ᛟ Écrit') >= 0 && vrai.vus.some(function (t) { return /Activé ×2/.test(t); }),
+    // (un ennemi qui frappe ludwing referme aussi ses écrits : « ᛟ Piège ! » — LEcrit, sa signature)
+    v('ludwing a écrit, puis ses écrits sont partis : « ᛟ Écrit », puis « ᛟ Activé » ou « ᛟ Piège ! »', vrai.vus.indexOf('ᛟ Écrit') >= 0 && vrai.vus.some(function (t) { return /Activé ×|Piège !/.test(t); }),
       vrai.vus.filter(function (t) { return /ᛟ/.test(t); }).slice(0, 6).join(' | '));
     await fermerCombat();
 

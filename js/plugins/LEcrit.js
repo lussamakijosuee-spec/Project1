@@ -44,6 +44,29 @@
  * @default 6
  * @desc seiryu (6).
  *
+ * @param resonance
+ * @text Résonance : + par autre écrit qui part avec lui
+ * @default 0.15
+ * @desc Trois écrits activés ensemble : chacun ×1,3 en plus. Préparer plus, c'est frapper plus fort.
+ *
+ * @param === LUDWING : LE PIÈGE ET LA CHANCE ===
+ * @default
+ *
+ * @param acteursPiege
+ * @text Ceux dont les écrits sont des pièges
+ * @default 3
+ * @desc ludwing (3) — « maître du rage-bait », le stratège qui pense de l'arrière : ses écrits sur un ennemi partent tout seuls quand cet ennemi le frappe.
+ *
+ * @param acteursChance
+ * @text Ceux qui ont de la chance
+ * @default 3
+ * @desc ludwing (3) — « le plus CHANCEUX du groupe, littéralement ».
+ *
+ * @param chanceGarde
+ * @text Chance qu'un écrit parti reste écrit (%)
+ * @type number
+ * @default 25
+ *
  * @param === LA VOLONTÉ ===
  * @default
  *
@@ -90,6 +113,15 @@
  *  va mal : +50 % à 0 PV (au prorata), +25 % par allié tombé, ×1,75 au plus.
  *  Écrire coûte des PV : payer rapproche de sa volonté.
  *
+ *  LA RÉSONANCE — des écrits qui partent ensemble se répondent : chacun
+ *  +15 % par autre écrit parti avec lui (trois ensemble : ×1,3 chacun).
+ *
+ *  LUDWING, LE PIÈGE ET LA CHANCE (JOKO, « rendre les vraiment intéressant
+ *  et original » ; son profil : « maître du rage-bait », « le plus CHANCEUX du
+ *  groupe, littéralement ») — ses écrits sur un ennemi partent TOUT SEULS
+ *  quand cet ennemi le frappe (ᛟ Piège !) : il écrit, il provoque (Vannes),
+ *  il attend. Et chaque écrit qui part a 1 chance sur 4 de rester écrit (🍀).
+ *
  *  Les ennemis n'écrivent pas. Tous les chiffres sont des réglages.
  * ============================================================================
  */
@@ -114,6 +146,10 @@ var LEcrit = LEcrit || {};
     var PAR_PV  = nombre('parPVManquant', 0.5);
     var PAR_KO  = nombre('parAllieTombe', 0.25);
     var VOL_MAX = nombre('volonteMax', 1.75);
+    var RESO    = nombre('resonance', 0.15);
+    var PIEGE   = liste('acteursPiege', '3');
+    var CHANCEUX = liste('acteursChance', '3');
+    var CHANCE  = nombre('chanceGarde', 25) / 100;
 
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
     function heros(b) { return !!(b && b.isActor && b.isActor() && EXCLUS.indexOf(b.actorId()) < 0); }
@@ -189,12 +225,18 @@ var LEcrit = LEcrit || {};
     //=========================================================================
     // Activer : tous ses écrits partent, dans l'ordre
     //=========================================================================
-    function declencher(b, m) {
+    function valide(b, m) {
+        if (!$dataSkills[m.competence] || !m.cible) { return false; }
+        var a = new Game_Action(b); a.setSkill(m.competence);
+        return a.testApply(m.cible);
+    }
+    function declencher(b, m, reso) {
         var sk = $dataSkills[m.competence], c = m.cible;
         if (!sk || !c) { return false; }
         var a = new Game_Action(b);
         a.setSkill(sk.id);
         a._ecritActive = true;
+        a._resonance = reso || 1;
         a._volonte = volonte(b);              // annoncée une fois pour toute l'activation (activer)
         if (!a.testApply(c)) { return false; }
         var anim = sk.animationId < 0 ? b.attackAnimationId1() : sk.animationId;
@@ -206,11 +248,25 @@ var LEcrit = LEcrit || {};
         a.applyGlobal();
         return true;
     }
+    /** Fait partir ces écrits de b, ensemble (la résonance) ; la chance de ludwing en garde. */
+    function partir(b, liste) {
+        var n = liste.filter(function (m) { return valide(b, m); }).length;
+        var reso = 1 + RESO * Math.max(0, n - 1), partis = 0, restent = [];
+        liste.forEach(function (m) {
+            if (declencher(b, m, reso)) {
+                partis++;
+                if (CHANCEUX.indexOf(b.actorId()) >= 0 && m.cible.isAlive() && Math.random() < CHANCE) { restent.push(m); }
+            }
+        });
+        restent.forEach(function (m) { b._ecrits.push(m); annonce(m.cible, '🍀 Toujours écrit', '#a0ffa0'); });
+        liste.forEach(function (m) { montrer(m.cible); });
+        if (partis > 1) { annonce(b, 'ᛟ Résonance ×' + chiffre(reso), '#ff9ad8'); }
+        return partis;
+    }
     function activer(b) {
         var tous = ecritsDe(b).slice();
         b._ecrits = [];
-        var partis = 0;
-        tous.forEach(function (m) { if (declencher(b, m)) { partis++; } montrer(m.cible); });
+        var partis = partir(b, tous);
         if (partis) {
             var v = volonte(b);
             annonce(b, 'ᛟ Activé ×' + partis, '#ff9ad8');
@@ -218,6 +274,34 @@ var LEcrit = LEcrit || {};
             if ($gameScreen) { $gameScreen.startFlash([255, 150, 230, 110], 18); }
         }
     }
+
+    // ludwing : l'ennemi qui le frappe referme le piège qu'il a écrit sur lui.
+    var _debutAction = BattleManager.startAction;
+    BattleManager.startAction = function () {
+        _debutAction.call(this);
+        var s = this._subject;
+        if (s && s.isEnemy && s.isEnemy() && enCombat()) {
+            var vises = this._allTargets || this._targets || [];
+            s._piegeVise = $gameParty.battleMembers().filter(function (a) { return PIEGE.indexOf(a.actorId()) >= 0 && vises.indexOf(a) >= 0; });
+        }
+    };
+    var _finAction = BattleManager.endAction;
+    BattleManager.endAction = function () {
+        var s = this._subject;
+        if (s && s._piegeVise && s._piegeVise.length) {
+            var porteurs = s._piegeVise;
+            s._piegeVise = null;
+            porteurs.forEach(function (a) {
+                if (!a.isAlive() || !s.isAlive()) { return; }
+                var siens = ecritsDe(a).filter(function (m) { return m.cible === s; });
+                if (!siens.length) { return; }
+                a._ecrits = ecritsDe(a).filter(function (m) { return m.cible !== s; });
+                annonce(s, 'ᛟ Piège !', '#e080ff');
+                partir(a, siens);
+            });
+        }
+        _finAction.call(this);
+    };
 
     // Activer n'existe qu'avec des écrits ; au-delà de 3 en attente, on n'écrit plus.
     var _conditions = Game_BattlerBase.prototype.meetsSkillConditions;
@@ -263,7 +347,7 @@ var LEcrit = LEcrit || {};
                 this._volonte = volonte(this.subject());
                 if (this._volonte >= 1.05) { annonce(this.subject(), 'ᛟ Volonté ×' + chiffre(this._volonte), '#ff9ad8'); }
             }
-            var k = this._volonte * (this._ecritActive ? BONUS : 1);
+            var k = this._volonte * (this._ecritActive ? BONUS * (this._resonance || 1) : 1);
             if (k !== 1) { v = Math.round(v * k); }
         }
         return v;

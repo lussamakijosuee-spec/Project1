@@ -132,7 +132,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         remettre(k); geste(k, 1106, e); geste(k, 1098, e);
         geste(k, 2, k); f.garde = [M.posture(k), M.flux(k)];
         geste(k, 1250, e); f.avatar = [M.posture(k), M.flux(k)];   // un ordre à seiryu : c'est lui qui bouge
-        geste(k, parole.id, e); f.parole = [M.posture(k), M.flux(k), k.isStateAffected(M.postures.vide)];
+        geste(k, parole.id, e); f.paroleKorrah = [M.posture(k), M.flux(k)];   // Korrah pense juste (2026-10-22) : sa Parole est un pas du flux
+        var ves = $gameActors.actor(1); remettre(ves); geste(ves, 1066, e);
+        geste(ves, 1186, e); f.parole = [M.posture(ves), M.flux(ves), ves.isStateAffected(M.postures.forge)];
         out.faux = f;
 
         // 6 · en premier
@@ -202,7 +204,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('💥 Brisé (immobilise) : le flux se brise', f.immobile[0] === '' && f.immobile[1] === 0);
     v('la Garde garde la posture et le flux', f.garde[0] === 'vide' && f.garde[1] === 1, JSON.stringify(f.garde));
     v('un ordre à seiryu (Saisie de l\'Armure) aussi : c\'est lui qui bouge', f.avatar[0] === 'vide' && f.avatar[1] === 1, JSON.stringify(f.avatar));
-    v('une Parole arrête le corps : plus de posture', f.parole[0] === '' && !f.parole[2], JSON.stringify(f.parole));
+    v('une Parole arrête le corps (Vesper) : plus de posture', f.parole[0] === '' && !f.parole[2], JSON.stringify(f.parole));
+    v('…sauf chez Korrah, qui pense juste : la posture reste, le flux monte', f.paroleKorrah[0] === 'vide' && f.paroleKorrah[1] === 2, JSON.stringify(f.paroleKorrah));
 
     console.log('\n6) En premier');
     v('dans le flux, son mouvement passe devant un ennemi en Garde (+2000 de vitesse)', r.ordre.flux[0] === 'Korrah' && r.ordre.flux[1] === r.ennemiNom, r.ordre.flux.join(' > '));

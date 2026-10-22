@@ -637,7 +637,9 @@
         var renvoi = target && target._voieRenvoi;
         if (value > 0 && renvoi && attacker && attacker !== target) {
             var reduced = Math.floor(value * (1 - renvoi.reduce));
-            var back = Math.max(1, Math.floor(value * renvoi.reflect));
+            // [2026-10-22] Le contre-temps de Vesper (LeMouvement) : la riposte fait monter son flux.
+            var kR = (window.LeMouvement && LeMouvement.riposte) ? LeMouvement.riposte(target) : 1;
+            var back = Math.max(1, Math.floor(value * renvoi.reflect * kR));
             target._voieRenvoi = null;
             _executeDamage.call(this, target, reduced);
             if (attacker.isAlive()) {
@@ -679,7 +681,8 @@
         var reflux = target && target._voieReflux;
         if (value > 0 && reflux && attacker && attacker !== target && target.isAlive()) {
             target._voieReflux = null;
-            var counter = Math.max(1, Math.floor(value * reflux));
+            var kF = (window.LeMouvement && LeMouvement.riposte) ? LeMouvement.riposte(target) : 1;
+            var counter = Math.max(1, Math.floor(value * reflux * kF));
             attacker.gainHp(-counter); attacker.startDamagePopup(); attacker.clearResult();
             // Même raison qu'au Renvoi : deux noms ne tiennent pas sur une ligne.
             log((target.name ? target.name() : 'La cible') + ' retourne la force : Reflux !');
