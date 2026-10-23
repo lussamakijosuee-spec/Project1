@@ -48,7 +48,8 @@
  *      Deux compétences sont de la même FAMILLE quand, du point de vue du
  *      joueur, choisir l'une ou l'autre revient au même —
  *      même branche · même portée · même nature (dégât/soin/drain) ·
- *      même élément · mêmes états posés.
+ *      même élément · mêmes états posés · même art (le prix : PM, PT ou
+ *      PV) · même verbe des trois arts. « ᛟ Activer » ne se replie jamais.
  *
  *  En combat, chaque famille ne montre qu'une ligne : LA MEILLEURE QUE LE
  *  HÉROS PEUT LANCER MAINTENANT. Pas seulement la plus forte — celle qu'il
@@ -87,12 +88,30 @@
             .sort().join(',');
     }
 
+    /** Depuis les trois arts (2026-10-22/23), deux capacités aux mêmes chiffres ne reviennent plus au même :
+     *  leur ART (le prix : PM, PT ou PV), leur VERBE (ce qu'elles font de plus) et « instantanée » changent
+     *  la décision. Sans ça, « ᛟ Activer » se repliait sous une autre capacité sur soi, et une capacité à
+     *  verbe sous sa voisine sans verbe. */
+    var VERBES = ['Ouvre', 'Finit', 'Reprise', 'Sur', 'Entre', 'Grace', 'Immobile', 'Accumule', 'EclatNoir', 'Riposte',
+                  'ApresRiposte', 'Lecture', 'Lache', 'Premier', 'NeufVoies', 'ToutOuRien', 'Leurre', 'Rythme',
+                  'Reste', 'Assez', 'MotJuste', 'Suspend', 'Viens', 'Pars', 'Nomme', 'Avec', 'Encourage', 'Devant',
+                  'Cercle', 'Referme', 'Sceau', 'Pret', 'Symbole', 'Appat', 'Rempart', 'DejaEcrit',
+                  'SeiryuSuit', 'SurEngourdi', 'ADeux', 'ConfieFroid', 'APlace', 'ReprendFroid', 'Instantané'];
+    function difference(s) {
+        var m = s.meta || {};
+        var art = window.LesTroisArts && LesTroisArts.art ? LesTroisArts.art(s) : '';
+        var v = VERBES.filter(function (k) { return m[k] !== undefined; })
+            .map(function (k) { return m[k] === true ? k : k + '=' + String(m[k]).trim(); });
+        return art + '/' + v.join('+');
+    }
+
     /** La clé de famille. Tout ce qui change la DÉCISION du joueur en fait partie. */
     function cle(s) {
         if (!s) { return null; }
         if (s.meta && s.meta.HorsFamille !== undefined) { return 'seul:' + s.id; }
+        if (window.LEcrit && s.id === LEcrit.ACTIVER) { return 'seul:' + s.id; }
         var d = s.damage || {};
-        return [s.stypeId, s.scope, d.type || 0, d.elementId || 0, etatsPoses(s)].join('|');
+        return [s.stypeId, s.scope, d.type || 0, d.elementId || 0, etatsPoses(s), difference(s)].join('|');
     }
 
     /** Ce qui sert à classer les membres d'une famille : d'abord le niveau

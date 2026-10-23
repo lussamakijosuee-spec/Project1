@@ -127,6 +127,56 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('elle reste dans l\'écran', !!bord && bord.droite <= bord.ecran, JSON.stringify(bord));
     v('…contre-épreuve : centrée sur lui comme avant, elle débordait', !!bord && bord.avant > bord.ecran);
 
+    console.log('\n5) Le menu de combat : une famille, une ligne — mais un verbe, un art, Activer, chacun la sienne');
+    var menu = await page.evaluate(function () {
+        var o = { manquent: [], avantCache: [], tailles: {} };
+        // la clé d'AVANT (FamillesDeCapacites v1.0) et sa force, refaites ici pour la contre-épreuve
+        function etats(s) { return (s.effects || []).filter(function (e) { return e.code === 21 || e.code === 22; }).map(function (e) { return e.code + ':' + e.dataId; }).sort().join(','); }
+        function vieille(s) { if (s.meta && s.meta.HorsFamille !== undefined) { return 'seul:' + s.id; } var d = s.damage || {}; return [s.stypeId, s.scope, d.type || 0, d.elementId || 0, etats(s)].join('|'); }
+        function niveau(a, id) { var l = $dataClasses[a.currentClass().id].learnings.filter(function (x) { return x.skillId === id; }); return l.length ? Math.max.apply(null, l.map(function (x) { return x.level; })) : 0; }
+        function facteur(s) { var m = String((s.damage || {}).formula || '').match(/\*\s*([\d.]+)/g); return m ? m.reduce(function (t, x) { return t + parseFloat(x.replace('*', '')); }, 0) : 0; }
+        function vieuxRepli(a, liste) {
+            var g = {}; liste.forEach(function (s) { (g[vieille(s)] = g[vieille(s)] || []).push(s); });
+            return Object.keys(g).map(function (k) {
+                var x = g[k].slice().sort(function (p, q) { return (niveau(a, q.id) * 1000 + facteur(q)) - (niveau(a, p.id) * 1000 + facteur(p)); });
+                return x.filter(function (s) { return a.canUse(s); })[0] || x[0];
+            });
+        }
+        var VERBE = /<(Ouvre|Finit|Reprise|Sur|Entre|Grace|Immobile|Accumule|EclatNoir|Riposte|ApresRiposte|Lecture|Lache|Premier|NeufVoies|ToutOuRien|Leurre|Rythme|Reste|Assez|MotJuste|Suspend|Viens|Pars|Nomme|Avec|Encourage|Devant|Cercle|Referme|Sceau|Pret|Symbole|Appat|Rempart)[:>]/;
+        var lud = $gameActors.actor(3), e = $gameTroop.members()[0];
+        lud._ecrits = [{ cible: e, competence: 158 }];
+        [1, 2, 3, 4].forEach(function (id) {
+            var a = $gameActors.actor(id);
+            a.setMp(a.mmp); a.setTp(a.maxTp());
+            var w = new Window_SkillList(0, 0, 400, 300); w.setActor(a);
+            var vues = [], brut = 0, vieux = 0;
+            a.addedSkillTypes().concat([1]).filter(function (t, i, l) { return l.indexOf(t) === i; }).forEach(function (t) {
+                w.setStypeId(t); w.refresh();
+                vues = vues.concat(w._data.filter(Boolean));
+                var tout = a.skills().filter(function (s) { return w.includes(s); });
+                brut += tout.length; vieux += vieuxRepli(a, tout).length;
+                // chaque capacité à verbe (ou Activer) a sa ligne, sauf une jumelle exacte (même clé neuve) déjà montrée
+                tout.filter(function (s) { return VERBE.test(s.note) || s.id === 1309; }).forEach(function (s) {
+                    if (w._data.indexOf(s) >= 0) { return; }
+                    var jumelle = w._data.some(function (x) { return x && Familles.de(a, s).indexOf(x) >= 0; });
+                    if (!jumelle) { o.manquent.push(a.name() + ' ' + s.id); }
+                });
+                vieuxRepli(a, tout).length;
+                tout.filter(function (s) { return VERBE.test(s.note) || s.id === 1309; }).forEach(function (s) {
+                    if (vieuxRepli(a, tout).indexOf(s) < 0) { o.avantCache.push(a.name() + ' ' + s.id); }
+                });
+            });
+            o.tailles[a.name()] = { tout: brut, avant: vieux, maintenant: vues.length };
+            if (id === 3) { o.activer = vues.some(function (s) { return s.id === 1309; }); }
+        });
+        lud._ecrits = [];
+        return o;
+    });
+    v('« ᛟ Activer » a sa ligne dans les capacités de ludwing (avec un écrit en attente)', menu.activer === true);
+    v('chaque capacité à verbe a sa ligne dans le menu de combat', menu.manquent.length === 0, menu.manquent.slice(0, 8).join(', '));
+    v('…contre-épreuve : avec la clé d\'avant, ' + menu.avantCache.length + ' d\'entre elles (ou Activer) étaient repliées sous une autre', menu.avantCache.length > 0, menu.avantCache.slice(0, 8).join(', '));
+    console.log('      lignes par héros (toutes / repliées avant / maintenant) : ' + Object.keys(menu.tailles).map(function (k) { var t = menu.tailles[k]; return k + ' ' + t.tout + '/' + t.avant + '/' + t.maintenant; }).join(' · '));
+
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();

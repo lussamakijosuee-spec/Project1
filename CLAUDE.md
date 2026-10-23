@@ -335,6 +335,11 @@ reforme · n t. ») s'écrivent à droite du livre d'Aël, sur la ligne du Pacte
 ordres refusés, il se dissipe, les âmes, le livre plein, la Porte, la Dette, la Rage, la Garde qui boit…) flottent
 aussi au-dessus de qui le fait, en court (le journal reste, pour les bancs) ; une annonce au bord droit reste dans
 l'écran (`CombatTactique`). Un nouveau message de système passe par une annonce, jamais par le seul journal.
+**Le menu de combat cachait le rework** : `FamillesDeCapacites` replie en une ligne les compétences aux mêmes chiffres
+(branche, portée, nature, élément, états) — 43 capacités à verbe, et « ᛟ Activer » (sur soi, sans dégâts), étaient
+repliées sous une voisine. Depuis le 2026-10-23, l'**art** et le **verbe** (et « instantanée ») font partie de la
+famille, et Activer ne se replie jamais. Le menu s'allonge d'autant (au niveau de départ : Korrah 76 → 92 lignes,
+ludwing 61 → 72, Aël 69 → 93, Vesper 25 → 27) — presque tout vient des verbes, l'art seul n'en ajoute qu'une ou deux.
 Banc : `navigateur/ce_qui_se_voit.js`.
 Les **PT** n'étaient pas une monnaie : l'Attaque (tpGain 100 × TCR ~2,4) remplissait la jauge, la Relique 46
 la gardait d'un combat à l'autre — réglé le 2026-10-22 (« Les trois arts », plus bas). **Les manas** (JOKO) : *« il n'y a plus âme et mana
