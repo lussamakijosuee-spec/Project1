@@ -13,18 +13,6 @@
    "octets": 664
   },
   {
-   "id": 10,
-   "nom": "Traqueur de Coups",
-   "demandes": [
-    "Respond"
-   ],
-   "aLaStructure": true,
-   "remplis": [
-    "respondState"
-   ],
-   "octets": 2359
-  },
-  {
    "id": 16,
    "nom": "Domaine Déployé",
    "demandes": [
@@ -304,7 +292,7 @@
   },
   {
    "id": 87,
-   "nom": "La Fureur Froide",
+   "nom": "☯ État de Flow",
    "demandes": [
     "Apply",
     "React",
@@ -316,7 +304,7 @@
     "removeState",
     "reactState"
    ],
-   "octets": 1769
+   "octets": 1876
   },
   {
    "id": 89,
@@ -525,6 +513,11 @@
    "dansMeta": 17,
    "exemple": "acteur #4 Aël"
   },
+  "style": {
+   "poses": 105,
+   "dansMeta": 105,
+   "exemple": "compétence #3 Attaque Consécutive"
+  },
   "parole": {
    "poses": 47,
    "dansMeta": 47,
@@ -538,7 +531,7 @@
   "interdit": {
    "poses": 1,
    "dansMeta": 1,
-   "exemple": "compétence #11 Éclat Noir"
+   "exemple": "compétence #11 Point de Rupture"
   },
   "parolel": {
    "poses": 274,
@@ -546,8 +539,8 @@
    "exemple": "compétence #12 Parole n°2 Encouragement"
   },
   "hp cost": {
-   "poses": 53,
-   "dansMeta": 53,
+   "poses": 71,
+   "dansMeta": 71,
    "exemple": "compétence #12 Parole n°2 Encouragement"
   },
   "noparole": {
@@ -560,10 +553,25 @@
    "dansMeta": 12,
    "exemple": "compétence #21 Parole n°3 Aura d'Espoir"
   },
+  "art": {
+   "poses": 42,
+   "dansMeta": 42,
+   "exemple": "compétence #25 Lecture du Corps"
+  },
   "regard": {
    "poses": 2,
    "dansMeta": 2,
    "exemple": "compétence #25 Lecture du Corps"
+  },
+  "berserkervesper": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #26 🩸 Berserker"
+  },
+  "horsfamille": {
+   "poses": 60,
+   "dansMeta": 60,
+   "exemple": "compétence #26 🩸 Berserker"
   },
   "pre-damage eval": {
    "poses": 4,
@@ -596,13 +604,13 @@
    "exemple": "compétence #45 Assaut Fulgurant"
   },
   "voie": {
-   "poses": 98,
-   "dansMeta": 98,
+   "poses": 101,
+   "dansMeta": 101,
    "exemple": "compétence #46 Déploiement de Domaine"
   },
   "cooldown": {
-   "poses": 21,
-   "dansMeta": 21,
+   "poses": 19,
+   "dansMeta": 19,
    "exemple": "compétence #50 Pari Téméraire"
   },
   "sang": {
@@ -665,9 +673,24 @@
    "dansMeta": 1,
    "exemple": "compétence #120 Déchirure d'Âme"
   },
+  "flowvesper": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #126 ☯ Art Serein : État de Flo"
+  },
+  "surengourdi": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #155 Parole n°3 Vague Équilibré"
+  },
+  "adeux": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #156 Contre-Sort"
+  },
   "combo": {
-   "poses": 6,
-   "dansMeta": 6,
+   "poses": 12,
+   "dansMeta": 12,
    "exemple": "compétence #413 Fureur Spectrale (Duo)"
   },
   "combolien": {
@@ -730,6 +753,11 @@
    "dansMeta": 3,
    "exemple": "compétence #477 Parole n°12 le Ciel Ouvert"
   },
+  "froidconfie": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #800 Le Froid Rendu"
+  },
   "fusionchair": {
    "poses": 1,
    "dansMeta": 1,
@@ -753,6 +781,11 @@
   "ultime": {
    "poses": 3,
    "dansMeta": 3,
+   "exemple": "compétence #813 ✶ la Convergence"
+  },
+  "convergence": {
+   "poses": 1,
+   "dansMeta": 1,
    "exemple": "compétence #813 ✶ la Convergence"
   },
   "reculvital": {
@@ -810,20 +843,35 @@
    "dansMeta": 1,
    "exemple": "compétence #955 Parole n°16 Il te Regarde "
   },
+  "seiryusuit": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1098 Traverser"
+  },
+  "reprendfroid": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #1099 Paume Immobile"
+  },
   "inscritdette": {
    "poses": 2,
    "dansMeta": 2,
-   "exemple": "compétence #1138 Première Entaille"
-  },
-  "horsfamille": {
-   "poses": 28,
-   "dansMeta": 28,
    "exemple": "compétence #1138 Première Entaille"
   },
   "rendrelesang": {
    "poses": 1,
    "dansMeta": 1,
    "exemple": "compétence #1143 Rendre le Sang"
+  },
+  "aplace": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1156 Elle Prend Ta Place"
+  },
+  "confiefroid": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1241 Ralentir"
   },
   "avatarposture": {
    "poses": 3,
@@ -880,6 +928,71 @@
    "dansMeta": 1,
    "exemple": "compétence #1280 Contrat Forcé"
   },
+  "artarme": {
+   "poses": 18,
+   "dansMeta": 18,
+   "exemple": "compétence #1281 Fil du Vent"
+  },
+  "sangpercant": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1299 Sang Perçant"
+  },
+  "supernova": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1300 Supernova"
+  },
+  "armedesang": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1301 L'Arme de Sang"
+  },
+  "vannevesper": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1302 Vanne à Vesper"
+  },
+  "unison item actors": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "unison item actor learn": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "unison item actor tp cost": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "unison item atk actors": {
+   "poses": 3,
+   "dansMeta": 3,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "unison item mat actors": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "multiple elements": {
+   "poses": 6,
+   "dansMeta": 6,
+   "exemple": "compétence #1303 Lame de Givre"
+  },
+  "unison item actor mp cost": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "compétence #1304 La Lame et son Ombre"
+  },
+  "instantané": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "compétence #1309 ᛟ Activer"
+  },
   "upgrade effect": {
    "poses": 30,
    "dansMeta": 30,
@@ -919,6 +1032,11 @@
    "poses": 1,
    "dansMeta": 1,
    "exemple": "objet #111 Appât"
+  },
+  "image d'arme": {
+   "poses": 226,
+   "dansMeta": 226,
+   "exemple": "arme #1 Épée Rouillée"
   },
   "don": {
    "poses": 16,
@@ -1035,11 +1153,6 @@
    "dansMeta": 2,
    "exemple": "ennemi #25 Errant Gonflé"
   },
-  "donoboss": {
-   "poses": 3,
-   "dansMeta": 3,
-   "exemple": "ennemi #37 Arbitre de l'Ordre d'Or"
-  },
   "traitboss": {
    "poses": 8,
    "dansMeta": 8,
@@ -1091,8 +1204,8 @@
    "exemple": "ennemi #101 le dieu sans visage"
   },
   "desc": {
-   "poses": 422,
-   "dansMeta": 422,
+   "poses": 437,
+   "dansMeta": 437,
    "exemple": "ennemi #124 esprit puissant"
   },
   "floating": {
@@ -1129,6 +1242,11 @@
    "poses": 1,
    "dansMeta": 1,
    "exemple": "ennemi #407 Aël, le Déchiré"
+  },
+  "donoboss": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "ennemi #427 Donovano, le Second"
   },
   "mecamiroir": {
    "poses": 1,
@@ -1215,9 +1333,9 @@
    "dansMeta": 0,
    "exemple": "état #7 Enragé"
   },
-  "custom respond effect": {
-   "poses": 3,
-   "dansMeta": 3,
+  "ancien respond effect": {
+   "poses": 1,
+   "dansMeta": 1,
    "exemple": "état #10 Traqueur de Coups"
   },
   "statefx": {
@@ -1233,7 +1351,12 @@
   "mue": {
    "poses": 1,
    "dansMeta": 1,
-   "exemple": "état #12 Berserk"
+   "exemple": "état #12 🩸 Berserker"
+  },
+  "lesstylesdevesper": {
+   "poses": 5,
+   "dansMeta": 5,
+   "exemple": "état #12 🩸 Berserker"
   },
   "custom passive condition": {
    "poses": 24,
@@ -1305,10 +1428,15 @@
    "dansMeta": 1,
    "exemple": "état #49 Mangeur d'Âmes"
   },
-  "threshold) {\n        value = 0; // annule les dégâts\n        target.startanimation(51); // animation de parade légère\n        \n        if (battlemanager._logwindow) {\n            battlemanager._logwindow.addtext(\"aël dévie l'attaque avec un doigt. mouvement inutile.\");\n        }\n    } \n    // cas 2": {
+  "threshold) {\n        value = 0; // annule les dégâts\n        target.startanimation(51); // animation de parade légère\n        \n        if (battlemanager._logwindow) {\n            battlemanager._logwindow.addtext(target.name() + \" dévie l'attaque d'un geste. mouvement inutile.\");\n        target._flowesquive = user;\n        }\n    } \n    // cas 2": {
    "poses": 1,
    "dansMeta": 0,
-   "exemple": "état #87 La Fureur Froide"
+   "exemple": "état #87 ☯ État de Flow"
+  },
+  "custom respond effect": {
+   "poses": 2,
+   "dansMeta": 2,
+   "exemple": "état #89 Le Sang ne Ment Jamais"
   },
   "reprise": {
    "poses": 1,
@@ -1344,6 +1472,26 @@
    "poses": 6,
    "dansMeta": 6,
    "exemple": "état #237 ✦ Sous Contrat"
+  },
+  "registre": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #247 ✦ Âmes"
+  },
+  "posture": {
+   "poses": 9,
+   "dansMeta": 9,
+   "exemple": "état #248 ◆ Posture de la Forge"
+  },
+  "ecrit": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #257 ᛟ Écrit"
+  },
+  "brisure": {
+   "poses": 1,
+   "dansMeta": 1,
+   "exemple": "état #1005 💥 Brisé"
   }
  },
  "sansTrace": [],
