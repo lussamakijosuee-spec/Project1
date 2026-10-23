@@ -265,6 +265,11 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', txt); w.push('wait'); }
     }
+    // Le journal est muet en vue de côté (SimpleMsgSideView ne garde aucune ligne) : ce qui doit se voir
+    // flotte aussi au-dessus de qui le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#9ad0ff'); }
+    }
     function coutFroid(skill) {
         var m = skill && skill.meta && skill.meta.FroidConfie;
         if (m === undefined || m === true) { return 0; }
@@ -327,6 +332,7 @@
         if (exige > 0) {
             poser(jauge() - exige);
             journal('\\C[23]❄ ' + (lui() ? lui().name() : 'seiryu') + ' lui rend tout le froid confié.\\C[0]');
+            annonce(this, '❄ Tout le froid rendu · ' + exige);
         }
         var gain = Math.floor(pm * PAR_PM);
         if (gain > 0 && laPourElle()) {
@@ -334,6 +340,7 @@
             if (apres > avant) {
                 journal('\\C[23]❄ ' + this.name() + ' confie ' + (apres - avant) + ' de froid à ' + lui().name()
                     + ' (' + apres + '/' + PLAFOND + ').\\C[0]');
+                annonce(lui(), '❄ Confié +' + (apres - avant) + ' · ' + apres + '/' + PLAFOND);
             }
         }
     };
@@ -359,12 +366,14 @@
             action._froidCharge = n; action._froidTout = true;
             poser(0);
             journal('\\C[23]❄ ' + s.name() + ' rend tout le froid confié (' + n + ').\\C[0]');
+            annonce(s, '❄ Rends-le · tout le froid (' + n + ')');
             return;
         }
         if (n < CHARGE || !(estSoin(it) || estGarde(it) || estCoup(it))) { return; }
         action._froidCharge = CHARGE;
         poser(n - CHARGE);
         journal('\\C[23]❄ ' + s.name() + ' dépense ' + CHARGE + ' de froid (' + jauge() + '/' + PLAFOND + ').\\C[0]');
+        annonce(s, '❄ Chargé · ' + jauge() + '/' + PLAFOND);
     }
 
     // Les coups chargés sont de glace — pour les dégâts (YEP_ElementCore)
@@ -422,6 +431,7 @@
         }
         journal('\\C[8]❄ Le froid confié revient sur ' + k.name() + ' (' + froid + ')'
             + (saisie ? ' — elle ne bouge plus.' : '.') + '\\C[0]');
+        annonce(k, saisie ? '❄ Le froid revient · Saisie !' : '❄ Le froid revient · ' + froid, saisie ? '#ff8080' : '#9ad0ff');
     }
 
     var _ajoute = Game_Battler.prototype.addState;
@@ -495,6 +505,8 @@
         if (x.isStateAffected(ETAT_PLACE)) { x._stateTurns[ETAT_PLACE] = TOURS_PLACE; }
         journal('\\C[23]🔄 Change — ' + k.name() + ' prend la place de ' + x.name()
             + (repris ? ', et ce qui allait avec.' : '.') + '\\C[0]');
+        annonce(k, '🔄 À la place de ' + x.name(), '#b8e0ff');
+        if (repris) { annonce(x, '🔄 Délivré', '#b8e0ff'); }
         if (BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
     }
 
@@ -570,6 +582,7 @@
             this._froidMordu = true;
             u.addState(ETAT_ENGOURDI);
             journal('\\C[23]❄ Le froid mord ' + u.name() + '.\\C[0]');
+            annonce(u, '❄ Le froid mord');
         }
     };
 
@@ -584,6 +597,7 @@
         var v = _valeurCapacite.call(this, target, critical);
         if (v > 0 && estActeur(this.subject(), PORTEUSE) && balise(this.item(), 'SurEngourdi')
             && target && target.isStateAffected(ETAT_ENGOURDI)) {
+            annonce(target, '❄ Sur l\'engourdi ×' + String(1 + BONUS_ENGOURDI / 100).replace('.', ','));
             return Math.round(v * (1 + BONUS_ENGOURDI / 100));
         }
         return v;
@@ -601,6 +615,7 @@
             s.clearResult();
             _applyCapacite.call(this, s);          // la chaîne d'avant : pas de récursion ici
             journal('\\C[23]❄ ' + s.name() + ' en profite aussi.\\C[0]');
+            annonce(s, '❄ À deux');
         }
         // <APlace> : elle prend sa place — les coups ciblés sur lui la frappent
         if (balise(it, 'APlace') && target.isActor && target.isActor() && target !== u && target.isAlive()) {
@@ -609,6 +624,7 @@
             if (target.isStateAffected(ETAT_PLACE)) {
                 target._stateTurns[ETAT_PLACE] = TOURS_A_PLACE;
                 journal('\\C[23]🔄 ' + u.name() + ' prend la place de ' + target.name() + '.\\C[0]');
+                annonce(target, '🔄 ' + u.name() + ' prend sa place', '#b8e0ff');
             }
         }
         // <SeiryuSuit> : on retient la cible ; il frappe quand son action à elle est finie
@@ -621,6 +637,7 @@
                     poser(jauge() - CHARGE);
                     journal('\\C[23]❄ ' + u.name() + ' reprend ' + CHARGE + ' de froid à ' + lui().name()
                         + ' (' + jauge() + '/' + PLAFOND + ').\\C[0]');
+                    annonce(u, '❄ Reprend ' + CHARGE + ' de froid');
                 }
             }
             var rr = target.result();
@@ -642,6 +659,7 @@
         e.startDamagePopup();
         if (e.isDead()) { e.performCollapse(); }
         journal('\\C[23]❄ ' + s.name() + ' suit le coup' + (r.isHit() ? ' : ' + r.hpDamage + ' dégâts.' : ', et manque.') + '\\C[0]');
+        annonce(s, '❄ Suit le coup');
         if (BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
     }
     var _finAction = BattleManager.endAction;
@@ -652,4 +670,55 @@
     };
 
     window.FroidConfie.suivre = suivre;            // pour un banc
+
+    //=========================================================================
+    // À L'ÉCRAN — seiryu est le cinquième : sa rangée de statut est hors de la
+    // fenêtre (4 rangées). Sa vie et son froid s'écrivent donc sur la ligne du
+    // Pacte et du livre, à droite ; s'il se reforme, combien de tours encore.
+    //=========================================================================
+    function ligneSeiryu() {
+        var s = lui();
+        if (!s || !enCombat() || $gameParty.battleMembers().indexOf(s) < 0) { return ''; }
+        if (s.isDead()) {
+            var a = $gameParty._seiryuAbsence, n = a && !a.fini ? Math.max(1, a.retour - tour()) : 0;
+            return n ? s.name() + ' se reforme · ' + n + ' t.' : s.name() + ' · à terre';
+        }
+        return s.name() + ' · ' + s.hp + ' PV · ❄ ' + jauge();
+    }
+    function Window_Seiryu() { this.initialize.apply(this, arguments); }
+    Window_Seiryu.prototype = Object.create(Window_Base.prototype);
+    Window_Seiryu.prototype.constructor = Window_Seiryu;
+    Window_Seiryu.prototype.initialize = function (x, y, largeur) {
+        Window_Base.prototype.initialize.call(this, x, y, largeur, this.fittingHeight(1));
+        this.opacity = 0; this._cle = null;
+    };
+    Window_Seiryu.prototype.visibleDansLeStatut = function () {
+        var sw = SceneManager._scene && SceneManager._scene._statusWindow, s = lui();
+        if (!sw || !s || !sw.topRow) { return false; }
+        var i = $gameParty.battleMembers().indexOf(s);
+        return i >= sw.topRow() && i < sw.topRow() + sw.maxPageRows();
+    };
+    Window_Seiryu.prototype.update = function () {
+        Window_Base.prototype.update.call(this);
+        var t = this.visibleDansLeStatut() ? '' : ligneSeiryu(), s = lui();
+        var cle = t + '/' + (s && s.hp < s.mhp / 4 ? 1 : 0);
+        if (cle === this._cle) { return; }
+        this._cle = cle;
+        this.contents.clear();
+        if (!t) { return; }
+        this.contents.fontSize = 17;
+        this.contents.outlineColor = 'rgba(0,0,0,0.9)';
+        this.changeTextColor(s.isDead() ? '#b0b0b0' : (s.hp < s.mhp / 4 ? '#ff8080' : (jauge() >= CHARGE ? '#9ad0ff' : '#ffffff')));
+        this.drawText(t, 4, 2, this.contentsWidth() - 8, 'right');
+        this.resetTextColor();
+    };
+    var _fenetres = Scene_Battle.prototype.createAllWindows;
+    Scene_Battle.prototype.createAllWindows = function () {
+        _fenetres.call(this);
+        // à droite du livre d'Aël (sa fenêtre : 300-630), sur la ligne du Pacte
+        var sw = this._statusWindow, y = sw ? sw.y - 56 : Graphics.boxHeight - 240, x = 612;
+        this._fenetreSeiryu = new Window_Seiryu(x, y, Graphics.boxWidth - x);
+        this.addChild(this._fenetreSeiryu);
+    };
+    window.FroidConfie.ligneSeiryu = ligneSeiryu;  // pour un banc
 })();

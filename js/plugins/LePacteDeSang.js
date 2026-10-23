@@ -194,6 +194,11 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', t); }
     }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus de qui
+    // le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#ffffff'); }
+    }
     function pacte(a) { return Math.max(0, a._pacte || 0); }
     function pactePct(a) { return a.mhp > 0 ? pacte(a) / a.mhp : 0; }
     function poserPacte(a, v) { a._pacte = Math.max(0, Math.min(Math.floor(v), Math.floor(CAP * a.mhp))); }
@@ -248,6 +253,7 @@
             poserPacte(u, 0);
             soigner(u, soin);
             journal('\\C[2]🩸 ' + u.name() + ' rend le sang : +' + soin + ' PV. Le Pacte est effacé.\\C[0]');
+            annonce(u, '🩸 Le sang rendu · +' + soin + ' PV', '#ff6070');
         }
 
         _apply.call(this, target);
@@ -263,6 +269,7 @@
                 poserPacte(u, pacte(u) + ABSORB * u.mhp);
                 journal('\\C[18]🩸 ' + u.name() + ' absorbe la Dette — Pacte ' + Math.round(pactePct(u) * 100) + ' %'
                     + (av < SEUIL && masque(u) ? ' · MASQUE ROUGE' : '') + '\\C[0]');
+                annonce(u, '🩸 Dette absorbée · ' + Math.round(pactePct(u) * 100) + ' %' + (av < SEUIL && masque(u) ? ' · MASQUE' : ''), '#ff6070');
             }
             // Inscrire : les techniques qui marquent.
             if (tag(it, 'InscritDette')) {
@@ -363,6 +370,7 @@
                     var rembourse = Math.min(p, value);
                     poserPacte(this, p - rembourse);
                     journal('\\C[8]🩸 La Dette boit le soin : −' + rembourse + ' au Pacte.\\C[0]');
+                    annonce(this, '🩸 La Dette boit le soin', '#b0b0b0');
                     return;
                 }
                 if (BLOQUE) { return; }

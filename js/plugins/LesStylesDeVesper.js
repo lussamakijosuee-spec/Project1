@@ -248,6 +248,11 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', t); }
     }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus de qui
+    // le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#ffffff'); }
+    }
     /** Poser un état hors du chemin d'une action : MV refuse un état retiré
      *  dans la même action tant que le résultat n'est pas vidé (CLAUDE.md §7). */
     function poser(a, id) { if (!a || !$dataStates[id]) { return; } a.clearResult(); a.addState(id); }
@@ -342,6 +347,7 @@
         if (!a.isStateAffected(ETAT_RAGE)) { return; }
         effetFort([255, 40, 40, 160], 'Monster4');
         journal('\\C[2]💢 ' + a.name().toUpperCase() + ' EXPLOSE DE RAGE ! 💢\\C[0]');
+        annonce(a, '💢 RAGE !', '#ff4040');
     }
 
     // ── les coups : Rage (dégâts), Garde (adaptation), Berserker (Colère, 1 PV)
@@ -377,6 +383,7 @@
                 if (r2 > r) {
                     ad[el] = r2;
                     journal('\\C[6]⚙ ' + target.name() + ' s\'adapte : ' + nomElement(el) + ' −' + Math.round(r2 * 100) + ' %\\C[0]');
+                    annonce(target, '⚙ S\'adapte : ' + nomElement(el) + ' −' + Math.round(r2 * 100) + ' %', '#a0d0ff');
                 }
             }
             // 🩸 Berserker : la Colère boit le coup (3B), puis 1 PV minimum (3A)
@@ -440,6 +447,7 @@
             var lud = dansLeCombat(LUDWING);
             if (lud && lud !== u && Math.random() < RAGE_LUD) {
                 journal('\\C[2]💢 ' + u.name() + ' perd le fil — c\'est ' + lud.name() + ' qui prend !\\C[0]');
+                annonce(lud, '💢 C\'est lui qui prend !', '#ff4040');
                 return t.map(function () { return lud; });
             }
         }
@@ -498,6 +506,7 @@
             this._armeDeSangUsee = false;
             this._sangEncaisse = 0;
             journal('\\C[2]🩸 L\'Arme de Sang retombe en poussière rouge.\\C[0]');
+            annonce(this, '🩸 L\'Arme de Sang retombe', '#b0b0b0');
         }
     };
 
@@ -514,6 +523,7 @@
             this._colere = 0;
             poser(this, ETOURDI);
             journal('\\C[8]🩸 Le Berserker la lâche : −' + Math.max(0, perte) + ' PV, elle vacille.\\C[0]');
+            annonce(this, '🩸 Le Berserker la lâche', '#b0b0b0');
         }
         if (id === ETAT_RAGE && !this.isStateAffected(ETAT_BERSERK)) { this._colere = 0; }
     };
@@ -531,11 +541,13 @@
         var pm = Math.ceil(a.mmp * pct), pt = Math.ceil(a.maxTp() * pct);
         a.gainMp(-pm); a.gainTp(-pt);
         journal('\\C[6]🛡 La Garde boit : −' + pm + ' PM, −' + pt + ' PT.\\C[0]');
+        annonce(a, '🛡 La Garde boit · −' + pm + ' PM', '#a0d0ff');
         if (a.mp <= 0 && a.tp <= 0) {
             a._adapt = {}; a._gardeTours = 0;
             poser(a, ETAT_BRISEE);
             effetFort([120, 120, 160, 160], 'Crash');
             journal('\\C[8]💔 Plus rien à boire : l\'armure de ' + a.name() + ' cède.\\C[0]');
+            annonce(a, '💔 L\'armure cède', '#ff8080');
         }
     }
     // Après le décompte des états de MV : l'Armure Brisée posée ici dure ses deux tours pleins.

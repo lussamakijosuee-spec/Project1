@@ -327,7 +327,15 @@ MaitriseVoies… ne s'affichent jamais. Ce qui doit se voir passe par **`CombatT
 texte, couleur)`** (texte flottant au-dessus du combattant), une **icône d'état avec compteur**
 (YEP_BuffsStatesCore `setStateCounter` ; un héros n'affiche que **2 icônes**, par priorité ; un ennemi
 une à la fois, en boucle), ou l'ordre des tours. Autres constats : `Window_Phrase` (LaParole) est posée
-exactement sur `Window_Pacte` (LePacteDeSang, 0,388) ; la 5ᵉ rangée de statut (seiryu) est hors champ.
+exactement sur `Window_Pacte` (LePacteDeSang, 0,388) — déplacée le 2026-10-23 à droite de la Colère de Vesper, sur
+sa ligne ; la 5ᵉ rangée de statut (seiryu) est hors champ — depuis le 2026-10-23, sa vie et son froid (ou « se
+reforme · n t. ») s'écrivent à droite du livre d'Aël, sur la ligne du Pacte (`LeFroidConfie`, `Window_Seiryu`).
+**Le 2026-10-23, les anciens systèmes des héros parlent enfin** : les ~55 lignes de journal de `SeiryuLeFamilier`,
+`LeFroidConfie`, `LeRegistre`, `LaBibliothequeDAel`, `LePacteDeSang` et `LesStylesDeVesper` (le froid confié, ses
+ordres refusés, il se dissipe, les âmes, le livre plein, la Porte, la Dette, la Rage, la Garde qui boit…) flottent
+aussi au-dessus de qui le fait, en court (le journal reste, pour les bancs) ; une annonce au bord droit reste dans
+l'écran (`CombatTactique`). Un nouveau message de système passe par une annonce, jamais par le seul journal.
+Banc : `navigateur/ce_qui_se_voit.js`.
 Les **PT** n'étaient pas une monnaie : l'Attaque (tpGain 100 × TCR ~2,4) remplissait la jauge, la Relique 46
 la gardait d'un combat à l'autre — réglé le 2026-10-22 (« Les trois arts », plus bas). **Les manas** (JOKO) : *« il n'y a plus âme et mana
 originel et mana sombre, c'est que mana négatif, mana positif et mana spirituel »* — 5 = 4, 7 = 2.
@@ -397,7 +405,10 @@ emporte ses écrits. **Déjà écrits** (partent tout de suite) : les dons — t
 collier »*, ludwing), une fiche `<DejaEcrit>` (Aspiration des Âmes Damnées, 70 : son collier) — les attaques à plusieurs (`<Combo>`, unisson) et la Parole lue d'Aël. **La volonté**
 (de LeSpirituel) : tout ce qui est de l'âme × (1 + 0,5 × PV manquants + 0,25 par allié tombé), ×1,75 au plus.
 Activer garde la posture du Mouvement. **La résonance** : des écrits qui partent ensemble, chacun +15 % par autre
-(trois : ×1,3). Banc : `navigateur/l_ecrit.js`.
+(trois : ×1,3). **Ce qui se voit** (2026-10-23) : dès qu'un héros a des écrits, **« ᛟ Activer · n »** s'ajoute juste
+sous l'Attaque dans ses ordres (elle reste aussi dans ses capacités) ; son aide dit ce qui attend, compté et sur qui
+(« ᛟ En attente : Cloison → Vesper · Trait Spectral ×2 → Slime ») ; un écrit grisé dit pourquoi (« 3 écrits
+attendent déjà »). Banc : `navigateur/l_ecrit.js`.
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
@@ -450,8 +461,20 @@ la phrase ouverte, *« une flèche, un mot : les deux partent ensemble »* ; `<L
 jusqu'à sa prochaine action, *« il n'y a plus moyen de savoir lequel est lui »* ; ludwing esquive déjà 35 %) —
 Vesper : Vague Basse, Prix du Sang (`Lache`), Coup Furieux, Onde de Rage ; Korrah : Éclat Bref, Rien de Visible ;
 ludwing : Ombres Multiples, Sept Éclats (`Reprise`), Lame d'Envers (`Sur`), Porte Entrouverte (`Reste`) ; Aël :
-Trait Clair. **62 capacités** portent un verbe des trois arts (plus les 28 de Korrah liées à seiryu et les 8
-des signatures). Banc : `navigateur/les_verbes.js`.
+Trait Clair. **Quatrième paquet, le soutien et le reste, 104** (JOKO : *« OUI CONTINUE TOUT »* ; verbes neufs :
+`<Encourage>` — Parole — l'allié frappe ×1,2 à sa prochaine action ; `<Devant>` — Parole, posé par un soin,
+une réanimation ou une purge de n'importe quel art — l'allié agit en premier au tour suivant ; `<Rythme>` —
+corps — un allié en posture prend un point de flux, jamais jusqu'au geste juste ; `<Rempart>` — écrit — quand
+il part sur un allié, le prochain coup qu'il reçoit ÷2) : les soins de la Source donnent du rythme, les murs
+écrits (Cloison, Halo, Barrière Magique, Abri, L'Équilibre Tenu, Encouragement, Transfusion) sont des remparts,
+les réanimations et les purges font passer devant, les Renvois et Parades d'Aël arment une riposte, ses
+attaques du Miroir et du Domaine prennent les verbes du corps, et Fil de Vie (Vesper) appâte l'ennemi sur elle.
+**Bilan** : 193 capacités portent un verbe (avec les 28 de Korrah liées à seiryu) ; les 35 Paroles des échelles
+gardent leur degré ; 17 qu'un ennemi utilise et 11 attaques à plusieurs ne changent pas ; restent sans verbe,
+exprès, les **formules de base** (Feu, Étincelle, Rayon Stellaire, Trait Spectral, Comète, Double Attaque —
+*« la formule basique où tu l'envoies juste »*), les ultimes du livre et du ciel d'Aël, ses flèches du Miracle,
+et les pièces d'autres systèmes (copie d'Âme, Pacte d'Âme, la Mue, Marquer la Cible, « Assez. » au hasard).
+Banc : `navigateur/les_verbes.js`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
@@ -459,6 +482,10 @@ le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte gr
 s'efface » (opacité ~200/255 au moment de la mesure), les mêmes sur la version d'avant — pas des bugs.
 Les bancs qui jugent en temps réel (`jouer`, `le_combat_tactique`…) échouent aussi si un autre banc
 lourd tourne en même temps : les lancer seuls.
+**Ils font chauffer son PC** (JOKO, 2026-10-23 : *« il chauffe trop, il crée des moments parfois »* — Chromium
+dessine le jeu au processeur) : un banc navigateur à la fois, seulement ceux que le changement touche, bridé à
+2 cœurs en priorité basse — `cmd /c start "" /b /wait /low /affinity 3 node bancs/navigateur/<banc>.js`
+(Chromium hérite de la bride ; `les_verbes` y prend 17 s, comme sans) — et rien qui reste tourner après.
 
 **Pièges de MV rencontrés ici :**
 

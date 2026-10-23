@@ -293,12 +293,18 @@
         var apres = palier();
         if (apres > avant) {
             journal('\\C[23]✦ seiryu devient ' + NOMS_PALIER[apres].toUpperCase() + '.\\C[0]');
+            annonce(lui(), '✦ ' + NOMS_PALIER[apres].toUpperCase(), '#ffd84a');
         }
     }
     function posture() { var m = memoire(); return m ? m.posture : POSTURE_DEF; }
     function journal(txt) {
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', txt); w.push('wait'); }
+    }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus de qui
+    // le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#9ad0ff'); }
     }
 
     window.Seiryu = {
@@ -634,6 +640,7 @@
             var prochain = p === 1 ? PALIER_DRESSE : (p === 2 ? PALIER_LIE : null);
             journal('\\C[23]✦ seiryu — ' + NOMS_PALIER[p]
                 + (prochain ? ' (' + m.experience + '/' + prochain + ')' : '') + '\\C[0]');
+            annonce(lui(), '✦ ' + NOMS_PALIER[p] + (prochain ? ' · ' + m.experience + '/' + prochain : ''));
         }
     };
 
@@ -660,6 +667,7 @@
         var p = palier();
         if (p === 1 && Math.random() >= OBEIT_SAUVAGE) {
             journal('\\C[8]✦ seiryu n\'écoute pas.\\C[0]');
+            annonce(lui(), '✦ N\'écoute pas', '#b0b0b0');
             return false;
         }
         return true;
@@ -669,6 +677,7 @@
         var s = lui();
         if (!s || !window.Seiryu.present() || !s.isAlive() || !s.canMove()) {
             journal('\\C[8]✦ seiryu ne peut pas répondre.\\C[0]');
+            annonce(elle() || s, '✦ seiryu ne répond pas', '#b0b0b0');
             return;
         }
         if (!obeit()) { return; }
@@ -681,6 +690,7 @@
                 cible._stateTurns[ETAT_AILE] = TOURS_AILE;
                 memoire().protections[cible.actorId()] = (memoire().protections[cible.actorId()] || 0) + 1;
                 journal('\\C[23]✦ seiryu se place au-dessus de ' + cible.name() + '.\\C[0]');
+                annonce(cible, '✦ seiryu au-dessus');
                 gagner(1);
             }
             return;
@@ -695,6 +705,7 @@
             var soin = utilisables(s, SOIN_UN);
             if (urgents.length && soin.length) {
                 journal('\\C[23]✦ seiryu : « pas maintenant — ' + urgents[0].name() + ' tombe. »\\C[0]');
+                annonce(s, '✦ « Pas maintenant »'); annonce(urgents[0], '✦ seiryu vient');
                 BattleManager.queueForceAction(s, soin[0], indexAllie(urgents[0]));
                 return;
             }
@@ -702,6 +713,7 @@
 
         if (!s.isLearnedSkill(skill.id) || !s.canUse(skill)) {
             journal('\\C[8]✦ seiryu ne sait pas encore faire ça — ou n\'a plus de quoi.\\C[0]');
+            annonce(s, '✦ Ne sait pas encore', '#b0b0b0');
             return;
         }
         var idx = -1;                                   // au hasard, faute de mieux
@@ -771,6 +783,7 @@
         window.Seiryu.posture(p);
         var dit = { libre: 'juge tout seul', agressif: 'frappe', garde: 'ne frappe plus — il couvre' };
         journal('\\C[23]✦ ' + (lui() ? lui().name() : 'seiryu') + ' ' + dit[p] + '.\\C[0]');
+        annonce(lui(), '✦ ' + { libre: 'Libre', agressif: 'Il frappe', garde: 'Il couvre' }[p]);
     };
 
     //=========================================================================
@@ -812,6 +825,7 @@
         s.setHp(Math.max(1, Math.floor(s.mhp * pct)));
         $gameParty._seiryuAbsence = null;
         journal('\\C[23]✦ ' + s.name() + ' ' + texte + '\\C[0]');
+        annonce(s, '✦ Se reforme'); if (/Hiver/.test(texte)) { annonce(elle(), '❄ L\'Hiver revient'); }
     }
 
     // Tombé sous un coup (et pas éteint avec elle) : l'absence commence.
@@ -826,6 +840,8 @@
         var b = bilan(); if (b) { b.morts++; }
         journal('\\C[8]✦ ' + this.name() + ' se dissipe — Korrah perd l\'Hiver. Il se reforme dans '
             + TOURS_ABSENCE + ' tour' + (TOURS_ABSENCE > 1 ? 's' : '') + '.\\C[0]');
+        annonce(this, '✦ Se dissipe · ' + TOURS_ABSENCE + ' t.', '#b0b0b0');
+        annonce(elle(), '❄ Plus d\'Hiver', '#b0b0b0');
     };
 
     // Rien ne le ramène avant l'heure : ni objet, ni sort, ni refresh qui
@@ -856,6 +872,7 @@
         if (t >= a.retour) { a.fini = true; return; }
         var reste = a.retour - t;
         journal('\\C[8]✦ seiryu se reforme… encore ' + reste + ' tour' + (reste > 1 ? 's' : '') + '.\\C[0]');
+        annonce(elle(), '✦ seiryu · encore ' + reste + ' t.', '#b0b0b0');
     }
 
     // ⚠ Piège 3 : s'il survit au groupe entier, MV ne déclare pas la défaite.
@@ -865,6 +882,7 @@
         if (!s || !k || !$gameParty._seiryuEntre) { return; }
         if (TOMBE_AVEC && !consciente(k) && s.isAlive()) {
             journal('\\C[8]' + s.name() + " s'éteint avec elle.\\C[0]");
+            annonce(s, '✦ S\'éteint avec elle', '#b0b0b0');
             eteindre(s);
             return;
         }

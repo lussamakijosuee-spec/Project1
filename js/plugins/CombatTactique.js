@@ -271,7 +271,9 @@ window.CombatTactique = CombatTactique;
         this.bitmap.textColor = couleur;
         this.bitmap.drawText(texte, 0, 0, 320, 40, 'center');
         this.anchor.x = 0.5; this.anchor.y = 1;
-        this.x = x; this.y = y;
+        // les héros sont au bord droit : une annonce longue y était coupée — elle reste dans l'écran
+        var demi = Math.min(320, this.bitmap.measureTextWidth(texte)) / 2 + 6;
+        this.x = Math.max(demi, Math.min(Graphics.boxWidth - demi, x)); this.y = y;
         this._vie = 0;
         this.texte = texte;
     };

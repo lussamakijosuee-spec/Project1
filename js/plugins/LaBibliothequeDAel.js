@@ -171,6 +171,11 @@
     function ael() { return $gameActors ? $gameActors.actor(AEL) : null; }
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
     function journal(t) { var w = SceneManager._scene && SceneManager._scene._logWindow; if (w) { w.push('addText', t); } }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus de qui
+    // le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#ffffff'); }
+    }
     function tag(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
     function miracleOuvert() { return INTER_MIRACLE <= 0 || !!($gameSwitches && $gameSwitches.value(INTER_MIRACLE)); }
 
@@ -228,6 +233,7 @@
         if (pages(a) >= PAGES) { return; }
         a._livreAel = pages(a) + 1;
         if (a._livreAel >= PAGES) { journal('\\C[14]📖 Le livre de ' + a.name() + ' est plein.\\C[0]'); }
+        if (a._livreAel >= PAGES) { annonce(a, '📖 Livre plein', '#ffd54a'); }
     }
 
     // ═════════════════════════════════════════════════════════════════════
@@ -244,6 +250,7 @@
                 a._paroleLue = it.id;
                 a._livreAel = 0;
                 journal('\\C[14]📖 ' + a.name() + ' lit « ' + it.name + ' » dans son livre.\\C[0]');
+                annonce(a, '📖 Lue : ' + it.name, '#ffd54a');
             }
         }
         _startAction.call(this);
@@ -293,12 +300,14 @@
     function miracle(a, e) {
         e._lectureAel = 0;
         var t = flecheContre(e);
+        if (!t) { annonce(e, '📖 Pas de faille', '#b0b0b0'); }
         if (!t) { journal('\\C[8]📖 ' + a.name() + ' lit ' + e.name() + '… et ne trouve pas la faille.\\C[0]'); return; }
         var sk = $dataSkills[t.fleche.id];
         if (!sk) { return; }
         var neuve = !a.isLearnedSkill(sk.id);
         if (neuve) { a.learnSkill(sk.id); }
         journal('\\C[14]✦ MIRACLE — ' + a.name() + (neuve ? ' développe « ' : ' retrouve « ') + sk.name + ' »\\C[0]');
+        annonce(a, '✦ MIRACLE — ' + sk.name, '#ffd54a');
         a._miracleGratuit = true;
         BattleManager.queueForceAction(a, sk.id, e.index());
     }
@@ -332,6 +341,7 @@
             var enCours = $gameTroop.members().some(function (e) { return lecture(e) > 0; });
             toutEffacer();
             if (enCours) { journal('\\C[8]📖 ' + this.name() + ' dit trop long — elle perd le fil.\\C[0]'); }
+            if (enCours) { annonce(this, '📖 Trop long : le fil est perdu', '#b0b0b0'); }
         } else if (t === 'petite') {
             lire(this, item);
         }
@@ -362,25 +372,31 @@
         if (!estAel(u) || !it || !enCombat() || !target) { return; }
 
         if (tag(it, 'Contrat') && target.isActor()) {
+            if (target === u) { annonce(u, 'Un Contrat, c\'est avec un autre', '#b0b0b0'); }
             if (target === u) { journal('\\C[8]Un Contrat se passe avec quelqu\'un d\'autre.\\C[0]'); return; }
             rompre(u);
             u._contrat = { acteur: target.actorId() };
             target.addState(ETAT_CONTRAT);
             journal('\\C[14]✦ ' + u.name() + ' passe un Contrat avec ' + target.name() + ' : c\'est lui qui paie.\\C[0]');
+            annonce(target, '✦ Contrat : c\'est lui qui paie', '#ffd54a');
         }
         if (tag(it, 'ContratForce') && target.isEnemy()) {
             rompre(u);
             u._contrat = { ennemi: target.index() };
             target.addState(ETAT_FORCE);
             journal('\\C[14]✦ ' + u.name() + ' force un Contrat sur ' + target.name() + ' : elle puisera dans ses PM.\\C[0]');
+            annonce(target, '✦ Contrat forcé : ses PM paient', '#ffd54a');
         }
         if (tag(it, 'PorteFermee') && target.isEnemy() && target.isAlive()) {
+            if (estBoss(target)) { annonce(target, 'La Porte ne se ferme pas', '#b0b0b0'); }
             if (estBoss(target)) { journal('\\C[8]La Porte ne se ferme pas sur ' + target.name() + '.\\C[0]'); return; }
+            if ($gameTroop.aliveMembers().length <= 1) { annonce(target, 'Pas sur le dernier debout', '#b0b0b0'); }
             if ($gameTroop.aliveMembers().length <= 1) { journal('\\C[8]La Porte ne se ferme pas sur le dernier debout.\\C[0]'); return; }
             var tours = parseInt(it.meta.PorteFermee, 10) || 3;
             target._porteRetour = $gameTroop.turnCount() + tours;
             target.hide();
             journal('\\C[14]✦ La Porte se referme sur ' + target.name() + ' — ' + tours + ' tours.\\C[0]');
+            annonce(target, '✦ La Porte · ' + tours + ' tours', '#ffd54a');
         }
     };
 
@@ -394,6 +410,7 @@
                 e._porteRetour = 0;
                 e.appear();
                 journal(e.name() + ' revient de l\'autre côté de la Porte.');
+                annonce(e, '✦ Revient de la Porte', '#ffd54a');
             }
         });
     };

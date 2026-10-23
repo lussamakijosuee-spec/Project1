@@ -195,12 +195,18 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', txt); w.push('wait'); }
     }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus de qui
+    // le fait (2026-10-23 ; le journal reste, pour les bancs).
+    function annonce(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#ffffff'); }
+    }
     function ajouter(n, pourquoi) {
         if (!n || !$gameVariables) { return; }
         $gameVariables.setValue(VAR, Math.max(0, ames() + n));
         var l = lui();
         journal('\\C[27]✦ ' + (l ? l.name() : 'ludwing') + (n > 0 ? ' prend ' + n : ' dépense ' + (-n)) + ' âme' + (Math.abs(n) > 1 ? 's' : '')
             + (pourquoi ? ' — ' + pourquoi : '') + ' (' + ames() + ').\\C[0]');
+        annonce(l, (n > 0 ? '✦ +' + n : '✦ −' + (-n)) + ' âme' + (Math.abs(n) > 1 ? 's' : '') + ' · ' + ames(), '#c8a0ff');
     }
     function copies() { var l = lui(); return (l && l._louCopiedSkills) || []; }
     /** Une copie, pour lui : une technique de son presse-papier qu'il ne connaît pas par ailleurs. */
@@ -290,6 +296,7 @@
         if (slots.length > MAX_COPIES) { slots.shift(); }
         journal('\\C[27]✦ ' + l.name() + ' copie « ' + s.name + ' »' + (qui ? ' — ' + qui + ' était Marqué' : '')
             + ' (' + slots.length + '/' + MAX_COPIES + ').\\C[0]');
+        annonce(l, '✦ Copié : ' + s.name, '#c8a0ff');
         return true;
     }
     var _commence = BattleManager.startAction;
@@ -367,6 +374,7 @@
                 ajouter(-COUT_COPIE, 'il colle « ' + skill.name + ' » (copie consommée)');
             } else {
                 journal('\\C[27]✦ ' + this.name() + ' colle « ' + skill.name + ' » — Domaine : gratuite, gardée.\\C[0]');
+                annonce(this, '✦ Domaine : copie offerte', '#c8a0ff');
             }
             return;
         }
@@ -404,6 +412,7 @@
         $gameTemp._registreMise = { quoi: quoi, n: n };
         if (dom) { journal('\\C[27]✦ Domaine : ' + n + ' âmes misées, offertes (' + sens + ').\\C[0]'); }
         else { ajouter(-n, 'mise : ' + sens); }
+        if (dom) { annonce(lui(), '✦ Domaine : ' + n + ' âmes offertes', '#c8a0ff'); }
     }
     // La mise s'ajoute au tirage de l'événement, au moment où il le fait.
     var _variables = Game_Interpreter.prototype.command122;
