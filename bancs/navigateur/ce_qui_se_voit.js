@@ -177,6 +177,27 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…contre-épreuve : avec la clé d\'avant, ' + menu.avantCache.length + ' d\'entre elles (ou Activer) étaient repliées sous une autre', menu.avantCache.length > 0, menu.avantCache.slice(0, 8).join(', '));
     console.log('      lignes par héros (toutes / repliées avant / maintenant) : ' + Object.keys(menu.tailles).map(function (k) { var t = menu.tailles[k]; return k + ' ' + t.tout + '/' + t.avant + '/' + t.maintenant; }).join(' · '));
 
+    console.log('\n6) La réplique du tableau des interactions (celui de JOKO)');
+    var vanne = await page.evaluate(function () {
+        var vus = [], an = CombatTactique.annoncer, o = {};
+        CombatTactique.annoncer = function (b, t) { vus.push((b && b.name ? b.name() : '?') + ' : ' + t); return an.apply(this, arguments); };
+        var lud = $gameActors.actor(3), ves = $gameActors.actor(1), kor = $gameActors.actor(2), m = $gameParty.members();
+        var ligne = Interactions.table.filter(function (l) { return l.competence === 1302 && l.cible === 1; })[0];
+        o.texte = ligne ? ligne.dit[0] : null;
+        function lancer(cible) {
+            var act = new Game_Action(lud); act.setSkill(1302); act.setTarget(m.indexOf(cible));
+            cible.clearResult(); act.apply(cible);
+        }
+        var n = vus.length; lancer(ves); o.surVesper = vus.slice(n);
+        n = vus.length; lancer(kor); o.surKorrah = vus.slice(n);
+        CombatTactique.annoncer = an;
+        return o;
+    });
+    var attendu = vanne.texte ? '« ' + vanne.texte.replace(/%2/g, 'Vesper') + ' »' : null;
+    var dit = vanne.surVesper.filter(function (t) { return /^ludwing : /.test(t); }).map(function (t) { return t.replace(/^ludwing : /, ''); }).reverse().join(' ');
+    v('la Vanne de ludwing sur Vesper : sa réplique flotte au-dessus de lui, telle qu\'écrite', !!attendu && dit === attendu, dit + ' / attendu ' + attendu);
+    v('…contre-épreuve : sur Korrah (pas dans le tableau), il ne dit rien', !vanne.surKorrah.some(function (t) { return /^ludwing : «/.test(t); }), vanne.surKorrah.join(' | ') || 'rien');
+
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();

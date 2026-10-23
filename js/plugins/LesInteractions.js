@@ -200,6 +200,19 @@
         if (!t || !qui) { return; }
         t = t.replace(/%1/g, lanceur.name()).replace(/%2/g, cible.name());
         journal('\\C[' + COULEUR + ']' + qui.name() + '\\C[0] : « ' + t + ' »');
+        bulle(qui, '« ' + t + ' »');
+    }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : la réplique flotte aussi au-dessus de qui la dit,
+    // découpée en lignes courtes (2026-10-23 ; le journal reste, pour les bancs). Le texte est celui du tableau, tel quel.
+    function bulle(qui, texte, couleur) {
+        if (!qui || !window.CombatTactique || !CombatTactique.annoncer) { return; }
+        var lignes = [], l = '';
+        String(texte).split(' ').forEach(function (mot) {
+            if (l && (l + ' ' + mot).length > 26) { lignes.push(l); l = mot; } else { l = l ? l + ' ' + mot : mot; }
+        });
+        if (l) { lignes.push(l); }
+        // les annonces s'empilent vers le haut : la dernière ligne d'abord, pour se lire de haut en bas
+        lignes.reverse().forEach(function (x) { CombatTactique.annoncer(qui, x, couleur || '#ffffff'); });
     }
     function trouver(lanceur, item, cible) {
         if (!enCombat() || !item || !DataManager.isSkill(item) || !lanceur || !cible) { return null; }
@@ -309,6 +322,7 @@
         slots.push(s.id);
         while (slots.length > max) { slots.shift(); }
         journal('\\C[' + COULEUR + ']' + u.name() + '\\C[0] copie « ' + s.name + ' » de ' + cible.name() + ' (' + slots.length + '/' + max + ')');
+        bulle(u, '✦ Copié : ' + s.name, '#c8a0ff');
     }
 
     // chaque combat repart de zéro

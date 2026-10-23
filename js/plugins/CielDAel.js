@@ -201,6 +201,11 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w && w.push) { w.push('addText', texte); }
     }
+    // Le journal est muet en vue de côté (SimpleMsgSideView) : ce qui doit se voir flotte aussi au-dessus d'elle
+    // (2026-10-23 ; le journal reste, pour les bancs).
+    function flotter(b, texte, couleur) {
+        if (b && window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, texte, couleur || '#ffd54a'); }
+    }
 
     function nomCiel(t) {
         return { none: 'ciel clair', rain: 'la pluie', storm: 'l\'orage', snow: 'la neige' }[t] || t;
@@ -221,6 +226,7 @@
         sujet.addState(INCANTATION);
         journal('\\C[14]' + sujet.name() + ' commence « ' + item.name + ' »…\\C[0]');
         journal('Encore ' + reste + ' tour' + (reste > 1 ? 's' : '') + '. Tenez-la.');
+        flotter(sujet, '🌀 « ' + item.name + ' » · ' + reste + ' t.');
     }
 
     /** On lui coupe la parole. */
@@ -235,8 +241,10 @@
             sujet._incantationRompue = inc;        // elle reprendra à son tour
             journal('\\C[18]' + sujet.name() + ' perd le fil de « ' + nom + ' » — ' + pourquoi + '.\\C[0]');
             journal('Elle reprendra : encore ' + inc.reste + ' tour' + (inc.reste > 1 ? 's' : '') + '.');
+            flotter(sujet, '✗ Le fil se perd · reprendra ' + inc.reste + ' t.', '#ff8080');
         } else {
             journal('\\C[18]« ' + nom +' » se brise — ' + pourquoi + '.\\C[0]');
+            flotter(sujet, '✗ « ' + nom + ' » se brise', '#ff8080');
         }
         sujet._incantation = null;
     }
@@ -294,6 +302,7 @@
                     if (inc.reste > 0) {
                         journal(sujet.name() + ' tient la Parole… encore ' +
                                 inc.reste + ' tour' + (inc.reste > 1 ? 's' : '') + '.');
+                        flotter(sujet, '🌀 Encore ' + inc.reste + ' t.');
                         sujet.removeCurrentAction();
                         this._phase = 'turn';
                         return;
@@ -308,6 +317,7 @@
                 sujet._incantation = null;
                 sujet._payeeDejaPour = inc.skillId;   // les coûts sont déjà partis
                 journal('\\C[14]' + sujet.name() + ' achève sa Parole.\\C[0]');
+                flotter(sujet, '✦ La Parole part');
                 _startAction.call(this);
                 return;
             }
@@ -384,6 +394,7 @@
         if (a && $gameScreen) {
             $gameScreen.changeWeather(a.type, a.type === 'none' ? 0 : 7, 30);
             journal('\\C[14]Le ciel change : ' + nomCiel(a.type) + '.\\C[0]');
+            flotter(this.subject(), '☁ Le ciel : ' + nomCiel(a.type));
         }
         if (faitSurcharge(item) && this.subject()) {
             this.subject().addState(SURCHARGE);

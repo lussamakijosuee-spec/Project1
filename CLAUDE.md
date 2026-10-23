@@ -333,8 +333,14 @@ reforme · n t. ») s'écrivent à droite du livre d'Aël, sur la ligne du Pacte
 **Le 2026-10-23, les anciens systèmes des héros parlent enfin** : les ~55 lignes de journal de `SeiryuLeFamilier`,
 `LeFroidConfie`, `LeRegistre`, `LaBibliothequeDAel`, `LePacteDeSang` et `LesStylesDeVesper` (le froid confié, ses
 ordres refusés, il se dissipe, les âmes, le livre plein, la Porte, la Dette, la Rage, la Garde qui boit…) flottent
-aussi au-dessus de qui le fait, en court (le journal reste, pour les bancs) ; une annonce au bord droit reste dans
-l'écran (`CombatTactique`). Un nouveau message de système passe par une annonce, jamais par le seul journal.
+aussi au-dessus de qui le fait, en court (le journal reste, pour les bancs) ; de même l'incantation du ciel d'Aël
+(`CielDAel` : « 🌀 « … » · n t. », le fil perdu, la Parole qui part) et **les répliques du tableau de `LesInteractions`**
+(celles de JOKO, telles qu'écrites, découpées en lignes courtes au-dessus de qui parle — la Vanne de ludwing ne
+s'était jamais affichée) ; une annonce au bord droit reste dans l'écran (`CombatTactique`). Un nouveau message de
+système passe par une annonce, jamais par le seul journal. **Restent muets, à JOKO de dire** : les messages des
+boss (`MecaniquesDeBoss` — la Dîme et son compte —, `DonoBoss`, `DonoKamui` — « c'est LE moment ! » —,
+`MahoragaBoss`, la Parole ratée des ennemis de `ParolesSysteme`) et des dons (`RoyaumeImperial`, `JackpotHakari`,
+`LouCopySystem`) : ce sont ses ennemis et ses dons, je ne les ai pas touchés.
 **Le menu de combat cachait le rework** : `FamillesDeCapacites` replie en une ligne les compétences aux mêmes chiffres
 (branche, portée, nature, élément, états) — 43 capacités à verbe, et « ᛟ Activer » (sur soi, sans dégâts), étaient
 repliées sous une voisine. Depuis le 2026-10-23, l'**art** et le **verbe** (et « instantanée ») font partie de la
