@@ -129,6 +129,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         out.max2 = lud.canUse($dataSkills[158]);
         lancer(lud, 158, e2);
         out.max3 = { trait: lud.canUse($dataSkills[158]), don: lud.canUse($dataSkills[466]), activer: lud.canUse(sk) };
+        // l'aide : Activer dit ce qui attend ; un écrit grisé dit pourquoi ; un don garde sa description
+        var hw = SceneManager._scene._helpWindow;
+        var aide = function (id) {
+            var faux = Object.create(Window_SkillList.prototype);
+            faux._actor = lud; faux._helpWindow = hw; faux.item = function () { return $dataSkills[id]; };
+            Window_SkillList.prototype.updateHelp.call(faux);
+            return String(hw._text || '');
+        };
+        out.aide = { activer: aide(ACT), trait: aide(158), don: aide(466) };
         e2.addState(1);
         out.mort = { ecrits: L.ecrits(lud).length, surE2: L.surCible(e2) };
         e2.revive(); nettoyer();
@@ -176,6 +185,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('\n5) Trois au plus, et la mort');
     v('à 2 écrits, on écrit encore', r.max2);
     v('à 3 : les écrits sont grisés, un don reste possible, Activer aussi', !r.max3.trait && r.max3.don && r.max3.activer, JSON.stringify(r.max3));
+    v('Activer, dans l\'aide : ce qui attend, compté (« ᛟ En attente : … Trait Spectral ×3 », et sur qui si la ligne tient)', /^ᛟ En attente : .*Trait Spectral ×3/.test(r.aide.activer.split('\n')[1] || ''), r.aide.activer.replace(/\n/g, ' / '));
+    v('…un écrit grisé dit pourquoi (« 3 écrits attendent déjà »)', /3 écrits attendent déjà/.test(r.aide.trait), r.aide.trait.replace(/\n/g, ' / '));
+    v('…contre-épreuve : un don, possible, garde sa description', r.aide.don.indexOf('attendent') < 0 && r.aide.don.indexOf('En attente') < 0);
     v('un ennemi tombé emporte son écrit (les autres restent)', r.mort.ecrits === 2 && r.mort.surE2 === 0, JSON.stringify(r.mort));
 
     console.log('\n6) La volonté');
@@ -212,6 +224,50 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     // (un ennemi qui frappe ludwing referme aussi ses écrits : « ᛟ Piège ! » — LEcrit, sa signature)
     v('ludwing a écrit, puis ses écrits sont partis : « ᛟ Écrit », puis « ᛟ Activé » ou « ᛟ Piège ! »', vrai.vus.indexOf('ᛟ Écrit') >= 0 && vrai.vus.some(function (t) { return /Activé ×|Piège !/.test(t); }),
       vrai.vus.filter(function (t) { return /ᛟ/.test(t); }).slice(0, 6).join(' | '));
+    await fermerCombat();
+
+    console.log('\n8) La commande « ᛟ Activer », juste sous l\'Attaque');
+    // ludwing seul saisit ses ordres (les autres gardent) ; tout passe par les fenêtres, comme un joueur.
+    await page.evaluate(function () {
+        Game_Actor.prototype.isAutoBattle = function () { return this.actorId() !== 3; };
+        window.__vus = [];
+    });
+    await ouvrirCombat();
+    await page.evaluate(function () {
+        $gameTroop.members().forEach(function (e) { e.addParam(0, 9999999); e.recoverAll(); e.addParam(2, -e.atk + 1); e.addParam(4, -e.mat + 1); });
+        var lud = $gameActors.actor(3), e = $gameTroop.members()[0];
+        lud._ecrits = [{ cible: e, competence: 158 }, { cible: e, competence: 158 }];
+    });
+    try {
+        // « Combattre » d'abord, s'il est demandé ; puis le tour de ludwing
+        await page.waitForFunction(function () {
+            var s = SceneManager._scene;
+            if (s._partyCommandWindow.active) { s.commandFight(); return false; }
+            return BattleManager.actor() === $gameActors.actor(3) && s._actorCommandWindow.active;
+        }, null, { timeout: 60000, polling: 200 });
+    } catch (x) { }
+    var cmd = await page.evaluate(function () {
+        var s = SceneManager._scene, w = s._actorCommandWindow, lud = $gameActors.actor(3), kor = $gameActors.actor(2), o = {};
+        w.setup(kor); o.korrah = w.findSymbol('ecritActiver');                 // contre-épreuve : sans écrit, pas de commande
+        w.setup(lud);
+        var i = w.findSymbol('ecritActiver');
+        o.nom = i >= 0 ? w.commandName(i) : null; o.place = i - w.findSymbol('attack'); o.active = i >= 0 && w.isCommandEnabled(i);
+        w.select(i); w.processOk();
+        var a0 = lud._actions[0];
+        o.choisi = a0 && a0.item() ? a0.item().id : 0; o.places = lud._actions.length;
+        // ses actions suivantes (Activer est instantanée ; il peut en avoir plusieurs) : des gardes, par la fenêtre
+        // (un commandGuard() appelé à la main laisse la fenêtre active, et le combat se fige)
+        for (var k = 0; k < 4 && BattleManager.actor() === lud; k++) { w.selectSymbol('guard'); w.processOk(); }
+        return o;
+    });
+    try {
+        await page.waitForFunction(function () { return window.__vus.some(function (t) { return /Activé ×/.test(t); }); }, null, { timeout: 60000, polling: 300 });
+    } catch (x) { }
+    cmd.vus = await page.evaluate(function () { return window.__vus.filter(function (t) { return /ᛟ/.test(t); }).slice(0, 4); });
+    v('ludwing, deux écrits : « ᛟ Activer · 2 » est juste sous l\'Attaque, et possible', cmd.nom === 'ᛟ Activer · 2' && cmd.place === 1 && cmd.active, JSON.stringify(cmd));
+    v('…la choisir prend Activer, et laisse une action de plus (instantanée)', cmd.choisi === 1309 && cmd.places >= 2);
+    v('…et au tour, les écrits partent', cmd.vus.some(function (t) { return /Activé ×2/.test(t); }), cmd.vus.join(' | '));
+    v('contre-épreuve : Korrah, sans écrit, n\'a pas la commande', cmd.korrah === -1);
     await fermerCombat();
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));

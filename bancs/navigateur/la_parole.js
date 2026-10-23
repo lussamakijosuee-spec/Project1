@@ -218,11 +218,21 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         LaParole.poser(14, 'Aël');
         r.aideFusion = LaParole.ligneAide(lud, $dataSkills[1224]);
         LaParole.poser(0);
+        // La ligne « ✦ En suspens » ne s'écrit sur rien : ni le Pacte, ni la Colère de Vesper, ni le livre d'Aël
+        var sc = SceneManager._scene, fp = sc._fenetrePhrase;
+        var bande = function (w) { return w ? [w.x + w.padding, w.y + w.padding + 8, w.x + w.width - w.padding, w.y + w.padding + 30] : null; };
+        var inter = function (a, b) { return !!(a && b) && a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3]; };
+        var autour = function () { var p = bande(fp); return [sc._fenetrePacte, sc._fenetreColere, sc._fenetreLecture].map(function (w) { return inter(p, bande(w)); }); };
+        r.fenetres = { existent: !!(fp && sc._fenetrePacte && sc._fenetreColere && sc._fenetreLecture), sur: autour(), dansEcran: fp.x + fp.width <= Graphics.boxWidth };
+        var x0 = fp.x, y0 = fp.y; fp.x = sc._fenetrePacte.x; fp.y = sc._fenetrePacte.y;   // contre-épreuve : là où elle était avant
+        r.fenetres.avant = autour(); fp.x = x0; fp.y = y0;
         return r;
     });
     v('Ombre — Fond (dernier degré) ne se redit pas au tour suivant', r6.avant === true && r6.memeTour === false, r6.aideBloquee.replace(/\\C\[\d+\]/g, ''));
     v('contre-épreuve : Ombre — Voile reste libre, et Fond revient après', r6.autre === true && r6.ensuite === true, JSON.stringify({ voile: r6.autre, ensuite: r6.ensuite }));
     v('l\'aide d\'une Fusion dit ce qu\'elle fera', /Fusion : avec Lumière en suspens → Crépuscule ×1\.5\. Longue/.test(r6.aideFusion), r6.aideFusion.replace(/\\C\[\d+\]/g, ''));
+    v('« ✦ En suspens » ne s\'écrit ni sur le Pacte, ni sur la Colère, ni sur le livre, et tient dans l\'écran', r6.fenetres.existent && r6.fenetres.sur.every(function (x) { return !x; }) && r6.fenetres.dansEcran, JSON.stringify(r6.fenetres));
+    v('…contre-épreuve : à son ancienne place, elle tombait sur le Pacte', r6.fenetres.avant[0] === true);
 
     await page.evaluate(function () { Math.random = window.__alea; });
     await fermerCombat();

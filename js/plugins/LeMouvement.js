@@ -232,7 +232,10 @@
  *   <NeufVoies> — +10 % par Voie déjà prise dans ce combat ;
  *   <ToutOuRien> — pile ×2, face ×0,25 ; ludwing tire deux fois ;
  *   <Leurre>    — esquive +30 % jusqu'à sa prochaine action (« il n'y a plus
- *                 moyen de savoir lequel est lui »).
+ *                 moyen de savoir lequel est lui ») ;
+ *   <Rythme>    — un allié (ou soi) dans sa posture prend un point de flux,
+ *                 jusqu'à 2 : le geste juste reste à faire (« les armes coupent
+ *                 mieux quand on s'en occupe »).
  * ============================================================================
  */
 
@@ -505,6 +508,12 @@ var LeMouvement = LeMouvement || {};
             this._riposteArmee = true;
             u._voieReflux = RIPOSTE;
             annonce(u, '⚔ Riposte prête', '#ffb070');
+        }
+        // <Rythme> : un allié dans sa posture prend un point de flux (le geste juste reste à faire)
+        if (it.meta.Rythme !== undefined && target && heros(target) && target.isAlive() && target._mvtVoie) {
+            target._mvtFlux = Math.min(GESTE - 1, (target._mvtFlux || 0) + 1);
+            afficher(target);
+            annonce(target, '◆ Rythme · flux ' + target._mvtFlux, COULEURS[target._mvtVoie]);
         }
         if (it.meta.Lecture !== undefined && target && target.isEnemy() && target.result().isHit()) {
             target._luPar = u.actorId();

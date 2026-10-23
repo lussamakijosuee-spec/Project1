@@ -79,6 +79,10 @@
  * @text <Nomme> : la prochaine Parole sur l'ennemi nommé ×
  * @default 1.3
  *
+ * @param encourage
+ * @text <Encourage> : la prochaine action qui blesse de l'allié ×
+ * @default 1.2
+ *
  * @param === LES LONGUES ===
  * @default
  *
@@ -155,7 +159,12 @@
  *   <Pars>      — l'ennemi touché passe en dernier (ce tour, ou le suivant) ;
  *   <Nomme>     — l'ennemi touché est nommé : la prochaine Parole sur lui ×1,3 ;
  *   <Avec>      — frappe aussi avec l'élément en suspens, et la phrase reste
- *                 ouverte (« une flèche, un mot : les deux partent ensemble »).
+ *                 ouverte (« une flèche, un mot : les deux partent ensemble ») ;
+ *   <Encourage> — sur un allié : sa prochaine action qui blesse ×1,2 (« un mot
+ *                 au bon moment vaut une potion ») ;
+ *   <Devant>    — sur un allié (n'importe quel art : un soin, une réanimation,
+ *                 une purge) : il agit en premier au tour suivant (« le Verbe
+ *                 refuse leur chute », « on gagne un temps sur eux »).
  *
  *  Les ennemis ne changent pas. Le ratage caché de ParolesSysteme est coupé
  *  pour les héros (son réglage HerosSansRatage).
@@ -176,7 +185,7 @@
     var ETAT = nb('etatLongue', 227);
     var POUR_ELLE = String(P['pourElle'] === undefined ? '4' : P['pourElle']).split(',').map(function (x) { return parseInt(x, 10); }).filter(function (x) { return x > 0; });
     var BONUS_ELLE = nb('bonusPourElle', 1.2);
-    var ASSEZ = nb('assez', 1.5), NOMME = nb('nomme', 1.3);
+    var ASSEZ = nb('assez', 1.5), NOMME = nb('nomme', 1.3), ENCOURAGE = nb('encourage', 1.2);
     var FUSIONS = {};
     String(P['fusions'] || '8+9=17, 8+11=19, 9+11=20, 9+13=22, 11+12=23, 14+15=29').split(',').forEach(function (x) {
         var m = /^\s*(\d+)\s*\+\s*(\d+)\s*=\s*(\d+)\s*$/.exec(x);
@@ -346,7 +355,14 @@
     /** Après le coup : ce que le mot laisse sur la cible. */
     function apres(act, cible) {
         var u = act.subject(), it = act.item();
-        if (!heros(u) || !act.isSkill() || !cible || !cible.isEnemy() || !cible.result().isHit()) { return; }
+        if (!heros(u) || !act.isSkill() || !cible) { return; }
+        // Sur un allié : <Encourage> (sa prochaine action qui blesse ×1,2), <Devant> (il agit en premier au tour suivant)
+        if (cible.isActor() && cible.isAlive() && cible.result().isHit()) {
+            if (balise(it, 'Encourage')) { cible._encourage = true; annonce(cible, '✦ Encouragé', '#ffe08a'); }
+            if (balise(it, 'Devant')) { cible._devant = true; annonce(cible, '⚡ En premier', '#ffe08a'); }
+            return;
+        }
+        if (!cible.isEnemy() || !cible.result().isHit()) { return; }
         if (balise(it, 'Nomme') && cible.isAlive()) {             // la flèche nommée : la prochaine Parole sur lui ×1,3
             cible._nomme = true;
             annonce(cible, '✦ Nommé', '#ffe08a');
@@ -406,6 +422,13 @@
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _valeur.call(this, target, critical);
         if (this._paroleMult && this._paroleMult !== 1) { v = Math.round(v * this._paroleMult); }
+        // Encouragé : sa prochaine action qui blesse ×1,2 (une fois, au premier coup).
+        var su = this.subject();
+        if (v > 0 && su && su._encourage && heros(su) && enCombat() && target && target.isEnemy && target.isEnemy()) {
+            su._encourage = false;
+            v = Math.round(v * ENCOURAGE);
+            annonce(su, '✦ Encouragé ×' + String(ENCOURAGE).replace('.', ','), '#ffe08a');
+        }
         // Un ennemi nommé : la prochaine Parole d'un héros sur lui ×1,3, une fois.
         var it = this.item();
         if (v > 0 && target && target._nomme && heros(this.subject()) && estParole(it) && !balise(it, 'Nomme')) {
@@ -427,14 +450,17 @@
     var _ordres = BattleManager.makeActionOrders;
     BattleManager.makeActionOrders = function () {
         _ordres.call(this);
-        var avant = [], fin = [];
-        // une Longue part en dernier ; un ennemi à qui on a dit « Pars. » après qu'il a agi, au tour suivant aussi
+        var tete = [], avant = [], fin = [];
+        // une Longue part en dernier ; un ennemi à qui on a dit « Pars. » après qu'il a agi, au tour suivant aussi ;
+        // un allié <Devant> (relevé, délivré, pressé) part en premier, une fois
         (this._actionBattlers || []).forEach(function (b) {
             var pars = b && b._pars && b._pars === tour();
             if (pars) { b._pars = 0; }
-            (tientUneLongue(b) || pars ? fin : avant).push(b);
+            var devant = b && b._devant && !tientUneLongue(b);
+            if (devant) { b._devant = false; }
+            (devant ? tete : (tientUneLongue(b) || pars ? fin : avant)).push(b);
         });
-        this._actionBattlers = avant.concat(fin);
+        this._actionBattlers = tete.concat(avant, fin);
     };
 
     var _debutTour = BattleManager.startTurn;
@@ -529,8 +555,8 @@
     function Window_Phrase() { this.initialize.apply(this, arguments); }
     Window_Phrase.prototype = Object.create(Window_Base.prototype);
     Window_Phrase.prototype.constructor = Window_Phrase;
-    Window_Phrase.prototype.initialize = function (x, y) {
-        Window_Base.prototype.initialize.call(this, x, y, 300, this.fittingHeight(1));   // 300 px : la ligne se resserre seule (drawText)
+    Window_Phrase.prototype.initialize = function (x, y, largeur) {
+        Window_Base.prototype.initialize.call(this, x, y, largeur || 300, this.fittingHeight(1));   // la ligne se resserre seule (drawText)
         this.opacity = 0; this._cle = null; this.refresh();
     };
     Window_Phrase.prototype.texte = function () {
@@ -557,8 +583,11 @@
     var _fenetres = Scene_Battle.prototype.createAllWindows;
     Scene_Battle.prototype.createAllWindows = function () {
         _fenetres.call(this);
-        var sw = this._statusWindow;
-        this._fenetrePhrase = new Window_Phrase(0, sw ? sw.y - 56 : Graphics.boxHeight - 240);
+        // Sous elle, le Pacte (0) et le livre d'Aël (300) ; à gauche sur sa ligne, la Colère de Vesper (420 px) :
+        // la phrase prend la place libre à droite de la Colère, au lieu de s'écrire sur le Pacte.
+        var sw = this._statusWindow, co = this._fenetreColere;
+        var x = co ? co.x + co.width : 0, y = co ? co.y : (sw ? sw.y - 90 : Graphics.boxHeight - 274);
+        this._fenetrePhrase = new Window_Phrase(x, y, Math.max(300, Graphics.boxWidth - x));
         this.addChild(this._fenetrePhrase);
     };
 

@@ -67,6 +67,10 @@
  * @type number
  * @default 25
  *
+ * @param rempart
+ * @text <Rempart> : le prochain coup reçu par l'allié ×
+ * @default 0.5
+ *
  * @param === LA VOLONTÉ ===
  * @default
  *
@@ -134,7 +138,10 @@
  *                cet allié referme les pièges de ludwing comme s'il le frappait ;
  *   <Symbole>  — compte pour deux dans la résonance ;
  *   <Appat>    — (n'importe quel art) les ennemis touchés frappent celui qui les
- *                a provoqués, jusqu'à la fin du tour suivant (Vannes).
+ *                a provoqués, jusqu'à la fin du tour suivant (Vannes) ;
+ *   <Rempart>  — écrit sur un allié : quand il part, le prochain coup que cet
+ *                allié reçoit est divisé par deux (« un mur qu'on ne voit pas,
+ *                et qui tient ») — on l'active juste avant le gros coup.
  *
  *  Les ennemis n'écrivent pas. Tous les chiffres sont des réglages.
  * ============================================================================
@@ -164,6 +171,7 @@ var LEcrit = LEcrit || {};
     var PIEGE   = liste('acteursPiege', '3');
     var CHANCEUX = liste('acteursChance', '3');
     var CHANCE  = nombre('chanceGarde', 25) / 100;
+    var REMPART = nombre('rempart', 0.5);
 
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
     function heros(b) { return !!(b && b.isActor && b.isActor() && EXCLUS.indexOf(b.actorId()) < 0); }
@@ -268,6 +276,11 @@ var LEcrit = LEcrit || {};
         // <Sceau: n> : n % de chances qu'il perde sa prochaine action (pas un boss)
         if (balise(sk, 'Sceau') && touche && c.isEnemy() && c.isAlive() && !estBoss(c) &&
             Math.random() * 100 < (parseInt(sk.meta.Sceau, 10) || 100)) { sceller(c); }
+        // <Rempart> : écrit sur un allié, il tient le prochain coup (÷2)
+        if (balise(sk, 'Rempart') && c.isActor() && c.isAlive()) {
+            c._rempart = true;
+            annonce(c, 'ᛟ Rempart', '#e080ff');
+        }
         // <Pret> : l'allié porte un morceau de son ombre — qui le frappe referme ses pièges
         if (balise(sk, 'Pret') && c.isActor() && c.isAlive()) {
             c._ombreDe = { acteur: b.actorId(), jusque: tour() + 1 };
@@ -413,6 +426,67 @@ var LEcrit = LEcrit || {};
         return true;
     };
 
+    // L'aide dit ce qui attend : sur Activer, ce qui va partir et sur qui ; sur un écrit grisé, pourquoi.
+    // La première ligne de la description reste ; la seconde est remplacée, le temps du combat.
+    var _aide = Window_SkillList.prototype.updateHelp;
+    Window_SkillList.prototype.updateHelp = function () {
+        _aide.call(this);
+        var s = this.item(), a = this._actor, h = this._helpWindow;
+        if (!s || !h || !enCombat() || !heros(a)) { return; }
+        var liste = ecritsDe(a), ligne = '';
+        if (s.id === ACTIVER && liste.length) {
+            // les mêmes écrits se comptent (« Trait Spectral ×2 ») ; on dit sur qui tant que la ligne tient
+            var groupes = [];
+            liste.forEach(function (m) {
+                var nom = ($dataSkills[m.competence] || {}).name || '?', qui = m.cible && m.cible.name ? m.cible.name() : '?';
+                var g = groupes.filter(function (x) { return x.nom === nom; })[0];
+                if (!g) { g = { nom: nom, n: 0, qui: [] }; groupes.push(g); }
+                g.n++; if (g.qui.indexOf(qui) < 0) { g.qui.push(qui); }
+            });
+            var noms = groupes.map(function (g) { return g.nom + (g.n > 1 ? ' ×' + g.n : ''); });
+            var avecCibles = groupes.map(function (g, i) { return noms[i] + ' → ' + g.qui.join(', '); });
+            var essais = ['ᛟ En attente : ' + avecCibles.join(' · '), 'ᛟ En attente : ' + noms.join(' · ')];
+            ligne = essais.filter(function (t) { return h.textWidth(t) <= h.contentsWidth() - 8; })[0] || '';
+            if (!ligne) {
+                ligne = 'ᛟ ' + liste.length + ' en attente : ';
+                for (var i = 0; i < noms.length; i++) {
+                    var t = ligne + (i ? ', ' : '') + noms[i];
+                    if (h.textWidth(t + '…') > h.contentsWidth() - 8) { ligne += '…'; break; }
+                    ligne = t;
+                }
+            }
+        } else if (liste.length >= MAX && !this.isEnabled(s)) {
+            var act = new Game_Action(a); act.setSkill(s.id);
+            if (doitEcrire(act)) { ligne = 'ᛟ ' + liste.length + ' écrits attendent déjà : active-les d\'abord.'; }
+        }
+        if (ligne) { h.setText(String(h._text || '').split('\n')[0] + '\n' + ligne); }
+    };
+
+    // Dès qu'un héros a des écrits en attente, « ᛟ Activer · n » se met juste sous l'Attaque : on touche le
+    // cercle sans aller le chercher dans les capacités (il y reste aussi). Même chemin qu'une capacité choisie.
+    var _cmdAttaque = Window_ActorCommand.prototype.addAttackCommand;
+    Window_ActorCommand.prototype.addAttackCommand = function () {
+        _cmdAttaque.call(this);
+        var a = this._actor, sk = $dataSkills[ACTIVER];
+        if (sk && enCombat() && heros(a) && ecritsDe(a).length && a.isLearnedSkill(ACTIVER)) {
+            this.addCommand(sk.name + ' · ' + ecritsDe(a).length, 'ecritActiver', a.canUse(sk));
+        }
+    };
+    var _fenetreOrdres = Scene_Battle.prototype.createActorCommandWindow;
+    Scene_Battle.prototype.createActorCommandWindow = function () {
+        _fenetreOrdres.call(this);
+        this._actorCommandWindow.setHandler('ecritActiver', this.commandeActiver.bind(this));
+    };
+    Scene_Battle.prototype.commandeActiver = function () {
+        var a = BattleManager.actor(), act = BattleManager.inputtingAction();
+        if (!a || !act) { this._actorCommandWindow.activate(); return; }
+        act.setSkill(ACTIVER);
+        a.setLastBattleSkill($dataSkills[ACTIVER]);
+        // d'une seule touche : Activer vise toujours qui l'a écrit, pas de cible à confirmer
+        // (YEP, « Select Help Window », ferait choisir le héros lui-même)
+        this.selectNextCommand();
+    };
+
     // Un ennemi tombé emporte ce qui était écrit sur lui.
     // Sur Game_Enemy : LouCopySystem, DonoBoss, DonoKamui et EvenementsUtiles y posent déjà leur mort.
     var _mourir = Game_Enemy.prototype.die;
@@ -446,6 +520,12 @@ var LEcrit = LEcrit || {};
             }
             var k = this._volonte * (this._ecritActive ? BONUS * (this._resonance || 1) : 1);
             if (k !== 1) { v = Math.round(v * k); }
+        }
+        // Le rempart d'un allié tient le prochain coup qu'on lui porte
+        if (v > 0 && target && target._rempart && target.isActor && target.isActor() && enCombat() && !this.isRecover()) {
+            target._rempart = false;
+            v = Math.round(v * REMPART);
+            annonce(target, 'ᛟ Le rempart tient', '#e080ff');
         }
         return v;
     };

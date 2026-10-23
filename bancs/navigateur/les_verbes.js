@@ -72,7 +72,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         remettre(ves); jouer(ves, 1066, e); C.finitContre = jouer(ves, 1068, e)._mvtMult;
         remettre(ves); jouer(ves, 1066, e);
         C.reprise = [jouer(ves, 1072, e)._mvtMult, jouer(ves, 1072, e)._mvtMult, jouer(ves, 1072, e)._mvtMult];   // Reprise du Marteau
-        remettre(ves); jouer(ves, 1066, e); C.repriseContre = jouer(ves, 1066, e)._mvtMult;
+        remettre(ves); jouer(ves, 4, e); C.repriseContre = jouer(ves, 4, e)._mvtMult;   // Double Attaque : sans verbe
         remettre(kor); jouer(kor, 1160, e); C.sur = jouer(kor, 1160, e)._mvtMult;                   // Maîtrise <Sur>
         var aSur = new Game_Action(kor); aSur.setSkill(1160); C.surTouche = [aSur.itemHit(e), aSur.itemEva(e)];
         remettre(kor); jouer(kor, 1157, e); C.surContre = jouer(kor, 1157, e)._mvtMult;
@@ -239,6 +239,47 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         T3.leurre = { avec: avecL, sans: sansL };
         lud._leurre = true; jouer(lud, 1066, e); T3.leurreApres = lud._leurre;
         out.trois = T3;
+
+        // ── QUATRIÈME PAQUET : le soutien ─────────────────────────────────
+        var Q = {};
+        var poses = [1066, 1132, 1145, 1226, 1232, 1123, 94, 449, 450, 12, 1237, 1080, 110, 1117, 1083, 1087, 1090, 1094, 1178, 1179, 1234, 1245];
+        Q.balises = poses.filter(function (id) { return !/<(Sur|Reprise|Rempart|Devant|Rythme|EclatNoir|Sceau|Assez|MotJuste|Riposte|Encourage|Reste)[:>]/.test($dataSkills[id].note); });
+        // Encourager (Aël) sur Vesper : sa prochaine action qui blesse ×1,2, une fois
+        e.recoverAll(); ves._encourage = false;
+        // (Encourager donne aussi +ATQ : on compare après, avec et sans l'encouragement)
+        parler(ael, 1234, ves); Q.encourage = ves._encourage;
+        var valV = function () { var a = new Game_Action(ves); a.setSkill(1066); return a.makeDamageValue(e, false); };
+        var avecE = valV(), ensuite = valV();
+        Q.encourageRatio = avecE / ensuite; Q.encourageExact = avecE === Math.round(ensuite * 1.2); Q.encourageUneFois = ves._encourage === false;
+        // « Debout. » : l'allié relevé agit en premier au tour suivant
+        kor.addState(1); parler(ael, 1178, kor);
+        Q.debout = { vivante: kor.isAlive(), devant: kor._devant };
+        var g = new Game_Action(e); g.setGuard(); e._actions = [g]; e2._actions = [];
+        $gameParty.members().forEach(function (m) { m._actions = []; });
+        var ak = new Game_Action(kor); ak.setSkill(151); ak.setTarget(0); kor._actions = [ak];
+        BattleManager.makeActionOrders();
+        Q.deboutPremier = BattleManager._actionBattlers[0] ? BattleManager._actionBattlers[0].name() : '';
+        Q.deboutUneFois = kor._devant;
+        BattleManager._actionBattlers = []; kor._actions = [];
+        // Affûter (Korrah, toute l'équipe) : un point de flux à qui est en posture, jamais 3
+        remettre(ves); jouer(ves, 1066, e); remettre(lud);
+        var affuter = function () { var a = new Game_Action(kor); a.setSkill(1237); a.makeTargets().forEach(function (t) { t.clearResult(); a.apply(t); }); };
+        affuter();
+        Q.rythme = { ves: M.flux(ves), lud: M.flux(lud) };
+        ves._mvtFlux = 1; affuter(); affuter(); Q.rythmeMax = M.flux(ves);
+        // Cloison (ludwing, écrit sur l'équipe) : quand il part, le prochain coup sur l'allié ÷2, une fois
+        [ves, kor, lud, ael].forEach(function (a) { a._ecrits = []; a._rempart = false; });
+        var coupV = function () { var a = new Game_Action(e); a.setAttack(); return a.makeDamageValue(ves, false); };
+        // (Cloison donne aussi +DÉF : on compare après l'activation, avec et sans le rempart)
+        ecrire(lud, 1117, ves); Q.remparEcrit = !ves._rempart;
+        E.activer(lud); Q.rempart = ves._rempart;
+        var avecR = coupV(), apresR = coupV();
+        Q.rempartRatio = avecR / apresR; Q.rempartExact = avecR === Math.round(apresR * 0.5); Q.rempartUneFois = ves._rempart === false;
+        ves._rempart = true;
+        var soinR = (function () { var a = new Game_Action(ael); a.setSkill(167); return a.makeDamageValue(ves, false); })();
+        Q.rempartSoin = ves._rempart;
+        ves._rempart = false; [ves, kor, lud, ael].forEach(function (a) { a._ecrits = []; });
+        out.quatre = Q;
         return out;
     });
 
@@ -248,7 +289,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('<Ouvre> (Trempe) : posture avec 1 de flux ; contre-épreuve, Frappe Pleine : 0', C.ouvre === 1 && C.ouvreContre === 0);
     v('<Finit> (Le Point Final) : flux 2 → ×1,6 et flux 0 ; sans flux, ×1', Math.abs(C.finit - 1.6) < 1e-9 && C.finitFlux === 0 && C.finitContre === 1, C.finit + ' / ' + C.finitContre);
     v('<Reprise> (Reprise du Marteau) : ×1,2 puis ×1,5 en la répétant', Math.abs(C.reprise[1] - 1.2) < 1e-9 && Math.abs(C.reprise[2] - 1.5) < 1e-9, JSON.stringify(C.reprise));
-    v('…contre-épreuve : Frappe Pleine répétée s\'use (×0,85)', Math.abs(C.repriseContre - 0.85) < 1e-9);
+    v('…contre-épreuve : Double Attaque répétée s\'use (×0,85)', Math.abs(C.repriseContre - 0.85) < 1e-9);
     v('<Sur> (Maîtrise) : répétée sans s\'user, ne rate pas', C.sur === 1 && C.surTouche[0] === 1 && C.surTouche[1] === 0, C.sur + ' · ' + JSON.stringify(C.surTouche));
     v('…contre-épreuve : Angle Parfait répété s\'use', Math.abs(C.surContre - 0.85) < 1e-9);
     v('<Entre> (Le Creux Entre Deux) : ×1,5 sur un ennemi qui a déjà agi ; pas sinon', Math.abs(C.entre - 1.5) < 1e-9 && C.entreContre === 1, C.entre + ' / ' + C.entreContre);
@@ -305,6 +346,18 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…contre-épreuve : Lumière — Lueur remplace la phrase', T3.avecContre && T3.avecContre.el === 14, JSON.stringify(T3.avecContre));
     v('Ombres Multiples : esquive +30 % sur ludwing', Math.abs(T3.leurre.avec - T3.leurre.sans - 0.3) < 1e-9, JSON.stringify(T3.leurre));
     v('…jusqu\'à sa prochaine action', T3.leurreApres === false);
+
+    var Q = r.quatre;
+    console.log('\n6) Le quatrième paquet : le soutien');
+    v('les balises sont posées (échantillon de 22 sur 99)', Q.balises.length === 0, Q.balises.join(', '));
+    v('Encourager : Vesper encouragée frappe ×1,2 à sa prochaine action', Q.encourage === true && Q.encourageExact, Q.encourageRatio.toFixed(3));
+    v('…une seule fois', Q.encourageUneFois);
+    v('« Debout. » relève Korrah, qui agit en premier au tour suivant (même devant un ennemi en Garde)', Q.debout.vivante && Q.debout.devant && Q.deboutPremier === 'Korrah', JSON.stringify(Q.debout) + ' · ' + Q.deboutPremier);
+    v('…une seule fois', Q.deboutUneFois === false);
+    v('Affûter : Vesper (en posture) prend un point de flux ; ludwing (sans posture) rien', Q.rythme.ves === 1 && Q.rythme.lud === 0, JSON.stringify(Q.rythme));
+    v('…jamais 3 : le geste juste reste à faire', Q.rythmeMax === 2);
+    v('Cloison écrite ne protège pas encore ; activée, le prochain coup sur Vesper ÷2', Q.remparEcrit && Q.rempart === true && Q.rempartExact, Q.rempartRatio.toFixed(3));
+    v('…une seule fois, et un soin ne l\'use pas', Q.rempartUneFois && Q.rempartSoin === true);
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
