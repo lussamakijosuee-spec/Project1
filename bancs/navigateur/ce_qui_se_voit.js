@@ -198,6 +198,56 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('la Vanne de ludwing sur Vesper : sa réplique flotte au-dessus de lui, telle qu\'écrite', !!attendu && dit === attendu, dit + ' / attendu ' + attendu);
     v('…contre-épreuve : sur Korrah (pas dans le tableau), il ne dit rien', !vanne.surKorrah.some(function (t) { return /^ludwing : «/.test(t); }), vanne.surKorrah.join(' | ') || 'rien');
 
+    console.log('\n7) Les boss, les ennemis et les dons (JOKO : « OUI A TOUT ») ; la fenêtre des capacités');
+    var bd = await page.evaluate(function () {
+        var MB = MecaBoss, o = {};
+        MB._bannieres = [];
+        MB.bandeauDuJournal('\\C[2]Le masque de Dono tombe. « …Tu m\'obliges à être sérieux. »\\C[0]');
+        o.long = JSON.parse(JSON.stringify(MB._bannieres[0] || null));
+        o.rouge = SceneManager._scene._logWindow.textColor(2);
+        MB._bannieres = [];
+        MB.bandeauDuJournal('Le Kamui revient.');
+        o.court = JSON.parse(JSON.stringify(MB._bannieres[0] || null));
+        // le même instant : le bandeau du plugin remplace sa ligne de journal
+        MB._bannieres = [];
+        MB.bandeauDuJournal('\\C[14]★ Dono se dépasse : il atteint enfin le MANA PARFAIT !\\C[0]');
+        MB.banniere('★ MANA PARFAIT', 'Dono se dépasse.', '#ffe066');
+        o.memeInstant = MB._bannieres.map(function (b) { return b.type + ':' + b.titre; });
+        // MB.dire (MecaniquesDeBossSuite) écrit au journal ET en bandeau
+        MB._bannieres = [];
+        MB.dire('\\C[2]Quelque chose répond dans le noir.\\C[0]');
+        o.dire = MB._bannieres.map(function (b) { return b.titre; });
+        // un autre instant : les deux restent
+        MB._bannieres = [];
+        MB.bandeauDuJournal('Une ligne d\'avant.');
+        Graphics.frameCount++;
+        MB.banniere('UN BANDEAU', '', '#ffffff');
+        o.autreInstant = MB._bannieres.length;
+        MB._bannieres = [];
+        // la fenêtre des capacités
+        var s = SceneManager._scene, w = s._skillWindow, aide = s._helpWindow;
+        o.fenetre = { h: w.height, y: w.y, neuf: w.fittingHeight(9), quatre: w.fittingHeight(4), bas: w.y + w.height, ecran: Graphics.boxHeight,
+                      sousAide: w.y >= aide.y + aide.height, lignes: w.maxPageRows ? w.maxPageRows() : 0 };
+        return o;
+    });
+    // les lignes du bas (Pacte, Colère, livre, phrase, seiryu) s'effacent tant qu'elle est ouverte, et reviennent :
+    // on laisse tourner les vraies images du jeu
+    var cles = ['_fenetrePacte', '_fenetreColere', '_fenetreLecture', '_fenetrePhrase', '_fenetreSeiryu'];
+    await page.evaluate(function () { var w = SceneManager._scene._skillWindow; w.setActor($gameActors.actor(3)); w.setStypeId(1); w.show(); w.openness = 255; });   // comme le jeu : un héros d'abord
+    await page.waitForTimeout(300);
+    bd.ouverte = await page.evaluate(function (c) { var s = SceneManager._scene; return c.map(function (k) { return s[k] ? s[k].visible : null; }); }, cles);
+    await page.evaluate(function () { var w = SceneManager._scene._skillWindow; w.hide(); w.openness = 0; });
+    await page.waitForTimeout(300);
+    bd.fermee = await page.evaluate(function (c) { var s = SceneManager._scene; return c.map(function (k) { return s[k] ? s[k].visible : null; }); }, cles);
+    v('une ligne de boss longue : coupée à sa pause, dans la couleur de son \\C[2]', !!bd.long && bd.long.titre === 'Le masque de Dono tombe.' && bd.long.sous === '« …Tu m\'obliges à être sérieux. »' && bd.long.couleur === bd.rouge && bd.long.type === 'journal', JSON.stringify(bd.long));
+    v('…une courte reste entière', !!bd.court && bd.court.titre === 'Le Kamui revient.' && bd.court.sous === '');
+    v('le plugin pose son propre bandeau au même instant : pas de doublon', JSON.stringify(bd.memeInstant) === JSON.stringify(['bandeau:★ MANA PARFAIT']), JSON.stringify(bd.memeInstant));
+    v('…contre-épreuve : à un autre instant, les deux restent', bd.autreInstant === 2);
+    v('MecaBoss.dire (les mécaniques de boss) passe aussi en bandeau', JSON.stringify(bd.dire) === JSON.stringify(['Quelque chose répond dans le noir.']), JSON.stringify(bd.dire));
+    v('la fenêtre des capacités montre 9 lignes (4 avant), posée en bas, sous l\'aide', bd.fenetre.h === bd.fenetre.neuf && bd.fenetre.h > bd.fenetre.quatre && bd.fenetre.bas === bd.fenetre.ecran && bd.fenetre.sousAide && bd.fenetre.lignes === 9, JSON.stringify(bd.fenetre));
+    v('…ouverte, les lignes du Pacte, de la Colère, du livre, de la phrase et de seiryu ne s\'écrivent pas dessus', bd.ouverte.every(function (x) { return x === false; }), JSON.stringify(bd.ouverte));
+    v('…fermée, elles reviennent', bd.fermee.every(function (x) { return x === true; }), JSON.stringify(bd.fermee));
+
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();

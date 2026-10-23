@@ -82,6 +82,7 @@
     function log(text) {
         var s = SceneManager._scene;
         if (s && s._logWindow) { s._logWindow.push('addText', text); }
+        if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(text); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
     }
 
     // Phases vérifiées à chaque tour de Dono

@@ -160,6 +160,7 @@
         var w = SceneManager._scene && SceneManager._scene._logWindow;
         if (w) { w.push('addText', t); w.push('wait'); }
         else if ($gameMessage && !$gameMessage.isBusy()) $gameMessage.add(t);
+        if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(t); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
     }
 
     //=========================================================================

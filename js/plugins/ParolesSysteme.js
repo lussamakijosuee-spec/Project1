@@ -146,6 +146,7 @@ var Paroles = Paroles || {};
         if (!SHOW_LOG) return;
         var w = BattleManager._logWindow;
         if (w) w.push('addText', t);
+        if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(t); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
     }
 
     //========================================================================

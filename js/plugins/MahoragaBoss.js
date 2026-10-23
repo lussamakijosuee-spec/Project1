@@ -159,6 +159,7 @@
     function battleMsg(text) {
         if (text && BattleManager._logWindow) {
             BattleManager._logWindow.push('addText', text);
+            if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(text); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
         }
     }
     function pickRnd(arr) {

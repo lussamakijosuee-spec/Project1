@@ -163,10 +163,34 @@
     MB.dire = function (texte) {
         var w = BattleManager._logWindow;
         if (w && w.push) { w.push('addText', texte); w.push('wait'); }
+        MB.bandeauDuJournal(texte);
     };
     MB.banniere = function (titre, sous, couleur) {
         if (!BANDEAUX) return;
+        // le plugin pose son propre bandeau pour ce moment : la ligne de journal du même instant s'efface
+        var f = Graphics.frameCount;
+        MB._bannieres = MB._bannieres.filter(function (b) { return !(b.type === 'journal' && b.frame === f); });
         MB._bannieres.push({ titre: titre, sous: sous || '', couleur: couleur || '#ffffff', type: 'bandeau' });
+    };
+    /**
+     * Le journal est muet en vue de côté (SimpleMsgSideView ne garde aucune ligne) : ce que les boss, les
+     * ennemis et les dons y écrivent passe aussi en bandeau (JOKO, 2026-10-23 : « OUI A TOUT »). Le texte
+     * est celui du plugin, sans ses codes ; sa couleur, celle de son premier \C[n]. Trop long, il se coupe
+     * à sa première pause (« . », « — », « : », « … ») : le titre, puis la suite.
+     */
+    MB.bandeauDuJournal = function (texte) {
+        if (!BANDEAUX || !texte || !$gameParty || !$gameParty.inBattle()) return;
+        var t = String(texte), m = /\\C\[(\d+)\]/i.exec(t), couleur = '#ffffff';
+        var w = SceneManager._scene && SceneManager._scene._logWindow;
+        if (m && w && w.textColor && Number(m[1]) > 0) { try { couleur = w.textColor(Number(m[1])); } catch (e) {} }
+        t = t.replace(/\\[A-Za-z]+\[[^\]]*\]/g, '').replace(/\\[{}|.!<>^$]/g, '').replace(/\s+/g, ' ').trim();
+        if (!t) return;
+        var titre = t, sous = '';
+        if (t.length > 40) {
+            var r = /^(.{8,52}?(?:\.|…|!|—|:))\s+(.+)$/.exec(t);
+            if (r) { titre = r[1].replace(/\s*[—:]$/, ''); sous = r[2]; }
+        }
+        MB._bannieres.push({ titre: titre, sous: sous, couleur: couleur, type: 'journal', frame: Graphics.frameCount });
     };
     MB.anim = function (b, id) { if (b && id > 0 && $dataAnimations[id]) b.startAnimation(id, false, 0); };
     MB.enCharge = function (b) { return b.isStateAffected(CHARGE); };
@@ -580,7 +604,8 @@
         bm.fillRect(w * 0.15, y0 + h - 7, w * 0.7, 1, b.couleur);
         bm.outlineWidth = 4;
         bm.fontBold = true;
-        bm.fontSize = titre ? 40 : 28;
+        // une ligne de journal longue garde sa place en rapetissant un peu (drawText la serrerait)
+        bm.fontSize = titre ? 40 : (b.titre.length > 46 ? 20 : (b.titre.length > 36 ? 24 : 28));
         bm.textColor = b.couleur;
         bm.drawText(b.titre, 0, y0 + (titre ? 14 : 10), w, titre ? 48 : 36, 'center');
         bm.fontBold = false;
@@ -590,7 +615,7 @@
         bm.drawText(b.sous, 20, y0 + (titre ? 62 : 46), w - 40, 26, 'center');
         bm.fontItalic = false;
         this._t = 0;
-        this._duree = titre ? 150 : 110;
+        this._duree = titre ? 150 : (b.type === 'journal' ? 90 : 110);
     };
     Sprite_Bandeau.prototype.update = function () {
         Sprite.prototype.update.call(this);

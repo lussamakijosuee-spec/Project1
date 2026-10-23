@@ -29,6 +29,14 @@
  * @default false
  * @desc L'Orbe des Capacités montre TOUJOURS tout : c'est l'arbre, il doit être complet.
  *
+ * @param lignesEnCombat
+ * @text Lignes visibles du menu de capacités en combat
+ * @type number
+ * @min 4
+ * @max 13
+ * @default 9
+ * @desc YEP (« Lower Windows ») en montrait 4. JOKO, 2026-10-23 : « OUI A TOUT » — agrandir. 4 = comme avant.
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  UNE FAMILLE, UNE LIGNE                                              by JOKO
@@ -78,6 +86,7 @@
     var ACTIF = String(P['actif'] || 'true') === 'true';
     var MARQUE = (P['marque'] === undefined ? ' ×' : String(P['marque']));
     var HORS_COMBAT = String(P['dansLeMenu'] || 'false') === 'true';
+    var LIGNES = Math.max(4, Math.min(13, Number(P['lignesEnCombat'] || 9) || 9));
 
     /** Les états qu'une compétence pose — deux sorts qui empoisonnent et qui
      *  brûlent ne sont pas la même chose, même à dégâts égaux. */
@@ -193,6 +202,35 @@
         this._data = Familles.replier(this._actor, this._data);
     };
 
+    // Le menu de capacités en combat : YEP le posait sur la fenêtre de statut, 4 lignes ; avec les verbes, un
+    // héros y a jusqu'à 90 lignes. Il monte maintenant à `lignesEnCombat` (9), sans passer sous l'aide en haut.
+    var _fenetreCapacites = Scene_Battle.prototype.createSkillWindow;
+    Scene_Battle.prototype.createSkillWindow = function () {
+        _fenetreCapacites.call(this);
+        var w = this._skillWindow, aide = this._helpWindow;
+        if (!w) { return; }
+        var haut = aide ? aide.y + aide.height : 0;
+        var h = Math.min(w.fittingHeight(LIGNES), Graphics.boxHeight - haut);
+        if (h <= w.height) { return; }
+        w.height = h;
+        w.y = Graphics.boxHeight - h;
+        w.createContents();
+    };
+    // Plus haute, elle passe sous les lignes posées au-dessus du statut (le Pacte, la Colère, le livre, la phrase,
+    // seiryu) : elles s'écriraient sur la liste. Elles s'effacent tant qu'elle les couvre.
+    var LIGNES_DU_BAS = ['_fenetrePacte', '_fenetreColere', '_fenetreLecture', '_fenetrePhrase', '_fenetreSeiryu'];
+    var _majCombat = Scene_Battle.prototype.update;
+    Scene_Battle.prototype.update = function () {
+        _majCombat.call(this);
+        var sk = this._skillWindow, it = this._itemWindow, self = this;
+        var haut = Infinity;
+        [sk, it].forEach(function (f) { if (f && f.visible && f.openness > 0) { haut = Math.min(haut, f.y); } });
+        LIGNES_DU_BAS.forEach(function (k) {
+            var l = self[k];
+            if (l) { l.visible = l.y + l.padding + 36 <= haut; }   // le bas de sa ligne de texte
+        });
+    };
+
     // La marque « ×5 » : on dit au joueur qu'il y a une famille derrière.
     var _drawItem = Window_SkillList.prototype.drawItem;
     Window_SkillList.prototype.drawItem = function (index) {
@@ -201,11 +239,13 @@
         var s = this._data && this._data[index];
         if (!s || !s._familleTaille || s._familleTaille < 2) { return; }
         var r = this.itemRect(index);
+        // à gauche du coût, pour ne pas lui passer dessus — YEP_SkillCore le dessine en « 46MP » + son icône,
+        // plus large que costWidth() : « 46MP×2 » se chevauchait. On réserve la place d'un coût à 4 chiffres.
+        var place = Math.max(this.costWidth(), this.textWidth('0000MP')) + Window_Base._iconWidth + 10;
         var ancienne = this.contents.fontSize;
         this.contents.fontSize = 16;
         this.changeTextColor(this.textColor(8));
-        // à gauche du coût, pour ne pas lui passer dessus
-        this.drawText(MARQUE + s._familleTaille, r.x, r.y, r.width - this.costWidth() - 6, 'right');
+        this.drawText(MARQUE + s._familleTaille, r.x, r.y, r.width - place, 'right');
         this.contents.fontSize = ancienne;
         this.resetTextColor();
     };

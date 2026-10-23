@@ -193,6 +193,7 @@
     function battleLog(text) {
         var scene = SceneManager._scene;
         if (scene && scene._logWindow) scene._logWindow.addText(text);
+        if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(String(text).replace(/\bLou\b/g, $gameActors.actor(LOU_ID) ? $gameActors.actor(LOU_ID).name() : 'Lou')); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
     }
 
     /** Modifie la santé mentale de Lou via Ame si dispo, sinon la variable. */

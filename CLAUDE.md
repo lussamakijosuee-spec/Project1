@@ -337,15 +337,23 @@ aussi au-dessus de qui le fait, en court (le journal reste, pour les bancs) ; de
 (`CielDAel` : « 🌀 « … » · n t. », le fil perdu, la Parole qui part) et **les répliques du tableau de `LesInteractions`**
 (celles de JOKO, telles qu'écrites, découpées en lignes courtes au-dessus de qui parle — la Vanne de ludwing ne
 s'était jamais affichée) ; une annonce au bord droit reste dans l'écran (`CombatTactique`). Un nouveau message de
-système passe par une annonce, jamais par le seul journal. **Restent muets, à JOKO de dire** : les messages des
-boss (`MecaniquesDeBoss` — la Dîme et son compte —, `DonoBoss`, `DonoKamui` — « c'est LE moment ! » —,
-`MahoragaBoss`, la Parole ratée des ennemis de `ParolesSysteme`) et des dons (`RoyaumeImperial`, `JackpotHakari`,
-`LouCopySystem`) : ce sont ses ennemis et ses dons, je ne les ai pas touchés.
+système passe par une annonce, jamais par le seul journal. **Les boss, les ennemis et les dons aussi** (JOKO,
+2026-10-23, à « je les fais flotter pareil ? » : *« OUI A TOUT »*) : ce que `MecaniquesDeBoss` (et `MecaBoss.dire`,
+donc `MecaniquesDeBossSuite`), `DonoBoss`, `DonoKamui`, `MahoragaBoss`, `ParolesSysteme` (la Parole ratée des
+ennemis), `RoyaumeImperial`, `JackpotHakari` et `LouCopySystem` écrivent au journal passe aussi dans le **bandeau**
+de `ScenesDeBoss` (`MecaBoss.bandeauDuJournal`) : leur texte sans codes, la couleur de leur premier `\C[n]`, coupé
+à sa première pause s'il est long (titre, puis la suite), 90 images. Pas de doublon : un bandeau que le plugin pose
+au même instant remplace sa ligne de journal. `LouCopySystem` dit « Lou » (son ancien nom) : le bandeau dit le nom
+du héros. Aucune fiche d'ennemi ni de don n'est touchée — seulement ce qui s'affiche.
 **Le menu de combat cachait le rework** : `FamillesDeCapacites` replie en une ligne les compétences aux mêmes chiffres
 (branche, portée, nature, élément, états) — 43 capacités à verbe, et « ᛟ Activer » (sur soi, sans dégâts), étaient
 repliées sous une voisine. Depuis le 2026-10-23, l'**art** et le **verbe** (et « instantanée ») font partie de la
 famille, et Activer ne se replie jamais. Le menu s'allonge d'autant (au niveau de départ : Korrah 76 → 92 lignes,
 ludwing 61 → 72, Aël 69 → 93, Vesper 25 → 27) — presque tout vient des verbes, l'art seul n'en ajoute qu'une ou deux.
+**La fenêtre des capacités en combat** (JOKO : *« OUI A TOUT »*) montre **9 lignes** au lieu de 4 (réglage
+`lignesEnCombat` de `FamillesDeCapacites`, 4 = comme avant) : posée en bas, elle monte jusqu'au milieu de l'écran ;
+tant qu'elle est ouverte, les lignes du Pacte, de la Colère, du livre, de la phrase et de seiryu s'effacent (elles
+s'écrivaient dessus). La marque de famille « ×2 » ne chevauche plus le coût.
 Banc : `navigateur/ce_qui_se_voit.js`.
 Les **PT** n'étaient pas une monnaie : l'Attaque (tpGain 100 × TCR ~2,4) remplissait la jauge, la Relique 46
 la gardait d'un combat à l'autre — réglé le 2026-10-22 (« Les trois arts », plus bas). **Les manas** (JOKO) : *« il n'y a plus âme et mana
@@ -497,6 +505,10 @@ lourd tourne en même temps : les lancer seuls.
 dessine le jeu au processeur) : un banc navigateur à la fois, seulement ceux que le changement touche, bridé à
 2 cœurs en priorité basse — `cmd /c start "" /b /wait /low /affinity 3 node bancs/navigateur/<banc>.js`
 (Chromium hérite de la bride ; `les_verbes` y prend 17 s, comme sans) — et rien qui reste tourner après.
+Bridé, `le_royaume_imperial` rate « le compteur descend sans qu'aucun tour passe » (35 à 48 images en 4 s au début du
+combat : le compteur reste à 120 s), la même chose sur la version d'avant — pas un bug. `les_boss` rate deux contrôles de
+Dono (« Dono et son Esprit sont dans la troupe 33 ») depuis que JOKO a mis l'Arbitre de l'Ordre d'Or (37) à sa place
+dans la troupe 33 : le banc attend encore Dono — à JOKO de dire où vit le duo maintenant.
 
 **Pièges de MV rencontrés ici :**
 

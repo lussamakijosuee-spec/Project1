@@ -42,7 +42,10 @@
         });
     }
     function getDono() { return $gameTroop ? $gameTroop.members().filter(isDono)[0] : null; }
-    function log(t) { var w = BattleManager._logWindow; if (w) { w.push('addText', t); w.push('wait'); } }
+    function log(t) {
+        var w = BattleManager._logWindow; if (w) { w.push('addText', t); w.push('wait'); }
+        if (typeof MecaBoss !== 'undefined' && MecaBoss.bandeauDuJournal) { MecaBoss.bandeauDuJournal(t); }   // muet en vue de côté : aussi en bandeau (JOKO, 2026-10-23)
+    }
 
     function initKamui(d) { if (d._kamuiCharge == null) { d._kamuiCharge = 8; d._kamuiOverload = 0; d._kamuiTurn = 0; d._kamuiMat = false; } }
 
