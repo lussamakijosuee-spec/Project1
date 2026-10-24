@@ -16,6 +16,15 @@ don et couverture on enlève »*. Le lore se réduit à **l'explication du mana*
 **couverture** sont retirés. Le reste des documents de lore est une archive, plus une contrainte
 (`docs/INDEX.md`, « Le statut du lore »).
 
+**Depuis le 2026-10-24, le monde, c'est la Bible de JOKO** : `docs/Les-Trois-Sources-la-Bible.docx`
+(« Version de référence », *« en cas de contradiction, c'est lui qui fait foi »*). Il a choisi *« Ton socle, mes
+systèmes dedans »* : son monde reste, et ce qui est dans le jeu y est entré. Son monde, c'est un seul Livre,
+Anésidora, les failles, les trois Chapitres, l'Académie Rubis et sept royaumes. Ce qui est entré, c'est le
+triangle de sa Genèse (celui du jeu), les trois arts au combat et les pages des héros. Les dons et les
+manifestations y reviennent comme lore. Ses règles de jeu ne s'appliquent pas toutes seules (§2) : une seule
+affinité, le prix de l'excès, les jauges des manifestations, « tuer ne fait pas monter de niveau » — je les
+propose, JOKO décide. Le lore se cite toujours (§1), désormais dans la Bible.
+
 **Quand JOKO dit « fais », il veut que je fasse — pas que je devine.** *« je suis un peu trop vague
 dans mes propos […] je veux que tu fasses, pas que tu devines. »* Ce qu'il écrit noir sur blanc
 s'exécute ; ce qu'il ne précise pas (un chiffre, une durée) devient un **paramètre réglable**, avec

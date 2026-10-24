@@ -13,6 +13,25 @@
 | **Ranger / activer** les plugins dans le bon ordre | **[`ORDRE_PLUGINS.md`](ORDRE_PLUGINS.md)** | ⚠️ l'ordre de chargement (à respecter) |
 | **Saisir le canon du mana** (le fond du jeu) | **[`SYSTEME_DE_MANA.md`](SYSTEME_DE_MANA.md)** · **[`CANON_LA_GENESE.md`](CANON_LA_GENESE.md)** | les règles du mana, et d'où il vient (les trois sources, le Premier) |
 
+## La Bible des Trois Sources (2026-10-24) — elle fait foi
+
+JOKO a apporté **[`Les-Trois-Sources-la-Bible.docx`](Les-Trois-Sources-la-Bible.docx)** (« Version de référence —
+octobre 2026 ») : le monde entier, ses lieux, ses organisations, ses objets, ses personnages. Elle se dit elle-même
+la référence : *« En cas de contradiction, c'est lui qui fait foi »*. À la question *« Pour le cœur du monde, je
+mets quoi dans ta Bible ? »*, il a choisi **« Ton socle, mes systèmes dedans »** : son monde reste (le Livre unique,
+Anésidora, les failles, les trois Chapitres, l'Académie Rubis en 7 ans), et ce qui est dans le jeu y est entré.
+- **Le triangle de sa Genèse** (*« le corps attaqua l'âme, l'âme attaqua l'esprit et l'esprit attaqua le corps »*),
+  c'est-à-dire celui du jeu. La Bible l'avait inversé.
+- Le prix et le temps de chaque art.
+- Les trois arts au combat.
+- La règle pour tous : un don ajoute une carte, sans sortir des arts.
+- Les quatre héros et seiryu, avec leurs profils écrits par JOKO et leurs pouvoirs en combat.
+- Ce qui est déjà dans le jeu.
+
+Là où elle contredit les documents plus anciens (les trois Codex et leurs neuf chapitres, l'académie dès 13 ans en
+deux ans, le test d'Aël seule, Korrah sous Donovano), c'est elle qui l'emporte. Les documents ci-dessous restent comme
+archive.
+
 ## Le statut du lore (2026-10-14)
 
 JOKO : *« non plus de lore complètement en gros mon jeu sera plus un jeu pour pote entre potes si
