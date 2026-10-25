@@ -126,7 +126,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 133 | Déflagration Spirituelle | 10% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 470 | `<Referme>` `<Post-Damage Eval>` `<Parole: origine>` `<Cooldown: 2>` `<Style: sang>` |
-| 1 | 445 | Tranche-Néant | 25% PV | dégâts PV *AME * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 527 | `<Sceau: 50>` `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` `<Cooldown: 3>` `<Style: lame>` |
+| 1 | 445 | Tranche-Néant | 25% PV | dégâts PV *AME * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 527 | `<Art: mouvement>` `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` `<Cooldown: 3>` `<Style: lame>` |
 | 1 | 446 | Jugement de Soi | 50 PT + 33% PV | dégâts PV *Physique* `Math.floor(a.atk * 36 * 200 / (200 + b.def))` | 35 | `<Finit>` `<Ulti>` `<UltiColor: #ff8a3a>` `<After Eval>` `<Cooldown: 3>` `<Style: lame>` |
 | 58 | 1149 | Verdict de l'Équilibre | 60 PT | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 60 * 100 / (200 + b.def + b.mdf))` · pose « ⚖ Verdict » 100% | 412 | `<Grace>` `<Style: garde>` |
 
@@ -414,7 +414,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 6 | 1221 | Parole n°15 Ombre — Voile | 10 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 6.6 * 200 / (200 + b.mdf))` | 445 | `<ParoleL: 3>` `<NomOrigine: Ombre — Voile>` ⚠ |
 | 8 | 1163 | Parole n°15 Porte Entrouverte | 22 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 11 * 200 / (200 + b.mdf))` · boost AGI 3t | 253 | `<Reste>` `<NomOrigine: Porte Entrouverte>` ⚠ |
 | 11 | 1083 | Remonter la Source | 32 PT | soin PV `Math.floor(a.mat * 3)` | 439 | `<Rythme>` `<Voie: source>` |
-| 12 | 1114 | Tracer le Cercle | 7% PV | dégâts PV *mana positive* `Math.floor(a.mat * 9.8 * 200 / (200 + b.mdf))` | 413 | `<Cercle>` `<Art: ecrit>` `<Voie: domaine>` |
+| 12 | 1114 | Tracer le Cercle | 22 PT | dégâts PV *mana positive* `Math.floor(a.mat * 9.8 * 200 / (200 + b.mdf))` | 413 | `<Art: mouvement>` `<Voie: domaine>` |
 | 13 | 1229 | Rompre le Silence | 16 PM | retire « 🔇 Silence Runique » 100% | 405 | `<Devant>` `<Art: parole>` |
 | 16 | 1201 | Parole n°11 Terre — Caillou | 10 PM | dégâts PV *TERRE* `Math.floor(a.mat * 7.7 * 200 / (200 + b.mdf))` | 203 | `<ParoleL: 3>` `<NomOrigine: Terre — Caillou>` ⚠ |
 | 17 | 1084 | Cautère | 26 PT | soin PV `Math.floor(a.mat * 6)` · retire « 🩸 Hémorragie Profonde » 100% | 397 | `<Rythme>` `<Voie: source>` |
@@ -423,7 +423,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 22 | 1242 | Faire Douter | 8% PV | pose « 🌀 Vertige » 80% | 418 | `<Sceau: 50>` `<Art: ecrit>` |
 | 23 | 1166 | Ombre Prêtée | 8% PV | pose « 🛡 Posture de Fer » 100% · boost DÉF 4t | 260 | `<Pret>` `<Art: ecrit>` |
 | 24 | 1085 | Second Souffle | 45 PT | retire « mort » 100% · PV 50% +0 | 449 | `<Devant>` `<Voie: source>` |
-| 27 | 1115 | Territoire Scellé | 15% PV | dégâts PV *mana positive* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 415 | `<Referme>` `<Art: ecrit>` `<Voie: domaine>` |
+| 27 | 1115 | Territoire Scellé | 44 PT | dégâts PV *mana positive* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 415 | `<Art: mouvement>` `<Voie: domaine>` |
 | 29 | 1223 | Parole n°15 Ombre — Nappe | 34 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 12 * 200 / (200 + b.mdf))` | 447 | `<ParoleL: 4>` `<NomOrigine: Ombre — Nappe>` ⚠ |
 | 30 | 1086 | Sève | 30 PT | boost PVmax 6t · boost MDF 6t | 391 | `<Rythme>` `<Voie: source>` |
 | 30 | 1244 | Relever | 50 PM | retire « mort » 100% · PV 40% +0 | 449 | `<Devant>` |
@@ -434,7 +434,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 37 | 1202 | Parole n°11 Terre — Éclat | 22 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 203 | `<ParoleL: 4>` `<NomOrigine: Terre — Éclat>` ⚠ |
 | 38 | 1199 | Parole n°10 Vent — Tempête | 46 PM | dégâts PV *VENT* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 192 | `<ParoleL: 5>` `<NomOrigine: Vent — Tempête>` ⚠ |
 | 40 | 1224 | Parole n°15 Ombre — Nuit | 46 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 70% | 448 | `<ParoleL: 5>` `<NomOrigine: Ombre — Nuit>` ⚠ |
-| 41 | 1116 | La Règle du Lieu | 17% PV | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` · pose « 🔇 Silence Runique » 60% | 416 | `<Sceau: 100>` `<Art: ecrit>` `<Voie: domaine>` |
+| 41 | 1116 | La Règle du Lieu | 50 PT | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` · pose « 🔇 Silence Runique » 60% | 416 | `<Art: mouvement>` `<Voie: domaine>` |
 | 43 | 1088 | Rendre le Mana | 30 PT | soin PM `Math.floor(a.mat * 1.2)` | 407 | `<Rythme>` `<Voie: source>` |
 | 44 | 1209 | Parole n°12 Foudre — Orage | 46 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 384 | `<ParoleL: 5>` `<NomOrigine: Foudre — Orage>` ⚠ |
 | 47 | 1128 | Contre-Éclat | 34 PT | dégâts PV *mana négative * `Math.floor(a.atk * 19 * 200 / (200 + b.def) * (1 + (a.mhp - a.hp) / a.mhp * 0.8))` | 453 | `<Riposte>` `<Voie: flash>` `<Nerf 2026-09-25: a.atk * 25 * → a.atk * 19 * — ×3,10 en moyenne pour 34 PT>` ⚠ |
@@ -453,7 +453,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 1 | 11 | Point de Rupture | 20 PT | dégâts PV *mana négative * `Math.floor(a.atk * 14 * 200 / (200 + b.def))` | 64 | `<Parole>` `<Trait: rupture>` `<Interdit>` |
 | 1 | 13 | Vannes | 10 PT | pose « Enragé » 30% · malus MDF 2t | 36 | `<Appat>` |
 | 1 | 65 | copie d'Ame | 4% PV | **coquille** — rien | 51 | `<Parole: origine>` |
-| 1 | 66 | Lotus des Ténèbres | 3% PV | dégâts PV *OMBRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 100% | 257 | `<Sceau: 25>` `<Art: ecrit>` `<ParoleL: 3>` `<Ombre>` |
+| 1 | 66 | Lotus des Ténèbres | 10 PT | dégâts PV *OMBRE* `Math.floor(a.atk * 8.7 * 200 / (200 + b.def))` · pose « Aveuglé » 100% | 257 | `<Art: mouvement>` `<ParoleL: 3>` `<Ombre>` |
 | 1 | 68 | Parole n°15 Annihilation des Ténèbres | 30 PM | dégâts PV *OMBRE* `a.mat * 10` · pose « Muet » 100% | 258 | `<Assez>` `<Cooldown: 2>` `<ParoleL: 3>` `<SceauMagie>` `<Ombre>` `<NomOrigine: Annihilation des Ténèbres>` ⚠ |
 | 1 | 69 | Porte de l'Envers | 12 PM | pose « Contre Total » 100% | 253 | `<ParoleL: 3>` `<Trait: porte>` |
 | 1 | 70 | Aspiration des Âmes Damnées | 8% PV | soin PV *mana spirituelle * `a.mhp * 0.50` · pose « Déstabilisé » 100% · script commun 16 | 434 | `<DejaEcrit>` `<ParoleL: 4>` `<AspirationDamnees>` |

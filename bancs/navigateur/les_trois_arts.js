@@ -74,7 +74,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         out.mouvements = [1106, 1, 53, 153, 56, 1082].map(art);
         out.ecrits = [158, 1165, 466, 152, 825].map(art);
         out.aucun = [2, 6, 1246, 1265, 1279, 14].map(art);
-        out.tags = [1114, 1236, 1233].map(art);
+        out.tags = [1117, 1236, 1233].map(art);   // Cloison (Tracer le Cercle est un mouvement depuis le 2026-10-25)
         out.laParole = [LaParole.estParole($dataSkills[1186]), LaParole.estParole($dataSkills[158]), LaParole.estParole($dataSkills[1106])];
         out.voies = [LeMouvement.voie(act(kor, 1106, e)), LeMouvement.voie(act(kor, 1211, e)), LeMouvement.voie(act(lud, 158, e)), LeMouvement.voie(act(ael, 1236, ael))];
 
@@ -150,7 +150,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('mouvements : une Voie, l\'Attaque, le sang (élément 4), « Parole n°4 », BERSEK, un soin de la Source', r.mouvements.every(function (x) { return x === 'mouvement'; }), r.mouvements.join(', '));
     v('écrits : « Parole n°2 », « Parole n°7 », le type âme, l\'élément 2, une rune', r.ecrits.every(function (x) { return x === 'ecrit'; }), r.ecrits.join(', '));
     v('aucun art : la Garde, Fuir, un ordre à seiryu, un Style, le Contrat, la Roulette du Destin', r.aucun.every(function (x) { return x === ''; }), r.aucun.join(', '));
-    v('<Art:> sur la fiche décide : Tracer le Cercle est un écrit, Accélérer une Parole, Garde Haute un mouvement',
+    v('<Art:> sur la fiche décide : Cloison est un écrit, Accélérer une Parole, Garde Haute un mouvement',
       r.tags.join() === 'ecrit,parole,mouvement', r.tags.join(', '));
     v('LaParole suit la même règle (une Parole oui ; un écrit et un mouvement non)', r.laParole[0] && !r.laParole[1] && !r.laParole[2]);
     v('LeMouvement aussi : seul le mouvement prend une posture', !!r.voies[0] && !r.voies[1] && !r.voies[2] && !r.voies[3], JSON.stringify(r.voies));

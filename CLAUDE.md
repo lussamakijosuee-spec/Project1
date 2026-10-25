@@ -413,7 +413,8 @@ boucliers) — un mouvement de Feu frappe en Feu et en négatif ; ▲ / ▼ s'an
 écrit : PM → PV au tiers, ou seulement le PV qu'il avait déjà ; Parole : ses PT en PM ; un PV hors ultime
 retiré). **Toute capacité a un art** : les 41 de soutien qui n'en avaient pas reçoivent `<Art:>` — ludwing
 écrit d'abord (les cercles du Domaine 1114-1117 « À partir d'ici, c'est chez toi », Marquer la Cible, Faire
-Douter, Ombre Prêtée, Lotus des Ténèbres, Âme d'Ombre), Aël parle (Halo seul est écrit), Vesper bouge (ses
+Douter, Ombre Prêtée, Lotus des Ténèbres, Âme d'Ombre — les trois cercles 1114-1116 et le Lotus sont des mouvements depuis le
+2026-10-25, voir « L'écrit, c'est le mana spirituel »), Aël parle (Halo seul est écrit), Vesper bouge (ses
 gardes ; L'Équilibre Tenu est écrit), Korrah bouge (prises, postures) et parle (ordres de l'esprit, Ralentir
 qui confie ses PM) ; restent sans art Fuir, revelation, VUE et les pièces des dons (438, 818, 14, 111, 69).
 **« Sauf les dons »** : les types ouverts par l'acteur ou par son don (4, 5, 6, 8-24, 26) et 71, 810,
@@ -509,9 +510,16 @@ paquet des verbes avait mise dans l'écrit — elle redevient un mouvement à 20
 avec `<Art: ecrit>`. Tout écrit d'un héros se paie en PV : Jugement des Défunts, Rappel des Âmes, Registre, Rappel et Dette
 Ancienne passent de PM en PV (au tiers, 5 % au moins ; Dette Ancienne perd sa recharge, son prix la freine) ; Ce Qu'il A Gardé,
 qu'un ennemi utilise, reste en PM ; Transfusion d'Âme Blanche prend ses PV par son effet. Dans le Domaine, une invocation
-regarde aussi ses PV (`RoyaumeImperial`). Fouet de Sang et Cercle Écarlate (« Parole n°2 », élément spirituel) restent des
-écrits. Règle B tenue (Fouet de Sang, Cercle Écarlate, Chaîne d'Âmes +6 %). Mesure : 2,86 → 2,88 tours. Banc :
-`25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).
+regarde aussi ses PV (`RoyaumeImperial`). Règle B tenue (Fouet de Sang, Cercle Écarlate, Chaîne d'Âmes +6 %). Mesure : 2,86 →
+2,88 tours. **Puis JOKO a sorti sept techniques de l'écrit** (même jour, à la question « lesquelles je sors de l'écrit pour en
+faire des mouvements ? » : *« Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles »*) — toutes en
+`<Art: mouvement>` : **Fouet de Sang** et **Cercle Écarlate** (branche sang de Vesper, toujours payées en PV), **Tranche-Néant**
+(son ultime, ses 25 % de PV gardés), **Lotus des Ténèbres** (10 PT) et les trois cercles de ludwing, **Tracer le Cercle**,
+**Territoire Scellé**, **La Règle du Lieu** (22, 44, 50 PT — leurs anciens PM, la règle des arts). Leurs verbes de l'écrit (Sceau,
+Cercle, Referme) et les lignes qui les annonçaient sont retirés, les descriptions de JOKO rendues. **Plus aucune capacité ne porte
+`<Cercle>`** (le verbe reste dans LEcrit ; `les_verbes` l'essaie sur Marquer la Cible le temps du contrôle) ; Referme reste sur
+Déflagration Spirituelle, Onde Concentrée et Dévoreur d'Âmes, Sceau sur Faire Douter, Désorientation et Syllabe de la Fin. Mesure :
+2,88 → 2,79 tours, boss 44 → 47 sur 60. Banc : `25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
