@@ -464,6 +464,13 @@ Rendre le Sang, Écarlate Montante, la Convergence, Sang Perçant, Supernova) se
 affinité). Ses capacités de la Voie du Sang (Art du Sang, Sang pour Sang…) restent en PT. Comme ses PT se vident de ses
 techniques de sang, la règle B a redescendu Ouvrir, Coup Furieux, Brise-Garde et Sang pour Sang, et remonté Fouet de Sang et
 Cercle Écarlate. Mesure : 3,16 → 2,98 tours, boss 41 → 43 sur 60. Banc : `navigateur/le_sang_de_vesper.js`.
+**Korrah, la tête en l'air (K1)** — la Bible : *« des attaques visées ratées, des objets qui tombent. Elle doit apprendre à se
+concentrer »*. Dans `LeMouvement` (section « Korrah : la tête en l'air ») : ses attaques sur une seule cible ratent 15 % du
+temps (`rateTeteEnLair` ; pas une `<Sur>`, pas un coup de zone), « 💭 La tête ailleurs… ». **Penser juste** (une Parole dans sa
+posture) ou **Focalisation** (451, `seConcentrent`) la concentrent : état **258 « 🎯 Concentrée »** (icône 127, priorité 99) — sa
+prochaine attaque visée ne rate pas, ne s'esquive pas, frappe ×1,25 (`bonusConcentree`), puis la concentration part ; ce qui la
+concentre n'en profite pas soi-même. Mesure (6 parties) : les combats ordinaires ne bougent pas, les boss tombent de ~43 à
+36,5 victoires sur 60 — un vrai nerf, avec une IA de banc qui ne se concentre jamais exprès. Banc : `navigateur/la_tete_en_lair.js`.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
