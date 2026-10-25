@@ -160,7 +160,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         __solide(e);
         var a0 = new Game_Action(l); a0.setSkill(id); var plein = a0.makeDamageValue(e, false);
         var rn = new Game_Action(l); rn.setSkill(1224); rn.calcElementRate = function () { return 1; };
-        var neutre = rn.makeDamageValue(e, false);
+        // la copie est une technique du don (type 26) : Nuit, sa mesure, se compte sans le prix de l'affinité (LesTroisArts)
+        LesTroisArts._sansAffinites = true; var neutre = rn.makeDamageValue(e, false); LesTroisArts._sansAffinites = false;
         l.paySkillCost(sk);
         r.apres = { ames: __ames(), gardee: l._louCopiedSkills.indexOf(id) >= 0, collee: l._registreCopie === id, affaiblie: !!l._louCopyWeaken };
         var a1 = new Game_Action(l); a1.setSkill(id);

@@ -21,9 +21,10 @@ don et couverture on enlève »*. Le lore se réduit à **l'explication du mana*
 systèmes dedans »* : son monde reste, et ce qui est dans le jeu y est entré. Son monde, c'est un seul Livre,
 Anésidora, les failles, les trois Chapitres, l'Académie Rubis et sept royaumes. Ce qui est entré, c'est le
 triangle de sa Genèse (celui du jeu), les trois arts au combat et les pages des héros. Les dons et les
-manifestations y reviennent comme lore. Ses règles de jeu ne s'appliquent pas toutes seules (§2) : une seule
-affinité, le prix de l'excès, les jauges des manifestations, « tuer ne fait pas monter de niveau » — je les
-propose, JOKO décide. Le lore se cite toujours (§1), désormais dans la Bible.
+manifestations y reviennent comme lore. Ses règles de jeu ne s'appliquent pas toutes seules (§2) : le prix
+de l'excès, les jauges des manifestations, « tuer ne fait pas monter de niveau » — je les propose, JOKO décide
+(il a dit non pour l'instant) ; **une seule affinité** est entrée le 2026-10-24 (« Les affinités », plus bas).
+Le lore se cite toujours (§1), désormais dans la Bible.
 
 **Quand JOKO dit « fais », il veut que je fasse — pas que je devine.** *« je suis un peu trop vague
 dans mes propos […] je veux que tu fasses, pas que tu devines. »* Ce qu'il écrit noir sur blanc
@@ -422,6 +423,22 @@ retirées sur 8 mouvements que leurs PT limitent, posée sur Annihilation des T�
 **Éteints** : FusionMana, ElementsVivants, LeSpirituel ; ManaAffinity : recul 0 / 0, `elPur` 99 (7 est le
 spirituel). Les 9 Voies de MaitriseVoies restent (les styles du corps ; le Masque de Vesper boit le drain du
 Sang). Banc : `navigateur/les_trois_arts.js`.
+
+**Les affinités** (`LesTroisArts.js` v1.1, 2026-10-24 ; JOKO : *« L'affinité unique oui c'est tout »*, *« non
+change pas le nom »*). La Bible : *« Chaque personne naît avec une seule affinité »*, *« C'est le don ou le trait qui
+ajoute une seconde affinité »*, *« un art hors de son affinité coûte plus et rend moins »*. Les affinités choisies par
+JOKO (réglage `affinites`) : **Vesper** spirituel + négatif (son sang) — ses Paroles sont hors affinité ; **Korrah**
+négatif + positif (l'Hiver de seiryu) — ses écrits ; **ludwing** négatif + spirituel (ses âmes) — ses Paroles ;
+**Aël** positif seul — ses mouvements et ses écrits. Hors affinité, le coût est ×1,5 dans sa monnaie (PM, PT ou PV,
+`coutHorsAffinite`), **jamais plus que la jauge pleine** (sinon Le Domaine Entier d'Aël, 70 PT → 105, ne partait
+plus jamais), et les dégâts, les soins et les PM rendus ×0,75 (`forceHorsAffinite`). Hors de la règle : l'Attaque
+(`horsRegle` 1), les **dons** — leurs types (4, 5, 6, 8-24, 26) et 71, 810, 438 : le don *est* la seconde affinité —
+et les **attaques à plusieurs** (type 25, unisson : chacun paie le sien) ; seiryu et les ennemis ne l'ont pas. **Ce
+qui se voit** : le coût affiché est le vrai, l'aide dit `【PAROLE · FEU · hors affinité】`, « ◇ Hors affinité » flotte
+au-dessus du héros. Mesure (`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 2,95 → 3,05 tours en moyenne,
+autant de victoires — un petit nerf. Pour un banc : `LesTroisArts.affinites(b)`, `LesTroisArts.horsAffinite(b, s)`,
+`LesTroisArts._sansAffinites = true` coupe la règle (`le_registre` mesure la copie de ludwing contre sa Nuit sans
+elle : la copie est un don). Banc : `navigateur/les_affinites.js`.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
