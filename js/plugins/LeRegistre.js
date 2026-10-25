@@ -122,6 +122,36 @@
  * @type state
  * @default 247
  *
+ * @param === LE POIDS DES ÂMES ===
+ * @default
+ *
+ * @param bonusParAme
+ * @text Dégâts par âme gardée (%)
+ * @default 2
+ * @desc « absorber d'autres âmes le rend plus puissant, mais leurs traumas viennent avec » (la Bible).
+ *
+ * @param bonusAmesMax
+ * @text Âmes comptées au plus pour les dégâts
+ * @default 10
+ * @desc 10 : +20 % au plus. Mesuré : à 25 (+50 %), ses âmes montent par centaines et les combats raccourcissaient de 16 %.
+ *
+ * @param seuilPoids
+ * @text Âmes gardées sans poids
+ * @default 5
+ *
+ * @param defenseParAme
+ * @text DÉF perdue par âme au-delà (%)
+ * @default 3
+ *
+ * @param poidsMax
+ * @text DÉF perdue au plus (%)
+ * @default 60
+ *
+ * @param etatPoids
+ * @text 😵 Le poids des âmes
+ * @type state
+ * @default 259
+ *
  * @help
  * ───────────────────────────────────────────────────────────────────────────
  * LE STRATÈGE
@@ -133,6 +163,12 @@
  * gratuit. » Et sur le personnage : « comme Megumi ou Shikamaru […] Orochimaru
  * […] beaucoup plus de ruse que les autres. Ou beaucoup plus de stratégie. »
  * Puis : « Oui, écris tout comme listé ».
+ *
+ * LE POIDS DES ÂMES (le rework, L1, 2026-10-25 ; la Bible : « absorber d'autres
+ * âmes le rend plus puissant, mais leurs traumas viennent avec ») — en combat,
+ * chaque âme gardée : +2 % à ses dégâts (10 âmes comptées au plus) ; au-delà de
+ * 5, chaque âme de plus lui coûte 3 % de DÉF (60 % au plus) — l'état 259, la
+ * perte en chiffre — jusqu'à ce qu'il les dépense. Amasser ou dépenser.
  *
  * GAGNER — en plus de ce qui existait (PorteurDAmes : +1 par mort ; LouCopySystem :
  * +1 quand c'est lui qui tue) :
@@ -180,6 +216,8 @@
     var ROULETTE = nb('roulette', 14), MISE_ROULETTE = nb('miseRoulette', 5), EV_ROULETTE = nb('evRoulette', 1), SEUIL = nb('seuilRoulette', 5);
     var ARME = nb('armeOmbre', 111), MISE_ARME = nb('miseArme', 3), EV_ARME = nb('evArme', 22), TIRAGE = nb('tirageArme', 41);
     var DOMAINE = nb('etatDomaine', 198), COMPTEUR = nb('etatCompteur', 247);
+    var PAR_AME = nb('bonusParAme', 2) / 100, AMES_MAX = nb('bonusAmesMax', 10), SEUIL_POIDS = nb('seuilPoids', 5);
+    var DEF_PAR_AME = nb('defenseParAme', 3) / 100, POIDS_MAX = nb('poidsMax', 60) / 100, ETAT_POIDS = nb('etatPoids', 259);
     var LOU = PluginManager.parameters('LouCopySystem') || {};
     var MAX_COPIES = parseInt(LOU['maxSlots'] || 4, 10) || 4;
 
@@ -215,6 +253,8 @@
 
     window.Registre = {
         ames: ames,
+        bonusAmes: function () { return bonusAmes(); },
+        poids: function () { return poids(); },
         copies: function () { return copies().slice(); },
         copier: function (id) { return copier(id, null); },
         domaine: enDomaine,
@@ -234,8 +274,34 @@
         if (!l.isAlive()) { return; }
         if (!l.isStateAffected(COMPTEUR)) { l.addNewState(COMPTEUR); l.resetStateCounts(COMPTEUR); }
         if (l.setStateCounter) { l.setStateCounter(COMPTEUR, ames()); }
+        peser(l);
         if (BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
     }
+
+    //=========================================================================
+    // LE POIDS DES ÂMES — plus fort de ce qu'il garde, plus lourd au-delà
+    //=========================================================================
+    function bonusAmes() { return window.Registre && Registre._sansPoids ? 1 : 1 + PAR_AME * Math.min(Math.max(0, ames()), AMES_MAX); }
+    function poids() { return window.Registre && Registre._sansPoids ? 0 : Math.min(POIDS_MAX, DEF_PAR_AME * Math.max(0, ames() - SEUIL_POIDS)); }
+    function peser(l) {
+        if (!$dataStates[ETAT_POIDS]) { return; }
+        var p = Math.round(poids() * 100), avant = l._poidsAmes || 0;
+        if (p > 0) {
+            if (!l.isStateAffected(ETAT_POIDS)) { l.addNewState(ETAT_POIDS); l.resetStateCounts(ETAT_POIDS); }
+            if (l.setStateCounter) { l.setStateCounter(ETAT_POIDS, '-' + p + '%'); }
+        } else if (l.isStateAffected(ETAT_POIDS)) { l.eraseState(ETAT_POIDS); }
+        if (p !== avant) {
+            if (p > avant) { annonce(l, '😵 Le poids des âmes · DÉF −' + p + ' %', '#b8a0e0'); }
+            else if (avant > 0) { annonce(l, p > 0 ? '✦ Plus léger · DÉF −' + p + ' %' : '✦ Plus léger', '#c8a0ff'); }
+        }
+        l._poidsAmes = p;
+    }
+    var _taux = Game_BattlerBase.prototype.paramRate;
+    Game_BattlerBase.prototype.paramRate = function (paramId) {
+        var r = _taux.call(this, paramId);
+        if (paramId === 3 && estLui(this) && enCombat()) { r *= 1 - poids(); }
+        return r;
+    };
     var _valeur = Game_Variables.prototype.setValue;
     Game_Variables.prototype.setValue = function (variableId, value) {
         _valeur.call(this, variableId, value);
@@ -414,6 +480,20 @@
         else { ajouter(-n, 'mise : ' + sens); }
         if (dom) { annonce(lui(), '✦ Domaine : ' + n + ' âmes offertes', '#c8a0ff'); }
     }
+    // Ses dégâts, de tout ce qu'il garde (le poids des âmes)
+    var _degatsAmes = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (target, critical) {
+        var v = _degatsAmes.call(this, target, critical), u = this.subject();
+        if (v > 0 && estLui(u) && enCombat() && !this.isRecover()) {
+            var k = bonusAmes();
+            if (k > 1) {
+                v = Math.round(v * k);
+                if (!this._amesVues && k >= 1.04) { this._amesVues = true; annonce(u, '✦ Âmes ×' + String(Math.round(k * 100) / 100).replace('.', ','), '#c8a0ff'); }
+            }
+        }
+        return v;
+    };
+
     // La mise s'ajoute au tirage de l'événement, au moment où il le fait.
     var _variables = Game_Interpreter.prototype.command122;
     Game_Interpreter.prototype.command122 = function () {

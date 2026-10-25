@@ -471,6 +471,14 @@ posture) ou **Focalisation** (451, `seConcentrent`) la concentrent : état **258
 prochaine attaque visée ne rate pas, ne s'esquive pas, frappe ×1,25 (`bonusConcentree`), puis la concentration part ; ce qui la
 concentre n'en profite pas soi-même. Mesure (6 parties) : les combats ordinaires ne bougent pas, les boss tombent de ~43 à
 36,5 victoires sur 60 — un vrai nerf, avec une IA de banc qui ne se concentre jamais exprès. Banc : `navigateur/la_tete_en_lair.js`.
+**ludwing, le poids des âmes (L1)** — la Bible : *« absorber d'autres âmes le rend plus puissant, mais leurs traumas viennent
+avec »*. Dans `LeRegistre` : en combat, chaque âme gardée (variable 15) donne +2 % à ses dégâts (`bonusParAme`, **10 âmes
+comptées au plus** — `bonusAmesMax`), « ✦ Âmes ×1,1 » quand il frappe ; au-delà de 5 (`seuilPoids`), chaque âme de plus lui coûte
+3 % de DÉF (`defenseParAme`, 60 % au plus — `poidsMax`), état **259 « 😵 Le poids des âmes »** (icône 62, la perte en chiffre),
+jusqu'à ce qu'il les dépense (« ✦ Plus léger »). **Mesuré, puis réglé** : les âmes ne retombent jamais d'elles-mêmes (50 au premier
+niveau du banc, 409 à la fin) ; avec 25 âmes comptées (+50 %), les combats raccourcissaient de 16 % — trop fort, d'où 10 (+20 %) :
+3,03 → 2,85 tours, boss 39 → 45 sur 60. Au-delà de 10, garder ne rapporte plus rien et coûte. `Registre._sansPoids = true` coupe la
+règle (`le_registre` mesure la copie sans elle). Banc : `navigateur/le_poids_des_ames.js`.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,

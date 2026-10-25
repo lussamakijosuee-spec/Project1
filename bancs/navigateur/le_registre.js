@@ -155,6 +155,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         __ames(1); r.a1 = l.canUse(sk);
         __ames(2); r.a2 = l.canUse(sk);
         // la puissance « à sa mesure » : 50 % d'Ombre — Nuit (sans élément) × l'élément de la copie
+        // (le poids des âmes, le rework L1, multiplie tout ce qu'il frappe selon ses âmes : on le met à part ici)
+        Registre._sansPoids = true;
         var ref = $dataSkills[1224], sauve = [sk.damage.variance, sk.damage.critical, ref.damage.variance, ref.damage.critical];
         sk.damage.variance = 0; sk.damage.critical = false; ref.damage.variance = 0; ref.damage.critical = false;
         __solide(e);
@@ -170,6 +172,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         l._registreCopie = 0; l._louCopyWeaken = true;
         var a2 = new Game_Action(l); a2.setSkill(id); r.hasard = { valeur: a2.makeDamageValue(e, false), attendu: Math.floor(plein * 0.5) };
         l._louCopyWeaken = false;
+        Registre._sansPoids = false;
         sk.damage.variance = sauve[0]; sk.damage.critical = sauve[1]; ref.damage.variance = sauve[2]; ref.damage.critical = sauve[3];
         r.brancheVide = l.addedSkillTypes().indexOf(26) >= 0;
         // un Marqué se laisse copier dès sa première technique — un autre non
