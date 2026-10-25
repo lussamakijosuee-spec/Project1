@@ -325,7 +325,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…contre-épreuve : frapper Korrah n\'y fait rien', W.pretContre === 0);
     v('Le Symbole compte pour deux : avec un autre écrit, résonance ×1,3 (au lieu de ×1,15)', W.symbole.join() === 'ᛟ Résonance ×1,3' && W.symboleContre.join() === 'ᛟ Résonance ×1,15', W.symbole.join() + ' / ' + W.symboleContre.join());
     v('Vannes : l\'ennemi provoqué frappe ludwing au lieu d\'Aël ; un autre non', W.appat.join() === 'ludwing' && W.appatContre.join() !== 'ludwing', W.appat.join() + ' / ' + W.appatContre.join());
-    v('Saignée Continue est devenue un écrit de Vesper, payé en PV', W.saignee.art === 'ecrit' && W.saignee.pv && W.saignee.pt === 0);
+    // JOKO, le 2026-10-25 : l'écrit, c'est le mana spirituel — Saignée Continue (élément Physique) redevient un mouvement
+    v('Saignée Continue est redevenue un mouvement à 20 PT (l\'écrit, c\'est le mana spirituel)', W.saignee.art === 'mouvement' && !W.saignee.pv && W.saignee.pt === 20, JSON.stringify(W.saignee));
 
     var D = r.deux;
     console.log('\n4) Le deuxième paquet');

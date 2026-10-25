@@ -259,6 +259,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         l.paySkillCost($dataSkills[14]); r.mise = JSON.stringify($gameTemp._registreMise) + ' · ' + __ames();
         $gameTemp._registreMise = null;
         __ames(0); r.invocation = l.canUse($dataSkills[124]);
+        // le 2026-10-25, ses techniques de l'âme se paient en PV : dans le Domaine, l'invocation regarde aussi ses PV
+        var pv = l.skillHpCost($dataSkills[124]), hp0 = l.hp;
+        l.setHp(pv); r.invocationSansPV = l.canPaySkillCost($dataSkills[124]);
+        l.setHp(pv + 1); r.invocationAvecPV = l.canPaySkillCost($dataSkills[124]); r.prixPV = pv;
+        l.setHp(hp0);
         l.removeState(198); l._louCopiedSkills = [];
         return r;
     });
@@ -266,6 +271,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('dans le Domaine : une copie sans âme, gratuite et gardée', dm.dans && dm.copie && dm.copieApres.ames === 0 && dm.copieApres.gardee, JSON.stringify(dm.copieApres));
     v('dans le Domaine : la mise maximale, offerte', /"n":5/.test(dm.mise) && / 0$/.test(dm.mise), dm.mise);
     v('dans le Domaine : une invocation sans âme (RoyaumeImperial)', dm.invocation);
+    v('… mais pas sans les PV qu\'elle coûte (à son prix, non ; un PV de plus, oui)', dm.prixPV > 0 && !dm.invocationSansPV && dm.invocationAvecPV, dm.prixPV + ' PV');
 
     // ── 7 · un vrai combat ──────────────────────────────────────────────
     console.log('\n7) Un vrai combat, laissé tourner');

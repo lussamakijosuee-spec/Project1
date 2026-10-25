@@ -501,6 +501,17 @@ Activer garde la posture du Mouvement. **La résonance** : des écrits qui parte
 sous l'Attaque dans ses ordres (elle reste aussi dans ses capacités) ; son aide dit ce qui attend, compté et sur qui
 (« ᛟ En attente : Cloison → Vesper · Trait Spectral ×2 → Slime ») ; un écrit grisé dit pourquoi (« 3 écrits
 attendent déjà »). Banc : `navigateur/l_ecrit.js`.
+**L'écrit, c'est le mana spirituel** (JOKO, 2026-10-25 : *« ça s'applique que aux techniques du mana spirituel. Pas ceux
+qui coûtent les PV. Tout ce qui est mana spirituel, faut utiliser ces PV pour l'utiliser »*, sur une attaque de Vesper
+*« clairement physique »* traitée en spirituel) : c'était **Saignée Continue** (élément Physique, coup physique), que le
+paquet des verbes avait mise dans l'écrit — elle redevient un mouvement à 20 PT, avec sa description d'origine. `LesTroisArts`
+(v1.2) refuse désormais l'écrit à toute technique d'élément Physique ou de l'attaque (`elementsJamaisEcrit` « -1, 1 »), même
+avec `<Art: ecrit>`. Tout écrit d'un héros se paie en PV : Jugement des Défunts, Rappel des Âmes, Registre, Rappel et Dette
+Ancienne passent de PM en PV (au tiers, 5 % au moins ; Dette Ancienne perd sa recharge, son prix la freine) ; Ce Qu'il A Gardé,
+qu'un ennemi utilise, reste en PM ; Transfusion d'Âme Blanche prend ses PV par son effet. Dans le Domaine, une invocation
+regarde aussi ses PV (`RoyaumeImperial`). Fouet de Sang et Cercle Écarlate (« Parole n°2 », élément spirituel) restent des
+écrits. Règle B tenue (Fouet de Sang, Cercle Écarlate, Chaîne d'Âmes +6 %). Mesure : 2,86 → 2,88 tours. Banc :
+`25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
@@ -537,7 +548,8 @@ phrase : son élément, ×1,5), `<MotJuste>` (l'élément fondamental qui marche
 les pièges de ludwing), `<Symbole>` (compte double dans la résonance), `<Appat>` (Vannes : les ennemis
 touchés frappent celui qui les a provoqués). **Premier paquet, 37 capacités** — Vesper : Le Point Final,
 Exécution, Reprise du Marteau, Trempe, Cri de Fureur, Grande Marée, Enclume, Le Sang Répond, Brise-Garde, et
-Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*, 7 % PV) ; Korrah : Le Creux Entre
+Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*, 7 % PV — redevenue un mouvement le 2026-10-25,
+voir « L'écrit, c'est le mana spirituel ») ; Korrah : Le Creux Entre
 Deux, Coup de Grâce Éclair, L'Immobile, Éclat Noir, Maîtrise, Angle Impossible, Vider le Geste, Focalisation ;
 ludwing : Vannes, Tracer le Cercle, Territoire Scellé, La Règle du Lieu, Faire Douter, Ombre Prêtée, Le
 Symbole, Âme d'Ombre ; Aël : « Reste. », Lumière Tenue, « Assez. », « Pars. », « Viens. », Le Mot Juste, ses

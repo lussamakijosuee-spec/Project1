@@ -1,10 +1,10 @@
 //=============================================================================
-// LesTroisArts.js — v1.1
+// LesTroisArts.js — v1.2
 // Les trois arts du Premier : chaque compétence de héros en est un, et c'est
 // son art qui donne son mana. Le triangle joue à chaque coup.
 //=============================================================================
 /*:
- * @plugindesc v1.1 ■ Les trois arts : chaque compétence de héros est une PAROLE
+ * @plugindesc v1.2 ■ Les trois arts : chaque compétence de héros est une PAROLE
  * (positif), un MOUVEMENT (négatif) ou un ÉCRIT (spirituel) — et c'est l'art qui
  * donne son mana : le triangle joue à chaque coup. Un art hors de ses affinités
  * coûte plus et rend moins.
@@ -53,6 +53,11 @@
  *
  * @param === LES RÈGLES ===
  * @default
+ *
+ * @param elementsJamaisEcrit
+ * @text Jamais un écrit (éléments)
+ * @default -1, 1
+ * @desc JOKO, 2026-10-25 : l'écrit, c'est le mana spirituel. Une technique de l'attaque (-1) ou Physique (1) est un mouvement, même avec <Art: ecrit>.
  *
  * @param typesEcrit
  * @text Types de l'écrit
@@ -135,6 +140,10 @@
  *      physique : le mouvement ;
  *   8. <Parole> sur la fiche, un sort magique, un soin : la Parole ;
  *  sinon, aucun art (le soutien sans mana).
+ *  ET : l'écrit, c'est le mana spirituel (JOKO, 2026-10-25 : « ça s'applique
+ *  que aux techniques du mana spirituel. Pas ceux qui coûtent les PV ») — une
+ *  technique d'élément Physique (ou de l'attaque) n'est jamais un écrit : c'est
+ *  un mouvement, même si sa fiche dit <Art: ecrit>.
  *
  *  LE TRIANGLE — sur une compétence de héros, les éléments de mana sont
  *  remplacés par celui de son art : un mouvement de Feu frappe en Feu ET en
@@ -187,6 +196,7 @@ var LesTroisArts = LesTroisArts || {};
     var EXCLUS      = liste('acteursExclus', '6');
     var TYPES_ECRIT = liste('typesEcrit', '8, 9');
     var TYPES_CORPS = liste('typesCorps', '5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24');
+    var JAMAIS_ECRIT = liste('elementsJamaisEcrit', '-1, 1');
     var ANNONCE     = String(P['annonceTriangle'] || 'true') !== 'false';
     var COUT_HORS   = decimal('coutHorsAffinite', 1.5);
     var FORCE_HORS  = decimal('forceHorsAffinite', 0.75);
@@ -217,6 +227,12 @@ var LesTroisArts = LesTroisArts || {};
 
     /** L'art d'une compétence : 'parole', 'mouvement', 'ecrit', ou '' (aucun). */
     function art(item) {
+        var a = artDeLaFiche(item);
+        // l'écrit, c'est le mana spirituel : un coup physique n'en est jamais un
+        if (a === 'ecrit' && item.damage && JAMAIS_ECRIT.indexOf(item.damage.elementId) >= 0) { return 'mouvement'; }
+        return a;
+    }
+    function artDeLaFiche(item) {
         if (!item || !DataManager.isSkill(item)) { return ''; }
         var m = item.meta || {};
         if (m.Art !== undefined) {
