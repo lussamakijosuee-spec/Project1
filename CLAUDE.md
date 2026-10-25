@@ -440,6 +440,23 @@ autant de victoires — un petit nerf. Pour un banc : `LesTroisArts.affinites(b)
 `LesTroisArts._sansAffinites = true` coupe la règle (`le_registre` mesure la copie de ludwing contre sa Nuit sans
 elle : la copie est un don). Banc : `navigateur/les_affinites.js`.
 
+**Le rework des capacités** (2026-10-25 ; JOKO : *« rework complètement tout les capacités, spéciales et ulti des
+personnages pour les rendre plus intéressant et équilibré surtout leur don et utilise le lore aussi »*, puis *« Oui tout »*
+sur la proposition mesurée : un paquet commun, puis un héros à la fois). **Le paquet commun** (`data/Skills.json`, 27 fiches ;
+noms, coûts et niveaux inchangés) : **A** — chaque ultime frappe au moins ×1,3 la meilleure capacité de sa portée, à chaque
+niveau, affinité comprise (Déflagration Spirituelle, Tranche-Néant, Instant Absolu ×7,6 → ×39, Point Zéro, Éclat de
+Conviction, Syllabe de la Fin, Plein Midi, Dévoreur d'Âmes ; Instant Absolu et Point Zéro portent 3 tours de recharge,
+la règle de `18_recharges`) ; **B** — chaque rendement (puissance par PT, PM ou % de PV, au niveau 60) entre ×0,5 et ×2
+de la médiane de sa monnaie chez son héros : 16 fiches (Brise-Garde 8,7 → 6,4, Coup Furieux ; Fracas Sismique, Déchaînement
+Négatif, Tranche des Trois Sources, Carnage des Neuf Voies, Fil de Foudre, Pluie de Lance du Styx, Chaîne d'Âmes, Pluie
+d'Étoiles…) ; **C** — Tranche-Néant et Jugement de Soi disaient « ULTIME d'Aël » (elles sont à Vesper), Dévoreur d'Âmes,
+Tout ou Rien et la Mue Souveraine, qui se disent ULTIME, passent en ultime, Dévoreur frappe en ratio (sa soustraction
+tombait à 0). Hors de la règle : les formules à caractère, ce qu'un ennemi utilise (Moisson des Âmes, Fils de Mana Pur —
+annoncés, gardés), les techniques d'un état (Rage, Flow, JACKPOT, ombres, Miracle), les combos, seiryu, les pièces des
+dons, et le Verbe qui Défait (un ultime d'effet : ×9 en ferait le plus gros coup de zone d'Aël pour 32 PM). Mesure
+(`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 3,05 → 3,16 tours, 172 victoires sur 176 des deux côtés, boss
+45 → 41 sur 60 — dans le bruit. Banc : `24_ultimes_et_rendements.js`.
+
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
 allié, soi), état **257 « ᛟ Écrit »** (le nombre en chiffre, ne s'use pas). **« ᛟ Activer »** (compétence

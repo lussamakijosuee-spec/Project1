@@ -77,6 +77,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
 | `10_troupes.js` | **les phases deux et les renforts** des 270 troupes de famille — 18 contrôles |
 | `11_degats_et_voies.js` | **la forme des formules** et **les neuf Voies** — 17 contrôles |
+| `24_ultimes_et_rendements.js` | **le paquet commun du rework** (2026-10-25 — JOKO : « Oui tout ») : chaque ultime frappe au moins ×1,3 la meilleure capacité de sa portée, du niveau où il s'apprend au 99 (affinité comprise) ; chaque rendement entre ×0,5 et ×2 de la médiane de sa monnaie au niveau 60 ; ce qui se dit ULTIME est un ultime, et à celui qui l'a ; Dévoreur d'Âmes en ratio ; ce qu'un ennemi utilise et le Verbe qui Défait ne bougent pas — 6 contrôles et 7 contre-épreuves |
 | `navigateur/jouer.js` | **le jeu, ouvert dans Chromium et joué à la touche** — 43 contrôles |
 | `navigateur/chevauchements.js` | **les textes qui se dessinent l'un sur l'autre** — il détourne `drawText` et compare les rectangles |
 | `navigateur/ponts_du_mana.js` | **le mana sans l'ancien lore** : les Chutes parties, les Voies qui tiennent — 9 contrôles |
