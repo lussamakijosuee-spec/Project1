@@ -455,7 +455,15 @@ tombait à 0). Hors de la règle : les formules à caractère, ce qu'un ennemi u
 annoncés, gardés), les techniques d'un état (Rage, Flow, JACKPOT, ombres, Miracle), les combos, seiryu, les pièces des
 dons, et le Verbe qui Défait (un ultime d'effet : ×9 en ferait le plus gros coup de zone d'Aël pour 32 PM). Mesure
 (`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 3,05 → 3,16 tours, 172 victoires sur 176 des deux côtés, boss
-45 → 41 sur 60 — dans le bruit. Banc : `24_ultimes_et_rendements.js`.
+45 → 41 sur 60 — dans le bruit. Banc : `24_ultimes_et_rendements.js` (il lit aussi ce que les traits
+d'acteur donnent : les Styles de Vesper, Sang Perçant, Supernova ; les arts d'armes, type 24, restent hors de la règle).
+**Vesper, le sang (V1)** — la Bible : *« son don le transforme en sang, et son sang se manie par les voies d'art »*. La
+branche « sang » (type 10, celle que son don ouvre : Première Entaille, Lame Liquide, Deux Cercles, Elle Ne Recule Pas,
+Rendre le Sang, Écarlate Montante, la Convergence, Sang Perçant, Supernova) se paie en % de PV, au tiers de son ancien coût
+(comme les écrits), 5 % au moins (la bande de `7_trois_sources`), et reste des mouvements (flux, posture, négatif, dans son
+affinité). Ses capacités de la Voie du Sang (Art du Sang, Sang pour Sang…) restent en PT. Comme ses PT se vident de ses
+techniques de sang, la règle B a redescendu Ouvrir, Coup Furieux, Brise-Garde et Sang pour Sang, et remonté Fouet de Sang et
+Cercle Écarlate. Mesure : 3,16 → 2,98 tours, boss 41 → 43 sur 60. Banc : `navigateur/le_sang_de_vesper.js`.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,

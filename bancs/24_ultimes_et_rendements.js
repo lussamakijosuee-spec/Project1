@@ -36,6 +36,7 @@ global.DataManager = { isSkill: function (x) { return !!x && x._competence === t
 eval(lire('js/plugins/LesTroisArts.js').replace('var LesTroisArts = LesTroisArts || {};', 'global.LesTroisArts = {};'));
 
 var C = JSON.parse(lire('data/Classes.json'));
+var ACTEURS = JSON.parse(lire('data/Actors.json'));
 var E = JSON.parse(lire('data/Enemies.json'));
 function base() {
     var S = JSON.parse(lire('data/Skills.json'));
@@ -50,10 +51,10 @@ function base() {
 
 var NOMS = { 1: 'Vesper', 2: 'Korrah', 3: 'ludwing', 4: 'Aël' };
 var ENNEMI = {}; E.forEach(function (e) { if (e) { e.actions.forEach(function (a) { ENNEMI[a.skillId] = 1; }); } });
-var TYPES_ETAT = [4, 5, 19, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 25, 26];
+var TYPES_ETAT = [4, 5, 19, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 25, 26];   // 24 : les arts de l'arme tenue
 var PIECES = [71, 810, 438, 800, 818];
 var ULTIMES_D_EFFET = [819];
-var CARACTERE = /Math\.random|\$game|b\.(hp|mhp|mp|mmp)\b|a\.(hp|mp|mhp|mmp|tp)\b|\bv\[|\bs\[/;
+var CARACTERE = /Math\.random|\$game|b\.(hp|mhp|mp|mmp)\b|a\.(hp|mp|mhp|mmp|tp)\b|a\._|\bv\[|\bs\[/;
 var CIBLE = { def: 100, mdf: 100, mhp: 10000, hp: 10000, agi: 100, luk: 50, atk: 100, mat: 100, level: 60 };
 
 function heros(c) { return { isActor: function () { return true; }, actorId: function () { return c; } }; }
@@ -80,6 +81,11 @@ function kit(S, c) {
     C[c].learnings.forEach(function (l) {
         var s = S[l.skillId];
         if (s && !vus[s.id] && s.id > 2) { vus[s.id] = 1; out.push({ s: s, niv: Math.max(1, l.level) }); }
+    });
+    // ce que l'acteur reçoit par ses traits (les Styles de Vesper, leur sang et leurs ultimes) : dès le niveau 1
+    ACTEURS[c].traits.forEach(function (t) {
+        var s = t.code === 43 ? S[t.dataId] : null;
+        if (s && !vus[s.id]) { vus[s.id] = 1; out.push({ s: s, niv: 1 }); }
     });
     return out;
 }

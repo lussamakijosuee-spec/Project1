@@ -120,7 +120,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             return s && s.id > 2 && s.id !== 1309 && DONS.indexOf(s.stypeId) < 0 && !A.art(s) && SANS_ART.indexOf(id) < 0;
         }).map(function (id) { return id + ' ' + $dataSkills[id].name; });
         out.prix = { n: n, faux: faux, orphelines: orphelines,
-                     dons: [$dataSkills[1159].mpCost, $dataSkills[1138].mpCost, $dataSkills[466].mpCost + '/' + /HP Cost/.test($dataSkills[466].note)],
+                     dons: [$dataSkills[1159].mpCost, $dataSkills[1138].mpCost + '/' + (/<HP Cost: 5%>/.test($dataSkills[1138].note)), $dataSkills[466].mpCost + '/' + /HP Cost/.test($dataSkills[466].note)],
                      exemples: [$dataSkills[1106].mpCost + '/' + $dataSkills[1106].tpCost, $dataSkills[453].mpCost + '/' + /HP Cost: 30%/.test($dataSkills[453].note),
                                 $dataSkills[172].mpCost + '/' + $dataSkills[172].tpCost] };
 
@@ -171,8 +171,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('toute capacité a son art (sauf Fuir, revelation, VUE et les pièces des dons)', r.prix.orphelines.length === 0, r.prix.orphelines.slice(0, 8).join(' · '));
     v('exemples : Pas de Côté 0 PM / 12 PT ; Dévoreur d\'Âmes 0 PM, 30 % PV ; Pluie d\'Étoiles 53 PM / 0 PT',
       r.prix.exemples.join(' | ') === '0/12 | 0/true | 53/0', r.prix.exemples.join(' | '));
-    v('contre-épreuve : les dons ne bougent pas (Froid Partagé 54 PM, Première Entaille 12 PM, Aspiration d\'Âme en PV)',
-      r.prix.dons.join(' | ') === '54 | 12 | 0/true', r.prix.dons.join(' | '));
+    // le 2026-10-25 (le rework, V1), le sang de Vesper se paie en sang : Première Entaille passe de 12 PM à 5 % de PV
+    v('contre-épreuve : la règle des arts ne touche pas les dons (Froid Partagé 54 PM, Aspiration d\'Âme en PV ; Première Entaille en PV depuis V1)',
+      r.prix.dons.join(' | ') === '54 | 0/true | 0/true', r.prix.dons.join(' | '));
 
     console.log('\n5) La barre de PT');
     v('l\'Attaque rend 20 PT (avant : 100)', r.pt.gain === 20);

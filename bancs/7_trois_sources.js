@@ -58,6 +58,10 @@ function controles(base) {
             var p = paye(k), t = artFiche(k);
             if (t && t !== ART_DE[elem]) { return false; }         // <Art:> sur la fiche décide
             if (!t && elem === 3 && mouvement(k)) { return false; }
+            // le rework, V1 (JOKO, 2026-10-25 : « Oui tout ») : le sang de Vesper (branche 10) se paie en sang —
+            // « son don le transforme en sang, et son sang se manie par les voies d'art » (la Bible) ;
+            // contrôlé par bancs/navigateur/le_sang_de_vesper.js
+            if (elem === 4 && k.stypeId === 10) { return false; }
             return p.pm || p.pt || p.pv;                 // les gratuites sont hors sujet
         });
         var fautives = liste.filter(function (k) {
