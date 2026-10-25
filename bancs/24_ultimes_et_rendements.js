@@ -10,7 +10,10 @@
  *   B. les rendements (puissance par point de PT, de PM ou de % de PV, au niveau
  *      60) restent entre la moitié et le double de la médiane de leur monnaie ;
  *   C. les étiquettes : Tranche-Néant et Jugement de Soi sont à Vesper, ce qui se
- *      dit ULTIME est rangé en ultime, Dévoreur d'Âmes frappe en ratio.
+ *      dit ULTIME est rangé en ultime, Dévoreur d'Âmes frappe en ratio ;
+ *   A1. (Aël) « en ultime, elle est la meilleure » (la Bible) : chacun de ses
+ *      ultimes frappe au moins ×1,2 le meilleur ultime des trois autres, de la
+ *      même portée, à chaque niveau.
  *
  * Hors de la règle, exprès : les formules « à caractère » (hasard, % de PV,
  * variable — §4), ce qu'un ennemi utilise, les techniques d'un état (Rage, Flow,
@@ -116,6 +119,24 @@ function controles(S) {
     r.push(['A · chaque ultime frappe au moins ×1,3 la meilleure capacité de sa portée, à chaque niveau', faibles.length === 0,
         faibles.length ? faibles.slice(0, 3).join(' · ') : nA + ' ultimes tenus du niveau où ils s\'apprennent jusqu\'au 99']);
 
+    // A1 · les ultimes d'Aël, au-dessus de ceux des autres
+    function ultimes(c) {
+        return kit(S, c).filter(function (x) {
+            var s = x.s; return s.stypeId === 3 && PIECES.indexOf(s.id) < 0 && ULTIMES_D_EFFET.indexOf(s.id) < 0 && portee(s.scope) && !CARACTERE.test(s.damage.formula) && brut(s, c, 60) > 0;
+        });
+    }
+    var autres = [1, 2, 3].map(function (c) { return { c: c, u: ultimes(c) }; }), sous = [], nA1 = 0;
+    ultimes(4).forEach(function (u) {
+        nA1++;
+        for (var L = u.niv; L <= 99; L++) {
+            var best = 0, qui = '';
+            autres.forEach(function (h) { h.u.forEach(function (x) { if (x.niv <= L && portee(x.s.scope) === portee(u.s.scope)) { var p = effectif(x.s, h.c, L); if (p > best) { best = p; qui = NOMS[h.c] + ' ' + x.s.name; } } }); });
+            if (best && effectif(u.s, 4, L) < 1.2 * best * 0.99) { sous.push(u.s.name + ' (niveau ' + L + ', ' + Math.round(effectif(u.s, 4, L)) + ' contre ' + qui + ' ' + Math.round(best) + ')'); break; }
+        }
+    });
+    r.push(['A1 · chaque ultime d\'Aël frappe au moins ×1,2 le meilleur ultime des trois autres, de sa portée, à chaque niveau', sous.length === 0,
+        sous.length ? sous.slice(0, 3).join(' · ') : nA1 + ' ultimes d\'Aël au-dessus']);
+
     // B · les rendements
     var hors = [], nB = 0;
     [1, 2, 3, 4].forEach(function (c) {
@@ -172,6 +193,7 @@ controles(base()).forEach(montre);
 var SABOTAGES = [
     ['Instant Absolu rendu à son ancienne formule (×7,6)', function (S) { S[449].damage.formula = 'Math.floor(a.mat * 7.6 * 200 / (200 + b.mdf))'; }, /^A ·/],
     ['Syllabe de la Fin rendue à ×14 (hors affinité d\'Aël, elle tombe sous la barre)', function (S) { S[820].damage.formula = 'Math.floor(a.mat * 14 * 200 / (200 + b.mdf))'; }, /^A ·/],
+    ['Plein Midi rendu à son ancien ×38 (sous Verdict de l\'Équilibre de Vesper)', function (S) { S[478].damage.formula = 'Math.floor(a.mat * 38 * 200 / (200 + b.mdf))'; }, /^A1 ·/],
     ['Brise-Garde rendue à son ancien ×8,7 (×2,7 la médiane)', function (S) { S[144].damage.formula = 'Math.floor(a.atk * 8.7 * 200 / (200 + b.def))'; }, /^B ·/],
     ['Fracas Sismique rendu à son ancien ×7,9 (×0,3)', function (S) { S[149].damage.formula = 'Math.floor(a.atk * 7.9 * 200 / (200 + b.def))'; }, /^B ·/],
     ['Dévoreur d\'Âmes rangé de nouveau en Spéciale', function (S) { S[453].stypeId = 2; }, /^C · ce qui se dit ULTIME/],

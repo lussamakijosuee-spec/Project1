@@ -479,6 +479,13 @@ jusqu'à ce qu'il les dépense (« ✦ Plus léger »). **Mesuré, puis réglé*
 niveau du banc, 409 à la fin) ; avec 25 âmes comptées (+50 %), les combats raccourcissaient de 16 % — trop fort, d'où 10 (+20 %) :
 3,03 → 2,85 tours, boss 39 → 45 sur 60. Au-delà de 10, garder ne rapporte plus rien et coûte. `Registre._sansPoids = true` coupe la
 règle (`le_registre` mesure la copie sans elle). Banc : `navigateur/le_poids_des_ames.js`.
+**Aël, en ultime la meilleure (A1)** — la Bible : *« en ultime, elle est la meilleure, et la plus rapide à le sortir »*. Chacun de
+ses ultimes frappe au moins ×1,2 le meilleur ultime des trois autres de la même portée, à chaque niveau (Éclat de Conviction,
+le Ciel Ouvert, Syllabe de la Fin, Plein Midi : +3 à +9 % ; La Parole Tenue et Celle Qu'on Ne Dit Qu'une Fois y étaient déjà) —
+contrôlé par `24_ultimes_et_rendements.js`. **A2** : ses 24 mouvements restent des mouvements (l'affinité les affaiblit déjà,
+*« la plus faible physiquement »*). **N** : rien de plus pour les Paroles longues hors affinité (Nell Varga). **Bilan du rework**
+(`lequipe_a_chaque_niveau`, 3 parties avant, 3 après) : 3,05 → 2,86 tours, 172 → 173 victoires sur 176, boss 45 → 43 sur 60 ;
+la Bible dit le sang qui se paie en sang, la tête en l'air, le poids des âmes, et les ultimes.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
