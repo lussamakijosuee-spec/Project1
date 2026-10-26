@@ -588,6 +588,23 @@ ludwing) ; Fils de Mana Pur garde son nom (à JOKO). Bancs : `navigateur/les_run
 `lorbe_en_raccord` à jour. **JOKO committe lui-même tout l'arbre de travail** (« zgz », 2026-10-26) : un fichier à moitié fait part avec ;
 et **tant que `RPGMV.exe` est ouvert, aucun `data/` ne s'écrit** (l'éditeur réécrit tout à sa sauvegarde).
 
+**Le rework des ennemis** (2026-10-26 ; JOKO : *« Ok on passe au ennemis maintenant refait un rework »*, puis *« Tous les 549 »*,
+*« La cohérence »*, *« Une mécanique par ennemi »*, *« L'équilibrage »*, et sur la liste montrée : *« Oui, écris tout »*). Constat : 549
+ennemis, dont **48 seulement rencontrés** (les 49 troupes posées sur ses cartes et ses événements) ; les ~400 des 18 familles (Titans,
+Glitchs, Automates…) avaient été générés le 2026-09-06. **L'instinct** (`LesInstincts.js`, balise `<Instinct: …>`, états 261-265) : une
+mécanique par ennemi, annoncée au-dessus de lui, tirée de la phrase de sa famille ou de la Bible (les Sentinelles « apprennent chaque
+attaque », les Loups d'étoiles « chassent en meute », les Revenants reviennent, les Dévoreurs « ne cessent jamais de chasser ») — 24 :
+meute (+20 % par membre tombé, « quand l'une tombe, les autres s'énervent »), essaim (+10 % par autre vivant), charge (l'élan tous les 3
+tours puis ×2, brisé par un coup de 15 % ou la brisure du bouclier), vole (de l'or, fuit sous 30 %, rend tout en tombant), revient (une
+fois, à 30 %), apprend (×0,7 par technique déjà reçue, ×0,4 au plus bas), rancœur (+10 % par coup, vise qui l'a frappé), mirage (+40 %
+d'esquive jusqu'au premier coup — à +50 %, les bancs, qui fixent le hasard à 0,5, rataient tout), dévore (30 % des dégâts), épines (la chair
+vive, 20 % au frappeur), chœur (alliés ×1,1, +5 % de PV par tour), répare (6 %), brûle, reprend (les Masques renvoient ta dernière technique),
+corrige (les Scribes effacent ta dernière rune, sinon un renfort), arrache (les Écorchés prennent de l'attaque, la rendent en tombant),
+reflet (50 %, sauf sur sa faiblesse), carapace (÷2 jusqu'à la brisure du bouclier), explose, embuscade, frénésie, venin, garde, marque.
+Une épine, un reflet, une explosion ne font jamais tomber un héros. **506 fiches** l'ont (familles par leur phrase, ses ennemis par leur
+nom, sinon leur courant : le Corps chasse, l'Esprit apprend, l'Âme revient) ; les **43 boss à mécanique** gardent la leur.
+`LesInstincts._eteint = true` coupe tout. Banc : `navigateur/les_instincts.js` (27 contrôles).
+
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
 réglage. **Vesper, le contre-temps** (*« spécialiste de la CONTRE-ATTAQUE »*, LeMouvement `contreTemps`) : une

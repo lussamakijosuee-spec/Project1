@@ -210,7 +210,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('revient : il refuse de tomber (1 PV), se relève à 30 %, une fois ; sans l\'instinct, il tombe', r.revient.tenu === 1 && r.revient.releve === 30 && r.revient.annonce && r.revient.secondeFois === 0 && r.revient.sans === 0, JSON.stringify(r.revient));
     v('apprend : ×1, ×0,7, ×0,49, ×0,4 au plus bas ; une autre technique, entière', JSON.stringify(r.apprend.suite) === '[1,0.7,0.49,0.4]' && r.apprend.autre, JSON.stringify(r.apprend));
     v('rancœur : deux coups ×1,2, l\'état et son chiffre, il vise Korrah qui l\'a frappé', Math.abs(r.rancoeur.x - 1.2) <= 0.02 && r.rancoeur.etat && r.rancoeur.chiffre === 2 && r.rancoeur.vise, JSON.stringify(r.rancoeur));
-    v('mirage : +50 % d\'esquive, dissipé au premier coup', r.mirage.esquive >= 0.5 && r.mirage.dissipe, JSON.stringify(r.mirage));
+    v('mirage : +40 % d\'esquive, dissipé au premier coup', r.mirage.esquive >= 0.4 && r.mirage.dissipe, JSON.stringify(r.mirage));
     v('dévore : il reprend 30 % de ce qu\'il fait', r.devore.pris > 0 && Math.abs(r.devore.pris - r.devore.attendu) <= 1, JSON.stringify(r.devore));
     v('chair vive : qui le frappe au corps reprend 20 %', r.epines.perdu > 0 && Math.abs(r.epines.perdu - r.epines.attendu) <= 1, JSON.stringify(r.epines));
     v('chœur : ses alliés frappent ×1,1', Math.abs(r.choeur.x - 1.1) <= 0.02, JSON.stringify(r.choeur));

@@ -570,6 +570,11 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
         await page.evaluate(function (l) { l.forEach(function (x) { window.EquilibreDesCombats.regler(x[0], x[1], x[2]); }); }, essai);
         console.log('réglage essayé :', process.env.MULT);
     }
+    // SANS_INSTINCTS=1 : les ennemis sans leur instinct (LesInstincts, 2026-10-26), pour mesurer ce qu'il change
+    if (process.env.SANS_INSTINCTS) {
+        await page.evaluate(function () { if (window.LesInstincts) { LesInstincts._eteint = true; } });
+        console.log('ennemis sans instinct');
+    }
     var reglage = await page.evaluate(function () { return window.EquilibreDesCombats ? JSON.parse(JSON.stringify(window.EquilibreDesCombats.mult)) : null; });
     if (process.env.VESPER_STYLE) {
         await page.evaluate(function (s) { window.__styleVesper = s; }, process.env.VESPER_STYLE);

@@ -201,7 +201,7 @@
  *               (×0,4 au plus bas) : il faut varier
  *   rancoeur  — chaque coup reçu : +10 % (5 au plus), et il vise celui qui
  *               l'a frappé en dernier
- *   mirage    — esquive tant qu'il n'a pas été touché ; le mirage revient
+ *   mirage    — +40 % d'esquive tant qu'il n'a pas été touché ; il revient
  *               2 tours après
  *   devore    — il reprend 30 % des dégâts qu'il fait
  *   epines    — la chair vive : qui le frappe au corps reprend 20 % du coup
