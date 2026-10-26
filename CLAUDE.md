@@ -511,14 +511,16 @@ avec `<Art: ecrit>`. Tout écrit d'un héros se paie en PV : Jugement des Défun
 Ancienne passent de PM en PV (au tiers, 5 % au moins ; Dette Ancienne perd sa recharge, son prix la freine) ; Ce Qu'il A Gardé,
 qu'un ennemi utilise, reste en PM ; Transfusion d'Âme Blanche prend ses PV par son effet. Dans le Domaine, une invocation
 regarde aussi ses PV (`RoyaumeImperial`). Règle B tenue (Fouet de Sang, Cercle Écarlate, Chaîne d'Âmes +6 %). Mesure : 2,86 →
-2,88 tours. **Puis JOKO a sorti six techniques de l'écrit** (même jour, à la question « lesquelles je sors de l'écrit pour en
+2,88 tours. **Puis JOKO a sorti cinq techniques de l'écrit** (même jour, à la question « lesquelles je sors de l'écrit pour en
 faire des mouvements ? » : *« Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles »*) — toutes en
-`<Art: mouvement>` : **Fouet de Sang** et **Cercle Écarlate** (branche sang de Vesper, toujours payées en PV), **Tranche-Néant**
+`<Art: mouvement>` : **Fouet de Sang** (branche sang de Vesper, toujours payé en PV), **Tranche-Néant**
 (son ultime, ses 25 % de PV gardés), **Lotus des Ténèbres** (10 PT) et deux des cercles de ludwing, **Tracer le Cercle** et
 **Territoire Scellé** (22 et 44 PT — leurs anciens PM, la règle des arts). Leurs verbes de l'écrit (Cercle, Referme) et les lignes
-qui les annonçaient sont retirés, les descriptions de JOKO rendues. **La Règle du Lieu reste un écrit** (JOKO, 2026-10-26, en
-relisant le tableau : *« La Règle du Lieu spirituelle »*) : 17 % de PV et son Sceau — quand il part, l'ennemi perd sa prochaine
-action (pas un boss) ; mesure : 2,79 → 2,76 tours, boss 47 → 47 sur 60. **Plus aucune capacité ne porte
+qui les annonçaient sont retirés, les descriptions de JOKO rendues. **Deux restent des écrits** (JOKO, 2026-10-26, en relisant
+le tableau) : *« La Règle du Lieu spirituelle »* — 17 % de PV et son Sceau, quand il part l'ennemi perd sa prochaine action (pas
+un boss) ; mesure : 2,79 → 2,76 tours, boss 47 → 47 sur 60 — puis *« Cercle Écarlate spirituelle »* — 10 % de PV, sa fiche d'avant
+(« Parole n°2 » en fait un écrit) ; mesure : 2,76 → 2,72 tours, boss 47 → 45 sur 60 (dans le bruit). Au même message, *« Tranche-Néant art »* : lu « les voies d'art », le
+Mouvement, qu'elle est déjà — rien n'est changé. **Plus aucune capacité ne porte
 `<Cercle>`** (le verbe reste dans LEcrit ; `les_verbes` l'essaie sur Marquer la Cible le temps du contrôle) ; Referme reste sur
 Déflagration Spirituelle, Onde Concentrée et Dévoreur d'Âmes, Sceau sur La Règle du Lieu, Faire Douter, Désorientation et Syllabe
 de la Fin. Mesure (avec les sept sorties) : 2,88 → 2,79 tours, boss 44 → 47 sur 60. Banc : `25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).

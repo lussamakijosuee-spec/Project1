@@ -162,8 +162,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         ecrire(lud, 1116, e); E.activer(lud);                                                               // La Règle du Lieu (JOKO, 2026-10-26 : « spirituelle »)
         W.sceau = BattleManager._actionBattlers.indexOf(e) < 0;
         BattleManager._actionBattlers = [e, e2];
-        // Lotus des Ténèbres, Tranche-Néant et deux des cercles sont des mouvements depuis le 2026-10-25 (JOKO) : plus de verbe de l'écrit
-        W.sortis = [445, 66, 1114, 1115, 464, 465].map(function (id) { var s = $dataSkills[id]; return { nom: s.name, art: LesTroisArts.art(s), verbe: /<(Sceau|Cercle|Referme)[:>]/.test(s.note) }; });
+        // Lotus des Ténèbres, Tranche-Néant, deux des cercles et Fouet de Sang sont des mouvements depuis le 2026-10-25 (JOKO) : plus de verbe de l'écrit
+        W.sortis = [445, 66, 1114, 1115, 464].map(function (id) { var s = $dataSkills[id]; return { nom: s.name, art: LesTroisArts.art(s), verbe: /<(Sceau|Cercle|Referme)[:>]/.test(s.note) }; });
         BattleManager._actionBattlers = [e, e2];
         Math.random = function () { return 0.6; }; ecrire(lud, 1242, e); E.activer(lud);                     // Faire Douter : 0,6 > 50 %
         W.douteRate = BattleManager._actionBattlers.indexOf(e) >= 0;
@@ -327,7 +327,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('Dévoreur d\'Âmes <Referme> : quand il part, tous ses autres écrits partent (même sur l\'autre ennemi)', W.referme.e2 > 0 && W.referme.reste === 0, JSON.stringify(W.referme));
     v('…contre-épreuve : sans lui, l\'écrit sur l\'autre ennemi attend', W.refermeContre === 0);
     v('La Règle du Lieu (un écrit, « spirituelle ») : l\'ennemi perd sa prochaine action', W.sceau);
-    v('sortis de l\'écrit (JOKO, 2026-10-25) : Tranche-Néant, le Lotus, Tracer le Cercle, Territoire Scellé, Fouet de Sang et Cercle Écarlate sont des mouvements, sans verbe de l\'écrit',
+    v('sortis de l\'écrit (JOKO, 2026-10-25) : Tranche-Néant, le Lotus, Tracer le Cercle, Territoire Scellé et Fouet de Sang sont des mouvements, sans verbe de l\'écrit',
       W.sortis.every(function (x) { return x.art === 'mouvement' && !x.verbe; }), W.sortis.map(function (x) { return x.nom + ' ' + x.art + (x.verbe ? ' +verbe' : ''); }).join(' · '));
     v('Faire Douter : 1 chance sur 2 (0,6 : non ; 0,4 : oui)', W.douteRate && W.douteTient);
     v('Ombre Prêtée : qui frappe Vesper referme le piège de ludwing', W.pret && W.pretPiege > 0, String(W.pretPiege));

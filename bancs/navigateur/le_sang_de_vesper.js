@@ -16,8 +16,9 @@
  *   2. elle paie vraiment : ses PV baissent du prix, et sous le prix elle ne
  *      peut plus la lancer ; Rendre le Sang la soigne toujours ;
  *   3. ce sont toujours des mouvements (l'art, la Voie, le négatif), dans son
- *      affinité (pas de ×1,5) — Fouet de Sang et Cercle Écarlate aussi, depuis que
- *      JOKO les a sortis de l'écrit (2026-10-25) ;
+ *      affinité (pas de ×1,5) — Fouet de Sang aussi, que JOKO a sorti de l'écrit
+ *      (2026-10-25) ; Cercle Écarlate, non : « Cercle Écarlate spirituelle »
+ *      (2026-10-26) — un écrit, payé en PV, dans son affinité lui aussi ;
  *   4. le menu affiche le prix en PV.
  *
  *   node <scratchpad>/serveur_bancs.js . 8899   (ou npx http-server -p 8899 -c-1 .)
@@ -78,7 +79,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         ves.recoverAll();
 
         // 3 · des mouvements
-        o.arts = SANG.map(function (s) { return { nom: s.name, art: LesTroisArts.art(s), mot: /^Parole n°2 /.test(s.name) }; });
+        o.arts = SANG.map(function (s) { return { id: s.id, nom: s.name, art: LesTroisArts.art(s), mot: /^Parole n°2 /.test(s.name) }; });
         var as = new Game_Action(ves); as.setSkill(1299); as.setTarget(e.index());
         o.voie = LeMouvement.voie(as);
         o.elements = as.getItemElements();
@@ -106,10 +107,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('Rendre le Sang : elle paie, puis le sang la soigne', r.rendre.paye === r.rendre.avant - r.rendre.prix && r.rendre.apres > r.rendre.avant, r.rendre.avant + ' → ' + r.rendre.paye + ' → ' + r.rendre.apres);
 
     console.log('\n3) Toujours des mouvements');
-    // JOKO, le 2026-10-25 : Fouet de Sang et Cercle Écarlate (« Parole n°2 ») sortent de l'écrit — toute la branche bouge
-    v('chacune est un mouvement, les « Parole n°2 » comprises (sorties de l\'écrit le 2026-10-25)',
-      r.arts.every(function (x) { return x.art === 'mouvement'; }) && r.arts.some(function (x) { return x.mot; }),
+    // JOKO : Fouet de Sang (« Parole n°2 ») sort de l'écrit (2026-10-25) ; « Cercle Écarlate spirituelle » (2026-10-26)
+    v('chacune est un mouvement, Fouet de Sang compris (sorti de l\'écrit le 2026-10-25) — sauf Cercle Écarlate',
+      r.arts.every(function (x) { return x.art === (x.id === 465 ? 'ecrit' : 'mouvement'); }) && r.arts.some(function (x) { return x.id === 464; }),
       r.arts.map(function (x) { return x.nom.replace('Parole n°2 ', '') + ' ' + x.art; }).join(', '));
+    v('Cercle Écarlate est un écrit (« Cercle Écarlate spirituelle », 2026-10-26)', r.arts.some(function (x) { return x.id === 465 && x.art === 'ecrit'; }));
     v('Sang Perçant prend la Voie du Sang et frappe en négatif', !!r.voie && r.elements.indexOf(4) >= 0, JSON.stringify(r.voie) + ' · éléments ' + r.elements.join(','));
     v('dans son affinité : aucune n\'est hors affinité', r.hors.length === 0, r.hors.join(', '));
 
