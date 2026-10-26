@@ -38,9 +38,16 @@ function ok(nom, cond, detail) {
         var out = [];
         [1, 2, 3, 4].forEach(function (id) {
             var a = $gameActors.actor(id);
-            var combat = a.addedSkillTypes().filter(function (t, i, l) { return l.indexOf(t) === i; })
-                .filter(function (t) { return a.skills().some(function (s) { return s.stypeId === t; }); })
-                .map(function (t) { return $dataSystem.skillTypes[t]; }).sort();
+            // 2026-10-26, « un menu par art » (LesTroisArts) : capacité et Spéciale se rangent en Voies, Paroles,
+            // Runes, et « ult » s'appelle Ultimes — l'Orbe le montre comme le combat
+            var noms = {};
+            a.addedSkillTypes().filter(function (t, i, l) { return l.indexOf(t) === i; }).forEach(function (t) {
+                a.skills().filter(function (s) { return s.stypeId === t; }).forEach(function (s) {
+                    var m = LesTroisArts.menuDe(s);
+                    noms[m ? m.nom : ((t === 3 && LesTroisArts.nomUltimes()) || $dataSystem.skillTypes[t] || ('Type ' + t))] = 1;
+                });
+            });
+            var combat = Object.keys(noms).sort();
             var orbe = OrbeDesCapacites.branchesDe(a).map(function (b) { return b.nom; }).sort();
             var glace = a.skills().filter(function (s) { return [13, 22].indexOf(s.damage.elementId) >= 0; });
             out.push({

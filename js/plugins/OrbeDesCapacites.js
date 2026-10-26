@@ -258,6 +258,25 @@
         var types = acteur.addedSkillTypes().slice();
         var out = [];
 
+        // ── Un menu par art (LesTroisArts, JOKO 2026-10-26) : capacité et Spéciale se rangent en
+        //    Voies, Paroles, Runes, comme en combat. Aucune compétence ne change de type.
+        var parArt = {};
+        if (window.LesTroisArts && LesTroisArts.menuDe) {
+            Object.keys(parType).map(Number).forEach(function (t) {
+                parType[t] = parType[t].filter(function (n) {
+                    var m = LesTroisArts.menuDe(n.skill);
+                    if (!m) { return true; }
+                    (parType[m.type] = parType[m.type] || []).push(n);
+                    parArt[m.type] = m.nom;
+                    return false;
+                });
+                if (!parType[t].length) { delete parType[t]; }
+            });
+        }
+        var generalOuvert = !!(window.LesTroisArts && LesTroisArts.typesGeneraux &&
+            LesTroisArts.typesGeneraux.some(function (g) { return types.indexOf(g) >= 0; }));
+        var nomUlt = window.LesTroisArts && LesTroisArts.nomUltimes ? LesTroisArts.nomUltimes() : null;
+
         // ── La branche propre : on retire ses compétences de leur branche de
         //    type, pour qu'aucune n'apparaisse deux fois, et on les réunit.
         var regle = BRANCHE_PROPRE[acteur.actorId()];
@@ -275,15 +294,15 @@
         }
 
         Object.keys(parType).map(Number).forEach(function (t) {
-            if (BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0
+            if (!parArt[t] && BRANCHES_VUES && BRANCHES_VUES.indexOf(t) < 0
                 && !(SES_BRANCHES && types.indexOf(t) >= 0)) { return; }
             var noeuds = parType[t].sort(function (a, b) {
                 return (a.niveau - b.niveau) || (a.skill.id - b.skill.id);
             });
             out.push({
                 stypeId: t,
-                nom: $dataSystem.skillTypes[t] || ('Type ' + t),
-                ouverte: types.indexOf(t) >= 0,   // un type qu'aucun trait n'ouvre reste invisible en combat
+                nom: parArt[t] || (t === 3 && nomUlt) || $dataSystem.skillTypes[t] || ('Type ' + t),
+                ouverte: parArt[t] ? generalOuvert : types.indexOf(t) >= 0,   // un type qu'aucun trait n'ouvre reste invisible en combat
                 couleur: teinte(t),
                 noeuds: noeuds
             });

@@ -506,7 +506,8 @@ Activer garde la posture du Mouvement. **La résonance** : des écrits qui parte
 (trois : ×1,3). **Ce qui se voit** (2026-10-23) : dès qu'un héros a des écrits, **« ᛟ Activer · n »** s'ajoute juste
 sous l'Attaque dans ses ordres (elle reste aussi dans ses capacités) ; son aide dit ce qui attend, compté et sur qui
 (« ᛟ En attente : Cloison → Vesper · Trait Spectral ×2 → Slime ») ; un écrit grisé dit pourquoi (« 3 écrits
-attendent déjà »). Banc : `navigateur/l_ecrit.js`.
+attendent déjà »). Banc : `navigateur/l_ecrit.js`. **Depuis le 2026-10-26, ce sont des runes dans un cercle** (v2.0 : l'air et le sol,
+l'accord, la transmutation entière ; « ᛟ Cercle », « ᛟ Dans le cercle », « ᛟ Le cercle se ferme ») — voir « Le chantier des compétences ».
 **L'écrit, c'est le mana spirituel** (JOKO, 2026-10-25 : *« ça s'applique que aux techniques du mana spirituel. Pas ceux
 qui coûtent les PV. Tout ce qui est mana spirituel, faut utiliser ces PV pour l'utiliser »*, sur une attaque de Vesper
 *« clairement physique »* traitée en spirituel) : c'était **Saignée Continue** (élément Physique, coup physique), que le
@@ -558,6 +559,34 @@ chaque côté) : 2,00 → 1,95 tours, boss 31 → 30 sur 40, sa part des dégât
 plus (Iaï 6-7 → 10-13 %, Couperet 2 → 5-6 %, Communion des Quatre 47 → 33 %) ; l'équipe (3 parties contre 6) : 2,76 → 2,75 tours,
 boss 42 → 44 sur 60. Bancs : `navigateur/la_lame_de_vesper.js` ; `les_signatures` joue le contre-temps en Garde, `la_regle_pour_tous` la Voie
 par défaut en Sang (en Lame, c'est celle de l'arme).
+
+**Le chantier des compétences** (2026-10-26 ; JOKO : *« beaucoup de chose de anciennes version […] surtout dans la logique et
+cohérent car il y a beaucoup trop de incohérent surtout sur les noms comme parole n° : nom de l'attaque »*, *« J'ai l'impression que tu
+Larp chef »*). Ses quatre choix : les Voies *« selon ce qu'ils font, numérotés par héros »*, *« Parole du Feu : Braise »*, *« Cercle, runes,
+fermer le cercle »*, *« un menu par art »*. **1** — chaque compétence de héros porte son `<Art:>` (renommer ne change plus son art).
+**2, les Voies** — 56 mouvements dans la Voie de leur effet (Forge le coup lourd, Onde le contre, Miroir la garde, Vide percer, Éclair ne
+pas rater, Domaine la zone, Flash le pari, Sang le drain, Source se soigner en frappant ; la Voie par défaut mettait presque tout un héros
+dans une seule, le flux ne montait pas) ; 141 noms « Premier art de l'Onde : Ressac », par héros et par Voie dans l'ordre d'apprentissage,
+les arts d'armes de Vesper par l'arme (« Premier art de l'épée : … ») ; gardent leur nom l'Attaque, les ultimes, le Jackpot, les branches
+des dons, les Combos. Les 7 mouvements qu'un ennemi utilise : copies pour les héros (1315-1321), les ennemis gardent leur fiche. Vannes
+passe à la Parole. **3, les Paroles** — 125 noms : « Parole du Feu : Braise », « Parole de la Glace : Souffle Court » (l'Hiver de Korrah
+en est), « Parole : Debout ! » sans élément, « Parole du Feu » la formule de base ; plus aucun « Parole n°X » chez les héros. Un nom à
+« : » trompe le lecteur de doctrines des ennemis : aucune doctrine n'en cite (vérifié). **4, les runes** (`LEcrit.js` v2.0) — le stylo
+d'âme trace un cercle : **dans l'air** sur la cible d'une rune à une cible (état 257 « ᛟ Cercle », il la suit, il attend « ᛟ Activer ») ;
+**au sol** pour une rune qui en vise plusieurs (état 260 « ✒ Cercle au sol », icône 289, sur tout ce côté) — elle part **toute seule**
+après l'action d'un ennemi (côté héros : seulement s'il a visé un héros), ou quand on ferme le cercle. Chaque écrit est une rune « Rune de
+Sceau : … », de son **signe** `<Rune: frappe | prise | sceau | lien | rempart>` (sans balise : ce qu'elle fait). **L'accord** : deux runes du
+même signe qui partent ensemble ×1,25 chacune (`bonusAccord` — ×1,5 était trop fort : trois runes préparées ~7,3 coups d'un coup contre
+~4,9 avant ; ~6,1 à ×1,25), le Sceau accordé est sûr ; **la transmutation entière** : trois du même signe, la vie payée pour elles revient
+(`transmutation` %). Échange équivalent : la rune se paie en PV, retenu quand elle s'inscrit. Restent : la résonance, la volonté, les verbes,
+le piège et la chance de ludwing, les dons « déjà écrits » (les runes de l'âme de ludwing partent tout de suite). L'aide dit
+`【RUNE · SCEAU】` et « ᛟ Dans le cercle : … → Slime · … au sol ». **5, un menu par art** (`LesTroisArts.js`) — en combat, capacité et
+Spéciale se rangent en **Voies, Paroles, Runes** (Activer avec les Runes), puis les branches du héros, **Ultimes** (« ult »), Combo ;
+**aucune fiche ne change de type** (le Flow, le kit des Styles, les Copies lisent toujours les types) ; l'Orbe des capacités montre les
+mêmes branches. **6** — les descriptions disent les trois manas (« Mana Pur » → le mana de son art, « Mana Sombre » → négatif, « Lou » →
+ludwing) ; Fils de Mana Pur garde son nom (à JOKO). Bancs : `navigateur/les_runes.js`, `navigateur/un_menu_par_art.js`, et `l_ecrit`,
+`lorbe_en_raccord` à jour. **JOKO committe lui-même tout l'arbre de travail** (« zgz », 2026-10-26) : un fichier à moitié fait part avec ;
+et **tant que `RPGMV.exe` est ouvert, aucun `data/` ne s'écrit** (l'éditeur réécrit tout à sa sauvegarde).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un

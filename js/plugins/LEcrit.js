@@ -1,33 +1,51 @@
 //=============================================================================
-// LEcrit.js — v1.0
-// L'Écrit, l'art de l'Âme (mana spirituel) : écrire d'abord, activer ensuite.
+// LEcrit.js — v2.0
+// L'Écrit, l'art de l'Âme (mana spirituel) : le stylo d'âme trace un cercle,
+// on y inscrit des runes, on le ferme.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ L'Écrit (mana spirituel) : une technique de l'âme ne part pas,
- * elle S'ÉCRIT sur sa cible. « Activer » fait partir tous tes écrits d'un coup,
- * plus forts. Leur force vient de la VOLONTÉ : PV bas, alliés tombés.
+ * @plugindesc v2.0 ■ L'Écrit (mana spirituel) : le stylo d'âme trace un cercle —
+ * dans l'air sur une cible, ou au sol. On y inscrit des RUNES (3 au plus), on le
+ * FERME : elles partent ensemble ; deux du même signe s'accordent.
  * @author pour JOKO
  *
  * @param === L'ÉCRIT ===
  * @default
  *
  * @param etatEcrit
- * @text État de l'écrit
+ * @text État du cercle dans l'air
  * @type state
  * @default 257
- * @desc Son icône est l'écrit ; son chiffre, combien d'écrits attendent sur cette cible.
+ * @desc Sur la cible ; son chiffre : combien de runes attendent dans ce cercle.
+ *
+ * @param etatSol
+ * @text État du cercle au sol
+ * @type state
+ * @default 260
+ * @desc Sur tout le côté où il est tracé ; son chiffre : combien de runes y attendent.
  *
  * @param ecritsMax
- * @text Écrits en attente au plus, par héros
+ * @text Runes en attente au plus, par héros
  * @type number
  * @min 1
  * @default 3
- * @desc Au-delà, ses techniques de l'âme sont grisées : il faut d'abord activer.
+ * @desc Dans l'air et au sol ensemble. Au-delà, ses runes sont grisées : il faut d'abord fermer le cercle.
  *
  * @param bonusEcrit
- * @text Un écrit activé : dégâts et soins ×
+ * @text Une rune qui part : dégâts et soins ×
  * @default 1.25
  * @desc Ce qu'on a préparé frappe plus fort que ce qu'on lance.
+ *
+ * @param bonusAccord
+ * @text L'accord : deux runes du même signe qui partent ensemble ×
+ * @default 1.25
+ * @desc Chacune, en plus de la résonance. Le signe est la balise <Rune: frappe | prise | sceau | lien | rempart>.
+ *
+ * @param transmutation
+ * @text Transmutation entière : la vie payée revient (%)
+ * @type number
+ * @default 100
+ * @desc Trois runes du même signe qui partent ensemble : l'échange est complet, le prix revient. 0 = rien.
  *
  * @param dejaEcrits
  * @text Types déjà écrits (partent tout de suite)
@@ -96,17 +114,35 @@
  *  la détermination ». La Genèse : « l'écriture des âmes […] créer des
  *  parchemins magiques avec son énergie spirituelle, ou ses PV ».
  *
- *  EST UN ÉCRIT : une compétence de héros dont l'art est l'écrit
- *  (LesTroisArts). Elle se paie en PV, tout de suite.
+ *  JOKO, le 2026-10-26 (le chantier des compétences) : le mana spirituel, ce
+ *  sont des runes écrites, « avec une technique simple le stylo d'âme qui
+ *  permet de […] désigner un cercle dans l'air ou le sol », Fullmetal
+ *  Alchemist et The Owl House ensemble ; il a choisi « Cercle, runes, fermer
+ *  le cercle » : tracer, inscrire (3 au plus), fermer, l'accord, l'échange
+ *  équivalent.
  *
- *  ÉCRIRE — elle ne part pas : elle s'écrit sur sa cible (ennemi, allié,
- *  soi). L'écrit reste affiché (ᛟ, avec leur nombre). 3 en attente au plus
- *  par héros.
+ *  EST UNE RUNE : une compétence de héros dont l'art est l'écrit
+ *  (LesTroisArts). Échange équivalent : elle se paie en PV, tout de suite.
+ *  Son SIGNE (<Rune: …>) dit ce qu'elle fait : Frappe, Prise (elle prend),
+ *  Sceau, Lien, Rempart.
  *
- *  ACTIVER — la compétence « ᛟ Activer » (instantanée : on joue encore son
- *  tour) fait partir TOUS ses écrits d'un coup, dans l'ordre où ils ont été
- *  écrits, ×1,25. Une cible tombée emporte ses écrits ; un soin écrit sur un
- *  allié attend le bon moment ; une réanimation écrite attend qu'il tombe.
+ *  LE STYLO D'ÂME TRACE UN CERCLE — la rune ne part pas, elle s'inscrit :
+ *   · DANS L'AIR, sur sa cible (ennemi, allié, soi) quand elle en vise une :
+ *     le cercle la suit ; une cible tombée l'emporte. Il attend qu'on le ferme.
+ *   · AU SOL quand elle en vise plusieurs (tous, au hasard) : une zone sur ce
+ *     côté. Elle part TOUTE SEULE quand l'ennemi y agit — côté ennemi, après
+ *     l'action d'un ennemi ; côté héros, après une action ennemie qui vise un
+ *     héros — ou quand on ferme le cercle.
+ *  3 runes en attente au plus par héros, dans l'air et au sol ensemble.
+ *
+ *  FERMER LE CERCLE — la compétence « ᛟ Activer » (instantanée : on joue
+ *  encore son tour) fait partir TOUTES ses runes d'un coup, dans l'ordre où
+ *  elles ont été inscrites, ×1,25. Un soin inscrit sur un allié attend le bon
+ *  moment ; une réanimation inscrite attend qu'il tombe.
+ *
+ *  L'ACCORD — deux runes du même signe qui partent ensemble s'accordent :
+ *  chacune ×1,25. Trois du même signe : TRANSMUTATION ENTIÈRE, l'échange est
+ *  complet — la vie payée pour les trois revient.
  *
  *  DÉJÀ ÉCRITS — les dons (invocations, âme, copies) partent tout de suite :
  *  les runes du collier de ludwing sont déjà tracées. Une fiche qui porte
@@ -172,6 +208,10 @@ var LEcrit = LEcrit || {};
     var CHANCEUX = liste('acteursChance', '3');
     var CHANCE  = nombre('chanceGarde', 25) / 100;
     var REMPART = nombre('rempart', 0.5);
+    var ETAT_SOL = nombre('etatSol', 260);
+    var ACCORD  = nombre('bonusAccord', 1.25);
+    var TRANSMUTATION = nombre('transmutation', 100) / 100;
+    var SIGNES = { frappe: 'Frappe', prise: 'Prise', sceau: 'Sceau', lien: 'Lien', rempart: 'Rempart' };
 
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
     function heros(b) { return !!(b && b.isActor && b.isActor() && EXCLUS.indexOf(b.actorId()) < 0); }
@@ -197,8 +237,26 @@ var LEcrit = LEcrit || {};
         return !(b.paroleLue && b.paroleLue(it));
     }
 
+    /** Le signe d'une rune : ce qu'elle fait (<Rune: …> sur la fiche). */
+    function signe(sk) {
+        if (!sk) { return ''; }
+        if (sk.meta && typeof sk.meta.Rune === 'string') {           // <Rune> sans valeur (824-826) : pas un signe
+            var s = String(sk.meta.Rune).trim().toLowerCase();
+            return SIGNES[s] ? s : '';
+        }
+        // sans balise : ce qu'elle fait (la même règle que celle qui a écrit les balises)
+        if (balise(sk, 'Sceau')) { return 'sceau'; }
+        if (balise(sk, 'Rempart')) { return 'rempart'; }
+        if (balise(sk, 'Appat') || balise(sk, 'Pret')) { return 'lien'; }
+        var t = sk.damage ? sk.damage.type : 0;
+        return t === 5 || t === 6 ? 'prise' : (t === 1 || t === 2 ? 'frappe' : (t === 3 || t === 4 ? 'rempart' : ''));
+    }
+    /** Le nom court, pour les annonces et l'aide : « Rune de Sceau : Faire Douter » → « Faire Douter ». */
+    function nomCourt(sk) { var n = (sk && sk.name) || '?', i = n.indexOf(' : '); return i >= 0 ? n.slice(i + 3) : n; }
+
     //=========================================================================
-    // Les écrits : gardés par qui les a écrits, montrés sur la cible
+    // Les runes : gardées par qui les a inscrites. Dans l'air, montrées sur la
+    // cible ; au sol (cible: null, sol: 'ennemis' | 'allies'), sur tout ce côté.
     //=========================================================================
     function ecritsDe(b) { return (b && b._ecrits) || []; }
     function surCible(c) {
@@ -206,33 +264,60 @@ var LEcrit = LEcrit || {};
         $gameParty.members().forEach(function (a) { ecritsDe(a).forEach(function (m) { if (m.cible === c) { n++; } }); });
         return n;
     }
-    function montrer(c) {
-        if (!c) { return; }
-        var n = surCible(c);
+    function compteur(c, etat, n) {
         if (n > 0) {
-            if (!c.isStateAffected(ETAT)) { c.addNewState(ETAT); }
-            c.resetStateCounts(ETAT);
-            if (c.setStateCounter) { c.setStateCounter(ETAT, n); }
-        } else if (c.isStateAffected(ETAT)) {
-            c.eraseState(ETAT);
-            if (c.removeStateCounter) { c.removeStateCounter(ETAT); }
+            if (!c.isStateAffected(etat)) { c.addNewState(etat); }
+            c.resetStateCounts(etat);
+            if (c.setStateCounter) { c.setStateCounter(etat, n); }
+        } else if (c.isStateAffected(etat)) {
+            c.eraseState(etat);
+            if (c.removeStateCounter) { c.removeStateCounter(etat); }
             c.refresh();
         }
     }
+    function montrer(c) { if (c) { compteur(c, ETAT, surCible(c)); } }
+    function auSol(cote) {
+        var n = 0;
+        $gameParty.members().forEach(function (a) { ecritsDe(a).forEach(function (m) { if (m.sol === cote) { n++; } }); });
+        return n;
+    }
+    function montrerSol(cote) {
+        if (!$dataStates[ETAT_SOL] || !$dataStates[ETAT_SOL].name) { return; }     // l'état n'existe pas encore : rien à montrer
+        var n = auSol(cote), cotes = cote === 'ennemis' ? $gameTroop.members() : $gameParty.battleMembers();
+        cotes.forEach(function (c) { compteur(c, ETAT_SOL, c.isAlive() ? n : 0); });
+    }
+    /** Une rune qui vise plusieurs cibles (tous, au hasard) se trace au sol. */
+    function zone(action) { return !action.isForOne(); }
 
     function ecrire(action, cible) {
-        var b = action.subject();
+        var b = action.subject(), sk = action.item(), g = signe(sk);
         b._ecrits = ecritsDe(b).slice();
-        b._ecrits.push({ cible: cible, competence: action.item().id });
-        cible.clearResult();
-        cible.result().used = true;          // touché, sans rien : pas de « raté » à l'écran
+        b._ecrits.push({ cible: cible, competence: sk.id, pv: b._pvPaye || 0 });
+        neutre(cible);
         montrer(cible);
-        annonce(cible, 'ᛟ Écrit', '#e080ff');
+        annonce(cible, 'ᛟ ' + (g ? SIGNES[g] : 'Rune') + ' · ' + nomCourt(sk), '#e080ff');
+    }
+    function tracerSol(action) {
+        var b = action.subject(), sk = action.item(), g = signe(sk), cote = action.isForOpponent() ? 'ennemis' : 'allies';
+        b._ecrits = ecritsDe(b).slice();
+        b._ecrits.push({ cible: null, sol: cote, competence: sk.id, pv: b._pvPaye || 0 });
+        montrerSol(cote);
+        annonce(b, '✒ Cercle au sol · ' + (g ? SIGNES[g] : 'Rune'), '#e080ff');
+    }
+    function neutre(c) {
+        c.clearResult();
+        c.result().used = true;              // touché, sans rien : pas de « raté » à l'écran
     }
 
     var _appliquer = Game_Action.prototype.apply;
     Game_Action.prototype.apply = function (target) {
-        if (target && doitEcrire(this)) { ecrire(this, target); return; }
+        if (target && doitEcrire(this)) {
+            if (!zone(this)) { ecrire(this, target); return; }
+            // au sol : une seule rune pour toute la zone, tracée au premier de ses coups
+            if (!this._traceSol) { this._traceSol = true; tracerSol(this); }
+            neutre(target);
+            return;
+        }
         _appliquer.call(this, target);
         var it = this.item(), u = this.subject();
         if (enCombat() && it && it.id === ACTIVER && target === u) { activer(u); }
@@ -251,31 +336,46 @@ var LEcrit = LEcrit || {};
     //=========================================================================
     // Activer : tous ses écrits partent, dans l'ordre
     //=========================================================================
-    function valide(b, m) {
-        if (!$dataSkills[m.competence] || !m.cible) { return false; }
-        var a = new Game_Action(b); a.setSkill(m.competence);
-        return a.testApply(m.cible);
+    /** Ceux qu'une rune touchera en partant : sa cible dans l'air ; au sol, toute la zone. */
+    function ciblesDe(b, m, a) {
+        if (!m.sol) { return m.cible ? [m.cible] : []; }
+        var vus = [];
+        a.makeTargets().forEach(function (c) { if (c && vus.indexOf(c) < 0) { vus.push(c); } });
+        return vus;
     }
-    function declencher(b, m, reso) {
-        var sk = $dataSkills[m.competence], c = m.cible;
-        if (!sk || !c) { return false; }
+    function valide(b, m) {
+        if (!$dataSkills[m.competence]) { return false; }
+        var a = new Game_Action(b); a.setSkill(m.competence);
+        return ciblesDe(b, m, a).some(function (c) { return a.testApply(c); });
+    }
+    function declencher(b, m, reso, accord) {
+        var sk = $dataSkills[m.competence];
+        if (!sk) { return false; }
         var a = new Game_Action(b);
         a.setSkill(sk.id);
         a._ecritActive = true;
-        a._resonance = reso || 1;
+        a._resonance = (reso || 1) * (accord || 1);
         a._volonte = volonte(b);              // annoncée une fois pour toute l'activation (activer)
-        if (!a.testApply(c)) { return false; }
+        var cibles = ciblesDe(b, m, a).filter(function (c) { return a.testApply(c); });
+        if (!cibles.length) { return false; }
         var anim = sk.animationId < 0 ? b.attackAnimationId1() : sk.animationId;
-        if (anim > 0) { c.startAnimation(anim, false, 0); }
-        c.clearResult();
-        a.apply(c);
-        var touche = c.result().isHit();
-        c.startDamagePopup();
-        if (c.isDead()) { c.performCollapse(); }
+        cibles.forEach(function (c) {
+            if (anim > 0) { c.startAnimation(anim, false, 0); }
+            c.clearResult();
+            a.apply(c);
+            var touche = c.result().isHit();
+            c.startDamagePopup();
+            if (c.isDead()) { c.performCollapse(); }
+            apres(b, sk, c, touche, accord > 1);
+        });
         a.applyGlobal();
-        // <Sceau: n> : n % de chances qu'il perde sa prochaine action (pas un boss)
+        return true;
+    }
+    /** Ce que le signe fait en plus, sur chaque cible touchée. */
+    function apres(b, sk, c, touche, accorde) {
+        // <Sceau: n> : n % de chances qu'il perde sa prochaine action (pas un boss) ; accordé, c'est sûr
         if (balise(sk, 'Sceau') && touche && c.isEnemy() && c.isAlive() && !estBoss(c) &&
-            Math.random() * 100 < (parseInt(sk.meta.Sceau, 10) || 100)) { sceller(c); }
+            (accorde || Math.random() * 100 < (parseInt(sk.meta.Sceau, 10) || 100))) { sceller(c); }
         // <Rempart> : écrit sur un allié, il tient le prochain coup (÷2)
         if (balise(sk, 'Rempart') && c.isActor() && c.isAlive()) {
             c._rempart = true;
@@ -286,7 +386,6 @@ var LEcrit = LEcrit || {};
             c._ombreDe = { acteur: b.actorId(), jusque: tour() + 1 };
             annonce(c, 'ᛟ Ombre prêtée', '#e080ff');
         }
-        return true;
     }
     function balise(it, nom) { return !!(it && it.meta && it.meta[nom] !== undefined); }
     function tour() { return $gameTroop ? $gameTroop.turnCount() : 0; }
@@ -323,7 +422,9 @@ var LEcrit = LEcrit || {};
         var c = a && a.item() === skill && doitEcrire(a) ? cibleDe(a) : null;
         this._cercleGratuit = !!(c && dansLeCercle(this, c));
         if (this._cercleGratuit) { annonce(this, 'ᛟ Dans le cercle : gratuit', '#e080ff'); }
+        var avant = this.hp;
         _payer.call(this, skill);
+        this._pvPaye = Math.max(0, avant - this.hp);      // l'échange équivalent : ce que la rune a coûté
         this._cercleGratuit = false;
     };
     var _coutPV = Game_BattlerBase.prototype.skillHpCost;
@@ -341,19 +442,31 @@ var LEcrit = LEcrit || {};
         }
         return _cibles.call(this);
     };
-    /** Fait partir ces écrits de b, ensemble (la résonance) ; la chance de ludwing en garde. */
+    /** Fait partir ces runes de b, ensemble : la résonance, l'accord ; la chance de ludwing en garde. */
     function partir(b, liste) {
+        var valides = liste.filter(function (m) { return valide(b, m); });
         // <Symbole> compte double dans la résonance
-        var n = liste.filter(function (m) { return valide(b, m); })
-            .reduce(function (t, m) { return t + (balise($dataSkills[m.competence], 'Symbole') ? 2 : 1); }, 0);
-        var reso = 1 + RESO * Math.max(0, n - 1), partis = 0, restent = [], referme = false;
+        var n = valides.reduce(function (t, m) { return t + (balise($dataSkills[m.competence], 'Symbole') ? 2 : 1); }, 0);
+        // l'accord : combien de runes de chaque signe partent ensemble
+        var parSigne = {};
+        valides.forEach(function (m) { var g = signe($dataSkills[m.competence]); if (g) { parSigne[g] = (parSigne[g] || 0) + 1; } });
+        var reso = 1 + RESO * Math.max(0, n - 1), partis = 0, restent = [], referme = false, rendu = 0;
         liste.forEach(function (m) {
-            if (declencher(b, m, reso)) {
+            var g = signe($dataSkills[m.competence]), accord = g && parSigne[g] >= 2 ? ACCORD : 1;
+            if (declencher(b, m, reso, accord)) {
                 partis++;
+                if (g && parSigne[g] >= 3) { rendu += m.pv || 0; }
                 if (balise($dataSkills[m.competence], 'Referme')) { referme = true; }
-                if (CHANCEUX.indexOf(b.actorId()) >= 0 && m.cible.isAlive() && Math.random() < CHANCE) { restent.push(m); }
+                if (CHANCEUX.indexOf(b.actorId()) >= 0 && (m.sol || m.cible.isAlive()) && Math.random() < CHANCE) { restent.push(m); }
             }
         });
+        Object.keys(parSigne).forEach(function (g) {
+            if (parSigne[g] >= 3) { annonce(b, 'ᛟ Transmutation entière · ' + SIGNES[g], '#ffd0f0'); }
+            else if (parSigne[g] === 2) { annonce(b, 'ᛟ Accord · ' + SIGNES[g] + ' ×' + chiffre(ACCORD), '#ff9ad8'); }
+        });
+        // la transmutation entière : l'échange est complet, la vie payée revient
+        rendu = Math.round(rendu * TRANSMUTATION);
+        if (rendu > 0 && b.isAlive()) { b.clearResult(); b.gainHp(rendu); b.startDamagePopup(); }
         // <Referme> : quand il part, tous ses autres écrits partent avec lui
         if (referme && !b._refermant && ecritsDe(b).length) {
             b._refermant = true;
@@ -362,8 +475,8 @@ var LEcrit = LEcrit || {};
             partis += partir(b, reste);
             b._refermant = false;
         }
-        restent.forEach(function (m) { b._ecrits.push(m); annonce(m.cible, '🍀 Toujours écrit', '#a0ffa0'); });
-        liste.forEach(function (m) { montrer(m.cible); });
+        restent.forEach(function (m) { b._ecrits.push(m); annonce(m.cible || b, '🍀 Toujours écrit', '#a0ffa0'); });
+        liste.forEach(function (m) { if (m.sol) { montrerSol(m.sol); } else { montrer(m.cible); } });
         if (partis > 1) { annonce(b, 'ᛟ Résonance ×' + chiffre(reso), '#ff9ad8'); }
         return partis;
     }
@@ -373,7 +486,7 @@ var LEcrit = LEcrit || {};
         var partis = partir(b, tous);
         if (partis) {
             var v = volonte(b);
-            annonce(b, 'ᛟ Activé ×' + partis, '#ff9ad8');
+            annonce(b, 'ᛟ Le cercle se ferme ×' + partis, '#ff9ad8');
             if (v >= 1.05) { annonce(b, 'ᛟ Volonté ×' + chiffre(v), '#ff9ad8'); }
             if ($gameScreen) { $gameScreen.startFlash([255, 150, 230, 110], 18); }
         }
@@ -393,11 +506,27 @@ var LEcrit = LEcrit || {};
                 // <Pret> : frapper l'allié qui porte son ombre, c'est le frapper lui
                 return vises.some(function (v) { return v && v._ombreDe && v._ombreDe.acteur === a.actorId() && t <= v._ombreDe.jusque; });
             });
+            s._agit = { heros: vises.some(function (v) { return v && v.isActor && v.isActor(); }) };
         }
     };
+    /** Le cercle au sol part quand l'ennemi y agit : côté ennemi, après toute action ennemie ;
+     *  côté héros, après une action ennemie qui vise un héros. */
+    function solRepond(s) {
+        var agit = s._agit; s._agit = null;
+        if (!agit) { return; }
+        $gameParty.battleMembers().forEach(function (a) {
+            if (!a.isAlive()) { return; }
+            var siens = ecritsDe(a).filter(function (m) { return m.sol === 'ennemis' || (m.sol === 'allies' && agit.heros); });
+            if (!siens.length) { return; }
+            a._ecrits = ecritsDe(a).filter(function (m) { return siens.indexOf(m) < 0; });
+            annonce(s.isAlive() ? s : a, '✒ Le sol répond', '#e080ff');
+            partir(a, siens);
+        });
+    }
     var _finAction = BattleManager.endAction;
     BattleManager.endAction = function () {
         var s = this._subject;
+        if (s && s.isEnemy && s.isEnemy() && enCombat()) { solRepond(s); }
         if (s && s._piegeVise && s._piegeVise.length) {
             var porteurs = s._piegeVise;
             s._piegeVise = null;
@@ -438,17 +567,19 @@ var LEcrit = LEcrit || {};
             // les mêmes écrits se comptent (« Trait Spectral ×2 ») ; on dit sur qui tant que la ligne tient
             var groupes = [];
             liste.forEach(function (m) {
-                var nom = ($dataSkills[m.competence] || {}).name || '?', qui = m.cible && m.cible.name ? m.cible.name() : '?';
+                var nom = nomCourt($dataSkills[m.competence]), qui = m.sol ? 'au sol' : (m.cible && m.cible.name ? m.cible.name() : '?');
                 var g = groupes.filter(function (x) { return x.nom === nom; })[0];
                 if (!g) { g = { nom: nom, n: 0, qui: [] }; groupes.push(g); }
                 g.n++; if (g.qui.indexOf(qui) < 0) { g.qui.push(qui); }
             });
             var noms = groupes.map(function (g) { return g.nom + (g.n > 1 ? ' ×' + g.n : ''); });
             var avecCibles = groupes.map(function (g, i) { return noms[i] + ' → ' + g.qui.join(', '); });
-            var essais = ['ᛟ En attente : ' + avecCibles.join(' · '), 'ᛟ En attente : ' + noms.join(' · ')];
+            // sans les cibles, une rune au sol le dit encore
+            var courts = groupes.map(function (g, i) { return noms[i] + (g.qui.length === 1 && g.qui[0] === 'au sol' ? ' (sol)' : ''); });
+            var essais = ['ᛟ Dans le cercle : ' + avecCibles.join(' · '), 'ᛟ Dans le cercle : ' + courts.join(' · '), 'ᛟ Dans le cercle : ' + noms.join(' · ')];
             ligne = essais.filter(function (t) { return h.textWidth(t) <= h.contentsWidth() - 8; })[0] || '';
             if (!ligne) {
-                ligne = 'ᛟ ' + liste.length + ' en attente : ';
+                ligne = 'ᛟ ' + liste.length + ' dans le cercle : ';
                 for (var i = 0; i < noms.length; i++) {
                     var t = ligne + (i ? ', ' : '') + noms[i];
                     if (h.textWidth(t + '…') > h.contentsWidth() - 8) { ligne += '…'; break; }
@@ -457,7 +588,7 @@ var LEcrit = LEcrit || {};
             }
         } else if (liste.length >= MAX && !this.isEnabled(s)) {
             var act = new Game_Action(a); act.setSkill(s.id);
-            if (doitEcrire(act)) { ligne = 'ᛟ ' + liste.length + ' écrits attendent déjà : active-les d\'abord.'; }
+            if (doitEcrire(act)) { ligne = 'ᛟ ' + liste.length + ' runes attendent déjà : ferme le cercle d\'abord.'; }
         }
         if (ligne) { h.setText(String(h._text || '').split('\n')[0] + '\n' + ligne); }
     };
@@ -536,6 +667,7 @@ var LEcrit = LEcrit || {};
     Game_Actor.prototype.onBattleStart = function () {
         _debut.call(this);
         this._ecrits = [];
+        this._pvPaye = 0;
         // Activer s'apprend au niveau 1 : un héros d'une partie commencée avant l'a quand même.
         if (heros(this) && $dataSkills[ACTIVER] && !this.isLearnedSkill(ACTIVER)) { this.learnSkill(ACTIVER); }
     };

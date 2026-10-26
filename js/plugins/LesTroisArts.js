@@ -112,6 +112,36 @@
  * @default true
  * @desc Au-dessus de l'ennemi : ▲ quand l'art le bat, ▼ quand il lui résiste.
  *
+ * @param === UN MENU PAR ART ===
+ * @default
+ *
+ * @param typesGeneraux
+ * @text Branches rangées par art
+ * @default 1, 2
+ * @desc En combat, ces branches (capacité, Spéciale) se rangent en Voies, Paroles, Runes. Vide = comme avant.
+ *
+ * @param nomVoies
+ * @text Le menu des mouvements
+ * @default Voies
+ *
+ * @param nomParoles
+ * @text Le menu des Paroles
+ * @default Paroles
+ *
+ * @param nomRunes
+ * @text Le menu des runes
+ * @default Runes
+ *
+ * @param nomUltimes
+ * @text Le nom de la branche des ultimes
+ * @default Ultimes
+ * @desc La branche 3 (« ult » dans la base) s'affiche sous ce nom en combat.
+ *
+ * @param avecLesRunes
+ * @text Avec les runes (sans art)
+ * @default 1309
+ * @desc « ᛟ Activer » ferme le cercle : il va dans le menu des Runes.
+ *
  * @help
  * ============================================================================
  *  LES TROIS ARTS                                                pour JOKO
@@ -167,6 +197,16 @@
  *  【PAROLE · FEU · hors affinité】 quand il l'est ; le coût affiché est le
  *  vrai ; au-dessus du héros : « ◇ Hors affinité ».
  *  Au-dessus de l'ennemi : ▲ Corps ×2 quand l'art le bat, ▼ quand il résiste.
+ *
+ *  UN MENU PAR ART (JOKO, le 2026-10-26, le chantier des compétences : « Un
+ *  menu par art ») — en combat, les branches générales (capacité, Spéciale)
+ *  se rangent par art : Voies (les mouvements), Paroles, Runes ; puis les
+ *  branches à lui du héros (le Sang, l'Hiver, l'Âme, le Miracle…), Ultimes,
+ *  Combo. AUCUNE FICHE NE CHANGE DE TYPE : le menu se calcule d'après l'art,
+ *  et ce qui lit les types (l'État de Flow scelle 1, 2, 3 ; le kit du Style de
+ *  Vesper ; les Copies de ludwing) continue de les lire. Ce qui n'a pas d'art
+ *  reste dans sa branche d'origine ; « ᛟ Activer » va avec les Runes. Hors
+ *  combat, rien ne change. LesTroisArts._sansMenusParArt = true coupe (bancs).
  *
  *  LaParole, LeMouvement, MaitriseVoies et L'Écrit demandent tous l'art ici :
  *  une seule règle. Les ennemis ne changent pas. Aucune fiche n'est modifiée.
@@ -366,11 +406,82 @@ var LesTroisArts = LesTroisArts || {};
         var el = s.damage ? s.damage.elementId : 0;
         var nom = el > 0 && MANAS.indexOf(el) < 0 && $dataSystem.elements[el] ? ' · ' + $dataSystem.elements[el].trim().toUpperCase() : '';
         // une rune dit son signe (LEcrit, <Rune: …>) : 【RUNE · SCEAU】
-        if (a === 'ecrit' && s.meta && s.meta.Rune) { nom = ' · ' + String(s.meta.Rune).trim().toUpperCase(); }
+        if (a === 'ecrit' && s.meta && typeof s.meta.Rune === 'string' && s.meta.Rune.trim()) { nom = ' · ' + String(s.meta.Rune).trim().toUpperCase(); }
         var hors = horsAffinite(this._actor, s) ? ' · hors affinité' : '';
         this._helpWindow.setText('【' + NOMS[a] + nom + hors + '】  ' + (s.description || ''));
     };
 
+    //=========================================================================
+    // UN MENU PAR ART (JOKO, 2026-10-26, le chantier des compétences : « Un menu par art »)
+    //=========================================================================
+    // En combat, les branches générales (capacité, Spéciale) se rangent par art : Voies (les mouvements),
+    // Paroles, Runes ; puis les branches à lui du héros, Ultimes, Combo. AUCUNE FICHE NE CHANGE DE TYPE :
+    // le menu se calcule d'après l'art (l'État de Flow, qui scelle les types 1, 2, 3, scelle toujours).
+    // Ce qui n'a pas d'art reste dans sa branche d'origine ; « ᛟ Activer », qui ferme le cercle, va avec les Runes.
+    var GENERAUX = liste('typesGeneraux', '1, 2');
+    var MENUS = [
+        { art: 'mouvement', type: 901, nom: String(P['nomVoies'] || 'Voies') },
+        { art: 'parole', type: 902, nom: String(P['nomParoles'] || 'Paroles') },
+        { art: 'ecrit', type: 903, nom: String(P['nomRunes'] || 'Runes') }
+    ];
+    var TYPE_ULT = 3, NOM_ULT = String(P['nomUltimes'] || 'Ultimes'), TYPE_COMBO = 25;     // (901-903 : des branches qui n'existent que dans le menu)
+    var AVEC_RUNES = liste('avecLesRunes', '1309');
+    function menuDe(type) { return MENUS.filter(function (m) { return m.type === type; })[0] || null; }
+    /** L'art qui range une compétence dans un menu. */
+    function artDuMenu(s) { return AVEC_RUNES.indexOf(s.id) >= 0 ? 'ecrit' : art(s); }
+    function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
+
+    var _inclut = Window_SkillList.prototype.includes;
+    Window_SkillList.prototype.includes = function (item) {
+        if (LesTroisArts._sansMenusParArt) { return _inclut.call(this, item); }
+        var m = menuDe(this._stypeId);
+        if (m) {
+            if (!item || GENERAUX.indexOf(item.stypeId) < 0 || artDuMenu(item) !== m.art) { return false; }
+            // les autres filtres (le kit du Style de Vesper, YEP…) jugent la compétence dans sa vraie branche
+            var v = this._stypeId;
+            this._stypeId = item.stypeId;
+            var ok = _inclut.call(this, item);
+            this._stypeId = v;
+            return ok;
+        }
+        // en combat, une branche générale ne garde que ce qui n'a pas d'art (le reste est dans les menus par art)
+        if (enCombat() && this._actor && heros(this._actor) && GENERAUX.indexOf(this._stypeId) >= 0 && item && artDuMenu(item)) { return false; }
+        return _inclut.call(this, item);
+    };
+
+    // (les bancs Node chargent ce fichier sans les fenêtres du combat)
+    var _commandes = typeof Window_ActorCommand !== 'undefined' ? Window_ActorCommand.prototype.addSkillCommands : null;
+    if (_commandes) Window_ActorCommand.prototype.addSkillCommands = function () {
+        var avant = this._list.length;
+        _commandes.call(this);
+        var a = this._actor;
+        if (LesTroisArts._sansMenusParArt || !a || !heros(a)) { return; }
+        var ajoutes = this._list.slice(avant);
+        var vide = function (type) {
+            var f = Object.create(Window_SkillList.prototype); f._actor = a; f._stypeId = type;
+            return !a.skills().some(function (s) { return Window_SkillList.prototype.includes.call(f, s); });
+        };
+        var parArt = MENUS.filter(function (m) { return !vide(m.type); })
+            .map(function (m) { return { name: m.nom, symbol: 'skill', enabled: true, ext: m.type }; });
+        var generaux = [], propres = [], ultimes = [], combos = [], autres = [];
+        ajoutes.forEach(function (c) {
+            if (c.symbol !== 'skill') { autres.push(c); }
+            else if (GENERAUX.indexOf(c.ext) >= 0) { if (!vide(c.ext)) { generaux.push(c); } }
+            else if (c.ext === TYPE_ULT) { ultimes.push({ name: NOM_ULT, symbol: c.symbol, enabled: c.enabled, ext: c.ext }); }
+            else if (c.ext === TYPE_COMBO) { combos.push(c); }
+            else { propres.push(c); }
+        });
+        this._list = this._list.slice(0, avant).concat(parArt, generaux, propres, ultimes, combos, autres);
+    };
+
+    /** Le menu par art d'une compétence : { type, nom } (901-903), ou null si elle reste dans sa branche. */
+    LesTroisArts.menuDe = function (s) {
+        if (LesTroisArts._sansMenusParArt || !s || GENERAUX.indexOf(s.stypeId) < 0) { return null; }
+        var a = artDuMenu(s), m = MENUS.filter(function (x) { return x.art === a; })[0];
+        return m ? { type: m.type, nom: m.nom } : null;
+    };
+    LesTroisArts.typesGeneraux = GENERAUX;
+    LesTroisArts.nomUltimes = function () { return LesTroisArts._sansMenusParArt ? null : NOM_ULT; };
     LesTroisArts.affinites = affinites;
     LesTroisArts.horsAffinite = horsAffinite;
     LesTroisArts.art = art;

@@ -148,8 +148,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         lud._ecrits = []; ecrire(lud, 158, e); hpE = e.hp;
         ennemiFrappe(e, ves);
         L.ailleurs = { perdu: hpE - e.hp, reste: E.ecrits(lud).length };
-        // contre-épreuve : les écrits de Korrah ne sont pas des pièges
-        kor._ecrits = []; lud._ecrits = []; ecrire(kor, 452, e); hpE = e.hp;
+        // contre-épreuve : les écrits de Korrah ne sont pas des pièges (une rune dans l'air sur l'ennemi, Désorientation —
+        // depuis le 2026-10-26, une rune qui vise tous les ennemis se trace au sol, et celle-là part quand l'ennemi agit)
+        kor._ecrits = []; lud._ecrits = []; ecrire(kor, 94, e); hpE = e.hp;
         ennemiFrappe(e, kor);
         L.korrah = { perdu: hpE - e.hp, reste: E.ecrits(kor).length };
         kor._ecrits = [];
@@ -215,7 +216,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('contre-épreuve : les écrits de Korrah ne sont pas des pièges', L.korrah.perdu === 0 && L.korrah.reste === 1, JSON.stringify(L.korrah));
     v('la chance (tirage sous 25 %) : l\'écrit parti reste écrit 🍀', L.chance.reste === 1 && L.chance.annonce, JSON.stringify(L.chance));
     v('sans la chance (tirage 50 %), il s\'en va', L.sansChance === 0);
-    v('résonance : trois écrits ensemble, chacun ×1,3 de plus', Math.abs(L.resonance.trois / (3 * L.resonance.un) - 1.3) < 0.01 && L.resonance.annonce.length > 0,
+    v('résonance : trois écrits ensemble, chacun ×1,3 de plus (et ×1,25 d\'accord : trois Frappe)', Math.abs(L.resonance.trois / (3 * L.resonance.un) - 1.3 * 1.25) < 0.01 && L.resonance.annonce.length > 0,
       'un : ' + L.resonance.un + ' · trois : ' + L.resonance.trois + ' (×' + (L.resonance.trois / (3 * L.resonance.un)).toFixed(3) + ')');
 
     console.log('\n4) Aël — pour elle');

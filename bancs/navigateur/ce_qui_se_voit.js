@@ -150,7 +150,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             a.setMp(a.mmp); a.setTp(a.maxTp());
             var w = new Window_SkillList(0, 0, 400, 300); w.setActor(a);
             var vues = [], brut = 0, vieux = 0;
-            a.addedSkillTypes().concat([1]).filter(function (t, i, l) { return l.indexOf(t) === i; }).forEach(function (t) {
+            // 2026-10-26 : en combat, capacité et Spéciale se rangent en Voies, Paroles, Runes (901-903, LesTroisArts)
+            a.addedSkillTypes().concat([1, 901, 902, 903]).filter(function (t, i, l) { return l.indexOf(t) === i; }).forEach(function (t) {
                 w.setStypeId(t); w.refresh();
                 vues = vues.concat(w._data.filter(Boolean));
                 var tout = a.skills().filter(function (s) { return w.includes(s); });

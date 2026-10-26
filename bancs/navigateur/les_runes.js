@@ -85,19 +85,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         }
 
         // 1 · les fiches
-        var ecrits = $dataSkills.filter(function (s) { return s && s.meta && LesTroisArts.art(s) === 'ecrit' && [3, 4, 5, 6, 10, 25].indexOf(s.stypeId) < 0; });
+        // les fiches des héros (elles portent <Art:>) ; un ennemi n'écrit pas
+        var deHeros = function (s) { return s && s.meta && typeof s.meta.Art === 'string' && LesTroisArts.art(s) === 'ecrit'; };
+        var ecrits = $dataSkills.filter(function (s) { return deHeros(s) && [3, 4, 5, 6, 10, 25].indexOf(s.stypeId) < 0; });
         out.fiches = { n: ecrits.length, sansRune: ecrits.filter(function (s) { return !/^Rune /.test(s.name); }).map(function (s) { return s.id + ' ' + s.name; }),
-                       parole: $dataSkills.filter(function (s) { return s && /^Parole n°/.test(s.name) && LesTroisArts.art(s) === 'ecrit'; }).length,
+                       parole: $dataSkills.filter(function (s) { return deHeros(s) && /^Parole n°/.test(s.name); }).length,
                        signes: {}, nomSigne: [] };
         ecrits.forEach(function (s) {
-            var g = s.meta.Rune ? String(s.meta.Rune).trim() : '';
+            var g = typeof s.meta.Rune === 'string' ? s.meta.Rune.trim() : '';
             out.fiches.signes[g] = (out.fiches.signes[g] || 0) + 1;
             var attendu = { frappe: 'de Frappe', prise: 'de Prise', sceau: 'de Sceau', lien: 'de Lien', rempart: 'de Rempart' }[g];
             if (attendu && s.name.indexOf('Rune ' + attendu + ' : ') !== 0) { out.fiches.nomSigne.push(s.id + ' ' + s.name); }
         });
         out.etats = { air: $dataStates[AIR].name, sol: $dataStates[SOL] && $dataStates[SOL].name, solFin: $dataStates[SOL] && $dataStates[SOL].autoRemovalTiming };
 
-        // 2 · au sol : Rune de Rempart : Encouragement (12, tous les alliés) ; Chaîne Courte (1164, tous les ennemis)
+        // 2 · au sol : Rune de Rempart : Encouragement (12, tous les alliés) ; Le Symbole (1170, tous les ennemis ;
+        // pas Chaîne Courte : une rune de l'âme, du collier de ludwing, part tout de suite)
         nettoyer();
         ael.setHp(1);
         lancer(kor, 12, ael);
@@ -105,7 +108,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
                           chiffres: $gameParty.battleMembers().map(function (a) { return a.isStateAffected(SOL) ? a.getStateCounter(SOL) : 0; }),
                           air: $gameParty.battleMembers().some(function (a) { return a.isStateAffected(AIR); }), annonce: annonces(kor) };
         var hp0 = e.hp, hp20 = e2.hp;
-        lancer(lud, 1164, e);
+        lancer(lud, 1170, e);
         out.solEnnemis = { ecrits: L.ecrits(lud).length, sol: (L.ecrits(lud)[0] || {}).sol, perdu: hp0 - e.hp + hp20 - e2.hp,
                            chiffres: [e, e2].map(function (x) { return x.isStateAffected(SOL) ? x.getStateCounter(SOL) : 0; }) };
         // contre-épreuve : une rune qui vise une seule cible se trace dans l'air, sur elle
@@ -168,7 +171,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
         // 6 · trois au plus, dans l'air et au sol ensemble ; l'aide
         nettoyer();
-        lancer(lud, 158, e); lancer(lud, 1164, e);
+        lancer(lud, 158, e); lancer(lud, 1170, e);
         out.max = { deux: lud.canUse($dataSkills[158]) };
         lancer(lud, 158, e2);
         out.max.trois = lud.canUse($dataSkills[158]); out.max.activer = lud.canUse($dataSkills[ACT]);
@@ -194,7 +197,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('Encouragement (tous les alliés) : une seule rune, au sol côté héros, montrée sur chacun (1)', s.ecrits === 1 && s.sol === 'allies' && s.chiffres.every(function (n) { return n === 1; }) && !s.air, JSON.stringify(s));
     v('…elle ne soigne pas tout de suite, et « ✒ Cercle au sol » s\'annonce', s.soin === 1 && s.annonce.some(function (t) { return /Cercle au sol/.test(t); }), s.annonce.join(' | '));
     var se = r.solEnnemis;
-    v('Chaîne Courte (tous les ennemis) : une rune au sol côté ennemi, rien ne part', se.ecrits === 1 && se.sol === 'ennemis' && se.perdu === 0 && se.chiffres.every(function (n) { return n === 1; }), JSON.stringify(se));
+    v('Le Symbole (tous les ennemis) : une rune au sol côté ennemi, rien ne part', se.ecrits === 1 && se.sol === 'ennemis' && se.perdu === 0 && se.chiffres.every(function (n) { return n === 1; }), JSON.stringify(se));
     v('contre-épreuve : Trait Spectral (une cible) se trace dans l\'air, sur elle', r.air.surE === 1 && r.air.sol === '', JSON.stringify(r.air));
 
     console.log('\n3) Le sol répond');
@@ -218,7 +221,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('\n6) Trois au plus, et l\'aide');
     v('dans l\'air et au sol ensemble : à 2, on inscrit encore ; à 3, non ; fermer le cercle, oui', r.max.deux && !r.max.trois && r.max.activer, JSON.stringify(r.max));
-    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol dit « au sol »', /ᛟ Dans le cercle : /.test(r.aide) && /au sol/.test(r.aide), r.aide.replace(/\n/g, ' / '));
+    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol », ou « (sol) » quand la ligne est courte)', /ᛟ Dans le cercle : /.test(r.aide) && /au sol|\(sol\)/.test(r.aide), r.aide.replace(/\n/g, ' / '));
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
