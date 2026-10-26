@@ -84,7 +84,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         tenir(5); o.fouet = voie(1);
         tenir(2); o.ecrite = { fil: voie(128), chirurgie: voie(129), contre: voie(131) };
         PacteDeSang.changerStyle('saignee'); o.enSang = voie(1);
-        PacteDeSang.changerStyle('garde'); o.enGarde = voie(1233);
+        PacteDeSang.changerStyle('garde'); o.enGarde = voie(1);
         // 2 · changer de Style, c'est changer de Voie
         PacteDeSang.changerStyle('lame'); tenir(2); remettre();
         jouer(action(1281)); o.apresLame = { voie: M.posture(ves), flux: M.flux(ves) };
@@ -155,7 +155,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         v(x.arme + ' → ' + a + ' (son art, l\'Attaque, Tranche-Néant)', (x.arme === 'mains nues' || x.art === a) && x.attaque === a && x.tn === a, JSON.stringify(x));
     });
     v('au fouet (aucune famille) : la Voie du Sang', r.fouet === 'sang', r.fouet);
-    v('une Voie écrite reste la sienne (Fil Clair Miroir, Chirurgie du Vide, la contre-attaque du Flow Onde)', r.ecrite.fil === 'miroir' && r.ecrite.chirurgie === 'vide' && r.ecrite.contre === 'onde', JSON.stringify(r.ecrite));
+    v('une Voie écrite reste la sienne (Fil Clair Éclair, Chirurgie du Vide, la contre-attaque du Flow Onde)', r.ecrite.fil === 'eclair' && r.ecrite.chirurgie === 'vide' && r.ecrite.contre === 'onde', JSON.stringify(r.ecrite));
     v('contre-épreuve : en Sang et en Garde, la Voie du Sang', r.enSang === 'sang' && r.enGarde === 'sang', r.enSang + ' · ' + r.enGarde);
 
     console.log('\n2) Changer de Style, c\'est changer de Voie');

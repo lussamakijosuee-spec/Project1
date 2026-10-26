@@ -189,7 +189,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('1) Vesper — le contre-temps');
     var V = r.vesper;
-    v('Garde Haute arme une riposte (c\'est un mouvement : posture du Sang)', V.armee.reflux === 1 && V.armee.annonce && V.armee.posture === 'sang', JSON.stringify(V.armee));
+    v('Garde Haute arme une riposte (c\'est un mouvement, une garde : posture du Miroir)', V.armee.reflux === 1 && V.armee.annonce && V.armee.posture === 'miroir', JSON.stringify(V.armee));
     v('on la frappe : l\'ennemi reçoit ce qu\'il a donné, et son flux monte de 1', V.rendu === V.petit && V.flux1 === 1 && V.annonce1.length > 0, V.rendu + ' / ' + V.petit + ' · ' + V.annonce1.join(''));
     v('au flux 3, la riposte est un geste juste : ×1,5', Math.abs(V.renduGeste - Math.floor(V.petit * 1.5)) <= 1 && V.flux3 === 0 && V.annonceGeste.length > 0, V.renduGeste + ' / ' + Math.floor(V.petit * 1.5));
     v('après la riposte, Contre-Courant frappe ×1,5', Math.abs(V.apres.avec / V.apres.sans - 1.5) < 0.02, V.apres.sans + ' → ' + V.apres.avec);

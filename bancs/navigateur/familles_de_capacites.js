@@ -93,7 +93,7 @@ function V(l, c, d) {
                     // ce que ça ferait sans repli : toutes ses compétences du type
                     var brut = a.skills().filter(function (s) { return s.stypeId === t; }).length;
                     total += brut; replie += n;
-                    if (brut > 0) { detail.push(($dataSystem.skillTypes[t] || t).trim() + ' ' + brut + '→' + n); }
+                    if (brut > 0) { detail.push(String($dataSystem.skillTypes[t] || t).trim() + ' ' + brut + '→' + n); }
                 });
             return { nom: a.name(), avant: total, apres: replie, detail: detail.join(' · ') };
         }
@@ -177,7 +177,7 @@ function V(l, c, d) {
         return {
             avecRepli: replie.length, brut: liste.length,
             seules: seules.length, seulesGardees: seulesGardees.length,
-            branche: ($dataSystem.skillTypes[t] || t).trim()
+            branche: String($dataSystem.skillTypes[t] || t).trim()
         };
     });
     V('aucune compétence seule dans sa famille n\'est masquée',
