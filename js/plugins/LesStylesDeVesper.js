@@ -3,7 +3,7 @@
 // Vesper : trois Styles, trois kits, trois ultimes — et sa Colère.
 //=============================================================================
 /*:
- * @plugindesc v1.1 ■ Vesper : Lame (arts d'armes, État de Flow), Sang
+ * @plugindesc v1.2 ■ Vesper : Lame (arts d'armes, État de Flow), Sang
  * (Berserker), Garde (adaptation, Arme de Sang). Et sa Colère, que ludwing
  * sait réveiller. À placer juste après LePacteDeSang.
  * @author pour JOKO
@@ -65,6 +65,11 @@
  * @desc famille: types d'armes | … — un art <ArtArme: famille> n'apparaît que
  * si elle tient une de ces armes (poings : aussi les mains nues).
  * @default epee: 2, 15 | dague: 1 | hache: 4 | lance: 12, 6 | distance: 3, 7, 8, 9, 13 | poings: 11, 10
+ *
+ * @param voiesDesArmes
+ * @text En Lame, la Voie de l'arme tenue
+ * @desc famille: Voie | … — en Lame, un mouvement sans Voie à lui prend celle de l'arme qu'elle tient (plus la Voie du Sang). Une famille absente : sa Voie par défaut. Vide : comme avant.
+ * @default epee: miroir | dague: eclair | hache: forge | lance: vide | distance: flash | poings: onde
  *
  * @param typeArts
  * @text Type de compétence des arts d'armes
@@ -187,6 +192,15 @@
  *      deux actions par tour (2C) ; le corps dévie les petits coups et
  *      esquive les gros une fois sur deux — et chaque esquive déclenche une
  *      contre-attaque (2A). Puis l'Épuisement du Flow.
+ *      v1.2 (JOKO, le 2026-10-26 : « L4 ») : chaque contre-attaque du Flow est
+ *      une riposte du contre-temps — son flux monte, la 3ᵉ est un geste juste.
+ *    ⚔ LA VOIE DE L'ARME — v1.2 (« L1 ») : en Lame, un mouvement sans Voie à
+ *      lui prend celle de l'arme tenue (voiesDesArmes) : épée Miroir, dague
+ *      Éclair, hache Forge, lance Vide, distance Flash, poings Onde. Plus la
+ *      Voie du Sang en Lame ; et changer de Style change de Voie.
+ *    ⚔ SES ARTS ONT UN VERBE — v1.2 (« L2 ») : chacun le sien, tiré de sa
+ *      description (Iaï : il part avant tout le monde ; Couperet : tout le
+ *      poids du corps…), écrit sur sa fiche.
  *
  *  🩸 SANG — la plus agressive : Masque ×1,5, vol de vie, aucune Parole.
  *  Colère ×1,5.
@@ -240,6 +254,13 @@
             FAMILLES[m[0].trim().toLowerCase()] = m[1].split(',').map(function (x) { return Number(x); }).filter(function (x) { return x > 0; });
         });
     var STYLE_DE_CLE = { lame: 'lame', garde: 'garde', saignee: 'sang' };
+    // famille d'arts → la Voie qu'elle donne en Lame (JOKO, 2026-10-26 : « L1 »)
+    var VOIE_ARME = {};
+    String(P['voiesDesArmes'] === undefined ? 'epee: miroir | dague: eclair | hache: forge | lance: vide | distance: flash | poings: onde' : P['voiesDesArmes'])
+        .split('|').forEach(function (bloc) {
+            var m = bloc.split(':'); if (m.length < 2) { return; }
+            VOIE_ARME[m[0].trim().toLowerCase()] = m[1].trim().toLowerCase();
+        });
 
     // ── outils ──────────────────────────────────────────────────────────────
     function estVesper(b) { return !!(b && b.isActor && b.isActor() && b.actorId() === VESPER); }
@@ -323,6 +344,21 @@
         return true;
     }
     function sansSortie(a) { return a.isStateAffected(ETAT_FLOW) || a.isStateAffected(ETAT_BERSERK); }
+
+    // ⚔ L1 — en Lame, un mouvement sans Voie à lui prend celle de l'arme tenue : l'épée le Miroir, la dague
+    // l'Éclair, la hache la Forge, la lance le Vide, la distance le Flash, les poings l'Onde (réglage). Le Style
+    // « ni sang » ne draine plus comme le Sang, et changer de Style change de Voie : le flux monte.
+    /** La famille de l'arme qu'elle tient en main (les poings à mains nues ; '' : aucune famille). */
+    function familleTenue(a) {
+        var w = a.weapons()[0];
+        if (!w) { return 'poings'; }
+        return Object.keys(FAMILLES).filter(function (f) { return FAMILLES[f].indexOf(w.wtypeId) >= 0; })[0] || '';
+    }
+    function voieDeLaLame(a) { return estVesper(a) && style(a) === 'lame' ? (VOIE_ARME[familleTenue(a)] || '') : ''; }
+    if (window.Voies) {
+        var _voieDuGeste = Voies.voieDuGeste;
+        Voies.voieDuGeste = function (b, item) { return voieDeLaLame(b) || (_voieDuGeste ? _voieDuGeste(b, item) : ''); };
+    }
 
     var _conditions = Game_BattlerBase.prototype.meetsSkillConditions;
     Game_BattlerBase.prototype.meetsSkillConditions = function (skill) {
@@ -533,6 +569,8 @@
             v._contreEnAttente = null;
             if (v.isStateAffected(ETAT_FLOW) && v.canMove() && this.isAlive()) {
                 // sans lui coûter les actions qu'elle avait prévues (LesInteractions)
+                // ☯ L4 — c'est une riposte du contre-temps (LeMouvement) : son flux monte, la 3ᵉ est un geste juste
+                if (window.LeMouvement && LeMouvement.riposteForcee) { LeMouvement.riposteForcee(v, CONTRE); }
                 if (window.Interactions) { Interactions.forcer(v, CONTRE, this.index()); }
                 else if (BattleManager.queueForceAction) { BattleManager.queueForceAction(v, CONTRE, this); }
             }

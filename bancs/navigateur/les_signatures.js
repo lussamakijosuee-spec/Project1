@@ -78,6 +78,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
         // ── 1 · VESPER, le contre-temps ──────────────────────────────────
         var V = {};
+        // ses gestes du contre-temps sont ceux de la Garde ; en Lame, ses mouvements prendraient la Voie de son arme (2026-10-26)
+        PacteDeSang.changerStyle('garde');
         remettre(ves); jouer(ves, 1066, e);                           // Frappe Pleine : une posture
         vider(ves); jouer(ves, 1233, ves);                            // Garde Haute <Riposte> (un mouvement : la Voie du Sang)
         V.armee = { reflux: ves._voieReflux, annonce: annonces(ves).indexOf('⚔ Riposte prête') >= 0, posture: M.posture(ves) };
@@ -99,6 +101,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         V.korrah = { avant: fluxK, apres: M.flux(kor) };
         // un gros coup brise la posture avant la riposte : elle rend quand même, sans flux
         remettre(ves); jouer(ves, 1066, e); ves._voieReflux = 1;
+        ves._adapt = {};                                              // un premier coup de ce type : la Garde ne s'y est pas encore faite
         var gros = Math.ceil(ves.mhp * 0.2); V.gros = { rendu: frappe(ves, gros), posture: M.posture(ves), flux: M.flux(ves), valeur: gros };
         ves.recoverAll();
         out.vesper = V;

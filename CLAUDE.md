@@ -439,7 +439,12 @@ qui se voit** : le coût affiché est le vrai, l'aide dit `【PAROLE · FEU · h
 au-dessus du héros. Mesure (`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 2,95 → 3,05 tours en moyenne,
 autant de victoires — un petit nerf. Pour un banc : `LesTroisArts.affinites(b)`, `LesTroisArts.horsAffinite(b, s)`,
 `LesTroisArts._sansAffinites = true` coupe la règle (`le_registre` mesure la copie de ludwing contre sa Nuit sans
-elle : la copie est un don). Banc : `navigateur/les_affinites.js`.
+elle : la copie est un don). Banc : `navigateur/les_affinites.js`. **v1.3, après la fusion du 2026-10-26** (le commit de JOKO
+« Appliquer les affinités aux trois arts » remplaçait ce bloc ; le jeu plantait à chaque technique de héros, `horsDe` perdue) :
+*« Ta règle + mes exceptions »* — son code (sa lecture « 1: spirituel négatif, … », son coût, son effet) avec les exceptions
+ci-dessus (dons, combos, 71, 810, 438, la jauge pleine, les PV et PM rendus par effet). La même fusion avait rallumé DonsSpirituels,
+FusionElements et ElementsVivants ; à « tu le voulais ? », *« Jsp tu en penses quoi »* : éteints de nouveau, ses décisions
+d'avant (les dons retirés, ses 6 fusions par LaParole, les trois arts) — un interrupteur chacun.
 
 **Le rework des capacités** (2026-10-25 ; JOKO : *« rework complètement tout les capacités, spéciales et ulti des
 personnages pour les rendre plus intéressant et équilibré surtout leur don et utilise le lore aussi »*, puis *« Oui tout »*
@@ -537,6 +542,22 @@ les règles A et A1 (une zone ne peut ni frapper moins que l'épée, ni passer l
 seul ennemi : ×33 la dague, ×38 les poings ; ×9 par trait à distance). La forme s'annonce (« ⚔ Tranche-Néant · à la dague »). Le
 plancher du Mana Pur de `7_trois_sources` passe à 43. Mesure (6 parties de chaque côté) : 2,74 → 2,76 tours, boss 46 → 42 sur 60
 — un écart de l'ordre du hasard du banc (un écart-type), dans le sens d'un petit nerf. Banc : `navigateur/tranche_neant.js`.
+
+**La Lame de Vesper** (`LesStylesDeVesper.js` v1.2, 2026-10-26 ; JOKO, sur la proposition mesurée des Styles : *« L1 l2,
+l4 »*, puis *« Montre-moi d'abord »* pour la Garde et le Sang). Mesuré avant : en Lame, 19 de ses 22 mouvements prenaient la
+Voie du Sang (sa `<VoieDefaut: sang>`) — le Style « ni sang » drainait, et son flux ne montait presque jamais ; ses 18 arts
+n'avaient aucun verbe. **L1** — en Lame, un mouvement sans Voie à lui prend celle de l'arme tenue (`voiesDesArmes` : épée
+Miroir, dague Éclair, hache Forge, lance Vide, distance Flash, poings Onde ; sans famille, le fouet : le Sang), par un crochet de
+MaitriseVoies (`Voies.voieDuGeste`) ; une Voie écrite reste la sienne ; changer de Style change de Voie, donc le flux monte.
+**L2** — un verbe du corps par art, tiré de sa description, avec sa ligne : épée Ouvre / Entre / Premier (Iaï), dague Premier /
+Ouvre / Sur, hache Ouvre / Entre / Lâche (Couperet), lance Sur / Ouvre / Finit (Saut du Héron), distance Premier / Reprise /
+Immobile (Tir du Point Mort), poings Ouvre / Entre / Finit (Cent Poings) — 18 fiches, noms, formules, coûts inchangés. **L4** — la
+contre-attaque du Flow est une riposte du contre-temps (`LeMouvement.riposteForcee`) : flux +1, la 3ᵉ ×1,5, elle ne compte pas
+comme un geste de plus, et « après la riposte » tient jusqu'à sa vraie action suivante. Pas fait : L3 (ses arts en PT). Mesure, en Lame (2 parties de
+chaque côté) : 2,00 → 1,95 tours, boss 31 → 30 sur 40, sa part des dégâts contre les boss la même (36 %), mais ses arts en font
+plus (Iaï 6-7 → 10-13 %, Couperet 2 → 5-6 %, Communion des Quatre 47 → 33 %) ; l'équipe (3 parties contre 6) : 2,76 → 2,75 tours,
+boss 42 → 44 sur 60. Bancs : `navigateur/la_lame_de_vesper.js` ; `les_signatures` joue le contre-temps en Garde, `la_regle_pour_tous` la Voie
+par défaut en Sang (en Lame, c'est celle de l'arme).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un

@@ -61,6 +61,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var e = $gameTroop.members()[0];
         e.addParam(0, 9999999); e.recoverAll();
         var VOIE = { 1: 'sang', 2: 'flash', 3: 'source', 4: 'miroir' };
+        // Vesper en Sang : en Lame, ses mouvements prennent la Voie de l'arme tenue (LesStylesDeVesper, 2026-10-26)
+        PacteDeSang.changerStyle('saignee');
         var SIGNE = { sang: /boit le sang/, flash: /ÉCLAT NOIR/, source: /referme ses chairs/, miroir: /Renvoi est prêt/ };
         var out = { reglages: $plugins.filter(function (p) { return p.name === 'MaitriseVoies'; })[0].parameters };
 
