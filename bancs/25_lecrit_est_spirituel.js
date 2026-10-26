@@ -61,6 +61,8 @@ var PAR_SON_EFFET = [105];
 // JOKO, le 2026-10-25 : « Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles » — des mouvements ;
 // le 2026-10-26 : « La Règle du Lieu spirituelle », « Cercle Écarlate spirituelle » — des écrits (contrôle 6)
 var SORTIS = { 464: 'PV', 445: 'PV', 66: 10, 1114: 22, 1115: 44 };
+// Tranche-Néant selon l'arme tenue (JOKO, 2026-10-26 : « oui donc plusieurs variantes ») : ses variantes sont sorties avec elle
+[1310, 1311, 1312, 1313, 1314].forEach(function (id) { SORTIS[id] = 'PV'; });
 var GARDES = { 1116: { pv: 17, sceau: true }, 465: { pv: 10 } };   // Transfusion d'Âme Blanche : 50 % des PV de qui la lance (<Pre-Damage Eval>)
 function base() {
     var S = JSON.parse(lire('data/Skills.json'));
@@ -116,7 +118,7 @@ function controles(S, T) {
         return T.art(s) !== 'mouvement' || !monnaie || /<(Sceau|Cercle|Referme)[:>]/.test(s.note);
     });
     r.push(['5 · ce que JOKO a sorti de l\'écrit est un mouvement, dans sa monnaie, sans verbe de l\'écrit', pasSortis.length === 0,
-        pasSortis.length ? pasSortis.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ')'; }).join(' · ') : 'Fouet de Sang, Tranche-Néant en PV ; le Lotus 10 PT ; Tracer le Cercle 22, Territoire Scellé 44 PT']);
+        pasSortis.length ? pasSortis.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ')'; }).join(' · ') : 'Fouet de Sang, Tranche-Néant (et ses 5 variantes) en PV ; le Lotus 10 PT ; Tracer le Cercle 22, Territoire Scellé 44 PT']);
     // 6
     var pasGardes = Object.keys(GARDES).map(Number).filter(function (id) {
         var s = S[id], g = GARDES[id], pv = /<HP Cost:\s*(\d+)%>/i.exec(s.note);

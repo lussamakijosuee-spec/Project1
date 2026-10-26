@@ -126,7 +126,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | Nv | # | Nom | Coût | Ce que ça fait | Anim | Balises |
 |---|---|---|---|---|---|---|
 | 1 | 133 | Déflagration Spirituelle | 10% PV | dégâts PV *mana spirituelle * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 470 | `<Referme>` `<Post-Damage Eval>` `<Parole: origine>` `<Cooldown: 2>` `<Style: sang>` |
-| 1 | 445 | Tranche-Néant | 25% PV | dégâts PV *AME * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 527 | `<Art: mouvement>` `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` `<Cooldown: 3>` `<Style: lame>` |
+| 1 | 445 | Tranche-Néant | 25% PV | dégâts PV *AME * `Math.floor(a.atk * 29.53 * 200 / (200 + b.def))` | 527 | `<Art: mouvement>` `<ArtArme: epee, sinon>` `<Premier>` `<Ulti>` `<UltiColor: #ff5a4a>` `<After Eval>` `<Parole: origine>` `<Cooldown: 3>` `<Style: lame>` |
 | 1 | 446 | Jugement de Soi | 50 PT + 33% PV | dégâts PV *Physique* `Math.floor(a.atk * 36 * 200 / (200 + b.def))` | 35 | `<Finit>` `<Ulti>` `<UltiColor: #ff8a3a>` `<After Eval>` `<Cooldown: 3>` `<Style: lame>` |
 | 58 | 1149 | Verdict de l'Équilibre | 60 PT | dégâts PV *mana positive* `Math.floor((a.atk + a.mat) * 60 * 100 / (200 + b.def + b.mdf))` · pose « ⚖ Verdict » 100% | 412 | `<Grace>` `<Style: garde>` |
 

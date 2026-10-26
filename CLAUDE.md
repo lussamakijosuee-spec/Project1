@@ -519,11 +519,24 @@ faire des mouvements ? » : *« Fouet de Sang + Cercle, Lotus des Ténèbres, Tr
 qui les annonçaient sont retirés, les descriptions de JOKO rendues. **Deux restent des écrits** (JOKO, 2026-10-26, en relisant
 le tableau) : *« La Règle du Lieu spirituelle »* — 17 % de PV et son Sceau, quand il part l'ennemi perd sa prochaine action (pas
 un boss) ; mesure : 2,79 → 2,76 tours, boss 47 → 47 sur 60 — puis *« Cercle Écarlate spirituelle »* — 10 % de PV, sa fiche d'avant
-(« Parole n°2 » en fait un écrit) ; mesure : 2,76 → 2,72 tours, boss 47 → 45 sur 60 (dans le bruit). Au même message, *« Tranche-Néant art »* : lu « les voies d'art », le
-Mouvement, qu'elle est déjà — rien n'est changé. **Plus aucune capacité ne porte
+(« Parole n°2 » en fait un écrit) ; mesure : 2,76 → 2,72 tours, boss 47 → 45 sur 60 (dans le bruit). Au même message, *« Tranche-Néant art »* : lu d'abord « les voies d'art » (rien changé), puis précisé — voir « Tranche-Néant,
+selon l'arme tenue ». **Plus aucune capacité ne porte
 `<Cercle>`** (le verbe reste dans LEcrit ; `les_verbes` l'essaie sur Marquer la Cible le temps du contrôle) ; Referme reste sur
 Déflagration Spirituelle, Onde Concentrée et Dévoreur d'Âmes, Sceau sur La Règle du Lieu, Faire Douter, Désorientation et Syllabe
 de la Fin. Mesure (avec les sept sorties) : 2,88 → 2,79 tours, boss 44 → 47 sur 60. Banc : `25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).
+
+**Tranche-Néant, selon l'arme tenue** (`LesStylesDeVesper.js` v1.1, 2026-10-26 ; JOKO, à « qu'elle devienne un art d'arme de
+Vesper (style Lame, selon l'arme tenue) » : *« oui donc plusieurs variantes »*). Une variante par famille d'arts d'armes, tirée de ses
+arts, et elle ne voit que celle de l'arme qu'elle tient : **à l'épée** (et au fouet, à l'éclat : `<ArtArme: epee, sinon>`, « sinon » =
+une arme d'aucune famille) 445, toute la troupe, `<Premier>` (Iaï) ; **à la dague** 1310, un ennemi, la moitié de l'armure ignorée (Sous
+la Garde) ; **à la hache** 1311, toute la troupe, 25 % d'Étourdi (Coup d'Épaule) ; **à la lance** 1312, toute la troupe, 30 % de l'armure
+ignorés, AGI −2 tours (Percée, Balayage) ; **à distance** 1313, quatre traits au hasard (Tirs en Pluie) ; **aux poings** (et à mains
+nues) 1314, un ennemi, 40 % de Vertige (Talon Retourné). Même fiche que 445 sauf la forme : nom, 25 % de PV, 3 tours de recharge,
+l'Épuisement de l'Âme, ultime de la branche « ult », Style Lame ; apprises par les traits de Vesper, comme ses arts. Les forces tiennent
+les règles A et A1 (une zone ne peut ni frapper moins que l'épée, ni passer le Ciel Ouvert d'Aël : ×29,7 la hache, ×27 la lance ; un
+seul ennemi : ×33 la dague, ×38 les poings ; ×9 par trait à distance). La forme s'annonce (« ⚔ Tranche-Néant · à la dague »). Le
+plancher du Mana Pur de `7_trois_sources` passe à 43. Mesure (6 parties de chaque côté) : 2,74 → 2,76 tours, boss 46 → 42 sur 60
+— un écart de l'ordre du hasard du banc (un écart-type), dans le sens d'un petit nerf. Banc : `navigateur/tranche_neant.js`.
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
