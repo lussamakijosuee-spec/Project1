@@ -233,7 +233,11 @@
  *  GESTE JUSTE (×1,5). Elle enchaîne pendant qu'on la frappe — tant que le
  *  coup reçu ne brise pas sa posture. <Riposte> (ses gardes) arme une riposte
  *  qui rend ce qu'elle reçoit ; <ApresRiposte> frappe ×1,5 si elle a riposté
- *  depuis sa dernière action.
+ *  depuis sa dernière action. Une action FORCÉE annoncée par
+ *  LeMouvement.riposteForcee(héros, compétence) — la contre-attaque de son
+ *  État de Flow (JOKO, 2026-10-26 : « L4 ») — est une riposte : son flux
+ *  monte, au 3 elle est un geste juste, et elle ne compte pas comme un geste
+ *  de plus.
  *  KORRAH, PENSER JUSTE — « frapper juste ET penser juste ». Dans une posture,
  *  sa Parole ne rompt pas le flux : c'est un pas de plus (+1, ×1,15), et le
  *  geste juste peut tomber sur la Parole ; le mouvement d'après compte comme
@@ -383,6 +387,7 @@ var LeMouvement = LeMouvement || {};
     }
     function remettre(b) {
         b._mvtVoie = ''; b._mvtFlux = 0; b._mvtDernier = 0; b._mvtPense = false; b._riposte = false; b._luPar = 0;
+        b._riposteForcee = 0; b._riposteEnCours = false;
         b._reprise = 0; b._touche = false; b._ripostesCompte = 0; b._lache = false; b._leurre = false; b._voiesVues = {};
     }
 
@@ -602,9 +607,20 @@ var LeMouvement = LeMouvement || {};
         }
     };
 
+    /** La prochaine action forcée de ce héros avec cette compétence est une riposte du contre-temps
+     *  (la contre-attaque du Flow de Vesper, LesStylesDeVesper) : son flux monte, au 3 elle est un geste
+     *  juste — et elle ne compte pas comme un geste de plus (ni « même technique », ni autre Voie). */
+    LeMouvement.riposteForcee = function (b, skillId) { if (b) { b._riposteForcee = skillId; } };
+
     var _debut = BattleManager.startAction;
     BattleManager.startAction = function () {
         var b = this._subject, a = b && b.currentAction && b.currentAction();
+        if (heros(b) && a && a.item() && a._forcing && b._riposteForcee && a.isSkill() && a.item().id === b._riposteForcee) {
+            b._riposteForcee = 0; b._riposteEnCours = true;
+            a._mvtMult = LeMouvement.riposte(b);
+            _debut.call(this);
+            return;
+        }
         if (heros(b) && a && a.item()) {
             decider(b, a);
             if (a.isSkill() && FOCALISE.indexOf(a.item().id) >= 0) { concentrer(b, a); }
@@ -617,7 +633,8 @@ var LeMouvement = LeMouvement || {};
     BattleManager.endAction = function () {
         var b = this._subject;
         if (heros(b) && b._mvtVoie && b.isAlive()) { afficher(b); }
-        if (heros(b)) { b._riposte = false; b._touche = false; }   // « après la riposte », « immobile » : jusqu'à l'action suivante
+        // « après la riposte », « immobile » : jusqu'à l'action suivante — une riposte forcée n'en est pas une
+        if (heros(b)) { if (b._riposteEnCours) { b._riposteEnCours = false; } else { b._riposte = false; b._touche = false; } }
         _fin.call(this);
     };
 

@@ -448,6 +448,12 @@
         }
         var sujet = action.subject();
         if (REGLE && sujet && sujet.isActor && sujet.isActor() && horsDuCorps(item)) return '';
+        // [JOKO 2026-10-26] une Voie que le geste prend d'ailleurs que la fiche — l'arme que Vesper tient en
+        // Lame (LesStylesDeVesper) ; avant sa Voie par défaut
+        if (Voies.voieDuGeste) {
+            var g = normVoie(Voies.voieDuGeste(sujet, item) || '');
+            if (g) return g;
+        }
         var metas = metasOf(sujet);
         for (var i = 0; i < metas.length; i++) {
             if (metas[i] && metas[i].VoieDefaut) {
