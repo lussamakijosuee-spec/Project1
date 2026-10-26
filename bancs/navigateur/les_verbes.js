@@ -144,10 +144,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             BattleManager._subject = qui; BattleManager.startAction(); BattleManager.endAction(); BattleManager._subject = null;
         }
         [ves, kor, lud, ael].forEach(function (a) { a._ecrits = []; });
-        ecrire(lud, 1114, e);                                                                              // Tracer le Cercle
+        // le 2026-10-25, JOKO a sorti Tracer le Cercle de l'écrit : plus aucune capacité ne porte <Cercle> —
+        // le verbe reste dans LEcrit, essayé ici sur Marquer la Cible le temps du contrôle
+        $dataSkills[1238].meta.Cercle = true;
+        ecrire(lud, 1238, e);
         W.cercle = payer(lud, 158, e); W.cercleContre = payer(lud, 158, e2);
+        delete $dataSkills[1238].meta.Cercle;
         lud._ecrits = []; e.recoverAll(); e2.recoverAll();
-        ecrire(lud, 158, e2); ecrire(lud, 1115, e);                                                         // Territoire Scellé
+        ecrire(lud, 158, e2); ecrire(lud, 453, e);                                                          // Dévoreur d'Âmes <Referme>
         var hp2 = e2.hp; ennemiFrappe(e, lud);
         W.referme = { e2: hp2 - e2.hp, reste: E.ecrits(lud).length };
         lud._ecrits = []; e2.recoverAll();
@@ -155,8 +159,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         W.refermeContre = hp2 - e2.hp;
         lud._ecrits = [];
         BattleManager._actionBattlers = [e, e2]; e.clearActions(); e.makeActions();
-        ecrire(lud, 1116, e); E.activer(lud);                                                               // La Règle du Lieu
+        ecrire(lud, 1116, e); E.activer(lud);                                                               // La Règle du Lieu (JOKO, 2026-10-26 : « spirituelle »)
         W.sceau = BattleManager._actionBattlers.indexOf(e) < 0;
+        BattleManager._actionBattlers = [e, e2];
+        // Lotus des Ténèbres, Tranche-Néant, deux des cercles et Fouet de Sang sont des mouvements depuis le 2026-10-25 (JOKO) : plus de verbe de l'écrit
+        W.sortis = [445, 66, 1114, 1115, 464].map(function (id) { var s = $dataSkills[id]; return { nom: s.name, art: LesTroisArts.art(s), verbe: /<(Sceau|Cercle|Referme)[:>]/.test(s.note) }; });
         BattleManager._actionBattlers = [e, e2];
         Math.random = function () { return 0.6; }; ecrire(lud, 1242, e); E.activer(lud);                     // Faire Douter : 0,6 > 50 %
         W.douteRate = BattleManager._actionBattlers.indexOf(e) >= 0;
@@ -183,7 +190,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var at2 = new Game_Action(e2); at2.setAttack(); at2.setTarget($gameParty.members().indexOf(ael));
         W.appatContre = at2.makeTargets().map(function (b) { return b.name(); });
         e._appat = null; lud._ecrits = [];
-        W.balises = [tag(1114, 'Cercle'), tag(1115, 'Referme'), tag(1116, 'Sceau'), tag(1242, 'Sceau'), tag(1166, 'Pret'), tag(1170, 'Symbole'), tag(13, 'Appat')];
+        W.balises = [tag(453, 'Referme'), tag(1116, 'Sceau'), tag(94, 'Sceau'), tag(1242, 'Sceau'), tag(1166, 'Pret'), tag(1170, 'Symbole'), tag(13, 'Appat')];
         W.saignee = { art: LesTroisArts.art($dataSkills[1134]), pv: /<HP Cost: 7%>/.test($dataSkills[1134].note), pt: $dataSkills[1134].tpCost };
         out.ecrit = W;
 
@@ -316,16 +323,19 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var W = r.ecrit;
     console.log('\n3) L\'écrit');
     v('les balises sont posées', W.balises.every(Boolean), JSON.stringify(W.balises));
-    v('Tracer le Cercle : dans le cercle, son écrit ne coûte rien ; hors du cercle, 7 % de PV', W.cercle === 0 && W.cercleContre > 0, W.cercle + ' / ' + W.cercleContre);
-    v('Territoire Scellé : quand il part, tous ses autres écrits partent (même sur l\'autre ennemi)', W.referme.e2 > 0 && W.referme.reste === 0, JSON.stringify(W.referme));
+    v('le Cercle (essayé sur Marquer la Cible) : dans le cercle, son écrit ne coûte rien ; hors du cercle, 7 % de PV', W.cercle === 0 && W.cercleContre > 0, W.cercle + ' / ' + W.cercleContre);
+    v('Dévoreur d\'Âmes <Referme> : quand il part, tous ses autres écrits partent (même sur l\'autre ennemi)', W.referme.e2 > 0 && W.referme.reste === 0, JSON.stringify(W.referme));
     v('…contre-épreuve : sans lui, l\'écrit sur l\'autre ennemi attend', W.refermeContre === 0);
-    v('La Règle du Lieu : l\'ennemi perd sa prochaine action', W.sceau);
+    v('La Règle du Lieu (un écrit, « spirituelle ») : l\'ennemi perd sa prochaine action', W.sceau);
+    v('sortis de l\'écrit (JOKO, 2026-10-25) : Tranche-Néant, le Lotus, Tracer le Cercle, Territoire Scellé et Fouet de Sang sont des mouvements, sans verbe de l\'écrit',
+      W.sortis.every(function (x) { return x.art === 'mouvement' && !x.verbe; }), W.sortis.map(function (x) { return x.nom + ' ' + x.art + (x.verbe ? ' +verbe' : ''); }).join(' · '));
     v('Faire Douter : 1 chance sur 2 (0,6 : non ; 0,4 : oui)', W.douteRate && W.douteTient);
     v('Ombre Prêtée : qui frappe Vesper referme le piège de ludwing', W.pret && W.pretPiege > 0, String(W.pretPiege));
     v('…contre-épreuve : frapper Korrah n\'y fait rien', W.pretContre === 0);
     v('Le Symbole compte pour deux : avec un autre écrit, résonance ×1,3 (au lieu de ×1,15)', W.symbole.join() === 'ᛟ Résonance ×1,3' && W.symboleContre.join() === 'ᛟ Résonance ×1,15', W.symbole.join() + ' / ' + W.symboleContre.join());
     v('Vannes : l\'ennemi provoqué frappe ludwing au lieu d\'Aël ; un autre non', W.appat.join() === 'ludwing' && W.appatContre.join() !== 'ludwing', W.appat.join() + ' / ' + W.appatContre.join());
-    v('Saignée Continue est devenue un écrit de Vesper, payé en PV', W.saignee.art === 'ecrit' && W.saignee.pv && W.saignee.pt === 0);
+    // JOKO, le 2026-10-25 : l'écrit, c'est le mana spirituel — Saignée Continue (élément Physique) redevient un mouvement
+    v('Saignée Continue est redevenue un mouvement à 20 PT (l\'écrit, c\'est le mana spirituel)', W.saignee.art === 'mouvement' && !W.saignee.pv && W.saignee.pt === 20, JSON.stringify(W.saignee));
 
     var D = r.deux;
     console.log('\n4) Le deuxième paquet');

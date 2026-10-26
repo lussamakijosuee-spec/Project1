@@ -1,0 +1,170 @@
+/*
+ * BANC — L'ÉCRIT, C'EST LE MANA SPIRITUEL (2026-10-25)
+ * ---------------------------------------------------------------------------
+ * JOKO, le 2026-10-25 : « ce système de marque s'applique que aux techniques
+ * qui [coûtent] les PV, sauf que c'est pas ça. Non, ça s'applique que aux
+ * techniques du mana spirituel. Pas ceux qui [coûtent] les PV. Tout ce qui est
+ * mana spirituel, faut utiliser ces PV pour l'utiliser. Et il y a le système.
+ * Parce que, par exemple, pour Vesper, une de ses attaques qui est clairement
+ * physique [est] utilisée comme si c'était du mana spirituel. »
+ *
+ * L'attaque, c'était Saignée Continue (élément Physique, coup physique) : le
+ * paquet des verbes l'avait rangée dans l'écrit (<Art: ecrit>, 7 % de PV). Elle
+ * redevient un mouvement à 20 PT, et LesTroisArts refuse désormais l'écrit à
+ * toute technique d'élément Physique ou de l'attaque (elementsJamaisEcrit).
+ * Les techniques de l'âme de ludwing qui se payaient en PM passent en PV.
+ *
+ * Ce banc lit data/ et charge LesTroisArts tel quel ; il vérifie dans les deux
+ * sens, et chaque contrôle tombe sur une base sabotée exprès :
+ *   1. aucun écrit d'un héros n'est un coup physique ;
+ *   2. Saignée Continue est un mouvement, à 20 PT, avec sa description de JOKO ;
+ *   3. tout écrit d'un héros se paie en PV, et seulement en PV (sauf ce qu'un
+ *      ennemi utilise, et Transfusion d'Âme Blanche, qui prend ses PV par son
+ *      effet — une formule à caractère) ;
+ *   4. dans l'autre sens : toute technique d'un héros au mana spirituel (élément
+ *      2 ou 7) est un écrit, et un écrit spirituel le reste — sauf ce que JOKO a
+ *      sorti de l'écrit ;
+ *   5. ce que JOKO a sorti de l'écrit le même jour (« Fouet de Sang + Cercle,
+ *      Lotus des Ténèbres, Tranche-Néant, Les 3 cercles ») : des mouvements, dans
+ *      leur monnaie, sans verbe de l'écrit — sauf ce qu'il a gardé spirituel :
+ *   6. JOKO, le 2026-10-26, en relisant le tableau : « La Règle du Lieu
+ *      spirituelle », puis « Cercle Écarlate spirituelle » — des écrits :
+ *      La Règle du Lieu à 17 % de PV, avec son Sceau (l'ennemi perd sa
+ *      prochaine action), Cercle Écarlate à 10 % de PV.
+ *
+ *   node bancs/25_lecrit_est_spirituel.js
+ */
+'use strict';
+var fs = require('fs');
+var path = require('path');
+var RACINE = path.join(__dirname, '..');
+function lire(f) { return fs.readFileSync(path.join(RACINE, f), 'utf8'); }
+
+var $plugins = eval(lire('js/plugins.js').replace(/^[\s\S]*?var \$plugins\s*=/, '(').replace(/;\s*$/, ')'));
+global.PluginManager = { parameters: function (n) { var p = $plugins.find(function (x) { return x.name === n; }); return p ? p.parameters : {}; } };
+global.DataManager = { isSkill: function (x) { return !!x && x._competence === true; } };
+['Game_Action', 'Window_SkillList', 'Game_BattlerBase', 'Game_Actor'].forEach(function (k) { global[k] = function () {}; global[k].prototype = {}; });
+eval(lire('js/plugins/LesTroisArts.js').replace('var LesTroisArts = LesTroisArts || {};', 'global.LesTroisArts = {};'));
+// la même, chargée SANS la règle (elementsJamaisEcrit vide) : pour la contre-épreuve
+var SANS_REGLE = (function () {
+    var vrai = PluginManager.parameters;
+    PluginManager.parameters = function (n) { var p = Object.assign({}, vrai(n)); if (n === 'LesTroisArts') { p.elementsJamaisEcrit = ''; } return p; };
+    var LesTroisArts = {};
+    eval(lire('js/plugins/LesTroisArts.js').replace('var LesTroisArts = LesTroisArts || {};', ''));
+    PluginManager.parameters = vrai;
+    return LesTroisArts;
+})();
+
+var C = JSON.parse(lire('data/Classes.json')), A = JSON.parse(lire('data/Actors.json')), E = JSON.parse(lire('data/Enemies.json'));
+var ENNEMI = {}; E.forEach(function (e) { if (e) { e.actions.forEach(function (a) { ENNEMI[a.skillId] = 1; }); } });
+var PAR_SON_EFFET = [105];
+// JOKO, le 2026-10-25 : « Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles » — des mouvements ;
+// le 2026-10-26 : « La Règle du Lieu spirituelle », « Cercle Écarlate spirituelle » — des écrits (contrôle 6)
+var SORTIS = { 464: 'PV', 445: 'PV', 66: 10, 1114: 22, 1115: 44 };
+// Tranche-Néant selon l'arme tenue (JOKO, 2026-10-26 : « oui donc plusieurs variantes ») : ses variantes sont sorties avec elle
+[1310, 1311, 1312, 1313, 1314].forEach(function (id) { SORTIS[id] = 'PV'; });
+var GARDES = { 1116: { pv: 17, sceau: true }, 465: { pv: 10 } };   // Transfusion d'Âme Blanche : 50 % des PV de qui la lance (<Pre-Damage Eval>)
+function base() {
+    var S = JSON.parse(lire('data/Skills.json'));
+    S.forEach(function (s) {
+        if (!s) { return; }
+        s._competence = true; s.meta = {};
+        var re = /<([^<>:]+)(:?)([^>]*)>/g, m;
+        while ((m = re.exec(s.note))) { s.meta[m[1]] = m[2] === ':' ? m[3] : true; }
+    });
+    return S;
+}
+function heros(S) {
+    var vus = {};
+    [1, 2, 3, 4].forEach(function (c) {
+        C[c].learnings.forEach(function (l) { vus[l.skillId] = 1; });
+        A[c].traits.forEach(function (t) { if (t.code === 43) { vus[t.dataId] = 1; } });
+    });
+    return Object.keys(vus).map(Number).map(function (id) { return S[id]; }).filter(function (s) { return s && s.id > 2; });
+}
+function elements(s) {
+    var e = [s.damage.elementId];
+    if (s.meta['Multiple Elements']) { String(s.meta['Multiple Elements']).split(',').forEach(function (x) { e.push(+x); }); }
+    return e;
+}
+
+function controles(S, T) {
+    T = T || LesTroisArts;
+    var r = [], H = heros(S), ecrits = H.filter(function (s) { return T.art(s) === 'ecrit'; });
+    // 1
+    var physiques = ecrits.filter(function (s) { return s.damage.elementId === 1 || s.damage.elementId === -1; });
+    r.push(['1 · aucun écrit d\'un héros n\'est un coup physique', physiques.length === 0,
+        physiques.length ? physiques.map(function (s) { return s.id + ' ' + s.name; }).join(', ') : ecrits.length + ' écrits, tous d\'un autre élément']);
+    // 2
+    var sc = S[1134];
+    r.push(['2 · Saignée Continue est un mouvement, à 20 PT, ni PV ni PM, avec sa description de JOKO',
+        LesTroisArts.art(sc) === 'mouvement' && sc.tpCost === 20 && sc.mpCost === 0 && !/<HP Cost/i.test(sc.note) && sc.description === 'On ne frappe plus : on attend que ça fasse effet.',
+        LesTroisArts.art(sc) + ' · ' + sc.tpCost + ' PT · ' + JSON.stringify(sc.description)]);
+    // 3
+    var mal = ecrits.filter(function (s) {
+        if (ENNEMI[s.id] || PAR_SON_EFFET.indexOf(s.id) >= 0) { return false; }
+        return !/<HP Cost:\s*\d+%>/i.test(s.note) || s.mpCost > 0 || s.tpCost > 0;
+    });
+    r.push(['3 · tout écrit d\'un héros se paie en PV, et seulement en PV', mal.length === 0,
+        mal.length ? mal.slice(0, 4).map(function (s) { return s.id + ' ' + s.name + ' (' + s.mpCost + ' PM, ' + s.tpCost + ' PT)'; }).join(' · ') : 'les ' + ecrits.length + ' écrits (sauf Ce Qu\'il A Gardé, qu\'un ennemi utilise, et Transfusion, par son effet)']);
+    // 4
+    var horsSysteme = H.filter(function (s) { return SORTIS[s.id] === undefined && elements(s).some(function (e) { return e === 2 || e === 7; }) && T.art(s) !== 'ecrit'; });
+    r.push(['4 · toute technique d\'un héros au mana spirituel (élément 2 ou 7) est un écrit', horsSysteme.length === 0,
+        horsSysteme.length ? horsSysteme.slice(0, 4).map(function (s) { return s.id + ' ' + s.name + ' (' + T.art(s) + ')'; }).join(' · ') : 'aucune hors du système (hors les sorties de JOKO)']);
+    // 5
+    var pasSortis = Object.keys(SORTIS).map(Number).filter(function (id) {
+        var s = S[id], m = SORTIS[id];
+        var monnaie = m === 'PV' ? (/<HP Cost:\s*\d+%>/i.test(s.note) && !s.mpCost) : (s.tpCost === m && !s.mpCost && !/<HP Cost/i.test(s.note));
+        return T.art(s) !== 'mouvement' || !monnaie || /<(Sceau|Cercle|Referme)[:>]/.test(s.note);
+    });
+    r.push(['5 · ce que JOKO a sorti de l\'écrit est un mouvement, dans sa monnaie, sans verbe de l\'écrit', pasSortis.length === 0,
+        pasSortis.length ? pasSortis.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ')'; }).join(' · ') : 'Fouet de Sang, Tranche-Néant (et ses 5 variantes) en PV ; le Lotus 10 PT ; Tracer le Cercle 22, Territoire Scellé 44 PT']);
+    // 6
+    var pasGardes = Object.keys(GARDES).map(Number).filter(function (id) {
+        var s = S[id], g = GARDES[id], pv = /<HP Cost:\s*(\d+)%>/i.exec(s.note);
+        var sceau = !g.sceau || (/<Sceau:\s*100>/.test(s.note) && /perd sa prochaine action/.test(s.description));
+        return T.art(s) !== 'ecrit' || !pv || +pv[1] !== g.pv || s.mpCost || s.tpCost || !sceau;
+    });
+    r.push(['6 · ce que JOKO a gardé spirituel est un écrit, en PV : La Règle du Lieu (17 %, avec son Sceau), Cercle Écarlate (10 %)', pasGardes.length === 0,
+        pasGardes.length ? pasGardes.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ', ' + S[id].tpCost + ' PT, ' + JSON.stringify(S[id].note.slice(0, 60)) + ')'; }).join(' · ')
+            : Object.keys(GARDES).map(function (id) { return S[id].name.replace('Parole n°2 ', '') + ' ' + T.art(S[id]) + ' ' + GARDES[id].pv + ' % PV'; }).join(' · ')]);
+    return r;
+}
+
+var ok = 0, ko = 0;
+function montre(c) { if (c[1]) { ok++; console.log('   ✓ ' + c[0] + '  —  ' + c[2]); } else { ko++; console.log('   ✗ ' + c[0] + '  —  ' + c[2]); } }
+console.log('L\'ÉCRIT, C\'EST LE MANA SPIRITUEL\n');
+console.log('1) Sur la vraie base');
+controles(base()).forEach(montre);
+
+console.log('\n2) La règle de LesTroisArts, dans les deux sens');
+var B = base();
+B[1134].note = '<Art: ecrit>\n' + B[1134].note;
+montre(['une fiche physique marquée <Art: ecrit> (Saignée Continue comme avant) reste un mouvement', LesTroisArts.art(B[1134]) === 'mouvement', LesTroisArts.art(B[1134])]);
+B[1134].meta.Art = ' ecrit';
+montre(['… même quand la métadonnée est lue', LesTroisArts.art(B[1134]) === 'mouvement', LesTroisArts.art(B[1134])]);
+montre(['contre-épreuve : un écrit spirituel le reste (Trait Spectral, Déflagration Spirituelle, Cloison)',
+    ['ecrit', 'ecrit', 'ecrit'].join() === [158, 133, 1117].map(function (id) { return LesTroisArts.art(B[id]); }).join(),
+    [158, 133, 1117].map(function (id) { return B[id].name + ' ' + LesTroisArts.art(B[id]); }).join(' · ')]);
+
+var SABOTAGES = [
+    ['sans la règle de LesTroisArts, l\'ancienne Saignée Continue (<Art: ecrit>) redevient un écrit physique', function (S) { S[1134].meta.Art = ' ecrit'; return SANS_REGLE; }, /^1 ·/],
+    ['Saignée Continue rendue à 7 % de PV', function (S) { S[1134].tpCost = 0; S[1134].note = '<HP Cost: 7%>\n' + S[1134].note; }, /^2 ·/],
+    ['le Registre de ludwing rendu à 26 PM', function (S) { S[1165].mpCost = 26; S[1165].note = S[1165].note.replace(/<HP Cost: \d+%>\n?/, ''); }, /^3 ·/],
+    ['une technique de l\'âme rangée dans la Parole (<Art: parole> sur Trait Spectral)', function (S) { S[158].meta.Art = 'parole'; }, /^4 ·/],
+    ['Tracer le Cercle remis dans l\'écrit', function (S) { S[1114].meta.Art = ' ecrit'; }, /^5 ·/],
+    ['le Referme rendu à Territoire Scellé', function (S) { S[1115].note = '<Referme>\n' + S[1115].note; }, /^5 ·/],
+    ['La Règle du Lieu passée en mouvement à 50 PT (comme le 2026-10-25)', function (S) { S[1116].meta.Art = ' mouvement'; S[1116].tpCost = 50; }, /^6 ·/],
+    ['La Règle du Lieu sans son Sceau', function (S) { S[1116].note = S[1116].note.replace(/<Sceau: 100>\n?/, ''); }, /^6 ·/],
+    ['Cercle Écarlate laissée en mouvement (comme le 2026-10-25)', function (S) { S[465].meta.Art = ' mouvement'; }, /^6 ·/]
+];
+console.log('\n3) Contre-épreuve — chaque sabotage doit faire tomber SON contrôle');
+SABOTAGES.forEach(function (sb) {
+    var S = base(), T = sb[1](S);
+    var tombe = controles(S, T).filter(function (c) { return !c[1]; }).map(function (c) { return c[0]; });
+    var sien = tombe.filter(function (c) { return sb[2].test(c); })[0];
+    montre([sb[0], !!sien, sien ? '« ' + sien + ' » tombe' + (tombe.length > 1 ? ' (et ' + (tombe.length - 1) + ' autre)' : '') : 'tombés : ' + (tombe.join(' | ') || 'aucun')]);
+});
+
+console.log('\n' + '='.repeat(70) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(70));
+process.exit(ko === 0 ? 0 : 1);

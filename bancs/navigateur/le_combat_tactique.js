@@ -331,7 +331,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var s0 = JSON.parse(JSON.stringify(A.statsCombat()));
         var c = T.skill('', { damage: { type: 1, elementId: 0, formula: '7', variance: 0, critical: false } });
         T.frapper(A, E, c);
-        var soin = T.skill('', { damage: { type: 3, elementId: 0, formula: '20', variance: 0, critical: false }, scope: 7 });
+        // un soin sans art : un soin est une Parole (LesTroisArts), et la Parole est hors des affinités de Vesper (×0,75)
+        var soin = T.skill('<Art: aucun>', { damage: { type: 3, elementId: 0, formula: '20', variance: 0, critical: false }, scope: 7 });
         B.setHp(B.mhp - 50); T.frapper(A, B, soin);
         var tue = T.skill('', { damage: { type: 1, elementId: 0, formula: '999999', variance: 0, critical: false } });
         T.frapper(A, E, tue);

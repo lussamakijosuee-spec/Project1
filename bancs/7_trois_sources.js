@@ -58,6 +58,10 @@ function controles(base) {
             var p = paye(k), t = artFiche(k);
             if (t && t !== ART_DE[elem]) { return false; }         // <Art:> sur la fiche décide
             if (!t && elem === 3 && mouvement(k)) { return false; }
+            // le rework, V1 (JOKO, 2026-10-25 : « Oui tout ») : le sang de Vesper (branche 10) se paie en sang —
+            // « son don le transforme en sang, et son sang se manie par les voies d'art » (la Bible) ;
+            // contrôlé par bancs/navigateur/le_sang_de_vesper.js
+            if (elem === 4 && k.stypeId === 10) { return false; }
             return p.pm || p.pt || p.pv;                 // les gratuites sont hors sujet
         });
         var fautives = liste.filter(function (k) {
@@ -101,7 +105,7 @@ function controles(base) {
     // ne faisait tomber aucun contrôle. Un contrôle avec du mou n'est pas un
     // contrôle. Le plancher vaut le compte RÉEL : §3 interdit de supprimer, donc
     // ce nombre ne peut que monter, et toute perte se voit immédiatement.
-    var PLANCHER = [38, 11];   // 2026-09-26 : + Jugement des Défunts et Rappel des Âmes (ludwing, AME)
+    var PLANCHER = [43, 11];   // 2026-09-26 : + Jugement des Défunts et Rappel des Âmes (ludwing, AME) ; 2026-10-26 : + les 5 variantes de Tranche-Néant
     r.push(['le Mana Pur (7, 16) garde ses compétences et son prix libre',
         compte[0] >= PLANCHER[0] && compte[1] >= PLANCHER[1],
         'élém 7 : ' + compte[0] + ' (plancher ' + PLANCHER[0] + ') · élém 16 : ' +

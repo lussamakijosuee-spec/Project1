@@ -194,7 +194,8 @@
     var _can = Game_BattlerBase.prototype.canPaySkillCost;
     Game_BattlerBase.prototype.canPaySkillCost = function (skill) {
         if (enDomaine(this) && estInvocation(skill)) {
-            return this._tp >= this.skillTpCost(skill) && this._mp >= this.skillMpCost(skill);
+            return this._tp >= this.skillTpCost(skill) && this._mp >= this.skillMpCost(skill) &&
+                (!this.skillHpCost || this._hp > this.skillHpCost(skill));   // 2026-10-25 : ses techniques de l'âme se paient en PV
         }
         return _can.call(this, skill);
     };

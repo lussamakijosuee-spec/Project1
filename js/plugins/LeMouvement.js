@@ -105,6 +105,34 @@
  * @text <Lecture> : son prochain mouvement sur l'ennemi lu ×
  * @default 1.5
  *
+ * @param === KORRAH : LA TÊTE EN L'AIR ===
+ * @default
+ *
+ * @param teteEnLair
+ * @text Ceux qui ont la tête en l'air
+ * @default 2
+ * @desc Korrah (2) — « des attaques visées ratées […] Elle doit apprendre à se concentrer » (la Bible).
+ *
+ * @param rateTeteEnLair
+ * @text Attaque visée ratée (%)
+ * @default 15
+ * @desc Ses attaques sur une seule cible ratent cette part du temps, sauf concentrée (une <Sur> ne rate jamais).
+ *
+ * @param etatConcentree
+ * @text État — Concentrée
+ * @type state
+ * @default 258
+ *
+ * @param bonusConcentree
+ * @text Concentrée : dégâts ×
+ * @default 1.25
+ * @desc Sa prochaine attaque visée ne rate pas (ni esquive) et frappe plus fort ; la concentration part avec elle.
+ *
+ * @param seConcentrent
+ * @text Ce qui la concentre (compétences)
+ * @default 451
+ * @desc En plus de « penser juste » (une Parole dans sa posture) : Focalisation (451).
+ *
  * @param === LES VERBES DU CORPS ===
  * @default
  *
@@ -211,6 +239,12 @@
  *  geste juste peut tomber sur la Parole ; le mouvement d'après compte comme
  *  une autre Voie. <Lecture> (Lecture du Corps, Œil du Stratège, Analyse
  *  Tactique) : l'ennemi est lu, son prochain mouvement sur lui frappe ×1,5.
+ *  KORRAH, LA TÊTE EN L'AIR (le rework, K1, 2026-10-25 ; la Bible : « des
+ *  attaques visées ratées […] Elle doit apprendre à se concentrer ») — ses
+ *  attaques sur une seule cible ratent 15 % du temps (pas une <Sur>). Penser
+ *  juste ou Focalisation la CONCENTRE (état 258, 🎯) : sa prochaine attaque
+ *  visée ne rate pas, ne s'esquive pas, et frappe ×1,25 — puis la
+ *  concentration part. Ce qui la concentre n'en profite pas soi-même.
  *
  *  LES VERBES DU CORPS (2026-10-22, « Oui rework tout ») — une balise sur une
  *  capacité, une ligne dans sa description ; chacun vient du nom que JOKO lui
@@ -273,6 +307,11 @@ var LeMouvement = LeMouvement || {};
     var APRES      = nombre('apresRiposte', 1.5);
     var PENSER     = liste('penserJuste', '2');
     var LU         = nombre('luDavance', 1.5);
+    var TETE       = liste('teteEnLair', '2');
+    var RATE_TETE  = nombre('rateTeteEnLair', 15) / 100;
+    var ETAT_CONC  = nombre('etatConcentree', 258);
+    var BONUS_CONC = nombre('bonusConcentree', 1.25);
+    var FOCALISE   = liste('seConcentrent', '451');
     var FINIT      = nombre('finitParFlux', 0.3);
     var REPRISE    = nombre('reprise', 1.2);
     var ENTRE      = nombre('entreDeux', 1.5);
@@ -368,6 +407,7 @@ var LeMouvement = LeMouvement || {};
         }
         action._mvtMult = mult;
         annonce(b, texte, couleur);
+        concentrer(b, action);                              // penser juste la concentre (la tête en l'air)
     }
 
     function decider(b, action) {
@@ -487,13 +527,50 @@ var LeMouvement = LeMouvement || {};
         return k;
     };
 
+    //=========================================================================
+    // Korrah, la tête en l'air : ses attaques visées ratent parfois — sauf
+    // concentrée : alors elle ne rate pas, et frappe plus fort
+    //=========================================================================
+    function teteEnLair(b) { return heros(b) && TETE.indexOf(b.actorId()) >= 0; }
+    function visee(action) {
+        var it = action.item();
+        return !!(it && enCombat() && teteEnLair(action.subject()) && action.isForOpponent() && it.scope === 1 &&
+            it.damage && (it.damage.type === 1 || it.damage.type === 5));
+    }
+    function concentrer(b, action) {
+        if (!teteEnLair(b) || !$dataStates[ETAT_CONC]) { return; }
+        if (action) { action._concentreeNee = true; }       // ce qui la concentre n'en profite pas soi-même
+        if (b.isStateAffected(ETAT_CONC)) { return; }
+        b.addState(ETAT_CONC);
+        if (b.isStateAffected(ETAT_CONC)) { annonce(b, '🎯 Concentrée', '#ffd84a'); }
+    }
+    /** Décidé une fois par action, au premier coup : '' | 'concentree' | 'ailleurs'. */
+    function teteDe(action) {
+        if (action._tete !== undefined) { return action._tete; }
+        var b = action.subject();
+        action._tete = '';
+        if (!visee(action) || action._concentreeNee) { return ''; }
+        if (b.isStateAffected(ETAT_CONC)) {
+            action._tete = 'concentree';
+            b.removeState(ETAT_CONC);
+            annonce(b, '🎯 Concentrée ×' + chiffre(BONUS_CONC), '#ffd84a');
+        } else if (!balise(action.item(), 'Sur') && Math.random() < RATE_TETE) {
+            action._tete = 'ailleurs';
+        }
+        return action._tete;
+    }
+
     // <Sur> : « rien qui rate, jamais »
     var _touche = Game_Action.prototype.itemHit;
     Game_Action.prototype.itemHit = function (target) {
+        var tete = teteDe(this);
+        if (tete === 'concentree') { return 1; }
+        if (tete === 'ailleurs') { return 0; }
         return balise(this.item(), 'Sur') && heros(this.subject()) ? 1 : _touche.call(this, target);
     };
     var _esquive = Game_Action.prototype.itemEva;
     Game_Action.prototype.itemEva = function (target) {
+        if (this._tete === 'concentree') { return 0; }
         if (balise(this.item(), 'Sur') && heros(this.subject())) { return 0; }
         var e = _esquive.call(this, target);
         return target && target._leurre && heros(target) && enCombat() ? Math.min(0.95, e + LEURRE) : e;
@@ -504,6 +581,10 @@ var LeMouvement = LeMouvement || {};
         _appliquer.call(this, target);
         var it = this.item(), u = this.subject();
         if (!enCombat() || !it || !heros(u) || !it.meta) { return; }
+        if (this._tete === 'ailleurs' && !this._teteVue && target && target.result().missed) {
+            this._teteVue = true;
+            annonce(u, '💭 La tête ailleurs…', '#c0c0c0');
+        }
         if (it.meta.Riposte !== undefined && !this._riposteArmee) {   // sur soi ou en frappant : une fois par action
             this._riposteArmee = true;
             u._voieReflux = RIPOSTE;
@@ -524,7 +605,10 @@ var LeMouvement = LeMouvement || {};
     var _debut = BattleManager.startAction;
     BattleManager.startAction = function () {
         var b = this._subject, a = b && b.currentAction && b.currentAction();
-        if (heros(b) && a && a.item()) { decider(b, a); }
+        if (heros(b) && a && a.item()) {
+            decider(b, a);
+            if (a.isSkill() && FOCALISE.indexOf(a.item().id) >= 0) { concentrer(b, a); }
+        }
         _debut.call(this);
     };
 
@@ -541,6 +625,7 @@ var LeMouvement = LeMouvement || {};
     Game_Action.prototype.makeDamageValue = function (target, critical) {
         var v = _valeur.call(this, target, critical);
         if (this._mvtMult && this._mvtMult !== 1 && v !== 0) { v = Math.round(v * this._mvtMult); }
+        if (this._tete === 'concentree' && v !== 0) { v = Math.round(v * BONUS_CONC); }
         var it = this.item(), u = this.subject();
         if (v > 0 && target && target._lache && heros(target) && enCombat()) {
             v = Math.round(v * LACHE);                       // la garde lâchée : elle encaisse plus fort

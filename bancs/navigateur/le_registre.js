@@ -155,12 +155,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         __ames(1); r.a1 = l.canUse(sk);
         __ames(2); r.a2 = l.canUse(sk);
         // la puissance « à sa mesure » : 50 % d'Ombre — Nuit (sans élément) × l'élément de la copie
+        // (le poids des âmes, le rework L1, multiplie tout ce qu'il frappe selon ses âmes : on le met à part ici)
+        Registre._sansPoids = true;
         var ref = $dataSkills[1224], sauve = [sk.damage.variance, sk.damage.critical, ref.damage.variance, ref.damage.critical];
         sk.damage.variance = 0; sk.damage.critical = false; ref.damage.variance = 0; ref.damage.critical = false;
         __solide(e);
         var a0 = new Game_Action(l); a0.setSkill(id); var plein = a0.makeDamageValue(e, false);
         var rn = new Game_Action(l); rn.setSkill(1224); rn.calcElementRate = function () { return 1; };
-        var neutre = rn.makeDamageValue(e, false);
+        // la copie est une technique du don (type 26) : Nuit, sa mesure, se compte sans le prix de l'affinité (LesTroisArts)
+        LesTroisArts._sansAffinites = true; var neutre = rn.makeDamageValue(e, false); LesTroisArts._sansAffinites = false;
         l.paySkillCost(sk);
         r.apres = { ames: __ames(), gardee: l._louCopiedSkills.indexOf(id) >= 0, collee: l._registreCopie === id, affaiblie: !!l._louCopyWeaken };
         var a1 = new Game_Action(l); a1.setSkill(id);
@@ -169,6 +172,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         l._registreCopie = 0; l._louCopyWeaken = true;
         var a2 = new Game_Action(l); a2.setSkill(id); r.hasard = { valeur: a2.makeDamageValue(e, false), attendu: Math.floor(plein * 0.5) };
         l._louCopyWeaken = false;
+        Registre._sansPoids = false;
         sk.damage.variance = sauve[0]; sk.damage.critical = sauve[1]; ref.damage.variance = sauve[2]; ref.damage.critical = sauve[3];
         r.brancheVide = l.addedSkillTypes().indexOf(26) >= 0;
         // un Marqué se laisse copier dès sa première technique — un autre non
@@ -220,13 +224,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         debut(1, 5); r.seuil = $gameVariables.value(5); r.vide = $gameTemp._registreMise === null;
         __ames(3); l.paySkillCost($dataSkills[14]); r.ames3 = __ames(); debut(1, 5); r.seuil3 = $gameVariables.value(5);
         __ames(0); l.paySkillCost($dataSkills[14]); debut(1, 5); r.seuil0 = $gameVariables.value(5);
-        // Arme d'Ombre : des tirages imposés — 100, puis 900, 500, 960 : il garde 960
+        // Arme d'Ombre : des tirages imposés — 100, puis 900, 500, 960 : il garde 960. Seuls les tirages de
+        // l'événement (1 à 1000) sont imposés : le poids des âmes pose l'état 259, et MV tire alors
+        // Math.randomInt(1) pour sa durée — il avalait le premier tirage quand l'état n'était pas encore là
         var vrai = Math.randomInt, suite = [99, 899, 499, 959], k = 0;
-        Math.randomInt = function (m) { return k < suite.length ? suite[k++] : vrai(m); };
+        Math.randomInt = function (m) { return m > 1 && k < suite.length ? suite[k++] : vrai(m); };
         __ames(10); l.paySkillCost($dataSkills[111]); r.amesArme = __ames();
-        debut(22, 41); r.tirage = $gameVariables.value(41);
+        var k0 = k; debut(22, 41); r.tirage = $gameVariables.value(41); r.imposes = k - k0;
         Math.randomInt = vrai;
-        k = 0; Math.randomInt = function (m) { return k < suite.length ? suite[k++] : vrai(m); };
+        k = 0; Math.randomInt = function (m) { return m > 1 && k < suite.length ? suite[k++] : vrai(m); };
         __ames(0); l.paySkillCost($dataSkills[111]); debut(22, 41); r.tirage0 = $gameVariables.value(41);
         Math.randomInt = vrai;
         // contre-épreuve : quelqu'un d'autre qui lance la Roulette ne mise rien
@@ -238,7 +244,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('… et le seuil passe de 1 à 6 (6 chances sur 30)', mi.seuil === 6 && mi.vide, String(mi.seuil));
     v('3 âmes : il mise les 3, seuil 4', mi.ames3 === 0 && mi.seuil3 === 4, mi.ames3 + ' · ' + mi.seuil3);
     v('sans âme : seuil 1, comme avant', mi.seuil0 === 1);
-    v('Arme d\'Ombre, 10 âmes : 3 misées, le meilleur de 4 tirages gardé', mi.amesArme === 7 && mi.tirage === 960, mi.amesArme + ' âmes · tirage ' + mi.tirage);
+    v('Arme d\'Ombre, 10 âmes : 3 misées, le meilleur de 4 tirages gardé', mi.amesArme === 7 && mi.tirage === 960 && mi.imposes === 4, mi.amesArme + ' âmes · tirage ' + mi.tirage + ' · ' + mi.imposes + ' tirages imposés sur 4');
     v('sans âme : le premier tirage, comme avant', mi.tirage0 === 100, String(mi.tirage0));
     v('contre-épreuve : Vesper ne mise rien', /^10 null$/.test(mi.autre), mi.autre);
 
@@ -255,6 +261,11 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         l.paySkillCost($dataSkills[14]); r.mise = JSON.stringify($gameTemp._registreMise) + ' · ' + __ames();
         $gameTemp._registreMise = null;
         __ames(0); r.invocation = l.canUse($dataSkills[124]);
+        // le 2026-10-25, ses techniques de l'âme se paient en PV : dans le Domaine, l'invocation regarde aussi ses PV
+        var pv = l.skillHpCost($dataSkills[124]), hp0 = l.hp;
+        l.setHp(pv); r.invocationSansPV = l.canPaySkillCost($dataSkills[124]);
+        l.setHp(pv + 1); r.invocationAvecPV = l.canPaySkillCost($dataSkills[124]); r.prixPV = pv;
+        l.setHp(hp0);
         l.removeState(198); l._louCopiedSkills = [];
         return r;
     });
@@ -262,6 +273,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('dans le Domaine : une copie sans âme, gratuite et gardée', dm.dans && dm.copie && dm.copieApres.ames === 0 && dm.copieApres.gardee, JSON.stringify(dm.copieApres));
     v('dans le Domaine : la mise maximale, offerte', /"n":5/.test(dm.mise) && / 0$/.test(dm.mise), dm.mise);
     v('dans le Domaine : une invocation sans âme (RoyaumeImperial)', dm.invocation);
+    v('… mais pas sans les PV qu\'elle coûte (à son prix, non ; un PV de plus, oui)', dm.prixPV > 0 && !dm.invocationSansPV && dm.invocationAvecPV, dm.prixPV + ' PV');
 
     // ── 7 · un vrai combat ──────────────────────────────────────────────
     console.log('\n7) Un vrai combat, laissé tourner');

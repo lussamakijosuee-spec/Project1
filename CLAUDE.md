@@ -21,9 +21,10 @@ don et couverture on enlève »*. Le lore se réduit à **l'explication du mana*
 systèmes dedans »* : son monde reste, et ce qui est dans le jeu y est entré. Son monde, c'est un seul Livre,
 Anésidora, les failles, les trois Chapitres, l'Académie Rubis et sept royaumes. Ce qui est entré, c'est le
 triangle de sa Genèse (celui du jeu), les trois arts au combat et les pages des héros. Les dons et les
-manifestations y reviennent comme lore. Ses règles de jeu ne s'appliquent pas toutes seules (§2) : une seule
-affinité, le prix de l'excès, les jauges des manifestations, « tuer ne fait pas monter de niveau » — je les
-propose, JOKO décide. Le lore se cite toujours (§1), désormais dans la Bible.
+manifestations y reviennent comme lore. Ses règles de jeu ne s'appliquent pas toutes seules (§2) : le prix
+de l'excès, les jauges des manifestations, « tuer ne fait pas monter de niveau » — je les propose, JOKO décide
+(il a dit non pour l'instant) ; **une seule affinité** est entrée le 2026-10-24 (« Les affinités », plus bas).
+Le lore se cite toujours (§1), désormais dans la Bible.
 
 **Quand JOKO dit « fais », il veut que je fasse — pas que je devine.** *« je suis un peu trop vague
 dans mes propos […] je veux que tu fasses, pas que tu devines. »* Ce qu'il écrit noir sur blanc
@@ -412,7 +413,8 @@ boucliers) — un mouvement de Feu frappe en Feu et en négatif ; ▲ / ▼ s'an
 écrit : PM → PV au tiers, ou seulement le PV qu'il avait déjà ; Parole : ses PT en PM ; un PV hors ultime
 retiré). **Toute capacité a un art** : les 41 de soutien qui n'en avaient pas reçoivent `<Art:>` — ludwing
 écrit d'abord (les cercles du Domaine 1114-1117 « À partir d'ici, c'est chez toi », Marquer la Cible, Faire
-Douter, Ombre Prêtée, Lotus des Ténèbres, Âme d'Ombre), Aël parle (Halo seul est écrit), Vesper bouge (ses
+Douter, Ombre Prêtée, Lotus des Ténèbres, Âme d'Ombre — Tracer le Cercle, Territoire Scellé et le Lotus sont des mouvements depuis
+le 2026-10-25, voir « L'écrit, c'est le mana spirituel »), Aël parle (Halo seul est écrit), Vesper bouge (ses
 gardes ; L'Équilibre Tenu est écrit), Korrah bouge (prises, postures) et parle (ordres de l'esprit, Ralentir
 qui confie ses PM) ; restent sans art Fuir, revelation, VUE et les pièces des dons (438, 818, 14, 111, 69).
 **« Sauf les dons »** : les types ouverts par l'acteur ou par son don (4, 5, 6, 8-24, 26) et 71, 810,
@@ -422,6 +424,69 @@ retirées sur 8 mouvements que leurs PT limitent, posée sur Annihilation des T�
 **Éteints** : FusionMana, ElementsVivants, LeSpirituel ; ManaAffinity : recul 0 / 0, `elPur` 99 (7 est le
 spirituel). Les 9 Voies de MaitriseVoies restent (les styles du corps ; le Masque de Vesper boit le drain du
 Sang). Banc : `navigateur/les_trois_arts.js`.
+
+**Les affinités** (`LesTroisArts.js` v1.1, 2026-10-24 ; JOKO : *« L'affinité unique oui c'est tout »*, *« non
+change pas le nom »*). La Bible : *« Chaque personne naît avec une seule affinité »*, *« C'est le don ou le trait qui
+ajoute une seconde affinité »*, *« un art hors de son affinité coûte plus et rend moins »*. Les affinités choisies par
+JOKO (réglage `affinites`) : **Vesper** spirituel + négatif (son sang) — ses Paroles sont hors affinité ; **Korrah**
+négatif + positif (l'Hiver de seiryu) — ses écrits ; **ludwing** négatif + spirituel (ses âmes) — ses Paroles ;
+**Aël** positif seul — ses mouvements et ses écrits. Hors affinité, le coût est ×1,5 dans sa monnaie (PM, PT ou PV,
+`coutHorsAffinite`), **jamais plus que la jauge pleine** (sinon Le Domaine Entier d'Aël, 70 PT → 105, ne partait
+plus jamais), et les dégâts, les soins et les PM rendus ×0,75 (`forceHorsAffinite`). Hors de la règle : l'Attaque
+(`horsRegle` 1), les **dons** — leurs types (4, 5, 6, 8-24, 26) et 71, 810, 438 : le don *est* la seconde affinité —
+et les **attaques à plusieurs** (type 25, unisson : chacun paie le sien) ; seiryu et les ennemis ne l'ont pas. **Ce
+qui se voit** : le coût affiché est le vrai, l'aide dit `【PAROLE · FEU · hors affinité】`, « ◇ Hors affinité » flotte
+au-dessus du héros. Mesure (`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 2,95 → 3,05 tours en moyenne,
+autant de victoires — un petit nerf. Pour un banc : `LesTroisArts.affinites(b)`, `LesTroisArts.horsAffinite(b, s)`,
+`LesTroisArts._sansAffinites = true` coupe la règle (`le_registre` mesure la copie de ludwing contre sa Nuit sans
+elle : la copie est un don). Banc : `navigateur/les_affinites.js`.
+
+**Le rework des capacités** (2026-10-25 ; JOKO : *« rework complètement tout les capacités, spéciales et ulti des
+personnages pour les rendre plus intéressant et équilibré surtout leur don et utilise le lore aussi »*, puis *« Oui tout »*
+sur la proposition mesurée : un paquet commun, puis un héros à la fois). **Le paquet commun** (`data/Skills.json`, 27 fiches ;
+noms, coûts et niveaux inchangés) : **A** — chaque ultime frappe au moins ×1,3 la meilleure capacité de sa portée, à chaque
+niveau, affinité comprise (Déflagration Spirituelle, Tranche-Néant, Instant Absolu ×7,6 → ×39, Point Zéro, Éclat de
+Conviction, Syllabe de la Fin, Plein Midi, Dévoreur d'Âmes ; Instant Absolu et Point Zéro portent 3 tours de recharge,
+la règle de `18_recharges`) ; **B** — chaque rendement (puissance par PT, PM ou % de PV, au niveau 60) entre ×0,5 et ×2
+de la médiane de sa monnaie chez son héros : 16 fiches (Brise-Garde 8,7 → 6,4, Coup Furieux ; Fracas Sismique, Déchaînement
+Négatif, Tranche des Trois Sources, Carnage des Neuf Voies, Fil de Foudre, Pluie de Lance du Styx, Chaîne d'Âmes, Pluie
+d'Étoiles…) ; **C** — Tranche-Néant et Jugement de Soi disaient « ULTIME d'Aël » (elles sont à Vesper), Dévoreur d'Âmes,
+Tout ou Rien et la Mue Souveraine, qui se disent ULTIME, passent en ultime, Dévoreur frappe en ratio (sa soustraction
+tombait à 0). Hors de la règle : les formules à caractère, ce qu'un ennemi utilise (Moisson des Âmes, Fils de Mana Pur —
+annoncés, gardés), les techniques d'un état (Rage, Flow, JACKPOT, ombres, Miracle), les combos, seiryu, les pièces des
+dons, et le Verbe qui Défait (un ultime d'effet : ×9 en ferait le plus gros coup de zone d'Aël pour 32 PM). Mesure
+(`lequipe_a_chaque_niveau`, 3 parties de chaque côté) : 3,05 → 3,16 tours, 172 victoires sur 176 des deux côtés, boss
+45 → 41 sur 60 — dans le bruit. Banc : `24_ultimes_et_rendements.js` (il lit aussi ce que les traits
+d'acteur donnent : les Styles de Vesper, Sang Perçant, Supernova ; les arts d'armes, type 24, restent hors de la règle).
+**Vesper, le sang (V1)** — la Bible : *« son don le transforme en sang, et son sang se manie par les voies d'art »*. La
+branche « sang » (type 10, celle que son don ouvre : Première Entaille, Lame Liquide, Deux Cercles, Elle Ne Recule Pas,
+Rendre le Sang, Écarlate Montante, la Convergence, Sang Perçant, Supernova) se paie en % de PV, au tiers de son ancien coût
+(comme les écrits), 5 % au moins (la bande de `7_trois_sources`), et reste des mouvements (flux, posture, négatif, dans son
+affinité). Ses capacités de la Voie du Sang (Art du Sang, Sang pour Sang…) restent en PT. Comme ses PT se vident de ses
+techniques de sang, la règle B a redescendu Ouvrir, Coup Furieux, Brise-Garde et Sang pour Sang, et remonté Fouet de Sang et
+Cercle Écarlate. Mesure : 3,16 → 2,98 tours, boss 41 → 43 sur 60. Banc : `navigateur/le_sang_de_vesper.js`.
+**Korrah, la tête en l'air (K1)** — la Bible : *« des attaques visées ratées, des objets qui tombent. Elle doit apprendre à se
+concentrer »*. Dans `LeMouvement` (section « Korrah : la tête en l'air ») : ses attaques sur une seule cible ratent 15 % du
+temps (`rateTeteEnLair` ; pas une `<Sur>`, pas un coup de zone), « 💭 La tête ailleurs… ». **Penser juste** (une Parole dans sa
+posture) ou **Focalisation** (451, `seConcentrent`) la concentrent : état **258 « 🎯 Concentrée »** (icône 127, priorité 99) — sa
+prochaine attaque visée ne rate pas, ne s'esquive pas, frappe ×1,25 (`bonusConcentree`), puis la concentration part ; ce qui la
+concentre n'en profite pas soi-même. Mesure (6 parties) : les combats ordinaires ne bougent pas, les boss tombent de ~43 à
+36,5 victoires sur 60 — un vrai nerf, avec une IA de banc qui ne se concentre jamais exprès. Banc : `navigateur/la_tete_en_lair.js`.
+**ludwing, le poids des âmes (L1)** — la Bible : *« absorber d'autres âmes le rend plus puissant, mais leurs traumas viennent
+avec »*. Dans `LeRegistre` : en combat, chaque âme gardée (variable 15) donne +2 % à ses dégâts (`bonusParAme`, **10 âmes
+comptées au plus** — `bonusAmesMax`), « ✦ Âmes ×1,1 » quand il frappe ; au-delà de 5 (`seuilPoids`), chaque âme de plus lui coûte
+3 % de DÉF (`defenseParAme`, 60 % au plus — `poidsMax`), état **259 « 😵 Le poids des âmes »** (icône 62, la perte en chiffre),
+jusqu'à ce qu'il les dépense (« ✦ Plus léger »). **Mesuré, puis réglé** : les âmes ne retombent jamais d'elles-mêmes (50 au premier
+niveau du banc, 409 à la fin) ; avec 25 âmes comptées (+50 %), les combats raccourcissaient de 16 % — trop fort, d'où 10 (+20 %) :
+3,03 → 2,85 tours, boss 39 → 45 sur 60. Au-delà de 10, garder ne rapporte plus rien et coûte. `Registre._sansPoids = true` coupe la
+règle (`le_registre` mesure la copie sans elle). Banc : `navigateur/le_poids_des_ames.js`.
+**Aël, en ultime la meilleure (A1)** — la Bible : *« en ultime, elle est la meilleure, et la plus rapide à le sortir »*. Chacun de
+ses ultimes frappe au moins ×1,2 le meilleur ultime des trois autres de la même portée, à chaque niveau (Éclat de Conviction,
+le Ciel Ouvert, Syllabe de la Fin, Plein Midi : +3 à +9 % ; La Parole Tenue et Celle Qu'on Ne Dit Qu'une Fois y étaient déjà) —
+contrôlé par `24_ultimes_et_rendements.js`. **A2** : ses 24 mouvements restent des mouvements (l'affinité les affaiblit déjà,
+*« la plus faible physiquement »*). **N** : rien de plus pour les Paroles longues hors affinité (Nell Varga). **Bilan du rework**
+(`lequipe_a_chaque_niveau`, 3 parties avant, 3 après) : 3,05 → 2,86 tours, 172 → 173 victoires sur 176, boss 45 → 43 sur 60 ;
+la Bible dit le sang qui se paie en sang, la tête en l'air, le poids des âmes, et les ultimes.
 
 **L'Écrit** (`LEcrit.js`, 2026-10-22 ; JOKO : *« B pour l'écrit »* — c'est toi qui l'actives). Un écrit
 (l'art de LesTroisArts) se paie en PV tout de suite mais **ne part pas** : il s'écrit sur sa cible (ennemi,
@@ -437,6 +502,41 @@ Activer garde la posture du Mouvement. **La résonance** : des écrits qui parte
 sous l'Attaque dans ses ordres (elle reste aussi dans ses capacités) ; son aide dit ce qui attend, compté et sur qui
 (« ᛟ En attente : Cloison → Vesper · Trait Spectral ×2 → Slime ») ; un écrit grisé dit pourquoi (« 3 écrits
 attendent déjà »). Banc : `navigateur/l_ecrit.js`.
+**L'écrit, c'est le mana spirituel** (JOKO, 2026-10-25 : *« ça s'applique que aux techniques du mana spirituel. Pas ceux
+qui coûtent les PV. Tout ce qui est mana spirituel, faut utiliser ces PV pour l'utiliser »*, sur une attaque de Vesper
+*« clairement physique »* traitée en spirituel) : c'était **Saignée Continue** (élément Physique, coup physique), que le
+paquet des verbes avait mise dans l'écrit — elle redevient un mouvement à 20 PT, avec sa description d'origine. `LesTroisArts`
+(v1.2) refuse désormais l'écrit à toute technique d'élément Physique ou de l'attaque (`elementsJamaisEcrit` « -1, 1 »), même
+avec `<Art: ecrit>`. Tout écrit d'un héros se paie en PV : Jugement des Défunts, Rappel des Âmes, Registre, Rappel et Dette
+Ancienne passent de PM en PV (au tiers, 5 % au moins ; Dette Ancienne perd sa recharge, son prix la freine) ; Ce Qu'il A Gardé,
+qu'un ennemi utilise, reste en PM ; Transfusion d'Âme Blanche prend ses PV par son effet. Dans le Domaine, une invocation
+regarde aussi ses PV (`RoyaumeImperial`). Règle B tenue (Fouet de Sang, Cercle Écarlate, Chaîne d'Âmes +6 %). Mesure : 2,86 →
+2,88 tours. **Puis JOKO a sorti cinq techniques de l'écrit** (même jour, à la question « lesquelles je sors de l'écrit pour en
+faire des mouvements ? » : *« Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles »*) — toutes en
+`<Art: mouvement>` : **Fouet de Sang** (branche sang de Vesper, toujours payé en PV), **Tranche-Néant**
+(son ultime, ses 25 % de PV gardés), **Lotus des Ténèbres** (10 PT) et deux des cercles de ludwing, **Tracer le Cercle** et
+**Territoire Scellé** (22 et 44 PT — leurs anciens PM, la règle des arts). Leurs verbes de l'écrit (Cercle, Referme) et les lignes
+qui les annonçaient sont retirés, les descriptions de JOKO rendues. **Deux restent des écrits** (JOKO, 2026-10-26, en relisant
+le tableau) : *« La Règle du Lieu spirituelle »* — 17 % de PV et son Sceau, quand il part l'ennemi perd sa prochaine action (pas
+un boss) ; mesure : 2,79 → 2,76 tours, boss 47 → 47 sur 60 — puis *« Cercle Écarlate spirituelle »* — 10 % de PV, sa fiche d'avant
+(« Parole n°2 » en fait un écrit) ; mesure : 2,76 → 2,72 tours, boss 47 → 45 sur 60 (dans le bruit). Au même message, *« Tranche-Néant art »* : lu d'abord « les voies d'art » (rien changé), puis précisé — voir « Tranche-Néant,
+selon l'arme tenue ». **Plus aucune capacité ne porte
+`<Cercle>`** (le verbe reste dans LEcrit ; `les_verbes` l'essaie sur Marquer la Cible le temps du contrôle) ; Referme reste sur
+Déflagration Spirituelle, Onde Concentrée et Dévoreur d'Âmes, Sceau sur La Règle du Lieu, Faire Douter, Désorientation et Syllabe
+de la Fin. Mesure (avec les sept sorties) : 2,88 → 2,79 tours, boss 44 → 47 sur 60. Banc : `25_lecrit_est_spirituel.js` (et `le_registre`, l'invocation sans ses PV).
+
+**Tranche-Néant, selon l'arme tenue** (`LesStylesDeVesper.js` v1.1, 2026-10-26 ; JOKO, à « qu'elle devienne un art d'arme de
+Vesper (style Lame, selon l'arme tenue) » : *« oui donc plusieurs variantes »*). Une variante par famille d'arts d'armes, tirée de ses
+arts, et elle ne voit que celle de l'arme qu'elle tient : **à l'épée** (et au fouet, à l'éclat : `<ArtArme: epee, sinon>`, « sinon » =
+une arme d'aucune famille) 445, toute la troupe, `<Premier>` (Iaï) ; **à la dague** 1310, un ennemi, la moitié de l'armure ignorée (Sous
+la Garde) ; **à la hache** 1311, toute la troupe, 25 % d'Étourdi (Coup d'Épaule) ; **à la lance** 1312, toute la troupe, 30 % de l'armure
+ignorés, AGI −2 tours (Percée, Balayage) ; **à distance** 1313, quatre traits au hasard (Tirs en Pluie) ; **aux poings** (et à mains
+nues) 1314, un ennemi, 40 % de Vertige (Talon Retourné). Même fiche que 445 sauf la forme : nom, 25 % de PV, 3 tours de recharge,
+l'Épuisement de l'Âme, ultime de la branche « ult », Style Lame ; apprises par les traits de Vesper, comme ses arts. Les forces tiennent
+les règles A et A1 (une zone ne peut ni frapper moins que l'épée, ni passer le Ciel Ouvert d'Aël : ×29,7 la hache, ×27 la lance ; un
+seul ennemi : ×33 la dague, ×38 les poings ; ×9 par trait à distance). La forme s'annonce (« ⚔ Tranche-Néant · à la dague »). Le
+plancher du Mana Pur de `7_trois_sources` passe à 43. Mesure (6 parties de chaque côté) : 2,74 → 2,76 tours, boss 46 → 42 sur 60
+— un écart de l'ordre du hasard du banc (un écart-type), dans le sens d'un petit nerf. Banc : `navigateur/tranche_neant.js`.
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
@@ -473,7 +573,8 @@ phrase : son élément, ×1,5), `<MotJuste>` (l'élément fondamental qui marche
 les pièges de ludwing), `<Symbole>` (compte double dans la résonance), `<Appat>` (Vannes : les ennemis
 touchés frappent celui qui les a provoqués). **Premier paquet, 37 capacités** — Vesper : Le Point Final,
 Exécution, Reprise du Marteau, Trempe, Cri de Fureur, Grande Marée, Enclume, Le Sang Répond, Brise-Garde, et
-Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*, 7 % PV) ; Korrah : Le Creux Entre
+Saignée Continue devient **son écrit** (*« on attend que ça fasse effet »*, 7 % PV — redevenue un mouvement le 2026-10-25,
+voir « L'écrit, c'est le mana spirituel ») ; Korrah : Le Creux Entre
 Deux, Coup de Grâce Éclair, L'Immobile, Éclat Noir, Maîtrise, Angle Impossible, Vider le Geste, Focalisation ;
 ludwing : Vannes, Tracer le Cercle, Territoire Scellé, La Règle du Lieu, Faire Douter, Ombre Prêtée, Le
 Symbole, Âme d'Ombre ; Aël : « Reste. », Lumière Tenue, « Assez. », « Pars. », « Viens. », Le Mot Juste, ses

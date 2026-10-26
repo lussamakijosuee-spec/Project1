@@ -3,7 +3,7 @@
 // Vesper : trois Styles, trois kits, trois ultimes — et sa Colère.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Vesper : Lame (arts d'armes, État de Flow), Sang
+ * @plugindesc v1.1 ■ Vesper : Lame (arts d'armes, État de Flow), Sang
  * (Berserker), Garde (adaptation, Arme de Sang). Et sa Colère, que ludwing
  * sait réveiller. À placer juste après LePacteDeSang.
  * @author pour JOKO
@@ -171,6 +171,18 @@
  *  la canne comme une lance, la griffe comme les poings ; poings aussi à
  *  mains nues). Le fouet n'a pas d'art à lui. Colère ×0,5. On la soigne
  *  normalement (LePacteDeSang, soinsEnLame).
+ *  Une liste marche aussi : <ArtArme: epee, sinon> — « sinon », c'est une
+ *  arme d'aucune famille (le fouet, l'éclat).
+ *    ⚔ TRANCHE-NÉANT (ulti) — v1.1, JOKO, le 2026-10-26 : « art d'arme de
+ *      Vesper (style Lame, selon l'arme tenue), oui donc plusieurs
+ *      variantes ». Une par famille, tirée de ses arts : à l'épée (et au
+ *      fouet, 445) toute la troupe, elle part avant tout le monde ; à la
+ *      dague (1310) un ennemi, la moitié de l'armure ignorée ; à la hache
+ *      (1311) toute la troupe, peut étourdir ; à la lance (1312) toute la
+ *      troupe, 30 % de l'armure ignorés, ils ralentissent ; à distance
+ *      (1313) quatre traits au hasard ; aux poings (1314) un ennemi, peut
+ *      donner le vertige. Même prix, même recharge, même contre-coup. Elle
+ *      ne voit que celle de l'arme qu'elle tient ; la forme s'annonce.
  *    ☯ ÉTAT DE FLOW (ulti) — n'apparaît que sous 20 % de PV. 3 tours :
  *      deux actions par tour (2C) ; le corps dévie les petits coups et
  *      esquive les gros une fois sur deux — et chaque esquive déclenche une
@@ -277,13 +289,33 @@
         if (fam === 'poings' && armes.length === 0) { return true; }
         return armes.some(function (w) { return t.indexOf(w.wtypeId) >= 0; });
     }
+    /** « sinon » : elle tient une arme, mais d'aucune famille (le fouet, l'éclat). */
+    function sansFamille(a) {
+        var armes = a.weapons();
+        return armes.length > 0 && !armes.some(function (w) {
+            return Object.keys(FAMILLES).some(function (f) { return FAMILLES[f].indexOf(w.wtypeId) >= 0; });
+        });
+    }
+    /** <ArtArme: dague> ou <ArtArme: epee, sinon> : l'une des familles suffit. */
+    function familles(it) { return String(it.meta.ArtArme).toLowerCase().split(/[,\s]+/).filter(Boolean); }
+    function tientArt(a, it) {
+        return familles(it).some(function (f) { return f === 'sinon' ? sansFamille(a) : tientFamille(a, f); });
+    }
+    var A_LA = { epee: 'à l\'épée', dague: 'à la dague', hache: 'à la hache', lance: 'à la lance', distance: 'à distance', poings: 'aux poings' };
+    /** Sous quelle forme part un art d'arme : la famille qu'elle tient (le nom de l'arme, sans famille). */
+    function forme(a, it) {
+        var f = familles(it).filter(function (x) { return x === 'sinon' ? sansFamille(a) : tientFamille(a, x); })[0];
+        if (f !== 'sinon') { return A_LA[f] || f || ''; }
+        var w = a.weapons()[0];
+        return w ? String($dataSystem.weaponTypes[w.wtypeId] || '').trim().toLowerCase() : '';
+    }
     function sousFlow(a) { return a.hp <= a.mhp * SEUIL_FLOW; }
     /** Ce que Vesper VOIT dans ses menus. */
     function dansLeKit(a, it) {
         if (!estVesper(a) || !it || !DataManager.isSkill(it)) { return true; }
         var st = stylesDe(it);
         if (st && st.indexOf(style(a)) < 0) { return false; }
-        if (tag(it, 'ArtArme') && !tientFamille(a, String(it.meta.ArtArme).trim().toLowerCase())) { return false; }
+        if (tag(it, 'ArtArme') && !tientArt(a, it)) { return false; }
         // « Art Serein : État de Flow — apparaît que à 20 % de PV »
         if (tag(it, 'FlowVesper') && (!sousFlow(a) || a.isStateAffected(ETAT_FLOW))) { return false; }
         // « pendant qu'elle est énervée elle peut se transformer en Berserker »
@@ -476,6 +508,11 @@
                 }
             }
             return;
+        }
+        // ⚔ un ultime d'arme (Tranche-Néant) dit sous quelle forme il part, une fois par action
+        if (tag(it, 'ArtArme') && tag(it, 'Ulti') && !this._formeDite) {
+            this._formeDite = true;
+            annonce(u, '⚔ ' + it.name + ' · ' + forme(u, it), '#ffd080');
         }
         // 🩸 Berserker : la Rage devient le Berserker (elle ne vise plus ludwing)
         if (tag(it, 'BerserkerVesper')) {

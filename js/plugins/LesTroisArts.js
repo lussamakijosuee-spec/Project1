@@ -1,12 +1,13 @@
 //=============================================================================
-// LesTroisArts.js — v1.0
+// LesTroisArts.js — v1.2
 // Les trois arts du Premier : chaque compétence de héros en est un, et c'est
 // son art qui donne son mana. Le triangle joue à chaque coup.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Les trois arts : chaque compétence de héros est une PAROLE
+ * @plugindesc v1.2 ■ Les trois arts : chaque compétence de héros est une PAROLE
  * (positif), un MOUVEMENT (négatif) ou un ÉCRIT (spirituel) — et c'est l'art qui
- * donne son mana : le triangle joue à chaque coup.
+ * donne son mana : le triangle joue à chaque coup. Un art hors de ses affinités
+ * coûte plus et rend moins.
  * @author pour JOKO
  *
  * @param === LES ARTS ===
@@ -53,6 +54,11 @@
  * @param === LES RÈGLES ===
  * @default
  *
+ * @param elementsJamaisEcrit
+ * @text Jamais un écrit (éléments)
+ * @default -1, 1
+ * @desc JOKO, 2026-10-25 : l'écrit, c'est le mana spirituel. Une technique de l'attaque (-1) ou Physique (1) est un mouvement, même avec <Art: ecrit>.
+ *
  * @param typesEcrit
  * @text Types de l'écrit
  * @default 8, 9
@@ -62,6 +68,40 @@
  * @text Types du mouvement
  * @default 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24
  * @desc BERSEK, sang, les ombres d'armes, Arts Sereins, arts.
+ *
+ * @param === LES AFFINITÉS ===
+ * @default
+ *
+ * @param affinites
+ * @text Les affinités des héros
+ * @default 1: spirituel + négatif; 2: négatif + positif; 3: négatif + spirituel; 4: positif
+ * @desc acteur: ses manas (positif = Parole, négatif = mouvement, spirituel = écrit). Un héros absent n'a pas la règle.
+ *
+ * @param coutHorsAffinite
+ * @text Coût hors affinité
+ * @default 1.5
+ * @desc Multiplie le coût (PM, PT ou PV) d'un art hors de ses affinités. Jamais plus que la jauge pleine.
+ *
+ * @param forceHorsAffinite
+ * @text Force hors affinité
+ * @default 0.75
+ * @desc Multiplie ses dégâts et ses soins.
+ *
+ * @param horsRegle
+ * @text Compétences hors de la règle
+ * @default 1, 71, 810, 438
+ * @desc L'Attaque, et les pièces des dons : Royaume Impérial, Ténèbres Impériales, Change.
+ *
+ * @param typesHorsRegle
+ * @text Types hors de la règle
+ * @default 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
+ * @desc Les types des dons (le don est la seconde affinité) et 25, les attaques à plusieurs (chacun paie le sien).
+ *
+ * @param annonceHorsAffinite
+ * @text Annoncer hors affinité
+ * @type boolean
+ * @default true
+ * @desc Au-dessus du héros, quand il lance un art hors de ses affinités.
  *
  * @param === À L'ÉCRAN ===
  * @default
@@ -122,13 +162,29 @@
  *      physique : le mouvement ;
  *   8. <Parole> sur la fiche, un sort magique, un soin : la Parole ;
  *  sinon, aucun art (le soutien sans mana).
+ *  ET : l'écrit, c'est le mana spirituel (JOKO, 2026-10-25 : « ça s'applique
+ *  que aux techniques du mana spirituel. Pas ceux qui coûtent les PV ») — une
+ *  technique d'élément Physique (ou de l'attaque) n'est jamais un écrit : c'est
+ *  un mouvement, même si sa fiche dit <Art: ecrit>.
  *
  *  LE TRIANGLE — sur une compétence de héros, les éléments de mana sont
  *  remplacés par celui de son art : un mouvement de Feu frappe en Feu ET en
  *  négatif. Le Feu reste sa couleur, la roue des éléments joue toujours. Les
  *  dégâts comme la brisure des boucliers (AstfglSCB) le lisent.
  *
- *  À L'ÉCRAN — l'aide d'une compétence dit son art : 【PAROLE · FEU】.
+ *  LES AFFINITÉS (la Bible ; JOKO, le 2026-10-24 : « L'affinité unique oui
+ *  c'est tout ») — chaque personne naît avec une seule affinité, et son don en
+ *  ajoute une seconde. Un art hors de ses affinités « coûte plus et rend
+ *  moins » : coût ×1,5 dans sa monnaie (jamais plus que la jauge pleine),
+ *  dégâts et soins ×0,75. Vesper : spirituel + négatif (son sang) ; Korrah :
+ *  négatif + positif (l'Hiver de seiryu) ; ludwing : négatif + spirituel (ses
+ *  âmes) ; Aël : positif seul. Hors de la règle : l'Attaque, les techniques
+ *  des dons (le don EST la seconde affinité), les attaques à plusieurs ;
+ *  seiryu et les ennemis ne l'ont pas.
+ *
+ *  À L'ÉCRAN — l'aide d'une compétence dit son art : 【PAROLE · FEU】, et
+ *  【PAROLE · FEU · hors affinité】 quand il l'est ; le coût affiché est le
+ *  vrai ; au-dessus du héros : « ◇ Hors affinité ».
  *  Au-dessus de l'ennemi : ▲ Corps ×2 quand l'art le bat, ▼ quand il résiste.
  *
  *  LES AFFINITÉS — la Bible : « Chaque personne n'a qu'une seule affinité
@@ -145,6 +201,9 @@
  *
  *  Script : LesTroisArts.art(compétence)  → 'parole' | 'mouvement' | 'ecrit' | ''
  *           LesTroisArts.mana(action)     → l'élément de mana de l'action (0 si aucun)
+ *           LesTroisArts.affinites(héros) → ses arts, ex. ['ecrit', 'mouvement']
+ *           LesTroisArts.horsAffinite(héros, compétence) → true / false
+ *           LesTroisArts._sansAffinites = true coupe la règle (pour un banc).
  * ============================================================================
  */
 
@@ -155,6 +214,7 @@ var LesTroisArts = LesTroisArts || {};
 
     var P = PluginManager.parameters('LesTroisArts');
     var nombre = function (k, d) { var v = parseInt(P[k], 10); return isNaN(v) ? d : v; };
+    var decimal = function (k, d) { var v = parseFloat(String(P[k]).replace(',', '.')); return isNaN(v) ? d : v; };
     var liste = function (k, d) {
         return String(P[k] === undefined ? d : P[k]).split(',')
             .map(function (x) { return parseInt(x, 10); }).filter(function (x) { return !isNaN(x); });
@@ -167,7 +227,13 @@ var LesTroisArts = LesTroisArts || {};
     var EXCLUS      = liste('acteursExclus', '6');
     var TYPES_ECRIT = liste('typesEcrit', '8, 9');
     var TYPES_CORPS = liste('typesCorps', '5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24');
+    var JAMAIS_ECRIT = liste('elementsJamaisEcrit', '-1, 1');
     var ANNONCE     = String(P['annonceTriangle'] || 'true') !== 'false';
+    var COUT_HORS   = decimal('coutHorsAffinite', 1.5);
+    var FORCE_HORS  = decimal('forceHorsAffinite', 0.75);
+    var HORS_REGLE  = liste('horsRegle', '1, 71, 810, 438');
+    var TYPES_HORS  = liste('typesHorsRegle', '4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26');
+    var ANNONCE_HORS = String(P['annonceHorsAffinite'] || 'true') !== 'false';
 
     var MOT_ECRIT = [2, 7], MOT_CORPS = [4, 5];
     var NOMS    = { parole: 'PAROLE', mouvement: 'MOUVEMENT', ecrit: 'ÉCRIT' };
@@ -192,6 +258,12 @@ var LesTroisArts = LesTroisArts || {};
 
     /** L'art d'une compétence : 'parole', 'mouvement', 'ecrit', ou '' (aucun). */
     function art(item) {
+        var a = artDeLaFiche(item);
+        // l'écrit, c'est le mana spirituel : un coup physique n'en est jamais un
+        if (a === 'ecrit' && item.damage && JAMAIS_ECRIT.indexOf(item.damage.elementId) >= 0) { return 'mouvement'; }
+        return a;
+    }
+    function artDeLaFiche(item) {
         if (!item || !DataManager.isSkill(item)) { return ''; }
         var m = item.meta || {};
         if (m.Art !== undefined) {
@@ -241,6 +313,10 @@ var LesTroisArts = LesTroisArts || {};
     var _apply = Game_Action.prototype.apply;
     Game_Action.prototype.apply = function (target) {
         _apply.call(this, target);
+        if (ANNONCE_HORS && !this._horsVu && horsDe(this)) {
+            this._horsVu = true;
+            annonce(this.subject(), '◇ Hors affinité', '#b8b8c8');
+        }
         if (!ANNONCE || !target || !target.isEnemy || !target.isEnemy()) { return; }
         var e = mana(this), r = target.result();
         if (!e || !r || !r.isHit() || r.hpDamage <= 0) { return; }
@@ -310,4 +386,6 @@ var LesTroisArts = LesTroisArts || {};
     LesTroisArts.mana = mana;
     LesTroisArts.manaDe = function (a) { return MANA[a] || 0; };
     LesTroisArts.heros = heros;
+    LesTroisArts.affinites = affinites;
+    LesTroisArts.horsAffinite = horsAffinite;
 })();
