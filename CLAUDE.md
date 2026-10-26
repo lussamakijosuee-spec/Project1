@@ -603,7 +603,12 @@ corrige (les Scribes effacent ta dernière rune, sinon un renfort), arrache (les
 reflet (50 %, sauf sur sa faiblesse), carapace (÷2 jusqu'à la brisure du bouclier), explose, embuscade, frénésie, venin, garde, marque.
 Une épine, un reflet, une explosion ne font jamais tomber un héros. **506 fiches** l'ont (familles par leur phrase, ses ennemis par leur
 nom, sinon leur courant : le Corps chasse, l'Esprit apprend, l'Âme revient) ; les **43 boss à mécanique** gardent la leur.
-`LesInstincts._eteint = true` coupe tout. Banc : `navigateur/les_instincts.js` (27 contrôles).
+`LesInstincts._eteint = true` coupe tout. Banc : `navigateur/les_instincts.js` (27 contrôles). **La cohérence** : les 141 compétences
+d'ennemis « Parole n°X » ont leur art figé (`<Art:>`, la règle de LesTroisArts) et le nom de leur art, comme celles des héros (93 « Parole
+du Feu : … », 33 « Rune de Frappe : … », 15 mouvements sans préfixe) — les doctrines citent toutes par numéro (« Skill 12 »), rien ne casse ;
+la balise `<Mana:>` (lue par rien, elle dit le courant) : sombre → negatif (147), âme et originel → spirituelle (103) ; **« pur » reste**
+(30 : Donovano le Mana Parfait, les Glitchs, la Reine Oubliée… — la Bible : *« Le mana parfait réunit les trois courants »* ; ils échappent
+au triangle, `7_trois_sources` le contrôle).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
