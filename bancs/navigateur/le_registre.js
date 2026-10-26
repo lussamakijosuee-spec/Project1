@@ -224,13 +224,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         debut(1, 5); r.seuil = $gameVariables.value(5); r.vide = $gameTemp._registreMise === null;
         __ames(3); l.paySkillCost($dataSkills[14]); r.ames3 = __ames(); debut(1, 5); r.seuil3 = $gameVariables.value(5);
         __ames(0); l.paySkillCost($dataSkills[14]); debut(1, 5); r.seuil0 = $gameVariables.value(5);
-        // Arme d'Ombre : des tirages imposés — 100, puis 900, 500, 960 : il garde 960
+        // Arme d'Ombre : des tirages imposés — 100, puis 900, 500, 960 : il garde 960. Seuls les tirages de
+        // l'événement (1 à 1000) sont imposés : le poids des âmes pose l'état 259, et MV tire alors
+        // Math.randomInt(1) pour sa durée — il avalait le premier tirage quand l'état n'était pas encore là
         var vrai = Math.randomInt, suite = [99, 899, 499, 959], k = 0;
-        Math.randomInt = function (m) { return k < suite.length ? suite[k++] : vrai(m); };
+        Math.randomInt = function (m) { return m > 1 && k < suite.length ? suite[k++] : vrai(m); };
         __ames(10); l.paySkillCost($dataSkills[111]); r.amesArme = __ames();
-        debut(22, 41); r.tirage = $gameVariables.value(41);
+        var k0 = k; debut(22, 41); r.tirage = $gameVariables.value(41); r.imposes = k - k0;
         Math.randomInt = vrai;
-        k = 0; Math.randomInt = function (m) { return k < suite.length ? suite[k++] : vrai(m); };
+        k = 0; Math.randomInt = function (m) { return m > 1 && k < suite.length ? suite[k++] : vrai(m); };
         __ames(0); l.paySkillCost($dataSkills[111]); debut(22, 41); r.tirage0 = $gameVariables.value(41);
         Math.randomInt = vrai;
         // contre-épreuve : quelqu'un d'autre qui lance la Roulette ne mise rien
@@ -242,7 +244,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('… et le seuil passe de 1 à 6 (6 chances sur 30)', mi.seuil === 6 && mi.vide, String(mi.seuil));
     v('3 âmes : il mise les 3, seuil 4', mi.ames3 === 0 && mi.seuil3 === 4, mi.ames3 + ' · ' + mi.seuil3);
     v('sans âme : seuil 1, comme avant', mi.seuil0 === 1);
-    v('Arme d\'Ombre, 10 âmes : 3 misées, le meilleur de 4 tirages gardé', mi.amesArme === 7 && mi.tirage === 960, mi.amesArme + ' âmes · tirage ' + mi.tirage);
+    v('Arme d\'Ombre, 10 âmes : 3 misées, le meilleur de 4 tirages gardé', mi.amesArme === 7 && mi.tirage === 960 && mi.imposes === 4, mi.amesArme + ' âmes · tirage ' + mi.tirage + ' · ' + mi.imposes + ' tirages imposés sur 4');
     v('sans âme : le premier tirage, comme avant', mi.tirage0 === 100, String(mi.tirage0));
     v('contre-épreuve : Vesper ne mise rien', /^10 null$/.test(mi.autre), mi.autre);
 

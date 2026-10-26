@@ -1,6 +1,6 @@
 # Inventaire des capacités
 
-Relevé du 2026-10-25. **Rien n'a été modifié** : ce fichier dit ce qui EST.
+Relevé du 2026-10-26. **Rien n'a été modifié** : ce fichier dit ce qui EST.
 Il se régénère avec `node bancs/audit/12_inventaire_capacites.js`.
 
 Trois colonnes de vérité, que l'éditeur ne montre pas :
@@ -434,7 +434,7 @@ Trois colonnes de vérité, que l'éditeur ne montre pas :
 | 37 | 1202 | Parole n°11 Terre — Éclat | 22 PM | dégâts PV *TERRE* `Math.floor(a.mat * 14 * 200 / (200 + b.mdf))` · pose « ⛓ Ancrage » 40% | 203 | `<ParoleL: 4>` `<NomOrigine: Terre — Éclat>` ⚠ |
 | 38 | 1199 | Parole n°10 Vent — Tempête | 46 PM | dégâts PV *VENT* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 192 | `<ParoleL: 5>` `<NomOrigine: Vent — Tempête>` ⚠ |
 | 40 | 1224 | Parole n°15 Ombre — Nuit | 46 PM | dégâts PV *OMBRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌑 Éclipse » 70% | 448 | `<ParoleL: 5>` `<NomOrigine: Ombre — Nuit>` ⚠ |
-| 41 | 1116 | La Règle du Lieu | 50 PT | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` · pose « 🔇 Silence Runique » 60% | 416 | `<Art: mouvement>` `<Voie: domaine>` |
+| 41 | 1116 | La Règle du Lieu | 17% PV | dégâts PV *mana positive* `Math.floor(a.mat * 20 * 200 / (200 + b.mdf))` · pose « 🔇 Silence Runique » 60% | 416 | `<Sceau: 100>` `<Art: ecrit>` `<Voie: domaine>` |
 | 43 | 1088 | Rendre le Mana | 30 PT | soin PM `Math.floor(a.mat * 1.2)` | 407 | `<Rythme>` `<Voie: source>` |
 | 44 | 1209 | Parole n°12 Foudre — Orage | 46 PM | dégâts PV *FOUDRE* `Math.floor(a.mat * 22 * 200 / (200 + b.mdf))` · pose « 🌀 Vertige » 70% | 384 | `<ParoleL: 5>` `<NomOrigine: Foudre — Orage>` ⚠ |
 | 47 | 1128 | Contre-Éclat | 34 PT | dégâts PV *mana négative * `Math.floor(a.atk * 19 * 200 / (200 + b.def) * (1 + (a.mhp - a.hp) / a.mhp * 0.8))` | 453 | `<Riposte>` `<Voie: flash>` `<Nerf 2026-09-25: a.atk * 25 * → a.atk * 19 * — ×3,10 en moyenne pour 34 PT>` ⚠ |

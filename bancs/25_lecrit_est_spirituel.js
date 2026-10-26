@@ -26,7 +26,9 @@
  *      sorti de l'écrit ;
  *   5. ce que JOKO a sorti de l'écrit le même jour (« Fouet de Sang + Cercle,
  *      Lotus des Ténèbres, Tranche-Néant, Les 3 cercles ») : des mouvements, dans
- *      leur monnaie, sans verbe de l'écrit.
+ *      leur monnaie, sans verbe de l'écrit — sauf La Règle du Lieu :
+ *   6. JOKO, le 2026-10-26 : « La Règle du Lieu spirituelle » — elle reste un
+ *      écrit, à 17 % de PV, avec son Sceau (l'ennemi perd sa prochaine action).
  *
  *   node bancs/25_lecrit_est_spirituel.js
  */
@@ -54,8 +56,9 @@ var SANS_REGLE = (function () {
 var C = JSON.parse(lire('data/Classes.json')), A = JSON.parse(lire('data/Actors.json')), E = JSON.parse(lire('data/Enemies.json'));
 var ENNEMI = {}; E.forEach(function (e) { if (e) { e.actions.forEach(function (a) { ENNEMI[a.skillId] = 1; }); } });
 var PAR_SON_EFFET = [105];
-// JOKO, le 2026-10-25 : « Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles » — des mouvements
-var SORTIS = { 464: 'PV', 465: 'PV', 445: 'PV', 66: 10, 1114: 22, 1115: 44, 1116: 50 };   // Transfusion d'Âme Blanche : 50 % des PV de qui la lance (<Pre-Damage Eval>)
+// JOKO, le 2026-10-25 : « Fouet de Sang + Cercle, Lotus des Ténèbres, Tranche-Néant, Les 3 cercles » — des mouvements ;
+// le 2026-10-26 : « La Règle du Lieu spirituelle » — elle reste un écrit (contrôle 6)
+var SORTIS = { 464: 'PV', 465: 'PV', 445: 'PV', 66: 10, 1114: 22, 1115: 44 };   // Transfusion d'Âme Blanche : 50 % des PV de qui la lance (<Pre-Damage Eval>)
 function base() {
     var S = JSON.parse(lire('data/Skills.json'));
     S.forEach(function (s) {
@@ -110,7 +113,12 @@ function controles(S, T) {
         return T.art(s) !== 'mouvement' || !monnaie || /<(Sceau|Cercle|Referme)[:>]/.test(s.note);
     });
     r.push(['5 · ce que JOKO a sorti de l\'écrit est un mouvement, dans sa monnaie, sans verbe de l\'écrit', pasSortis.length === 0,
-        pasSortis.length ? pasSortis.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ')'; }).join(' · ') : 'Fouet de Sang, Cercle Écarlate, Tranche-Néant en PV ; le Lotus 10 PT ; les cercles 22, 44, 50 PT']);
+        pasSortis.length ? pasSortis.map(function (id) { return id + ' ' + S[id].name + ' (' + T.art(S[id]) + ')'; }).join(' · ') : 'Fouet de Sang, Cercle Écarlate, Tranche-Néant en PV ; le Lotus 10 PT ; Tracer le Cercle 22, Territoire Scellé 44 PT']);
+    // 6
+    var rl = S[1116];
+    r.push(['6 · La Règle du Lieu reste spirituelle : un écrit, 17 % de PV, ni PM ni PT, avec son Sceau',
+        T.art(rl) === 'ecrit' && /<HP Cost:\s*17%>/i.test(rl.note) && !rl.mpCost && !rl.tpCost && /<Sceau:\s*100>/.test(rl.note) && /perd sa prochaine action/.test(rl.description),
+        T.art(rl) + ' · ' + rl.mpCost + ' PM · ' + rl.tpCost + ' PT · ' + JSON.stringify(rl.note)]);
     return r;
 }
 
@@ -136,7 +144,9 @@ var SABOTAGES = [
     ['le Registre de ludwing rendu à 26 PM', function (S) { S[1165].mpCost = 26; S[1165].note = S[1165].note.replace(/<HP Cost: \d+%>\n?/, ''); }, /^3 ·/],
     ['une technique de l\'âme rangée dans la Parole (<Art: parole> sur Trait Spectral)', function (S) { S[158].meta.Art = 'parole'; }, /^4 ·/],
     ['Tracer le Cercle remis dans l\'écrit', function (S) { S[1114].meta.Art = ' ecrit'; }, /^5 ·/],
-    ['le Sceau rendu à La Règle du Lieu', function (S) { S[1116].note = '<Sceau: 100>\n' + S[1116].note; }, /^5 ·/]
+    ['le Referme rendu à Territoire Scellé', function (S) { S[1115].note = '<Referme>\n' + S[1115].note; }, /^5 ·/],
+    ['La Règle du Lieu passée en mouvement à 50 PT (comme le 2026-10-25)', function (S) { S[1116].meta.Art = ' mouvement'; S[1116].tpCost = 50; }, /^6 ·/],
+    ['La Règle du Lieu sans son Sceau', function (S) { S[1116].note = S[1116].note.replace(/<Sceau: 100>\n?/, ''); }, /^6 ·/]
 ];
 console.log('\n3) Contre-épreuve — chaque sabotage doit faire tomber SON contrôle');
 SABOTAGES.forEach(function (sb) {
