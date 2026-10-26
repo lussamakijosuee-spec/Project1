@@ -361,6 +361,8 @@ var LesTroisArts = LesTroisArts || {};
             return c > 0 && horsAffinite(this, skill) ? Math.ceil(c * COUT_HORS) : c;
         };
     });
+    // l'annonce « ◇ Hors affinité » (plus haut, dans apply) le demande à l'action : la fusion du 2026-10-26 l'avait perdue
+    function horsDe(action) { return action.isSkill() && horsAffinite(action.subject(), action.item()); }
     // l'effet : les dégâts et les soins
     var _valeurAff = Game_Action.prototype.makeDamageValue;
     Game_Action.prototype.makeDamageValue = function (target, critical) {
