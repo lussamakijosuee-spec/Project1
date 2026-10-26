@@ -168,9 +168,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('\n5) À l\'écran');
     v('l\'aide de Vesper : 【PAROLE · FEU · hors affinité】 ; ses mouvements et ses écrits, non',
-      r.aide.ves[0] === '【PAROLE · FEU · hors affinité】' && !/hors/.test(r.aide.ves[1]) && r.aide.ves[2] === '【ÉCRIT】', r.aide.ves.join(' '));
+      r.aide.ves[0] === '【PAROLE · FEU · hors affinité】' && !/hors/.test(r.aide.ves[1]) && /^【RUNE( · [A-ZÉ]+)?】$/.test(r.aide.ves[2]), r.aide.ves.join(' '));
     v('l\'aide d\'Aël : son mouvement est hors affinité, sa Parole non', /^【MOUVEMENT.*hors affinité】$/.test(r.aide.ael[0]) && !/hors/.test(r.aide.ael[1]), r.aide.ael.join(' '));
-    v('l\'aide de Korrah : son écrit est hors affinité, son mouvement non', /^【ÉCRIT.*hors affinité】$/.test(r.aide.kor[0]) && !/hors/.test(r.aide.kor[1]), r.aide.kor.join(' '));
+    v('l\'aide de Korrah : son écrit est hors affinité, son mouvement non', /^【RUNE.*hors affinité】$/.test(r.aide.kor[0]) && !/hors/.test(r.aide.kor[1]), r.aide.kor.join(' '));
     v('le coût affiché est le vrai : 15 PM pour Braise (10 sans la règle)', r.coutAffiche.stable && r.coutAffiche.avec === '15MP' && r.coutAffiche.sans === '10MP', x(r.coutAffiche));
     v('« ◇ Hors affinité » au-dessus de Vesper (Braise) et d\'Aël (Renvoi Net)',
       r.flotte.ves.indexOf('◇ Hors affinité') >= 0 && r.flotte.ael.indexOf('◇ Hors affinité') >= 0, r.flotte.ves.join(' | ') + ' / ' + r.flotte.ael.join(' | '));

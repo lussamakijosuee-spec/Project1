@@ -1,5 +1,5 @@
 /*
- * BANC NAVIGATEUR — L'ÉCRIT (LEcrit.js, 2026-10-22)
+ * BANC NAVIGATEUR — L'ÉCRIT (LEcrit.js, 2026-10-22 ; les runes, v2.0, 2026-10-26 — voir aussi les_runes.js)
  * ---------------------------------------------------------------------------
  * JOKO, le 2026-10-22 : « Spirituelle c'est plus comme les symboles le fait de
  * écrire ou préparer des écrits le système de Full Metal Alchemist » ; « B pour
@@ -112,14 +112,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         out.pret = lud.canUse(sk);
         hp0 = e.hp;
         lancer(lud, ACT, lud);
-        // ×1,25 préparé, ×1,15 de résonance (deux ensemble)
-        out.activer = { perdu: hp0 - e.hp, attendu: 2 * Math.round(ref * 1.25 * 1.15), ref: ref, reste: L.ecrits(lud).length,
+        // ×1,25 préparé, ×1,15 de résonance (deux ensemble), ×1,25 d'accord (deux Frappe)
+        out.activer = { perdu: hp0 - e.hp, attendu: 2 * Math.round(ref * 1.25 * 1.15 * 1.25), ref: ref, reste: L.ecrits(lud).length,
                         etat: e.isStateAffected(ETAT), annonce: annonces(lud) };
         // un soin écrit sur toute l'équipe : rien tout de suite, tout à l'activation
         nettoyer();
         ael.setHp(1); kor.setHp(Math.floor(kor.mhp * 0.8));
         var ac = act(kor, 12, ael); ac.makeTargets().forEach(function (t) { t.clearResult(); ac.apply(t); });
-        out.soin = { tout_de_suite: ael.hp, ecrits: L.ecrits(kor).length, chiffreAel: ael.getStateCounter(ETAT) };
+        out.soin = { tout_de_suite: ael.hp, ecrits: L.ecrits(kor).length, chiffreAel: ael.getStateCounter(260) };
         lancer(kor, ACT, kor);
         out.soin.apres = ael.hp;
 
@@ -160,7 +160,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('1) La base');
     v('« ᛟ Activer » (1309) : capacité instantanée', r.base.nom === 'ᛟ Activer' && r.base.instant && r.base.type === 1, JSON.stringify(r.base).slice(0, 120));
     v('apprise au niveau 1 par les quatre classes, et connue des quatre héros', r.base.classes.every(Boolean) && r.base.appris.length >= 4 && r.base.appris.every(Boolean), JSON.stringify(r.base.appris));
-    v('l\'état 257 « ᛟ Écrit » ne s\'use pas tout seul', r.base.etat.nom === 'ᛟ Écrit' && r.base.etat.fin === 0, JSON.stringify(r.base.etat));
+    v('l\'état 257 « ᛟ Cercle » ne s\'use pas tout seul', r.base.etat.nom === 'ᛟ Cercle' && r.base.etat.fin === 0, JSON.stringify(r.base.etat));
 
     console.log('\n2) Ce qui s\'écrit');
     var q = r.qui;
@@ -172,22 +172,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('\n3) Écrire');
     var w = r.ecrire;
     v('rien ne part : l\'ennemi ne perd rien, et ce n\'est pas un « raté »', w.perdu === 0 && w.touche, String(w.perdu));
-    v('l\'écrit est gardé (1), montré sur l\'ennemi (état, chiffre 1) et annoncé', w.ecrits === 1 && w.etat && w.chiffre === 1 && w.annonce.indexOf('ᛟ Écrit') >= 0, w.annonce.join(' | '));
+    v('l\'écrit est gardé (1), montré sur l\'ennemi (état, chiffre 1) et annoncé', w.ecrits === 1 && w.etat && w.chiffre === 1 && w.annonce.some(function (t) { return /^ᛟ Frappe · Trait Spectral/.test(t); }), w.annonce.join(' | '));
 
     console.log('\n4) Activer');
     v('grisé sans écrit, possible avec', !r.grise && r.pret);
     var a = r.activer;
-    v('deux écrits partent d\'un coup, chacun ×1,25 et ×1,15 de résonance', Math.abs(a.perdu - a.attendu) <= 2, a.perdu + ' / ' + a.attendu + ' (un coup lancé : ' + a.ref + ')');
-    v('il n\'en reste rien : ni écrit, ni état ; « ᛟ Activé ×2 » au-dessus de ludwing', a.reste === 0 && !a.etat && a.annonce.some(function (t) { return /Activé ×2/.test(t); }), a.annonce.join(' | '));
-    v('un soin écrit sur l\'équipe ne soigne pas tout de suite', r.soin.tout_de_suite === 1 && r.soin.ecrits >= 4 && r.soin.chiffreAel === 1, JSON.stringify(r.soin));
+    v('deux runes partent d\'un coup, chacune ×1,25, ×1,15 de résonance, ×1,25 d\'accord', Math.abs(a.perdu - a.attendu) <= 2, a.perdu + ' / ' + a.attendu + ' (un coup lancé : ' + a.ref + ')');
+    v('il n\'en reste rien : ni écrit, ni état ; « ᛟ Le cercle se ferme ×2 » au-dessus de ludwing', a.reste === 0 && !a.etat && a.annonce.some(function (t) { return /Le cercle se ferme ×2/.test(t); }), a.annonce.join(' | '));
+    v('un soin écrit sur l\'équipe (au sol, une seule rune) ne soigne pas tout de suite', r.soin.tout_de_suite === 1 && r.soin.ecrits === 1 && r.soin.chiffreAel === 1, JSON.stringify(r.soin));
     v('…il soigne à l\'activation', r.soin.apres > 1, String(r.soin.apres));
 
     console.log('\n5) Trois au plus, et la mort');
     v('à 2 écrits, on écrit encore', r.max2);
     v('à 3 : les écrits sont grisés, un don reste possible, Activer aussi', !r.max3.trait && r.max3.don && r.max3.activer, JSON.stringify(r.max3));
-    v('Activer, dans l\'aide : ce qui attend, compté (« ᛟ En attente : … Trait Spectral ×3 », et sur qui si la ligne tient)', /^ᛟ En attente : .*Trait Spectral ×3/.test(r.aide.activer.split('\n')[1] || ''), r.aide.activer.replace(/\n/g, ' / '));
-    v('…un écrit grisé dit pourquoi (« 3 écrits attendent déjà »)', /3 écrits attendent déjà/.test(r.aide.trait), r.aide.trait.replace(/\n/g, ' / '));
-    v('…contre-épreuve : un don, possible, garde sa description', r.aide.don.indexOf('attendent') < 0 && r.aide.don.indexOf('En attente') < 0);
+    v('Activer, dans l\'aide : ce qui attend, compté (« ᛟ Dans le cercle : … Trait Spectral ×3 », et sur qui si la ligne tient)', /^ᛟ Dans le cercle : .*Trait Spectral ×3/.test(r.aide.activer.split('\n')[1] || ''), r.aide.activer.replace(/\n/g, ' / '));
+    v('…un écrit grisé dit pourquoi (« 3 runes attendent déjà »)', /3 runes attendent déjà/.test(r.aide.trait), r.aide.trait.replace(/\n/g, ' / '));
+    v('…contre-épreuve : un don, possible, garde sa description', r.aide.don.indexOf('attendent') < 0 && r.aide.don.indexOf('Dans le cercle') < 0);
     v('un ennemi tombé emporte son écrit (les autres restent)', r.mort.ecrits === 2 && r.mort.surE2 === 0, JSON.stringify(r.mort));
 
     console.log('\n6) La volonté');
@@ -222,7 +222,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var vrai = await page.evaluate(function () { return { n: window.__n, vus: window.__vus, tour: $gameTroop.turnCount() }; });
     v('le combat a tourné (' + vrai.n + ' choix de ludwing, tour ' + vrai.tour + ')', vrai.n >= 4);
     // (un ennemi qui frappe ludwing referme aussi ses écrits : « ᛟ Piège ! » — LEcrit, sa signature)
-    v('ludwing a écrit, puis ses écrits sont partis : « ᛟ Écrit », puis « ᛟ Activé » ou « ᛟ Piège ! »', vrai.vus.indexOf('ᛟ Écrit') >= 0 && vrai.vus.some(function (t) { return /Activé ×|Piège !/.test(t); }),
+    v('ludwing a écrit, puis ses écrits sont partis : « ᛟ Frappe · … », puis « ᛟ Le cercle se ferme » ou « ᛟ Piège ! »', vrai.vus.some(function (t) { return /^ᛟ Frappe · /.test(t); }) && vrai.vus.some(function (t) { return /Le cercle se ferme ×|Piège !/.test(t); }),
       vrai.vus.filter(function (t) { return /ᛟ/.test(t); }).slice(0, 6).join(' | '));
     await fermerCombat();
 
@@ -261,12 +261,12 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         return o;
     });
     try {
-        await page.waitForFunction(function () { return window.__vus.some(function (t) { return /Activé ×/.test(t); }); }, null, { timeout: 60000, polling: 300 });
+        await page.waitForFunction(function () { return window.__vus.some(function (t) { return /Le cercle se ferme ×/.test(t); }); }, null, { timeout: 60000, polling: 300 });
     } catch (x) { }
     cmd.vus = await page.evaluate(function () { return window.__vus.filter(function (t) { return /ᛟ/.test(t); }).slice(0, 4); });
     v('ludwing, deux écrits : « ᛟ Activer · 2 » est juste sous l\'Attaque, et possible', cmd.nom === 'ᛟ Activer · 2' && cmd.place === 1 && cmd.active, JSON.stringify(cmd));
     v('…la choisir prend Activer, et laisse une action de plus (instantanée)', cmd.choisi === 1309 && cmd.places >= 2);
-    v('…et au tour, les écrits partent', cmd.vus.some(function (t) { return /Activé ×2/.test(t); }), cmd.vus.join(' | '));
+    v('…et au tour, les écrits partent', cmd.vus.some(function (t) { return /Le cercle se ferme ×2/.test(t); }), cmd.vus.join(' | '));
     v('contre-épreuve : Korrah, sans écrit, n\'a pas la commande', cmd.korrah === -1);
     await fermerCombat();
 

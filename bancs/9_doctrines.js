@@ -256,7 +256,7 @@ var SABOTAGES = [
     ['une compétence trop chère pour l\'ennemi', function (b) {
         var e = cobaye(b);
         e.params[1] = 0;
-        var cher = S.filter(function (s) { return s && s.name && (s.mpCost || 0) > 0 && (HOMONYMES[s.name.toUpperCase()] || []).length === 1; })[0];
+        var cher = S.filter(function (s) { return s && s.name && s.name.indexOf(':') < 0 && (s.mpCost || 0) > 0 && (HOMONYMES[s.name.toUpperCase()] || []).length === 1; })[0];
         remplaceDoctrine(e, ['ALWAYS: ' + cher.name + ', Lowest HP%']);
     }, /peut payer/],
     ['le repli retiré à tout le monde', function (b) {

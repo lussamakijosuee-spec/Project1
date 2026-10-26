@@ -182,7 +182,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('un mouvement négatif ne brûle plus la chair (0 PV de recul)', r.pt.recul === 0, String(r.pt.recul));
 
     console.log('\n6) À l\'écran');
-    v('l\'aide dit l\'art : 【PAROLE · …】, 【MOUVEMENT · …】, 【ÉCRIT】', /^【PAROLE/.test(r.aide[0]) && /^【MOUVEMENT/.test(r.aide[1]) && r.aide[2] === '【ÉCRIT】', r.aide.join(' '));
+    v('l\'aide dit l\'art : 【PAROLE · …】, 【MOUVEMENT · …】, 【RUNE · …】', /^【PAROLE/.test(r.aide[0]) && /^【MOUVEMENT/.test(r.aide[1]) && /^【RUNE( · [A-ZÉ]+)?】$/.test(r.aide[2]), r.aide.join(' '));
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');

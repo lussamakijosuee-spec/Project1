@@ -135,7 +135,7 @@ function verdict(t, passe, detail) {
             var sorts = [];
             for (var i = 1; i < $dataSkills.length && sorts.length < 6; i++) {
                 var sk = $dataSkills[i];
-                if (sk && sk.name && /^Parole n°/.test(sk.name)) { sorts.push(sk); }
+                if (sk && sk.name && /^Parole/.test(sk.name)) { sorts.push(sk); }
             }
             sorts.forEach(function (sk) {
                 var t = 0;

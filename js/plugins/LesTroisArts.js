@@ -163,7 +163,7 @@
  *  ajoute une seconde ». v1.3 (2026-10-26) : la règle telle que JOKO l'a
  *  écrite, avec ses exceptions (« Ta règle + mes exceptions »).
  *
- *  À L'ÉCRAN — l'aide d'une compétence dit son art : 【PAROLE · FEU】, et
+ *  À L'ÉCRAN — l'aide d'une compétence dit son art : 【PAROLE · FEU】, 【RUNE · SCEAU】, et
  *  【PAROLE · FEU · hors affinité】 quand il l'est ; le coût affiché est le
  *  vrai ; au-dessus du héros : « ◇ Hors affinité ».
  *  Au-dessus de l'ennemi : ▲ Corps ×2 quand l'art le bat, ▼ quand il résiste.
@@ -208,7 +208,7 @@ var LesTroisArts = LesTroisArts || {};
     var ANNONCE_HORS = String(P['annonceHorsAffinite'] || 'true') !== 'false';
 
     var MOT_ECRIT = [2, 7], MOT_CORPS = [4, 5];
-    var NOMS    = { parole: 'PAROLE', mouvement: 'MOUVEMENT', ecrit: 'ÉCRIT' };
+    var NOMS    = { parole: 'PAROLE', mouvement: 'MOUVEMENT', ecrit: 'RUNE' };
     var SOURCES = { parole: 'Esprit', mouvement: 'Corps', ecrit: 'Âme' };
 
     function heros(b) { return !!(b && b.isActor && b.isActor() && EXCLUS.indexOf(b.actorId()) < 0); }
@@ -365,6 +365,8 @@ var LesTroisArts = LesTroisArts || {};
         if (!a || !this._helpWindow) { _aide.call(this); return; }
         var el = s.damage ? s.damage.elementId : 0;
         var nom = el > 0 && MANAS.indexOf(el) < 0 && $dataSystem.elements[el] ? ' · ' + $dataSystem.elements[el].trim().toUpperCase() : '';
+        // une rune dit son signe (LEcrit, <Rune: …>) : 【RUNE · SCEAU】
+        if (a === 'ecrit' && s.meta && s.meta.Rune) { nom = ' · ' + String(s.meta.Rune).trim().toUpperCase(); }
         var hors = horsAffinite(this._actor, s) ? ' · hors affinité' : '';
         this._helpWindow.setText('【' + NOMS[a] + nom + hors + '】  ' + (s.description || ''));
     };
