@@ -72,6 +72,28 @@
  * @default true
  * @desc Au-dessus de l'ennemi : ▲ quand l'art le bat, ▼ quand il lui résiste.
  *
+ * @param === LES AFFINITÉS ===
+ * @default
+ *
+ * @param affinites
+ * @text Les affinités des héros
+ * @default 1: spirituel négatif, 2: négatif positif, 3: négatif spirituel, 4: positif
+ * @desc « acteur: courants » — l'affinité naturelle d'abord, puis celle de son don. Un héros absent n'a pas de règle.
+ *
+ * @param coutHorsAffinite
+ * @text Hors affinité : le coût ×
+ * @default 1.5
+ *
+ * @param forceHorsAffinite
+ * @text Hors affinité : l'effet ×
+ * @default 0.75
+ * @desc Les dégâts et les soins d'un art hors de ses affinités.
+ *
+ * @param horsRegle
+ * @text Compétences hors de la règle
+ * @default 1
+ * @desc L'Attaque : le geste de base, pas un art qu'on apprend.
+ *
  * @help
  * ============================================================================
  *  LES TROIS ARTS                                                pour JOKO
@@ -108,6 +130,15 @@
  *
  *  À L'ÉCRAN — l'aide d'une compétence dit son art : 【PAROLE · FEU】.
  *  Au-dessus de l'ennemi : ▲ Corps ×2 quand l'art le bat, ▼ quand il résiste.
+ *
+ *  LES AFFINITÉS — la Bible : « Chaque personne n'a qu'une seule affinité
+ *  naturelle, parmi les trois courants ; le don ou le trait en ajoute une
+ *  seconde », et « un art hors de son affinité coûte plus et rend moins ».
+ *  JOKO, le 2026-10-24 : « L'affinité unique oui ». Vesper spirituel + négatif
+ *  (son sang), Korrah négatif + positif (l'Hiver de seiryu), ludwing négatif +
+ *  spirituel (ses âmes), Aël positif. Hors affinité : le coût ×1,5, les dégâts
+ *  et les soins ×0,75 (réglages) ; l'aide le dit : 【PAROLE · hors affinité】.
+ *  L'Attaque reste hors de la règle. seiryu et les ennemis n'en ont pas.
  *
  *  LaParole, LeMouvement, MaitriseVoies et L'Écrit demandent tous l'art ici :
  *  une seule règle. Les ennemis ne changent pas. Aucune fiche n'est modifiée.
@@ -221,16 +252,60 @@ var LesTroisArts = LesTroisArts || {};
         else if (taux < 1) { annonce(target, '▼ ' + source + ' ×' + chiffre(taux), '#ffa08d'); }
     };
 
-    // L'aide d'une compétence dit son art (et sa couleur d'élément, s'il en a une).
+    //=========================================================================
+    // Les affinités — une naturelle, et celle du don ; hors d'elles, un art coûte plus et rend moins
+    //=========================================================================
+    var COURANTS = { negatif: 'mouvement', positif: 'parole', spirituel: 'ecrit' };
+    function sansAccents(s) { return s.normalize ? s.normalize('NFD').replace(/[̀-ͯ]/g, '') : s; }
+    var AFFINITES = {};
+    String(P['affinites'] === undefined ? '1: spirituel négatif, 2: négatif positif, 3: négatif spirituel, 4: positif' : P['affinites'])
+        .split(',').forEach(function (x) {
+            var m = /^\s*(\d+)\s*:\s*(.+)$/.exec(x);
+            if (!m) { return; }
+            AFFINITES[+m[1]] = sansAccents(m[2].trim().toLowerCase()).split(/\s+/)
+                .map(function (c) { return COURANTS[c]; }).filter(Boolean);
+        });
+    var COUT_HORS  = parseFloat(P['coutHorsAffinite']);  if (isNaN(COUT_HORS))  { COUT_HORS = 1.5; }
+    var FORCE_HORS = parseFloat(P['forceHorsAffinite']); if (isNaN(FORCE_HORS)) { FORCE_HORS = 0.75; }
+    var HORS_REGLE = liste('horsRegle', '1');
+
+    /** Ses arts (affinité naturelle, puis celle de son don) ; [] : pas de règle pour lui. */
+    function affinites(b) { return (heros(b) && AFFINITES[b.actorId()]) || []; }
+    function horsAffinite(b, item) {
+        if (LesTroisArts._sansAffinites || !item || HORS_REGLE.indexOf(item.id) >= 0) { return false; }
+        var aff = affinites(b), a = art(item);
+        return aff.length > 0 && !!a && aff.indexOf(a) < 0;
+    }
+    // le coût : dans sa propre monnaie (PT, PM ou PV), ce que les autres plugins en ont fait d'abord
+    ['skillMpCost', 'skillTpCost', 'skillHpCost'].forEach(function (f) {
+        var avant = Game_BattlerBase.prototype[f];
+        if (!avant) { return; }
+        Game_BattlerBase.prototype[f] = function (skill) {
+            var c = avant.call(this, skill);
+            return c > 0 && horsAffinite(this, skill) ? Math.ceil(c * COUT_HORS) : c;
+        };
+    });
+    // l'effet : les dégâts et les soins
+    var _valeurAff = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (target, critical) {
+        var v = _valeurAff.call(this, target, critical);
+        if (v !== 0 && this.isSkill() && horsAffinite(this.subject(), this.item())) { v = Math.round(v * FORCE_HORS); }
+        return v;
+    };
+
+    // L'aide d'une compétence dit son art (et sa couleur d'élément, s'il en a une), et si elle est hors affinité.
     var _aide = Window_SkillList.prototype.updateHelp;
     Window_SkillList.prototype.updateHelp = function () {
         var s = this.item(), a = s && this._actor && heros(this._actor) ? art(s) : '';
         if (!a || !this._helpWindow) { _aide.call(this); return; }
         var el = s.damage ? s.damage.elementId : 0;
         var nom = el > 0 && MANAS.indexOf(el) < 0 && $dataSystem.elements[el] ? ' · ' + $dataSystem.elements[el].trim().toUpperCase() : '';
-        this._helpWindow.setText('【' + NOMS[a] + nom + '】  ' + (s.description || ''));
+        var hors = horsAffinite(this._actor, s) ? ' · hors affinité' : '';
+        this._helpWindow.setText('【' + NOMS[a] + nom + hors + '】  ' + (s.description || ''));
     };
 
+    LesTroisArts.affinites = affinites;
+    LesTroisArts.horsAffinite = horsAffinite;
     LesTroisArts.art = art;
     LesTroisArts.mana = mana;
     LesTroisArts.manaDe = function (a) { return MANA[a] || 0; };
