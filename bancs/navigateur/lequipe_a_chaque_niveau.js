@@ -50,6 +50,22 @@ var SORTIE = process.env.SORTIE || path.join(__dirname, 'mesures_equipe.json');
 var PAR_TROUPE = parseInt(process.env.PAR_TROUPE || '2', 10);
 var TROUPES = parseInt(process.env.TROUPES || '8', 10);
 
+/** Les troupes que le jeu pose : rencontres des cartes, « Traitement du combat » direct des événements et des événements communs. */
+function troupesDuJeu() {
+    var data = path.join(__dirname, '..', '..', 'data'), vus = {};
+    function lire(f) { return JSON.parse(fs.readFileSync(path.join(data, f), 'utf8')); }
+    function scan(list) { (list || []).forEach(function (c) { if (c.code === 301 && c.parameters[0] === 0) { vus[c.parameters[1]] = 1; } }); }
+    lire('MapInfos.json').forEach(function (m) {
+        var f = m && 'Map' + String(m.id).padStart(3, '0') + '.json';
+        if (!f || !fs.existsSync(path.join(data, f))) { return; }
+        var M = lire(f);
+        (M.encounterList || []).forEach(function (e) { vus[e.troopId] = 1; });
+        (M.events || []).forEach(function (ev) { if (ev) { ev.pages.forEach(function (p) { scan(p.list); }); } });
+    });
+    lire('CommonEvents.json').forEach(function (ce) { if (ce) { scan(ce.list); } });
+    return Object.keys(vus).map(Number);
+}
+
 (async function () {
     var nav = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--no-sandbox', '--mute-audio'] });
     var page = await nav.newPage({ viewport: { width: 816, height: 624 } });
@@ -60,11 +76,13 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
     await page.evaluate(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
     await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
     await page.waitForTimeout(1500);
-    await page.evaluate(function () {
+    await page.evaluate(function (seul) {
         [1, 2, 3, 4].forEach(function (id) { if (!$gameParty.members().some(function (m) { return m.actorId() === id; })) { $gameParty.addActor(id); } });
+        // SEUL=n : un seul héros, comme au début du jeu (DebutMarques n'en donne qu'un) ; seiryu entre avec Korrah
+        if (seul) { [1, 2, 3, 4, 6].forEach(function (id) { if (id !== seul) { $gameParty.removeActor(id); } }); }
         BattleManager.setup(1, true, true); SceneManager.push(Scene_Battle);
-    });
-    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Battle && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
+    }, parseInt(process.env.SEUL || '0', 10));
+    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Battle && !SceneManager.isSceneChanging(); }, null, { timeout: 180000 });
     await page.waitForTimeout(2500);
 
     // ═════════════════════════════════════════════════════════════════════
@@ -575,6 +593,17 @@ var TROUPES = parseInt(process.env.TROUPES || '8', 10);
         await page.evaluate(function () { if (window.LesInstincts) { LesInstincts._eteint = true; } });
         console.log('ennemis sans instinct');
     }
+    // VRAIES=1 : seulement les troupes que le jeu pose vraiment (rencontres des cartes, combats des événements
+    // et des événements communs) — « mesurer chaque rencontre » (JOKO, 2026-10-26)
+    if (process.env.VRAIES) {
+        var vraies = troupesDuJeu();
+        await page.evaluate(function (l) {
+            var P = window.__parRang;
+            Object.keys(P).forEach(function (k) { P[k] = P[k].filter(function (x) { return l.indexOf(typeof x === 'object' ? x.id : x) >= 0; }); });
+        }, vraies);
+        console.log('seulement les troupes du jeu :', vraies.length);
+    }
+    if (process.env.SEUL) { console.log('un seul héros :', process.env.SEUL); }
     var reglage = await page.evaluate(function () { return window.EquilibreDesCombats ? JSON.parse(JSON.stringify(window.EquilibreDesCombats.mult)) : null; });
     if (process.env.VESPER_STYLE) {
         await page.evaluate(function (s) { window.__styleVesper = s; }, process.env.VESPER_STYLE);

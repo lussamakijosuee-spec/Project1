@@ -1,9 +1,9 @@
 //=============================================================================
-// EquilibreDesCombats.js — v1.0
+// EquilibreDesCombats.js — v1.1
 // Les combats, réglés sur ce que l'équipe fait VRAIMENT — par rang.
 //=============================================================================
 /*:
- * @plugindesc v1.0 ■ Multiplie les PV et la force des ennemis selon leur rang
+ * @plugindesc v1.1 ■ Multiplie les PV et la force des ennemis selon leur rang
  * (D, C, B, A, S, boss). Réglé sur des combats joués dans le moteur. Ne touche
  * à aucune fiche : éteindre ce greffon rend les ennemis d'origine.
  * @author pour JOKO
@@ -22,10 +22,10 @@
  * @default 1.5
  * @param pvB
  * @text Rang B — PV ×
- * @default 3.6
+ * @default 5.8
  * @param forceB
  * @text Rang B — ATQ/MAG ×
- * @default 1.45
+ * @default 1.6
  * @param pvA
  * @text Rang A — PV ×
  * @default 1.8
@@ -83,6 +83,18 @@
  *  ⚠ La force des boss est plafonnée : YEP_CoreEngine borne les paramètres
  *    ennemis à 999 (« Enemy Parameter »), et presque tous les boss y sont
  *    déjà. Le multiplicateur de force n'y change donc rien — les PV, si.
+ *
+ * ───────────────────────────────────────────────────────────────────────────
+ *  v1.1 — LE REWORK DES ENNEMIS (2026-10-27, avec leurs instincts)
+ * ───────────────────────────────────────────────────────────────────────────
+ *  Rang B : PV ×3,6 → ×5,8, force ×1,45 → ×1,6. L'équipe complète le tuait
+ *  en 1,6 à 2 tours ; il en dure 3,2 à 3,8 (16 combats par niveau, 94 %
+ *  de victoires), et 2,1 sur les seules troupes posées dans le jeu.
+ *  D et C ne bougent pas : le jeu commence avec UN héros (DebutMarques). Seul
+ *  au niveau 1, il gagne 80 à 100 % des rangs D en 1 à 3,5 tours ; seul au
+ *  niveau 12, 44 à 94 % des rangs C — plus de PV casserait le début.
+ *  A, S et boss ne bougent pas : 3,3 tours en A, 4 à 10 en S, 7 à 11 pour
+ *  les boss, et les instincts y coûtent déjà des victoires (les Bêtes).
  */
 (function () {
     'use strict';

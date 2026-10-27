@@ -106,6 +106,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var base = await ev(function (t) {
         var ids = $dataTroops[t].members.map(function (m) { return m.enemyId; });
         var sansBouclier = $dataEnemies.filter(function (e) { return e && e.meta && e.meta.mSh; }).length;
+        // Depuis le rework des ennemis (2026-10-27), le Slime a un rang (D), donc un bouclier : le banc le lui
+        // retire en mémoire, pour garder un ennemi sans rang — la règle « sans rang, aucun bouclier ».
+        ids.forEach(function (id) { var e = $dataEnemies[id]; e.note = e.note.replace(/<\s*Rang\s*:[^>]*>\s*/gi, ''); delete e.meta.Rang; });
         return { ids: ids, nom: $dataEnemies[ids[0]].name, avecBalise: sansBouclier, plugin: $plugins.some(function (p) { return p.name === 'AstfglSCB' && p.status; }) };
     }, TROUPE);
     V('le plugin est chargé (AstfglSCB, actif)', base.plugin);

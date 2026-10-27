@@ -608,7 +608,18 @@ d'ennemis « Parole n°X » ont leur art figé (`<Art:>`, la règle de LesTroisA
 du Feu : … », 33 « Rune de Frappe : … », 15 mouvements sans préfixe) — les doctrines citent toutes par numéro (« Skill 12 »), rien ne casse ;
 la balise `<Mana:>` (lue par rien, elle dit le courant) : sombre → negatif (147), âme et originel → spirituelle (103) ; **« pur » reste**
 (30 : Donovano le Mana Parfait, les Glitchs, la Reine Oubliée… — la Bible : *« Le mana parfait réunit les trois courants »* ; ils échappent
-au triangle, `7_trois_sources` le contrôle).
+au triangle, `7_trois_sources` le contrôle). **Les rangs** (*« un rang D à S pour ceux qui n'en ont pas (donc un bouclier) »*) :
+les 104 ennemis sans rang en reçoivent un (D 36, C 22, B 31, A 9, S 6 — le plus proche de leurs PV et de leur force, d'après la
+médiane des ennemis déjà rangés ; les boss à mécanique restent « boss »), donc un bouclier et le multiplicateur d'EquilibreDesCombats ;
+12 sont rencontrés dans le jeu (le Slime et le Poulet Bizarre en D, la Wyverne du Fort de Kragenvar en B, l'Esprit Errant en A…).
+**L'équilibrage** (`EquilibreDesCombats` v1.1, mesuré avec les instincts) : seul le **rang B** change — PV ×3,6 → ×5,8, force ×1,45 →
+×1,6 ; l'équipe complète le tuait en 1,6 à 2 tours, il en dure 3,2 à 3,8 (94 % de victoires, 8 % de ses PV reçus par tour), 2,1 sur
+les seules troupes posées dans le jeu. **D et C ne bougent pas** : l'équipe complète les tue en 1 tour, mais le jeu commence avec
+**un seul héros** (DebutMarques) — seul au niveau 1, 80 à 100 % de victoires en D, en 1 à 3,5 tours ; seul au niveau 12 en C, Korrah
+94 %, Vesper 75 %, ludwing 56 %, Aël 44 %. **A, S et boss ne bougent pas** : 3,3 tours en A (88 % : les Bêtes, en frénésie, gagnent
+une fois sur deux — des Destins qu'on peut fuir), 4 à 10 en S, 7 à 11 pour les boss. Les héros partent encore du niveau 89 : les
+niveaux de bêta que JOKO a dits (Vesper 40-50, ludwing et Korrah ~30, Aël ~15) ne sont pas posés. Banc : `lequipe_a_chaque_niveau`
+avec `VRAIES=1` (les 49 troupes du jeu) et `SEUL=n` (un seul héros).
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un

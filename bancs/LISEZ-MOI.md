@@ -163,7 +163,13 @@ node bancs/navigateur/analyser_equipe.js                           # la lecture
 MULT="D:3.5,1.4;A:1.8,1" node bancs/navigateur/lequipe_a_chaque_niveau.js   # essayer un réglage
 DIAG=552,80 node bancs/navigateur/lequipe_a_chaque_niveau.js       # un combat, coup par coup
 SONDE=4,45,579 node bancs/navigateur/lequipe_a_chaque_niveau.js    # le kit d'un héros, trié
+VRAIES=1 node bancs/navigateur/lequipe_a_chaque_niveau.js          # seulement les 49 troupes posées dans le jeu
+SEUL=4 NIVEAUX=1,12 node bancs/navigateur/lequipe_a_chaque_niveau.js   # un seul héros (le début du jeu)
+SANS_INSTINCTS=1 node bancs/navigateur/lequipe_a_chaque_niveau.js  # les ennemis sans leur instinct
 ```
+
+> Le banc joue l'**équipe complète** à chaque niveau ; le jeu commence avec **un seul** héros
+> (DebutMarques). Un réglage des rangs D et C se vérifie donc aussi avec `SEUL=1` … `SEUL=4`.
 
 > Les boss restent **bruyants** : avec la même configuration, le niveau 60 a donné 2 victoires sur 8,
 > puis 5 sur 8. Un chiffre de boss se lit sur plusieurs passages, jamais sur un seul.
