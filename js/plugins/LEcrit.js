@@ -1,10 +1,10 @@
 //=============================================================================
-// LEcrit.js — v2.0
+// LEcrit.js — v2.1
 // L'Écrit, l'art de l'Âme (mana spirituel) : le stylo d'âme trace un cercle,
 // on y inscrit des runes, on le ferme.
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ L'Écrit (mana spirituel) : le stylo d'âme trace un cercle —
+ * @plugindesc v2.1 ■ L'Écrit (mana spirituel) : le stylo d'âme trace un cercle —
  * dans l'air sur une cible, ou au sol. On y inscrit des RUNES (3 au plus), on le
  * FERME : elles partent ensemble ; deux du même signe s'accordent.
  * @author pour JOKO
@@ -46,6 +46,24 @@
  * @type number
  * @default 100
  * @desc Trois runes du même signe qui partent ensemble : l'échange est complet, le prix revient. 0 = rien.
+ *
+ * @param solAuChoix
+ * @text Une rune de zone : Garder ou Piège, au choix
+ * @type boolean
+ * @default true
+ * @desc JOKO, 2026-10-27 : « Deux runes au choix ». En la lançant, on choisit : Garder (elle attend Activer) ou Piège (elle part quand l'ennemi agit).
+ *
+ * @param solParDefaut
+ * @text Sans choix (combat auto, IA) : garder ou piege
+ * @default piege
+ *
+ * @param nomGarder
+ * @text Le choix « Garder »
+ * @default ᛟ Garder — c'est toi qui l'actives
+ *
+ * @param nomPiege
+ * @text Le choix « Piège »
+ * @default ✒ Piège — elle part quand l'ennemi agit
  *
  * @param dejaEcrits
  * @text Types déjà écrits (partent tout de suite)
@@ -133,6 +151,12 @@
  *     côté. Elle part TOUTE SEULE quand l'ennemi y agit — côté ennemi, après
  *     l'action d'un ennemi ; côté héros, après une action ennemie qui vise un
  *     héros — ou quand on ferme le cercle.
+ *     DEUX RUNES AU CHOIX (JOKO, 2026-10-27 : « tu mets un truc, et c'est toi
+ *     qui l'actives au bon moment […] supra méta », puis « Deux runes au
+ *     choix ») — en lançant une rune de zone, on choisit : ᛟ GARDER, elle
+ *     attend au sol qu'on ferme le cercle, comme l'Écrit d'avant ; ou
+ *     ✒ PIÈGE, elle part toute seule quand l'ennemi agit. Sans choix (combat
+ *     automatique), c'est le réglage « solParDefaut ».
  *  3 runes en attente au plus par héros, dans l'air et au sol ensemble.
  *
  *  FERMER LE CERCLE — la compétence « ᛟ Activer » (instantanée : on joue
@@ -211,6 +235,10 @@ var LEcrit = LEcrit || {};
     var ETAT_SOL = nombre('etatSol', 260);
     var ACCORD  = nombre('bonusAccord', 1.25);
     var TRANSMUTATION = nombre('transmutation', 100) / 100;
+    var AU_CHOIX = String(P.solAuChoix || 'true') !== 'false';
+    var PAR_DEFAUT = String(P.solParDefaut || 'piege').trim().toLowerCase() === 'garder' ? 'garder' : 'piege';
+    var NOM_GARDER = String(P.nomGarder || "ᛟ Garder — c'est toi qui l'actives");
+    var NOM_PIEGE = String(P.nomPiege || "✒ Piège — elle part quand l'ennemi agit");
     var SIGNES = { frappe: 'Frappe', prise: 'Prise', sceau: 'Sceau', lien: 'Lien', rempart: 'Rempart' };
 
     function enCombat() { return !!($gameParty && $gameParty.inBattle()); }
@@ -300,9 +328,10 @@ var LEcrit = LEcrit || {};
     function tracerSol(action) {
         var b = action.subject(), sk = action.item(), g = signe(sk), cote = action.isForOpponent() ? 'ennemis' : 'allies';
         b._ecrits = ecritsDe(b).slice();
-        b._ecrits.push({ cible: null, sol: cote, competence: sk.id, pv: b._pvPaye || 0 });
+        var garde = (action._modeRune || PAR_DEFAUT) === 'garder';
+        b._ecrits.push({ cible: null, sol: cote, competence: sk.id, pv: b._pvPaye || 0, garde: garde });
         montrerSol(cote);
-        annonce(b, '✒ Cercle au sol · ' + (g ? SIGNES[g] : 'Rune'), '#e080ff');
+        annonce(b, (garde ? 'ᛟ Gardée au sol · ' : '✒ Piège au sol · ') + (g ? SIGNES[g] : 'Rune'), '#e080ff');
     }
     function neutre(c) {
         c.clearResult();
@@ -516,7 +545,8 @@ var LEcrit = LEcrit || {};
         if (!agit) { return; }
         $gameParty.battleMembers().forEach(function (a) {
             if (!a.isAlive()) { return; }
-            var siens = ecritsDe(a).filter(function (m) { return m.sol === 'ennemis' || (m.sol === 'allies' && agit.heros); });
+            // une rune gardée attend qu'on ferme le cercle : seul le piège répond
+            var siens = ecritsDe(a).filter(function (m) { return !m.garde && (m.sol === 'ennemis' || (m.sol === 'allies' && agit.heros)); });
             if (!siens.length) { return; }
             a._ecrits = ecritsDe(a).filter(function (m) { return siens.indexOf(m) < 0; });
             annonce(s.isAlive() ? s : a, '✒ Le sol répond', '#e080ff');
@@ -567,7 +597,7 @@ var LEcrit = LEcrit || {};
             // les mêmes écrits se comptent (« Trait Spectral ×2 ») ; on dit sur qui tant que la ligne tient
             var groupes = [];
             liste.forEach(function (m) {
-                var nom = nomCourt($dataSkills[m.competence]), qui = m.sol ? 'au sol' : (m.cible && m.cible.name ? m.cible.name() : '?');
+                var nom = nomCourt($dataSkills[m.competence]), qui = m.sol ? (m.garde ? 'au sol' : 'piège') : (m.cible && m.cible.name ? m.cible.name() : '?');
                 var g = groupes.filter(function (x) { return x.nom === nom; })[0];
                 if (!g) { g = { nom: nom, n: 0, qui: [] }; groupes.push(g); }
                 g.n++; if (g.qui.indexOf(qui) < 0) { g.qui.push(qui); }
@@ -575,8 +605,9 @@ var LEcrit = LEcrit || {};
             var noms = groupes.map(function (g) { return g.nom + (g.n > 1 ? ' ×' + g.n : ''); });
             var avecCibles = groupes.map(function (g, i) { return noms[i] + ' → ' + g.qui.join(', '); });
             // sans les cibles, une rune au sol le dit encore
-            var courts = groupes.map(function (g, i) { return noms[i] + (g.qui.length === 1 && g.qui[0] === 'au sol' ? ' (sol)' : ''); });
-            var essais = ['ᛟ Dans le cercle : ' + avecCibles.join(' · '), 'ᛟ Dans le cercle : ' + courts.join(' · '), 'ᛟ Dans le cercle : ' + noms.join(' · ')];
+            var courts = groupes.map(function (g, i) { return noms[i] + (g.qui.length === 1 && g.qui[0] === 'au sol' ? ' (sol)' : (g.qui.length === 1 && g.qui[0] === 'piège' ? ' (piège)' : '')); });
+            var auSolCourt = groupes.map(function (g, i) { return noms[i] + (g.qui.length === 1 && (g.qui[0] === 'au sol' || g.qui[0] === 'piège') ? ' (sol)' : ''); });
+            var essais = ['ᛟ Dans le cercle : ' + avecCibles.join(' · '), 'ᛟ Dans le cercle : ' + courts.join(' · '), 'ᛟ Dans le cercle : ' + auSolCourt.join(' · '), 'ᛟ Dans le cercle : ' + noms.join(' · ')];
             ligne = essais.filter(function (t) { return h.textWidth(t) <= h.contentsWidth() - 8; })[0] || '';
             if (!ligne) {
                 ligne = 'ᛟ ' + liste.length + ' dans le cercle : ';
@@ -617,6 +648,62 @@ var LEcrit = LEcrit || {};
         // (YEP, « Select Help Window », ferait choisir le héros lui-même)
         this.selectNextCommand();
     };
+
+    // Deux runes au choix : une rune de zone demande, en la lançant, si on la garde ou si c'est un piège.
+    function Window_ModeRune() { this.initialize.apply(this, arguments); }
+    Window_ModeRune.prototype = Object.create(Window_Command.prototype);
+    Window_ModeRune.prototype.constructor = Window_ModeRune;
+    Window_ModeRune.prototype.windowWidth = function () { return 480; };
+    Window_ModeRune.prototype.makeCommandList = function () {
+        this.addCommand(NOM_GARDER, 'garder');
+        this.addCommand(NOM_PIEGE, 'piege');
+    };
+    LEcrit.Window_ModeRune = Window_ModeRune;
+    /** Une rune que ce héros tracerait au sol (une zone) : celle qui se choisit. */
+    function auChoix(a, s) {
+        if (!AU_CHOIX || !s || !heros(a)) { return false; }
+        var act = new Game_Action(a); act.setSkill(s.id);
+        return doitEcrire(act) && zone(act);
+    }
+    LEcrit.auChoix = auChoix;
+    var _fenetres = Scene_Battle.prototype.createAllWindows;
+    Scene_Battle.prototype.createAllWindows = function () {
+        _fenetres.call(this);
+        var w = this._fenetreRune = new Window_ModeRune(0, 0);
+        w.x = (Graphics.boxWidth - w.width) / 2;
+        w.y = (Graphics.boxHeight - w.height) / 2;
+        w.setHandler('garder', this.choisirRune.bind(this, 'garder'));
+        w.setHandler('piege', this.choisirRune.bind(this, 'piege'));
+        w.setHandler('cancel', this.annulerRune.bind(this));
+        w.deactivate(); w.hide();
+        this.addWindow(w);
+    };
+    var _okCapacite = Scene_Battle.prototype.onSkillOk;
+    Scene_Battle.prototype.onSkillOk = function () {
+        var w = this._fenetreRune, act = BattleManager.inputtingAction();
+        if (act) { act._modeRune = null; }
+        if (w && auChoix(BattleManager.actor(), this._skillWindow.item())) {
+            this._skillWindow.deactivate();
+            w.select(PAR_DEFAUT === 'garder' ? 0 : 1);
+            w.show(); w.open(); w.activate();
+            return;
+        }
+        _okCapacite.call(this);
+    };
+    Scene_Battle.prototype.choisirRune = function (mode) {
+        var w = this._fenetreRune, act = BattleManager.inputtingAction();
+        w.deactivate(); w.hide();
+        if (act) { act._modeRune = mode; }
+        this._skillWindow.activate();
+        _okCapacite.call(this);
+        if (act) { act._modeRune = mode; }       // setSkill ne l'efface pas, mais on le repose après le chemin de YEP
+    };
+    Scene_Battle.prototype.annulerRune = function () {
+        this._fenetreRune.deactivate(); this._fenetreRune.hide();
+        this._skillWindow.activate();
+    };
+    var _effacer = Game_Action.prototype.clear;
+    Game_Action.prototype.clear = function () { _effacer.call(this); this._modeRune = null; };
 
     // Un ennemi tombé emporte ce qui était écrit sur lui.
     // Sur Game_Enemy : LouCopySystem, DonoBoss, DonoKamui et EvenementsUtiles y posent déjà leur mort.

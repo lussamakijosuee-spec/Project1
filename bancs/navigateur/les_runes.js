@@ -21,6 +21,10 @@
  *   5. la transmutation entière : trois du même signe, la vie payée revient ;
  *      deux, non ;
  *   6. trois au plus, dans l'air et au sol ensemble ; l'aide dit « au sol ».
+ *   7. deux runes au choix (v2.1, JOKO : « tu mets un truc, et c'est toi qui
+ *      l'actives au bon moment », « Deux runes au choix ») : une rune de zone
+ *      gardée attend Activer, l'ennemi qui agit ne la fait pas partir ; un piège
+ *      part ; le choix ne se pose que pour une rune de zone.
  *
  *   node <scratchpad>/serveur_bancs.js . 8899   (ou npx http-server -p 8899 -c-1 .)
  *   node bancs/navigateur/les_runes.js
@@ -180,6 +184,35 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         faux._actor = lud; faux._helpWindow = hw; faux.item = function () { return $dataSkills[ACT]; };
         Window_SkillList.prototype.updateHelp.call(faux);
         out.aide = String(hw._text || '');
+
+        // 7 · deux runes au choix : Garder (elle attend Activer) ou Piège (elle part quand l'ennemi agit)
+        nettoyer();
+        var g = act(lud, 1170, e); g._modeRune = 'garder';
+        g.makeTargets().forEach(function (x) { x.clearResult(); g.apply(x); });
+        hp0 = e.hp; hp20 = e2.hp;
+        ennemiAgit(e2, null);
+        out.garder = { reste: L.ecrits(lud).length, garde: !!(L.ecrits(lud)[0] || {}).garde, perdu: hp0 - e.hp + hp20 - e2.hp, annonce: annonces(lud) };
+        hp0 = e.hp; hp20 = e2.hp;
+        L.activer(lud);
+        out.garder.active = hp0 - e.hp + hp20 - e2.hp; out.garder.apres = L.ecrits(lud).length;
+        nettoyer();
+        var p = act(lud, 1170, e); p._modeRune = 'piege';
+        p.makeTargets().forEach(function (x) { x.clearResult(); p.apply(x); });
+        hp0 = e.hp; hp20 = e2.hp;
+        ennemiAgit(e2, null);
+        out.piege = { perdu: hp0 - e.hp + hp20 - e2.hp, reste: L.ecrits(lud).length, annonce: annonces(lud) };
+        var sc = SceneManager._scene, w = sc._fenetreRune;
+        out.choix = { zone: L.auChoix(lud, $dataSkills[1170]), une: L.auChoix(lud, $dataSkills[158]), soutien: L.auChoix(kor, $dataSkills[12]),
+                      fenetre: !!w && w.maxItems() === 2 && w.commandSymbol(0) === 'garder' && w.commandSymbol(1) === 'piege',
+                      noms: w ? [w.commandName(0), w.commandName(1)] : [] };
+        // le chemin du menu : choisir « Garder » pose le mode sur l'action en cours de saisie
+        var enCours = new Game_Action(lud), biAvant = BattleManager.inputtingAction;
+        BattleManager.inputtingAction = function () { return enCours; };
+        var faussesFenetres = { _fenetreRune: w, _skillWindow: { activate: function () { }, item: function () { return $dataSkills[1170]; }, hide: function () { } },
+            _helpWindow: sc._helpWindow, onSelectAction: function () { }, selectNextCommand: function () { } };
+        try { Scene_Battle.prototype.choisirRune.call(faussesFenetres, 'garder'); } catch (x) { out.choixErreur = String(x).slice(0, 120); }
+        BattleManager.inputtingAction = biAvant;
+        out.choix.mode = enCours._modeRune;
         nettoyer();
         return out;
     });
@@ -195,7 +228,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('\n2) Au sol');
     var s = r.solAllies;
     v('Encouragement (tous les alliés) : une seule rune, au sol côté héros, montrée sur chacun (1)', s.ecrits === 1 && s.sol === 'allies' && s.chiffres.every(function (n) { return n === 1; }) && !s.air, JSON.stringify(s));
-    v('…elle ne soigne pas tout de suite, et « ✒ Cercle au sol » s\'annonce', s.soin === 1 && s.annonce.some(function (t) { return /Cercle au sol/.test(t); }), s.annonce.join(' | '));
+    v('…elle ne soigne pas tout de suite, et « ✒ Cercle au sol » s\'annonce', s.soin === 1 && s.annonce.some(function (t) { return /(Piège|Gardée) au sol/.test(t); }), s.annonce.join(' | '));
     var se = r.solEnnemis;
     v('Le Symbole (tous les ennemis) : une rune au sol côté ennemi, rien ne part', se.ecrits === 1 && se.sol === 'ennemis' && se.perdu === 0 && se.chiffres.every(function (n) { return n === 1; }), JSON.stringify(se));
     v('contre-épreuve : Trait Spectral (une cible) se trace dans l\'air, sur elle', r.air.surE === 1 && r.air.sol === '', JSON.stringify(r.air));
@@ -221,9 +254,18 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('\n6) Trois au plus, et l\'aide');
     v('dans l\'air et au sol ensemble : à 2, on inscrit encore ; à 3, non ; fermer le cercle, oui', r.max.deux && !r.max.trois && r.max.activer, JSON.stringify(r.max));
-    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol », ou « (sol) » quand la ligne est courte)', /ᛟ Dans le cercle : /.test(r.aide) && /au sol|\(sol\)/.test(r.aide), r.aide.replace(/\n/g, ' / '));
+    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol » gardée, « piège » sinon ; en court « (sol) », « (piège) »)', /ᛟ Dans le cercle : /.test(r.aide) && /au sol|\(sol\)|piège/.test(r.aide), r.aide.replace(/\n/g, ' / '));
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
+    console.log('\n7) Deux runes au choix');
+    var gd = r.garder;
+    v('Garder : l\'ennemi agit, la rune de zone reste au sol et rien ne part (« ᛟ Gardée au sol »)', gd.reste === 1 && gd.garde && gd.perdu === 0 && gd.annonce.some(function (t) { return /Gardée au sol/.test(t); }), JSON.stringify(gd).slice(0, 220));
+    v('…c\'est Activer qui la fait partir', gd.active > 0 && gd.apres === 0, gd.active + ' PV · reste ' + gd.apres);
+    v('Piège : l\'ennemi agit, elle part toute seule (« ✒ Piège au sol »)', r.piege.perdu > 0 && r.piege.reste === 0 && r.piege.annonce.some(function (t) { return /Piège au sol/.test(t); }), JSON.stringify(r.piege).slice(0, 200));
+    v('le choix ne se pose que pour une rune de zone (Le Symbole, Encouragement), pas pour une rune à une cible', r.choix.zone && r.choix.soutien && !r.choix.une, JSON.stringify(r.choix));
+    v('la fenêtre du choix : « Garder », puis « Piège »', r.choix.fenetre, r.choix.noms.join(' / '));
+    v('choisir « Garder » dans le menu le pose sur l\'action', r.choix.mode === 'garder', String(r.choix.mode) + (r.choixErreur ? ' · ' + r.choixErreur : ''));
+
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();
     process.exit(ko === 0 ? 0 : 1);
