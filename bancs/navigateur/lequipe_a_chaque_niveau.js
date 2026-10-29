@@ -547,7 +547,9 @@ function troupesDuJeu() {
                 // seiryu : ses chutes, les tours où Korrah n'avait pas l'Hiver, ses soins
                 seiryu: window.Seiryu && Seiryu.bilan ? Seiryu.bilan() : null,
                 // Vesper : tours par Style, Rage / Flow / Berserker / armure brisée, ce que ludwing a pris
-                vesper: carnet.vesper
+                vesper: carnet.vesper,
+                // les réactions élémentaires de FusionElements v2.0 (Vapeur, Fonte…), dans ce combat
+                reactions: window.Fusion && Fusion.compte ? Fusion.compte() : null
             };
             // on vide ce que les sprites n'afficheront jamais
             $gameParty.members().concat($gameTroop.members()).forEach(function (b) { b.clearDamagePopup(); b.clearAnimations && b.clearAnimations(); });
@@ -667,7 +669,11 @@ function troupesDuJeu() {
         var bv = boss.filter(function (c) { return c.victoire; }).length;
         var bt = boss.reduce(function (s, c) { return s + c.tours; }, 0) / (boss.length || 1);
         console.log('niveau ' + String(n).padStart(2) + ' · rang ' + rang + ' · ' + combats.length + ' combats, ' + v + ' victoires, ' + tMoy.toFixed(1) + ' tours'
-            + (boss.length ? '   |   boss : ' + bv + '/' + boss.length + ', ' + bt.toFixed(1) + ' tours' : ''));
+            + (boss.length ? '   |   boss : ' + bv + '/' + boss.length + ', ' + bt.toFixed(1) + ' tours' : '')
+            + (function () {
+                var nr = combats.concat(boss).reduce(function (s, c) { return s + Object.keys(c.reactions || {}).reduce(function (x, k) { return x + c.reactions[k]; }, 0); }, 0);
+                return nr ? '   |   ' + nr + ' réactions' : '';
+            })());
     }
     resultats.erreurs = erreurs.slice(0, 20);
     fs.writeFileSync(SORTIE, JSON.stringify(resultats, null, 1));

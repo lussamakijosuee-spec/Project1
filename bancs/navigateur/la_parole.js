@@ -7,7 +7,9 @@
  *
  * Ce banc vérifie, dans le vrai moteur et dans les deux sens :
  *   1. qui est une Parole (mana positif seulement) et les degrés des échelles ;
- *      FusionElements éteint ; seules les 6 fusions de JOKO existent ;
+ *      l'ancienne fusion par la somme (FusionElements v1.0) ne joue plus —
+ *      depuis le 2026-10-29, FusionElements v2.0 fait les réactions sur la
+ *      cible, pas de fusion dans l'air ; seules les 6 fusions de JOKO existent ;
  *   2. un héros ne rate plus en silence — un ennemi, si ;
  *   3. la phrase commune : posée, affichée, tenue jusqu'à la fin du tour suivant ;
  *   4. la Double : deux éléments si un autre est en suspens — pas sinon ;
@@ -62,7 +64,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('1) Qui est une Parole, et les degrés');
     var q = await page.evaluate(function () {
         var L = LaParole, r = {};
-        r.fusionElements = $plugins.filter(function (p) { return p.name === 'FusionElements'; })[0].status;
+        var fe = $plugins.filter(function (p) { return p.name === 'FusionElements'; })[0];
+        r.fusionElements = fe.status;
+        r.fusionV2 = /^v2/.test(fe.description) && !!(window.Fusion && Fusion.reaction) && Fusion.enSuspens() === 0;
         r.degres = [1186, 1187, 1188, 1189, 1190, 1213, 1224].map(function (id) { return L.degre($dataSkills[id]); });
         r.paroles = { braise: L.estParole($dataSkills[1186]), rayon: L.estParole($dataSkills[166]), glace: L.estParole($dataSkills[1211]) };
         r.pasParoles = { encouragement: L.estParole($dataSkills[12]), failleNeg: L.estParole($dataSkills[153]), registre: L.estParole($dataSkills[1165]),
@@ -72,7 +76,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         r.accidents = { feuFeu: L.fusionDe(8, 8), ventGlace: L.fusionDe(10, 13), feuLumiere: L.fusionDe(8, 14), ventFeu: L.fusionDe(10, 8) };
         return r;
     });
-    v('FusionElements est éteint (remplacé)', q.fusionElements === false);
+    v('l\'ancienne fusion par la somme ne joue plus (FusionElements éteint, ou sa v2.0 des réactions)', q.fusionElements === false || q.fusionV2);
     v('les degrés : simple, double, amplifiée, fusion, dernier', q.degres.slice(0, 5).join(',') === 'simple,double,amplifiee,fusion,dernier', q.degres.join(','));
     v('…aussi pour l\'échelle de Glace (Aiguille) et d\'Ombre (Nuit)', q.degres[5] === 'amplifiee' && q.degres[6] === 'fusion');
     v('Paroles : Feu — Braise, Rayon Stellaire (n°14), Glace — Givre', q.paroles.braise && q.paroles.rayon && q.paroles.glace);

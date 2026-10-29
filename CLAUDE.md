@@ -306,8 +306,9 @@ des **6 de JOKO** (Vapeur, Lave, Plante, Givre, Métal, Crépuscule — plus auc
 somme), ×1,5 ; compléter referme la phrase. **Fusion et dernier degré sont longues** : annoncées au
 début du tour, elles partent en dernier (`makeActionOrders`) ; un coup de 15 % des PV, un cumul de
 30 % ou un état qui immobilise la brise (×0,5) ; le dernier degré ne se redit pas au tour suivant.
-**Pas d'état posé** (`etatLongue` 0) : le 227 d'Aël fragilise. `FusionElements` est **éteint** (sa
-fusion de n'importe quels deux sorts, avec 10 collisions, est remplacée) ; `ParolesSysteme` garde son
+**Pas d'état posé** (`etatLongue` 0) : le 227 d'Aël fragilise. L'ancienne fusion de `FusionElements` (v1.0 : n'importe quels
+deux sorts, par la somme des codes, avec 10 collisions) est remplacée ; depuis le 2026-10-29, FusionElements v2.0 fait les
+**réactions** sur la cible (plus bas), et ne fond rien dans l'air ; `ParolesSysteme` garde son
 ratage pour les **ennemis** seulement (`HerosSansRatage`). Aucune fiche n'est modifiée. Banc :
 `navigateur/la_parole.js`. Les degrés, pour JOKO, sont des maths : *« la formule basique où tu
 l'envoies juste […] où tu additionnes […] où tu multiplies. Et t'as la formule où tu amplifies. C'est
@@ -444,7 +445,8 @@ elle : la copie est un don). Banc : `navigateur/les_affinites.js`. **v1.3, aprè
 *« Ta règle + mes exceptions »* — son code (sa lecture « 1: spirituel négatif, … », son coût, son effet) avec les exceptions
 ci-dessus (dons, combos, 71, 810, 438, la jauge pleine, les PV et PM rendus par effet). La même fusion avait rallumé DonsSpirituels,
 FusionElements et ElementsVivants ; à « tu le voulais ? », *« Jsp tu en penses quoi »* : éteints de nouveau, ses décisions
-d'avant (les dons retirés, ses 6 fusions par LaParole, les trois arts) — un interrupteur chacun.
+d'avant (les dons retirés, ses 6 fusions par LaParole, les trois arts) — un interrupteur chacun. JOKO les a éteints lui aussi le
+même jour (« Désactive les anciens systèmes ») ; FusionElements revient le 2026-10-29 en v2.0, les réactions élémentaires.
 
 **Le rework des capacités** (2026-10-25 ; JOKO : *« rework complètement tout les capacités, spéciales et ulti des
 personnages pour les rendre plus intéressant et équilibré surtout leur don et utilise le lore aussi »*, puis *« Oui tout »*
@@ -620,6 +622,24 @@ les seules troupes posées dans le jeu. **D et C ne bougent pas** : l'équipe co
 une fois sur deux — des Destins qu'on peut fuir), 4 à 10 en S, 7 à 11 pour les boss. Les héros partent encore du niveau 89 : les
 niveaux de bêta que JOKO a dits (Vesper 40-50, ludwing et Korrah ~30, Aël ~15) ne sont pas posés. Banc : `lequipe_a_chaque_niveau`
 avec `VRAIES=1` (les 49 troupes du jeu) et `SEUL=n` (un seul héros).
+
+**Les réactions élémentaires** (`FusionElements.js` v2.0, 2026-10-29 ; JOKO : *« je voulais comme sur genshin des combo
+élémentaires qui donnait un effet »*, puis sur la table proposée : *« Oui et modifier le plugin en vrai rework monstrueux »*). **L'aura** :
+un coup qui blesse avec un élément fondamental (Feu 8 … Ombre 15 ; n'importe quel héros, n'importe quel art, une rune quand elle part)
+laisse son élément sur la cible, états **266-273** « ◈ Feu »… (icônes 64-71), 2 fins de tour ; le même élément la rafraîchit, un
+élément qui ne réagit pas la remplace. **La réaction** : un autre élément la fait réagir et l'efface — 💨 **Vapeur** (Feu + Eau) ×1,5,
+Brûlure et Aveuglé ; 🔥 **Fonte** (Feu + Glace) ×1,5 ; 💥 **Surcharge** (Feu + Foudre) 50 % du coup sur les autres ; 🌋 **Lave** (Feu +
+Terre) Brûlure ; 🧊 **Givre** (Eau + Glace) il perd sa prochaine action — pas un boss (rang S ou à mécanique, la règle du Sceau), état
+274 ; ⚡ **Électrocharge** (Eau + Foudre) 25 % du coup à 2 fins de tour, état 276 ; 🌿 **Plante** (Eau + Terre) le lanceur reprend 15 % ;
+❄ **Supraconduction** (Glace + Foudre) DÉF ×0,5 2 tours, état 275 ; ⚙ **Métal** (Terre + Foudre) Paralysie ; 💎 **Cristallisation**
+(Terre + Glace) le prochain coup que reçoit le lanceur ÷2, état 277 ; 🌗 **Crépuscule** (Lumière + Ombre) Aveuglé, le lanceur reprend
+10 % ; 🌪 **Dispersion** (Vent + Feu, Eau, Glace ou Foudre) l'élément passe à tous les autres ennemis. Ses 6 fusions gardent leur nom
+et l'effet de sa table des esprits (ElementsVivants). **Ajouté, à lui de dire** : un ennemi qui portait déjà une aura réagit avec l'élément
+dispersé, sur un souffle de 25 % du coup (`souffle`, 0 : il se pose seulement). Une Fusion de LaParole (`_paroleElements` ≥ 16) ne pose
+ni ne réagit ; les ennemis ne posent pas d'aura (`ennemisPosent`). **Ce qui se voit** : l'icône de l'aura, la réaction au-dessus de la
+cible (« 💨 VAPEUR · ×1,5 ») avec son animation (« Vapeur · Explosion »…), son son, un éclair d'écran, et au choix de la cible, l'aide
+dit « ◈ Feu → 💨 Vapeur ». Tous les chiffres, animations et sons sont des réglages. `window.Fusion` (aura, reaction, prevoir, compte,
+`_eteint`). Mesure (`lequipe_a_chaque_niveau`, 3 parties sans, 3 avec) : 3,01 → 3,05 tours, 171 → 171 victoires sur 176, boss 49 → 46 sur 60 — dans le bruit, car l'IA du banc ne cherche pas les paires : ~20 réactions sur ~200 combats (le banc les compte, « n réactions »). Les éléments des héros : Vesper Feu et Eau (la Vapeur à elle seule), Korrah Glace et Foudre (la Supraconduction), ludwing l'Ombre, Aël la Lumière (le Crépuscule à deux). Banc : `navigateur/les_reactions.js` ; `la_parole` accepte la v2.0.
 
 **Les signatures** (2026-10-22 ; JOKO : *« Oui tout »* puis *« rendre les vraiment intéressant et original »*).
 Une par héros, tirée de son **profil écrit** (`Actors.json`), branchée sur un art ; chaque chiffre est un
