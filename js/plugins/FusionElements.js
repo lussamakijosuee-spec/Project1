@@ -117,7 +117,7 @@
  *
  * @param animations
  * @text Les animations (réaction: animation)
- * @default vapeur: 270, fonte: 166, surcharge: 166, lave: 283, givre: 309, electrocharge: 218, plante: 296, supraconduction: 231, metal: 322, cristallisation: 205, crepuscule: 335, dispersion: 192
+ * @default vapeur: 393, fonte: 67, surcharge: 166, lave: 397, givre: 72, electrocharge: 77, plante: 389, supraconduction: 429, metal: 64, cristallisation: 385, crepuscule: 125, dispersion: 92
  *
  * @param sons
  * @text Les sons (réaction: son)
@@ -216,7 +216,7 @@
     var SOUFFLE = nombre('souffle', 25) / 100;
     var BRULURE = nombre('etatBrulure', 91), AVEUGLE = nombre('etatAveugle', 5), PARALYSIE = nombre('etatParalysie', 136);
     var GELE = nombre('etatGele', 274), SUPRA = nombre('etatSupra', 275), ETAT_ELECTRO = nombre('etatElectro', 276), ETAT_CRISTAL = nombre('etatCristal', 277);
-    var ANIMS = paires('animations', 'vapeur: 270, fonte: 166, surcharge: 166, lave: 283, givre: 309, electrocharge: 218, plante: 296, supraconduction: 231, metal: 322, cristallisation: 205, crepuscule: 335, dispersion: 192');
+    var ANIMS = paires('animations', 'vapeur: 393, fonte: 67, surcharge: 166, lave: 397, givre: 72, electrocharge: 77, plante: 389, supraconduction: 429, metal: 64, cristallisation: 385, crepuscule: 125, dispersion: 92');
     var SONS = paires('sons', 'vapeur: Fire2, fonte: Ice3, surcharge: Explosion1, lave: Fire3, givre: Ice4, electrocharge: Thunder3, plante: Heal2, supraconduction: Thunder6, metal: Paralyze2, cristallisation: Earth3, crepuscule: Darkness3, dispersion: Wind4');
     var FLASH = oui('flash', true), PREVISION = oui('prevision', true);
 

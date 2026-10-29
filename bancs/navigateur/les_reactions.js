@@ -158,6 +158,19 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         e.clearResult(); fu.apply(e); o.fusionLP = { aura: auraDe(e), brule: e.isStateAffected(91) };
         propre(e); F._eteint = true; coup(ael, 8, e); o.eteint = auraDe(e); poser(e, 8); coup(ael, 9, e); o.eteintReaction = e.isStateAffected(91); F._eteint = false;
 
+        // 3 bis · chaque réaction joue SON animation, sur la cible (pas au centre de l'écran)
+        var jouees = [], sa = e.startAnimation;
+        e.startAnimation = function (id) { jouees.push(id); return sa.apply(this, arguments); };
+        var paires = { vapeur: [8, 9], fonte: [8, 13], surcharge: [8, 12], lave: [8, 11], givre: [9, 13], electrocharge: [9, 12],
+            plante: [9, 11], supraconduction: [12, 13], metal: [11, 12], cristallisation: [11, 13], crepuscule: [14, 15], dispersion: [8, 10] };
+        o.anims = {};
+        Object.keys(paires).forEach(function (r) {
+            propre(e); propre(e2); poser(e, paires[r][0]); jouees.length = 0; coup(ael, paires[r][1], e);
+            var id = jouees[0] || 0, a = $dataAnimations[id];
+            o.anims[r] = { id: id, nom: a ? a.name : '', image: a ? a.animation1Name : '', position: a ? a.position : -1 };
+        });
+        e.startAnimation = sa;
+
         // 4 · l'aide au choix de la cible
         propre(e); poser(e, 8);
         var w = new Window_Help(2), ecrit = [], dt = w.drawText;
@@ -206,6 +219,12 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     console.log('\n4) Ce qui se voit');
     v('l\'annonce au-dessus de l\'ennemi : « 💨 VAPEUR ×1,5 »', /💨 VAPEUR · ×1,5/.test(r.vapeur.annonce), r.vapeur.annonce);
     v('le compte du combat', (r.compteFin.vapeur || 0) >= 2 && (r.compteFin.fonte || 0) >= 1, JSON.stringify(r.compteFin));
+    var an = r.anims, ks = Object.keys(an);
+    var liste = ks.map(function (k) { return k + ' ' + an[k].id + ' « ' + an[k].nom + ' » (' + an[k].image + ')'; }).join(' · ');
+    v('chaque réaction joue une animation sur la cible', ks.length === 12 && ks.every(function (k) { return an[k].id > 0 && an[k].image; }), liste);
+    v('…une image différente pour chacune (12 sur 12)', ks.map(function (k) { return an[k].image; }).filter(function (x, i, l) { return l.indexOf(x) === i; }).length === 12);
+    v('…jouée sur l\'ennemi, pas au centre de l\'écran', ks.every(function (k) { return an[k].position !== 3; }),
+        ks.filter(function (k) { return an[k].position === 3; }).join(', '));
     v('au choix de la cible, l\'aide dit « ◈ Feu → 💨 Vapeur »', r.aide.some(function (t) { return /◈ Feu → 💨 Vapeur/.test(t); }), r.aide.join(' | '));
     v('…sans aura, ce que le coup posera (« → ◈ Eau »)', r.aideSans.some(function (t) { return /→ ◈ Eau/.test(t); }), r.aideSans.join(' | '));
     v('l\'ancienne API (window.Fusion) reste', r.ancienneApi);

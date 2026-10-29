@@ -637,7 +637,7 @@ Terre) Brûlure ; 🧊 **Givre** (Eau + Glace) il perd sa prochaine action — p
 et l'effet de sa table des esprits (ElementsVivants). **Ajouté, à lui de dire** : un ennemi qui portait déjà une aura réagit avec l'élément
 dispersé, sur un souffle de 25 % du coup (`souffle`, 0 : il se pose seulement). Une Fusion de LaParole (`_paroleElements` ≥ 16) ne pose
 ni ne réagit ; les ennemis ne posent pas d'aura (`ennemisPosent`). **Ce qui se voit** : l'icône de l'aura, la réaction au-dessus de la
-cible (« 💨 VAPEUR · ×1,5 ») avec son animation (« Vapeur · Explosion »…), son son, un éclair d'écran, et au choix de la cible, l'aide
+cible (« 💨 VAPEUR · ×1,5 ») avec **son** animation (JOKO, 2026-10-29, « une par réaction » : avant, les 12 étaient la même image teintée — Bulles, Feu Un 2, Feu · Explosion, Braises, Glace Un 2, Tonnerre Un 2, Pétales, Éclats brisés, Paralyser, Cristal, la 125 (Darklight), Vent Un 2 ; toutes déjà dans le jeu, toutes jouées sur la cible, jamais au centre de l'écran), son son, un éclair d'écran, et au choix de la cible, l'aide
 dit « ◈ Feu → 💨 Vapeur ». Tous les chiffres, animations et sons sont des réglages. `window.Fusion` (aura, reaction, prevoir, compte,
 `_eteint`). Mesure (`lequipe_a_chaque_niveau`, 3 parties sans, 3 avec) : 3,01 → 3,05 tours, 171 → 171 victoires sur 176, boss 49 → 46 sur 60 — dans le bruit, car l'IA du banc ne cherche pas les paires : ~20 réactions sur ~200 combats (le banc les compte, « n réactions »). Les éléments des héros : Vesper Feu et Eau (la Vapeur à elle seule), Korrah Glace et Foudre (la Supraconduction), ludwing l'Ombre, Aël la Lumière (le Crépuscule à deux). Banc : `navigateur/les_reactions.js` ; `la_parole` accepte la v2.0.
 
