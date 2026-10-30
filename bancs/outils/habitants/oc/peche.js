@@ -174,7 +174,7 @@ module.exports = {
         repos: ['Le jour de repos, je cuisine pour la semaine. Edwin mange quand il oublie de lire. Alors je cuisine beaucoup.']
     },
     avis: {
-        Solange: ['Solange dit que c\'est la faille qui lui change l\'humeur. Il n\'y a pas de faille. Elle est lunatique, c\'est tout. Un jour sur trois, elle me donne raison.'],
+        Solange: ['Solange dit que c\'est la faille qui lui change l\'humeur. La faille est dans la grotte, à l\'autre bout de la région. Elle est lunatique, c\'est tout. Un jour sur trois, elle me donne raison.'],
         Edwin: ['Mon fils explique tout. Il m\'a expliqué comment faire une tartine. J\'en fais depuis trente ans. Il avait raison sur un point, c\'est ça le pire.'],
         Roul: ['Roul vient du bar pour pêcher ici. Il dit que nos poissons sont plus bêtes. Il les rate quand même.'],
         Emma: ['La petite Fieldensong ! Elle fait sa princesse, mais elle mange mes tartines comme une affamée. Je lui en mets deux.'],

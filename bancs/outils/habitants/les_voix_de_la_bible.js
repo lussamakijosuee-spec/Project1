@@ -8,8 +8,8 @@
  * Ce qu'ils savent vient de la Bible (docs/Les-Trois-Sources-la-Bible.docx) :
  * l'Admission et ses licences, la Chancellerie, les trois guildes, la Bourse,
  * la Confrérie et son sceau, les cristaux, les failles, l'Académie Rubis, le
- * Héros. Personne ne dit où l'on est : on parle de Haute-Taville comme d'une
- * capitale lointaine. Pas de prix (le jeu compte en G, la Bible en sols).
+ * Héros. On est en Aurevel, à la campagne, avec une faille dans la grotte
+ * (JOKO, 2026-10-30 ; voir situation/) : Haute-Taville est la capitale, loin. Pas de prix (le jeu compte en G, la Bible en sols).
  *
  * Les sept « cliant » à chapeau rose (le même sprite, Actor3 n° 5) sont les
  * sœurs Brémont : sept, le même chapeau cousu par leur mère pour les

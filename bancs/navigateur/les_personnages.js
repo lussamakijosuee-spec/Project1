@@ -26,7 +26,9 @@
  *   ⑩ le jeu de Petit-Louis suit le triangle, et jamais à l'envers ;
  *   ⑪ Zéphyrin n'est là que la nuit de la Veillée ;
  *   ⑫ chaque rendez-vous d'amitié peut être tenu : à l'heure dite, sur la
- *     carte dite, la personne est là et visible (pas rentrée chez elle).
+ *     carte dite, la personne est là et visible (pas rentrée chez elle) ;
+ *   ⑬ la situation (Aurevel, la faille de la grotte) est dans les pages, et
+ *     personne ne dit plus qu'il n'y a pas de faille ici.
  *
  *   node bancs/navigateur/les_personnages.js
  */
@@ -73,6 +75,26 @@ var liensKaze = OC['29:40'].oc.liens.Hilde; delete OC['29:40'].oc.liens.Hilde;
 var attrape = !Object.keys(OC['29:40'].avis).concat(Object.keys(OC['29:40'].oc.liens)).some(function (x) { return x.indexOf('Hilde') >= 0; });
 OC['29:40'].avis.Hilde = avisKaze; OC['29:40'].oc.liens.Hilde = liensKaze;
 V('① les liens se répondent (et un lien coupé exprès est attrapé)', !seuls.length && attrape, seuls.length ? 'sans retour : ' + seuls.join(', ') : 'tous les avis ont leur retour');
+
+/* ── ⑬ la situation (JOKO : « en Aurevel, dans les campagnes, avec une faille à côté ») : elle est dans les pages,
+ *    et plus personne ne dit qu'il n'y a pas de faille ici ─────────────────────────────────────────────────── */
+var SIT = {}; fs.readdirSync(path.join(DOS, 'situation')).forEach(function (f) { Object.assign(SIT, require(path.join(DOS, 'situation', f))); });
+function textes(liste) { return liste.filter(function (c) { return c.code === 401; }).map(function (c) { return c.parameters[0]; }).join(' '); }
+var avecSituation = 0, contredit = [];
+var NIE = /(n'y a pas de faille (ici|près)|pas de faille près d'ici)/i;
+Object.keys(SIT).forEach(function (k) {
+    var m = /^(\d+):(\d+)$/.exec(k), e = carte(+m[1]).events[+m[2]];
+    if (!e) return;
+    var t = e.pages.map(function (p) { return textes(p.list); }).join(' ');
+    var l = [].concat(SIT[k].nouvelles || []);
+    if (l.length && t.indexOf(l[0].replace(/^~[^|]*\|/, '').split('|')[0].slice(0, 24)) >= 0) avecSituation++;
+});
+[29, 30, 31, 33, 41, 42, 43, 44, 46, 47].forEach(function (n) {
+    carte(n).events.forEach(function (e) { if (e) e.pages.forEach(function (p) { var t = textes(p.list); if (NIE.test(t)) contredit.push(n + ':' + e.id + ' ' + e.name); }); });
+});
+var planteAttrape = NIE.test('Bon. Il n\'y a pas de faille ici. Mais il pourrait y en avoir une.');
+V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et personne ne dit plus qu\'il n\'y en a pas', avecSituation >= 50 && !contredit.length && planteAttrape,
+    avecSituation + ' habitants en parlent · ' + (contredit.length ? 'le nient encore : ' + contredit.join(', ') : 'aucun ne le nie') + ' · une phrase qui le nie, plantée exprès, est attrapée');
 
 (async function () {
     var nav = await chromium.launch({ args: ['--no-sandbox', '--mute-audio'] });

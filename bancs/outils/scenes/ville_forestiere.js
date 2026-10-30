@@ -74,5 +74,10 @@ module.exports = { carte: 29, nom: 'Ville Forestière', x: 0, y: 39, scenes: [
     { cle: 'ninon-ville', nom: 'Ninon livre', qui: ['30:30'], attente: 60, gestes: [
         ['hasard', [[['dit', '30:30', 'Une lettre pour la grand-rue ! Je repasse !']], [['dit', '30:30', 'Je suis en retard ! Je suis TOUJOURS en retard !']]]]] },
     { cle: 'zephyrin', nom: 'Zéphyrin, la nuit de la Veillée', qui: [62], si: 'Habitants.veillee()', attente: 60, gestes: [
-        ['bulle', 62, 3], ['dit', 62, 'Des lumières ! Pour ceux qui attendent ! Pour ceux qui reviennent !']] }
+        ['bulle', 62, 3], ['dit', 62, 'Des lumières ! Pour ceux qui attendent ! Pour ceux qui reviennent !']] },
+    // la situation (2026-10-30) : en Aurevel, une faille dans la grotte, au bout du marécage
+    { cle: 'porte-nord-faille', nom: 'La porte nord compte ceux de la grotte', qui: [11, 12], dist: 5, heures: [8, 18], attente: 150, gestes: [
+        ['face', 12, 11], ['dit', 12, 'Deux sont partis vers la grotte, ce matin.'], ['dit', 11, 'Avec un permis ?'], ['dit', 12, 'Avec un permis.'], ['dit', 11, 'Alors je les compterai ce soir.']] },
+    { cle: 'crieur-faille', nom: 'Mathurin crie l\'avis de la Chancellerie', qui: [53], heures: [8, 19], attente: 180, gestes: [
+        ['son', 'Bell1', 50], ['dit', 53, 'OYEZ ! La faille de la grotte ne s\'entre qu\'avec un permis de la Chancellerie !']] }
 ]};

@@ -30,5 +30,8 @@ module.exports = { carte: 33, nom: 'Village de Pêche', x: 0, y: 0, scenes: [
     { cle: 'solange', nom: 'Solange et son humeur', qui: [45], attente: 100, gestes: [
         ['si', 'Habitants.jour() % 3 === 0', [['dit', 45, 'Quelle belle journée ! Même les mouettes sont belles !']], [['si', 'Habitants.jour() % 3 === 1', [['dit', 45, 'Le lac est une page blanche…']], [['dit', 45, 'Tout m\'énerve. C\'est la faille.']]]]]] },
     { cle: 'ninon-peche', nom: 'Ninon cherche la maison bleue', qui: ['30:30'], heures: [12, 14], attente: 60, gestes: [
-        ['dit', '30:30', 'Une lettre pour la maison bleue ! … Elles sont TOUTES bleues !']] }
+        ['dit', '30:30', 'Une lettre pour la maison bleue ! … Elles sont TOUTES bleues !']] },
+    // la situation (2026-10-30)
+    { cle: 'edwin-vent', nom: 'Edwin regarde le vent de la grotte', qui: [22], attente: 200, gestes: [
+        ['bulle', 22, 1], ['dit', 22, 'Le vent vient de la grotte… Ce mana-là n\'est pas d\'ici. Je le note.']] }
 ]};

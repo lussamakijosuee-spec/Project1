@@ -318,7 +318,7 @@ module.exports = {
         aime: 'les voiles bien tendues, le vent d\'ouest, que Roul lui raconte ses poissons (les jours gais)',
         deteste: 'les mouettes (les jours grognons), qu\'Edwin dise que son mana est « normal »',
         reve: 'qu\'on lui reconnaisse une vraie imprégnation ; ce serait plus simple que d\'avoir un caractère',
-        secret: 'il n\'y a pas de faille près d\'ici ; elle le sait très bien',
+        secret: 'la faille de la grotte est bien trop loin pour l\'imprégnation ; elle le sait très bien',
         peur: 'être d\'humeur grognonne le jour de la fête',
         manie: 'son foulard : rouge les jours gais, bleu les jours poétiques, gris les jours grognons',
         phrase: 'C\'est pas moi, c\'est la faille.',

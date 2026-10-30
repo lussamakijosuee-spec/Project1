@@ -71,6 +71,19 @@ function ocDe(f) {
     var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
     return est ? OC[est[1]] || null : null;
 }
+// la situation (2026-10-30 : « en Aurevel, dans les campagnes, avec une faille à côté ») : habitants/situation/*.js,
+// des lignes qui s'AJOUTENT à la fiche (nouvelles, lieux…), jamais à la place
+var DOS_SIT = path.join(__dirname, 'habitants', 'situation'), SITUATION = {};
+if (fs.existsSync(DOS_SIT)) fs.readdirSync(DOS_SIT).filter(function (x) { return /\.js$/.test(x); }).sort().forEach(function (x) {
+    var t = require(path.join(DOS_SIT, x));
+    Object.keys(t).forEach(function (k) { (SITUATION[k] = SITUATION[k] || []).push(t[k]); });
+});
+function situationDe(f) {
+    var k = f.carte + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '');
+    if (SITUATION[k]) return SITUATION[k];
+    var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
+    return est ? SITUATION[est[1]] || [] : [];
+}
 var NOMS_DE = {};
 LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { NOMS_DE[(f.carte || lot.carte) + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '')] = f.nom; }); });
 // le crieur annonce les anniversaires (P6) : ceux de toutes les fiches OC
@@ -199,6 +212,12 @@ LOTS.forEach(function (lot) {
         if (oc) Object.keys(oc).forEach(function (k) {
             if (k === 'plus') Object.keys(oc.plus).forEach(function (j) { fiche[j] = [].concat(fiche[j] || [], oc.plus[j]); });
             else fiche[k] = oc[k];
+        });
+        situationDe(f).forEach(function (s) {
+            Object.keys(s).forEach(function (j) {
+                if (Array.isArray(s[j])) fiche[j] = [].concat(fiche[j] || [], s[j]);
+                else { var o = fiche[j] = Object.assign({}, fiche[j] || {}); Object.keys(s[j]).forEach(function (l) { o[l] = [].concat(o[l] || [], s[j][l]); }); }
+            });
         });
         if (f.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
             return si(C.js("Habitants.anniversaire('" + a.md + "')"), H.unParmi(f.nom, [].concat(f.annonceAnniversaires === true ? ['Oyez ! Aujourd\'hui, c\'est l\'anniversaire de %1 ! Un sourire, un mot gentil, ça ne coûte rien !'] : f.annonceAnniversaires).map(function (t) { return t.replace('%1', a.nom); })));
