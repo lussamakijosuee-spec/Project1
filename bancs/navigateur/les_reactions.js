@@ -105,7 +105,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         propre(e); coup(ael, 8, e); coup(ael, 8, e); o.meme = auraDe(e);
         propre(e); coup(ael, 8, e); coup(ael, 14, e); o.remplace = auraDe(e);
         propre(kor); var ge = new Game_Action(e); ge.setSkill(SK[8]); ge.setTarget($gameParty.members().indexOf(kor)); kor.clearResult(); ge.apply(kor); o.surHeros = auraDe(kor);
-        propre(e); coup(ael, 8, e); finDeTour(); o.apres1 = auraDe(e); finDeTour(); o.apres2 = auraDe(e);
+        propre(e); coup(ael, 8, e); finDeTour(); o.apres1 = auraDe(e); finDeTour(); o.apres2 = auraDe(e); finDeTour(); o.apres3 = auraDe(e);
 
         // 2 · les réactions
         function reaction(el1, el2, cible, lanceur) {
@@ -171,6 +171,37 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         });
         e.startAnimation = sa;
 
+        // 3 ter · v2.1 : à deux, qui peut réagir, le signe dans la liste
+        // une aura neuve dit qui peut la faire réagir ; la même aura rafraîchie ne le redit pas
+        propre(e); e._ctAnnonces = []; coup(ael, 8, e); o.qui = annonces(e).filter(function (t) { return /^◈ /.test(t); });
+        e._ctAnnonces = []; coup(ael, 8, e); o.quiEncore = annonces(e).filter(function (t) { return /^◈ /.test(t); });
+        o.quiListe = F.quiPeutReagir(8);
+        // une attaque combinée à deux éléments qui réagissent : Crépuscule (Ombre + Lumière), Feu Attisé (Feu + Vent)
+        function combo(id, els) {
+            var s = JSON.parse(JSON.stringify($dataSkills[SK[8]]));
+            s.id = id; s.name = 'Combo ' + id; s.stypeId = 25; s.damage.elementId = els[0]; s.multipleElements = els.slice(1);
+            $dataSkills[id] = s; return id;
+        }
+        var CREP = combo(9200, [15, 14]), FEU_VENT = combo(9201, [8, 10]), SANS = combo(9202, [13, 15]);
+        propre(e); propre(e2); propre(ael); ael.setHp(Math.floor(ael.mhp / 2)); var pvC = ael.hp; e._ctAnnonces = [];
+        coup(ael, 15, e, CREP);
+        o.aDeux = { aveugle: e.isStateAffected(5), soin: ael.hp - pvC, aura: auraDe(e), crep: annonces(e).some(function (t) { return /CRÉPUSCULE/.test(t); }) };
+        propre(e); propre(e2); coup(ael, 8, e, FEU_VENT); o.aDeuxVent = { e2: auraDe(e2), e: auraDe(e) };
+        propre(e); propre(e2); coup(ael, 13, e, SANS); o.aDeuxSans = { aura: auraDe(e), aveugle: e.isStateAffected(5) };
+        // contre-épreuve : deux éléments sur une capacité qui n'est pas à deux (pas un Combo) ne réagissent pas seuls
+        var pasCombo = JSON.parse(JSON.stringify($dataSkills[CREP])); pasCombo.id = 9203; pasCombo.stypeId = 1; $dataSkills[9203] = pasCombo;
+        propre(e); coup(ael, 15, e, 9203); o.pasCombo = { aveugle: e.isStateAffected(5), aura: auraDe(e) };
+        // sur une aura déjà posée, c'est celui des deux qui réagit avec elle qui joue (Eau posée + Feu Attisé : Vapeur)
+        propre(e); poser(e, 9); var avantV = F.compte().vapeur || 0; coup(ael, 8, e, FEU_VENT); o.aDeuxSurAura = (F.compte().vapeur || 0) - avantV;
+        // le signe sur l'icône : une technique d'Eau quand un ennemi porte ◈ Feu ; pas la Lumière
+        $gameTroop.members().forEach(propre); poser(e, 8);
+        var lw = new Window_BattleSkill(0, 0, 400, 200), dessins = [], vrai = lw.contents.drawText;
+        lw.contents.drawText = function (txt) { dessins.push(String(txt)); return vrai.apply(this, arguments); };
+        lw._actor = ael; lw._data = [$dataSkills[SK[9]], $dataSkills[SK[14]]];
+        lw.drawItem(0); o.signeEau = dessins.indexOf('💨') >= 0;
+        dessins.length = 0; lw.drawItem(1); o.signeLumiere = dessins.some(function (x) { return /💨|🔥|💥|🌋|🧊|⚡|🌿|❄|⚙|💎|🌗|🌪/.test(x); });
+        $gameTroop.members().forEach(propre); dessins.length = 0; lw.drawItem(0); o.signeSansAura = dessins.some(function (x) { return /💨/.test(x); });
+
         // 4 · l'aide au choix de la cible
         propre(e); poser(e, 8);
         var w = new Window_Help(2), ecrit = [], dt = w.drawText;
@@ -190,7 +221,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…contre-épreuve : un coup qui rate, rien', r.rate === 0, String(r.rate));
     v('le même élément la garde ; un élément qui ne réagit pas (Lumière) la remplace', r.meme === 8 && r.remplace === 14, r.meme + ' · ' + r.remplace);
     v('un ennemi ne pose pas d\'aura sur un héros (réglage)', r.surHeros === 0, String(r.surHeros));
-    v('elle tient 2 fins de tour', r.apres1 === 8 && r.apres2 === 0, r.apres1 + ' puis ' + r.apres2);
+    v('elle tient 3 fins de tour (v2.1 : le temps que le deuxième héros joue)', r.apres1 === 8 && r.apres2 === 8 && r.apres3 === 0, r.apres1 + ' · ' + r.apres2 + ' · ' + r.apres3);
 
     console.log('\n2) Les réactions');
     v('💨 Vapeur (Feu, puis Eau) : ×1,5, Brûlure et Aveuglé, l\'aura consommée', Math.abs(r.vapeur.k - 1.5) < 0.02 && r.vapeur.brule && r.vapeur.aveugle && r.vapeur.aura === 0, JSON.stringify(r.vapeur));
@@ -225,6 +256,16 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('…une image différente pour chacune (12 sur 12)', ks.map(function (k) { return an[k].image; }).filter(function (x, i, l) { return l.indexOf(x) === i; }).length === 12);
     v('…jouée sur l\'ennemi, pas au centre de l\'écran', ks.every(function (k) { return an[k].position !== 3; }),
         ks.filter(function (k) { return an[k].position === 3; }).join(', '));
+    console.log('\nv2.1 · à deux, qui peut réagir, le signe dans la liste');
+    v('une aura neuve dit qui peut la faire réagir (« ◈ Feu · … »)', r.qui.length === 1 && r.quiListe.length > 0 && r.qui[0].indexOf(r.quiListe[0]) > 0, r.qui.join(' | ') + ' — ' + r.quiListe.join(', '));
+    v('…la même aura rafraîchie ne le redit pas', r.quiEncore.length === 0, r.quiEncore.join(' | '));
+    v('un Combo Ombre + Lumière fait le Crépuscule à lui seul (Aveuglé, le lanceur reprend)', r.aDeux.crep && r.aDeux.aveugle && r.aDeux.soin > 0 && r.aDeux.aura === 0, JSON.stringify(r.aDeux));
+    v('un Combo Feu + Vent répand le Feu sur les autres', r.aDeuxVent.e2 === 8, JSON.stringify(r.aDeuxVent));
+    v('…contre-épreuve : un Combo Glace + Ombre ne réagit pas (il pose son aura)', r.aDeuxSans.aura === 15 && !r.aDeuxSans.aveugle, JSON.stringify(r.aDeuxSans));
+    v('…contre-épreuve : deux éléments sur une capacité qui n\'est pas à deux ne réagissent pas seuls', !r.pasCombo.aveugle, JSON.stringify(r.pasCombo));
+    v('sur une aura d\'Eau, Feu Attisé fait la Vapeur (celui des deux qui réagit)', r.aDeuxSurAura === 1, String(r.aDeuxSurAura));
+    v('dans la liste, une technique d\'Eau porte 💨 quand un ennemi porte ◈ Feu', r.signeEau);
+    v('…contre-épreuves : pas la Lumière, et rien sans aura', !r.signeLumiere && !r.signeSansAura, r.signeLumiere + ' · ' + r.signeSansAura);
     v('au choix de la cible, l\'aide dit « ◈ Feu → 💨 Vapeur »', r.aide.some(function (t) { return /◈ Feu → 💨 Vapeur/.test(t); }), r.aide.join(' | '));
     v('…sans aura, ce que le coup posera (« → ◈ Eau »)', r.aideSans.some(function (t) { return /→ ◈ Eau/.test(t); }), r.aideSans.join(' | '));
     v('l\'ancienne API (window.Fusion) reste', r.ancienneApi);

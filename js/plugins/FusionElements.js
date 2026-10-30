@@ -1,9 +1,9 @@
 //=============================================================================
-// FusionElements.js — v2.0  ·  Les réactions élémentaires
+// FusionElements.js — v2.1  ·  Les réactions élémentaires
 // RPG Maker MV   ·   pour JOKO   ·   « comme sur Genshin, des combos élémentaires »
 //=============================================================================
 /*:
- * @plugindesc v2.0 ■ Les RÉACTIONS élémentaires, comme dans Genshin : un coup laisse son élément sur l'ennemi (2 tours) ; un autre élément le fait RÉAGIR — Vapeur, Fonte, Surcharge, Lave, Givre, Électrocharge, Plante, Supraconduction, Métal, Cristallisation, Crépuscule, Dispersion.
+ * @plugindesc v2.1 ■ Les RÉACTIONS élémentaires, comme dans Genshin : un coup laisse son élément sur l'ennemi (3 tours) ; un autre élément le fait RÉAGIR — Vapeur, Fonte, Surcharge, Lave, Givre, Électrocharge, Plante, Supraconduction, Métal, Cristallisation, Crépuscule, Dispersion.
  * @author pour JOKO
  *
  * @param === L'AURA ===
@@ -11,8 +11,15 @@
  *
  * @param etatsAura
  * @text Les états des auras (élément: état)
- * @desc Un coup de cet élément laisse cet état sur la cible ; sa durée est celle de l'état (2 tours, en fin de tour).
+ * @desc Un coup de cet élément laisse cet état sur la cible.
  * @default 8:266, 9:267, 10:268, 11:269, 12:270, 13:271, 14:272, 15:273
+ *
+ * @param toursAura
+ * @text Combien de fins de tour l'aura tient
+ * @desc 3 : le temps que le deuxième héros joue (2 avant la v2.1).
+ * @type number
+ * @min 1
+ * @default 3
  *
  * @param ennemisPosent
  * @text Les ennemis posent-ils des auras ?
@@ -134,6 +141,18 @@
  * @type boolean
  * @default true
  *
+ * @param marqueListe
+ * @text Dans la liste des capacités, le signe de la réaction
+ * @desc Une capacité qui ferait réagir une aura déjà posée porte son signe (💨, 🔥…) sur son icône.
+ * @type boolean
+ * @default true
+ *
+ * @param quiReagit
+ * @text Quand une aura se pose, dire qui peut la faire réagir
+ * @desc Au-dessus de l'ennemi : « ◈ Feu · Vesper, Korrah » — les héros qui ont de quoi la faire réagir.
+ * @type boolean
+ * @default true
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LES RÉACTIONS ÉLÉMENTAIRES                                         JOKO
@@ -149,7 +168,7 @@
  *
  *  ◈ L'AURA — un coup qui blesse avec un élément (Feu, Eau, Vent, Terre,
  *    Foudre, Glace, Lumière, Ombre) laisse cet élément SUR la cible, avec son
- *    icône, 2 tours. N'importe quel héros, n'importe quel art (une Parole, un
+ *    icône, 3 fins de tour (réglage toursAura). N'importe quel héros, n'importe quel art (une Parole, un
  *    mouvement, une rune qui part). Le même élément la rafraîchit ; un
  *    élément qui ne réagit pas la remplace.
  *  ✦ LA RÉACTION — un AUTRE élément qui la touche la fait réagir, et
@@ -173,11 +192,19 @@
  *       pose seulement).
  *  Une Fusion de LaParole (Vapeur, Lave…) est déjà une réaction : elle ne
  *  pose rien et ne réagit pas. Les ennemis ne posent pas d'aura (réglage).
+ *  ✦ À DEUX (v2.1) — une attaque combinée (type Combo, ou <unison item
+ *    actors>) porte ses deux éléments : s'ils réagissent ensemble, elle
+ *    réagit à elle seule (Crépuscule : Ombre + Lumière ; Feu Attisé : Feu +
+ *    Vent, qui répand le Feu). Sur une aura déjà posée, c'est celui de ses
+ *    deux éléments qui réagit avec elle qui joue.
  *
  *  CE QUI SE VOIT — l'aura est une icône sur l'ennemi ; la réaction flotte
  *  au-dessus de lui (« 💨 VAPEUR ×1,5 »), avec son animation, son son, un
  *  éclair d'écran ; au choix de la cible, l'aide dit son aura et ce que ton
- *  coup va faire (« ◈ Feu → 💨 Vapeur »).
+ *  coup va faire (« ◈ Feu → 💨 Vapeur »). Depuis la v2.1, une aura qui se
+ *  pose dit qui peut la faire réagir (« ◈ Feu · Vesper, Korrah »), et dans la
+ *  liste des capacités, celle qui ferait réagir une aura déjà posée porte
+ *  le signe de la réaction sur son icône.
  *
  *  Script : Fusion.aura(combattant)        → l'élément de son aura (0 : aucune)
  *           Fusion.reaction(el1, el2)      → 'vapeur', 'fonte'… ('' : rien)
@@ -219,6 +246,7 @@
     var ANIMS = paires('animations', 'vapeur: 393, fonte: 67, surcharge: 166, lave: 397, givre: 72, electrocharge: 77, plante: 389, supraconduction: 429, metal: 64, cristallisation: 385, crepuscule: 125, dispersion: 92');
     var SONS = paires('sons', 'vapeur: Fire2, fonte: Ice3, surcharge: Explosion1, lave: Fire3, givre: Ice4, electrocharge: Thunder3, plante: Heal2, supraconduction: Thunder6, metal: Paralyze2, cristallisation: Earth3, crepuscule: Darkness3, dispersion: Wind4');
     var FLASH = oui('flash', true), PREVISION = oui('prevision', true);
+    var TOURS_AURA = nombre('toursAura', 3), MARQUE_LISTE = oui('marqueListe', true), QUI_REAGIT = oui('quiReagit', true);
 
     // ce que chaque réaction montre
     var R = {
@@ -265,6 +293,15 @@
         if (fond(e)) { return e; }
         return (it.multipleElements || []).filter(fond)[0] || 0;
     }
+    /** Une attaque à deux (le type Combo, ou DoubleX Unison) : elle porte ses deux éléments. */
+    function estCombo(it) { return !!it && (it.stypeId === 25 || /<\s*unison item actors\s*:/i.test(it.note || '')); }
+    /** Les éléments fondamentaux d'une attaque combinée, dans l'ordre de la fiche (le sien, puis les autres). */
+    function elementsDuCombo(action) {
+        var it = action && action.item && action.item();
+        if (!estCombo(it) || !it.damage) { return []; }
+        var l = [it.damage.elementId].concat(it.multipleElements || []).filter(fond);
+        return l.filter(function (e, i) { return l.indexOf(e) === i; });
+    }
     function aura(b) {
         if (!b) { return 0; }
         var e = Object.keys(AURA).filter(function (k) { return b.isStateAffected(AURA[k]); })[0];
@@ -284,8 +321,34 @@
         if (!peutPoser(u, t)) { return null; }
         var el = elementDe(action);
         if (!el) { return null; }
-        var a = aura(t);
+        var a = aura(t), deux = elementsDuCombo(action);
+        if (deux.length >= 2) {
+            // à deux : sur une aura, celui des deux éléments qui réagit avec elle ; sans aura, l'un sur l'autre
+            if (a) {
+                var qui = deux.filter(function (e) { return reaction(a, e); })[0];
+                return qui ? { el: qui, aura: a, r: reaction(a, qui) } : { el: deux[deux.length - 1], aura: a, r: '' };
+            }
+            var r2 = reaction(deux[0], deux[1]);
+            return r2 ? { el: deux[1], aura: deux[0], r: r2, aDeux: true } : { el: deux[deux.length - 1], aura: 0, r: '' };
+        }
         return { el: el, aura: a, r: reaction(a, el) };
+    }
+    /** Les héros qui ont de quoi faire réagir cette aura : une capacité de dégâts, contre l'ennemi, d'un élément qui réagit. */
+    function quiPeutReagir(a) {
+        if (!a) { return []; }
+        return $gameParty.battleMembers().filter(function (h) {
+            if (!h.isAlive() || !h.canMove()) { return false; }
+            var ids = h.usableSkills().map(function (s) { return s.id; });
+            if (h.canAttack && h.canAttack()) { ids.push(h.attackSkillId()); }
+            return ids.some(function (id) {
+                var s = $dataSkills[id];
+                if (!s || !s.damage || [1, 5].indexOf(s.damage.type) < 0 || estCombo(s)) { return false; }
+                var act = new Game_Action(h); act.setSkill(id);
+                if (!act.isForOpponent()) { return false; }
+                var e = elementDe(act);
+                return e && reaction(a, e);
+            });
+        }).map(function (h) { return h.name(); });
     }
 
     // un état posé hors du chemin d'un coup (CLAUDE.md, §7) : sans le refus d'un état retiré dans la même action
@@ -299,7 +362,7 @@
     function oterEtat(b, id) { if (b && b.isStateAffected(id)) { b.eraseState(id); b.refresh(); } }
     function poserAura(b, el) {
         AURA_ETATS.forEach(function (id) { if (id !== AURA[el]) { oterEtat(b, id); } });
-        poserEtat(b, AURA[el]);
+        poserEtat(b, AURA[el], TOURS_AURA);
     }
     function oterAura(b) { AURA_ETATS.forEach(function (id) { oterEtat(b, id); }); }
     /** Un état ordinaire (Brûlure, Aveuglé, Paralysie) : il respecte les résistances de la cible. */
@@ -422,8 +485,17 @@
         var res = target && target.result();
         if (!plan || !res || !res.isHit() || !(res.hpDamage > 0)) { return; }
         try {
-            if (plan.r) { reagir(this.subject(), target, plan.r, res.hpDamage, plan.el, plan.aura); }
-            else { poserAura(target, plan.el); }
+            if (plan.r) {
+                if (plan.aDeux) { annonce(this.subject(), '✦ À deux : ' + nomElement(plan.aura) + ' + ' + nomElement(plan.el), R[plan.r].couleur); }
+                reagir(this.subject(), target, plan.r, res.hpDamage, plan.el, plan.aura);
+            } else {
+                var neuve = aura(target) !== plan.el;
+                poserAura(target, plan.el);
+                if (neuve && QUI_REAGIT && target.isAlive()) {
+                    var noms = quiPeutReagir(plan.el);
+                    annonce(target, '◈ ' + nomElement(plan.el) + (noms.length ? ' · ' + noms.join(', ') : ''), '#c8c8d0');
+                }
+            }
         } catch (e) { console.error('FusionElements', e); }
     };
 
@@ -491,12 +563,42 @@
         this.resetFontSettings();
     };
 
+    // ── dans la liste des capacités : le signe de la réaction sur l'icône ───
+    /** La réaction que cette capacité ferait sur l'un des ennemis vivants ('' : aucune). */
+    function reactionDansLaListe(h, s) {
+        if (!s || !s.damage || [1, 5].indexOf(s.damage.type) < 0) { return ''; }
+        var act = new Game_Action(h); act.setSkill(s.id);
+        if (!act.isForOpponent()) { return ''; }
+        var l = $gameTroop.aliveMembers();
+        for (var i = 0; i < l.length; i++) { var p = prevoir(act, l[i]); if (p && p.r) { return p.r; } }
+        return '';
+    }
+    var _ligneCapacite = Window_SkillList.prototype.drawItem;
+    Window_SkillList.prototype.drawItem = function (index) {
+        _ligneCapacite.call(this, index);
+        if (!MARQUE_LISTE || !enCombat() || !actif()) { return; }
+        var s = this._data && this._data[index], h = this._actor;
+        if (!s || !h || !h.isActor || !h.isActor()) { return; }
+        var r = '';
+        try { r = reactionDansLaListe(h, s); } catch (e) { r = ''; }
+        if (!r) { return; }
+        // en haut à droite de l'icône (le ★ de MaitriseDesCompetences est en bas à gauche, le « ×2 » des familles près du coût)
+        var rect = this.itemRect(index), fs = this.contents.fontSize;
+        this.contents.fontSize = 15;
+        this.changeTextColor(R[r].couleur);
+        this.contents.drawText(R[r].signe, rect.x + 20, rect.y, 22, 18, 'left');
+        this.contents.fontSize = fs;
+        this.resetTextColor();
+    };
+
     // ── de quoi le mesurer sans deviner ─────────────────────────────────────
     window.Fusion = {
         aura: aura,
         reaction: reaction,
         elementDe: elementDe,
         prevoir: prevoir,
+        quiPeutReagir: quiPeutReagir,
+        reactionDansLaListe: reactionDansLaListe,
         compte: function () { return JSON.parse(JSON.stringify(compte)); },
         etats: { aura: AURA, gele: GELE, supra: SUPRA, electro: ETAT_ELECTRO, cristal: ETAT_CRISTAL },
         // l'ancienne API (v1.0) : il n'y a plus d'élément « en suspens dans l'air » ici — c'est LaParole qui le tient
