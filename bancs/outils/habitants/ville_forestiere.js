@@ -13,11 +13,11 @@ var fiches = [];
 function F(f) { fiches.push(f); }
 
 /* ── les gardes ───────────────────────────────────────────────────────── */
-F(K.garde(11, 'Brunehaut', { role: 'garde de la porte nord', voix: 'sèche, sarcastique, dévisage les voyageurs.',
+F(K.garde(11, 'Brunehaut', { tags: ['<Va: 18-21 46 ; 21-6 40>'], role: 'garde de la porte nord', voix: 'sèche, sarcastique, dévisage les voyageurs.',
     premiere: 'Porte nord. Je suis Brunehaut. Si tu sors, c\'est la forêt. Si tu rentres, c\'est la ville. Si tu restes planté là, c\'est moi.',
     discuter: ['Je compte les gens qui sortent, et ceux qui rentrent. Le soir, il en manque toujours un ou deux.', 'Les chasseurs sortent à l\'aube et rentrent à la nuit. Ceux qui rentrent pas, on met leur nom sur une liste. La liste est longue.'],
     perso: { titre: 'Pourquoi garde ?', paliers: [[1, 'Parce que personne ne voulait de la porte nord.'], [4, 'Mon frère est sorti par cette porte il y a trois ans. Il n\'est pas rentré. Alors je la garde. Au cas où.']] } }));
-F(K.garde(12, 'Oswin', { role: 'jeune garde de la porte nord, s\'ennuie', voix: 'jeune, las, rêve d\'être muté au manoir.',
+F(K.garde(12, 'Oswin', { tags: ['<Va: 6-13 40 ; 13-17 46>'], role: 'jeune garde de la porte nord, s\'ennuie', voix: 'jeune, las, rêve d\'être muté au manoir.',
     premiere: 'Salut. Oswin. Tu veux passer ? Passe. Tu veux parler ? Par pitié, parle.',
     discuter: ['Au manoir, les gardes mangent de la viande tous les jours. Ici, on mange de la poussière.', 'J\'ai compté les pavés de la porte. Cent quarante-deux. Hier j\'en comptais cent quarante et un. Je crois que je deviens fou.'],
     perso: { titre: 'Le manoir ?', paliers: [[1, 'Je veux y être muté. Brunehaut dit que je suis trop bête. C\'est une qualité, pour garder des nobles.'], [4, 'J\'ai écrit trois demandes. Jehan, l\'écrivain du bar, les a écrites pour moi. On ne m\'a jamais répondu.']] } }));
@@ -41,15 +41,15 @@ F(K.garde(33, 'Mathis', { role: 'guetteur, en haut près de la porte nord', voix
     premiere: 'D\'ici, je vois toute la forêt. Et toi, maintenant.',
     discuter: ['Le soir, les lampes enchantées s\'allument une à une. D\'en haut, on dirait que la ville respire.', 'Les nuages viennent du nord. Quand ils sont gris-jaune, il neige le lendemain. Je me suis jamais trompé. Presque.'],
     perso: { titre: 'Qu\'est-ce que tu vois ?', paliers: [[1, 'Des arbres. Beaucoup d\'arbres.'], [4, 'Parfois, la nuit, une lanterne bouge dans la forêt. Des braconniers. Je fais semblant de rien voir. Le lendemain, il y a un lièvre devant la guérite.']] } }));
-F(K.garde(34, 'Rolf', { role: 'garde de la porte sud', voix: 'jovial, colossal, mange tout le temps.',
+F(K.garde(34, 'Rolf', { tags: ['<Va: 18-21 46 ; 21-6 40>'], role: 'garde de la porte sud', voix: 'jovial, colossal, mange tout le temps.',
     premiere: 'Porte sud ! Rolf ! Tu veux un morceau de saucisse ? Non ? Plus pour moi.',
     discuter: ['Berthe, la cuisinière du bar, me garde les fonds de marmite. C\'est la femme de ma vie. Elle le sait pas.', 'On m\'a mis à la porte sud parce que je bouche le passage à moi tout seul. C\'est un compliment.'],
     perso: { titre: 'Tu manges tout le temps ?', paliers: [[1, 'Je grandis encore !'], [4, 'Quand j\'étais petit, on mangeait un jour sur deux. Depuis, je mange pour les deux jours.']] } }));
-F(K.garde(35, 'Konrad', { role: 'garde de la porte sud, taciturne', voix: 'lent, deux mots par phrase, regard lourd.',
+F(K.garde(35, 'Konrad', { tags: ['<Va: 6-13 40 ; 13-17 46>'], role: 'garde de la porte sud, taciturne', voix: 'lent, deux mots par phrase, regard lourd.',
     premiere: 'Konrad.', bonjour: { 1: ['Hm.'], 2: ['…'], 3: ['Soir.'], 4: ['Nuit.'] },
     discuter: ['Rolf parle. Moi, je regarde.', 'Trop de soldats du lord, ces temps-ci. Pas bon.'],
     perso: { titre: 'Tu parles peu.', paliers: [[1, 'Oui.'], [4, 'J\'ai beaucoup parlé, avant. Au mauvais homme. Il est mort. Depuis, je réfléchis.']] } }));
-F(K.garde(36, 'Béran', { role: 'vétéran, trois doigts à la main gauche', voix: 'cynique, las, a vu trop de guerres de lords.',
+F(K.garde(36, 'Béran', { tags: ['<Vie: ronde>', '<Ronde: 20,11 ; 27,20 ; 20,27 ; 11,24>', '<Logis: 23,28>'], role: 'vétéran, trois doigts à la main gauche', voix: 'cynique, las, a vu trop de guerres de lords.',
     premiere: 'Béran. Vétéran, qu\'ils disent. Ça veut dire vieux et encore vivant.',
     discuter: ['J\'ai fait trois guerres pour trois lords. Aucun ne se souvient de mon nom. Moi je me souviens de celui de mes morts.', 'Tu vois cette main ? Trois doigts. Les deux autres sont restés dans une plaine dont je sais même plus le nom.'],
     perso: { titre: 'Les guerres ?', paliers: [[1, 'Laisse les guerres où elles sont.'], [4, 'On se battait pour des frontières que personne ne voyait. Les nobles dînaient pendant qu\'on creusait.'], [7, 'Si le lord repart en guerre, je pars dans la montagne. Je me le suis promis. Je tiendrai pas ma promesse. On la tient jamais.']] } }));
@@ -59,22 +59,22 @@ F(K.garde(37, 'Aude', { role: 'garde de nuit', voix: 'calme, attentive, aime la 
     perso: { titre: 'Tu aimes la nuit ?', paliers: [[1, 'La nuit ne ment pas. Le jour, tout le monde fait semblant.'], [4, 'Je suis née la nuit, dans une grange. Ma mère disait que je n\'ai jamais voulu du soleil.']] } }));
 
 /* ── les habitants ────────────────────────────────────────────────────── */
-F({ ev: 25, nom: 'Élise', role: 'jeune femme, se promène avec Tomas (la ronde tracée par JOKO)', voix: 'vive, impatiente, rêve d\'ailleurs.',
-    premiere: 'Oh, bonjour ! On fait le tour de la ville. Encore. On fait toujours le tour de la ville.',
-    bonjourTous: ['Bonjour !', '~Elle tire Tomas par la manche.|Viens, on continue !'],
-    saisons: { 1: ['Au printemps, je veux partir. En été aussi. Et en automne. Et en hiver.'], 2: ['Il fait si beau ! Tomas dit qu\'il fera beau aussi demain, ici. C\'est ça le problème.'], 3: ['Les marchands repartent vers le sud. J\'aimerais monter dans une charrette.'], 4: ['L\'hiver, on fait le tour de la ville plus vite. Pour pas geler.'] },
-    discuter: ['Tomas veut qu\'on se marie ici, qu\'on ait une maison ici, qu\'on meure ici. Moi, je veux voir la mer.', 'Tu as voyagé, toi ? Raconte. Non, attends, ne raconte pas, je vais être jalouse.', K.MAGIE[3]],
-    nouvelles: [K.LORD[6], K.LORD[0]],
-    perso: { titre: 'Et Tomas ?', paliers: [[1, 'Je l\'aime. C\'est bien le problème.'], [4, 'S\'il ne vient pas avec moi, je partirai quand même. Enfin… je crois. Tu partirais, toi ?']] },
-    aurevoir: ['Bonne route ! Toi, au moins, tu en as une.', 'À bientôt !'] });
-F({ ev: 26, nom: 'Tomas', role: 'jeune homme, se promène avec Élise', voix: 'posé, casanier, amoureux, un peu inquiet.',
-    premiere: 'Bonjour. Tomas. Élise vous a déjà dit qu\'elle voulait partir ? Elle le dit à tout le monde.',
-    bonjourTous: ['Bonjour.', '~Il suit Élise d\'un pas plus lent.|Doucement…'],
-    saisons: { 1: ['Le printemps, je plante. Si on reste, on aura des pommes dans trois ans.'], 2: ['Il fait bon ici, non ? Pourquoi aller ailleurs ?'], 3: ['Je rentre le bois pour deux. Elle ne le sait pas encore.'], 4: ['L\'hiver, elle ne parle plus de partir. C\'est ma saison préférée.'] },
-    discuter: ['Je suis tonnelier, comme mon père. On fait des tonneaux. Les tonneaux ne partent jamais nulle part, eux.', 'J\'ai une bague. Pour elle. Ça fait six mois que je la garde dans ma poche.'],
-    nouvelles: [K.LORD[3], K.DUR[1]],
-    perso: { titre: 'Et Élise ?', paliers: [[1, 'Elle est… tout.'], [4, 'Si elle part, je partirai avec elle. Je le sais. Mais je veux qu\'elle me le demande.']] },
-    aurevoir: ['Bonne journée.', 'Si vous la voyez partir sans moi… dites-le-moi.'] });
+F({ ev: 25, nom: 'Élise', role: 'enfant de kaze', voix: 'vive, impatiente, rêve d\'ailleurs.',
+    premiere: 'Bonjour ! Je suis Élise ! Tu viens de loin ? Plus loin que la forêt ? Je veux y aller.',
+    bonjourTous: ['Salut !', '~Elle saute d\'un pavé à l\'autre.|Tu as vu ? Je ne touche pas les lignes !'],
+    saisons: { 1: ['Au printemps, il y a des têtards dans la rivière. Tomas a peur des têtards.'], 2: ['L\'été, maman nous compte toutes les cinq minutes. On est deux. C\'est pas dur.'], 3: ['Les feuilles tombent ! Papa dit que c\'est pour faire des tas. Je saute dedans.'], 4: ['La neige ! Papa a fait un bonhomme avec une épée. Il a dit que c\'était pour nous protéger.'] },
+    discuter: ['Quand je serai grande, je passerai l\'Admission. Avec une épée. Comme papa, mais en plus loin.', 'Papa a l\'air méchant. Il est pas méchant. Il me porte sur ses épaules et il fait semblant de pas s\'en rendre compte.', 'Tomas dit que la forêt est pleine de bêtes. Moi je dis que c\'est pour ça qu\'il faut y aller.'],
+    nouvelles: ['Papa cherche une fleur pour l\'anniversaire de maman. C\'est un secret. Tu le dis pas, hein ?'],
+    perso: { titre: 'Tu veux partir ?', paliers: [[1, 'Oui ! Voir la mer. Et des failles. Et la mer.'], [4, 'Mais pas trop longtemps. Sinon maman va s\'inquiéter, et Tomas aussi. Et papa ferait une soupe pour personne.']] },
+    aurevoir: ['Salut ! Reviens raconter !', 'Bonne aventure !'] });
+F({ ev: 26, nom: 'Tomas', role: 'enfant de kaze', voix: 'posé, casanier, , un peu inquiet.',
+    premiere: 'Bonjour. Je suis Tomas. Élise t\'a déjà dit qu\'elle voulait partir ? Elle le dit à tout le monde.',
+    bonjourTous: ['Bonjour.', '~Il suit sa sœur des yeux.|Pas trop loin, Élise…'],
+    saisons: { 1: ['Au printemps, il pleut. Si on reste à l\'intérieur, on ne se mouille pas.'], 2: ['Il fait chaud. Je reste à l\'ombre. Élise, non.'], 3: ['L\'automne, papa rentre le bois. Je l\'aide à porter les petites bûches.'], 4: ['L\'hiver, on reste à la maison. C\'est ma saison préférée.'] },
+    discuter: ['La maison, c\'est l\'épicerie. Il y a tout : des cordes, des potions, des bougies. Pourquoi partir ?', 'Papa dit qu\'il faut savoir tomber. Je sais tomber. Je préfère ne pas grimper.', 'Si Élise part à l\'aventure, je viendrai. Pour la ramener.'],
+    nouvelles: ['Maman tient l\'épicerie le matin, papa l\'après-midi. À midi, ils se croisent et ils sourient. Je sais pas pourquoi ça les fait sourire.'],
+    perso: { titre: 'Tu as peur ?', paliers: [[1, 'Un peu. Tout le temps.'], [4, 'Papa aussi a peur, je crois. Mais il le fait quand même. Il dit que c\'est ça, le courage.']] },
+    aurevoir: ['Bonne journée. Fais attention.', 'Reviens, hein.'] });
 F({ ev: 27, nom: 'Gaston', role: 'paysan, râle contre les taxes, finit ses journées au bar', voix: 'grognon, fataliste, drôle malgré lui.', tags: [BAR],
     premiere: 'Gaston. Paysan. Enfin, paysan pour le lord : je cultive, il récolte.',
     bonjour: { 1: ['Debout depuis quatre heures. Et toi, tu te promènes.'], 2: ['Hm. Encore une journée à nourrir des gens qui me méprisent.'], 3: ['Je vais au bar. Viens si tu veux. Tu paies si tu viens.'] }, bonjourTous: ['Quoi ?'],
@@ -83,15 +83,15 @@ F({ ev: 27, nom: 'Gaston', role: 'paysan, râle contre les taxes, finit ses jour
     nouvelles: [K.LORD[0], K.LORD[2], K.LORD[5]],
     perso: { titre: 'Votre ferme ?', paliers: [[1, 'Elle est au lord. J\'y habite, c\'est tout.'], [4, 'Ma femme est morte en couches, avec le petit. J\'ai continué à labourer le lendemain. Le lord ne donne pas de jour pour ça.']] },
     aurevoir: ['Ouais.', 'Va, va.'] });
-F({ ev: 28, nom: 'Hilde', role: 'mère de quatre enfants, débordée', voix: 'pressée, affectueuse, parle en surveillant ses enfants.', tags: ['<Agenda: 9-11 0,24>'],
-    premiere: 'Bonjour ! Pardon, je surveille les petits. JULES ! Lâche ce chat ! … Pardon. Bonjour.',
-    bonjour: { 1: ['Je vais au marché, les petits ont mangé tout le pain.'], 2: ['Ils font la sieste. Enfin, deux sur quatre. C\'est déjà ça.'], 3: ['L\'heure du bain. Personne ne veut. Tout le monde y passe.'] }, bonjourTous: ['Bonjour !'],
-    saisons: { 1: ['Au printemps, ils sortent tous et reviennent couverts de boue.'], 2: ['L\'été, ils nagent dans la rivière. Je compte les têtes toutes les cinq minutes.'], 3: ['L\'automne, les rhumes. Quatre rhumes. Un seul mouchoir.'], 4: ['L\'hiver, ils restent à la maison. Je deviens folle.'] },
-    discuter: [K.MAGIE[1], 'Quatre enfants, un mari aux champs et une maison qui fuit. Et on me demande si je m\'ennuie.', 'Mon aînée veut être garde, comme Ida. Je lui ai dit non. Elle a dit « trop tard ».'],
-    nouvelles: [K.LORD[1], K.MAGIE[0]],
-    perso: { titre: 'Et vous, Hilde ?', paliers: [[1, 'Moi ? Je n\'ai pas le temps d\'être moi.'], [4, 'Avant les enfants, je chantais. Au bar, le soir. Colin me rappelle cette époque. Je ne le lui dirai jamais.']] },
-    aurevoir: ['Bonne journée ! JULES ! POSE ÇA !', 'À bientôt !'] });
-F({ ev: 29, nom: 'Fernand', role: 'vieux paysan, prédit le temps', voix: 'lent, sage, un peu sourd.',
+F({ ev: 28, nom: 'Hilde', role: 'mère de 2 enfants, débordée, chaleureuse', voix: 'pressée, affectueuse, parle en surveillant ses enfants.', tags: ['<Agenda: 8-13 5,32>', '<Logis: 5,32>'],
+    premiere: 'Bonjour ! Pardon, je surveille les petits. ÉLISE ! Pas si loin ! … Pardon. Hilde. Le matin, je tiens l\'épicerie ; l\'après-midi, c\'est Kaze.',
+    bonjour: { 1: ['Je file à l\'épicerie. Kaze garde les petits jusqu\'à midi… enfin, il essaie.'], 2: ['Kaze a pris l\'épicerie. Moi, je reprends les enfants. On s\'échange le monde à midi.'], 3: ['L\'heure du bain. Personne ne veut. Tout le monde y passe.'] }, bonjourTous: ['Bonjour !', '~Elle compte deux têtes du regard.|Bonjour !'],
+    saisons: { 1: ['Au printemps, Élise rentre couverte de boue et Tomas couvert d\'inquiétude.'], 2: ['L\'été, ils veulent nager dans la rivière. Je compte les têtes. Deux. Toujours deux. Je recompte.'], 3: ['L\'automne, les rhumes. Deux rhumes, un mouchoir, et Kaze qui les borde trois fois.'], 4: ['L\'hiver, ils restent à la maison. La maison, c\'est l\'épicerie. Ils jouent entre les fioles.'] },
+    discuter: ['Le matin, l\'épicerie ; l\'après-midi, les enfants. Kaze fait l\'inverse. On se croise à midi, on se dit trois mots, et ça suffit.', 'Kaze a l\'air dur comme une lame. Il chante pour endormir Tomas. Faux. Ne lui dis pas que je te l\'ai dit.', 'Élise veut partir à l\'aventure. Tomas veut rester à la maison. Moi, je veux qu\'ils mangent leur soupe.'],
+    nouvelles: ['Les recrues de l\'Admission achètent toutes la même chose : une trousse de soins, de quoi recharger leurs cristaux, et une corde. Je dis toujours de prendre une corde.', K.MAGIE[0]],
+    perso: { titre: 'Et vous, Hilde ?', paliers: [[1, 'Moi ? Je n\'ai pas le temps d\'être moi.'], [3, 'Kaze croit que je ne sais pas, pour mon anniversaire. Il pose des questions sur les fleurs à tout le monde. Il est très mauvais pour les secrets.'], [6, 'Avant les enfants, je chantais. Le soir, au bar. Kaze venait tous les soirs et ne disait rien. Un jour, il a dit « encore ». C\'est tout. Ça m\'a suffi.']] },
+    aurevoir: ['Bonne journée ! ÉLISE ! TOMAS ! On rentre !', 'À bientôt !'] });
+F({ ev: 29, nom: 'Fernand', tags: ['<Logis: 36,6>'], role: 'vieux paysan, prédit le temps', voix: 'lent, sage, un peu sourd.',
     premiere: 'Hein ? Bonjour ? Oui, bonjour. Fernand. Je dis le temps qu\'il fera. Gratuitement. C\'est pour ça qu\'on m\'écoute pas.',
     bonjourTous: ['Hein ?', 'Bonjour, bonjour.'],
     saisons: { 1: ['Il pleuvra trois jours. Puis il fera beau. Puis il pleuvra.'], 2: ['Orage demain. Mes genoux le disent. Mes genoux ne mentent jamais.'], 3: ['Hiver précoce. Les écureuils sont nerveux.'], 4: ['Encore un mois de gel. Peut-être deux. Rentre ton bois.'] },
@@ -99,16 +99,16 @@ F({ ev: 29, nom: 'Fernand', role: 'vieux paysan, prédit le temps', voix: 'lent,
     nouvelles: [K.LORD[7]],
     perso: { titre: 'Vos genoux ?', paliers: [[1, 'Ils prédisent la pluie mieux que n\'importe quel mage.'], [4, 'Je suis tombé d\'un toit à vingt ans. Depuis, ils me disent le temps. C\'est le seul cadeau que le toit m\'a fait.']] },
     aurevoir: ['Hein ? Oui, au revoir.', 'Prends un manteau.'] });
-F({ ev: 38, nom: 'Colette', role: 'marchande d\'œufs, amie de Mireille', voix: 'bavarde, rieuse, chuchote en regardant autour.', tags: [BAR],
-    premiere: 'Des œufs frais ! … Ah, pardon, tu n\'en veux pas. Colette. On se connaît pas, mais ça va venir.',
-    bonjourTous: ['Bonjour, bonjour !', '~Elle rajuste son panier.|Tu sais la dernière ?'],
-    saisons: { 1: ['Les poules pondent comme jamais. Les prix baissent. Je pleure.'], 2: ['La chaleur fait couver les poules. Plus d\'œufs, que des poussins.'], 3: ['L\'automne, les renards. J\'ai perdu trois poules cette semaine.'], 4: ['L\'hiver, un œuf vaut une pièce. Je suis riche un mois par an.'] },
-    discuter: ['Mireille, au bar, dit que c\'est moi qui répands les rumeurs. C\'est faux. C\'est elle. Moi je les vérifie.', K.MAGIE[4], 'Mes poules ont des noms de nobles. La plus grosse s\'appelle Madame la Duchesse.'],
-    nouvelles: [K.LORD[6], K.LORD[1], K.DUR[0]],
-    perso: { titre: 'Des œufs, alors ?', paliers: [[1, 'Deux pièces la douzaine. Enfin, douze pour un ami. Tu n\'es pas encore un ami.'], [3, 'Tiens, prends-en un. Cadeau. Pour que tu reviennes.']] },
-    options: [{ titre: 'Acheter des œufs (5 G)', cmds: paye(5, cat(A.se('Item1'), A.objet(44, 2), P('Colette', 'Voilà ! Enfin… des pommes. Les poules ont fait grève. Mais c\'est bon aussi.'), H.affinite(1)), P('Colette', 'Pas d\'or ? Pas d\'œufs. C\'est la loi des poules.')) }],
-    aurevoir: ['Et répète pas ce que je t\'ai dit !', 'À bientôt !'] });
-F({ ev: 39, nom: 'Tobias', role: 'allumeur des lampes enchantées de la ville', voix: 'doux, poétique, parle de la lumière comme d\'un être vivant.',
+F({ ev: 38, nom: 'Colette', role: 'vendeuse des livres de Parole d\'ombre', voix: '', tags: ['<Agenda: 13-18 15,34>', '<Soiree: 14,32>', '<Va: 18-21 33 32,30 1/3>'],
+    premiere: '....bonjour',
+    bonjourTous: ['....', '~Elle griffonne des chiffres dans la marge d\'un livre noir.|… Oui ?'],
+    saisons: { 1: ['Le printemps. Les gens parlent plus. Je lis plus loin d\'eux.'], 2: ['L\'été, les parfaits à la fraise. … Je n\'ai rien dit.'], 3: ['L\'automne. Le vent tourne les pages à ma place. Je déteste ça.'], 4: ['L\'hiver. Le silence tient tout seul. Enfin.'] },
+    discuter: ['Une Parole d\'ombre, c\'est une équation. Bien posée, elle tombe juste. Mal posée, elle tombe sur toi.', 'Je vends des livres de Parole d\'ombre. Personne ne les lit jusqu\'au bout. Moi si.', 'Tu parles. Beaucoup. … Abrège.', 'L\'eau et l\'ombre se répondent. J\'ai trois pas d\'avance, toujours. Le quatrième, je le retiens. Il ferait trop de dégâts.'],
+    nouvelles: ['Le crieur crie. Les recrues crient. La ville entière crie. Je calcule quand même.', 'On parle de moi au bar. Ce qu\'on dit est faux. Ce qui est vrai, personne ne le sait.'],
+    perso: { titre: 'Et jeck ?', paliers: [[1, '… Qui ? … Le marchand de roulette ? Il est bruyant. Il triche mal. … Pourquoi tu me demandes ça.'], [4, '~Elle ferme son livre un peu trop fort.|Il me voit comme une amie. C\'est très bien. C\'est parfait. C\'est mathématiquement parfait.'], [8, '~Elle détourne les yeux, rouge jusqu\'aux oreilles.|Tu reviens souvent. … Ce n\'est pas une question. Continue. Et deviens meilleur : je ne supporte pas qu\'on stagne près de moi.']] },
+    options: [{ titre: 'Colette ?', cmds: P('Colette', 'Oui. Colette. C\'est mon prénom. … Si tu ris, je te jette hors de mon espace.') }],
+    aurevoir: ['… Oui.', 'Va. Et sois concis, la prochaine fois.'] });
+F({ ev: 39, nom: 'Tobias', tags: ['<Vie: ronde>', '<Ronde: 20,25 ; 13,34 ; 12,15 ; 20,15 ; 11,6 ; 13,6 ; 35,8>'], role: 'allumeur des lampes enchantées de la ville', voix: 'doux, poétique, parle de la lumière comme d\'un être vivant.',
     premiere: 'Tobias. J\'allume les lampes. Enfin, je leur rappelle de s\'allumer. Elles sont enchantées, mais elles oublient.',
     bonjour: { 1: ['Je viens de les éteindre toutes. Elles dorment.'], 2: ['Je vérifie les pierres des lampes. Certaines faiblissent.'], 3: ['C\'est l\'heure ! Je fais ma tournée. Une par une.', '~Il tapote une lampe du bout des doigts. Elle s\'allume.'], 4: ['Toutes allumées. Maintenant, je veille.'] },
     saisons: { 1: ['Le printemps, les nuits raccourcissent. Mes lampes se reposent.'], 2: ['L\'été, les insectes tournent autour des lampes. Ils ne comprennent pas que ce n\'est pas le soleil.'], 3: ['L\'automne, j\'allume plus tôt chaque jour. Deux minutes. Je les compte.'], 4: ['L\'hiver, les lampes brûlent seize heures. Elles fatiguent, comme moi.'] },
@@ -116,15 +116,15 @@ F({ ev: 39, nom: 'Tobias', role: 'allumeur des lampes enchantées de la ville', 
     nouvelles: [K.LORD[3]],
     perso: { titre: 'Pourquoi les lampes ?', paliers: [[1, 'Quelqu\'un doit le faire.'], [4, 'Ma fille avait peur du noir. Elle n\'est plus là. Mais la ville, elle, n\'aura jamais peur du noir.']] },
     aurevoir: ['Que ta route soit éclairée.', 'Bonne nuit, ou bonne journée. Je confonds toujours.'] });
-F({ ev: 40, nom: 'Kaze', role: 'bretteur de passage', voix: 'laconique, précis, regard d\'acier.',
-    premiere: '~Il ne te regarde pas, mais tu sens qu\'il t\'a vu arriver depuis longtemps.|Kaze. De passage.',
-    bonjourTous: ['…', 'Hm. Toi.'],
-    saisons: { 1: ['La neige fond. Les routes rouvrent. Je repars bientôt.'], 2: ['Trop de monde, l\'été.'], 3: ['Le vent tourne.'], 4: ['On ne voyage pas l\'hiver. On attend.'] },
-    discuter: ['Ma lame ne s\'use pas. Moi, si.', 'On m\'a proposé d\'entrer au service du lord. J\'ai refusé. Je ne sers pas ceux qui ne se battent pas eux-mêmes.', 'Tu tiens bien ton arme. Mieux que la plupart.'],
-    nouvelles: [K.LORD[4]],
-    perso: { titre: 'Pourquoi voyager ?', paliers: [[1, 'Parce que.'], [5, 'Je cherche quelqu\'un qui se bat mieux que moi. Pour apprendre. Ou pour finir.']] },
-    aurevoir: ['Hm.', 'Garde ta garde haute.'] });
-F({ ev: 41, nom: 'Mado', role: 'lavandière', voix: 'forte, franche, les mains rouges, rit fort.', tags: [BAR],
+F({ ev: 40, nom: 'Kaze', role: 'travaille au magasin d\'objets et mari de hilde', voix: 'laconique, précis, regard d\'acier, mais un très bon citoyen', tags: ['<Agenda: 13-20 5,32>', '<Logis: 5,32>'],
+    premiere: '~Il te jauge d\'un regard d\'acier.|Kaze. … L\'épicerie, l\'après-midi, c\'est moi. Si tu as besoin d\'une corde, je te la porte.',
+    bonjourTous: ['Hm.', '~Il hoche la tête. Une fois. Mais il a posé ce qu\'il portait pour te répondre.|Toi.'],
+    saisons: { 1: ['Le printemps. Les routes rouvrent. Les fleurs aussi.'], 2: ['Trop chaud pour les petits. Je leur ai fait de l\'ombre avec une toile.'], 3: ['Le vent tourne. Je rentre le bois des voisins. Ils ne savent pas que c\'est moi.'], 4: ['L\'hiver. On attend. Je fais des soupes.'] },
+    discuter: ['… J\'aide. C\'est tout. Ne le répète pas.', 'Élise grimpe partout. Tomas s\'inquiète de tout. Je leur ai appris à tomber. À l\'une pour qu\'elle se relève, à l\'autre pour qu\'il ose.', 'Tu tiens bien ton arme. Mieux que la plupart.'],
+    nouvelles: ['Les recrues passent à l\'épicerie avant la Forêt. Je leur mets une corde de plus dans le sac. Elles ne la paient pas. Elles reviennent.'],
+    perso: { titre: 'Tu caches quelque chose.', paliers: [[1, '… Non.'], [3, 'L\'anniversaire de Hilde. Dans deux semaines. Il me faut une fleur. Pas une du marché.'], [5, 'Une fleur très rare. Elle ne pousse pas ici. Il faudrait partir, et je ne pars pas sans quelqu\'un pour garder l\'épicerie et les petits. … Tu as l\'air de quelqu\'un qui part.']] },
+    aurevoir: ['Hm.', 'Garde ta garde haute. Et mange.'] });
+F({ ev: 41, nom: 'Mado', role: 'lavandière', voix: 'forte, franche, les mains rouges, rit fort.', tags: ['<Soiree: 14,32>', '<Logis: 7,18>'],
     premiere: 'Mado, lavandière ! Si t\'as du linge sale, t\'es au bon endroit. Si t\'as des secrets sales, aussi : je lave tout.',
     bonjourTous: ['Salut, toi !', '~Elle essore un drap avec une force alarmante.|Ouf. Bonjour.'],
     saisons: { 1: ['La rivière est glacée au printemps. Mes mains aussi.'], 2: ['L\'été, le linge sèche en une heure. Je fais le double de travail pour le même prix.'], 3: ['Les feuilles dans la rivière, ça tache. Qui a inventé l\'automne ?'], 4: ['L\'hiver, je casse la glace pour laver. Personne ne me paie pour casser la glace.'] },

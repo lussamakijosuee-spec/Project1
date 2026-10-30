@@ -10,7 +10,7 @@ var P = K.P, A = K.A, C = K.C, si = K.si, cat = K.cat, H = K.H, paye = K.paye, b
 var fiches = [];
 function F(f) { fiches.push(f); }
 
-F({ ev: 6, nom: 'Bertrand', role: 'marchand de primeurs', voix: 'crieur, blagueur, vante ses légumes comme des bijoux.',
+F({ ev: 6, nom: 'Bertrand', tags: ['<Logis: 29 11,14>'], role: 'marchand de primeurs', voix: 'crieur, blagueur, vante ses légumes comme des bijoux.',
     premiere: 'Approchez ! Des pommes rouges comme des joues de jeune mariée ! … Bertrand, primeurs. Tu achètes ou tu admires ?',
     bonjour: { 1: ['On installe ! Les meilleures places partent à l\'aube.'], 2: ['Deux pour le prix d\'un, jusqu\'à ce que je change d\'avis !'], 3: ['Je remballe. Tout ce qui reste est à moitié prix. Enfin, aux trois quarts.'] }, bonjourTous: ['Bonjour !'],
     saisons: { 1: ['Radis, oseille, premières fraises. Le printemps a bon goût.'], 2: ['Tomates, pêches, melons. L\'été, je vends au kilo et je transpire au litre.'], 3: ['Pommes, courges, champignons. Et du cidre, sous le comptoir.'], 4: ['Choux. Des choux. Et encore des choux. L\'hiver est une saison de choux.'] },
@@ -19,7 +19,7 @@ F({ ev: 6, nom: 'Bertrand', role: 'marchand de primeurs', voix: 'crieur, blagueu
     perso: { titre: 'Les affaires ?', paliers: [[1, 'Ça roule !'], [4, 'Ça roulerait mieux sans les taxes. Je vends deux fois plus qu\'il y a dix ans. Je gagne deux fois moins.']] },
     options: [{ titre: 'Acheter', cmds: boutique([['objet', 44], ['objet', 9], ['objet', 46], ['objet', 45]]) }],
     aurevoir: ['Revenez ! Les pommes vous attendront !', 'Bonne journée !'] });
-F({ ev: 7, nom: 'Mirabelle', role: 'mage de quartier : recharge les lampes enchantées, vend de petits sorts', voix: 'pétillante, affairée, parle vite de choses compliquées.',
+F({ ev: 7, nom: 'Mirabelle', tags: ['<Logis: 45 3,10>'], role: 'mage de quartier : recharge les lampes enchantées, vend de petits sorts', voix: 'pétillante, affairée, parle vite de choses compliquées.',
     premiere: 'Mirabelle, magie du quotidien ! Lampes, serrures qui chantent, bouilloires qui ne débordent pas. Rien de grandiose. Tout d\'utile.',
     bonjourTous: ['Bonjour ! Une lampe à recharger ?', '~De petites étincelles tournent autour de ses doigts.|Oh, pardon. Bonjour.'],
     saisons: { 1: ['Le printemps, tout le monde veut un charme contre les moustiques. Ça ne marche pas. Je le vends quand même, avec un avertissement.'], 2: ['L\'été, je rafraîchis les caves. Deux pièces le sort. Les brasseurs m\'adorent.'], 3: ['L\'automne, les lampes. Toutes les lampes. Je dors quatre heures par nuit.'], 4: ['L\'hiver, je réchauffe des pierres. Une pierre chaude dans un lit, c\'est le vrai luxe.'] },
@@ -31,7 +31,7 @@ F({ ev: 7, nom: 'Mirabelle', role: 'mage de quartier : recharge les lampes encha
         { titre: 'Un charme de lumière (60 G)', cmds: paye(60, cat(A.se('Magic2'), A.objet(63, 1), P('Mirabelle', 'Tiens. Pour les nuits où tu ne veux pas être seul dans le noir.')), P('Mirabelle', 'Soixante pièces. Je ne fais pas crédit, même aux héros.')) }
     ],
     aurevoir: ['Que tes lampes brillent !', 'Reviens quand quelque chose grince !'] });
-F({ ev: 8, nom: 'Gustave', role: 'fromager', voix: 'lent, gourmand, parle de fromage avec émotion.',
+F({ ev: 8, nom: 'Gustave', tags: ['<Logis: 33 15,7>'], role: 'fromager', voix: 'lent, gourmand, parle de fromage avec émotion.',
     premiere: 'Gustave. Fromages. Tu sens ça ? C\'est l\'odeur du bonheur. Ma femme dit que c\'est l\'odeur du divorce.',
     bonjourTous: ['Bonjour. Goûte.', '~Il te tend un bout de fromage sans demander.|Alors ?'],
     saisons: { 1: ['Fromage frais, au lait de printemps. Doux comme une promesse.'], 2: ['L\'été, les fromages coulent. Moi aussi.'], 3: ['L\'automne, les fromages d\'alpage descendent. Les meilleurs de l\'année.'], 4: ['L\'hiver, je vends les vieux. Plus ils sont vieux, plus ils sont chers. Comme les nobles.'] },
@@ -39,7 +39,7 @@ F({ ev: 8, nom: 'Gustave', role: 'fromager', voix: 'lent, gourmand, parle de fro
     nouvelles: [K.LORD[3], K.LORD[0]],
     perso: { titre: 'Votre femme ?', paliers: [[1, 'Elle m\'aime. Et elle déteste mes fromages.'], [4, 'On s\'est rencontrés ici, au marché. Elle vendait des pommes. Je lui ai offert un fromage. Elle me l\'a lancé à la figure. Le lendemain, elle est revenue.']] },
     aurevoir: ['Reviens goûter !', 'Hm, bonne journée.'] });
-F({ ev: 10, nom: 'Rose', role: 'fleuriste', voix: 'douce, rêveuse, un peu triste.',
+F({ ev: 10, nom: 'Rose', tags: ['<Logis: 29 15,14>'], role: 'fleuriste', voix: 'douce, rêveuse, un peu triste.',
     premiere: 'Des fleurs ? Pour quelqu\'un ? … Pour toi, peut-être. On n\'offre jamais de fleurs à soi-même. C\'est dommage.',
     bonjourTous: ['Bonjour…', '~Elle arrange ses bouquets sans lever les yeux.|Bonjour.'],
     saisons: { 1: ['Le printemps, c\'est ma saison. Tout fleurit, même moi.'], 2: ['Les roses de l\'été. On les achète pour les mariages et pour les enterrements.'], 3: ['L\'automne, je vends des branches rouges et des fleurs séchées. C\'est beau aussi, ce qui meurt.'], 4: ['L\'hiver, pas de fleurs. Je vends des rubans. Et je compte les jours.'] },
@@ -47,7 +47,7 @@ F({ ev: 10, nom: 'Rose', role: 'fleuriste', voix: 'douce, rêveuse, un peu trist
     nouvelles: [K.LORD[6]],
     perso: { titre: 'Pourquoi triste ?', paliers: [[1, 'Je ne suis pas triste. Je suis fleuriste.'], [4, 'Le garçon à la rose… un jour, il m\'en a laissé une. Sur mon étal. Il n\'est plus revenu. Il est parti avec les soldats du lord.']] },
     aurevoir: ['Au revoir…', 'Offre des fleurs à quelqu\'un. Avant qu\'il ne soit trop tard.'] });
-F({ ev: 11, nom: 'Tian', role: 'marchand d\'épices venu de loin', voix: 'cérémonieux, patient, proverbes étranges.',
+F({ ev: 11, nom: 'Tian', tags: ['<Logis: 45 11,10>'], role: 'marchand d\'épices venu de loin', voix: 'cérémonieux, patient, proverbes étranges.',
     premiere: 'Bienvenue à l\'étal de Tian. Mes épices ont traversé plus de montagnes que la plupart des hommes.',
     bonjour: { 1: ['Le matin, les épices dorment. Il faut les réveiller doucement.'], 2: ['Approche, sens. Ne touche pas.'], 3: ['Je remballe. Le soir, les épices perdent leur âme.'] }, bonjourTous: ['Bienvenue.'],
     saisons: { 1: ['Au printemps, les routes du sud rouvrent. Mes caravanes arrivent.'], 2: ['L\'été, le poivre vaut de l\'or. Littéralement : le lord le paie en or.'], 3: ['L\'automne, on fait des provisions. Le sel, la cannelle. Le sel surtout.'], 4: ['L\'hiver, je suis coincé ici. Votre froid est une épice que je n\'aime pas.'] },
@@ -55,7 +55,7 @@ F({ ev: 11, nom: 'Tian', role: 'marchand d\'épices venu de loin', voix: 'céré
     nouvelles: [K.LORD[0], K.LORD[7]],
     perso: { titre: 'Votre pays ?', paliers: [[1, 'Loin. Plus loin que ta carte.'], [4, 'J\'y ai une femme et une fille. Je leur envoie de l\'argent à chaque caravane. Je ne sais pas si l\'argent arrive. Je ne sais pas si elles m\'attendent encore.']] },
     aurevoir: ['Que ta route soit parfumée.', 'Reviens. Les épices se souviennent des visages.'] });
-F({ ev: 12, nom: 'Oriane', role: 'apprentie enchanteresse de maître Aldebert', voix: 'enthousiaste, maladroite, fait tout brûler un peu.',
+F({ ev: 12, nom: 'Oriane', tags: ['<Logis: 45 3,10>'], role: 'apprentie enchanteresse de maître Aldebert', voix: 'enthousiaste, maladroite, fait tout brûler un peu.',
     premiere: 'Bonjour ! Oriane, apprentie ! … Attention, ne touche pas ce pot, il est peut-être en train d\'exploser. Non. Ça va.',
     bonjourTous: ['Bonjour !', '~Une odeur de brûlé flotte autour d\'elle.|Ce n\'est rien. Presque rien.'],
     saisons: { 1: ['J\'apprends les sorts de germination ! Maître Aldebert dit que je fais pousser surtout des mauvaises herbes.'], 2: ['L\'été, j\'ai fait geler une cruche d\'eau ! Et la table. Et la main du maître.'], 3: ['J\'enchante des lampes ! Enfin, j\'essaie. Il y en a une qui chante au lieu d\'éclairer.'], 4: ['L\'hiver, je m\'entraîne à faire des étincelles. Je ne sens plus mes sourcils.'] },
@@ -63,7 +63,7 @@ F({ ev: 12, nom: 'Oriane', role: 'apprentie enchanteresse de maître Aldebert', 
     nouvelles: [K.LORD[1], K.MAGIE[2]],
     perso: { titre: 'Pourquoi la magie ?', paliers: [[1, 'Parce que c\'est la plus belle chose du monde !'], [4, 'Mes parents voulaient que j\'épouse un marchand de laine. J\'ai fait brûler le contrat de mariage. Par accident. Enfin… presque par accident.']] },
     aurevoir: ['À bientôt ! Et éloigne-toi de ce pot.', 'Bonne journée !'] });
-F({ ev: 13, nom: 'Aldebert', role: 'vieux mage réparateur d\'objets enchantés', voix: 'grincheux, érudit, méprise les amateurs et adore son apprentie.',
+F({ ev: 13, nom: 'Aldebert', tags: ['<Logis: 45 11,10>'], role: 'vieux mage réparateur d\'objets enchantés', voix: 'grincheux, érudit, méprise les amateurs et adore son apprentie.',
     premiere: 'Aldebert. Je répare ce que les autres enchantent mal. C\'est-à-dire presque tout.',
     bonjourTous: ['Hm. Encore un client.', '~Il examine une lampe à la loupe en marmonnant.|Qu\'y a-t-il ?'],
     saisons: { 1: ['Le printemps, les enchantements s\'agitent. Comme les bêtes.'], 2: ['La chaleur fait gonfler les pierres des lampes. Elles fêlent. Je répare.'], 3: ['Les nobles arrivent avec leurs bibelots magiques cassés. Je leur facture le double. Ils ne savent pas compter la magie.'], 4: ['L\'hiver, les runes gèlent. Oui, ça existe. Non, je ne l\'expliquerai pas.'] },
@@ -71,7 +71,7 @@ F({ ev: 13, nom: 'Aldebert', role: 'vieux mage réparateur d\'objets enchantés'
     nouvelles: [K.LORD[7], 'Le manoir m\'a envoyé une lampe enchantée à réparer. En or. Pour éclairer un couloir. Un COULOIR.'],
     perso: { titre: 'Votre passé ?', paliers: [[1, 'J\'ai été jeune. C\'était une erreur.'], [4, 'J\'ai enseigné à la capitale, autrefois. On m\'a renvoyé pour avoir dit à un noble qu\'il n\'avait aucun talent. Il n\'en avait aucun.']] },
     aurevoir: ['Ne casse rien en partant.', 'Hm.'] });
-F({ ev: 14, nom: 'Selma', role: 'diseuse de bonne aventure (charlatane, et elle le sait)', voix: 'mystérieuse en surface, pragmatique dessous.',
+F({ ev: 14, nom: 'Selma', tags: ['<Logis: 45 3,10>'], role: 'diseuse de bonne aventure (charlatane, et elle le sait)', voix: 'mystérieuse en surface, pragmatique dessous.',
     premiere: '~Elle te fixe avec intensité.|Je vois… je vois… que tu as une bourse. C\'est déjà beaucoup.',
     bonjourTous: ['Approche, voyageur…', 'Les cartes t\'attendaient.'],
     saisons: { 1: ['Le printemps, les jeunes filles viennent demander leur avenir. Je leur dis toujours « un bel inconnu ». Il y en a toujours un.'], 2: ['L\'été, je lis les lignes de la main. Elles sont plus visibles, avec le soleil.'], 3: ['L\'automne, les gens ont peur. La peur, c\'est bon pour les affaires.'], 4: ['L\'hiver, je prédis le printemps. Je ne me trompe jamais.'] },
@@ -80,14 +80,14 @@ F({ ev: 14, nom: 'Selma', role: 'diseuse de bonne aventure (charlatane, et elle 
     perso: { titre: 'Vous voyez vraiment ?', paliers: [[1, 'Bien sûr. Dix pièces.'], [4, 'Non. Mais parfois, je sens des choses. Une fois sur cent. Je ne sais jamais laquelle.']] },
     options: [{ titre: 'Se faire lire l\'avenir (10 G)', cmds: paye(10, cat(A.se('Magic3'), A.attendre(30), H.unParmi('Selma', ['Je vois… une route. Longue. Tu la prendras. Évidemment, tu es voyageur.', 'Je vois… quelqu\'un qui t\'attend. Ou qui ne t\'attend plus. Les cartes sont floues.', 'Je vois… une grande épreuve. Tu la surmonteras. Ou pas. Dans ce cas, tu ne reviendras pas me le reprocher.', '~Elle pâlit, et range ses cartes très vite.|Rien. Je ne vois rien. Reprends ton or.'])), P('Selma', 'L\'avenir ne se lit pas à crédit.')) }],
     aurevoir: ['Que les cartes te soient favorables.', 'Reviens… je le sais déjà.'] });
-F({ ev: 15, nom: 'Hugo', role: 'crieur public : annonce les décrets du lord', voix: 'voix de stentor, solennelle, puis normale quand il cesse de crier.',
-    premiere: 'OYEZ, OYEZ ! … Ah, c\'est qu\'une personne. Bonjour. Hugo, crieur. Je lis ce qu\'on me donne à lire.',
-    bonjourTous: ['OYEZ ! … Pardon, l\'habitude.', 'Bonjour. Pas de décret aujourd\'hui. Pour l\'instant.'],
-    saisons: { 1: ['Au printemps, on annonce les foires. Et les nouvelles taxes des foires.'], 2: ['L\'été, les décrets du lord pleuvent. Il s\'ennuie, l\'été.'], 3: ['L\'automne, on annonce les réquisitions de grain. Personne n\'applaudit.'], 4: ['L\'hiver, j\'annonce le couvre-feu. Les gens rentrent avant la fin de ma phrase.'] },
-    discuter: ['Je ne fais que lire. Quand les gens me lancent des légumes, je leur rappelle que je ne fais que lire. Ils visent mieux.', 'Mon père était crieur. Il a perdu sa voix à force de crier les guerres. Moi, je crie les taxes. On progresse.'],
-    nouvelles: K.LORD,
-    perso: { titre: 'Le dernier décret ?', paliers: [[1, 'OYEZ ! Par ordre du lord, la taxe sur le sel est doublée pour la saison. … Voilà. Ne me frappe pas.'], [3, 'OYEZ ! Par ordre du lord, chaque charrette entrant en ville paiera un droit de passage pour la fête du lord. … Oui. Pour la fête. Non, vous n\'êtes pas invités.'], [6, '~Il baisse le parchemin.|Entre nous ? Je ne sais pas lire. On me fait apprendre par cœur. Un jour, je me tromperai, et j\'annoncerai la baisse des taxes. Pour voir.']] },
-    aurevoir: ['OYEZ ! Au revoir !', 'Va en paix. Et paie tes taxes.'] });
+F({ ev: 15, nom: 'jeck', tags: ['<Logis: 37>'], role: 'marchand d\'objets trouvés et roulette truquée', voix: 'voix de stentor, énergique, franche, sans filtre.',
+    premiere: 'HÉ ! Toi ! Ouais, toi ! jeck ! Objets trouvés, roulette, bonne humeur ! Tout est à vendre, sauf la bonne humeur. Ah si, elle aussi.',
+    bonjourTous: ['YO !', '~Il fait tourner sa roulette d\'un coup de pouce.|Tu tentes ta chance ? Elle est honnête ! … Presque.'],
+    saisons: { 1: ['Le printemps, les gens perdent plein de trucs dans la boue. Moi, je les trouve. C\'est un cycle.'], 2: ['L\'été, tout le monde a chaud et moi j\'ai des chapeaux trouvés ! Les affaires !'], 3: ['L\'automne, le vent emporte les écharpes. Le vent, c\'est mon meilleur fournisseur.'], 4: ['L\'hiver, les gants ! Toujours un seul. Je vends des gants seuls, pour les gens qui ont une seule main froide.'] },
+    discuter: ['La roulette est truquée ? Moi, truquer ? … Ouais. Mais un peu. Pour l\'ambiance.', 'Je dis ce que je pense. Les gens aiment pas toujours. Mais au moins, ils savent.', 'J\'ai trouvé une botte. Juste une. Si tu trouves un gars qui boite, envoie-le-moi.'],
+    nouvelles: ['Colette ? Ouais, c\'est une pote. Elle me regarde bizarre, des fois. Elle doit faire des calculs.', 'Les recrues de l\'Admission perdent TOUT. Leurs gants, leurs cartes, leur dignité. Je garde tout.'],
+    perso: { titre: 'Ta roulette ?', paliers: [[1, 'C\'est une roue. Elle tourne. Je gagne. Fin de l\'histoire.'], [4, 'Bon, d\'accord. Elle penche à gauche. C\'est pas ma faute, c\'est la table. … C\'est moi qui ai scié la table.']] },
+    aurevoir: ['À plus ! Perds des trucs, je les retrouverai !', 'Ciao !'] });
 F({ ev: 16, nom: 'Dame Véra', role: 'dame noble du manoir, fait ses emplettes', voix: 'hautaine, polie, curieuse malgré elle du peuple.',
     premiere: 'Oh. Un voyageur. Vous… vous parlez aux gens comme moi ? Comme c\'est rafraîchissant. Dame Véra. Vous pouvez me saluer.',
     bonjourTous: ['Bonjour, bonjour.', '~Elle tient un mouchoir parfumé sous son nez.|Ah, c\'est vous.'],
@@ -96,7 +96,7 @@ F({ ev: 16, nom: 'Dame Véra', role: 'dame noble du manoir, fait ses emplettes',
     nouvelles: ['Au manoir, on attend la fête du lord. Trois semaines de préparatifs pour une soirée. Et on se plaindra du vin.', 'La baronne a encore changé de chambre. La troisième cette semaine. Elle dit que les murs la regardent. Ce sont des tableaux.'],
     perso: { titre: 'Pourquoi venir au marché ?', paliers: [[1, 'Pour acheter, voyons.'], [4, 'Pour voir des gens qui ne jouent pas un rôle. Au manoir, même les chiens font semblant.'], [7, '~Elle baisse la voix.|Ma famille veut me marier à un cousin du lord. Il collectionne les papillons morts. Je viens ici respirer avant de dire oui.']] },
     aurevoir: ['Au revoir. Ce fut… plaisant.', 'Allez. Ne dites à personne que j\'ai ri.'] });
-F({ ev: 17, nom: 'Jacquot', role: 'colporteur, vend de tout et surtout n\'importe quoi', voix: 'bonimenteur, rapide, sympathique.',
+F({ ev: 17, nom: 'Jacquot', tags: ['<Logis: 45 11,10>'], role: 'colporteur, vend de tout et surtout n\'importe quoi', voix: 'bonimenteur, rapide, sympathique.',
     premiere: 'Jacquot, colporteur ! Rubans, aiguilles, boutons, et un clou qui a appartenu à un chevalier ! … Enfin, à son cheval.',
     bonjourTous: ['Hé ! Approche !', 'Pour toi, prix d\'ami, et j\'ai beaucoup d\'amis.'],
     saisons: K.SAISON,
@@ -109,7 +109,7 @@ F(K.garde(18, 'Firmin', { role: 'garde du marché, suit la ronde tracée par JOK
     discuter: ['Les voleurs du marché, je les connais tous. Ils me connaissent aussi. On se salue.', 'Les soldats du lord se servent chez les marchands. Moi, je n\'ai pas le droit de les arrêter. Alors je regarde ailleurs. Je déteste regarder ailleurs.'] }));
 F(K.garde(19, 'Nestor', { role: 'garde du marché, suit la ronde tracée par JOKO', tags: ['<Vie: fixe>'], premiere: 'Nestor, garde. Tu achètes, tu paies, tu pars. Et tout le monde reste ami.',
     discuter: ['J\'ai attrapé un gamin qui volait des pommes. Je l\'ai relâché. Il m\'a volé ma bourse en partant. Respect.', 'Bertrand me donne une pomme par jour pour que je surveille son étal. C\'est ce qu\'on appelle un salaire, ici.'] }));
-F({ ev: 20, nom: 'Madeleine', role: 'bouchère', voix: 'solide, directe, tranche la conversation comme la viande.',
+F({ ev: 20, nom: 'Madeleine', tags: ['<Logis: 37>'], role: 'bouchère', voix: 'solide, directe, tranche la conversation comme la viande.',
     premiere: 'Madeleine, boucherie. Tu veux quoi ? Parle, j\'ai un couteau à la main et peu de patience.',
     bonjourTous: ['Quoi ?', '~Elle abat son couperet sur le billot.|Oui ?'],
     saisons: { 1: ['L\'agneau de printemps. Tendre. Les enfants pleurent. Les parents mangent.'], 2: ['L\'été, la viande tourne vite. Achète le matin.'], 3: ['L\'automne, on tue le cochon. Tout le quartier aide. Tout le quartier mange.'], 4: ['L\'hiver, le lard, le salé, les saucisses. Ça tient au corps.'] },
@@ -118,7 +118,7 @@ F({ ev: 20, nom: 'Madeleine', role: 'bouchère', voix: 'solide, directe, tranche
     perso: { titre: 'Votre mari ?', paliers: [[1, 'Parti.'], [4, 'Enrôlé de force, il y a deux ans. Il écrivait. Il n\'écrit plus. Je garde son tablier accroché. Je le décrocherai pas.']] },
     options: [{ titre: 'Acheter de la viande', cmds: boutique([['objet', 45], ['objet', 46]]) }],
     aurevoir: ['Suivant !', 'Va.'] });
-F({ ev: 23, nom: 'Lucien', role: 'cartographe, près de la carte du monde', voix: 'méticuleux, passionné, s\'excuse beaucoup.',
+F({ ev: 23, nom: 'Lucien', tags: ['<Logis: 33 27,17>'], role: 'cartographe, près de la carte du monde', voix: 'méticuleux, passionné, s\'excuse beaucoup.',
     premiere: 'Oh ! Bonjour ! Lucien, cartographe. Pardon, je mesurais l\'ombre du clocher. Pour une carte. Elles sont toutes fausses, vous savez.',
     bonjourTous: ['Bonjour ! Pardon.', '~Il déroule une carte, la regarde, la réenroule.|Bonjour.'],
     saisons: { 1: ['Au printemps, les rivières changent de lit. Mes cartes aussi.'], 2: ['L\'été, je pars relever les chemins. Je reviens avec des coups de soleil et des erreurs.'], 3: ['L\'automne, je recopie. Des nuits entières. Mes yeux s\'usent plus vite que mes plumes.'], 4: ['L\'hiver, les routes du col disparaissent sous la neige. Sur mes cartes, elles sont toujours là. Mensonge utile.'] },

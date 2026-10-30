@@ -93,7 +93,10 @@ function V(l, c, d) {
             // MOG_TimeSystem range l'heure dans une VARIABLE (la 200) et la lit
             // de là : $gameSystem.hour() fait $gameVariables._data[200].
             // Il expose set_hour() pour la poser proprement.
-            if (typeof $gameSystem.set_hour === 'function') { $gameSystem.set_hour(hh); }
+            // ⚠ 2026-10-30 : et les minutes à zéro. Une heure de jeu dure 25 secondes :
+            //   posée à 12 h 40, elle passait à 13 h pendant l'attente, et à 13 h chacun
+            //   retourne à son poste.
+            if (typeof $gameSystem.set_hour === 'function') { $gameSystem.set_hour(hh); if ($gameSystem.set_minute) $gameSystem.set_minute(0); }
             else { $gameVariables.setValue(200, hh); }
         }, h);
         await page.waitForTimeout(secondes || 2600);
@@ -124,7 +127,9 @@ function V(l, c, d) {
     console.log('    heure   dehors  dedans   distance moyenne à la place   ce qu\'ils visent');
     var journee = {};
     for (var h of [2, 7, 10, 12, 15, 19, 22]) {
-        var r = await aHeure(h, (h === 2 || h === 22) ? 13000 : 4000);
+        // ⚠ 2026-10-30 : une heure de jeu dure deux minutes ; à midi, la place est à quinze
+        //   cases de certains postes : quatre secondes ne suffisaient pas pour y arriver.
+        var r = await aHeure(h, (h === 2 || h === 22) ? 13000 : h === 12 ? 18000 : 4000);
         journee[h] = r;
         console.log('     ' + String(h).padStart(2) + ' h    ' +
             String(r.dehors).padStart(4) + '    ' + String(r.dedans).padStart(4) + '        ' +

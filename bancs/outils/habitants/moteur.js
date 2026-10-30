@@ -123,7 +123,8 @@ function compiler(p) {
     var options = [];
     if (p.discuter) options.push({ titre: p.titreDiscuter || 'Discuter', cmds: p.discuterMoment ? si(C.js('Math.random() < 0.5'), selon(V.moment, p.discuterMoment, nom, p.discuter), unParmi(nom, p.discuter)) : unParmi(nom, p.discuter) });
     if (p.nouvelles) options.push({ titre: p.titreNouvelles || 'Quoi de neuf ?', cmds: p.nouvellesSaison ? si(C.js('Math.random() < 0.5'), selon(V.saison, p.nouvellesSaison, nom, p.nouvelles), unParmi(nom, p.nouvelles)) : unParmi(nom, p.nouvelles) });
-    if (p.perso) options.push({ titre: p.perso.titre, cmds: paliers(p.perso.sur === 'affinite' ? V.affinite : V.visites, p.perso.paliers, nom) });
+    // ses confidences s'ouvrent avec l'AFFINITÉ (Habitants v1.3 : +1 chaque jour où l'on se parle), plus seulement les visites
+    if (p.perso) options.push({ titre: p.perso.titre, cmds: paliers(p.perso.sur === 'visites' ? V.visites : V.affinite, p.perso.paliers, nom) });
     (p.options || []).forEach(function (o) { options.push(o); });
     var fin = { titre: p.titreFin || 'Au revoir', cmds: cat(unParmi(nom, p.aurevoir || ['…']), D.sortirBoucle()) };
     var conditionnelles = options.filter(function (o) { return o.si; });

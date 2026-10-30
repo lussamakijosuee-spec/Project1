@@ -47,15 +47,24 @@ F({ carte: 42, ev: 5, nom: 'Hélène', role: 'armurière, tient le magasin d\'ar
     perso: { titre: 'Pourquoi armurière ?', paliers: [[1, 'Parce que je voulais que les gens rentrent chez eux.'], [4, 'Mon frère est parti à la guerre du lord d\'avant, avec une armure de cuir mal cousue. Je couds bien, maintenant.']] },
     options: [{ titre: 'Voir la marchandise', garder: 'boutique' }],
     aurevoir: ['Rentre entier.', 'Bonne route. Et serre tes sangles.'] });
-F({ carte: 43, ev: 3, nom: 'Pascaline', role: 'épicière, tient le magasin d\'objets', voix: 'vive, organisée, compte tout de tête.', horaire: '8-20',
+F({ carte: 43, ev: 3, nom: 'Hilde', role: 'épicière, tient le magasin d\'objets', voix: 'vive, organisée, compte tout de tête.', horaire: '8-20', tags: ['<Est: 29:28>'],
     avant: [[356, 0, ['NPC talk marchand']]],
-    premiere: 'Pascaline, épicerie ! Potions, rations, cordes, lampes : si ça sert en voyage, je l\'ai. Si je ne l\'ai pas, ça ne sert pas.',
+    premiere: 'Bienvenue à l\'épicerie ! Potions, rations, cordes, lampes : si ça sert en voyage, je l\'ai. Si je ne l\'ai pas, Kaze le trouvera.',
     bonjourTous: ['Bonjour !', '~Elle compte des fioles à voix basse.|… vingt-trois. Bonjour !'],
     saisons: { 1: ['Le printemps, je vends des cordes et des bottes. Les voyageurs repartent.'], 2: ['L\'été, les potions contre la fièvre partent comme des petits pains.'], 3: ['L\'automne, les provisions. Tout le monde a peur de manquer.'], 4: ['L\'hiver, les lampes enchantées. On en recharge dix par jour au marché.'] },
-    discuter: ['Mes potions viennent de l\'apothicaire d\'à côté. Elles marchent. Celles de Silas, au bar, je ne dirai rien. Enfin, si : non.', K.MAGIE[0], 'Le manoir a commandé trois caisses de bougies. Des bougies ! Avec toutes leurs lampes enchantées. Il y a des pièces où ils ne veulent pas de magie, paraît-il.'],
-    nouvelles: [K.LORD[0], K.LORD[6]],
-    perso: { titre: 'Les affaires ?', paliers: [[1, 'Ça va, ça vient.'], [4, 'Je fais crédit à des familles qui ne pourront jamais payer. Mon mari dit que je suis folle. Je dis qu\'un village sans crédit, c\'est un cimetière.']] },
+    discuter: ['Mes potions viennent de l\'apothicaire d\'à côté. Elles marchent. Celles de Silas, au bar, je ne dirai rien. Enfin, si : non.', K.MAGIE[0], 'Le matin, c\'est moi. L\'après-midi, c\'est Kaze. Il vend moins de bavardages, mais plus de cordes.'],
+    nouvelles: ['Les recrues de l\'Admission prennent toutes une trousse de soins et de quoi recharger leurs cristaux. Je leur dis de prendre une corde. Elles rient. Elles reviennent en acheter une.'],
+    perso: { titre: 'Les affaires ?', paliers: [[1, 'Ça va, ça vient.'], [4, 'Je fais crédit à des familles qui ne pourront jamais payer. Kaze dit que je suis folle. Puis il leur porte leurs courses.']] },
     options: [{ titre: 'Voir la marchandise', garder: 'boutique' }],
     aurevoir: ['Bonne route ! Et prends une corde. On prend toujours une corde.', 'À bientôt !'] });
+F({ carte: 43, ev: 3, page: 2, muet: true, nom: 'Kaze', role: 'l\'après-midi, il tient l\'épicerie de Hilde', voix: 'laconique, précis, regard d\'acier.', tags: ['<Est: 29:40>'],
+    avant: [[356, 0, ['NPC talk marchand']]],
+    premiere: '~Il lève les yeux de son comptoir. Il ne sourit pas, mais il a déjà sorti une corde.|L\'épicerie. Hilde est avec les petits. Qu\'est-ce qu\'il te faut ?',
+    bonjourTous: ['Hm. Qu\'est-ce qu\'il te faut ?', '~Il range trois fioles au millimètre.|Toi.'],
+    saisons: { 1: ['Le printemps. Les bottes partent.'], 2: ['L\'été. Les potions contre la fièvre.'], 3: ['L\'automne. Les provisions.'], 4: ['L\'hiver. Les lampes.'] },
+    discuter: ['Hilde compte tout de tête. Moi, je compte deux fois.', 'Une recrue est venue sans un sou. Elle est repartie avec une corde. Je ne l\'ai pas vue. Tu ne l\'as pas vue non plus.'],
+    nouvelles: ['On cherche une fleur rare. … Moi. Je cherche. Pas « on ».'],
+    options: [{ titre: 'Voir la marchandise', garder: 'boutique', page: 1 }],
+    aurevoir: ['Hm. Prends une corde.', 'Reviens entier.'] });
 
 module.exports = { carte: 41, fiches: fiches };

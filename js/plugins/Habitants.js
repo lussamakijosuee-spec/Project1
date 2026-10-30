@@ -1,5 +1,5 @@
 //=============================================================================
-// Habitants.js — v1.2  ·  Les gens vivent leur vie
+// Habitants.js — v1.3  ·  Les gens vivent leur vie
 // RPG Maker MV   ·   pour JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure et la saison).
 //=============================================================================
@@ -39,6 +39,64 @@
  * @type variable
  * @default 885
  *
+ * @param affiniteParJour
+ * @text Affinité gagnée par jour où l'on se parle
+ * @type number
+ * @min 0
+ * @default 1
+ * @desc La première conversation de chaque jour de jeu rapproche (v1.3). Ce
+ * sont les jours passés à se parler qui ouvrent les confidences.
+ *
+ * @param joursSouvenir
+ * @text Pendant combien de jours on parle de tes exploits
+ * @type number
+ * @min 1
+ * @default 14
+ *
+ * @param chanceSouvenir
+ * @text Chance qu'un habitant en parle (%)
+ * @type number
+ * @min 0
+ * @max 100
+ * @default 60
+ * @desc Chaque habitant tire une fois par exploit : il en parle, ou il n'en dit
+ * rien. Personne ne le répète deux fois.
+ *
+ * @param joursAdmission
+ * @text Durée de l'Admission (jours, au début de chaque saison)
+ * @type number
+ * @min 0
+ * @default 7
+ * @desc La Bible : « Quatre fois par an, au début de chaque saison, la
+ * Chancellerie ouvre une Admission » ; « la semaine d'Admission ».
+ *
+ * @param veillee
+ * @text La Veillée du Retour (mois/jour)
+ * @type string
+ * @default 9/30
+ * @desc La Bible ne donne pas la date (« la nuit où l'on dit que le Premier a
+ * disparu »). Défaut : la dernière nuit de l'automne. À JOKO de la fixer.
+ *
+ * @param phrasesQuete
+ * @text Ce qu'on dit d'une quête finie (%1 = son titre)
+ * @type string[]
+ * @default ["On parle de toi en ville. « %1 », c'est fini, à ce qu'il paraît.","Alors c'est toi, pour « %1 » ? Ça se raconte, tu sais.","« %1 »… J'ai entendu. Bien joué."]
+ *
+ * @param phrasesBoss
+ * @text Ce qu'on dit d'un boss battu (%1 = son nom)
+ * @type string[]
+ * @default ["Il paraît que tu as battu %1. Les gens ne parlent que de ça.","%1, vaincu ? Par toi ? … Bon. Je te crois.","Tu as affronté %1 et tu es là à me parler. Chapeau."]
+ *
+ * @param phrasesAdmission
+ * @text Ce qu'on dit pendant l'Admission
+ * @type string[]
+ * @default ["C'est la semaine d'Admission. La ville est pleine de recrues qui se croient déjà licenciées.","L'Admission, cette semaine : examen au Hall de l'Égide, puis le Champ d'Épreuve. Les guildes tiennent leurs salons.","Tu as vu toutes ces recrues ? C'est l'Admission. Réussir donne le droit de travailler, pas un rang."]
+ *
+ * @param phrasesVeillee
+ * @text Ce qu'on dit le jour de la Veillée du Retour
+ * @type string[]
+ * @default ["Ce soir, c'est la Veillée du Retour. La nuit où l'on dit que le Premier a disparu.","La Veillée, ce soir. À Haute-Taville, la Basse-Brume tient un marché de nuit. Ici, on veille sur la place.","Tu veilles ce soir ? Tout le monde reste dehors, pour la Veillée du Retour."]
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LES GENS VIVENT LEUR VIE
@@ -74,6 +132,23 @@
  *     parle attend la fin du dialogue.
  *         <Sortie: 20,39>        une autre sortie que la plus proche
  *
+ *  4. CE QU'ILS RETIENNENT (v1.3)
+ *     · Une quête finie, un boss battu : pendant « joursSouvenir » jours, chaque
+ *       habitant peut en parler, une fois, avant son menu. Ses mots sont
+ *       génériques (les réglages « phrasesQuete », « phrasesBoss ») : JOKO les
+ *       change dans le gestionnaire de plugins.
+ *     · L'AFFINITÉ monte d'elle-même : +1 le premier jour où l'on se parle,
+ *       puis chaque jour suivant. C'est elle qui ouvre les confidences (le
+ *       sujet personnel des fiches), plus seulement le nombre de visites.
+ *
+ *  5. LE CALENDRIER DE LA BIBLE (v1.3)
+ *     · L'ADMISSION — les « joursAdmission » premiers jours de chaque saison.
+ *       <Admission> dans la Note : présent seulement pendant l'Admission.
+ *     · LA VEILLÉE DU RETOUR — le jour réglé (« veillee »). VieDuVillage garde
+ *       les gens dehors jusqu'à 2 h.
+ *     Le jour même, un habitant le dit (« phrasesAdmission », « phrasesVeillee »).
+ *         Habitants.admission()   Habitants.veillee()
+ *
  *  Commandes de plugin : aucune.
  */
 var Habitants = window.Habitants || {};
@@ -86,23 +161,50 @@ window.Habitants = Habitants;
         moment: Number(P.varMoment || 883), saison: Number(P.varSaison || 884), affinite: Number(P.varAffinite || 885)
     };
     Habitants.V = V;
+    var PAR_JOUR = Number(P.affiniteParJour !== undefined ? P.affiniteParJour : 1);
+    var JOURS_SOUVENIR = Math.max(1, Number(P.joursSouvenir || 14));
+    var CHANCE_SOUVENIR = Math.max(0, Math.min(100, Number(P.chanceSouvenir !== undefined ? P.chanceSouvenir : 60))) / 100;
+    var JOURS_ADMISSION = Math.max(0, Number(P.joursAdmission !== undefined ? P.joursAdmission : 7));
+    var VEILLEE = String(P.veillee || '9/30').split('/').map(Number);
+    function liste(x, defaut) { try { var l = JSON.parse(x); return Array.isArray(l) && l.length ? l : defaut; } catch (e) { return defaut; } }
+    var PHRASES = {
+        quete: liste(P.phrasesQuete, ['On parle de toi en ville. « %1 », c\'est fini, à ce qu\'il paraît.']),
+        boss: liste(P.phrasesBoss, ['Il paraît que tu as battu %1. Les gens ne parlent que de ça.']),
+        admission: liste(P.phrasesAdmission, ['C\'est la semaine d\'Admission.']),
+        veillee: liste(P.phrasesVeillee, ['Ce soir, c\'est la Veillée du Retour.'])
+    };
 
     function heure() { return $gameSystem.hour ? $gameSystem.hour() : 12; }
-    function jour() { return $gameSystem.day ? $gameSystem.day() : 1; }
+    // ⚠ v1.3 : day() de MOG est le jour DU MOIS (1 à 30). « Jours depuis » passait
+    //   en négatif d'un mois à l'autre, et le retour après sept jours ne venait
+    //   jamais. On compte les jours depuis le début de la partie.
+    function jour() {
+        if ($gameSystem.total_days) { try { return $gameSystem.total_days(); } catch (e) {} }
+        return $gameSystem.day ? $gameSystem.day() : 1;
+    }
+    Habitants.jour = jour;
     function saison() { var s = $gameSystem.season ? $gameSystem.season() : 1; return s >= 1 && s <= 4 ? s : 1; }
     function moment(h) { return h >= 5 && h < 12 ? 1 : h >= 12 && h < 18 ? 2 : h >= 18 && h < 22 ? 3 : 4; }
     function memoire() { return ($gameSystem._habitants = $gameSystem._habitants || {}); }
-    function cle(i) { return (i._mapId || $gameMap.mapId()) + ':' + i._eventId; }
+    // la copie de passage d'un voyageur (AlleesEtVenues) est le même personnage : même mémoire
+    function cle(i) {
+        var v = window.AlleesEtVenues && AlleesEtVenues.cleInterpreteur ? AlleesEtVenues.cleInterpreteur(i) : null;
+        return v || ((i._mapId || $gameMap.mapId()) + ':' + i._eventId);
+    }
 
     Habitants.prep = function (interp) {
         var m = memoire(), k = cle(interp), f = m[k] = m[k] || { visites: 0, jour: null, affinite: 0 };
         var j = jour();
+        // v1.3 : une partie d'avant — ses visites comptent comme des jours passés à se parler
+        if (!f.v13) { f.v13 = true; f.affinite = Math.max(f.affinite || 0, Math.min(f.visites || 0, 6)); if (f.jour !== null && f.jour > j) f.jour = j; }
         $gameVariables.setValue(V.jours, f.jour === null ? 0 : Math.max(0, j - f.jour));
+        if (f.jour !== j) f.affinite += PAR_JOUR;            // le premier mot du jour
         f.visites++; f.jour = j;
         $gameVariables.setValue(V.visites, f.visites);
         $gameVariables.setValue(V.moment, moment(heure()));
         $gameVariables.setValue(V.saison, saison());
         $gameVariables.setValue(V.affinite, f.affinite);
+        preparerSouvenir(interp, f);
     };
     Habitants.affinite = function (interp, n) {
         var m = memoire(), k = cle(interp), f = m[k] = m[k] || { visites: 0, jour: null, affinite: 0 };
@@ -118,11 +220,20 @@ window.Habitants = Habitants;
         var so = n.match(/<Sortie:\s*(\d+)\s*,\s*(\d+)\s*>/i);
         ev._habHoraire = h ? [Number(h[1]), Number(h[2])] : null;
         ev._habSaisons = s ? s[1].split(',').map(Number) : null;
-        ev._habPassage = !!(h || s || /<Passage>/i.test(n));
+        ev._habAdmission = /<Admission>/i.test(n);
+        ev._habPassage = !!(h || s || ev._habAdmission || /<Passage>/i.test(n) ||
+            (window.AlleesEtVenues && AlleesEtVenues.passeParLaPorte && AlleesEtVenues.passeParLaPorte(ev)));
         ev._habSortieDite = so ? { x: Number(so[1]), y: Number(so[2]) } : null;
     }
     Habitants.present = function (ev) {
         lire(ev);
+        // AlleesEtVenues : la copie d'un voyageur n'est là qu'à son heure ; un voyageur parti n'est plus chez lui
+        if (window.AlleesEtVenues && AlleesEtVenues.presence) {
+            var av = AlleesEtVenues.presence(ev);
+            if (av === false) return false;
+            if (av === true) return true;
+        }
+        if (ev._habAdmission && !Habitants.admission()) return false;
         if (ev._habSaisons && ev._habSaisons.indexOf(saison()) < 0) return false;
         if (!ev._habHoraire) return true;
         var a = ev._habHoraire[0], b = ev._habHoraire[1], h = heure();
@@ -165,6 +276,7 @@ window.Habitants = Habitants;
     // si on peut s'y tenir, sinon la case devant.
     function sortieDe(ev) {
         lire(ev);
+        if (window.AlleesEtVenues && AlleesEtVenues.sortie) { var av = AlleesEtVenues.sortie(ev); if (av) return av; }
         if (ev._habSortieDite) return ev._habSortieDite;
         var maison = { x: ev.event().x, y: ev.event().y }, best = null, d = Infinity;
         sorties().forEach(function (s) {
@@ -206,8 +318,9 @@ window.Habitants = Habitants;
         $gameMap.events().forEach(function (e) {
             if (!e.isNormalPriority() || e.isThrough() || e._moveType !== 0) return;
             if (e._habDepart || e._habArrivee || e._habDelai !== undefined || pilotes.indexOf(e) >= 0) return;
+            if (e._visite || e._habPassage) return;
             var m = e.event().meta || {};
-            if (m.Horaire || m.Passage || m.Saisons) return;
+            if (m.Horaire || m.Passage || m.Saisons || m.Admission) return;
             l.push(e.y * w + e.x);
         });
         return l.sort(function (a, b) { return a - b; }).join(',');
@@ -271,6 +384,9 @@ window.Habitants = Habitants;
     function pasVers(ev, b) {
         if ($gameMap._habBudget <= 0) return;
         $gameMap._habBudget--;
+        // sous l'averse, on court se mettre à l'abri (v1.3)
+        var pluie = $gameScreen && ($gameScreen.weatherType() === 'rain' || $gameScreen.weatherType() === 'storm');
+        ev.setMoveSpeed(pluie ? 5 : 4);
         var d = directionVers(ev, b.x, b.y);
         if (d > 0) {
             ev.moveStraight(d);
@@ -323,10 +439,12 @@ window.Habitants = Habitants;
         // pendant une scène (OutilsDeScene, mode cinématique), il s'arrête sur place
         if (window.OutilsDeScene && OutilsDeScene.figeAussi(this)) return;
         b.t += 1;                                  // en temps réel, même pendant les pas
-        if (this.isMoving() && b.t <= LIMITE) return;
+        // un voyageur qui traverse la ville a plus loin à aller qu'un habitué qui entre au bar
+        var limite = this._visite ? LIMITE * 4 : LIMITE;
+        if (this.isMoving() && b.t <= limite) return;
         // partir : être à côté de la sortie suffit (le joueur se tient souvent devant la porte)
         var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) <= 1 : (this.x === b.x && this.y === b.y);
-        if (arrive || b.t > LIMITE) {
+        if (arrive || b.t > limite) {
             this._moveType = this._habMove;
             if (this._habDepart) { this._habDepart = null; _refresh.call(this); }
             else { if (!arrive) this.locate(b.x, b.y); this.setDirection(b.dir); this._habArrivee = null; }
@@ -335,6 +453,107 @@ window.Habitants = Habitants;
         if (b.attente > 0) { b.attente--; return; }
         pasVers(this, b);
     };
+    /* ── le calendrier de la Bible (v1.3) ───────────────────────────────── */
+    // L'Admission : les premiers jours du premier mois de chaque saison.
+    Habitants.admission = function () {
+        if (!$gameSystem || !$gameSystem.day || JOURS_ADMISSION <= 0) return false;
+        var premierMois = $gameSystem._season_interval ? $gameSystem._season_interval[0] === 0 : (($gameSystem.month() - 1) % 3 === 0);
+        return premierMois && $gameSystem.day() <= JOURS_ADMISSION;
+    };
+    // La Veillée du Retour : le jour réglé, de 18 h à 2 h du matin (la nuit d'après compte encore).
+    Habitants.veillee = function (largeNuit) {
+        if (!$gameSystem || !$gameSystem.month) return false;
+        var m = $gameSystem.month(), d = $gameSystem.day(), h = heure();
+        var jourMeme = m === VEILLEE[0] && d === VEILLEE[1];
+        if (largeNuit === false) return jourMeme;
+        if (jourMeme) return true;
+        // de minuit à 2 h, le lendemain : la veillée n'est pas finie
+        var maxJour = $gameSystem._day_max ? $gameSystem._day_max - 1 : 30;
+        var veille = d === 1 ? (m === (VEILLEE[0] % 12) + 1 && VEILLEE[1] === maxJour) : (m === VEILLEE[0] && d - 1 === VEILLEE[1]);
+        return veille && h < 2;
+    };
+
+    /* ── ce qu'ils retiennent (v1.3) ────────────────────────────────────── */
+    function hautsFaits() { return ($gameSystem._hautsFaits = $gameSystem._hautsFaits || []); }
+    Habitants.hautsFaits = function () { return hautsFaits().slice(); };
+    Habitants.retenir = function (cleFait, genre, nom, ancien) {
+        var l = hautsFaits();
+        if (l.some(function (f) { return f.cle === cleFait; })) return false;
+        l.push({ cle: cleFait, genre: genre, nom: nom, jour: ancien ? -9999 : jour() });
+        return true;
+    };
+    // les quêtes finies (QuetesDuMonde) — regardées une fois par seconde, pas à chaque image
+    function regarderLesQuetes() {
+        if (!$gameSystem || !$gameSystem.questList) return;
+        var premiere = !$gameSystem._hautsFaitsVus;
+        $gameSystem._hautsFaitsVus = true;
+        $gameSystem.questList().forEach(function (q) {
+            // une quête finie avant la v1.3 ne se raconte pas comme une nouvelle
+            if (q && q.status === 'done' && q.type !== 'tuto') Habitants.retenir('quete:' + q.id, 'quete', q.title || q.id, premiere);
+        });
+    }
+    var _end = BattleManager.endBattle;
+    BattleManager.endBattle = function (result) {
+        if (result === 0 && $gameTroop) {
+            $gameTroop.members().forEach(function (e) {
+                var boss = window.MecaBoss && MecaBoss.estBoss ? MecaBoss.estBoss(e) : !!(e.enemy().meta && e.enemy().meta.Boss);
+                if (boss) Habitants.retenir('boss:' + e.enemyId(), 'boss', e.name());
+            });
+        }
+        return _end.call(this, result);
+    };
+    function nomQuiParle(liste) {
+        for (var i = 0; i < (liste || []).length; i++) {
+            var c = liste[i];
+            if (c.code === 401) { var m = String(c.parameters[0]).match(/\\n<([^>]+)>/); if (m) return m[1]; }
+        }
+        return '';
+    }
+    function hasard(l) { return l[Math.floor(Math.random() * l.length)]; }
+    // ce qu'il dira avant son menu : un exploit récent qu'il n'a pas encore commenté, ou le jour qu'il est
+    function preparerSouvenir(interp, f) {
+        interp._habSouvenir = null;
+        f.dits = f.dits || {};
+        var j = jour(), texte = null;
+        var recents = hautsFaits().filter(function (h) { return j - h.jour <= JOURS_SOUVENIR && !f.dits[h.cle]; });
+        if (recents.length) {
+            var h = recents[recents.length - 1];
+            f.dits[h.cle] = true;                         // il en parle ou non : une seule fois
+            if (Math.random() < CHANCE_SOUVENIR) texte = hasard(PHRASES[h.genre] || PHRASES.quete).replace(/%1/g, h.nom);
+        }
+        if (!texte) {
+            var occ = Habitants.veillee(false) ? 'veillee:' + j : Habitants.admission() ? 'admission:' + ($gameSystem.year ? $gameSystem.year() : 0) + ':' + saison() : null;
+            if (occ && !f.dits[occ]) { f.dits[occ] = true; texte = hasard(PHRASES[occ.split(':')[0]]); }
+        }
+        if (!texte) return;
+        var nom = nomQuiParle(interp._list);
+        var cmds = [{ code: 101, indent: 0, parameters: ['', 0, 0, 2] }];
+        require46(texte).forEach(function (l, i) { cmds.push({ code: 401, indent: 0, parameters: [(i === 0 && nom ? '\\n<' + nom + '>' : '') + l] }); });
+        cmds.push({ code: 0, indent: 0, parameters: [] });
+        interp._habSouvenir = cmds;
+    }
+    function require46(t) {                         // des lignes de 46 signes au plus, 4 au plus
+        var l = [], cur = '';
+        String(t).split(' ').forEach(function (m) { if (cur && (cur + ' ' + m).length > 46) { l.push(cur); cur = m; } else cur = cur ? cur + ' ' + m : m; });
+        if (cur) l.push(cur);
+        return l.slice(0, 4);
+    }
+    // juste avant le menu (« Discuter · Quoi de neuf ? · … ») : après le bonjour, avant les sujets
+    var _c102 = Game_Interpreter.prototype.command102;
+    Game_Interpreter.prototype.command102 = function () {
+        if (this._habSouvenir) {
+            var l = this._habSouvenir; this._habSouvenir = null;
+            this.setupChild(l, this._eventId);
+            return false;
+        }
+        return _c102.call(this);
+    };
+    var _updQ = Scene_Map.prototype.update;
+    Scene_Map.prototype.update = function () {
+        _updQ.call(this);
+        if ((this._habQ = (this._habQ || 0) + 1) >= 60) { this._habQ = 0; regarderLesQuetes(); }
+    };
+
     // ce que fait chacun, pour les bancs
     Habitants.etat = function () {
         return $gameMap.events().filter(function (e) { lire(e); return e._habPassage; }).map(function (e) {

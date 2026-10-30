@@ -23,7 +23,7 @@ var fiches = [];
 function F(f) { f.muet = true; fiches.push(f); }
 
 /* ── le magasin d'armures (42) : trois Brémont qui sortent de l'Admission ── */
-F({ carte: 42, ev: 6, nom: 'Odile', role: 'Brémont, recrue toute neuve, cliente d\'Hélène', voix: 'enthousiaste, vantarde, parle de sa licence comme d\'un trophée.',
+F({ carte: 42, ev: 6, nom: 'Odile', tags: ['<Va: 10-12 43 5,8 ; 19-22 44 6,16>'], role: 'Brémont, recrue toute neuve, cliente d\'Hélène', voix: 'enthousiaste, vantarde, parle de sa licence comme d\'un trophée.',
     premiere: 'Odile Brémont ! Licence d\'aventurière toute neuve. Provisoire, mais neuve. Je viens choisir l\'armure de mes exploits.',
     bonjourTous: ['Tu trouves que ce plastron me grandit ?', '~Elle s\'admire dans un bouclier poli.|Oh ! Bonjour.'],
     saisons: K.SAISON,
@@ -35,7 +35,7 @@ F({ carte: 42, ev: 6, nom: 'Odile', role: 'Brémont, recrue toute neuve, cliente
     perso: { titre: 'Les sœurs Brémont ?', paliers: [[1, 'On est sept. Même chapeau, même nez, même mère épuisée. Sidonie et Prune sont ici avec moi.'],
         [4, 'Maman voulait des couturières. On a passé l\'Admission à trois le même jour. Elle a cousu nos chapeaux pour nous retrouver dans la foule.']] },
     aurevoir: ['Retiens bien mon nom : Odile Brémont. Tu le liras sur les affiches.', 'À plus ! Et dis à Hélène que l\'or, c\'est solide.'] });
-F({ carte: 42, ev: 7, nom: 'Sidonie', role: 'Brémont, recrue, a lu tout le règlement', voix: 'posée, pointilleuse, cite les règles de la Chancellerie par cœur.',
+F({ carte: 42, ev: 7, nom: 'Sidonie', tags: ['<Va: 10-12 43 9,8 ; 19-22 44 8,16>'], role: 'Brémont, recrue, a lu tout le règlement', voix: 'posée, pointilleuse, cite les règles de la Chancellerie par cœur.',
     premiere: 'Sidonie Brémont. Oui, la sœur d\'Odile. Non, je ne prendrai pas l\'armure dorée. Je prends celle qui couvre les reins.',
     bonjourTous: ['Bonjour. Tu as lu le livret de la Chancellerie ? Non ? Évidemment.', '~Elle vérifie les sangles d\'un plastron, une par une.|Bonjour.'],
     saisons: K.SAISON,
@@ -45,7 +45,7 @@ F({ carte: 42, ev: 7, nom: 'Sidonie', role: 'Brémont, recrue, a lu tout le règ
     nouvelles: ['La Chancellerie cherche des évaluateurs. On y entre par concours, pas par le rang. J\'y pense sérieusement.',
         'Un aventurier bien préparé exploite une faiblesse précise. Le courage seul ne suffit pas. Je le répète à Odile tous les matins.'],
     aurevoir: ['Serre tes sangles. Vérifie-les deux fois.', 'Bonne route. Et lis le règlement.'] });
-F({ carte: 42, ev: 8, nom: 'Prune', role: 'Brémont, la plus jeune, recalée de l\'Admission', voix: 'joyeuse, généreuse, jamais découragée.',
+F({ carte: 42, ev: 8, nom: 'Prune', tags: ['<Va: 10-12 43 6,12 ; 19-22 44 9,15>'], role: 'Brémont, la plus jeune, recalée de l\'Admission', voix: 'joyeuse, généreuse, jamais découragée.',
     premiere: 'Prune ! La petite des sept. J\'ai raté l\'Admission, mais rien n\'est perdu : un échec, ça mène à une formation complémentaire.',
     bonjourTous: ['Coucou !', '~Elle essaie un casque trois tailles trop grand.|Coucou ! Je vois rien, mais coucou !'],
     saisons: K.SAISON,
@@ -56,7 +56,7 @@ F({ carte: 42, ev: 8, nom: 'Prune', role: 'Brémont, la plus jeune, recalée de 
     aurevoir: ['Reviens entier ! Comme dit Hélène.', 'Salut ! Et si tu croises Odile, ne lui fais pas de compliment.'] });
 
 /* ── le magasin d'objets (43) : trois Brémont qui font les sacs ─────────── */
-F({ carte: 43, ev: 4, nom: 'Agathe', role: 'Brémont, fait le sac d\'expédition de ses sœurs', voix: 'méthodique, coche des listes à voix haute.',
+F({ carte: 43, ev: 4, nom: 'Agathe', tags: ['<Va: 14-16 42 6,10 ; 19-22 44 6,14>'], role: 'Brémont, fait le sac d\'expédition de ses sœurs', voix: 'méthodique, coche des listes à voix haute.',
     premiere: 'Agathe Brémont, la troisième. Je fais le sac d\'expédition de mes sœurs. Corde, trousse, balise. Elles, elles font les exploits.',
     bonjourTous: ['Bonjour. Corde : oui. Trousse : oui. Toi : bonjour.', '~Elle coche une liste longue comme le bras.|Hm ? Bonjour.'],
     saisons: K.SAISON,
@@ -65,7 +65,7 @@ F({ carte: 43, ev: 4, nom: 'Agathe', role: 'Brémont, fait le sac d\'expédition
         'Les cristaux de mana font tourner les lanternes, les barrières, les outils. Et ils se rechargent. Et la recharge, elle se paie.'],
     nouvelles: ['Ce qu\'on rapporte des failles fait tourner tout le pays : des braises d\'âme, des cristaux, des matériaux vivants. Et des courbatures.'],
     aurevoir: ['N\'oublie pas ta corde.', 'Liste faite, sac fermé. À la prochaine.'] });
-F({ carte: 43, ev: 6, nom: 'Rosalie', role: 'Brémont, admiratrice du Héros', voix: 'rêveuse, exaltée, raconte les exploits comme si elle y était.',
+F({ carte: 43, ev: 6, nom: 'Rosalie', tags: ['<Va: 14-16 42 8,10 ; 19-22 44 8,14>'], role: 'Brémont, admiratrice du Héros', voix: 'rêveuse, exaltée, raconte les exploits comme si elle y était.',
     premiere: 'Rosalie, la cinquième Brémont ! Tu as entendu parler du Héros ? Donovano ? Celui du Quartier Noyé ?',
     bonjourTous: ['Bonjour ! Tu ressembles un peu à un héros. Un tout petit peu.', '~Elle serre contre elle une affiche roulée.|Oh, bonjour !'],
     saisons: K.SAISON,
@@ -74,7 +74,7 @@ F({ carte: 43, ev: 6, nom: 'Rosalie', role: 'Brémont, admiratrice du Héros', v
         'Il n\'est ni capitaine ni noble, et il n\'est d\'aucune guilde. Le genre de personne qui n\'a pas besoin d\'affiche. Moi, j\'en ai trois.'],
     nouvelles: ['Le public connaît les exploits, pas les techniques. Alors j\'invente les techniques. Dans ma tête, il fait des saltos.'],
     aurevoir: ['Si tu le croises, dis-lui que Rosalie le salue !', 'À bientôt ! Vive le Héros !'] });
-F({ carte: 43, ev: 7, nom: 'Capucine', role: 'Brémont, vient faire recharger la lanterne familiale', voix: 'râleuse, pratique, l\'humour sec.',
+F({ carte: 43, ev: 7, nom: 'Capucine', tags: ['<Va: 14-16 42 11,10 ; 19-22 44 5,15>'], role: 'Brémont, vient faire recharger la lanterne familiale', voix: 'râleuse, pratique, l\'humour sec.',
     premiere: 'Capucine. Brémont, oui, la sixième. Ne me demande pas laquelle des sept est l\'aînée : on se dispute encore.',
     bonjourTous: ['Bonjour. Tu viens recharger quelque chose, toi aussi ?', '~Elle secoue une lanterne qui grésille.|Elle fatigue. Comme moi.'],
     saisons: K.SAISON,
@@ -85,7 +85,7 @@ F({ carte: 43, ev: 7, nom: 'Capucine', role: 'Brémont, vient faire recharger la
     aurevoir: ['Ferme la porte, tu fais entrer le froid.', 'Salut. Si tu vois une lanterne pas chère, c\'est un piège.'] });
 
 /* ── l'auberge (44) : la septième Brémont, une messagère, une élève de Rubis ── */
-F({ carte: 44, ev: 14, nom: 'Bérénice', role: 'l\'aînée des Brémont, cachée à l\'auberge', voix: 'lasse, ironique, tendre avec ses sœurs.',
+F({ carte: 44, ev: 14, nom: 'Bérénice', tags: ['<Va: 22-8 45 11,10>'], role: 'l\'aînée des Brémont, cachée à l\'auberge', voix: 'lasse, ironique, tendre avec ses sœurs.',
     premiere: 'Chut. Je suis Bérénice, l\'aînée des Brémont. Si tu croises une fille avec ce chapeau, tu ne m\'as pas vue.',
     bonjourTous: ['Chut.', '~Elle a posé son chapeau sous la table.|Tu ne m\'as pas vue.'],
     saisons: K.SAISON,
@@ -94,7 +94,7 @@ F({ carte: 44, ev: 14, nom: 'Bérénice', role: 'l\'aînée des Brémont, caché
         'Moi, je n\'ai pas passé l\'Admission. Personne n\'est obligé de partir en expédition : c\'est dans la loi. Je l\'ai encadrée.'],
     nouvelles: ['Odile veut l\'armure dorée, Sidonie a lu le règlement, Prune veut sauver tout le monde, Agathe fait les sacs, Rosalie aime le Héros, Capucine râle. Et moi, je dors.'],
     aurevoir: ['Tu ne m\'as pas vue.', 'Bonne nuit. Même si c\'est le matin.'] });
-F({ carte: 44, ev: 13, nom: 'Léonie', role: 'messagère des routes royales', voix: 'rapide, toujours pressée, sait tout ce qui se dit sur la route.',
+F({ carte: 44, ev: 13, nom: 'Léonie', tags: ['<Va: 6-18 49 1/3 2j ; 22-6 45 3,10>'], role: 'messagère des routes royales', voix: 'rapide, toujours pressée, sait tout ce qui se dit sur la route.',
     premiere: 'Léonie, messagère. Je porte les lettres d\'un relais à l\'autre. Si tu en as une, j\'en ai déjà quarante : une de plus ne pèse rien.',
     bonjourTous: ['Salut ! Je repars dans une heure. Peut-être deux.', '~Elle trie des lettres en trois piles.|Salut !'],
     saisons: K.SAISON,
@@ -104,7 +104,7 @@ F({ carte: 44, ev: 13, nom: 'Léonie', role: 'messagère des routes royales', vo
     nouvelles: ['Au début de chaque saison, la Chancellerie ouvre une Admission. Tout le monde écrit chez soi : « j\'ai réussi », ou « je recommence ». Les deux pèsent pareil.',
         'Les navires d\'Ilmarée longent les côtes de l\'est. Leurs messagers vont plus vite que moi. Je ne leur parle plus.'],
     aurevoir: ['J\'ai une lettre en retard. Elles le sont toutes.', 'Bonne route ! Et écris à tes parents.'] });
-F({ carte: 44, ev: 15, nom: 'Ysaline', role: 'élève de cinquième année de l\'Académie Rubis, rentrée pour la saison', voix: 'vive, un peu fière, se moque d\'elle-même.',
+F({ carte: 44, ev: 15, nom: 'Ysaline', tags: ['<Va: 22-7 45 11,10>'], role: 'élève de cinquième année de l\'Académie Rubis, rentrée pour la saison', voix: 'vive, un peu fière, se moque d\'elle-même.',
     premiere: 'Ysaline, cinquième année à l\'Académie Rubis. Je rentre chez moi pour la saison. Enfin, je rentre lentement.',
     bonjourTous: ['Salut ! Tu n\'aurais pas vu passer une sixième année ? Non ? Tant mieux.', '~Elle révise un grimoire, la langue entre les dents.|Hm ? Salut.'],
     saisons: K.SAISON,
@@ -120,7 +120,7 @@ F({ carte: 44, ev: 15, nom: 'Ysaline', role: 'élève de cinquième année de l\
 
 /* ── la Forêt (31) : deux gardes de la route ─────────────────────────────── */
 var VEILLE = { 1: ['Le matin, la forêt est calme. Ça ne veut rien dire.'], 2: ['Rien à signaler. Je le note quand même.'], 3: ['Le soir, les bêtes sortent. Nous, on reste.'], 4: ['La nuit, on garde la lanterne basse et l\'oreille haute.'] };
-F({ carte: 31, ev: 15, nom: 'Anselme', role: 'vieux garde de la route', voix: 'calme, récite les règlements comme des proverbes.', meteo: K.METEO.garde,
+F({ carte: 31, ev: 15, nom: 'Anselme', tags: ['<Ronde: 11,26 ; 11,20 ; 11,13 ; 11,20>'], role: 'vieux garde de la route', voix: 'calme, récite les règlements comme des proverbes.', meteo: K.METEO.garde,
     premiere: 'Garde Anselme, patrouille de la route. On surveille la forêt. La forêt, elle, nous surveille aussi.',
     bonjour: VEILLE, bonjourTous: ['Halte. … Bon, passe.'],
     saisons: K.SAISON,
@@ -130,7 +130,7 @@ F({ carte: 31, ev: 15, nom: 'Anselme', role: 'vieux garde de la route', voix: 'c
         'Bastien sursaute à chaque feuille. Je lui dis qu\'un garde qui ne sursaute jamais, c\'est un garde qui n\'a rien entendu.'],
     nouvelles: ['Quand une Chute arrive, c\'est la garde royale qui tient les routes et fait évacuer. Les aventuriers, eux, entrent détruire le Nœud. Chacun son métier.'],
     aurevoir: ['Reste sur le chemin.', 'Bonne route. Et regarde où tu marches.'] });
-F({ carte: 31, ev: 16, nom: 'Bastien', role: 'jeune garde de la route', voix: 'nerveux, bavard, plein de bonne volonté.', meteo: K.METEO.garde,
+F({ carte: 31, ev: 16, nom: 'Bastien', tags: ['<Ronde: 15,26 ; 14,23 ; 10,23 ; 14,23>'], role: 'jeune garde de la route', voix: 'nerveux, bavard, plein de bonne volonté.', meteo: K.METEO.garde,
     premiere: 'Bastien. Garde. Débutant. Si tu entends un bruit dans les fourrés, c\'est sûrement un lapin. Sûrement.',
     bonjour: VEILLE, bonjourTous: ['Ah ! … Ah, c\'est toi. Bonjour.'],
     saisons: K.SAISON,
@@ -140,7 +140,7 @@ F({ carte: 31, ev: 16, nom: 'Bastien', role: 'jeune garde de la route', voix: 'n
     aurevoir: ['Fais attention aux lapins.', 'Bonne route ! Enfin, prudente.'] });
 
 /* ── trois nouveaux venus ─────────────────────────────────────────────────── */
-F({ carte: 29, ev: 53, nom: 'Mathurin', role: 'crieur des nouvelles, au réverbère de la grand-rue', voix: 'tonitruant, théâtral, ne sait pas parler bas.',
+F({ carte: 29, ev: 53, nom: 'Mathurin', tags: ['<Vie: sedentaire>'], role: 'crieur des nouvelles, au réverbère de la grand-rue', voix: 'tonitruant, théâtral, ne sait pas parler bas.',
     premiere: 'Oyez, oyez ! Mathurin, crieur ! Ce que le royaume sait, je le crie. Ce qu\'il ne sait pas, je le crie plus fort.',
     bonjourTous: ['OYEZ ! … Ah, c\'est toi. Oyez quand même.', '~Il s\'éclaircit la voix, très longuement.|Oyez !'],
     saisons: { 1: ['Le printemps s\'ouvre sur une Admission ! Licences neuves, guildes qui recrutent, et des recrues qui se croient déjà rang S !'],
@@ -154,7 +154,7 @@ F({ carte: 29, ev: 53, nom: 'Mathurin', role: 'crieur des nouvelles, au réverb�
         'Le Héros, Donovano, n\'est d\'aucune guilde ! Aucune ! Les guildes en pleurent, paraît-il ! Oyez !',
         'Avis de la Chancellerie : chaque faille demande son propre permis ! Arriver le premier ne donne aucun droit ! Fin de l\'avis !'],
     aurevoir: ['Va, et répète ce que je t\'ai dit !', 'OYEZ ! … Au revoir.'] });
-F({ carte: 30, ev: 26, nom: 'Fanchon', role: 'recruteuse de la Veilleuse', voix: 'chaleureuse, franche, fière de sa lanterne.',
+F({ carte: 30, ev: 26, nom: 'Fanchon', tags: ['<Logis: 45 3,10>'], role: 'recruteuse de la Veilleuse', voix: 'chaleureuse, franche, fière de sa lanterne.',
     premiere: 'Fanchon, de la Veilleuse : tu vois la lanterne brodée ? C\'est nous. On cherche des recrues qui veulent apprendre. Et rentrer vivantes.',
     bonjourTous: ['Bonjour ! Tu as l\'air de quelqu\'un qui aime être formé.', '~Elle époussette la lanterne brodée de sa cape.|Bonjour !'],
     saisons: K.SAISON,
@@ -164,7 +164,7 @@ F({ carte: 30, ev: 26, nom: 'Fanchon', role: 'recruteuse de la Veilleuse', voix:
     nouvelles: ['Le Voile-Soleil recrute les plus prometteurs, et les paie le mieux. Les Crocs prennent tout le monde, facilement. C\'est y rester qui est difficile.',
         'Si tu n\'as pas de guilde, la Bourse des Lames Franches a des contrats pour les indépendants. Avec une licence, et la promesse de respecter ses arbitrages.'],
     aurevoir: ['Que ta lanterne ne s\'éteigne pas.', 'Reviens nous voir. Et rentre vivant.'] });
-F({ carte: 33, ev: 43, nom: 'Gustave', role: 'Essayeur de la Confrérie des Reliquaires, en tournée', voix: 'précis, cérémonieux, très patient avec les gens pressés.',
+F({ carte: 33, ev: 43, nom: 'Gustave', tags: ['<Logis: 45 11,10>'], role: 'Essayeur de la Confrérie des Reliquaires, en tournée', voix: 'précis, cérémonieux, très patient avec les gens pressés.',
     premiere: 'Gustave, Essayeur de la Confrérie des Reliquaires. Un pêcheur a remonté une relique dans ses filets. Je viens l\'inspecter.',
     bonjourTous: ['Bonjour. Vous n\'avez rien trouvé dans vos filets, vous ?', '~Il polit une loupe avec un soin infini.|Bonjour.'],
     saisons: K.SAISON,

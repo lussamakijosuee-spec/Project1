@@ -21,6 +21,17 @@
  *   … --seulement les_voix_de_la_bible.js                → ne pose que ce lot
  *     (les autres habitants ne sont pas réécrits : JOKO a pu retoucher leurs
  *     pages dans l'éditeur)
+ *   … --fiches 29:28,43:3                                  → ne pose que ces fiches
+ *   … --ecarts                                             → montre, sans rien
+ *     écrire, ce qui a été retouché à la main dans chaque page
+ *
+ * CE QUI EST À JOKO DANS UNE PAGE DÉJÀ POSÉE (2026-10-30). Il réécrit les
+ * rôles et les voix dans l'en-tête (« ◆ HABITANT · Hilde — mère de 2
+ * enfants… »), il ajoute ses notes (la personnalité de Colette, celle d'Emma,
+ * d'Edwin…). L'outil garde cet en-tête TEL QUEL, ligne pour ligne, et garde
+ * aussi les commentaires qu'il a ajoutés avant lui ; seules les balises de
+ * l'outil (<Agenda:>, <Va:>, <Logis:>, <Ronde:>, <Est:>, <Vie:>, <Soiree:>)
+ * suivent la fiche.
  *
  * Une carte retirée (le Village Montagnard, 36, le 2026-10-29) se dit et se
  * saute. Une fiche « muet: true » vise une page MUETTE (rien, ou seulement
@@ -34,6 +45,8 @@ var RACINE = path.join(__dirname, '..', '..');
 var DATA = path.join(RACINE, 'data');
 var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
 var iSeul = process.argv.indexOf('--seulement'), SEULEMENT = iSeul >= 0 ? process.argv[iSeul + 1] : null;
+var iFi = process.argv.indexOf('--fiches'), FICHES = iFi >= 0 ? String(process.argv[iFi + 1]).split(',') : null;
+var ECARTS = process.argv.indexOf('--ecarts') >= 0;
 var D = require('./recettes/dsl.js');
 var H = require('./habitants/moteur.js');
 var COMMUNS = require('./habitants/_communs.js');
@@ -110,6 +123,22 @@ function commentairesGardes(liste, murmure) {
     return out;
 }
 
+/* ── l'en-tête de JOKO ─────────────────────────────────────────────────── */
+var BALISE_OUTIL = /^<(Agenda|Soir[ée]e|Vie|Logis|Va|Ronde|Est)\b/i;
+function enTete(liste) {                  // les commentaires de tête, coupés à la marque
+    var avant = [], marque = [], i = 0;
+    for (; i < liste.length && (liste[i].code === 108 || liste[i].code === 408); i++) {
+        if (liste[i].code === 108 && MARQUE.test(liste[i].parameters[0])) break;
+        avant.push(liste[i]);
+    }
+    for (; i < liste.length && (liste[i].code === 108 || liste[i].code === 408); i++) {
+        if (liste[i].code === 108 && /^Généré par bancs\/outils/.test(liste[i].parameters[0])) break;
+        marque.push(liste[i]);
+    }
+    return { avant: avant, marque: marque };
+}
+function memeTexte(a, b) { return a.code === b.code && String(a.parameters[0]) === String(b.parameters[0]); }
+
 /* ── poser ────────────────────────────────────────────────────────────── */
 var defauts = [], poses = 0, lignes = 0;
 function versListe(cmds) { return cmds.map(function (c) { return { code: c[0], indent: c[1], parameters: c[2] }; }); }
@@ -134,6 +163,7 @@ function controle(nom, liste) {
 var repris = [];
 LOTS.forEach(function (lot) {
     lot.fiches.forEach(function (f) {
+        if (FICHES && FICHES.indexOf(f.carte + ':' + f.ev) < 0) return;
         if (!existe(f.carte)) { repris.push('carte ' + f.carte + ' (' + f.nom + ') : la carte n\'existe plus'); return; }
         var m = carteDe(f.carte), e = m.events[f.ev];
         // ⚠ 2026-10-02 : JOKO a retiré Gaston (carte 29, év. 27) et repris deux
@@ -151,27 +181,50 @@ LOTS.forEach(function (lot) {
         if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
         fiche.options = (f.options || []).map(function (o) {
             if (!o.garder) return o;
-            var cmds = extraire(f.carte, f.ev, page, o.garder);
+            var cmds = extraire(f.carte, f.ev, o.page || page, o.garder);
             if (o.saisonnieres) cmds = si(C.js('Math.random() < 0.5'), H.selon(H.V.saison, f.nouvellesSaison, f.nom), cmds);
             return { titre: o.titre, si: o.si, cmds: cmds };
         });
         var liste;
         var tags = (f.tags || []).map(function (t) { return { code: 108, indent: 0, parameters: [t] }; });
-        try { liste = commentairesGardes(orig.pages[page - 1].list, f.murmure).concat(tags, versListe(H.compiler(fiche))); }
+        var gardes = orig.pages[page - 1] ? commentairesGardes(orig.pages[page - 1].list, f.murmure) : [];
+        try { liste = gardes.concat(tags, versListe(H.compiler(fiche))); }
         catch (err) { defauts.push(f.nom + ' : ' + err.message); return; }
+        // ce que JOKO a écrit dans la page posée : son en-tête, ses commentaires ajoutés
+        var avant = enTete(e.pages[page - 1].list), neuf = enTete(liste);
+        var ajouts = avant.avant.filter(function (c) {
+            return !BALISE_OUTIL.test(String(c.parameters[0]).trim()) && !gardes.concat(tags).some(function (g) { return memeTexte(g, c); });
+        });
+        if (ajouts.length || (!muette && avant.marque.length)) {
+            var reste = liste.slice(neuf.avant.length + neuf.marque.length);
+            liste = neuf.avant.concat(ajouts, !muette && avant.marque.length ? avant.marque : neuf.marque, reste);
+        }
         liste.push({ code: 0, indent: 0, parameters: [] });
         controle(f.nom, liste);
+        if (ECARTS) {
+            var txt = function (l) { return l.filter(function (c) { return [101, 401, 108, 408, 102, 402, 355, 111].indexOf(c.code) >= 0; }).map(function (c) { return c.code + ' ' + JSON.stringify(c.parameters); }); };
+            var a = txt(e.pages[page - 1].list), b = txt(liste), sa = {}, sb = {};
+            a.forEach(function (x) { sa[x] = 1; }); b.forEach(function (x) { sb[x] = 1; });
+            var plus = a.filter(function (x) { return !sb[x]; }), moins = b.filter(function (x) { return !sa[x]; });
+            if (plus.length || moins.length) {
+                console.log('   ### ' + f.carte + ':' + f.ev + ' ' + f.nom + ' — retouché à la main : ' + plus.length + ' ligne(s) que la fiche n\'écrit pas');
+                plus.forEach(function (x) { console.log('      page  ' + x.slice(0, 200)); });
+                moins.forEach(function (x) { console.log('      fiche ' + x.slice(0, 200)); });
+            }
+            return;
+        }
         e.pages[page - 1].list = liste;
         // les murmures des autres pages aussi
         e.pages.forEach(function (p, k) { if (k !== page - 1) p.list.forEach(function (c) { if (c.code === 108 && /^text_indicator\s*:\s*Blah Blah Blah\s*$/.test(c.parameters[0])) c.parameters[0] = 'text_indicator : ' + (f.murmure || '…'); }); });
-        if (f.horaire || f.passage) {
-            var note = String(orig.note || '').replace(/<Horaire:[^>]*>\s*/i, '').replace(/<Passage>\s*/i, '');
-            e.note = ((f.horaire ? '<Horaire: ' + f.horaire + '>' : '<Passage>') + (note ? '\n' + note : ''));
+        if (f.horaire || f.passage || f.note) {
+            var note = String(orig.note || '').replace(/<Horaire:[^>]*>\s*/i, '').replace(/<Passage>\s*/i, '').replace(/<Admission>\s*/i, '');
+            var tete = (f.horaire ? '<Horaire: ' + f.horaire + '>' : f.passage ? '<Passage>' : '') + (f.note ? (f.horaire || f.passage ? '\n' : '') + f.note : '');
+            e.note = tete + (note ? '\n' + note : '');
         }
         if (!e.name || /^EV\d+$/.test(e.name)) e.name = f.nom;
         poses++;
     });
-    if (lot.tableau) {
+    if (lot.tableau && !FICHES && !ECARTS) {
         var m = carteDe(lot.carte), t = m.events[49], tl = [];
         tl = tl.concat(D.note('◆ HABITANT · le tableau d\'affichage du bar — une affiche de saison, puis une vieille.'));
         tl = tl.concat(A.js('Habitants.prep(this);'), A.se('Book2'));
@@ -191,7 +244,7 @@ console.log('   ' + poses + ' habitants posés (' + Object.keys(parCarte).map(fu
 if (repris.length) console.log('   ⚑ laissés à JOKO :\n     ' + repris.join('\n     '));
 if (defauts.length) { console.log('   ✗ ' + defauts.length + ' défaut(s) :\n     ' + defauts.slice(0, 40).join('\n     ')); process.exit(1); }
 console.log('   ✓ blocs refermés, scripts et conditions valides, sons présents, lignes à la bonne largeur');
-if (!ECRIRE) process.exit(0);
+if (!ECRIRE || ECARTS) process.exit(0);
 
 // au format de l'éditeur (un événement par ligne) : les commits de JOKO
 // restent lisibles, et un diff montre l'événement qui a changé

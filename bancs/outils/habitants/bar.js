@@ -69,7 +69,7 @@ F(27, {
 
 /* ── Silas, le marchand louche (ev 31) ─────────────────────────────────── */
 F(31, {
-    nom: 'Silas', role: 'marchand de fioles, menteur de métier', voix: 'mielleuse, trop polie, compliments à tout bout de champ.', horaire: '18-4',
+    nom: 'Silas', tags: ['<Logis: 45 3,10>'], role: 'marchand de fioles, menteur de métier', voix: 'mielleuse, trop polie, compliments à tout bout de champ.', horaire: '18-4',
     avant: P('Silas', 'Bienvenue.'),
     premiere: 'Ah ! Un visage intelligent. Ça se voit tout de suite, vous savez. Vous, vous reconnaissez la qualité.',
     retour: ['Mon client préféré ! Je vous ai gardé quelque chose. Enfin… j\'y ai pensé très fort.'],
@@ -115,7 +115,7 @@ F(31, {
 
 /* ── maître Ulric, le graveur (ev 11) ──────────────────────────────────── */
 F(11, {
-    nom: 'Ulric', role: 'graveur, vend aussi le nécessaire du voyageur', voix: 'lent, précis, parle comme il grave : peu de mots, bien choisis.', horaire: '8-20',
+    nom: 'Ulric', tags: ['<Logis: 45 3,10>'], role: 'graveur, vend aussi le nécessaire du voyageur', voix: 'lent, précis, parle comme il grave : peu de mots, bien choisis.', horaire: '8-20',
     premiere: 'Tu regardes mes mains ? Tout le monde regarde mes mains. Quarante ans de burin.',
     retour: ['Te revoilà. J\'ai gravé trois bagues depuis ta dernière visite. Le monde tourne.'],
     bonjour: {
@@ -230,7 +230,7 @@ F(13, {
 
 /* ── Mireille, la commère (ev 14 « PNJ rumeur ») ───────────────────────── */
 F(14, {
-    nom: 'Mireille', role: 'la commère, sait tout sur tout le monde (et se trompe une fois sur deux)', voix: 'volubile, chuchote fort, « tu sais pas la meilleure ».', horaire: '10-23',
+    nom: 'Mireille', tags: ['<Logis: 38>'], role: 'la commère, sait tout sur tout le monde (et se trompe une fois sur deux)', voix: 'volubile, chuchote fort, « tu sais pas la meilleure ».', horaire: '10-23',
     murmure: '…et tu sais pas la meilleure…',
     premiere: 'Toi, t\'es pas d\'ici. Je connais tout le monde, ici. Tout le monde. Assieds-toi, je vais te raconter qui est qui.',
     retour: ['Te revoilà ! Il s\'en est passé, des choses. Assieds-toi.'],
@@ -283,7 +283,7 @@ F(14, {
 
 /* ── Baptiste, le charretier (ev 15) ───────────────────────────────────── */
 F(15, {
-    nom: 'Baptiste', role: 'charretier, fait la route entre les villages', voix: 'jovial, parle de ses bœufs comme de ses enfants.', horaire: '12-22',
+    nom: 'Baptiste', tags: ['<Logis: 45 3,10>'], role: 'charretier, fait la route entre les villages', voix: 'jovial, parle de ses bœufs comme de ses enfants.', horaire: '12-22',
     premiere: 'Salut l\'ami ! Baptiste, charretier. Si t\'as un colis, je le porte. Si t\'as une histoire, je l\'écoute.',
     retour: ['Tiens, le voyageur ! T\'as fait plus de route que moi, on dirait.'],
     bonjour: { 2: ['Je viens de décharger. J\'ai soif comme un bœuf. Et les bœufs, ça boit.'], 3: ['Journée finie. Les bœufs sont à l\'écurie, moi je suis au bar. Chacun sa paille.'], 4: ['Je devrais dormir, je repars à l\'aube. Encore une.'] },
@@ -308,7 +308,7 @@ F(15, {
 
 /* ── Odon, le vieux joueur de cartes (ev 17) ───────────────────────────── */
 F(17, {
-    nom: 'Odon', role: 'vieux retraité, joue aux cartes seul', voix: 'râleur, « de mon temps », mauvais perdant.', horaire: '9-24',
+    nom: 'Odon', tags: ['<Logis: 33 15,7>'], role: 'vieux retraité, joue aux cartes seul', voix: 'râleur, « de mon temps », mauvais perdant.', horaire: '9-24',
     premiere: 'Tu joues ? Non ? Alors pousse-toi, tu me caches les cartes.',
     bonjour: { 1: ['Le matin, les cartes sont honnêtes. Après, elles trichent.'], 2: ['Hm. Encore perdu contre moi-même.'], 3: ['Trop de bruit, le soir. De mon temps, on buvait en silence.'], 4: ['Je rentre bientôt. Ma femme m\'attend. Enfin, elle dort.'] },
     saisons: { 1: ['Le printemps, ça me fait éternuer.'], 2: ['Trop chaud. De mon temps, les étés étaient moins chauds.'], 3: ['Mes genoux sentent la pluie avant le ciel.'], 4: ['De mon temps, l\'hiver durait six mois. Les jeunes savent pas ce que c\'est, le froid.'] },
@@ -326,7 +326,7 @@ F(17, {
 
 /* ── Lise, l'apprentie qui rêve de partir (ev 18) ──────────────────────── */
 F(18, {
-    nom: 'Lise', role: 'fille du forgeron, rêve d\'aventure', voix: 'enthousiaste, pose trop de questions, parle vite.', horaire: '18-23',
+    nom: 'Lise', tags: ['<Logis: 41>'], role: 'fille du forgeron, rêve d\'aventure', voix: 'enthousiaste, pose trop de questions, parle vite.', horaire: '18-23',
     murmure: 'Un jour, je partirai…',
     premiere: 'T\'es un aventurier ?! Un vrai ? T\'as déjà tué un monstre ? C\'était comment ? Raconte !',
     retour: ['Tu es revenu ! Alors ? Alors ?! Tu as vu quoi ?'],
@@ -343,7 +343,7 @@ F(18, {
 
 /* ── Garrec, mercenaire vantard (ev 19) ────────────────────────────────── */
 F(19, {
-    nom: 'Garrec', role: 'mercenaire de rang C (il dit B)', voix: 'fort, fanfaron, gentil au fond, ment sur ses exploits.', horaire: '16-3',
+    nom: 'Garrec', tags: ['<Logis: 45 11,10>'], role: 'mercenaire de rang C (il dit B)', voix: 'fort, fanfaron, gentil au fond, ment sur ses exploits.', horaire: '16-3',
     premiere: 'Garrec. Rang B. … Bon, C. Presque B. Tu veux une histoire ? J\'en ai des centaines.',
     retour: ['Ah, mon rival ! Tu as tué combien de monstres depuis ? Moi, trente. Ou trois.'],
     bonjour: { 2: ['Je m\'échauffe. Pour ce soir. Bras de fer.'], 3: ['Ce soir, je paie une tournée ! … Enfin, si quelqu\'un me prête.'], 4: ['Encore une ! Encore une… Où est ma chope ?'] },
@@ -359,7 +359,7 @@ F(19, {
 
 /* ── Anselme, le joueur endetté (ev 20) ────────────────────────────────── */
 F(20, {
-    nom: 'Anselme', role: 'joueur de dés, doit de l\'argent à tout le monde', voix: 'charmeur, nerveux, toujours « sûr de gagner cette fois ».', horaire: '19-4',
+    nom: 'Anselme', tags: ['<Logis: 29 11,14>'], role: 'joueur de dés, doit de l\'argent à tout le monde', voix: 'charmeur, nerveux, toujours « sûr de gagner cette fois ».', horaire: '19-4',
     premiere: 'Toi, t\'as une tête de chanceux. Tu veux doubler ta mise ? Je suis sûr de gagner, cette fois.',
     retour: ['Ah ! Mon porte-bonheur est de retour !'],
     bonjour: { 3: ['Chut. Si Margot demande, je suis pas là. Je lui dois trois soirées.'], 4: ['La nuit, les dés sont plus généreux. C\'est connu.', 'Encore une partie, et je rembourse tout le monde.'] },
@@ -374,7 +374,7 @@ F(20, {
 
 /* ── Pia, la fille du meunier, amoureuse du barde (ev 21) ──────────────── */
 F(21, {
-    nom: 'Pia', role: 'fille du meunier, amoureuse en secret de Colin le barde', voix: 'timide, phrases qui s\'arrêtent au milieu.', horaire: '17-22', saisons: undefined,
+    nom: 'Pia', tags: ['<Logis: 33 15,7>'], role: 'fille du meunier, amoureuse en secret de Colin le barde', voix: 'timide, phrases qui s\'arrêtent au milieu.', horaire: '17-22', saisons: undefined,
     premiere: 'Oh ! Pardon, je… je regardais pas, je veux dire, je regardais… la musique.',
     bonjour: { 3: ['~Elle ne quitte pas le barde des yeux.|Hm ? Oh, bonsoir.', 'Il va jouer, tu crois ? Enfin… je m\'en fiche. Je demande.'], 4: ['Je devrais rentrer. Papa va… Encore une chanson.'] },
     bonjourTous: ['Oh. Bonjour.'],
@@ -391,7 +391,7 @@ fiches[fiches.length - 1].saisons = { 1: ['Les cerisiers sont en fleurs, au bord
 
 /* ── les frères Vannier, bûcherons jumeaux (ev 22 et 23) ────────────────── */
 F(22, {
-    nom: 'Aimé Vannier', role: 'bûcheron, jumeau « aîné »', voix: 'bourru, contredit son frère sur tout.', horaire: '18-23',
+    nom: 'Aimé Vannier', tags: ['<Logis: 33 27,17>'], role: 'bûcheron, jumeau « aîné »', voix: 'bourru, contredit son frère sur tout.', horaire: '18-23',
     premiere: 'Aimé Vannier. L\'aîné. L\'autre, c\'est Basile. Le cadet. De quatre minutes.',
     bonjourTous: ['Salut.', '~Il pose sa hache contre la table.|Longue journée.'],
     saisons: { 1: ['Le bois de printemps est plein de sève. Il brûle mal.'], 2: ['Trop chaud pour couper. On coupe quand même.'], 3: ['L\'automne, tout le monde veut du bois. On travaille double.'], 4: ['Le gel fend les troncs. Au moins, ça nous aide.'] },
@@ -402,7 +402,7 @@ F(22, {
     aurevoir: ['Salut.', 'Et crois pas Basile.']
 });
 F(23, {
-    nom: 'Basile Vannier', role: 'bûcheron, jumeau « aîné » (lui aussi)', voix: 'bourru, contredit son frère sur tout.', horaire: '18-23',
+    nom: 'Basile Vannier', tags: ['<Logis: 33 27,17>'], role: 'bûcheron, jumeau « aîné » (lui aussi)', voix: 'bourru, contredit son frère sur tout.', horaire: '18-23',
     premiere: 'Basile Vannier. L\'aîné. L\'autre, c\'est Aimé. Le cadet. De quatre minutes.',
     bonjourTous: ['Salut.', '~Il se masse l\'épaule.|Aimé a encore traîné. J\'ai tout fait.'],
     saisons: { 1: ['Printemps. La forêt se réveille. Aimé aussi, enfin, vers midi.'], 2: ['L\'été, les moustiques. Ils aiment Aimé. C\'est bien les seuls.'], 3: ['Automne. On coupe, on fend, on livre. Aimé compte.'], 4: ['L\'hiver, on vend le bois trois fois plus cher. C\'est la saison que j\'aime.'] },
@@ -415,7 +415,7 @@ F(23, {
 
 /* ── Hector et Maude, trente ans de mariage (ev 24 et 25) ──────────────── */
 F(24, {
-    nom: 'Hector', role: 'vieux mari, bon vivant', voix: 'blagueur, taquine sa femme, l\'adore.', horaire: '11-21',
+    nom: 'Hector', tags: ['<Logis: 29 15,14>'], role: 'vieux mari, bon vivant', voix: 'blagueur, taquine sa femme, l\'adore.', horaire: '11-21',
     premiere: 'Bonjour, jeune homme ! Ou jeune dame, j\'ai plus mes yeux. Hector. Et la dame qui soupire, c\'est Maude. Trente ans.',
     bonjourTous: ['Ah, bonjour !', '~Il lève son verre vers toi.|À la tienne !'],
     saisons: { 1: ['Le printemps ! Maude veut repeindre la maison. Chaque printemps. Elle est bleue depuis trente ans.'], 2: ['L\'été, on va pêcher. Enfin, moi je pêche, Maude critique.'], 3: ['L\'automne, c\'est notre anniversaire. Trente et un ans. Elle m\'a pas encore tué.'], 4: ['L\'hiver, Maude me tricote des chaussettes. Elles sont trop petites. Chaque année.'] },
@@ -425,7 +425,7 @@ F(24, {
     aurevoir: ['Bonne journée !', 'Et marie-toi, ça rend fou mais c\'est bien.']
 });
 F(25, {
-    nom: 'Maude', role: 'vieille épouse, lucide', voix: 'soupirs, piques sèches, tendresse cachée.', horaire: '11-21',
+    nom: 'Maude', tags: ['<Logis: 29 15,14>'], role: 'vieille épouse, lucide', voix: 'soupirs, piques sèches, tendresse cachée.', horaire: '11-21',
     premiere: 'Ne l\'écoutez pas, il raconte n\'importe quoi. Maude. Enchantée. Enfin, fatiguée.',
     bonjourTous: ['Bonjour.', '~Elle soupire en regardant Hector.|Il vous a déjà raconté la bière ? Il la raconte à tout le monde.'],
     saisons: { 1: ['Je veux repeindre la maison en jaune. Il dit qu\'on verra. Ça fait trente ans qu\'on verra.'], 2: ['Il m\'emmène pêcher. Il ne prend rien. Mais il est content. Alors moi aussi, un peu.'], 3: ['Notre anniversaire approche. Il va oublier. Il oublie toujours. Et il se rattrape toujours.'], 4: ['Je lui tricote des chaussettes. Trop petites, exprès. Sinon il ne sort plus de chez nous.'] },
@@ -437,7 +437,7 @@ F(25, {
 
 /* ── Roul, pêcheur rival de Tobin (ev 26) ──────────────────────────────── */
 F(26, {
-    nom: 'Roul', role: 'pêcheur, rival de Tobin', voix: 'grincheux, jaloux, exagère ses prises.', horaire: '14-22',
+    nom: 'Roul', tags: ['<Va: 5-13 33 7,38 bas peche>', '<Logis: 38 22-5>'], role: 'pêcheur, rival de Tobin', voix: 'grincheux, jaloux, exagère ses prises.', horaire: '14-22',
     premiere: 'Roul. Pêcheur. Le meilleur. Si on te parle de Tobin, c\'est le deuxième meilleur. Et encore.',
     bonjourTous: ['Salut.', 'Ça sent le poisson ? C\'est moi. C\'est l\'odeur du succès.'],
     saisons: { 1: ['Le printemps, les truites remontent. Je les attends. Tobin dort encore.'], 2: ['L\'été, le lac est chaud, les poissons descendent. Faut aller les chercher.'], 3: ['Automne. Les brochets. Gros comme ma jambe. Enfin, comme mon bras.'], 4: ['L\'hiver, on perce la glace. Tobin y va pas. Il a peur de passer au travers.'] },
@@ -464,7 +464,7 @@ F(28, {
 
 /* ── Merle et Casimir, gardes de la ville (ev 29 et 30) ────────────────── */
 F(29, {
-    nom: 'Merle', role: 'garde de nuit, en fin de ronde', voix: 'fatigué, pragmatique, humour de caserne.', horaire: '20-2',
+    nom: 'Merle', tags: ['<Va: 14-20 29 20,27>', '<Ronde: 11,24 ; 20,27 ; 27,20 ; 20,11>', '<Logis: 40 2-14>'], role: 'garde de nuit, en fin de ronde', voix: 'fatigué, pragmatique, humour de caserne.', horaire: '20-2',
     premiere: 'Garde de nuit. Merle. Si tu fais pas de bêtises, on sera pas amenés à se connaître mieux.',
     bonjourTous: ['Repos. Enfin, presque.', '~Il enlève son casque et se gratte la tête.|Soirée tranquille. Pour l\'instant.'],
     saisons: { 1: ['Le printemps, les ivrognes sortent. Et les voleurs aussi. Même combat.'], 2: ['L\'été, les nuits sont courtes. Mes rondes aussi. J\'aime l\'été.'], 3: ['L\'automne, on double les patrouilles au nord. Les loups.'], 4: ['L\'hiver, garder une porte dans le vent, c\'est la pire punition qui soit.'] },
@@ -474,7 +474,7 @@ F(29, {
     aurevoir: ['Circule.', 'Et reste dans les rues éclairées.']
 });
 F(30, {
-    nom: 'Casimir', role: 'garde de jour, fier de son uniforme', voix: 'réglementaire, un peu naïf, cite le règlement.', horaire: '12-20',
+    nom: 'Casimir', tags: ['<Va: 7-18 29 20,11>', '<Ronde: 20,11 ; 27,20 ; 20,27 ; 11,24>', '<Logis: 40 22-7>'], role: 'garde de jour, fier de son uniforme', voix: 'réglementaire, un peu naïf, cite le règlement.', horaire: '18-22',
     premiere: 'Garde Casimir, de la garde de jour. Article trois : tout étranger est prié de se présenter. Voilà, c\'est fait.',
     bonjourTous: ['Citoyen.', 'Bonjour ! Enfin, bonne relève. Enfin… bonjour.'],
     saisons: { 1: ['Article douze : interdit de laisser ses cochons dans la rue. Personne respecte l\'article douze au printemps.'], 2: ['L\'été, l\'armure chauffe. Mais une armure, c\'est l\'honneur.'], 3: ['L\'automne, fête des récoltes. On arrête beaucoup de gens joyeux.'], 4: ['L\'hiver, j\'ai trouvé un homme endormi dans la neige. Il vit. Grâce au règlement : article quarante, la ronde des porches.'] },
@@ -486,7 +486,7 @@ F(30, {
 
 /* ── Jehan, l'écrivain public (ev 32) ──────────────────────────────────── */
 F(32, {
-    nom: 'Jehan', role: 'écrivain public, écrit les lettres des autres', voix: 'poli, cultivé, un brin mélancolique.', horaire: '9-17',
+    nom: 'Jehan', tags: ['<Logis: 38>'], role: 'écrivain public, écrit les lettres des autres', voix: 'poli, cultivé, un brin mélancolique.', horaire: '9-17',
     premiere: 'Jehan, écrivain public. J\'écris ce que les gens n\'osent pas dire. Contre une modeste somme.',
     bonjourTous: ['Bonjour. Une lettre à écrire ?', '~Il essuie sa plume.|Bien le bonjour.'],
     saisons: { 1: ['Le printemps : des lettres d\'amour. Toutes pareilles. Je les écris toutes différentes.'], 2: ['L\'été, des lettres de voyage. « Je vais bien, envoyez de l\'argent. »'], 3: ['L\'automne, les lettres de condoléances. Ce sont les plus difficiles, et les plus sincères.'], 4: ['L\'hiver, les gens écrivent à ceux qui sont loin. L\'encre gèle. Les sentiments, non.'] },
@@ -499,7 +499,7 @@ F(32, {
 
 /* ── Théo, le gamin qui n'a rien à faire là (ev 36) ────────────────────── */
 F(36, {
-    nom: 'Théo', role: 'gamin des rues, vend des « nouvelles »', voix: 'effronté, rapide, commerçant-né.', horaire: '8-19',
+    nom: 'Théo', tags: ['<Logis: 29 11,14>'], role: 'gamin des rues, vend des « nouvelles »', voix: 'effronté, rapide, commerçant-né.', horaire: '8-19',
     premiere: 'Hé ! T\'as une pièce ? J\'ai des nouvelles. Des vraies. Presque vraies.',
     bonjourTous: ['Hé !', 'Chut, Margot me cherche.'],
     saisons: { 1: ['Le printemps, je vole des cerises. Pas volé. Emprunté. À l\'arbre.'], 2: ['L\'été, je dors dehors. C\'est comme une maison, mais sans toit.'], 3: ['Les pommes tombent. Le verger du vieux Odon. Il court pas vite.'], 4: ['L\'hiver, Berthe me laisse dormir près du four. Dis-le à personne.'] },
@@ -512,7 +512,7 @@ F(36, {
 
 /* ── Berthe, la cuisinière (ev 37) ─────────────────────────────────────── */
 F(37, {
-    nom: 'Berthe', role: 'cuisinière du bar, nourrit tout le monde', voix: 'maternelle, autoritaire, « mange ».', horaire: '6-23',
+    nom: 'Berthe', tags: ['<Logis: 29 11,14>'], role: 'cuisinière du bar, nourrit tout le monde', voix: 'maternelle, autoritaire, « mange ».', horaire: '6-23',
     premiere: 'T\'as pas mangé, toi. Ça se voit. Assieds-toi. Mange.',
     bonjour: { 1: ['Le pain sort du four. Tiens, goûte. Non, c\'est pas une question.'], 2: ['Le ragoût mijote. Encore une heure.'], 3: ['C\'est le coup de feu ! Pousse-toi, pousse-toi !'], 4: ['Je nettoie. Il reste un fond de soupe, si tu veux.'] },
     saisons: { 1: ['Soupe d\'orties et d\'ail sauvage. Ysolde me les cueille. Elle cuisine pas, elle, mais elle sait où ça pousse.'], 2: ['Salade, fromage frais, tomates. L\'été, la cuisine se fait toute seule.'], 3: ['Ragoût de gibier et tarte aux pommes. L\'automne, c\'est ma saison.'], 4: ['Potée, lard, choux. L\'hiver, faut tenir au corps.'] },
@@ -526,7 +526,7 @@ F(37, {
 
 /* ── Nell, ancienne voleuse (ev 38) ────────────────────────────────────── */
 F(38, {
-    nom: 'Nell', role: 'ancienne pickpocket, rangée (presque)', voix: 'moqueuse, maligne, prévient contre les arnaques.', horaire: '17-3',
+    nom: 'Nell', tags: ['<Logis: 45 11,10>'], role: 'ancienne pickpocket, rangée (presque)', voix: 'moqueuse, maligne, prévient contre les arnaques.', horaire: '17-3',
     premiere: 'T\'as la bourse qui pend, là. Range-la. Je dis ça pour toi. J\'ai arrêté, moi.',
     bonjourTous: ['Salut, cible.', '~Elle fait tourner une pièce entre ses doigts.|Détends-toi. Je t\'ai rien pris. Aujourd\'hui.'],
     saisons: { 1: ['Le printemps, les foires. J\'y vais plus. Trop de tentations.'], 2: ['L\'été, les poches sont légères et les gens distraits. Paradis perdu.'], 3: ['L\'automne, les paysans vendent leurs récoltes. Ils rentrent riches. Pas longtemps, avec Anselme dans le coin.'], 4: ['L\'hiver, les manteaux épais. Poches profondes. Je dis ça comme ça.'] },

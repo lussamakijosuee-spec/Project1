@@ -97,6 +97,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   await heure(17);
   await page.waitForTimeout(800);
   await heure(18);
+  // ⚠ 2026-10-30 (AlleesEtVenues) : Silas dort à l'auberge (<Logis: 45 3,10>) ; à 18 h il sort de sa
+  //   chambre et traverse l'auberge puis la ville : il passe la porte du bar vers 18 h 30
+  await page.evaluate(function () { $gameSystem.set_minute(31); $gameMap.requestRefresh(); });
   var silasId = await page.evaluate(function () { return $gameMap.events().filter(function (e) { return e.event().name === 'Silas'; })[0].eventId(); });
   var arrivee = null;   // il entre dans les trois secondes (arrivées étalées)
   for (var t2 = 0; t2 < 16 && !(arrivee && arrivee.page >= 0); t2++) { await page.waitForTimeout(250); arrivee = await page.evaluate(function (id) { var e = $gameMap.event(id); return { page: e._pageIndex, x: e.x, y: e.y, marche: !!e._habArrivee, place: [e.event().x, e.event().y] }; }, silasId); }
@@ -112,11 +115,13 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   /* 5. la soirée au bar — un habitant qui a <Soiree: 14,32> (Gaston, l'év. 27,
    *    a été retiré par JOKO le 2026-10-01 ; Colette et Mado y vont aussi) */
   await aller(29, 20, 22);
+  await heure(19);
+  // un soir sur trois, Colette va à la plage du Village de Pêche (<Va: 18-21 33 … 1/3>) : on prend
+  // quelqu'un qui va au bar ce soir (AlleesEtVenues dit où chacun passe la soirée)
   var soiree = await page.evaluate(function () {
-    var e = $gameMap.events().filter(function (e) { return e.page() && e.page().list.some(function (c) { return (c.code === 108 || c.code === 408) && /<Soiree:\s*14,\s*32>/.test(c.parameters[0]); }); })[0];
+    var e = $gameMap.events().filter(function (e) { return e.page() && e.page().list.some(function (c) { return (c.code === 108 || c.code === 408) && /<Soiree:\s*14,\s*32>/.test(c.parameters[0]); }) && (!window.AlleesEtVenues || (AlleesEtVenues.ou('29:' + e.eventId()) || { carte: 46 }).carte === 46); })[0];
     return e ? { id: e.eventId(), nom: e.event().name } : null;
   });
-  await heure(19);
   var gaston = null;
   for (t = 0; soiree && t < 240 && !gaston; t++) {   // Colette part de 11,9 : 25 cases
     await page.waitForTimeout(500);
