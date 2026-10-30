@@ -276,15 +276,18 @@ window.Habitants = Habitants;
     var PAR_SCENE = Number(P.affiniteScene !== undefined ? P.affiniteScene : 1);
     function fiche(interp) { var m = memoire(), k = cle(interp); return (m[k] = m[k] || { visites: 0, jour: null, affinite: 0 }); }
     function evDe(interp) { return interp && interp.character ? interp.character(0) : null; }
-    // le nom d'un habitant : sa ligne « ◆ HABITANT · Nom — … » (la page de JOKO peut l'avoir réécrite)
+    // le nom d'un habitant : sa ligne « ◆ FICHE · Nom — … » (écrite par l'outil), sinon « ◆ HABITANT · Nom — … »
+    // (que JOKO a pu réécrire : « Hugo », « Yvon », « Emma Fieldensong est une… »)
     function nomDe(e) {
         if (!e || !e.page || !e.page()) return '';
         if (e._habNomPage === e._pageIndex) return e._habNom;
-        var l = e.page().list, n = '';
-        for (var i = 0; i < l.length && (l[i].code === 108 || l[i].code === 408); i++) {
-            var m = /^◆ HABITANT · ([^—]+)/.exec(String(l[i].parameters[0]));
+        var l = e.page().list, n = '', h = '';
+        for (var i = 0; i < l.length && (l[i].code === 108 || l[i].code === 408 || l[i].code === 356 || l[i].code === 355); i++) {
+            var t = String(l[i].parameters[0]), m = /^◆ FICHE · ([^—]+)/.exec(t), m2 = /^◆ HABITANT · ([^—]+)/.exec(t);
             if (m) { n = m[1].trim(); break; }
+            if (m2 && !h) h = m2[1].trim();
         }
+        n = n || h;
         e._habNomPage = e._pageIndex; e._habNom = n;
         return n;
     }

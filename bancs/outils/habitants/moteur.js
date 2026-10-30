@@ -155,8 +155,9 @@ function scenesProposees(p) {
     sc.forEach(function (x, i) {
         var faire = x.quand ? cat(unParmi(p.nom, [].concat(x.rdv)), A.js('Habitants.promettre(this, ' + i + ');'))
             : cat(D.note('— scène d\'amitié ' + (i + 1) + ' : ' + (x.titre || '')), jouer(p.nom, x.gestes), A.js('Habitants.vue(this, ' + i + ');'));
-        l = l.concat(si(C.js('Habitants.prochaine(this, ' + paliers + ') === ' + i), faire));
-        if (x.quand && x.rappel) l = l.concat(si(C.js('Habitants.scene(this, ' + i + ') === 1 && Math.random() < 0.5'), unParmi(p.nom, [].concat(x.rappel))));
+        // le rappel, seulement les autres fois (pas dans la conversation où il vient de donner le rendez-vous)
+        var rappel = x.quand && x.rappel ? si(C.js('Habitants.scene(this, ' + i + ') === 1 && Math.random() < 0.5'), unParmi(p.nom, [].concat(x.rappel))) : null;
+        l = l.concat(si(C.js('Habitants.prochaine(this, ' + paliers + ') === ' + i), faire, rappel));
     });
     return l;
 }

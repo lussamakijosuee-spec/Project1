@@ -17,14 +17,16 @@
  *     même amitié — et Kaze, sur la page 2 du même événement, a la sienne ;
  *   ④ les cadeaux : adoré +2 et l'objet part ; un deuxième le même jour est
  *     refusé ; détesté, il est rendu et rien ne bouge ; son anniversaire, ×2 ;
- *   ⑤ « à côté » : Kaze près de Hilde est vu, loin d'elle non ;
+ *   ⑤ « à côté » : Tomas près d'Élise est vu, loin d'elle non ;
  *   ⑥ « où il est » : au bar, Habitants.ici dit bar ; en ville, non ;
  *   ⑦ le crieur annonce l'anniversaire de Hilde le 12 avril, et pas le 13 ;
  *   ⑧ trop de choix : le menu de Margot passe par « Autre chose… » ;
  *   ⑨ toutes les pages des personnages se parlent jusqu'au bout, choix au
  *     hasard, cadeaux et scènes compris, sans une erreur ;
  *   ⑩ le jeu de Petit-Louis suit le triangle, et jamais à l'envers ;
- *   ⑪ Zéphyrin n'est là que la nuit de la Veillée.
+ *   ⑪ Zéphyrin n'est là que la nuit de la Veillée ;
+ *   ⑫ chaque rendez-vous d'amitié peut être tenu : à l'heure dite, sur la
+ *     carte dite, la personne est là et visible (pas rentrée chez elle).
  *
  *   node bancs/navigateur/les_personnages.js
  */
@@ -138,7 +140,7 @@ V('① les liens se répondent (et un lien coupé exprès est attrapé)', !seuls
         return r;
     });
     if (r2.etat1 !== 1) console.log('      (diagnostic) ' + JSON.stringify({ cles: r2.cles, carte: r2.map, page: r2.pg, nom: r2.nom, aff: r2.aff1, texte: r2.promesse.slice(0, 300) }));
-    V('② à l\'amitié 3, Hilde donne son rendez-vous', r2.etat1 === 1 && /épicerie demain matin/.test(r2.promesse), 'scène 1 : ' + r2.etat1 + ' (1 = promise) · « ' + (r2.promesse.match(/Tu passes devant[^|]*/) || ['?'])[0].slice(0, 60) + '… »');
+    V('② à l\'amitié 3, Hilde donne son rendez-vous — et ne le rappelle pas dans la même phrase', r2.etat1 === 1 && /épicerie demain matin/.test(r2.promesse) && !/N'oublie pas : l'épicerie/.test(r2.promesse), 'scène 1 : ' + r2.etat1 + ' (1 = promise) · « ' + (r2.promesse.match(/Tu passes devant[^|]*/) || ['?'])[0].slice(0, 60) + '… »');
     V('② contre-épreuve : en ville, l\'après-midi, la scène ne se joue pas', r2.etat1b === 1 && !/Te voilà ! Regarde/.test(r2.encore), 'toujours promise');
     await aller(43, 9, 8, 8);
     var r3 = await page.evaluate(function () {
@@ -190,14 +192,15 @@ V('① les liens se répondent (et un lien coupé exprès est attrapé)', !seuls
 
     /* ⑤ à côté · ⑥ où il est */
     var r5 = await page.evaluate(function () {
-        var h = $gameMap.event(28), k = $gameMap.event(40), it = new Game_Interpreter(); it.setup([], 28);
+        // Élise et Tomas : l'après-midi, ils sont toujours dehors (Kaze, lui, entre à l'épicerie à 13 h)
+        var h = $gameMap.event(25), k = $gameMap.event(26), it = new Game_Interpreter(); it.setup([], 25);
         var r = {};
-        k.locate(h.x + 1, h.y); r.pres = Habitants.aCote(it, 'Kaze');
-        k.locate(h.x + 12, h.y + 12); r.loin = Habitants.aCote(it, 'Kaze');
+        k.locate(h.x + 1, h.y); r.pres = Habitants.aCote(it, 'Tomas');
+        k.locate(h.x + 12, h.y + 12); r.loin = Habitants.aCote(it, 'Tomas');
         r.villeBar = Habitants.ici(it, 'bar');
         return r;
     });
-    V('⑤ « à côté » : Kaze près de Hilde est vu, loin d\'elle non', r5.pres === true && r5.loin === false, 'à une case : ' + r5.pres + ' · à 24 cases : ' + r5.loin);
+    V('⑤ « à côté » : Tomas près d\'Élise est vu, loin d\'elle non', r5.pres === true && r5.loin === false, 'à une case : ' + r5.pres + ' · à 24 cases : ' + r5.loin);
     await aller(46, 20, 20, 30);
     var r6 = await page.evaluate(function () { var it = new Game_Interpreter(); it.setup([], 27); return { bar: Habitants.ici(it, 'bar'), travail: Habitants.ici(it, 'travail') }; });
     V('⑥ au bar, on est « au bar » (et pas « au travail ») ; en ville, non', r6.bar === true && r6.travail === false && r5.villeBar === false, 'bar : ' + r6.bar + ' · en ville : ' + r5.villeBar);
@@ -272,6 +275,33 @@ V('① les liens se répondent (et un lien coupé exprès est attrapé)', !seuls
         tous.fini += r9.fini; tous.total += r9.total; tous.erreurs = tous.erreurs.concat(r9.erreurs);
     }
     V('⑨ toutes les pages des personnages se parlent jusqu\'au bout (4 amitiés × 4 heures)', tous.total > 0 && tous.fini === tous.total && !tous.erreurs.length, tous.fini + '/' + tous.total + (tous.erreurs.length ? ' — ' + tous.erreurs.slice(0, 3).join(' | ') : ''));
+
+    /* ⑫ chaque rendez-vous peut être tenu : à l'heure dite, sur la carte dite, la personne est là, visible */
+    var rdv = [];
+    Object.keys(OC).forEach(function (k) {
+        if (/\/\d+$/.test(k)) return;                 // une page 2 (Colin) : elle n'est là que quand JOKO l'allume
+        (OC[k].scenes || []).forEach(function (sc, i) {
+            if (!sc.quand) return;
+            var h = (sc.quand.a - sc.quand.de === 1 ? sc.quand.de : sc.quand.de + 1) % 24;
+            rdv.push({ k: k, nom: NOMS[k], i: i, carte: sc.quand.carte, h: h });
+        });
+    });
+    var groupes = {}; rdv.forEach(function (r) { var g = r.carte + '@' + r.h; (groupes[g] = groupes[g] || []).push(r); });
+    var manques = [];
+    for (var g of Object.keys(groupes)) {
+        var r0 = groupes[g][0], autre = r0.carte === 29 ? 30 : 29;
+        await aller(autre, r0.h, 20, 20);                   // comme le joueur : il arrive d'une autre carte
+        await page.evaluate(function (p) { $gameSystem.set_hour(p.h); $gameSystem.set_minute(20); $gamePlayer.reserveTransfer(p.c, 1, 1, 2, 0); }, { h: r0.h, c: r0.carte });
+        await page.waitForFunction(function (c) { return $gameMap.mapId() === c && !$gamePlayer.isTransferring() && SceneManager._scene._spriteset; }, r0.carte, { timeout: 30000 });
+        await page.waitForTimeout(2500);
+        var vus = await page.evaluate(function (l) {
+            return l.map(function (r) {
+                return $gameMap.events().some(function (e) { return Habitants.nomDe(e) === r.nom && !e._erased && e._pageIndex >= 0 && e.opacity() > 0 && !(e._vie && e._vie.dedans) && !e._habDepart; });
+            });
+        }, groupes[g]);
+        groupes[g].forEach(function (r, i) { if (!vus[i]) manques.push(r.nom + ' scène ' + (r.i + 1) + ' (carte ' + r.carte + ', ' + r.h + ' h)'); });
+    }
+    V('⑫ chaque rendez-vous d\'amitié peut être tenu (la personne est là, à l\'heure dite)', rdv.length > 40 && !manques.length, rdv.length + ' rendez-vous' + (manques.length ? ' — impossibles : ' + manques.join(', ') : ', tous tenables'));
 
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 2).join(' | ') || 'rien');
     console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(66));
