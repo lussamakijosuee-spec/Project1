@@ -58,6 +58,24 @@ var LOTS = fs.readdirSync(path.join(__dirname, 'habitants')).filter(function (x)
     .map(function (x) { return require('./habitants/' + x); });
 if (SEULEMENT && !LOTS.length) { console.log('   ✗ aucun lot « ' + SEULEMENT + ' » dans habitants/'); process.exit(1); }
 var BAR = LOTS.filter(function (l) { return l.carte === 46; })[0];
+// les personnages, comme des OC (2026-10-30) : habitants/oc/*.js, une entrée « carte:événement » (« /2 » : sa page 2)
+// qui s'ajoute à la fiche ; une page <Est: 29:28> reçoit celle de 29:28 (c'est la même personne)
+var DOS_OC = path.join(__dirname, 'habitants', 'oc'), OC = {};
+if (fs.existsSync(DOS_OC)) fs.readdirSync(DOS_OC).filter(function (x) { return /\.js$/.test(x); }).sort().forEach(function (x) {
+    var t = require(path.join(DOS_OC, x));
+    Object.keys(t).forEach(function (k) { if (OC[k]) throw new Error('oc/' + x + ' : ' + k + ' a déjà sa fiche'); OC[k] = t[k]; });
+});
+function ocDe(f) {
+    var k = f.carte + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '');
+    if (OC[k]) return OC[k];
+    var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
+    return est ? OC[est[1]] || null : null;
+}
+var NOMS_DE = {};
+LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { NOMS_DE[(f.carte || lot.carte) + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '')] = f.nom; }); });
+// le crieur annonce les anniversaires (P6) : ceux de toutes les fiches OC
+var ANNIVERSAIRES = Object.keys(OC).filter(function (k) { return OC[k].anniversaire && NOMS_DE[k]; })
+    .map(function (k) { return { md: OC[k].anniversaire, nom: NOMS_DE[k] }; });
 var FSNAP = path.join(__dirname, 'habitants', 'originaux.json');
 function fichierCarte(n) { return path.join(DATA, 'Map' + String(n).padStart(3, '0') + '.json'); }
 function existe(n) { return fs.existsSync(fichierCarte(n)); }
@@ -177,6 +195,14 @@ LOTS.forEach(function (lot) {
         var muette = f.muet && e.pages[page - 1].list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
         if (!muette && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
         var fiche = Object.assign({}, f);
+        var oc = ocDe(f);
+        if (oc) Object.keys(oc).forEach(function (k) {
+            if (k === 'plus') Object.keys(oc.plus).forEach(function (j) { fiche[j] = [].concat(fiche[j] || [], oc.plus[j]); });
+            else fiche[k] = oc[k];
+        });
+        if (f.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
+            return si(C.js("Habitants.anniversaire('" + a.md + "')"), H.unParmi(f.nom, [].concat(f.annonceAnniversaires === true ? ['Oyez ! Aujourd\'hui, c\'est l\'anniversaire de %1 ! Un sourire, un mot gentil, ça ne coûte rien !'] : f.annonceAnniversaires).map(function (t) { return t.replace('%1', a.nom); })));
+        })));
         // le temps qu'il fait : sa propre voix, sinon celle de son milieu
         if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
         fiche.options = (f.options || []).map(function (o) {

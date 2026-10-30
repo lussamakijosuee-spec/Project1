@@ -24,5 +24,12 @@ module.exports = { carte: 30, nom: 'Marché', x: 0, y: 0, scenes: [
     { cle: 'lucien', nom: 'Lucien et la carte du monde', qui: [23], heures: [8, 20], attente: 120, gestes: [
         ['bulle', 23, 8], ['dit', 23, 'Ce fleuve n\'est pas au bon endroit. Pardon. Le fleuve est bien. C\'est moi.']] },
     { cle: 'madeleine', nom: 'Madeleine tranche', qui: [20], heures: [8, 20], attente: 90, gestes: [
-        ['son', 'Slash1', 50], ['dit', 20, 'Suivant !']] }
+        ['son', 'Slash1', 50], ['dit', 20, 'Suivant !']] },
+    // les nouveaux (2026-10-30, comme des OC)
+    { cle: 'timothee', nom: 'Timothée et la caisse de pommes', qui: [28, 6], dist: 5, attente: 120, gestes: [
+        ['son', 'Blow1', 50], ['bulle', 28, 6], ['dit', 28, 'Pardon ! Pardon ! Elle a glissé !'], ['tourne', 6, 28], ['dit', 6, 'La caisse de pommes, encore ! L\'académie paiera !'], ['dit', 28, 'Je ramasse ! Je ramasse !']] },
+    { cle: 'pervenche-ninon', nom: 'Pervenche confie une lettre', qui: [29, 30], dist: 6, attente: 120, gestes: [
+        ['face', 30, 29], ['dit', 29, 'Pour ma sœur ! Elle est encore fraîche, ne la plie pas !'], ['dit', 30, 'Je cours si vite qu\'elle n\'aura pas le temps de sécher !'], ['bulle', 29, 4]] },
+    { cle: 'pervenche', nom: 'Pervenche range ses encres', qui: [29], attente: 90, gestes: [
+        ['dit', 29, 'Bleu de nuit pour le soir, bleu ciel pour le matin…'], ['bulle', 29, 3]] }
 ]};

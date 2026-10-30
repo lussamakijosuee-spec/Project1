@@ -89,6 +89,122 @@ function paliers(varId, liste, nom) {
     return chaine(0);
 }
 function affinite(n) { return A.js('Habitants.affinite(this, ' + n + ');'); }
+function q(x) { return "'" + String(x).replace(/'/g, "\\'") + "'"; }
+var V_CADEAU = 888;
+NOMS_VAR[V_CADEAU] = '◆ Habitants · cadeau (objet choisi)';
+var OBJETS = null;
+function nomObjet(id) {
+    if (!OBJETS) { try { OBJETS = require('../../../data/Items.json'); } catch (e) { OBJETS = []; } }
+    return OBJETS[id] && OBJETS[id].name ? OBJETS[id].name : '#' + id;
+}
+var MOIS = ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+
+/* ── P1 · la fiche du personnage, comme un OC : en tête de sa page ─────── */
+function ficheOC(p) {
+    var o = p.oc; if (!o) return [];
+    var champs = [['Âge', o.age], ['Allure', o.allure], ['Caractère', o.caractere], ['Aime', o.aime], ['Déteste', o.deteste],
+        ['Son rêve', o.reve], ['Son secret', o.secret], ['Sa peur', o.peur], ['Ses manies', o.manie], ['Sa phrase', o.phrase && '« ' + o.phrase + ' »']];
+    if (o.liens) champs.push(['Ses liens', Object.keys(o.liens).map(function (k) { return k + ' : ' + o.liens[k]; }).join(' · ')]);
+    if (p.anniversaire) { var x = p.anniversaire.split('/').map(Number); champs.push(['Anniversaire', x[1] + ' ' + MOIS[x[0]]]); }
+    if (p.cadeaux) champs.push(['Cadeaux', ['adore', 'aime', 'deteste'].filter(function (g) { return (p.cadeaux[g] || []).length; })
+        .map(function (g) { return { adore: 'adore', aime: 'aime', deteste: 'déteste' }[g] + ' ' + p.cadeaux[g].map(nomObjet).join(', '); }).join(' ; ')]);
+    var lignes = ['◆ FICHE · ' + p.nom + ' — son personnage (bancs/outils/habitants/, champ « oc »)'];
+    champs.filter(function (c) { return c[1]; }).forEach(function (c) {
+        var mots = (c[0] + ' : ' + c[1]).split(' '), l = '';
+        mots.forEach(function (m) { if (l && (l + ' ' + m).length > 62) { lignes.push(l); l = '   ' + m; } else l = l ? l + ' ' + m : m; });
+        lignes.push(l);
+    });
+    return [[108, 0, [lignes[0]]]].concat(lignes.slice(1).map(function (x) { return [408, 0, [x]]; }));
+}
+
+/* ── P4 · une scène d'amitié : des répliques, des gestes, un choix ─────── */
+function jouer(nom, gestes) {
+    return cat.apply(null, gestes.map(function (g) {
+        if (typeof g === 'string') return parle(nom, g);
+        var v = g[0];
+        if (v === 'dit') return parle(g[1], g[2]);                         // un autre qui parle (s'il est là)
+        if (v === 'bulle') return A.bulle(0, g[1], true);
+        if (v === 'pas') return D.route(0, (typeof g[1] === 'string' ? g[1].split(' ') : g[1]).map(function (m) {   // 'gauche gauche tHaut'
+            if (typeof m !== 'string') return m;
+            if (!D.M[m]) throw new Error(nom + ' : pas inconnu « ' + m + ' »');
+            return typeof D.M[m] === 'function' ? D.M[m]() : D.M[m];
+        }), { attendre: true });
+        if (v === 'tourne') return D.route(0, [g[1] === 'joueur' || !g[1] ? D.M.tVersJoueur : D.M[g[1]]], { attendre: true });
+        if (v === 'son') return A.se(g[1], g[2] || 80, g[3] || 100);
+        if (v === 'attend') return A.attendre(g[1]);
+        if (v === 'noir') return A.fonduNoir();
+        if (v === 'jour') return A.fonduRetour();
+        if (v === 'ami') return affinite(g[1]);
+        if (v === 'js') return A.js(g[1]);
+        if (v === 'choix') return D.choix(g[1], g[2].map(function (b) { return jouer(nom, b); }), { annuler: -1 });
+        throw new Error(nom + ' : geste inconnu « ' + v + ' »');
+    }));
+}
+function scenesAuRendezVous(p) {
+    return cat.apply(null, (p.scenes || []).map(function (sc, i) {
+        if (!sc.quand) return [];
+        var w = sc.quand;
+        return si(C.js('Habitants.scene(this, ' + i + ') === 1 && Habitants.rdv(' + w.carte + ', ' + w.de + ', ' + w.a + ')'),
+            cat(D.note('— scène d\'amitié ' + (i + 1) + ' : ' + (sc.titre || '')), jouer(p.nom, sc.gestes), A.js('Habitants.vue(this, ' + i + ');'), A.stop()));
+    }));
+}
+function scenesProposees(p) {
+    var sc = p.scenes || []; if (!sc.length) return [];
+    var paliers = '[' + sc.map(function (x) { return x.palier; }).join(', ') + ']';
+    var l = [];
+    sc.forEach(function (x, i) {
+        var faire = x.quand ? cat(unParmi(p.nom, [].concat(x.rdv)), A.js('Habitants.promettre(this, ' + i + ');'))
+            : cat(D.note('— scène d\'amitié ' + (i + 1) + ' : ' + (x.titre || '')), jouer(p.nom, x.gestes), A.js('Habitants.vue(this, ' + i + ');'));
+        l = l.concat(si(C.js('Habitants.prochaine(this, ' + paliers + ') === ' + i), faire));
+        if (x.quand && x.rappel) l = l.concat(si(C.js('Habitants.scene(this, ' + i + ') === 1 && Math.random() < 0.5'), unParmi(p.nom, [].concat(x.rappel))));
+    });
+    return l;
+}
+
+/* ── P2 · ce qu'il dit selon où il est ─────────────────────────────────── */
+var LIEUX = ['bar', 'place', 'repos', 'ailleurs', 'nuit', 'travail'];
+function selonLieu(p, sinonCmds) {
+    var lx = p.lieux || {}, cles = LIEUX.filter(function (k) { return lx[k] && lx[k].length; });
+    function chaine(i) {
+        if (i >= cles.length) return sinonCmds;
+        return si(C.js("Habitants.ici(this, '" + cles[i] + "') && Math.random() < 0.7"), unParmi(p.nom, lx[cles[i]]), chaine(i + 1));
+    }
+    return chaine(0);
+}
+/* ── P4 · le ton de l'amitié : au-dessus d'un palier, une autre façon de dire bonjour ── */
+function selonAmitie(p, cle, sinonCmds) {
+    var t = (p.amitie || []).filter(function (x) { return x[1][cle] && x[1][cle].length; }).sort(function (a, b) { return b[0] - a[0]; });
+    function chaine(i) {
+        if (i >= t.length) return sinonCmds;
+        return si(C.js('$gameVariables.value(' + V.affinite + ') >= ' + t[i][0] + ' && Math.random() < 0.65'), unParmi(p.nom, t[i][1][cle]), chaine(i + 1));
+    }
+    return chaine(0);
+}
+/* ── P3 · les autres : quand l'un d'eux est juste à côté ─────────────── */
+function aCote(p, sinonCmds) {
+    var noms = Object.keys(p.aCote || {});
+    function chaine(i) {
+        if (i >= noms.length) return sinonCmds;
+        return si(C.js('Habitants.aCote(this, ' + q(noms[i]) + ') && Math.random() < 0.6'), unParmi(p.nom, [].concat(p.aCote[noms[i]])), chaine(i + 1));
+    }
+    return chaine(0);
+}
+/* ── P5 · offrir un objet ──────────────────────────────────────────────── */
+function offrir(p) {
+    var c = p.cadeaux, d = c.dits || {}, anniv = p.anniversaire ? "Habitants.anniversaire('" + p.anniversaire + "')" : 'false';
+    function liste(g) { return '[' + (c[g] || []).join(', ') + ']'; }
+    function reagir(g) {
+        return cat(unParmi(p.nom, [].concat(d[g] || ['…'])), p.anniversaire && g !== 'deteste' ? si(C.js(anniv), unParmi(p.nom, [].concat(d.anniv || ['~Pour son anniversaire : ça compte double.']))) : [],
+            A.js("Habitants.offrir(this, '" + g + "', " + anniv + ');'));
+    }
+    var v = '$gameVariables.value(' + V_CADEAU + ')';
+    return si(C.js('Habitants.offert(this)'), unParmi(p.nom, [].concat(d.deja || ['Tu m\'as déjà fait un cadeau aujourd\'hui.'])),
+        cat(A.vr(V_CADEAU, 0), A.choisirObjet(V_CADEAU, 1),
+            si(C.js(v + ' > 0'),
+                si(C.js(liste('adore') + '.indexOf(' + v + ') >= 0'), reagir('adore'),
+                    si(C.js(liste('deteste') + '.indexOf(' + v + ') >= 0'), reagir('deteste'),
+                        si(C.js(liste('aime') + '.indexOf(' + v + ') >= 0'), reagir('aime'), reagir('neutre')))))));
+}
 
 /* ── la fiche → la liste ──────────────────────────────────────────────── */
 function compiler(p) {
@@ -96,19 +212,24 @@ function compiler(p) {
     l = l.concat(D.note('◆ HABITANT · ' + p.nom + (p.role ? ' — ' + p.role : '')));
     if (p.voix) l = l.concat(D.note('Sa voix : ' + p.voix));
     l = l.concat(D.note('Généré par bancs/outils/poser_les_habitants.js depuis bancs/outils/habitants/. Modifiable ici comme n\'importe quel événement ; relancer l\'outil réécrit cette page.'));
+    l = l.concat(ficheOC(p));
     l = l.concat(A.js('Habitants.prep(this);'));
     if (p.avant) l = l.concat(p.avant);
+    // P4 : au rendez-vous qu'il t'a donné, sa scène se joue
+    l = l.concat(scenesAuRendezVous(p));
 
-    // l'accueil
-    var bonjour = selon(V.moment, p.bonjour || {}, nom, p.bonjourTous);
-    var accueil = bonjour;
-    if (p.retour) accueil = si(C.vr(V.jours, '>=', 7), unParmi(nom, p.retour), bonjour);
+    // l'accueil : la première fois > son anniversaire > quelqu'un à côté > le retour > bonjour (selon l'amitié, puis le moment)
+    var bonjour = selonAmitie(p, 'bonjour', selon(V.moment, p.bonjour || {}, nom, p.bonjourTous));
+    var accueil = aCote(p, bonjour);
+    if (p.retour) accueil = si(C.vr(V.jours, '>=', 7), unParmi(nom, p.retour), accueil);
+    if (p.anniversaire && p.anniv) accueil = si(C.js("Habitants.anniversaire('" + p.anniversaire + "')"), unParmi(nom, [].concat(p.anniv)), accueil);
     if (p.premiere) accueil = si(C.vr(V.visites, '=', 1), element(nom, p.premiere), accueil);
     l = l.concat(accueil);
     if (p.blesse) l = l.concat(si(C.js('$gameParty.leader() && $gameParty.leader().hpRate() < 0.4'), unParmi(nom, [].concat(p.blesse))));
     // la remarque du jour : par mauvais temps, le temps qu'il fait (MeteoVivante) ;
     // sinon, à partir de la 2e visite, la saison
     var remSaison = p.saisons ? si(C.vr(V.visites, '>', 1), selon(V.saison, p.saisons, nom)) : [];
+    remSaison = selonLieu(p, remSaison);              // P2 : là où il est passe avant la saison
     if (p.meteo) {
         var types = ['orage', 'tempete', 'pluie', 'neige', 'brouillard'].filter(function (t) { return p.meteo[t] && p.meteo[t].length; });
         var chaine = function (i) {
@@ -118,20 +239,34 @@ function compiler(p) {
         l = l.concat(chaine(0));
     } else l = l.concat(remSaison);
     if (p.apresAccueil) l = l.concat(p.apresAccueil);
+    // P4 : quand l'amitié a monté, il propose sa scène (un rendez-vous), ou il la rappelle
+    l = l.concat(scenesProposees(p));
 
     // le menu
     var options = [];
-    if (p.discuter) options.push({ titre: p.titreDiscuter || 'Discuter', cmds: p.discuterMoment ? si(C.js('Math.random() < 0.5'), selon(V.moment, p.discuterMoment, nom, p.discuter), unParmi(nom, p.discuter)) : unParmi(nom, p.discuter) });
+    if (p.discuter) {
+        var parler = p.discuterMoment ? si(C.js('Math.random() < 0.5'), selon(V.moment, p.discuterMoment, nom, p.discuter), unParmi(nom, p.discuter)) : unParmi(nom, p.discuter);
+        // P3 : une fois sur trois, il parle de quelqu'un d'autre
+        var avis = Object.keys(p.avis || {}).reduce(function (a, k) { return a.concat(p.avis[k]); }, []);
+        if (avis.length) parler = si(C.js('Math.random() < 0.35'), unParmi(nom, avis), parler);
+        options.push({ titre: p.titreDiscuter || 'Discuter', cmds: parler });
+    }
     if (p.nouvelles) options.push({ titre: p.titreNouvelles || 'Quoi de neuf ?', cmds: p.nouvellesSaison ? si(C.js('Math.random() < 0.5'), selon(V.saison, p.nouvellesSaison, nom, p.nouvelles), unParmi(nom, p.nouvelles)) : unParmi(nom, p.nouvelles) });
     // ses confidences s'ouvrent avec l'AFFINITÉ (Habitants v1.3 : +1 chaque jour où l'on se parle), plus seulement les visites
     if (p.perso) options.push({ titre: p.perso.titre, cmds: paliers(p.perso.sur === 'visites' ? V.visites : V.affinite, p.perso.paliers, nom) });
     (p.options || []).forEach(function (o) { options.push(o); });
-    var fin = { titre: p.titreFin || 'Au revoir', cmds: cat(unParmi(nom, p.aurevoir || ['…']), D.sortirBoucle()) };
+    if (p.cadeaux) options.push({ titre: p.titreOffrir || 'Offrir…', cmds: offrir(p) });
+    var fin = { titre: p.titreFin || 'Au revoir', cmds: cat(selonAmitie(p, 'aurevoir', unParmi(nom, p.aurevoir || ['…'])), D.sortirBoucle()) };
     var conditionnelles = options.filter(function (o) { return o.si; });
     if (conditionnelles.length > 3) throw new Error(nom + ' : au plus 3 options conditionnelles par menu');
     function menu(actives) {
         var liste = options.filter(function (o) { return !o.si || actives.indexOf(o) >= 0; }).concat([fin]);
-        if (liste.length > 6) throw new Error(nom + ' : plus de 6 choix dans le menu');
+        if (liste.length > 6) {
+            // trop de choix : les derniers passent dans « Autre chose… » (Annuler y revient au menu)
+            var dessous = liste.slice(4, -1);
+            if (dessous.length > 5) throw new Error(nom + ' : trop de choix, même avec « Autre chose… »');
+            liste = liste.slice(0, 4).concat([{ titre: 'Autre chose…', cmds: D.choix(dessous.map(function (o) { return o.titre; }).concat(['Retour']), dessous.map(function (o) { return o.cmds; }).concat([[]]), { annuler: dessous.length }) }, fin]);
+        }
         return D.choix(liste.map(function (o) { return o.titre; }), liste.map(function (o) { return o.cmds; }), { annuler: liste.length - 1 });
     }
     // chaque option conditionnelle : une branche « si » (le menu MV ne cache pas un choix tout seul)
@@ -144,4 +279,4 @@ function compiler(p) {
     return l;
 }
 
-module.exports = { V: V, NOMS_VAR: NOMS_VAR, parle: parle, unParmi: unParmi, selon: selon, paliers: paliers, affinite: affinite, compiler: compiler, couper: couper };
+module.exports = { V: V, V_CADEAU: V_CADEAU, NOMS_VAR: NOMS_VAR, nomObjet: nomObjet, parle: parle, unParmi: unParmi, selon: selon, paliers: paliers, affinite: affinite, compiler: compiler, couper: couper };

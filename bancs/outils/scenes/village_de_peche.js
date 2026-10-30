@@ -23,5 +23,12 @@ module.exports = { carte: 33, nom: 'Village de Pêche', x: 0, y: 0, scenes: [
     { cle: 'colette-plage', nom: 'Colette à la plage, le soir', qui: ['29:38'], heures: [18, 21], attente: 60, gestes: [
         ['bulle', '29:38', 8], ['dit', '29:38', '… La mer ne parle pas. Enfin.']] },
     { cle: 'jonas', nom: 'Jonas, recrue, fils de pêcheur', qui: [16], attente: 120, gestes: [
-        ['bulle', 16, 8], ['dit', 16, 'Papa pêche. Moi, je monte la garde. On regarde tous les deux la mer.']] }
+        ['bulle', 16, 8], ['dit', 16, 'Papa pêche. Moi, je monte la garde. On regarde tous les deux la mer.']] },
+    // les nouveaux (2026-10-30, comme des OC)
+    { cle: 'solange-edwin', nom: 'Solange veut une imprégnation', qui: [45, 22], dist: 5, attente: 150, gestes: [
+        ['face', 45, 22], ['dit', 45, 'Regarde-moi avec tes lunettes ! C\'est la faille, avoue !'], ['dit', 22, 'Votre mana est… parfaitement normal.'], ['bulle', 45, 5], ['dit', 45, 'C\'EST LA FAILLE QUI TE FAIT DIRE ÇA.']] },
+    { cle: 'solange', nom: 'Solange et son humeur', qui: [45], attente: 100, gestes: [
+        ['si', 'Habitants.jour() % 3 === 0', [['dit', 45, 'Quelle belle journée ! Même les mouettes sont belles !']], [['si', 'Habitants.jour() % 3 === 1', [['dit', 45, 'Le lac est une page blanche…']], [['dit', 45, 'Tout m\'énerve. C\'est la faille.']]]]]] },
+    { cle: 'ninon-peche', nom: 'Ninon cherche la maison bleue', qui: ['30:30'], heures: [12, 14], attente: 60, gestes: [
+        ['dit', '30:30', 'Une lettre pour la maison bleue ! … Elles sont TOUTES bleues !']] }
 ]};

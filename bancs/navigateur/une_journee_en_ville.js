@@ -50,7 +50,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
           if ($gameMessage.isChoice()) { var k = $gameMessage.choices().length; $gameMessage.onChoice(choixFixe != null ? choixFixe : Math.floor(Math.random() * k)); }
           $gameMessage.clear();
         }
-        it.update(); $gameMap.events().forEach(function (e) { e.update(); }); n++;
+        // une bulle finit quand son sprite l'a jouée (MV garde _balloonId jusque-là) : ici, sans dessin, on la finit (les scènes d'amitié en ont)
+        it.update(); $gameMap.events().forEach(function (e) { e.update(); if (e.isBalloonPlaying()) { e._balloonId = 0; e.endBalloon(); } }); n++;
         if (it._waitMode === 'transfer') { it._waitMode = ''; }
       }
       return { fini: !it.isRunning(), textes: vus };
