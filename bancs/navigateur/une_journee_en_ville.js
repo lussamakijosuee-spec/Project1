@@ -64,7 +64,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   for (var t1 = 0; t1 < 16 && !(r1 && r1[1] >= 0 && r1[2] >= 0); t1++) { await page.waitForTimeout(250); r1 = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(6)._pageIndex]; }); }
   await heure(22);
   var r1b = null;
-  for (var t0 = 0; t0 < 40 && !(r1b && r1b[1] < 0); t0++) { await page.waitForTimeout(500); r1b = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(4)._habDepart ? 1 : 0]; }); }
+  for (var t0 = 0; t0 < 120 && !(r1b && r1b[1] < 0); t0++) { await page.waitForTimeout(500); r1b = await page.evaluate(function () { return [$gameSwitches.value(202), $gameMap.event(4)._pageIndex, $gameMap.event(4)._habDepart ? 1 : 0]; }); }
   ok(r1[0] && r1[1] >= 0 && r1[2] >= 0 && !r1b[0] && r1b[1] < 0, 'horaires de JOKO réparés : à 10 h « TS · Jour » allumé, les clients de la forge sont là ; à 22 h ils sortent par la porte, puis n\'y sont plus');
 
   /* 2. les portes */
@@ -104,12 +104,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   var arrivee = null;   // il entre dans les trois secondes (arrivées étalées)
   for (var t2 = 0; t2 < 16 && !(arrivee && arrivee.page >= 0); t2++) { await page.waitForTimeout(250); arrivee = await page.evaluate(function (id) { var e = $gameMap.event(id); return { page: e._pageIndex, x: e.x, y: e.y, marche: !!e._habArrivee, place: [e.event().x, e.event().y] }; }, silasId); }
   var fin = null;
-  for (var t = 0; t < 40 && !fin; t++) { await page.waitForTimeout(500); fin = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habArrivee ? [e.x, e.y] : null; }, silasId); }
+  // ⚠ 2026-10-30 : sous les yeux du joueur, il ne saute plus jusqu'à sa place au bout de huit secondes : il
+  //   marche jusqu'au bout (une trentaine de cases, longues sans carte graphique)
+  for (var t = 0; t < 180 && !fin; t++) { await page.waitForTimeout(500); fin = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habArrivee ? [e.x, e.y] : null; }, silasId); }
   ok(arrivee.page >= 0 && arrivee.marche && fin && fin[0] === arrivee.place[0] && fin[1] === arrivee.place[1], 'à 18 h Silas entre par la porte (' + arrivee.x + ',' + arrivee.y + ') et marche jusqu\'à sa place (' + arrivee.place.join(',') + ')' + (fin ? ' — arrivé' : ' — pas arrivé'));
   await heure(4);
   var depart = await page.evaluate(function (id) { var e = $gameMap.event(id); return { page: e._pageIndex, marche: !!e._habDepart }; }, silasId);
   var parti = false;
-  for (t = 0; t < 40 && !parti; t++) { await page.waitForTimeout(500); parti = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habDepart && e._pageIndex < 0; }, silasId); }
+  for (t = 0; t < 180 && !parti; t++) { await page.waitForTimeout(500); parti = await page.evaluate(function (id) { var e = $gameMap.event(id); return !e._habDepart && e._pageIndex < 0; }, silasId); }
   ok(depart.page >= 0 && depart.marche && parti, 'à 4 h Silas marche jusqu\'à la porte, puis n\'est plus là');
 
   /* 5. la soirée au bar — un habitant qui a <Soiree: 14,32> (Gaston, l'év. 27,

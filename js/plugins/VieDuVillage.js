@@ -1,5 +1,5 @@
 //=============================================================================
-// VieDuVillage.js — v2.0  ·  Les PNJ ont une journée
+// VieDuVillage.js — v2.1  ·  Les PNJ ont une journée
 // RPG Maker MV   ·   by JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure).
 //   AlleesEtVenues (le voyage d'une carte à l'autre) se charge après lui.
@@ -49,10 +49,12 @@
  * @default 30
  *
  * @param flanerie
- * @text Rayon de flânerie autour du but
+ * @text Promenade du soir sur la place (cases)
  * @type number
  * @min 0
  * @default 2
+ * @desc v2.1 : arrivés, ils ne piétinent plus. Le soir seulement, sur la place,
+ * il leur arrive de changer de place, à quelques cases. 0 = jamais.
  *
  * @param rentrerSousLaPluie
  * @text Rentrer quand il pleut ?
@@ -129,6 +131,15 @@
  *   · les CLIENTS restent à leur place, et de temps en temps vont au
  *     comptoir, aux étagères, prennent l'air (réglage « lieux »), puis
  *     reviennent.
+ *
+ *  ILS MARCHENT (v2.1 — JOKO : « le plus gros problème c'est la marche, ils
+ *  font n'importe quoi ») :
+ *   · arrivés, ils ne bougent plus : chacun à sa case, tourné du bon côté (son
+ *     poste comme JOKO l'a posé, ou vers le milieu de la place) ; de temps en
+ *     temps, il regarde ailleurs, sans faire un pas ;
+ *   · sur la place, CHACUN SA CASE (ils ne visent plus tous la même) ;
+ *   · le pas suit le pas, sans s'arrêter entre deux cases ;
+ *   · bloqués, ils attendent, puis contournent : jamais un pas au hasard.
  *
  *  ILS TE VOIENT (v2.0)
  *   · à deux cases, un PNJ qui ne fait rien se tourne vers toi ;
@@ -337,6 +348,28 @@
         }
         return c;
     }
+    // des cases libres autour d'un point, du plus près au plus loin, sans deux voisines
+    function casesAutour(c, n) {
+        var w = $gameMap.width(), vu = {}, file = [[c.x, c.y, 0]], prises = [], serrees = [];
+        vu[c.y * w + c.x] = true;
+        while (file.length && prises.length < n) {
+            var t = file.shift(), x = t[0], y = t[1];
+            var libre = t[2] >= 1 && $gameMap.eventsXy(x, y).length === 0 &&
+                [2, 4, 6, 8].filter(function (d) { return $gameMap.isPassable(x, y, d); }).length >= 3;
+            if (libre) {
+                var voisine = prises.some(function (p) { return Math.abs(p.x - x) + Math.abs(p.y - y) <= 1; });
+                (voisine ? serrees : prises).push({ x: x, y: y });
+            }
+            if (t[2] > 9) continue;
+            [2, 4, 6, 8].forEach(function (d) {
+                var nx = $gameMap.roundXWithDirection(x, d), ny = $gameMap.roundYWithDirection(y, d);
+                if (!$gameMap.isValid(nx, ny) || vu[ny * w + nx]) return;
+                if (!$gameMap.isPassable(x, y, d) || !$gameMap.isPassable(nx, ny, 10 - d)) return;
+                vu[ny * w + nx] = true; file.push([nx, ny, t[2] + 1]);
+            });
+        }
+        return prises.concat(serrees).slice(0, n);
+    }
     function recenser() {
         var pnj = [], portes = [];
         $gameMap.events().forEach(function (e) {
@@ -361,6 +394,9 @@
         //   ne l'atteignait, tout le monde piétinait autour. On prend la case praticable la plus proche.
         place = casePraticable(place);
         var dedans = interieur();
+        // chacun sa case sur la place, en couronne autour du milieu, espacées
+        var cases = dedans ? [] : casesAutour(place, pnj.length + 4);
+        var rang = 0;
 
         pnj.forEach(function (p) {
             var e = p.ev, m = p.m;
@@ -376,10 +412,12 @@
             if (dedans && metier !== 'fixe') { metier = (m.boutique || metier === 'sedentaire') ? 'comptoir' : 'client'; }
             // une copie de passage qui fait sa ronde dehors (un garde du bar en service) : il patrouille
             if (e._visite) { metier = m.ronde && !dedans ? 'garde' : 'visiteur'; }
+            var sa = metier === 'garde' || e._visite || !cases.length ? place : cases[rang++ % cases.length];
             e._vie = {
-                cle: m.cle, metier: metier, poste: poste, logis: logis, place: place,
+                cle: m.cle, metier: metier, poste: poste, logis: logis, place: sa, milieu: place, cases: cases,
                 agenda: m.agenda || [], portes: portes, ronde: m.ronde, iRonde: 0,
-                dedans: false, but: null, dirPoste: e.direction()
+                dedans: false, but: null, dirPoste: e.event().pages[0] ? (e.page() || e.event().pages[0]).image.direction || e.direction() : e.direction(),
+                marche: {}, vers: null, premier: true
             };
         });
         return { pnj: pnj, portes: portes, place: place };
@@ -391,25 +429,56 @@
     // ⚠ 2026-09-30 : un PNJ bloqué relançait une recherche toutes les six
     //   images, sans fin : on attend un peu, et pas plus de quatre recherches
     //   par image pour tout le village.
+    // v2.1 : on ne fait plus le pas ici, on dit où il va ; il marche à chaque image
+    //   (avancer()), sans la pause de six images qui le faisait avancer par à-coups
     function unPasVers(ev, x, y) {
-        if (ev.isMoving()) { return; }
-        if (ev.x === x && ev.y === y) { return; }
-        if (ev._vieAttente > 0) { ev._vieAttente--; return; }
-        if ($gameMap._vieBudget <= 0) { return; }
-        $gameMap._vieBudget--;
-        var d;
-        if (window.Habitants && Habitants.directionVers) {
-            d = Habitants.directionVers(ev, x, y);
-        } else {
-            var ancien = ev.searchLimit;
-            ev.searchLimit = function () { return PORTEE; };
-            d = ev.findDirectionTo(x, y);
-            ev.searchLimit = ancien;
-        }
-        if (d > 0) { ev.moveStraight(d); }
-        else { ev.moveTowardCharacter({ x: x, y: y, isMoving: function () { return false; } }); }
-        if (!ev.isMovementSucceeded()) { ev._vieAttente = 3 + Math.randomInt(5); }
+        if (ev.x === x && ev.y === y) { ev._vie.vers = null; return; }
+        ev._vie.vers = { x: x, y: y };
     }
+    // un pas, s'il a où aller : à chaque image, dès que le pas d'avant est fini
+    function avancer(ev) {
+        var v = ev._vie, c = v && v.vers;
+        if (!c || ev.isMoving() || v.dedans || ev._vieScene > 0 || ev._pauseConversation > 0 || ev.isMoveRouteForcing() || enPassage(ev)) return;
+        if (ev.x === c.x && ev.y === c.y) { v.vers = null; return; }
+        var m = v.marche || (v.marche = {});
+        if (m.attente > 0) { m.attente--; return; }
+        // à une case du but, et quelqu'un s'y tient : il est arrivé, il ne le bouscule pas
+        if (dist(ev, c) === 1 && (m.bloque || 0) >= 3) { v.vers = null; v.presque = { x: c.x, y: c.y }; m.bloque = 0; return; }
+        // sa case de la place est prise depuis longtemps : il en prend une autre, libre, près de lui
+        if (v.but === 'place' && (m.bloque || 0) >= 8 && v.cases && c.x === v.place.x && c.y === v.place.y) {
+            var autres = v.cases.filter(function (k) { return libreA(k.x, k.y, ev); }).sort(function (a, b) { return dist(a, ev) - dist(b, ev); });
+            if (autres.length) { v.place = autres[0]; v.vers = { x: autres[0].x, y: autres[0].y }; m.bloque = 0; return; }
+        }
+        if (window.Habitants && Habitants.pas) { Habitants.pas(ev, c.x, c.y, m); return; }
+        var d = ev.findDirectionTo(c.x, c.y);
+        if (d > 0) ev.moveStraight(d);
+        if (!ev.isMovementSucceeded()) m.attente = 20;
+    }
+    // il est arrivé : à sa case comme JOKO l'a posé, ou vers ce qu'il regarde ; et de temps en
+    // temps il tourne la tête, puis revient. Il ne fait pas un pas.
+    function seTenir(ev, v, dir) {
+        if (ev._vieRegarde) return;
+        if (v.regardeAilleurs > 0) { if (--v.regardeAilleurs === 0) ev.setDirection(dir); return; }
+        if (ev.direction() !== dir && !v.tourne) ev.setDirection(dir);
+        v.tourne = false;
+        if ((v.repos = (v.repos === undefined ? 40 + Math.randomInt(120) : v.repos) - 1) > 0) return;
+        v.repos = 80 + Math.randomInt(160);
+        var cotes = (dir === 2 || dir === 8) ? [4, 6] : [2, 8];
+        ev.setDirection(cotes[Math.randomInt(2)]);
+        v.regardeAilleurs = 15 + Math.randomInt(20);
+        v.tourne = true;
+    }
+    function versLe(de, a) {
+        var dx = a.x - de.x, dy = a.y - de.y;
+        if (!dx && !dy) return 0;
+        return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 6 : 4) : (dy > 0 ? 2 : 8);
+    }
+    function libreA(x, y, ev) {
+        return $gameMap.isValid(x, y) && !($gamePlayer.x === x && $gamePlayer.y === y) &&
+            !$gameMap.eventsXyNt(x, y).some(function (e) { return e !== ev && e.isNormalPriority(); }) &&
+            [2, 4, 6, 8].some(function (d) { return $gameMap.isPassable(x, y, d); });
+    }
+    function estArrive(ev, v, c) { return dist(ev, c) === 0 || (v.presque && v.presque.x === c.x && v.presque.y === c.y && dist(ev, c) <= 1); }
 
     function agendaDe(v, h) {
         var r = null;
@@ -431,6 +500,7 @@
         // ⚠ Un PNJ à qui l'on parle, ou qu'une scène retient, ne s'en va pas.
         if (ev._pauseConversation > 0 || ev._vieScene > 0 || ev.isMoveRouteForcing()) { return; }
         if (enPassage(ev)) { return; }
+        v.vers = null;
         var pluie = ilPleut();
         // sous l'averse on court ; sinon le pas normal (à 3 ils traînaient)
         ev.setMoveSpeed(pluie && v.metier !== 'garde' && v.metier !== 'comptoir' && v.metier !== 'client' ? 5 : 4);
@@ -443,11 +513,12 @@
         v.but = but.lieu;
         if (but.lieu === 'ronde' && v.ronde) {
             cible = v.ronde[v.iRonde % v.ronde.length];
-            if (dist(ev, cible) <= 0) {
+            // arrivé, ou juste à côté parce que quelqu'un s'y tient : il ne l'attend pas, il continue sa ronde
+            if (estArrive(ev, v, cible)) {
                 // arrivé : il regarde un peu autour, puis repart vers le point suivant
                 if (!v.attenteRonde) v.attenteRonde = 30 + Math.randomInt(40);
-                if (--v.attenteRonde <= 0) { v.attenteRonde = 0; v.iRonde++; }
-                else if (Math.random() < 0.08) ev.setDirection([2, 4, 6, 8][Math.randomInt(4)]);
+                if (--v.attenteRonde <= 0) { v.attenteRonde = 0; v.iRonde++; v.presque = null; }
+                else if (Math.random() < 0.03 && !ev._vieRegarde) ev.setDirection([2, 4, 6, 8][Math.randomInt(4)]);
                 return;
             }
         }
@@ -469,6 +540,19 @@
             }
         }
 
+        // ── on arrive sur la carte : chacun est déjà où sa journée le met (comme dans Stardew Valley).
+        //    Avant, tout le monde repartait de la case de l'éditeur et traversait la ville sous nos yeux.
+        if (v.premier) {
+            v.premier = false;
+            if (but.dedans) { cacher(ev, v, cible); return; }
+            if (dist(ev, cible) > 1 && but.lieu !== 'ronde' && libreA(cible.x, cible.y, ev)) { ev.locate(cible.x, cible.y); }
+            // posé par JOKO dans un recoin du décor d'où l'on ne sort pas (Tobias, au bord de la Ville) : s'il doit
+            // aller ailleurs, il commence sur la case praticable la plus proche (personne ne le voit, on arrive)
+            else if (dist(ev, cible) > 1 && window.Habitants && Habitants.atteint && !Habitants.atteint(ev, cible.x, cible.y)) {
+                var sortie = casePraticable({ x: ev.x, y: ev.y });
+                if (sortie.x !== ev.x || sortie.y !== ev.y) ev.locate(sortie.x, sortie.y);
+            }
+        }
         // ── entrer et sortir ──
         // ⚠ On ne se tient JAMAIS sur la case d'une porte : être devant, c'est être rentré.
         var surLePas = dist(ev, cible) <= 1;
@@ -481,17 +565,22 @@
         }
         if (v.dedans) { return; }      // il dort, on ne le dérange pas
 
-        // ── arrivé : il flâne un peu, il ne se fige pas ──
-        var d = dist(ev, cible);
-        if (d === 0) {
-            if (but.lieu === 'poste' && v.metier === 'garde') { if (ev.direction() !== v.dirPoste && !ev._vieRegarde) ev.setDirection(v.dirPoste); return; }
-            if (FLANERIE > 0 && Math.random() < 0.25) { ev.moveRandom(); }
+        // ── arrivé : il se tient là, tourné du bon côté (v2.1 : il ne piétine plus) ──
+        if (estArrive(ev, v, cible)) {
+            var dir = but.lieu === 'place' ? (versLe(ev, v.milieu || cible) || v.dirPoste) : v.dirPoste;
+            if (but.lieu === 'place' && v.metier === 'garde') dir = ev.direction();       // la ronde de nuit : il regarde où il va
+            seTenir(ev, v, dir);
+            // le soir, sur la place, il change parfois de place (quelques cases, jamais au hasard)
+            if (but.lieu === 'place' && FLANERIE > 0 && v.metier !== 'garde' && heure() >= 18 && v.cases && v.cases.length > 1) {
+                if ((v.promenade = (v.promenade === undefined ? 300 + Math.randomInt(600) : v.promenade) - 1) <= 0) {
+                    v.promenade = 500 + Math.randomInt(700);
+                    var proches = v.cases.filter(function (c) { return dist(c, v.place) <= FLANERIE + 2 && !$gameMap.eventsXy(c.x, c.y).length; });
+                    if (proches.length) { v.place = proches[Math.randomInt(proches.length)]; v.presque = null; }
+                }
+            }
             return;
         }
-        if (d <= FLANERIE && but.lieu !== 'logis' && but.lieu !== 'ronde' && v.metier !== 'garde') {
-            if (Math.random() < 0.35) { ev.moveRandom(); }
-            return;
-        }
+        v.presque = null;
         unPasVers(ev, cible.x, cible.y);
     }
 
@@ -518,46 +607,50 @@
     function derriereLeComptoir(ev, v) {
         var proche = $gameMap.mapId() && dist($gameplayerPos(), v.poste) <= 4;
         if (proche || !v.course) {
-            if (dist(ev, v.poste) > 0) { unPasVers(ev, v.poste.x, v.poste.y); return; }
+            if (!estArrive(ev, v, v.poste)) { v.course = null; unPasVers(ev, v.poste.x, v.poste.y); return; }
             // à sa place : face au comptoir, prêt à servir
-            if (proche) { if (!ev._vieRegarde && ev.direction() !== v.dirPoste) ev.setDirection(v.dirPoste); v.course = null; v.attente = 120; return; }
-            if ((v.attente = (v.attente || 0) - 1) > 0) return;
+            if (proche) { if (!ev._vieRegarde && ev.direction() !== v.dirPoste) ev.setDirection(v.dirPoste); v.course = null; v.attente = 150; return; }
+            seTenir(ev, v, v.dirPoste);
+            // v2.1 : il va voir ses étagères de temps en temps (toutes les 15 à 40 s), pas sans arrêt
+            if ((v.attente = (v.attente === undefined ? 100 + Math.randomInt(200) : v.attente) - 1) > 0) return;
             var coin = coinDuMarchand(v);
-            if (coin.length > 1 && Math.random() < 0.5) { v.course = coin[1 + Math.randomInt(coin.length - 1)]; v.resteLa = 30 + Math.randomInt(50); }
-            else { v.attente = 40 + Math.randomInt(60); }
+            v.attente = 150 + Math.randomInt(250);
+            if (coin.length > 1 && Math.random() < 0.4) { v.course = coin[1 + Math.randomInt(coin.length - 1)]; v.resteLa = 40 + Math.randomInt(50); }
             return;
         }
         var c = v.course;
-        if (dist(ev, c) > 0) { unPasVers(ev, c.x, c.y); return; }
-        if (v.resteLa === 30 || v.resteLa === 60) ev.setDirection(8);                  // ses étagères
-        if (--v.resteLa <= 0) { v.course = null; v.attente = 60 + Math.randomInt(120); }
+        if (!estArrive(ev, v, c)) { unPasVers(ev, c.x, c.y); return; }
+        if (v.resteLa === 40) ev.setDirection(8);                                       // ses étagères
+        if (--v.resteLa <= 0) { v.course = null; v.presque = null; }
     }
     function $gameplayerPos() { return { x: $gamePlayer.x, y: $gamePlayer.y }; }
+    // un coin du comptoir n'accueille qu'un client à la fois
+    function lieuPris(l) { var p = $gameMap._vieLieux; return !!(p && p[l.x + ',' + l.y]); }
+    function lacher(v) { var c = v.course; if (c && $gameMap._vieLieux) delete $gameMap._vieLieux[c.x + ',' + c.y]; v.course = null; v.resteLa = null; v.presque = null; }
     function aSaPlace(ev, v) {
         // une course en cours : y aller, y rester, revenir
         if (v.course) {
             var c = v.course;
             if (v.resteLa === undefined || v.resteLa === null) {
-                if (dist(ev, c) <= (c.sorte === 'air' ? 1 : 0)) { v.resteLa = 30 + Math.randomInt(60); if (c.sorte === 'air') ev.setOpacity(0); else ev.setDirection(8); return; }
-                if ((v.tCourse = (v.tCourse || 0) + 1) > 120) { v.course = null; v.resteLa = null; return; }   // trop loin, trop bloqué : il renonce
+                if (dist(ev, c) <= (c.sorte === 'air' ? 1 : 0) || estArrive(ev, v, c)) { v.resteLa = 40 + Math.randomInt(60); if (c.sorte === 'air') ev.setOpacity(0); else ev.setDirection(8); return; }
+                if ((v.tCourse = (v.tCourse || 0) + 1) > 150) { lacher(v); return; }   // trop loin, trop bloqué : il renonce
                 unPasVers(ev, c.x, c.y); return;
             }
             if (--v.resteLa > 0) return;
             if (c.sorte === 'air') ev.setOpacity(255);
-            v.course = null; v.resteLa = null; v.retour = true;
+            lacher(v); v.retour = true;
             return;
         }
-        if (dist(ev, v.poste) > 0) {
-            if (v.metier === 'visiteur' && !v.retour && dist(ev, v.poste) <= 1) { if (Math.random() < 0.15) ev.moveRandom(); return; }
-            unPasVers(ev, v.poste.x, v.poste.y); return;
-        }
-        if (v.retour) { v.retour = false; ev.setDirection(v.dirPoste || ev.event().pages[0].image.direction || 2); }
-        // de temps en temps, une course (le comptoir, les étagères, l'air)
-        if ((v.attente = (v.attente === undefined ? 300 + Math.randomInt(600) : v.attente) - 1) > 0) return;
-        v.attente = 400 + Math.randomInt(900);
-        var lieux = LIEUX[$gameMap.mapId()] || [];
-        if (!lieux.length || v.metier === 'visiteur' || Math.random() < 0.4) return;
+        if (!estArrive(ev, v, v.poste)) { unPasVers(ev, v.poste.x, v.poste.y); return; }
+        if (v.retour) { v.retour = false; v.presque = null; }
+        seTenir(ev, v, v.dirPoste || 2);
+        // de temps en temps (une à quatre minutes), une course : le comptoir, les étagères, l'air
+        if ((v.attente = (v.attente === undefined ? 600 + Math.randomInt(1200) : v.attente) - 1) > 0) return;
+        v.attente = 900 + Math.randomInt(1500);
+        var lieux = (LIEUX[$gameMap.mapId()] || []).filter(function (l) { return !lieuPris(l); });
+        if (!lieux.length || v.metier === 'visiteur' || Math.random() < 0.5) return;
         v.course = lieux[Math.randomInt(lieux.length)]; v.tCourse = 0; v.resteLa = null;
+        ($gameMap._vieLieux = $gameMap._vieLieux || {})[v.course.x + ',' + v.course.y] = ev.eventId();
     }
 
     /* ── ils te voient ─────────────────────────────────────────────────── */
@@ -639,7 +732,7 @@
     //   chaque carte chargée.
     var _charge = Scene_Map.prototype.onMapLoaded;
     Scene_Map.prototype.onMapLoaded = function () {
-        if ($gameMap) { $gameMap._vieRecensee = false; $gameMap._vieAvecCopies = false; }
+        if ($gameMap) { $gameMap._vieRecensee = false; $gameMap._vieAvecCopies = false; $gameMap._vieLieux = {}; }
         _charge.call(this);
         // une scène en cours au moment de la sauvegarde : son arrêt n'a plus de sens
         if ($gameMap) { $gameMap.events().forEach(function (e) { if (e) e._vieScene = 0; }); }
@@ -673,6 +766,8 @@
         ecarter();
         if (this._vieT % 20 === 0) { regarder(liste); }
         if (this._vieT % 150 === 0) { signes(); }
+        // le pas suit le pas : à chaque image, ceux qui ont fini le leur repartent
+        liste.forEach(function (ev) { if (ev && !ev._erased) avancer(ev); });
         if (this._vieT % PAS !== 0 || !liste.length) { return; }
         // On passe sur TOUS les PNJ, mais on ne calcule un chemin que pour ceux
         // qui ont fini leur pas (v1 : un seul par tour de rôle, et personne

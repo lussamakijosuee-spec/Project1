@@ -301,7 +301,7 @@ window.Habitants = Habitants;
     //   « ramait parfois ». Désormais : trois recherches par image au plus pour
     //   toute la carte, une attente quand on est bloqué, puis un pas de côté,
     //   et les arrivées sont étalées sur quelques secondes.
-    var BUDGET = 3;
+    var BUDGET = 3;           // des cartes des distances neuves par image (les pas eux-mêmes ne comptent plus)
 
     /* Le chemin : une carte des distances (parcours en largeur) calculée UNE
      * fois par destination et par carte, sur les cases praticables. Chacun
@@ -381,20 +381,87 @@ window.Habitants = Habitants;
     }
     Habitants.directionVers = directionVers;
 
+    /* Un pas, comme quelqu'un qui marche (2026-10-30, JOKO : « le plus gros
+     * problème c'est la marche, ils font n'importe quoi ») : jamais au hasard.
+     *   · la case qui rapproche, libre — et tout droit si c'est aussi court
+     *     (sinon il zigzague d'une case sur l'autre) ;
+     *   · quelqu'un devant : il attend un peu ; s'il est encore là, il le
+     *     contourne par le côté (une case qui n'éloigne pas), jamais en revenant
+     *     sur ses pas ;
+     *   · la recherche coûteuse (une carte des distances) se fait au plus
+     *     BUDGET fois par image ; les pas eux-mêmes ne coûtent rien.
+     * m : sa mémoire de marche { bloque, avant, attente }. Rend vrai s'il avance. */
+    function pas(ev, x, y, m) {
+        if (m.fantome) { m.fantome = false; ev.setThrough(false); }
+        var cache = $gameMap._habDistances;
+        if (!(cache && cache[x + ',' + y]) || !$gameMap._habDecorAJour) {
+            if ($gameMap._habBudget <= 0) return false;
+            $gameMap._habBudget--;
+        }
+        var dist = distances(x, y), w = $gameMap.width(), ici = dist[ev.y * w + ev.x];
+        var loin = ici < 0;
+        if (loin) ici = 1e9;
+        var vers = [], cote = [], detour = [], recents = m.recents || (m.recents = []);
+        [2, 4, 6, 8].forEach(function (d) {
+            var nx = ev.x + DX[d], ny = ev.y + DY[d];
+            if (!$gameMap.isValid(nx, ny)) return;
+            var v = dist[ny * w + nx];
+            if (v < 0) return;
+            var k = nx + ',' + ny, libre = ev.canPass(ev.x, ev.y, d), recent = recents.indexOf(k) >= 0;
+            if (v < ici) vers.push({ d: d, v: v, libre: libre && !recent, k: k });
+            else if (v === ici && libre && !recent) cote.push({ d: d, v: v, k: k });
+            else if (v === ici + 1 && libre && !recent) detour.push({ d: d, v: v, k: k });
+        });
+        function faire(c) {
+            recents.push(ev.x + ',' + ev.y); if (recents.length > 5) recents.shift();
+            m.avant = ev.x + ',' + ev.y;
+            ev.moveStraight(c.d);
+            return ev.isMovementSucceeded();
+        }
+        var bons = vers.filter(function (c) { return c.libre; });
+        if (bons.length) {
+            var min = Math.min.apply(null, bons.map(function (c) { return c.v; }));
+            var choix = bons.filter(function (c) { return c.v === min; });
+            var tout = choix.filter(function (c) { return c.d === ev.direction(); })[0] || choix[0];
+            if (faire(tout)) { if (m.bloque > 0) m.bloque--; if (!m.bloque) recents.length = 0; return true; }
+        }
+        // ⚠ posé dans un mur (une guérite, le pilier d'une porte : JOKO y met ses gardes) — il n'est pas sur
+        //   la carte des distances et ne peut sortir d'aucun côté : il en sort d'un pas, comme on passe une
+        //   porte, vers la case praticable la plus proche du but
+        if (loin) {
+            var sorties = [2, 4, 6, 8].map(function (d) { var nx = ev.x + DX[d], ny = ev.y + DY[d]; return { d: d, v: $gameMap.isValid(nx, ny) ? dist[ny * w + nx] : -1, nx: nx, ny: ny }; })
+                .filter(function (c) { return c.v >= 0 && !$gameMap.eventsXyNt(c.nx, c.ny).some(function (e) { return e.isNormalPriority() && e !== ev; }) && !($gamePlayer.x === c.nx && $gamePlayer.y === c.ny); })
+                .sort(function (a, b) { return a.v - b.v; });
+            if (sorties.length) { ev.setThrough(true); ev.moveStraight(sorties[0].d); m.fantome = true; return true; }
+        }
+        m.bloque = (m.bloque || 0) + 1;
+        // le joueur se tient dans le passage (souvent la porte) : un instant, puis il se faufile à côté de lui
+        if (m.bloque >= 2) {
+            var joueur = vers.filter(function (c) { return !c.libre && c.k === $gamePlayer.x + ',' + $gamePlayer.y; })[0];
+            if (joueur) { ev.setThrough(true); ev.moveStraight(joueur.d); m.fantome = true; m.avant = ev.x + ',' + ev.y; return true; }
+        }
+        // quelqu'un devant : d'abord un pas de côté qui n'éloigne pas ; s'il attend depuis longtemps, un
+        // vrai détour (une case de plus), sans revenir sur les cases qu'il vient de quitter
+        if (m.bloque >= 3 && cote.length && faire(cote[0])) return true;
+        if (m.bloque >= 6 && detour.length && faire(detour[0])) return true;
+        m.attente = 18 + Math.randomInt(18);          // il attend que ça passe, comme on attend
+        return false;
+    }
+    Habitants.pas = pas;
+    // peut-il marcher d'ici jusque-là ? (sa case est-elle sur la carte des distances du but)
+    Habitants.atteint = function (ev, x, y) { return distances(x, y)[ev.y * $gameMap.width() + ev.x] >= 0; };
+    // le joueur le voit-il ? (une téléportation ne se fait jamais sous ses yeux)
+    function aLEcran(ev) {
+        var x = $gameMap.adjustX(ev._realX), y = $gameMap.adjustY(ev._realY);
+        return x > -1 && y > -1 && x < $gameMap.screenTileX() + 1 && y < $gameMap.screenTileY() + 1;
+    }
+    Habitants.aLEcran = aLEcran;
+
     function pasVers(ev, b) {
-        if ($gameMap._habBudget <= 0) return;
-        $gameMap._habBudget--;
         // sous l'averse, on court se mettre à l'abri (v1.3)
         var pluie = $gameScreen && ($gameScreen.weatherType() === 'rain' || $gameScreen.weatherType() === 'storm');
         ev.setMoveSpeed(pluie ? 5 : 4);
-        var d = directionVers(ev, b.x, b.y);
-        if (d > 0) {
-            ev.moveStraight(d);
-            if (ev.isMovementSucceeded()) { b.bloque = 0; return; }
-        }
-        b.bloque = (b.bloque || 0) + 1;
-        if (b.bloque >= 3) { ev.moveRandom(); b.bloque = 0; }
-        b.attente = 12 + Math.randomInt(24);
+        pas(ev, b.x, b.y, b);
     }
     function onLuiParle(ev) {
         return $gameMap._interpreter && $gameMap._interpreter.isRunning() && $gameMap._interpreter.eventId() === ev.eventId();
@@ -441,11 +508,17 @@ window.Habitants = Habitants;
         b.t += 1;                                  // en temps réel, même pendant les pas
         // un voyageur qui traverse la ville a plus loin à aller qu'un habitué qui entre au bar
         var limite = this._visite ? LIMITE * 4 : LIMITE;
+        // ⚠ 2026-10-30 : sous les yeux du joueur, on ne « passe » pas d'un coup : il continue de marcher
+        //   (au plus quatre fois plus longtemps) ; hors de l'écran, personne ne voit le raccourci
+        if (b.t > limite && b.t <= limite * 4 && aLEcran(this)) limite = b.t + 1;
         if (this.isMoving() && b.t <= limite) return;
         // partir : être à côté de la sortie suffit (le joueur se tient souvent devant la porte)
         var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) <= 1 : (this.x === b.x && this.y === b.y);
+        // arriver : à une case de sa place, si quelqu'un s'y tient, c'est arrivé
+        if (!arrive && this._habArrivee && Math.abs(this.x - b.x) + Math.abs(this.y - b.y) === 1 && (b.bloque || 0) >= 3) arrive = true;
         if (arrive || b.t > limite) {
             this._moveType = this._habMove;
+            if (b.fantome) { b.fantome = false; this.setThrough(false); }      // il s'était faufilé : il redevient solide
             if (this._habDepart) { this._habDepart = null; _refresh.call(this); }
             else { if (!arrive) this.locate(b.x, b.y); this.setDirection(b.dir); this._habArrivee = null; }
             return;
