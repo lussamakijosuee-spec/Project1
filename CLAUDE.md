@@ -259,7 +259,7 @@ décrit le personnage *« comme Megumi ou Shikamaru […] Orochimaru […] beauc
 autres »* — un stratège, pas le plus fort. **Gagner** (variable 15, compteur ✦ Âmes = état 247) :
 +1 par mort (PorteurDAmes ; +1 de plus quand c'est lui qui tue, LouCopySystem), +2 si le mort était
 **👁 Marqué** (213), +1 par drain à lui qui touche (+1 sur un Marqué) ; la technique d'un Marqué est
-copiée dès la première fois. **Dépenser** : invocations (type 8, ouvert sur la classe 3) ; la branche
+copiée dès la première fois. **Dépenser** : invocations (type 8 — JOKO l'a retiré de la classe 3 le 2026-10-29, voulu : elles ne sont plus dans son menu) ; la branche
 **Copies** (type 26, en combat, seulement s'il a des copies) — 2 âmes, ni PM ni PT, consommée,
 et **« à sa mesure »** (JOKO : *« chaque copie frappe 50 % de son Ombre — Nuit, avec l'élément et les
 effets de la technique volée »* ; réglages `puissanceCopie`, `referenceCopie` 1224 — Copie d'Âme, au
@@ -776,6 +776,9 @@ dans la troupe 33 : le banc attend encore Dono — à JOKO de dire où vit le du
   dans sa séquence par défaut) : un ennemi tué reste à 0 PV sans `isDead()` jusqu'à la fin du coup. Un
   code qui compte une mise à mort dans `executeDamage` doit lire « 0 PV et immortel » (PorteurDAmes et
   le Marqué de LeRegistre ne comptaient jamais l'âme d'une mise à mort — corrigé le 2026-10-22) ;
+- **supprimer une carte dans l'éditeur supprime toutes ses cartes filles** : le 2026-10-29, l'ancienne Forêt Perdue
+  (35) a emporté ses 11 filles (le Village Montagnard et ses 3 quêtes, la Forteresse…) — voulu, d'après JOKO ;
+  une carte qu'on garde se déplace d'abord sous une autre ;
 - un banc qui saisit les commandes lui-même doit passer par les fenêtres (`commandAttack`,
   `onSelectAction`, `onEnemyOk`) : tant qu'une fenêtre de commande reste active, Scene_Battle
   n'appelle plus `BattleManager.update` et le combat se fige sans erreur.

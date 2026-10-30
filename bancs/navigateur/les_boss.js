@@ -99,7 +99,9 @@ var CAPT = path.join(__dirname, 'captures');
     };
   });
   console.log('\n— Chargement');
-  v('27 mécaniques déclarées, 27 boss reliés', base.defs === 27 && base.table === 27, base.defs + ' / ' + base.table);
+  // la Veuve (797) et l'Errant (796) sont devenus les deux mains du Percepteur (JOKO, 2026-10-29) : leurs
+  // mécaniques restent écrites, mais plus aucun ennemi ne les porte
+  v('27 mécaniques déclarées, 25 boss reliés', base.defs === 27 && base.table === 25, base.defs + ' / ' + base.table);
   v('chaque boss de la table est un <Boss> et a sa mécanique', base.tousBoss && base.sansDef.length === 0, base.sansDef.join(','));
   v('la barre du boss et le bandeau existent dans la scène', base.barre && base.bandeau);
   v('la carte-titre annonce le boss', /GARGAL|déjà/.test(base.titre), base.titre);
@@ -137,14 +139,14 @@ var CAPT = path.join(__dirname, 'captures');
 
   var r2 = await page.evaluate(function () {
     function seuil(troupe) { var b = __troupe(troupe), c = __competences(b); __jouer(b, c.tele); return b._ruptureSeuil / b.mhp; }
-    return { gargal: seuil(519), fournaise: seuil(523), veuve: seuil(528), glace: seuil(537), vhaal: seuil(525), immobile: seuil(541) };
+    return { gargal: seuil(519), fournaise: seuil(523), glace: seuil(537), vhaal: seuil(525), immobile: seuil(541) };
   });
-  v('Fournaise, la Veuve, Grande Glace : insécables, comme leur texte le dit', r2.fournaise === 0 && r2.veuve === 0 && r2.glace === 0);
+  v('Fournaise, Grande Glace : insécables, comme leur texte le dit', r2.fournaise === 0 && r2.glace === 0);
   v('Vhaal, « la ligne qui n\'a jamais cédé » : deux fois plus dur', Math.abs(r2.vhaal / r2.gargal - 2) < 0.01, (r2.vhaal / r2.gargal).toFixed(2));
   v('le Grand Immobile, « un tour, un seul » : deux fois plus facile', Math.abs(r2.immobile / r2.gargal - 0.5) < 0.01, (r2.immobile / r2.gargal).toFixed(2));
 
   // ═════════ 2 · les 27, joués
-  console.log('\n— Les 27 mécaniques, mise en garde puis frappe');
+  console.log('\n— Les 25 mécaniques reliées, mise en garde puis frappe');
   var r3 = await page.evaluate(function () {
     var out = [];
     Object.keys(MecaBoss.table).map(Number).forEach(function (eid) {
@@ -152,6 +154,11 @@ var CAPT = path.join(__dirname, 'captures');
       for (var i = 1; i < $dataTroops.length; i++) {
         var t = $dataTroops[i];
         if (t && t.members.length === 1 && t.members[0].enemyId === eid) { troupe = i; break; }
+      }
+      // un boss qui vient avec d'autres (le Percepteur et ses deux mains) : sa troupe ◈, lui en tête
+      for (var j = 1; !troupe && j < $dataTroops.length; j++) {
+        var u = $dataTroops[j];
+        if (u && /◈/.test(u.name) && u.members.length && u.members[0].enemyId === eid) { troupe = j; }
       }
       var ligne = { eid: eid, cle: MecaBoss.table[eid] };
       try {
@@ -171,9 +178,9 @@ var CAPT = path.join(__dirname, 'captures');
     return out;
   });
   var plantes = r3.filter(function (l) { return l.erreur; });
-  v('les 27 jouent mise en garde → action d\'un héros → frappe, sans planter', plantes.length === 0, plantes.map(function (l) { return l.eid + ' ' + l.erreur; }).join(' ; '));
+  v('les 25 jouent mise en garde → action d\'un héros → frappe, sans planter', plantes.length === 0, plantes.map(function (l) { return l.eid + ' ' + l.erreur; }).join(' ; '));
   var muets = r3.filter(function (l) { return !l.barre; });
-  v('pendant la charge, les 27 disent quelque chose dans la barre', muets.length === 0, muets.map(function (l) { return l.cle; }).join(','));
+  v('pendant la charge, les 25 disent quelque chose dans la barre', muets.length === 0, muets.map(function (l) { return l.cle; }).join(','));
   r3.forEach(function (l) { console.log('        ' + (l.cle + '          ').slice(0, 11) + '│ ' + l.barre); });
 
   // ═════════ 3 · mesures, avec contre-épreuve
@@ -185,12 +192,6 @@ var CAPT = path.join(__dirname, 'captures');
     b._flair = h[0]; var avec = __mesure(b, c.frappe, h[0]);
     b._flair = h[1]; var sans = __mesure(b, c.frappe, h[0]);
     R.flair = avec / sans;
-    // la Veuve : a pris la main ×2, sinon ×0,6
-    b = __troupe(528); c = __competences(b); __jouer(b, c.tele);
-    __jouer(H()[0], H()[0].attackSkillId(), b);
-    R.mainPrise = b._mains.length === 1 && b._mains[0] === H()[0];
-    R.main = __mesure(b, c.frappe, H()[0]) / __mesure(b, c.frappe, H()[1]) *
-             (function () { b._mains = []; var x = __mesure(b, c.frappe, H()[1]) / __mesure(b, c.frappe, H()[0]); return x; })();
     // Dynamo : qui a bougé prend ×0,5, qui est resté ×1,5
     b = __troupe(543); c = __competences(b); __jouer(b, c.tele);
     __jouer(H()[0], H()[0].attackSkillId(), b);
@@ -258,8 +259,6 @@ var CAPT = path.join(__dirname, 'captures');
     return R;
   });
   v('Gargal : l\'odeur rend la Curée ×1,5 sur elle et ×0,7 ailleurs', Math.abs(r4.flair - 1.5 / 0.7) < 0.03, r4.flair.toFixed(3) + ' (attendu ' + (1.5 / 0.7).toFixed(3) + ')');
-  v('la Veuve : frapper pendant sa charge, c\'est « prendre la main »', r4.mainPrise);
-  v('la Veuve : main prise ×2, main refusée ×0,6', Math.abs(r4.main - 2 / 0.6) < 0.05, r4.main.toFixed(3));
   v('Dynamo : « Bouge. » — qui agit prend ×0,5, qui reste ×1,5', Math.abs(r4.bouge - 1 / 3) < 0.01, r4.bouge.toFixed(3));
   v('la Cantatrice : la magie se tait pendant la charge, pas le corps, et revient après', r4.scelle === true && r4.corps === true && r4.rendu === true, JSON.stringify([r4.scelle, r4.corps, r4.rendu]));
   v('le Sans-Prix : le mauvais élément ne passe qu\'à 15 %', Math.abs(r4.interstice.mauvais - 0.15) < 0.01, r4.interstice.mauvais.toFixed(3));
@@ -291,7 +290,8 @@ var CAPT = path.join(__dirname, 'captures');
     catch (e) { R.anim = e.message; }
     // un objet et une compétence de même numéro ne se confondent plus
     R.cles = Object.keys(b._mSkills).join(',');
-    // Radahn : sous 30 %, la pluie s'annonce puis tombe
+    // Radahn : sous 30 %, la pluie s'annonce puis tombe (s'il la connaît encore)
+    R.meteores = b.enemy().actions.some(function (a) { return a.skillId === 436; });
     b.setHp(Math.floor(b.mhp * 0.25));
     $gameTroop._turnCount = 10; b.makeActions();
     R.annonce = !!b._radahnMeteor;
@@ -327,8 +327,13 @@ var CAPT = path.join(__dirname, 'captures');
   v('Mahoraga s\'adapte à un état que le groupe lui inflige deux fois', r5.adapte);
   v('l\'animation d\'adaptation part sans planter (requestAnimation n\'existait pas)', r5.anim === true, String(r5.anim));
   v('la Roue range les techniques par clé', r5.cles.length > 0, r5.cles);
-  v('Radahn : sous 30 %, la pluie de météores s\'annonce', r5.annonce);
-  v('Radahn : au tour suivant elle TOMBE, puis revient tous les 3 tours', r5.pluie === 436 && r5.pasEncore !== 436 && r5.encore === 436, [r5.pluie, r5.pasEncore, r5.encore].join(' → '));
+  if (r5.meteores) {
+    v('Radahn : sous 30 %, la pluie de météores s\'annonce', r5.annonce);
+    v('Radahn : au tour suivant elle TOMBE, puis revient tous les 3 tours', r5.pluie === 436 && r5.pasEncore !== 436 && r5.encore === 436, [r5.pluie, r5.pasEncore, r5.encore].join(' → '));
+  } else {
+    // JOKO lui a donné un autre jeu (2026-10-29) : plus de météores, donc plus d'annonce qui promet le ciel
+    v('Radahn sans ses météores : sous 30 %, rien ne s\'annonce', !r5.annonce);
+  }
   v('Dono et son Esprit sont dans la troupe 33', r5.duo);
   v('l\'Esprit abattu ne renaît pas à la fin du même tour', r5.memeTour === true);
   v('… il renaît au tour suivant, et l\'œil éteint le reste', r5.tourSuivant === true && r5.oeil === true);
@@ -337,7 +342,7 @@ var CAPT = path.join(__dirname, 'captures');
 
   // ═════════ 5 · la barre, à l'écran
   await page.evaluate(function () {
-    var b = __troupe(528); var c = __competences(b);
+    var b = __troupe(519); var c = __competences(b);
     SceneManager._scene._spriteset.createEnemies && SceneManager._scene._spriteset.createEnemies();
     __jouer(b, c.tele);
     __jouer($gameParty.aliveMembers()[0], $gameParty.aliveMembers()[0].attackSkillId(), b);

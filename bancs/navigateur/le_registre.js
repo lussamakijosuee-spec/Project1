@@ -132,7 +132,9 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         l.paySkillCost($dataSkills[124]); r.apres = __ames();
         return r;
     });
-    v('la branche « invocation » est dans son menu, dès le début', inv.branche);
+    // JOKO a retiré la branche « invocation » de sa classe le 2026-10-29, et c'était voulu (2026-10-30) :
+    // ses invocations ne sont plus dans son menu ; leur prix en âmes reste juste, ci-dessous
+    v('la branche « invocation » n\'est plus dans son menu (voulu, 2026-10-29)', !inv.branche);
     v('2 âmes : Rappel des Âmes oui, Jugement des Défunts non (3)', inv.a2.rappel && !inv.a2.jugement, JSON.stringify(inv.a2));
     v('3 âmes : Jugement possible, et il les prend', inv.a3 && inv.apres === 0, 'reste ' + inv.apres);
 

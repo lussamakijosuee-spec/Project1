@@ -474,7 +474,9 @@
     var _ma = Game_Enemy.prototype.makeActions;
     Game_Enemy.prototype.makeActions = function () {
         var t = $gameTroop ? $gameTroop.turnCount() : 0;
-        if (isRadahn(this) && !this._radahnMeteor && this.hpRate() <= 0.30) {
+        // l'annonce ne promet que ce qu'il sait faire : sans la Pluie de Météores dans ses actions
+        // (JOKO lui a donné un autre jeu le 2026-10-29), le ciel ne s'annonce pas
+        if (isRadahn(this) && !this._radahnMeteor && this.hpRate() <= 0.30 && connait(this, METEORES)) {
             this._radahnMeteor = true;
             this._radahnProchain = t + 1;
             var sc = SceneManager._scene;

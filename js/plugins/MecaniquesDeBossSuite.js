@@ -10,7 +10,7 @@
  * @param table
  * @text Boss → mécanique
  * @type note
- * @default "788:flair, 789:portee, 790:greffes, 791:gonfle, 792:meche, 793:sol, 794:ligne, 795:liste, 796:silence, 797:main, 798:registre, 799:aspiration, 800:geste, 801:role, 802:souffle, 803:entre, 804:plume, 805:rature, 806:tension, 809:annonce, 810:bras, 811:gel, 812:bouge, 813:vent, 814:tresor, 815:interstice, 816:accepte"
+ * @default "788:flair, 789:portee, 790:greffes, 791:gonfle, 792:meche, 793:sol, 794:ligne, 795:liste, 798:registre, 799:aspiration, 800:geste, 801:role, 802:souffle, 803:entre, 804:plume, 805:rature, 806:tension, 809:annonce, 810:bras, 811:gel, 812:bouge, 813:vent, 814:tresor, 815:interstice, 816:accepte"
  * @desc id d'ennemi : mécanique. On peut aussi poser <MecaBoss: nom> dans la note d'un ennemi.
  *
  * @help

@@ -69,7 +69,7 @@ function ok(nom, cond, detail) {
     var s1 = await ev(function () { return { statut: $gameSystem.questStatus('sortie'), suivie: $gameSystem._queteSuivie, yep: $gameSystem.getQuestsAvailable().length, data: $dataQuests.filter(Boolean).map(function (q) { return q.name; }) }; });
     ok('entrer dans la Caverne ouvre « Sortir de la pierre »', s1.statut === 'active', 'suivie : ' + s1.suivie);
     ok('la quête est dans le journal YEP', s1.yep === 1 && s1.data.some(function (n) { return /Sortir de la pierre/.test(n); }), s1.data.join(' · '));
-    await aller(32); await aller(31);
+    await aller(49); await aller(31);   // la Caverne sort sur le Marécage 49 depuis le 2026-10-23 (JJ)
     var s2 = await ev(function () { var q = $gameSystem.quete('sortie'); return { faits: q.objs.map(function (o) { return o.done; }), statut: q.status }; });
     ok('le Marécage et la Forêt cochent leurs objectifs', s2.faits[0] && s2.faits[1] && !s2.faits[2], JSON.stringify(s2.faits));
     await aller(29);
@@ -104,11 +104,15 @@ function ok(nom, cond, detail) {
     var c1 = await ev(function () { var r1 = parler('barde', 0); var r2 = parler('barde', 1); return { textes: r2.textes.join(' '), erreurs: 0 }; });
     ok('Colin le barde ne plante plus sur questStatus (sans quête : une chanson)', /chanson|Colin/.test(c1.textes), c1.textes.slice(0, 60));
     ok('aucune erreur JavaScript jusqu\'ici', erreurs.length === 0, erreurs.slice(0, 2).join(' | '));
-    await aller(36);
-    var s4 = await ev(function () { var r = parler('Vieille Sarielle', 0); return { st: $gameSystem.questStatus('rumeurs'), objs: $gameSystem.quete('rumeurs') ? $gameSystem.quete('rumeurs').objs.length : 0 }; });
-    ok('Sarielle donne « Les trois rumeurs » avec ses trois objectifs', s4.st === 'active' && s4.objs === 3, s4.objs + ' objectifs');
-    var m1 = await ev(function () { var v = $gameVariables.value(45); var r = parler('EV029', 0); return { avant: v, apres: $gameVariables.value(45), fait: $gameSystem.questObjDone('rumeurs', 1) }; });
-    ok('Marn le fossoyeur livre sa rumeur (variable 45 +1, objectif coché)', m1.apres === m1.avant + 1 && m1.fait);
+    // le Village Montagnard (36) — Sarielle et ses trois rumeurs, Marn le fossoyeur — a été retiré le 2026-10-29 :
+    // tant que la carte n'existe pas, cette partie se dit et se saute
+    if (await ev(function () { return !!$dataMapInfos[36]; })) {
+        await aller(36);
+        var s4 = await ev(function () { var r = parler('Vieille Sarielle', 0); return { st: $gameSystem.questStatus('rumeurs'), objs: $gameSystem.quete('rumeurs') ? $gameSystem.quete('rumeurs').objs.length : 0 }; });
+        ok('Sarielle donne « Les trois rumeurs » avec ses trois objectifs', s4.st === 'active' && s4.objs === 3, s4.objs + ' objectifs');
+        var m1 = await ev(function () { var v = $gameVariables.value(45); var r = parler('EV029', 0); return { avant: v, apres: $gameVariables.value(45), fait: $gameSystem.questObjDone('rumeurs', 1) }; });
+        ok('Marn le fossoyeur livre sa rumeur (variable 45 +1, objectif coché)', m1.apres === m1.avant + 1 && m1.fait);
+    } else { console.log('   ·  la carte 36 (le Village Montagnard) n\'existe plus : Sarielle et Marn sautés'); }
 
     console.log('\n══ LES QUÊTES DE PERSONNAGE ET LA SAUVEGARDE ' + '═'.repeat(31));
     await aller(29);
