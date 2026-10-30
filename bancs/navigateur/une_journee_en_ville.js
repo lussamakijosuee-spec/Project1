@@ -128,7 +128,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
   /* 6. toutes les conversations */
   var total = { pages: 0, ok: 0, erreurs: [] };
   // une carte que JOKO a retirée (le Village Montagnard, 36, le 2026-10-29) se dit et se saute
-  var lesCartes = await page.evaluate(function (l) { return l.filter(function (c) { return !!$dataMapInfos[c]; }); }, [29, 30, 33, 36, 41, 42, 43, 44, 46, 47]);
+  var lesCartes = await page.evaluate(function (l) { return l.filter(function (c) { return !!$dataMapInfos[c]; }); }, [29, 30, 31, 33, 36, 41, 42, 43, 44, 46, 47]);
   if (lesCartes.indexOf(36) < 0) { console.log('  ·  36 : cette carte n\'existe plus, sautée'); }
   for (var carte of lesCartes) {
     await aller(carte, 1, 1);

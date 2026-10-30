@@ -18,6 +18,14 @@
  *
  *   node bancs/outils/poser_les_habitants.js            → contrôle
  *   node bancs/outils/poser_les_habitants.js --ecrire   → écrit les cartes
+ *   … --seulement les_voix_de_la_bible.js                → ne pose que ce lot
+ *     (les autres habitants ne sont pas réécrits : JOKO a pu retoucher leurs
+ *     pages dans l'éditeur)
+ *
+ * Une carte retirée (le Village Montagnard, 36, le 2026-10-29) se dit et se
+ * saute. Une fiche « muet: true » vise une page MUETTE (rien, ou seulement
+ * des commentaires) : elle peut la remplir la première fois ; une page qui
+ * parle sans la marque « ◆ HABITANT » reste à JOKO.
  */
 'use strict';
 var fs = require('fs');
@@ -25,6 +33,7 @@ var path = require('path');
 var RACINE = path.join(__dirname, '..', '..');
 var DATA = path.join(RACINE, 'data');
 var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
+var iSeul = process.argv.indexOf('--seulement'), SEULEMENT = iSeul >= 0 ? process.argv[iSeul + 1] : null;
 var D = require('./recettes/dsl.js');
 var H = require('./habitants/moteur.js');
 var COMMUNS = require('./habitants/_communs.js');
@@ -32,20 +41,23 @@ var A = D.A, C = D.C, si = D.si, cat = D.cat;
 
 // chaque fichier de habitants/ (sauf le moteur) est un lot : { carte, fiches, tableau?, NOMS_SW? }
 var LOTS = fs.readdirSync(path.join(__dirname, 'habitants')).filter(function (x) { return /\.js$/.test(x) && x !== 'moteur.js' && x.charAt(0) !== '_'; }).sort()
+    .filter(function (x) { return !SEULEMENT || x === SEULEMENT; })
     .map(function (x) { return require('./habitants/' + x); });
+if (SEULEMENT && !LOTS.length) { console.log('   ✗ aucun lot « ' + SEULEMENT + ' » dans habitants/'); process.exit(1); }
 var BAR = LOTS.filter(function (l) { return l.carte === 46; })[0];
 var FSNAP = path.join(__dirname, 'habitants', 'originaux.json');
 function fichierCarte(n) { return path.join(DATA, 'Map' + String(n).padStart(3, '0') + '.json'); }
+function existe(n) { return fs.existsSync(fichierCarte(n)); }
 var cartes = {};
 function carteDe(n) { return cartes[n] || (cartes[n] = JSON.parse(fs.readFileSync(fichierCarte(n), 'utf8'))); }
-LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { f.carte = f.carte || lot.carte; carteDe(f.carte); }); });
+LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { f.carte = f.carte || lot.carte; if (existe(f.carte)) { carteDe(f.carte); } }); });
 
 /* ── l'instantané des événements de JOKO : chaque événement est photographié
  *    la PREMIÈRE fois qu'une fiche le vise, puis jamais réécrit ────────── */
 var snap = fs.existsSync(FSNAP) ? JSON.parse(fs.readFileSync(FSNAP, 'utf8')) : {}, nouveauxClichés = 0;
 LOTS.forEach(function (lot) {
     var ids = lot.fiches.map(function (f) { return [f.carte, f.ev]; }).concat(lot.tableau ? [[lot.carte, 49]] : []);
-    ids.forEach(function (x) { var k = x[0] + ':' + x[1], e = carteDe(x[0]).events[x[1]]; if (e && !snap[k]) { snap[k] = JSON.parse(JSON.stringify(e)); nouveauxClichés++; } });
+    ids.filter(function (x) { return existe(x[0]); }).forEach(function (x) { var k = x[0] + ':' + x[1], e = carteDe(x[0]).events[x[1]]; if (e && !snap[k]) { snap[k] = JSON.parse(JSON.stringify(e)); nouveauxClichés++; } });
 });
 if (nouveauxClichés) { fs.writeFileSync(FSNAP, JSON.stringify(snap, null, 1)); console.log('   instantané : ' + nouveauxClichés + ' événement(s) d\'origine photographié(s) dans ' + path.relative(RACINE, FSNAP)); }
 function original(carte, ev) { var e = snap[carte + ':' + ev]; if (!e) throw new Error('pas d\'instantané pour ' + carte + ':' + ev); return e; }
@@ -122,6 +134,7 @@ function controle(nom, liste) {
 var repris = [];
 LOTS.forEach(function (lot) {
     lot.fiches.forEach(function (f) {
+        if (!existe(f.carte)) { repris.push('carte ' + f.carte + ' (' + f.nom + ') : la carte n\'existe plus'); return; }
         var m = carteDe(f.carte), e = m.events[f.ev];
         // ⚠ 2026-10-02 : JOKO a retiré Gaston (carte 29, év. 27) et repris deux
         //   habitants du bar (év. 28 « vesper », év. 48 « colidia »). Un
@@ -130,7 +143,9 @@ LOTS.forEach(function (lot) {
         if (!e) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (' + f.nom + ') : retiré par JOKO'); return; }
         var page = f.page || 1, orig = original(f.carte, f.ev);
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
-        if (!e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
+        // une fiche « muet: true » vise une page qui n'avait encore rien à dire : elle peut la remplir la première fois
+        var muette = f.muet && e.pages[page - 1].list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
+        if (!muette && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
         var fiche = Object.assign({}, f);
         // le temps qu'il fait : sa propre voix, sinon celle de son milieu
         if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
