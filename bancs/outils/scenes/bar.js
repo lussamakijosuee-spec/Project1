@@ -34,5 +34,11 @@ module.exports = { carte: 46, nom: 'BAR', x: 0, y: 0, scenes: [
     { cle: 'colette', nom: 'Colette et le parfait à la fraise', qui: ['29:38'], heures: [18, 21], attente: 90, gestes: [
         ['bulle', '29:38', 4], ['dit', '29:38', '… Un parfait à la fraise. Ne dis rien.']] },
     { cle: 'mado', nom: 'Mado au bar', qui: ['29:41'], heures: [18, 21], attente: 90, gestes: [
-        ['dit', '29:41', 'Une bière ! Et que quelqu\'un rie avec moi, j\'ai lavé toute la journée !']] }
+        ['dit', '29:41', 'Une bière ! Et que quelqu\'un rie avec moi, j\'ai lavé toute la journée !']] },
+    // les nouveaux (2026-10-30, comme des OC) : Barthélemy le conteur (52)
+    { cle: 'conte', nom: 'Barthélemy raconte, la salle se penche', qui: [52], heures: [20, 24], vue: 14, attente: 60, gestes: [
+        ['bulle', 52, 8], ['hasard', [[['dit', 52, '… et c\'est là que le Corps attaqua l\'Âme…']], [['dit', 52, '… le quatrième jour, il devint lui-même une source…']], [['dit', 52, '… la Mère, le Père, et la Fille, qui n\'obéissait à personne…']]]],
+        ['si', 'VieDuVillage.la(18)', [['bulle', 18, 1], ['dit', 18, 'Et après ?!']]], ['si', 'VieDuVillage.la(12)', [['dit', 12, '♪ (une seule note, très basse)']]], ['attend', 40], ['dit', 52, 'Demain. Il faut toujours une fin demain.']] },
+    { cle: 'conte-colin', nom: 'Le conteur et le barde', qui: [52, 12], dist: 6, heures: [19, 23], attente: 120, gestes: [
+        ['face', 52, 12], ['dit', 52, 'Garde la fin, mon garçon. Ne la chante pas trop tôt.'], ['dit', 12, 'Et si personne n\'attend la fin ?'], ['dit', 52, 'Alors chante pour celui qui attend.'], ['bulle', 12, 9]] }
 ]};

@@ -8,8 +8,8 @@
  * Ce qu'ils savent vient de la Bible (docs/Les-Trois-Sources-la-Bible.docx) :
  * l'Admission et ses licences, la Chancellerie, les trois guildes, la Bourse,
  * la Confrérie et son sceau, les cristaux, les failles, l'Académie Rubis, le
- * Héros. Personne ne dit où l'on est : on parle de Haute-Taville comme d'une
- * capitale lointaine. Pas de prix (le jeu compte en G, la Bible en sols).
+ * Héros. On est en Aurevel, à la campagne, avec une faille dans la grotte
+ * (JOKO, 2026-10-30 ; voir situation/) : Haute-Taville est la capitale, loin. Pas de prix (le jeu compte en G, la Bible en sols).
  *
  * Les sept « cliant » à chapeau rose (le même sprite, Actor3 n° 5) sont les
  * sœurs Brémont : sept, le même chapeau cousu par leur mère pour les
@@ -140,7 +140,7 @@ F({ carte: 31, ev: 16, nom: 'Bastien', tags: ['<Ronde: 15,26 ; 14,23 ; 10,23 ; 1
     aurevoir: ['Fais attention aux lapins.', 'Bonne route ! Enfin, prudente.'] });
 
 /* ── trois nouveaux venus ─────────────────────────────────────────────────── */
-F({ carte: 29, ev: 53, nom: 'Mathurin', tags: ['<Vie: sedentaire>'], role: 'crieur des nouvelles, au réverbère de la grand-rue', voix: 'tonitruant, théâtral, ne sait pas parler bas.',
+F({ carte: 29, ev: 53, nom: 'Mathurin', tags: ['<Vie: sedentaire>'], annonceAnniversaires: ['OYEZ, OYEZ ! Aujourd\'hui, c\'est l\'anniversaire de %1 ! Un mot gentil, ça ne coûte rien ! Un cadeau non plus ! … Enfin, si, un peu.', 'AVIS À LA POPULATION ! %1 a un an de plus aujourd\'hui ! On ne dit pas combien ! On dit bravo !'], role: 'crieur des nouvelles, au réverbère de la grand-rue', voix: 'tonitruant, théâtral, ne sait pas parler bas.',
     premiere: 'Oyez, oyez ! Mathurin, crieur ! Ce que le royaume sait, je le crie. Ce qu\'il ne sait pas, je le crie plus fort.',
     bonjourTous: ['OYEZ ! … Ah, c\'est toi. Oyez quand même.', '~Il s\'éclaircit la voix, très longuement.|Oyez !'],
     saisons: { 1: ['Le printemps s\'ouvre sur une Admission ! Licences neuves, guildes qui recrutent, et des recrues qui se croient déjà rang S !'],

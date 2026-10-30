@@ -1,11 +1,12 @@
 //=============================================================================
-// Habitants.js — v1.3  ·  Les gens vivent leur vie
+// Habitants.js — v1.4  ·  Les gens vivent leur vie
 // RPG Maker MV   ·   pour JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure et la saison).
 //=============================================================================
 /*:
- * @plugindesc v1.1 ■ Les habitants se souviennent de toi, ont des horaires,
- * arrivent et repartent à pied par la porte, et changent de propos avec la
+ * @plugindesc v1.4 ■ Les habitants se souviennent de toi, ont des horaires,
+ * des amitiés, des cadeaux et un anniversaire, arrivent et repartent à pied
+ * par la porte, et changent de propos avec la
  * saison et l'heure.
  * @author JOKO
  *
@@ -97,6 +98,33 @@
  * @type string[]
  * @default ["Ce soir, c'est la Veillée du Retour. La nuit où l'on dit que le Premier a disparu.","La Veillée, ce soir. À Haute-Taville, la Basse-Brume tient un marché de nuit. Ici, on veille sur la place.","Tu veilles ce soir ? Tout le monde reste dehors, pour la Veillée du Retour."]
  *
+ * @param varCadeau
+ * @text Variable : l'objet qu'on offre
+ * @type variable
+ * @default 888
+ * @desc v1.4 : « Offrir… » range ici le numéro de l'objet choisi.
+ *
+ * @param cadeauAdore
+ * @text Affinité : un objet qu'il adore
+ * @type number
+ * @default 2
+ *
+ * @param cadeauAime
+ * @text Affinité : un objet qu'il aime
+ * @type number
+ * @default 1
+ *
+ * @param cadeauNeutre
+ * @text Affinité : un autre objet
+ * @type number
+ * @default 0
+ * @desc Un objet qu'il déteste, il te le rend : rien n'est perdu.
+ *
+ * @param affiniteScene
+ * @text Affinité : une scène d'amitié vue
+ * @type number
+ * @default 1
+ *
  * @help
  * ═══════════════════════════════════════════════════════════════════════════
  *  LES GENS VIVENT LEUR VIE
@@ -145,9 +173,24 @@
  *     · L'ADMISSION — les « joursAdmission » premiers jours de chaque saison.
  *       <Admission> dans la Note : présent seulement pendant l'Admission.
  *     · LA VEILLÉE DU RETOUR — le jour réglé (« veillee »). VieDuVillage garde
- *       les gens dehors jusqu'à 2 h.
+ *       les gens dehors jusqu'à 2 h. <Veillee> dans la Note (v1.4) : présent
+ *       seulement cette nuit-là (le marchand de la Veillée).
  *     Le jour même, un habitant le dit (« phrasesAdmission », « phrasesVeillee »).
  *         Habitants.admission()   Habitants.veillee()
+ *
+ *  6. LES PERSONNAGES (v1.4) — ce que les pages lisent :
+ *         Habitants.ici(this, 'bar')      il est au bar (aussi : 'place', 'repos',
+ *                                          'ailleurs' — en visite —, 'travail', 'nuit')
+ *         Habitants.aCote(this, 'Roul')   Roul est là, à 5 cases au plus
+ *         Habitants.prochaine(this, [3, 6, 10])   la scène d'amitié à proposer
+ *         Habitants.scene(this, n)        0 pas encore · 1 promise · 2 vue
+ *         Habitants.promettre(this, n) / Habitants.vue(this, n)
+ *         Habitants.rdv(33, 21, 24)       on est au Village de Pêche, de 21 h à minuit
+ *         Habitants.offert(this)          il a déjà reçu un cadeau aujourd'hui
+ *         Habitants.offrir(this, 'adore') l'objet choisi est donné (rendu s'il le
+ *                                          déteste) ; l'affinité suit les réglages,
+ *                                          double le jour de son anniversaire
+ *         Habitants.anniversaire('4/12')  c'est aujourd'hui (mois/jour)
  *
  *  Commandes de plugin : aucune.
  */
@@ -187,9 +230,23 @@ window.Habitants = Habitants;
     function moment(h) { return h >= 5 && h < 12 ? 1 : h >= 12 && h < 18 ? 2 : h >= 18 && h < 22 ? 3 : 4; }
     function memoire() { return ($gameSystem._habitants = $gameSystem._habitants || {}); }
     // la copie de passage d'un voyageur (AlleesEtVenues) est le même personnage : même mémoire
+    // v1.4 : une page <Est: 29:28> (Hilde à l'épicerie) est la même personne que 29:28 : même amitié
     function cle(i) {
         var v = window.AlleesEtVenues && AlleesEtVenues.cleInterpreteur ? AlleesEtVenues.cleInterpreteur(i) : null;
-        return v || ((i._mapId || $gameMap.mapId()) + ':' + i._eventId);
+        if (v) return v;
+        var e = i._eventId > 0 && $gameMap && (i._mapId || $gameMap.mapId()) === $gameMap.mapId() ? $gameMap.event(i._eventId) : null;
+        return (e && estDe(e)) || ((i._mapId || $gameMap.mapId()) + ':' + i._eventId);
+    }
+    function estDe(e) {
+        if (e._habEstPage === e._pageIndex) return e._habEst;
+        var p = e._pageIndex >= 0 ? e.page() : null, r = null;
+        if (p) for (var k = 0; k < p.list.length; k++) {
+            var c = p.list[k]; if (c.code !== 108 && c.code !== 408) break;
+            var m = /<Est:\s*(\d+)\s*:\s*(\d+)\s*>/i.exec(String(c.parameters[0]));
+            if (m) { r = m[1] + ':' + m[2]; break; }
+        }
+        e._habEstPage = e._pageIndex; e._habEst = r;
+        return r;
     }
 
     Habitants.prep = function (interp) {
@@ -212,6 +269,84 @@ window.Habitants = Habitants;
         $gameVariables.setValue(V.affinite, f.affinite);
     };
 
+    /* ── les personnages (v1.4) : le lieu, les autres, l'amitié, les cadeaux ── */
+    var V_CADEAU = Number(P.varCadeau || 888);
+    var POINTS = { adore: Number(P.cadeauAdore !== undefined ? P.cadeauAdore : 2), aime: Number(P.cadeauAime !== undefined ? P.cadeauAime : 1),
+        neutre: Number(P.cadeauNeutre !== undefined ? P.cadeauNeutre : 0), deteste: 0 };
+    var PAR_SCENE = Number(P.affiniteScene !== undefined ? P.affiniteScene : 1);
+    function fiche(interp) { var m = memoire(), k = cle(interp); return (m[k] = m[k] || { visites: 0, jour: null, affinite: 0 }); }
+    function evDe(interp) { return interp && interp.character ? interp.character(0) : null; }
+    // le nom d'un habitant : sa ligne « ◆ FICHE · Nom — … » (écrite par l'outil), sinon « ◆ HABITANT · Nom — … »
+    // (que JOKO a pu réécrire : « Hugo », « Yvon », « Emma Fieldensong est une… »)
+    function nomDe(e) {
+        if (!e || !e.page || !e.page()) return '';
+        if (e._habNomPage === e._pageIndex) return e._habNom;
+        var l = e.page().list, n = '', h = '';
+        for (var i = 0; i < l.length && (l[i].code === 108 || l[i].code === 408 || l[i].code === 356 || l[i].code === 355); i++) {
+            var t = String(l[i].parameters[0]), m = /^◆ FICHE · ([^—]+)/.exec(t), m2 = /^◆ HABITANT · ([^—]+)/.exec(t);
+            if (m) { n = m[1].trim(); break; }
+            if (m2 && !h) h = m2[1].trim();
+        }
+        n = n || h;
+        e._habNomPage = e._pageIndex; e._habNom = n;
+        return n;
+    }
+    Habitants.nomDe = nomDe;
+    Habitants.ici = function (interp, lieu) {
+        var e = evDe(interp), h = heure();
+        var bar = $gameMap.mapId() === 46, place = !!(e && e._vie && e._vie.but === 'place');
+        var repos = !!(window.VieDuVillage && VieDuVillage.repos && VieDuVillage.repos());
+        var ailleurs = !!(e && e._visite) && !bar;
+        if (lieu === 'bar') return bar;
+        if (lieu === 'place') return place;
+        if (lieu === 'repos') return repos && !bar;
+        if (lieu === 'ailleurs') return ailleurs;
+        if (lieu === 'nuit') return !bar && (h >= 22 || h < 5);
+        if (lieu === 'travail') return !bar && !place && !repos && !ailleurs && h >= 5 && h < 22;
+        return false;
+    };
+    Habitants.aCote = function (interp, nom, r) {
+        var e = evDe(interp); if (!e) return false;
+        r = r || 5; nom = String(nom).toLowerCase();
+        return $gameMap.events().some(function (o) {
+            return o !== e && !o._erased && o._pageIndex >= 0 && o.opacity() > 0 && nomDe(o).toLowerCase() === nom &&
+                Math.abs(o.x - e.x) + Math.abs(o.y - e.y) <= r;
+        });
+    };
+    Habitants.scene = function (interp, n) { var s = fiche(interp).scenes || []; return s[n] || 0; };
+    Habitants.promettre = function (interp, n) { var f = fiche(interp); (f.scenes = f.scenes || [])[n] = 1; };
+    Habitants.vue = function (interp, n) {
+        var f = fiche(interp); (f.scenes = f.scenes || [])[n] = 2;
+        f.affinite += PAR_SCENE; $gameVariables.setValue(V.affinite, f.affinite);
+    };
+    // la prochaine scène à proposer : la première pas encore promise, les précédentes vues, l'amitié assez haute
+    Habitants.prochaine = function (interp, paliers) {
+        var f = fiche(interp), s = f.scenes || [];
+        for (var i = 0; i < paliers.length; i++) {
+            if (s[i] === 2) continue;
+            return !s[i] && f.affinite >= paliers[i] ? i : -1;
+        }
+        return -1;
+    };
+    Habitants.rdv = function (carte, de, a) {
+        var h = heure();
+        return $gameMap.mapId() === carte && (de <= a ? h >= de && h < a : h >= de || h < a);
+    };
+    Habitants.anniversaire = function (md) {
+        if (!$gameSystem || !$gameSystem.month) return false;
+        var x = String(md).split('/').map(Number);
+        return $gameSystem.month() === x[0] && $gameSystem.day() === x[1];
+    };
+    Habitants.offert = function (interp) { return fiche(interp).cadeau === jour(); };
+    Habitants.offrir = function (interp, genre, anniv) {
+        var f = fiche(interp), id = $gameVariables.value(V_CADEAU), objet = $dataItems[id];
+        if (!objet || genre === 'deteste') return;                 // il te le rend
+        $gameParty.loseItem(objet, 1);
+        f.cadeau = jour();
+        f.affinite += (POINTS[genre] || 0) * (anniv ? 2 : 1);
+        $gameVariables.setValue(V.affinite, f.affinite);
+    };
+
     /* ── les horaires ───────────────────────────────────────────────────── */
     function lire(ev) {
         if (ev._habHoraire !== undefined) return;
@@ -221,7 +356,8 @@ window.Habitants = Habitants;
         ev._habHoraire = h ? [Number(h[1]), Number(h[2])] : null;
         ev._habSaisons = s ? s[1].split(',').map(Number) : null;
         ev._habAdmission = /<Admission>/i.test(n);
-        ev._habPassage = !!(h || s || ev._habAdmission || /<Passage>/i.test(n) ||
+        ev._habVeillee = /<Veill[ée]e>/i.test(n);                 // v1.4 : là seulement la nuit de la Veillée du Retour
+        ev._habPassage = !!(h || s || ev._habAdmission || ev._habVeillee || /<Passage>/i.test(n) ||
             (window.AlleesEtVenues && AlleesEtVenues.passeParLaPorte && AlleesEtVenues.passeParLaPorte(ev)));
         ev._habSortieDite = so ? { x: Number(so[1]), y: Number(so[2]) } : null;
     }
@@ -234,6 +370,7 @@ window.Habitants = Habitants;
             if (av === true) return true;
         }
         if (ev._habAdmission && !Habitants.admission()) return false;
+        if (ev._habVeillee && !Habitants.veillee()) return false;
         if (ev._habSaisons && ev._habSaisons.indexOf(saison()) < 0) return false;
         if (!ev._habHoraire) return true;
         var a = ev._habHoraire[0], b = ev._habHoraire[1], h = heure();
@@ -301,7 +438,7 @@ window.Habitants = Habitants;
     //   « ramait parfois ». Désormais : trois recherches par image au plus pour
     //   toute la carte, une attente quand on est bloqué, puis un pas de côté,
     //   et les arrivées sont étalées sur quelques secondes.
-    var BUDGET = 3;
+    var BUDGET = 3;           // des cartes des distances neuves par image (les pas eux-mêmes ne comptent plus)
 
     /* Le chemin : une carte des distances (parcours en largeur) calculée UNE
      * fois par destination et par carte, sur les cases praticables. Chacun
@@ -381,20 +518,87 @@ window.Habitants = Habitants;
     }
     Habitants.directionVers = directionVers;
 
+    /* Un pas, comme quelqu'un qui marche (2026-10-30, JOKO : « le plus gros
+     * problème c'est la marche, ils font n'importe quoi ») : jamais au hasard.
+     *   · la case qui rapproche, libre — et tout droit si c'est aussi court
+     *     (sinon il zigzague d'une case sur l'autre) ;
+     *   · quelqu'un devant : il attend un peu ; s'il est encore là, il le
+     *     contourne par le côté (une case qui n'éloigne pas), jamais en revenant
+     *     sur ses pas ;
+     *   · la recherche coûteuse (une carte des distances) se fait au plus
+     *     BUDGET fois par image ; les pas eux-mêmes ne coûtent rien.
+     * m : sa mémoire de marche { bloque, avant, attente }. Rend vrai s'il avance. */
+    function pas(ev, x, y, m) {
+        if (m.fantome) { m.fantome = false; ev.setThrough(false); }
+        var cache = $gameMap._habDistances;
+        if (!(cache && cache[x + ',' + y]) || !$gameMap._habDecorAJour) {
+            if ($gameMap._habBudget <= 0) return false;
+            $gameMap._habBudget--;
+        }
+        var dist = distances(x, y), w = $gameMap.width(), ici = dist[ev.y * w + ev.x];
+        var loin = ici < 0;
+        if (loin) ici = 1e9;
+        var vers = [], cote = [], detour = [], recents = m.recents || (m.recents = []);
+        [2, 4, 6, 8].forEach(function (d) {
+            var nx = ev.x + DX[d], ny = ev.y + DY[d];
+            if (!$gameMap.isValid(nx, ny)) return;
+            var v = dist[ny * w + nx];
+            if (v < 0) return;
+            var k = nx + ',' + ny, libre = ev.canPass(ev.x, ev.y, d), recent = recents.indexOf(k) >= 0;
+            if (v < ici) vers.push({ d: d, v: v, libre: libre && !recent, k: k });
+            else if (v === ici && libre && !recent) cote.push({ d: d, v: v, k: k });
+            else if (v === ici + 1 && libre && !recent) detour.push({ d: d, v: v, k: k });
+        });
+        function faire(c) {
+            recents.push(ev.x + ',' + ev.y); if (recents.length > 5) recents.shift();
+            m.avant = ev.x + ',' + ev.y;
+            ev.moveStraight(c.d);
+            return ev.isMovementSucceeded();
+        }
+        var bons = vers.filter(function (c) { return c.libre; });
+        if (bons.length) {
+            var min = Math.min.apply(null, bons.map(function (c) { return c.v; }));
+            var choix = bons.filter(function (c) { return c.v === min; });
+            var tout = choix.filter(function (c) { return c.d === ev.direction(); })[0] || choix[0];
+            if (faire(tout)) { if (m.bloque > 0) m.bloque--; if (!m.bloque) recents.length = 0; return true; }
+        }
+        // ⚠ posé dans un mur (une guérite, le pilier d'une porte : JOKO y met ses gardes) — il n'est pas sur
+        //   la carte des distances et ne peut sortir d'aucun côté : il en sort d'un pas, comme on passe une
+        //   porte, vers la case praticable la plus proche du but
+        if (loin) {
+            var sorties = [2, 4, 6, 8].map(function (d) { var nx = ev.x + DX[d], ny = ev.y + DY[d]; return { d: d, v: $gameMap.isValid(nx, ny) ? dist[ny * w + nx] : -1, nx: nx, ny: ny }; })
+                .filter(function (c) { return c.v >= 0 && !$gameMap.eventsXyNt(c.nx, c.ny).some(function (e) { return e.isNormalPriority() && e !== ev; }) && !($gamePlayer.x === c.nx && $gamePlayer.y === c.ny); })
+                .sort(function (a, b) { return a.v - b.v; });
+            if (sorties.length) { ev.setThrough(true); ev.moveStraight(sorties[0].d); m.fantome = true; return true; }
+        }
+        m.bloque = (m.bloque || 0) + 1;
+        // le joueur se tient dans le passage (souvent la porte) : un instant, puis il se faufile à côté de lui
+        if (m.bloque >= 2) {
+            var joueur = vers.filter(function (c) { return !c.libre && c.k === $gamePlayer.x + ',' + $gamePlayer.y; })[0];
+            if (joueur) { ev.setThrough(true); ev.moveStraight(joueur.d); m.fantome = true; m.avant = ev.x + ',' + ev.y; return true; }
+        }
+        // quelqu'un devant : d'abord un pas de côté qui n'éloigne pas ; s'il attend depuis longtemps, un
+        // vrai détour (une case de plus), sans revenir sur les cases qu'il vient de quitter
+        if (m.bloque >= 3 && cote.length && faire(cote[0])) return true;
+        if (m.bloque >= 6 && detour.length && faire(detour[0])) return true;
+        m.attente = 18 + Math.randomInt(18);          // il attend que ça passe, comme on attend
+        return false;
+    }
+    Habitants.pas = pas;
+    // peut-il marcher d'ici jusque-là ? (sa case est-elle sur la carte des distances du but)
+    Habitants.atteint = function (ev, x, y) { return distances(x, y)[ev.y * $gameMap.width() + ev.x] >= 0; };
+    // le joueur le voit-il ? (une téléportation ne se fait jamais sous ses yeux)
+    function aLEcran(ev) {
+        var x = $gameMap.adjustX(ev._realX), y = $gameMap.adjustY(ev._realY);
+        return x > -1 && y > -1 && x < $gameMap.screenTileX() + 1 && y < $gameMap.screenTileY() + 1;
+    }
+    Habitants.aLEcran = aLEcran;
+
     function pasVers(ev, b) {
-        if ($gameMap._habBudget <= 0) return;
-        $gameMap._habBudget--;
         // sous l'averse, on court se mettre à l'abri (v1.3)
         var pluie = $gameScreen && ($gameScreen.weatherType() === 'rain' || $gameScreen.weatherType() === 'storm');
         ev.setMoveSpeed(pluie ? 5 : 4);
-        var d = directionVers(ev, b.x, b.y);
-        if (d > 0) {
-            ev.moveStraight(d);
-            if (ev.isMovementSucceeded()) { b.bloque = 0; return; }
-        }
-        b.bloque = (b.bloque || 0) + 1;
-        if (b.bloque >= 3) { ev.moveRandom(); b.bloque = 0; }
-        b.attente = 12 + Math.randomInt(24);
+        pas(ev, b.x, b.y, b);
     }
     function onLuiParle(ev) {
         return $gameMap._interpreter && $gameMap._interpreter.isRunning() && $gameMap._interpreter.eventId() === ev.eventId();
@@ -441,11 +645,17 @@ window.Habitants = Habitants;
         b.t += 1;                                  // en temps réel, même pendant les pas
         // un voyageur qui traverse la ville a plus loin à aller qu'un habitué qui entre au bar
         var limite = this._visite ? LIMITE * 4 : LIMITE;
+        // ⚠ 2026-10-30 : sous les yeux du joueur, on ne « passe » pas d'un coup : il continue de marcher
+        //   (au plus quatre fois plus longtemps) ; hors de l'écran, personne ne voit le raccourci
+        if (b.t > limite && b.t <= limite * 4 && aLEcran(this)) limite = b.t + 1;
         if (this.isMoving() && b.t <= limite) return;
         // partir : être à côté de la sortie suffit (le joueur se tient souvent devant la porte)
         var arrive = this._habDepart ? Math.abs(this.x - b.x) + Math.abs(this.y - b.y) <= 1 : (this.x === b.x && this.y === b.y);
+        // arriver : à une case de sa place, si quelqu'un s'y tient, c'est arrivé
+        if (!arrive && this._habArrivee && Math.abs(this.x - b.x) + Math.abs(this.y - b.y) === 1 && (b.bloque || 0) >= 3) arrive = true;
         if (arrive || b.t > limite) {
             this._moveType = this._habMove;
+            if (b.fantome) { b.fantome = false; this.setThrough(false); }      // il s'était faufilé : il redevient solide
             if (this._habDepart) { this._habDepart = null; _refresh.call(this); }
             else { if (!arrive) this.locate(b.x, b.y); this.setDirection(b.dir); this._habArrivee = null; }
             return;

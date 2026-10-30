@@ -58,5 +58,26 @@ module.exports = { carte: 29, nom: 'Ville Forestière', x: 0, y: 39, scenes: [
     { cle: 'ronde-casimir', nom: 'Casimir en ronde', qui: ['46:30'], heures: [7, 18], attente: 120, gestes: [
         ['bulle', '46:30', 1], ['dit', '46:30', 'Article quatre : la ronde se fait au pas. Au pas !']] },
     { cle: 'ronde-merle', nom: 'Merle finit sa ronde', qui: ['46:29'], heures: [14, 20], attente: 120, gestes: [
-        ['bulle', '46:29', 8], ['dit', '46:29', 'Encore une rue, et c\'est la bière.']] }
+        ['bulle', '46:29', 8], ['dit', '46:29', 'Encore une rue, et c\'est la bière.']] },
+    // les nouveaux (2026-10-30, comme des OC)
+    { cle: 'cae', nom: 'Corps, Âme, Esprit !', qui: [59, 25], dist: 4, heures: [9, 19], attente: 50, gestes: [
+        ['face', 59, 25], ['dit', 59, 'Corps… Âme… ESPRIT !'], ['dit', 25, 'Le Corps !'], ['son', 'Laugh', 40], ['dit', 59, 'L\'Esprit bat le Corps ! Encore gagné !'], ['bulle', 25, 5],
+        ['si', 'VieDuVillage.la(26)', [['dit', 26, 'Elle joue toujours le Corps.']]]] },
+    { cle: 'anouk', nom: 'Anouk patrouille', qui: [60], attente: 80, gestes: [
+        ['hasard', [[['dit', 60, 'Patrouille. Rien à signaler.']], [['bulle', 60, 1], ['dit', 60, 'Un pigeon suspect. Je note.']], [['dit', 60, 'Lanterne de la grand-rue : en état. Je note.']]]]] },
+    { cle: 'anouk-petit-louis', nom: 'Anouk et le tricheur', qui: [60, 59], dist: 4, attente: 120, gestes: [
+        ['face', 60, 59], ['dit', 60, 'Toi. Tu regardes les mains avant de jouer.'], ['bulle', 59, 6], ['dit', 59, '… Tu vas me noter ?'], ['dit', 60, 'Je note : « enfance ». Circule.']] },
+    { cle: 'evariste', nom: 'Évariste renifle l\'air', qui: [61], heures: [8, 19], attente: 90, gestes: [
+        ['bulle', 61, 8], ['hasard', [[['dit', 61, 'Mauvais dosage, rue du bas. Ça va mousser.']], [['dit', 61, 'Quelqu\'un fait une potion de soin. Correcte. Pour une fois.']]]]] },
+    { cle: 'conteur-place', nom: 'Le conteur sur la place', qui: ['46:52', 25], dist: 6, heures: [14, 18], attente: 80, gestes: [
+        ['dit', '46:52', '… et c\'est là que…'], ['bulle', 25, 1], ['dit', 25, 'Et après ?!'], ['si', 'VieDuVillage.la(59)', [['dit', 59, 'Il triche, l\'Esprit !']]]] },
+    { cle: 'ninon-ville', nom: 'Ninon livre', qui: ['30:30'], attente: 60, gestes: [
+        ['hasard', [[['dit', '30:30', 'Une lettre pour la grand-rue ! Je repasse !']], [['dit', '30:30', 'Je suis en retard ! Je suis TOUJOURS en retard !']]]]] },
+    { cle: 'zephyrin', nom: 'Zéphyrin, la nuit de la Veillée', qui: [62], si: 'Habitants.veillee()', attente: 60, gestes: [
+        ['bulle', 62, 3], ['dit', 62, 'Des lumières ! Pour ceux qui attendent ! Pour ceux qui reviennent !']] },
+    // la situation (2026-10-30) : en Aurevel, une faille dans la grotte, au bout du marécage
+    { cle: 'porte-nord-faille', nom: 'La porte nord compte ceux de la grotte', qui: [11, 12], dist: 5, heures: [8, 18], attente: 150, gestes: [
+        ['face', 12, 11], ['dit', 12, 'Deux sont partis vers la grotte, ce matin.'], ['dit', 11, 'Avec un permis ?'], ['dit', 12, 'Avec un permis.'], ['dit', 11, 'Alors je les compterai ce soir.']] },
+    { cle: 'crieur-faille', nom: 'Mathurin crie l\'avis de la Chancellerie', qui: [53], heures: [8, 19], attente: 180, gestes: [
+        ['son', 'Bell1', 50], ['dit', 53, 'OYEZ ! La faille de la grotte ne s\'entre qu\'avec un permis de la Chancellerie !']] }
 ]};

@@ -164,16 +164,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('── H6 · ils se souviennent ──');
     var souv = await ev(function () {
+        // le hasard fixé (60 % de chances d'en parler : 0 sur 4, une fois sur quarante) : chacun doit en parler, une seule fois
+        var hasard = Math.random; Math.random = function () { return 0.1; };
         Habitants.retenir('quete:essai', 'quete', 'Sortir de la pierre');
         var gens = $gameMap.events().filter(function (x) { return x.page() && x.page().list.some(function (c) { return c.code === 355 && /Habitants\.prep/.test(c.parameters[0]); }); });
         var parQui = gens.map(function (e) {
             var i = new Game_Interpreter(), n = 0, nom = null; i.setup(e.page().list, e.eventId());
-            for (var k = 0; k < 3; k++) { Habitants.prep(i); var l = i._habSouvenir; if (l && l.some(function (c) { return /Sortir de la pierre/.test(c.parameters[0] || ''); })) { n++; nom = l[1].parameters[0]; } }
+            for (var k = 0; k < 3; k++) { Habitants.prep(i); var l = i._habSouvenir;
+                // la phrase est coupée en lignes de 46 signes : « Sortir de la / pierre » peut tomber sur deux lignes, on lit la phrase entière
+                var t = l ? l.filter(function (c) { return c.code === 401; }).map(function (c) { return c.parameters[0]; }).join(' ') : '';
+                if (/Sortir de la pierre/.test(t)) { n++; nom = l[1].parameters[0]; } }
             return { qui: e.event().name, n: n, texte: nom };
         });
+        Math.random = hasard;
         return { gens: parQui.length, disent: parQui.filter(function (p) { return p.n > 0; }), max: Math.max.apply(null, parQui.map(function (p) { return p.n; })) };
     });
-    V('H6 · une quête finie se raconte, une seule fois par habitant', souv.disent.length >= 1 && souv.max === 1, souv.disent.length + ' habitant(s) sur ' + souv.gens + ' en parlent, une fois chacun' + (souv.disent[0] ? ' : « ' + souv.disent[0].texte + ' »' : ''));
+    V('H6 · une quête finie se raconte, une seule fois par habitant', souv.gens > 0 && souv.disent.length === souv.gens && souv.max === 1, souv.disent.length + ' habitant(s) sur ' + souv.gens + ' en parlent, une fois chacun' + (souv.disent[0] ? ' : « ' + souv.disent[0].texte + ' »' : ''));
     var aff = await ev(function () {
         var e = $gameMap.events().filter(function (x) { return x.page() && x.page().list.some(function (c) { return c.code === 355 && /Habitants\.prep/.test(c.parameters[0]); }); })[1];
         var i = new Game_Interpreter(); i.setup(e.page().list, e.eventId());
