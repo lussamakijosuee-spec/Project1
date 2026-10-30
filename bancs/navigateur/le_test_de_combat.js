@@ -42,6 +42,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             SceneManager.catchException = function (e) { window.__plantage = String(e && e.message || e).slice(0, 160); return _c.apply(this, arguments); };
             DataManager.setupBattleTest(); SceneManager.goto(Scene_Battle);
         });
+        // la troupe de test peut être un boss qui se présente (« ◈ Le Percepteur… ») : on valide ses messages
+        // comme le joueur, sinon le combat attend une touche pour toujours
+        await page.evaluate(function () {
+            window.__valider = setInterval(function () {
+                var w = SceneManager._scene && SceneManager._scene._messageWindow;
+                if ($gameMessage.isBusy() && w && w.pause) { w.pause = false; w.terminateMessage(); }
+            }, 300);
+        });
         var pret = await page.waitForFunction(function () { var s = SceneManager._scene; return window.__plantage || (s instanceof Scene_Battle && s._actorCommandWindow && s._actorCommandWindow.active); }, null, { timeout: 90000 }).then(function () { return true; }, function () { return false; });
         var r = await page.evaluate(function () { var s = SceneManager._scene; return { plantage: window.__plantage || null, commandes: !!(s._actorCommandWindow && s._actorCommandWindow.active), carte: !!$dataMap, troupe: $gameTroop.members().map(function (e) { return e.name(); }).join(', ') }; });
         r.pret = pret; r.erreurs = erreurs;

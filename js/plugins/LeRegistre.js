@@ -275,7 +275,7 @@
         if (!l.isStateAffected(COMPTEUR)) { l.addNewState(COMPTEUR); l.resetStateCounts(COMPTEUR); }
         if (l.setStateCounter) { l.setStateCounter(COMPTEUR, ames()); }
         peser(l);
-        if (BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
+        if (BattleManager._statusWindow && BattleManager.refreshStatus) { BattleManager.refreshStatus(); }
     }
 
     //=========================================================================

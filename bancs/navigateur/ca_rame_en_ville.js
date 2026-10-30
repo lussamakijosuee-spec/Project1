@@ -32,7 +32,10 @@ var echecs = 0;
     SceneManager.updateMain = function () { var a = performance.now(); u.call(this); window.__t.push(performance.now() - a); };
   });
   await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
-  for (var c of CARTES) {
+  // une carte que JOKO a retirée (le Village Montagnard, 36, le 2026-10-29) se dit et se saute
+  var existent = await page.evaluate(function (l) { return l.filter(function (c) { return !!$dataMapInfos[c]; }); }, CARTES);
+  CARTES.filter(function (c) { return existent.indexOf(c) < 0; }).forEach(function (c) { console.log('  ·  ' + c + ' : cette carte n\'existe plus, sautée'); });
+  for (var c of existent) {
     await page.evaluate(function (c) { var info = $dataMapInfos[c]; $gamePlayer.reserveTransfer(c, 10, 10, 2, 2); $gameSystem.set_hour(19); }, c);
     await page.waitForFunction(function (c) { return $gameMap.mapId() === c && SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, c, { timeout: 60000 });
     await page.waitForTimeout(2500);
