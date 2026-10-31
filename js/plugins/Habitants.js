@@ -595,9 +595,11 @@ window.Habitants = Habitants;
     Habitants.aLEcran = aLEcran;
 
     function pasVers(ev, b) {
-        // sous l'averse, on court se mettre à l'abri (v1.3)
+        // sous l'averse, on court se mettre à l'abri (v1.3) : un cran de plus que la vitesse de l'éditeur
+        // (v1.4 : avant, on forçait 4, le pas du joueur, quelle que soit la vitesse que JOKO avait mise)
         var pluie = $gameScreen && ($gameScreen.weatherType() === 'rain' || $gameScreen.weatherType() === 'storm');
-        ev.setMoveSpeed(pluie ? 5 : 4);
+        var p = ev.page && ev.page(), base = p && p.moveSpeed > 0 ? p.moveSpeed : 3;
+        ev.setMoveSpeed(Math.min(6, base + (pluie ? 1 : 0)));
         pas(ev, b.x, b.y, b);
     }
     function onLuiParle(ev) {

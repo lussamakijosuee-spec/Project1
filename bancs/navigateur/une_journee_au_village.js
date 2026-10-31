@@ -87,8 +87,11 @@ function V(l, c, d) {
                              : 'les ' + depart.etat.length + ' ont un logis');
     }
 
-    /** Pousse l'horloge à l'heure voulue, laisse marcher, puis relève. */
-    async function aHeure(h, secondes) {
+    /** Pousse l'horloge à l'heure voulue, laisse marcher, puis relève.
+     *  ⚠ 2026-10-31 : en IMAGES de jeu, plus en secondes — à ~10 images par seconde ici, et depuis qu'ils marchent à
+     *  la vitesse de l'éditeur (3 : 32 images par case), quatre secondes ne disaient plus rien. « assez » : la chose
+     *  attendue est arrivée, on relève tout de suite ; sinon, au bout des images, et le contrôle juge. */
+    async function aHeure(h, images, assez) {
         await ev(function (hh) {
             // MOG_TimeSystem range l'heure dans une VARIABLE (la 200) et la lit
             // de là : $gameSystem.hour() fait $gameVariables._data[200].
@@ -99,7 +102,12 @@ function V(l, c, d) {
             if (typeof $gameSystem.set_hour === 'function') { $gameSystem.set_hour(hh); if ($gameSystem.set_minute) $gameSystem.set_minute(0); }
             else { $gameVariables.setValue(200, hh); }
         }, h);
-        await page.waitForTimeout(secondes || 2600);
+        await page.waitForFunction(function (p) {
+            if (window.__depuis === undefined || window.__heureVisee !== p.h) { window.__depuis = Graphics.frameCount; window.__heureVisee = p.h; }
+            if (Graphics.frameCount - window.__depuis >= p.n) { window.__depuis = undefined; return true; }
+            if (p.assez && Graphics.frameCount - window.__depuis >= 120 && new Function('e', 'return ' + p.assez)(VieDuVillage.etat())) { window.__depuis = undefined; return true; }
+            return false;
+        }, { h: h, n: images || 300, assez: assez || null }, { timeout: 600000, polling: 250 });
         return await ev(function () {
             var e = window.VieDuVillage ? VieDuVillage.etat() : [];
             return {
@@ -129,7 +137,10 @@ function V(l, c, d) {
     for (var h of [2, 7, 10, 12, 15, 19, 22]) {
         // ⚠ 2026-10-30 : une heure de jeu dure deux minutes ; à midi, la place est à quinze
         //   cases de certains postes : quatre secondes ne suffisaient pas pour y arriver.
-        var r = await aHeure(h, (h === 2 || h === 22) ? 13000 : h === 12 ? 18000 : 4000);
+        // la nuit : rentrés en moins de 1 200 images (≈ 50 minutes de jeu) ; à midi : près de la place en moins de 1 000
+        var vide = 'e.filter(function (p) { return p.dedans; }).length >= Math.ceil(e.filter(function (p) { return p.but === "logis"; }).length * 0.6)';
+        var proche = '(function (l) { return l.length > 0 && l.reduce(function (a, b) { return a + b; }, 0) / l.length <= 6; })(e.filter(function (p) { return !p.dedans && p.place && p.but === "place"; }).map(function (p) { return Math.abs(p.x - p.place.x) + Math.abs(p.y - p.place.y); }))';
+        var r = await aHeure(h, (h === 2 || h === 22) ? 1200 : h === 12 ? 1000 : 300, (h === 2 || h === 22) ? vide : h === 12 ? proche : null);
         journee[h] = r;
         console.log('     ' + String(h).padStart(2) + ' h    ' +
             String(r.dehors).padStart(4) + '    ' + String(r.dedans).padStart(4) + '        ' +
