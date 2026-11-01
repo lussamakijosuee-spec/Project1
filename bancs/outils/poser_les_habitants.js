@@ -170,6 +170,24 @@ function enTete(liste) {                  // les commentaires de tête, coupés 
 }
 function memeTexte(a, b) { return a.code === b.code && String(a.parameters[0]) === String(b.parameters[0]); }
 
+/* ── qui est dans cet événement ? (sa page : la ligne « ◆ FICHE », sinon « ◆ HABITANT », sinon son nom) ── */
+function norme(t) { return String(t || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function quiEst(e, page) {
+    var p = e.pages[page - 1]; if (!p) return null;
+    var tete = p.list.filter(function (c) { return c.code === 108; }).map(function (c) { return String(c.parameters[0]); });
+    var fi = tete.filter(function (t) { return /^◆ FICHE · /.test(t); })[0], ha = tete.filter(function (t) { return /^◆ HABITANT · /.test(t); })[0];
+    if (fi) return { nom: fi.replace(/^◆ FICHE · /, '').split(' — ')[0].trim(), ligne: fi, sur: 'fiche' };
+    if (ha) return { nom: ha.replace(/^◆ HABITANT · /, '').split(' — ')[0].trim(), ligne: ha, sur: 'en-tête' };
+    var vide = p.list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
+    return vide ? { nom: String(e.name || '').trim(), ligne: e.name, sur: 'nom', vide: true, id: e.id } : null;
+}
+function cestLui(q, f) {
+    var n = norme(f.nom);
+    if (q.sur !== 'nom') return norme(q.ligne).indexOf(n) >= 0;                  // « ◆ HABITANT · Yvon — Edwin Bramble… » : c'est bien Edwin
+    var orig = snap[f.carte + ':' + f.ev];
+    return norme(q.nom) === n || /^ev\d+$/i.test(q.nom) || (orig && norme(orig.name) === norme(q.nom));
+}
+
 /* ── poser ────────────────────────────────────────────────────────────── */
 var defauts = [], poses = 0, lignes = 0;
 function versListe(cmds) { return cmds.map(function (c) { return { code: c[0], indent: c[1], parameters: c[2] }; }); }
@@ -202,6 +220,10 @@ LOTS.forEach(function (lot) {
         //   événement retiré, ou une page qui ne porte plus la marque
         //   « ◆ HABITANT », est à JOKO : on ne la réécrit jamais, on le dit.
         if (!e) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (' + f.nom + ') : retiré par JOKO'); return; }
+        // ⚠ 2026-11-01 (« FGFG ») : JOKO réutilise des numéros — 30:16 est devenu sa Fanchon, 30:26 une marque « kaze »,
+        //   46:49 une marque « colette ». On n'écrit que dans un événement qui est toujours CETTE personne.
+        var qui = quiEst(e, f.page || 1);
+        if (qui && !cestLui(qui, f)) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (fiche ' + f.nom + ') : c\'est maintenant « ' + qui.nom + ' », pas réécrit'); return; }
         var page = f.page || 1, orig = original(f.carte, f.ev);
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
         // une fiche « muet: true » vise une page qui n'avait encore rien à dire : elle peut la remplir la première fois
@@ -269,7 +291,11 @@ LOTS.forEach(function (lot) {
         if (!e.name || /^EV\d+$/.test(e.name)) e.name = f.nom;
         poses++;
     });
-    if (lot.tableau && !FICHES && !ECARTS) {
+    // le tableau d'affichage du bar : seulement s'il est toujours là (le 2026-11-01, JOKO a fait du 46:49 une marque « colette »)
+    var t49 = lot.tableau ? carteDe(lot.carte).events[49] : null;
+    if (lot.tableau && t49 && !/tableau|^ev\d+$/i.test(String(t49.name).trim()) && !t49.pages[0].list.some(function (c) { return c.code === 108 && /^◆ HABITANT · le tableau/.test(c.parameters[0]); })) {
+        repris.push('carte ' + lot.carte + ' év. 49 (le tableau d\'affichage) : c\'est maintenant « ' + String(t49.name).trim() + ' », pas réécrit');
+    } else if (lot.tableau && !FICHES && !ECARTS) {
         var m = carteDe(lot.carte), t = m.events[49], tl = [];
         tl = tl.concat(D.note('◆ HABITANT · le tableau d\'affichage du bar — une affiche de saison, puis une vieille.'));
         tl = tl.concat(A.js('Habitants.prep(this);'), A.se('Book2'));

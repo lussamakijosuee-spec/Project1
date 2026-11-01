@@ -133,9 +133,68 @@ function formatCarte(m) {
     return '{\n' + props + ',\n"data":' + JSON.stringify(m.data) + ',\n"events":[\n' + m.events.map(function (e) { return JSON.stringify(e); }).join(',\n') + '\n]\n}';
 }
 var ecrites = {};
+// qui est dans chaque événement, d'après les fiches des habitants : une scène dont quelqu'un a été retiré par JOKO, ou dont
+// le numéro sert maintenant à quelqu'un d'autre (2026-11-01, « FGFG » : 30:26 est une marque « kaze »), ne se pose pas
+var NOMS = {};
+(function () {
+    var D = path.join(__dirname, 'habitants');
+    fs.readdirSync(D).filter(function (x) { return /\.js$/.test(x) && !/^(moteur|_)/.test(x); }).forEach(function (x) {
+        var l = require(path.join(D, x));
+        l.fiches.forEach(function (f) { var k = (f.carte || l.carte) + ':' + f.ev; if (!NOMS[k]) NOMS[k] = f.nom; });
+    });
+})();
+function norme(t) { return String(t || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function present(m, carte, q) {
+    // une copie de passage « 29:41 » : son original doit exister ; un numéro : l'événement, toujours la même personne
+    var c = carte, id = q;
+    if (estVisiteur(q)) { c = +q.split(':')[0]; id = +q.split(':')[1]; }
+    var mm = c === carte ? m : (fs.existsSync(fichier(c)) ? JSON.parse(fs.readFileSync(fichier(c), 'utf8')) : null);
+    var e = mm && mm.events[id];
+    if (!e) return 'retiré';
+    var nom = NOMS[c + ':' + id];
+    if (!nom) return null;
+    var tete = e.pages.map(function (p) { return p.list.filter(function (x) { return x.code === 108 && /^◆ (FICHE|HABITANT) · /.test(x.parameters[0]); }).map(function (x) { return x.parameters[0]; }).join(' '); }).join(' ');
+    if (tete ? norme(tete).indexOf(norme(nom)) < 0 : norme(e.name) !== norme(nom)) return 'c\'est maintenant « ' + String(e.name).trim() + ' »';
+    return null;
+}
 LOTS.forEach(function (lot) {
     if (!fs.existsSync(fichier(lot.carte))) { console.log('   ⚑ carte ' + lot.carte + ' : n\'existe plus'); return; }
     var m = ecrites[lot.carte] || JSON.parse(fs.readFileSync(fichier(lot.carte), 'utf8'));
+    lot = Object.assign({}, lot, { scenes: lot.scenes.map(function (sc) {
+        // ses gens, et tous ceux que ses gestes nomment ; une ligne dans un « si » qui nomme un absent tombe seule
+        function noms(g) {
+            var l = [];
+            if (['dit', 'bulle', 'pas', 'tourne', 'face'].indexOf(g[0]) >= 0) [g[1], g[0] === 'tourne' || g[0] === 'face' ? g[2] : null].forEach(function (q) { if (typeof q === 'number' || estVisiteur(q)) l.push(q); });
+            return l;
+        }
+        function tous(l, acc) {
+            (l || []).forEach(function (g) {
+                if (!Array.isArray(g)) return;
+                noms(g).forEach(function (q) { acc.push(q); });
+                if (g[0] === 'si') { tous(g[2], acc); tous(g[3], acc); var v = /VieDuVillage\.la\((\d+)\)/.exec(g[1]); if (v) acc.push(+v[1]); }
+                if (g[0] === 'hasard') g[1].forEach(function (x) { tous(x, acc); });
+            });
+            return acc;
+        }
+        function absent(q) { var r = present(m, lot.carte, q); return r ? q + ' ' + r : null; }
+        function elaguer(l) {
+            return (l || []).map(function (g) {
+                if (!Array.isArray(g)) return g;
+                if (g[0] === 'si') {
+                    if (tous([g], []).some(absent)) { console.log('   ⚑ ' + lot.nom + ' · « ' + sc.nom + ' » : une ligne qui nomme un absent tombe'); return null; }
+                    return [g[0], g[1], elaguer(g[2]), g[3] ? elaguer(g[3]) : g[3]];
+                }
+                if (g[0] === 'hasard') return [g[0], g[1].map(elaguer)];
+                return g;
+            }).filter(function (g) { return g !== null; });
+        }
+        // ce qui est hors d'un « si » doit être là ; ce qui est dans un « si » tombe avec sa ligne
+        var gens = sc.qui.slice();
+        sc.gestes.forEach(function (g) { if (Array.isArray(g) && g[0] !== 'si') tous([g], []).forEach(function (q) { if (gens.indexOf(q) < 0) gens.push(q); }); });
+        var raison = gens.map(absent).filter(Boolean)[0];
+        if (raison) { console.log('   ⚑ ' + lot.nom + ' · « ' + sc.nom + ' » : ' + raison + ', pas posée'); return null; }
+        return Object.assign({}, sc, { gestes: elaguer(sc.gestes) });
+    }).filter(Boolean) });
     var l = liste(lot);
     controle(lot.nom, l, m);
     var e = m.events.filter(function (x) { return x && /^🏘/.test(x.name || ''); })[0];
