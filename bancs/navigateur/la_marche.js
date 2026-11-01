@@ -13,7 +13,9 @@
  *   ② Mathurin, sédentaire à son réverbère, ne fait pas un pas ;
  *   ③ à midi, chacun vise SA case de la place (aucune case visée par deux) ;
  *   ④ un PNJ qui sort par une porte où le joueur se tient se faufile à côté de lui ;
- *   ⑤ contre-épreuve : un PNJ qu'on fait piétiner exprès est bien attrapé.
+ *   ⑤ contre-épreuve : un PNJ qu'on fait piétiner exprès est bien attrapé ;
+ *   ⑥ ils marchent à la vitesse que JOKO a mise dans l'éditeur (3 : 32 images par
+ *     case), pas au pas du joueur (16) — la contre-épreuve : un PNJ mis à 2 marche à 2.
  *
  *   node bancs/navigateur/la_marche.js
  */
@@ -38,10 +40,22 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         Scene_Map.prototype.update = function () {
             _u.call(this);
             if (!window.__trace) return;
+            window.__image = (window.__image || 0) + 1;
+            // contre-épreuve : un passant qu'on met à 2 dans son « éditeur » doit marcher à 2
+            if (window.__ralentir && window.__lent === undefined) {
+                // avant midi, quelqu'un qui attend à son poste : à midi, il part vers la place, et chaque départ relit sa vitesse
+                // (un villageois sans <Agenda:> : Hilde, elle, est à l'épicerie jusqu'à 13 h)
+                var l = $gameMap.events().filter(function (e) { return e._vie && e._vie.metier === 'villageois' && e._pageIndex >= 0 && !e.isMoving() && !e._visite && e.page().moveSpeed === 3 &&
+                    !e.page().list.some(function (c) { return c.code === 108 && /^<Agenda/.test(c.parameters[0]); }); })[0];
+                if (l) { window.__lent = l.eventId(); l.page().moveSpeed = 2; }
+            }
             $gameMap.events().forEach(function (e) {
                 if (!e._vie || e._vie.metier === 'fixe' || e._pageIndex < 0 || e.opacity() === 0) return;
-                var t = window.__trace[e.eventId()] = window.__trace[e.eventId()] || { nom: e.event().name, pos: [] };
-                var k = e.x + ',' + e.y; if (t.pos[t.pos.length - 1] !== k) t.pos.push(k);
+                var t = window.__trace[e.eventId()] = window.__trace[e.eventId()] || { nom: e.event().name, pos: [], images: [], vitesses: {} };
+                var k = e.x + ',' + e.y;
+                if (t.pos[t.pos.length - 1] !== k) { t.pos.push(k); t.images.push(window.__image); }
+                // la vitesse à laquelle il marche, et celle de l'éditeur (sa page)
+                if (e.isMoving()) { var c = e.realMoveSpeed() + '/' + e.page().moveSpeed; t.vitesses[c] = (t.vitesses[c] || 0) + 1; }
             });
         };
         window.mesurer = function () {
@@ -53,7 +67,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
                     pas++;
                     if (i >= 2 && p[i][0] === p[i - 2][0] && p[i][1] === p[i - 2][1]) ar++;
                 }
-                r.pas += pas; r.ar += ar; r.parQui[id] = { nom: window.__trace[id].nom, pas: pas, ar: ar };
+                r.pas += pas; r.ar += ar; r.parQui[id] = { nom: window.__trace[id].nom, pas: pas, ar: ar, vitesses: window.__trace[id].vitesses, images: window.__trace[id].images };
             });
             return r;
         };
@@ -76,13 +90,38 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('① à 10 h, en ville : moins de 5 % d\'allers-retours (ils ne piétinent plus)', dix.pas > 0 && dix.ar / dix.pas < 0.05, dix.pas + ' pas, ' + dix.ar + ' allers-retours (' + Math.round(100 * dix.ar / Math.max(1, dix.pas)) + ' % ; 23 % avant la correction)');
     var mathurin = dix.parQui[53] || { pas: 0 };
     V('② Mathurin, à son réverbère, ne fait pas un pas', mathurin.pas === 0, mathurin.pas + ' pas en 30 s (13 en 40 s avant)');
+    await page.evaluate(function () { window.__ralentir = true; });
     var midi = await suivre(29, 11, 58, 30, 20, 24);
+    var lent = await page.evaluate(function () { return window.__lent; });
+    var infoLent = await page.evaluate(function () {
+        var e = window.__lent !== undefined ? $gameMap.event(window.__lent) : null;
+        var m = {}; $gameMap.events().forEach(function (x) { if (x._vie) m[x._vie.metier] = (m[x._vie.metier] || 0) + 1; });
+        return { qui: e ? e.event().name + ' (' + e._vie.metier + ')' : 'personne', metiers: m };
+    });
     V('① à midi, ils vont sur la place sans aller-retour', midi.pas > 0 && midi.ar / midi.pas < 0.05, midi.pas + ' pas, ' + midi.ar + ' allers-retours (' + Math.round(100 * midi.ar / Math.max(1, midi.pas)) + ' %)');
     var cases = await page.evaluate(function () {
         var l = $gameMap._viePNJ.filter(function (e) { return e._vie && e._vie.but === 'place'; }), vues = {};
         l.forEach(function (e) { var k = e._vie.place.x + ',' + e._vie.place.y; vues[k] = (vues[k] || 0) + 1; });
         return { n: l.length, partagees: Object.keys(vues).filter(function (k) { return vues[k] > 1; }).length };
     });
+    // ⑥ la vitesse : celle que JOKO a mise dans l'éditeur, pas le pas du joueur (avant, 4 était forcé : ils filaient)
+    var autre = [], parCase = [];
+    [dix, midi].forEach(function (m) {
+        Object.keys(m.parQui).forEach(function (id) {
+            var q = m.parQui[id];
+            if (+id === lent && m === midi) return;             // le passant ralenti exprès : c'est la contre-épreuve
+            Object.keys(q.vitesses || {}).forEach(function (c) { var x = c.split('/'); if (x[0] !== x[1]) autre.push(q.nom + ' ' + x[0] + ' au lieu de ' + x[1]); });
+            // images par case, sur les pas qui se suivent (un pas juste après l'autre)
+            if (q.vitesses && q.vitesses['3/3']) for (var i = 1; i < q.images.length; i++) { var d = q.images[i] - q.images[i - 1]; if (d < 60) parCase.push(d); }
+        });
+    });
+    parCase.sort(function (a, b) { return a - b; });
+    var med = parCase.length ? parCase[Math.floor(parCase.length / 2)] : 0;
+    V('⑥ ils marchent à la vitesse de l\'éditeur (3 : deux fois plus lent que le joueur)', !autre.length && med >= 28 && med <= 40,
+        (autre.length ? 'pas à leur vitesse : ' + autre.slice(0, 3).join(', ') + ' · ' : '') + parCase.length + ' pas à la vitesse 3 : ' + med + ' images par case (32 attendues ; 16 au pas du joueur)');
+    var ql = midi.parQui[lent] || { vitesses: {} };
+    V('⑥ contre-épreuve : un passant mis à 2 dans l\'éditeur marche à 2', !!ql.vitesses['2/2'] && !Object.keys(ql.vitesses).some(function (c) { return c.split('/')[0] !== '2'; }),
+        infoLent.qui + ' : ' + JSON.stringify(ql.vitesses) + (ql.nom ? '' : ' · métiers : ' + JSON.stringify(infoLent.metiers)));
     V('③ à midi, chacun vise sa case de la place', cases.n > 1 && cases.partagees === 0, cases.n + ' sur la place · ' + cases.partagees + ' case(s) visée(s) par deux');
 
     // ④ la forge à 22 h : Renaud sort, le joueur se tient dans le couloir de la porte (une case de large)
@@ -112,7 +151,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         window.__pietine = setInterval(function () { if (!e.isMoving()) { e.moveStraight([4, 6][d++ % 2]); } }, 150);
         return [x0, y0];
     });
-    await page.waitForTimeout(8000);
+    // Mathurin est à 2 dans l'éditeur (JOKO, 2026-10-31) : un pas lui prend plus d'une seconde ; on attend ses pas, pas un temps fixe
+    await page.waitForFunction(function () { var t = window.__trace && window.__trace[53]; return t && t.pos.length >= 6; }, null, { timeout: 90000, polling: 250 }).catch(function () {});
     var pie = await page.evaluate(function () { clearInterval(window.__pietine); var r = window.mesurer(); window.__trace = null; return r.parQui[53] || { pas: 0, ar: 0 }; });
     V('⑤ contre-épreuve : un PNJ qu\'on fait piétiner exprès est attrapé', pie.pas > 2 && pie.ar > 0, 'Mathurin forcé : ' + pie.pas + ' pas, ' + pie.ar + ' allers-retours comptés');
 

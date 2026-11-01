@@ -1,5 +1,5 @@
 //=============================================================================
-// VieDuVillage.js — v2.1  ·  Les PNJ ont une journée
+// VieDuVillage.js — v2.2  ·  Les PNJ ont une journée
 // RPG Maker MV   ·   by JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure).
 //   AlleesEtVenues (le voyage d'une carte à l'autre) se charge après lui.
@@ -438,6 +438,8 @@
     // un pas, s'il a où aller : à chaque image, dès que le pas d'avant est fini
     function avancer(ev) {
         var v = ev._vie, c = v && v.vers;
+        // « fixe » : il ne bouge plus, même s'il était en route (v2.2)
+        if (v && v.metier === 'fixe') { v.vers = null; return; }
         if (!c || ev.isMoving() || v.dedans || ev._vieScene > 0 || ev._pauseConversation > 0 || ev.isMoveRouteForcing() || enPassage(ev)) return;
         if (ev.x === c.x && ev.y === c.y) { v.vers = null; return; }
         var m = v.marche || (v.marche = {});
@@ -494,6 +496,8 @@
     // Habitants le fait entrer ou sortir par la porte : on le laisse faire
     function enPassage(ev) { return !!(ev._habDepart || ev._habArrivee || ev._habDelai !== undefined || ev._pageIndex < 0); }
 
+    // la vitesse de l'éditeur (la page active ; 3 si elle n'en dit rien)
+    function vitesseDe(ev) { var p = ev.page && ev.page(); return p && p.moveSpeed > 0 ? p.moveSpeed : 3; }
     function piloter(ev) {
         var v = ev._vie;
         if (!v || v.metier === 'fixe') { return; }
@@ -502,8 +506,11 @@
         if (enPassage(ev)) { return; }
         v.vers = null;
         var pluie = ilPleut();
-        // sous l'averse on court ; sinon le pas normal (à 3 ils traînaient)
-        ev.setMoveSpeed(pluie && v.metier !== 'garde' && v.metier !== 'comptoir' && v.metier !== 'client' ? 5 : 4);
+        // v2.2 : la vitesse est celle que JOKO a mise dans l'éditeur (3, par défaut : deux fois plus lent que le
+        //   joueur ; 2 pour ses vieux) — avant, on forçait 4, le pas du joueur, et ils filaient ; sous l'averse, un
+        //   cran de plus. Un marchand derrière son comptoir revient à sa place à 3 au moins (à 1, deux secondes par case).
+        var vit = vitesseDe(ev) + (pluie && v.metier !== 'garde' && v.metier !== 'comptoir' && v.metier !== 'client' ? 1 : 0);
+        ev.setMoveSpeed(Math.min(6, v.metier === 'comptoir' ? Math.max(3, vit) : vit));
 
         if (v.metier === 'comptoir') { return derriereLeComptoir(ev, v); }
         if (v.metier === 'client' || v.metier === 'visiteur') { return aSaPlace(ev, v); }
@@ -756,7 +763,7 @@
             // on coupe le déplacement automatique de MV : deux pilotes sur le
             // même PNJ se battraient pour le volant.
             ($gameMap._viePNJ || []).forEach(function (e) {
-                if (e._vie && e._vie.metier !== 'fixe') { e._moveType = 0; e.setMoveSpeed(4); }
+                if (e._vie && e._vie.metier !== 'fixe') { e._moveType = 0; }
             });
         }
 
