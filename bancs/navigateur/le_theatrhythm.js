@@ -17,7 +17,9 @@
  *     touche et la bonne rangée, au centre de la zone critique à son temps ;
  *     la mauvaise touche rate ; la boucle de la musique rejoue la partition ;
  *   ⑥ l'éditeur : poser, héros, type, effacer, annuler, enregistrer, essayer
- *     dans le vrai Theatrhythm et revenir (points et résultat rendus).
+ *     dans le vrai Theatrhythm et revenir (points et résultat rendus) ;
+ *   ⑦ les semaines Whitty, Matt, Dabi : neuf partitions justes, un événement
+ *     commun par chanson, chaque semaine qui monte, et Whitty 3 joué pour de vrai.
  *
  *   node bancs/navigateur/le_theatrhythm.js
  */
@@ -282,6 +284,63 @@ var erreurs = [];
     await touche('Escape');
     await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && SceneManager.isCurrentSceneStarted(); }, null, { timeout: 120000 });
     V('Échap quitte l\'éditeur', true);
+
+    // ⑦ les semaines : Whitty, Matt, Dabi
+    console.log('\n⑦ Les semaines (Whitty, Matt, Dabi)');
+    var semaines = require('../outils/semaines.json');
+    var ces = JSON.parse(fs.readFileSync(path.join(RACINE, 'data', 'CommonEvents.json'), 'utf8'));
+    var sw = Number(JSON.parse(/var \$plugins =\s*(\[[\s\S]*\]);?\s*$/.exec(fs.readFileSync(path.join(RACINE, 'js', 'plugins.js'), 'utf8'))[1])
+        .filter(function (p) { return p.name === 'MOG_Theatrhythm'; })[0].parameters['Result Switch ID']);
+    var stats = {}, fichiersOk = true, evOk = true, details = [];
+    semaines.forEach(function (c) {
+        var f = path.join(RACINE, 'theatrhythm', c.musique + '.json');
+        var p = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
+        var bon = p && p.notes.length > 50 && p.pvSelonChanson && p.notes.every(function (n, i) {
+            return n[0] >= 0 && n[1] >= 0 && n[1] <= 7 && n[2] >= -1 && n[2] <= 3 && n[3] >= 0 && n[3] <= 3 && (!i || p.notes[i - 1][0] <= n[0]);
+        });
+        if (!bon) { fichiersOk = false; details.push(c.musique); }
+        var e = ces.filter(function (x) { return x && x.name.indexOf('🎵 ' + c.adversaire + ' ' + c.niveau + ' · ') === 0; })[0];
+        var cmds = e ? e.list.filter(function (x) { return x.code === 356; }).map(function (x) { return x.parameters[0]; }) : [];
+        if (cmds[0] !== 'theatrhythm_musique ' + c.musique || cmds[1] !== 'theatrhythm : ' + c.ennemi + ' : ' + c.vitesse) { evOk = false; details.push('événement ' + c.adversaire + ' ' + c.niveau); }
+        c.id = e && e.id;
+        var s = stats[c.adversaire] = stats[c.adversaire] || [];
+        s.push({ rouges: p ? p.notes.filter(function (n) { return n[3] === 3; }).length : 0, densite: p ? p.notes.length / (p.notes[p.notes.length - 1][0] / 1000) : 0 });
+    });
+    V('neuf partitions justes (touches, héros, types, triées, « pvSelonChanson »)', fichiersOk, details.join(', '));
+    V('un événement commun par chanson : sa musique, son ennemi, sa vitesse', evOk, details.join(', '));
+    var montent = Object.keys(stats).every(function (a) { var s = stats[a]; return s[0].densite < s[1].densite && s[1].densite < s[2].densite; });
+    V('chaque semaine monte : de plus en plus de notes par seconde', montent, Object.keys(stats).map(function (a) { return a + ' ' + stats[a].map(function (x) { return x.densite.toFixed(1); }).join(' < '); }).join(' · '));
+    V('les rouges : Whitty en pose à partir de la 2e, Dabi de plus en plus, Matt seulement dans Target Practice',
+        stats.Whitty[0].rouges === 0 && stats.Whitty[1].rouges > 0 && stats.Whitty[2].rouges > stats.Whitty[1].rouges &&
+        stats.Dabi[0].rouges < stats.Dabi[1].rouges && stats.Dabi[1].rouges < stats.Dabi[2].rouges &&
+        stats.Matt[0].rouges === 0 && stats.Matt[1].rouges === 0 && stats.Matt[2].rouges > 0,
+        Object.keys(stats).map(function (a) { return a + ' ' + stats[a].map(function (x) { return x.rouges; }).join('/'); }).join(' · '));
+    var semOk = ['Whitty', 'Matt', 'Dabi'].every(function (a) {
+        var e = ces.filter(function (x) { return x && x.name === '🎵 Semaine ' + a; })[0];
+        if (!e) return false;
+        var appels = e.list.filter(function (x) { return x.code === 117; }).map(function (x) { return x.parameters[0]; });
+        var tests = e.list.filter(function (x) { return x.code === 111 && x.parameters[0] === 0 && x.parameters[1] === sw && x.parameters[2] === 1; }).length;
+        var ids = semaines.filter(function (c) { return c.adversaire === a; }).map(function (c) { return c.id; });
+        return JSON.stringify(appels) === JSON.stringify(ids) && tests === 3;
+    });
+    V('« 🎵 Semaine … » : les trois chansons dans l\'ordre, arrêt si perdu (interrupteur ' + sw + ')', semOk);
+    // une chanson pour de vrai : Whitty 3 · Ballistic
+    var c3 = semaines.filter(function (c) { return c.adversaire === 'Whitty' && c.niveau === 3; })[0];
+    await page.evaluate(function (id) {
+        var i = new Game_Interpreter();
+        i.setup($dataCommonEvents[id].list); i.update();
+    }, c3.id);
+    await demarrer();
+    var r7 = await page.evaluate(async function (c) {
+        var s = SceneManager._scene, k = s._sprite_buttons, p = TheatrhythmPlus.lire(c.musique);
+        var coup = Math.max(s._party_atk - s._enemy_def, 1), attendu = Math.floor(coup * p.notes.filter(function (n) { return n[3] !== 3; }).length * 0.8 * 1.3);
+        var vue = await attendre(function () { for (var j = 0; j < k._keys.length; j++) if (k._keys_t[j] !== null) return true; return false; }, 60000);
+        return { musique: k._musique, ennemi: s._enemy.enemyId(), vitesse: k._keys_speed, pv: s._enemy_hp[1], attendu: attendu, notes: !!vue, cur: AudioManager._currentBgm && AudioManager._currentBgm.name };
+    }, c3);
+    V('« 🎵 Whitty 3 » lance Ballistic : sa musique, Croûte Brûlante, vitesse 8', r7.musique === c3.musique && r7.cur === c3.musique && r7.ennemi === c3.ennemi && r7.vitesse === c3.vitesse, JSON.stringify([r7.cur, r7.ennemi, r7.vitesse]));
+    V('l\'ennemi tient la chanson (PV pris sur la partition)', Math.abs(r7.pv - r7.attendu) <= 1 && r7.pv > 1000, r7.pv + ' PV');
+    V('les notes de la partition arrivent', r7.notes);
+    await revenir();
 
     V('aucune erreur dans la page', erreurs.length === 0, erreurs.slice(0, 3).join(' | '));
     console.log('\n' + (ko ? '❌ ' + ko + ' échec(s), ' + ok + ' réussite(s)' : '✅ TOUT PASSE (' + ok + ' contrôles)'));

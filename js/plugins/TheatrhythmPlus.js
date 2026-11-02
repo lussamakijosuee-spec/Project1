@@ -409,6 +409,21 @@
         this._annonce.opacity = 255; this._annonceTemps = 70;
     };
 
+    // Une partition qui le demande (« pvSelonChanson ») : l'ennemi tombe vers la fin de la chanson
+    // si l'on réussit à peu près 80 % des notes — comme une chanson de FNF, pas trois coups et c'est fini
+    var _parametres = Scene_Theatrhythm.prototype.set_battler_parameters;
+    Scene_Theatrhythm.prototype.set_battler_parameters = function () {
+        _parametres.call(this);
+        var m = TP.musique(), p = m && m.name ? (TP._essai && TP._essai.musique === m.name ? TP._essai.p : TP.lire(m.name)) : null;
+        if (!p || !p.pvSelonChanson) return;
+        var coup = Math.max(this._party_atk - this._enemy_def, 1);
+        var touchees = p.notes.filter(function (n) { return n[3] !== 3; }).length * (Number(p.pvSelonChanson) > 0 && p.pvSelonChanson !== true ? Number(p.pvSelonChanson) : 0.8);
+        var serie = R.serie > 0 ? 1 + R.forceSerie / R.serie : 1;   // l'attaque du héros compte aussi
+        var pv = Math.max(1, Math.floor(coup * touchees * serie));
+        this._enemy_hp = [pv, pv];
+        this._enemy_bp = Math.floor(((pv / 30) + this._enemy_atk + this._enemy_def) / 3) * Moghunter.theatrhythm_bp_base_value;
+    };
+
     Scene_Theatrhythm.prototype.soin_theatrhythm = function (rang) {
         this._party_hp[0] = Math.min(this._party_hp[1], this._party_hp[0] + this._party_hp[1] * R.soin);
         var a = this._battlers[rang];

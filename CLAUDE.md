@@ -738,6 +738,19 @@ mis à **900 « Theatrhythm : points »** et **1000 « Theatrhythm : victoire »
 FNF, son éditeur, la partition auto par analyse du tempo) et **`LaBoiteAMusique.js`** (la Music Box à 435 musiques) sont **éteints** dans
 le gestionnaire, fichiers gardés ; la Music Box est celle de MOG. Bancs : `navigateur/le_theatrhythm.js`, et `navigateur/le_rythme.js`
 pour les deux éteints (il les charge lui-même).
+**Les semaines** (2026-11-02 ; JOKO : *« Fait moi des exemples de combat comme whitty, dabi et mat pour song »*) : trois
+adversaires des mods de FNF, trois chansons chacun, sur des musiques **du jeu** (aucune ajoutée) — `bancs/outils/semaines.json` dit
+lesquelles : Whitty (Croûte Brûlante 482 ; Lo-Fight, Overhead, Ballistic), Matt (Poing de Montagne 653 ; Light It Up, Ruckus, Target
+Practice), Dabi (Dernier Feu 487 ; Flamme Bleue, Brasier, Cendres — titres à moi, ceux de son mod je ne les connais pas sûrement).
+`ecrire_les_semaines.js` mesure chaque musique (`mesurer_les_musiques.js` : tempo, premier temps, attaques par double-croche) et pose
+les notes sur ses vraies attaques, au style du personnage : Whitty des flèches et des rafales qui roulent, ses bombes (rouges) dès la
+2e chanson ; Matt les poings A S Z X en 1-2 et crochets, les esquives ← →, l'uppercut doré X à chaque phrase, les scies (rouges) de
+Target Practice ; Dabi à contretemps sur tout le clavier, des flammes (rouges) de plus en plus nombreuses et des murs de feu. Chaque
+semaine monte (notes par seconde, rouges, vitesse 4 à 8). Les partitions portent `pvSelonChanson` (TheatrhythmPlus) : l'ennemi a les
+PV pour tenir la chanson (80 % des notes réussies, l'attaque du héros comptée), sinon des héros niveau 89 l'abattent en trois coups.
+`poser_les_semaines.js` pose les événements communs **1806-1817** (« 🎵 Whitty 1 · Lo-Fight »… et « 🎵 Semaine Whitty » qui enchaîne
+les trois, et s'arrête si l'interrupteur de résultat est éteint) ; aucun événement de carte. Ligne « ◆ SEMAINE » : l'outil ne réécrit
+que les siens. Retoucher une chanson : `theatrhythm_editeur <musique>`.
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :

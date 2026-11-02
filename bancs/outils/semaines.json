@@ -1,0 +1,11 @@
+[
+ { "adversaire": "Whitty", "niveau": 1, "titre": "Lo-Fight", "musique": "Battle-Furious-GUITAR_loop", "ennemi": 482, "vitesse": 5, "style": "whitty" },
+ { "adversaire": "Whitty", "niveau": 2, "titre": "Overhead", "musique": "Crasher", "ennemi": 482, "vitesse": 6, "style": "whitty" },
+ { "adversaire": "Whitty", "niveau": 3, "titre": "Ballistic", "musique": "Z_Net_JrpgEpicRockBattleThem_1", "ennemi": 482, "vitesse": 8, "style": "whitty" },
+ { "adversaire": "Matt", "niveau": 1, "titre": "Light It Up", "musique": "Are-you-kidding", "ennemi": 653, "vitesse": 4, "style": "matt" },
+ { "adversaire": "Matt", "niveau": 2, "titre": "Ruckus", "musique": "Battle-Sonic", "ennemi": 653, "vitesse": 6, "style": "matt" },
+ { "adversaire": "Matt", "niveau": 3, "titre": "Target Practice", "musique": "agitating-point", "ennemi": 653, "vitesse": 7, "style": "matt" },
+ { "adversaire": "Dabi", "niveau": 1, "titre": "Flamme Bleue", "musique": "Beast-From-Hell", "ennemi": 487, "vitesse": 5, "style": "dabi" },
+ { "adversaire": "Dabi", "niveau": 2, "titre": "Brasier", "musique": "Burning-Cavern", "ennemi": 487, "vitesse": 6, "style": "dabi" },
+ { "adversaire": "Dabi", "niveau": 3, "titre": "Cendres", "musique": "Battle-FatalBlood", "ennemi": 487, "vitesse": 7, "style": "dabi" }
+]
