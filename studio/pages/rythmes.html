@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rythmes — Le Studio</title>
+<link rel="stylesheet" href="/pages/studio.css">
+<style>
+  main { padding: 12px 16px 24px; }
+  .ligne { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 10px; }
+  .champ { display: flex; flex-direction: column; gap: 3px; min-width: 120px; }
+  .champ > label { font-size: 12px; color: var(--discret); }
+  .champ.etroit { min-width: 0; width: 92px; }
+  .champ.large { min-width: 240px; }
+  .transport { background: var(--panneau); border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px; align-items: center; }
+  .transport select { width: auto; }
+  .transport .temps { font: 600 18px/1 ui-monospace, Consolas, monospace; min-width: 92px; text-align: right; }
+  .palette { display: flex; gap: 4px; }
+  .palette button { width: 40px; height: 40px; padding: 0; background-repeat: no-repeat; background-color: var(--fond); border-width: 2px; }
+  .palette button.choisi { border-color: var(--accent); background-color: var(--accent-doux); }
+  button.actif { background: var(--alerte); border-color: var(--alerte); color: #fff; }
+  #cadre { position: relative; border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; background: #111018; }
+  #toile { display: block; width: 100%; height: 312px; cursor: crosshair; touch-action: none; }
+  .bas { justify-content: space-between; align-items: center; margin-top: 8px; }
+  #commande { background: var(--panneau); border: 1px solid var(--bord); border-radius: 6px; padding: 5px 9px; user-select: all; }
+  .aide { margin-top: 12px; }
+  .aide summary { cursor: pointer; font-weight: 600; }
+  kbd { border: 1px solid var(--bord); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 12px; background: var(--panneau); }
+  #modale { position: fixed; inset: 0; background: #000c; display: none; align-items: center; justify-content: center; z-index: 10; }
+  #modale.ouverte { display: flex; }
+  #modale .cadre { background: var(--panneau); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 96vw; }
+  #modale iframe { width: 816px; height: 624px; max-width: calc(96vw - 24px); max-height: calc(96vh - 90px); border: 0; background: #000; border-radius: 6px; }
+  #modale .barre { display: flex; gap: 8px; align-items: center; }
+  #modale .barre .etat { flex: 1; color: var(--discret); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="barre-studio">
+  <a class="retour" href="/">← Studio</a><h1>🎵 Rythmes</h1><span class="discret" id="titreJeu"></span>
+  <span class="pastille" id="etat">—</span>
+</header>
+<main>
+  <div class="ligne">
+    <div class="champ large"><label>Partition</label><select id="choix"></select></div>
+    <div class="champ large"><label>Nom (celui de la commande)</label><input id="nom" placeholder="chant_du_troll" spellcheck="false"></div>
+    <button id="btnEnregistrer" class="principal">💾 Enregistrer</button>
+    <div class="champ etroit"><label>Ennemi (essai)</label><input id="ennemi" type="number" min="1" value="1"></div>
+    <button id="btnEssayer">🎮 Essayer dans le jeu</button>
+  </div>
+
+  <div class="ligne">
+    <div class="champ large"><label>Musique (audio/bgm)</label><select id="musique"></select></div>
+    <div class="champ etroit"><label>Tempo (BPM)</label><input id="bpm" type="number" min="20" max="400" step="0.01"></div>
+    <button id="btnTaper" title="Tape en rythme sur la musique (ou la touche T)">👆 Taper le tempo</button>
+    <div class="champ etroit"><label>1er temps (s)</label><input id="decalage" type="number" step="0.001"></div>
+    <button id="btnPremier" title="Le premier temps de la musique est là où est le curseur">📍 1er temps ici</button>
+    <div class="champ etroit"><label>Vitesse (1-20)</label><input id="vitesse" type="number" min="1" max="20"></div>
+    <div class="champ"><label>Aimant</label>
+      <select id="aimant">
+        <option value="1">sur le temps</option><option value="2">1/2 temps</option><option value="3">1/3 (triolet)</option>
+        <option value="4">1/4 temps</option><option value="8">1/8 temps</option><option value="0">libre (ne suit pas la musique)</option>
+      </select></div>
+  </div>
+
+  <div class="ligne transport">
+    <button id="btnDebut" title="Retour au début (Origine)">⏮</button>
+    <button id="btnLecture" class="principal" title="Lecture / pause (Espace)">▶ Lecture</button>
+    <select id="debit" title="Vitesse de lecture"><option value="1">100 %</option><option value="0.75">75 %</option><option value="0.5">50 %</option></select>
+    <label class="coche"><input type="checkbox" id="metronome"> Tic sur les temps</label>
+    <label class="coche"><input type="checkbox" id="tics" checked> Tic sur les notes</label>
+    <button id="btnEnreg" title="En lecture : A, S, Z, X et les flèches posent une note dans le couloir actif">⏺ Enregistrer au clavier</button>
+    <span class="discret petit">Couloir actif : <b id="couloirActif">1</b> (<kbd>1</kbd>–<kbd>4</kbd>)</span>
+    <div class="palette" id="palette"></div>
+    <span class="temps" id="temps">0:00.00</span>
+  </div>
+
+  <div id="cadre"><canvas id="toile"></canvas></div>
+
+  <div class="ligne bas">
+    <span id="infos" class="discret"></span>
+    <span>Dans ton événement, « Commande de plugin » : <code id="commande"></code> <button id="btnCopier">Copier</button></span>
+  </div>
+
+  <details class="aide" open>
+    <summary>Comment ça marche</summary>
+    <ul>
+      <li><b>Les 4 couloirs</b> sont les 4 héros de l'équipe, dans l'ordre (le 1er en haut). Les <b>boutons</b> sont les 8 de MOG : A, S, Z (OK), X (Annuler) et les quatre flèches. Choisis-en un dans la palette, puis <b>clique dans un couloir</b> : la note se pose. Clic droit dessus : elle part. Tu peux la <b>glisser</b>.</li>
+      <li><b>Suivre la musique</b> : règle le tempo (tape-le avec <kbd>T</kbd> en écoutant), mets le <b>1er temps</b> au bon endroit, et l'aimant pose les notes sur les temps. <b>Ne pas suivre</b> : aimant « libre », la note va exactement où tu cliques.</li>
+      <li><b>Ça accélère</b> : clique dans la bande « vitesse » (au-dessus des couloirs) — à partir de là, les notes arrivent à cette vitesse. Clic droit sur le drapeau : il part.</li>
+      <li><b>Au clavier</b> : lance la lecture, appuie sur ⏺, puis joue les touches A, S, Z, X et les flèches en rythme : chaque touche pose une note dans le couloir actif (<kbd>1</kbd>–<kbd>4</kbd> pour en changer). <kbd>Espace</kbd> lecture/pause, <kbd>Suppr</kbd> efface la note choisie, <kbd>Ctrl</kbd>+<kbd>Z</kbd> annule. Molette : avancer ; <kbd>Ctrl</kbd>+molette : zoomer.</li>
+      <li><b>🎮 Essayer</b> lance le vrai jeu ici, avec la partition telle qu'elle est (même pas enregistrée). <b>💾 Enregistrer</b> l'écrit dans <code>data/rythmes/</code> ; RPG Maker peut rester ouvert. Dans ton événement : la commande ci-dessus. Sans partition, le Theatrhythm de MOG joue au hasard, comme avant.</li>
+    </ul>
+  </details>
+</main>
+
+<div id="modale">
+  <div class="cadre">
+    <iframe id="jeu" title="Essai dans le jeu"></iframe>
+    <div class="barre">
+      <span class="etat" id="etatEssai"></span>
+      <button id="btnRejouer">↻ Rejouer</button>
+      <button id="btnFermer">Fermer</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+function $(id) { return document.getElementById(id); }
+var BOUTONS = ['A', 'S', 'Z (OK)', 'X (Annuler)', '↑', '→', '←', '↓'];
+var TOUCHES = { KeyA: 0, KeyS: 1, KeyZ: 2, Enter: 2, KeyX: 3, ArrowUp: 4, ArrowRight: 5, ArrowLeft: 6, ArrowDown: 7 };
+var GOUTTIERE = 96, REGLE = 28, PISTE = 26, COULOIR = 64, NB = 4;
+
+// ── l'état ──────────────────────────────────────────────────────────────────
+var P = nouvelle();
+var nomCourant = '';
+var heros = [];
+var historique = [];
+var vue = { debut: -0.5, pxs: 160 };
+var curseur = 0;
+var bouton = 2, couloir = 0, selection = null, enregistrement = false;
+var lecture = null;
+var audio = { ctx: null, gain: null, buffer: null, nom: null, pics: null, parSec: 200 };
+var image = new Image();
+image.src = '/jeu/img/theatrhythm/Theatrhythm_A.png';
+image.onload = function () { dessinerPalette(); sale = true; };
+
+function nouvelle() { return { musique: null, bpm: 120, decalage: 0, vitesse: 6, aimant: 4, notes: [], vitesses: [] }; }
+
+function toast(t, erreur) {
+  var e = $('toast'); e.textContent = t; e.className = 'toast visible' + (erreur ? ' erreur' : '');
+  clearTimeout(toast._m); toast._m = setTimeout(function () { e.className = 'toast'; }, erreur ? 6000 : 3500);
+}
+function api(url, corps) {
+  return fetch(url, corps ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) } : undefined)
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.erreur || ('Erreur ' + r.status)); return j; }); });
+}
+function horloge(t) {
+  var s = Math.max(0, t), m = Math.floor(s / 60);
+  return m + ':' + (s - m * 60).toFixed(2).padStart(5, '0');
+}
+
+// ── la grille du tempo ──────────────────────────────────────────────────────
+function temps() { return 60 / (Number(P.bpm) || 120); }
+function pas() { var a = Number(P.aimant); return a > 0 ? temps() / a : 0; }
+function aimanter(t) {
+  var p = pas(); if (!p) return Math.max(0, Math.round(t * 1000) / 1000);
+  return Math.max(0, P.decalage + Math.round((t - P.decalage) / p) * p);
+}
+function xDe(t) { return GOUTTIERE + (t - vue.debut) * vue.pxs; }
+function tDe(x) { return vue.debut + (x - GOUTTIERE) / vue.pxs; }
+function yCouloir(c) { return REGLE + PISTE + c * COULOIR; }
+
+// ── défaire ─────────────────────────────────────────────────────────────────
+function retenir() {
+  historique.push(JSON.stringify({ notes: P.notes, vitesses: P.vitesses }));
+  if (historique.length > 200) historique.shift();
+  brouillon();
+}
+function defaire() {
+  var h = historique.pop(); if (!h) return;
+  var o = JSON.parse(h); P.notes = o.notes; P.vitesses = o.vitesses; selection = null; sale = true; majInfos(); brouillon();
+}
+function brouillon() { try { localStorage.setItem('studio.rythme', JSON.stringify({ nom: $('nom').value, partition: P })); } catch (e) {} }
+
+// ── la musique ──────────────────────────────────────────────────────────────
+function contexte() {
+  if (!audio.ctx) {
+    audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    audio.gain = audio.ctx.createGain(); audio.gain.gain.value = 0.8; audio.gain.connect(audio.ctx.destination);
+  }
+  return audio.ctx;
+}
+function chargerMusique(nom) {
+  arreter();
+  audio.buffer = null; audio.pics = null; audio.nom = nom; sale = true;
+  if (!nom) return Promise.resolve();
+  $('etat').textContent = '♪ chargement…'; $('etat').className = 'pastille';
+  var ctx = contexte();
+  function essai(ext) { return fetch('/jeu/audio/bgm/' + encodeURIComponent(nom) + ext).then(function (r) { if (!r.ok) throw new Error(); return r.arrayBuffer(); }); }
+  return essai('.ogg').catch(function () { return essai('.m4a'); })
+    .then(function (data) { return new Promise(function (ok, ko) { ctx.decodeAudioData(data, ok, ko); }); })
+    .then(function (buf) {
+      if (audio.nom !== nom) return;
+      audio.buffer = buf;
+      var d = buf.getChannelData(0), n = Math.ceil(buf.duration * audio.parSec), pics = new Float32Array(n), k = buf.sampleRate / audio.parSec;
+      for (var i = 0; i < n; i++) { var m = 0; for (var j = Math.floor(i * k), f = Math.min(d.length, Math.floor((i + 1) * k)); j < f; j += 4) { var v = Math.abs(d[j]); if (v > m) m = v; } pics[i] = m; }
+      audio.pics = pics; sale = true; majInfos();
+      $('etat').textContent = '♪ ' + nom + ' · ' + horloge(buf.duration); $('etat').className = 'pastille ok';
+    })
+    .catch(function () { $('etat').textContent = '♪ illisible'; $('etat').className = 'pastille alerte'; toast('La musique « ' + nom + ' » ne se lit pas dans le navigateur.', true); });
+}
+function maintenant() {
+  if (!lecture) return curseur;
+  return lecture.t0 + (audio.ctx.currentTime - lecture.ctx0) * lecture.debit;
+}
+function jouer() {
+  var ctx = contexte(); ctx.resume();
+  var debit = Number($('debit').value) || 1;
+  var src = null;
+  if (audio.buffer && curseur < audio.buffer.duration) {
+    src = ctx.createBufferSource(); src.buffer = audio.buffer; src.playbackRate.value = debit; src.connect(audio.gain);
+    src.start(0, Math.max(0, curseur));
+    src.onended = function () { if (lecture && lecture.src === src) arreter(true); };
+  }
+  lecture = { src: src, ctx0: ctx.currentTime, t0: curseur, debit: debit, prevu: curseur };
+  $('btnLecture').textContent = '⏸ Pause';
+}
+function arreter(garder) {
+  if (!lecture) return;
+  var t = maintenant(), l = lecture; lecture = null;
+  if (l.src) { l.src.onended = null; try { l.src.stop(); } catch (e) {} }
+  curseur = garder === false ? curseur : t;
+  $('btnLecture').textContent = '▶ Lecture'; sale = true;
+}
+function basculer() { if (lecture) arreter(); else jouer(); }
+function tic(quand, aigu) {
+  var ctx = audio.ctx, o = ctx.createOscillator(), g = ctx.createGain();
+  o.frequency.value = aigu ? 1760 : 880; g.gain.setValueAtTime(0.25, quand); g.gain.exponentialRampToValueAtTime(0.001, quand + 0.05);
+  o.connect(g); g.connect(audio.ctx.destination); o.start(quand); o.stop(quand + 0.06);
+}
+// les tics des 200 ms à venir
+function programmerTics() {
+  if (!lecture) return;
+  var de = lecture.prevu, a = maintenant() + 0.2 * lecture.debit;
+  if (a <= de) return;
+  function quand(t) { return lecture.ctx0 + (t - lecture.t0) / lecture.debit; }
+  if ($('metronome').checked) {
+    var b = temps(), k = Math.ceil((de - P.decalage) / b - 1e-9);
+    for (var t = P.decalage + k * b; t < a; t += b) if (t >= de) tic(quand(t), Math.round((t - P.decalage) / b) % 4 === 0);
+  }
+  if ($('tics').checked) P.notes.forEach(function (n) { if (n.t >= de && n.t < a) tic(quand(n.t), true); });
+  lecture.prevu = a;
+}
+
+// ── la toile ────────────────────────────────────────────────────────────────
+var toile = $('toile'), g2 = toile.getContext('2d'), sale = true, largeur = 0;
+function redimensionner() {
+  var r = window.devicePixelRatio || 1, l = toile.clientWidth, h = REGLE + PISTE + NB * COULOIR + 6;
+  toile.style.height = h + 'px'; toile.width = Math.round(l * r); toile.height = Math.round(h * r);
+  g2.setTransform(r, 0, 0, r, 0, 0); largeur = l; sale = true;
+}
+window.addEventListener('resize', redimensionner);
+
+function dessiner() {
+  var h = REGLE + PISTE + NB * COULOIR + 6, t0 = tDe(GOUTTIERE), t1 = tDe(largeur);
+  g2.clearRect(0, 0, largeur, h);
+  g2.fillStyle = '#111018'; g2.fillRect(0, 0, largeur, h);
+  for (var c = 0; c < NB; c++) { g2.fillStyle = c % 2 ? '#1a1824' : '#16141f'; g2.fillRect(GOUTTIERE, yCouloir(c), largeur, COULOIR); }
+  g2.fillStyle = 'rgba(157,133,255,0.10)'; g2.fillRect(GOUTTIERE, yCouloir(couloir), largeur, COULOIR);
+  // la forme de la musique
+  if (audio.pics) {
+    var milieu = yCouloir(0) + NB * COULOIR / 2, amp = NB * COULOIR / 2 - 4;
+    g2.fillStyle = 'rgba(120,200,255,0.16)';
+    for (var x = GOUTTIERE; x < largeur; x++) {
+      var a = tDe(x), b = tDe(x + 1), i0 = Math.max(0, Math.floor(a * audio.parSec)), i1 = Math.min(audio.pics.length, Math.ceil(b * audio.parSec)), m = 0;
+      for (var i = i0; i < i1; i++) if (audio.pics[i] > m) m = audio.pics[i];
+      if (m > 0) g2.fillRect(x, milieu - m * amp, 1, m * amp * 2);
+    }
+  }
+  // la grille
+  var bt = temps(), p = pas(), k = Math.floor((t0 - P.decalage) / (p || bt)) - 1;
+  for (var t = P.decalage + k * (p || bt); t < t1; t += (p || bt)) {
+    if (t < 0) continue;
+    var surTemps = Math.abs((t - P.decalage) / bt - Math.round((t - P.decalage) / bt)) < 1e-6;
+    var n = Math.round((t - P.decalage) / bt), mesure = surTemps && n % 4 === 0;
+    var X = Math.round(xDe(t)) + 0.5;
+    g2.strokeStyle = mesure ? 'rgba(255,255,255,0.35)' : surTemps ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.06)';
+    g2.beginPath(); g2.moveTo(X, REGLE); g2.lineTo(X, h); g2.stroke();
+    if (mesure && n >= 0) { g2.fillStyle = '#cfc8e8'; g2.font = '11px Segoe UI, sans-serif'; g2.fillText(String(n / 4 + 1), X + 3, 12); }
+  }
+  // la règle : les secondes
+  g2.fillStyle = '#211f2a'; g2.fillRect(GOUTTIERE, 14, largeur, REGLE - 14);
+  g2.fillStyle = '#9d97b0'; g2.font = '10px Segoe UI, sans-serif';
+  var pasS = vue.pxs > 120 ? 1 : vue.pxs > 40 ? 5 : 15;
+  for (var s = Math.max(0, Math.ceil(t0 / pasS) * pasS); s < t1; s += pasS) { var xs = xDe(s); g2.fillRect(xs, 22, 1, 6); g2.fillText(horloge(s).replace(/\.00$/, ''), xs + 2, 24); }
+  // la piste des vitesses
+  g2.fillStyle = '#1d1b27'; g2.fillRect(GOUTTIERE, REGLE, largeur, PISTE);
+  g2.fillStyle = '#9d97b0'; g2.fillText('vitesse ' + P.vitesse + ' au départ', GOUTTIERE + 6, REGLE + 17);
+  P.vitesses.forEach(function (v) {
+    var xv = xDe(v.t); if (xv < GOUTTIERE - 60 || xv > largeur) return;
+    g2.strokeStyle = 'rgba(255,170,60,0.55)'; g2.beginPath(); g2.moveTo(xv + 0.5, REGLE); g2.lineTo(xv + 0.5, h); g2.stroke();
+    g2.fillStyle = '#ffaa3c'; g2.fillRect(xv, REGLE + 4, 54, PISTE - 8);
+    g2.fillStyle = '#1a1206'; g2.font = '600 11px Segoe UI, sans-serif'; g2.fillText('⚡ ' + v.v, xv + 6, REGLE + 17);
+  });
+  // les notes
+  var cote = 42;
+  P.notes.forEach(function (n) {
+    var xn = xDe(n.t); if (xn < GOUTTIERE - cote || xn > largeur + cote) return;
+    var yn = yCouloir(n.c) + COULOIR / 2;
+    if (image.complete && image.naturalWidth) {
+      var cw = image.naturalWidth / 8, ch = image.naturalHeight;
+      g2.drawImage(image, cw * n.b, 0, cw, ch, xn - cote / 2, yn - cote / 2, cote, cote);
+    } else {
+      g2.fillStyle = '#9d85ff'; g2.beginPath(); g2.arc(xn, yn, cote / 2, 0, 7); g2.fill();
+      g2.fillStyle = '#fff'; g2.fillText(BOUTONS[n.b][0], xn - 4, yn + 4);
+    }
+    if (n === selection) { g2.strokeStyle = '#ffe066'; g2.lineWidth = 3; g2.beginPath(); g2.arc(xn, yn, cote / 2 + 3, 0, 7); g2.stroke(); g2.lineWidth = 1; }
+  });
+  // la gouttière : les couloirs
+  g2.fillStyle = '#211f2a'; g2.fillRect(0, 0, GOUTTIERE, h);
+  for (c = 0; c < NB; c++) {
+    g2.fillStyle = c === couloir ? '#c9b8ff' : '#cfc8e8'; g2.font = '600 12px Segoe UI, sans-serif';
+    g2.fillText('Couloir ' + (c + 1), 8, yCouloir(c) + 26);
+    g2.fillStyle = '#8f89a3'; g2.font = '11px Segoe UI, sans-serif';
+    g2.fillText((c + 1) + (c ? 'e' : 'er') + ' héros', 8, yCouloir(c) + 42);
+  }
+  g2.fillStyle = '#8f89a3'; g2.fillText('vitesse', 8, REGLE + 17);
+  // le curseur
+  var tc = maintenant(), xc = xDe(tc);
+  if (xc >= GOUTTIERE) { g2.fillStyle = lecture ? '#ff5d5d' : '#9d85ff'; g2.fillRect(Math.round(xc) - 1, 0, 2, h); }
+}
+
+function boucle() {
+  if (lecture) {
+    programmerTics();
+    var t = maintenant();
+    if (audio.buffer && t >= audio.buffer.duration) arreter();
+    var x = xDe(t);
+    if (x > largeur - 80 || x < GOUTTIERE) vue.debut = t - (largeur - GOUTTIERE) * 0.15 / vue.pxs;
+    sale = true;
+  }
+  if (sale) { dessiner(); $('temps').textContent = horloge(maintenant()); sale = false; }
+  requestAnimationFrame(boucle);
+}
+
+// ── la souris ───────────────────────────────────────────────────────────────
+function noteSous(x, y) {
+  var c = Math.floor((y - yCouloir(0)) / COULOIR), meilleure = null, d = 22;
+  P.notes.forEach(function (n) { if (n.c !== c) return; var e = Math.abs(xDe(n.t) - x); if (e <= d) { d = e; meilleure = n; } });
+  return meilleure;
+}
+function vitesseSous(x) {
+  var v = null; P.vitesses.forEach(function (m) { var xv = xDe(m.t); if (x >= xv && x <= xv + 54) v = m; }); return v;
+}
+var glisse = null;
+toile.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+toile.addEventListener('pointerdown', function (e) {
+  var r = toile.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  if (x < GOUTTIERE) {
+    var cc = Math.floor((y - yCouloir(0)) / COULOIR);
+    if (cc >= 0 && cc < NB) { couloir = cc; $('couloirActif').textContent = cc + 1; sale = true; }
+    return;
+  }
+  var t = tDe(x);
+  if (y < REGLE) {                                          // la règle : le curseur
+    var enLecture = !!lecture; arreter(); curseur = Math.max(0, t); if (enLecture) jouer(); sale = true; return;
+  }
+  if (y < REGLE + PISTE) {                                  // la piste des vitesses
+    var m = vitesseSous(x);
+    if (e.button === 2) { if (m) { retenir(); P.vitesses.splice(P.vitesses.indexOf(m), 1); sale = true; majInfos(); } return; }
+    var v = prompt('À partir d\'ici, les notes arrivent à la vitesse (1 = lent, 20 = très vite) :', m ? m.v : P.vitesse);
+    if (v === null) return;
+    v = Math.min(20, Math.max(1, Number(v) || P.vitesse));
+    retenir();
+    if (m) m.v = v; else P.vitesses.push({ t: aimanter(t), v: v });
+    P.vitesses.sort(function (a, b) { return a.t - b.t; });
+    sale = true; majInfos(); return;
+  }
+  var c = Math.floor((y - yCouloir(0)) / COULOIR);
+  if (c < 0 || c >= NB) return;
+  var n = noteSous(x, y);
+  if (e.button === 2) { if (n) { retenir(); P.notes.splice(P.notes.indexOf(n), 1); if (selection === n) selection = null; sale = true; majInfos(); } return; }
+  retenir();
+  if (!n) { n = { t: aimanter(t), c: c, b: bouton }; P.notes.push(n); trier(); }
+  selection = n; glisse = { note: n, dx: x - xDe(n.t) };
+  toile.setPointerCapture(e.pointerId);
+  sale = true; majInfos();
+});
+toile.addEventListener('pointermove', function (e) {
+  if (!glisse) return;
+  var r = toile.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  glisse.note.t = aimanter(tDe(x - glisse.dx));
+  glisse.note.c = Math.min(NB - 1, Math.max(0, Math.floor((y - yCouloir(0)) / COULOIR)));
+  sale = true;
+});
+toile.addEventListener('pointerup', function () { if (glisse) { trier(); brouillon(); majInfos(); } glisse = null; });
+toile.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  var r = toile.getBoundingClientRect(), x = e.clientX - r.left;
+  if (e.ctrlKey) {
+    var t = tDe(x); vue.pxs = Math.min(1200, Math.max(10, vue.pxs * (e.deltaY < 0 ? 1.2 : 1 / 1.2))); vue.debut = t - (x - GOUTTIERE) / vue.pxs;
+  } else {
+    vue.debut += (e.deltaY + e.deltaX) / vue.pxs;
+  }
+  vue.debut = Math.max(-1, vue.debut); sale = true;
+}, { passive: false });
+function trier() { P.notes.sort(function (a, b) { return a.t - b.t || a.c - b.c; }); }
+
+// ── le clavier ──────────────────────────────────────────────────────────────
+var taps = [];
+function taper() {
+  var m = performance.now();
+  if (taps.length && m - taps[taps.length - 1] > 2000) taps = [];
+  taps.push(m); if (taps.length > 9) taps.shift();
+  if (taps.length >= 3) { P.bpm = Math.round(60000 * (taps.length - 1) / (taps[taps.length - 1] - taps[0]) * 100) / 100; $('bpm').value = P.bpm; sale = true; majInfos(); brouillon(); }
+}
+document.addEventListener('keydown', function (e) {
+  if (/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName) && document.activeElement.type !== 'checkbox') return;
+  if ($('modale').classList.contains('ouverte')) return;
+  if (e.code === 'Space') { e.preventDefault(); basculer(); return; }
+  if (e.ctrlKey && e.code === 'KeyZ') { e.preventDefault(); defaire(); return; }
+  if (/^Digit[1-4]$/.test(e.code)) { couloir = Number(e.code.slice(5)) - 1; $('couloirActif').textContent = couloir + 1; sale = true; return; }
+  if (e.code === 'KeyT') { taper(); return; }
+  if (e.code === 'Home') { arreter(); curseur = 0; vue.debut = -0.5; sale = true; return; }
+  if (enregistrement && lecture && TOUCHES[e.code] !== undefined) {
+    e.preventDefault();
+    retenir(); var n = { t: aimanter(maintenant()), c: couloir, b: TOUCHES[e.code] };
+    P.notes.push(n); trier(); selection = n; sale = true; majInfos(); return;
+  }
+  if ((e.code === 'Delete' || e.code === 'Backspace') && selection) {
+    retenir(); P.notes.splice(P.notes.indexOf(selection), 1); selection = null; sale = true; majInfos(); return;
+  }
+  if (selection && !enregistrement && /^Arrow/.test(e.code)) {
+    e.preventDefault(); retenir();
+    var dp = pas() || 0.01;
+    if (e.code === 'ArrowLeft') selection.t = Math.max(0, aimanter(selection.t - dp));
+    if (e.code === 'ArrowRight') selection.t = aimanter(selection.t + dp);
+    if (e.code === 'ArrowUp') selection.c = Math.max(0, selection.c - 1);
+    if (e.code === 'ArrowDown') selection.c = Math.min(NB - 1, selection.c + 1);
+    trier(); sale = true; return;
+  }
+  if (selection && TOUCHES[e.code] !== undefined && !enregistrement) { retenir(); selection.b = TOUCHES[e.code]; choisirBouton(selection.b); sale = true; }
+});
+
+// ── les commandes ───────────────────────────────────────────────────────────
+function dessinerPalette() {
+  var p = $('palette'); p.innerHTML = '';
+  BOUTONS.forEach(function (nom, i) {
+    var b = document.createElement('button'); b.title = nom;
+    if (image.naturalWidth) { b.style.backgroundImage = 'url(' + image.src + ')'; b.style.backgroundSize = (36 * 8) + 'px 36px'; b.style.backgroundPosition = (-36 * i) + 'px 0'; }
+    else b.textContent = nom[0];
+    if (i === bouton) b.className = 'choisi';
+    b.onclick = function () { choisirBouton(i); if (selection) { retenir(); selection.b = i; sale = true; } };
+    p.appendChild(b);
+  });
+}
+function choisirBouton(i) { bouton = i; dessinerPalette(); }
+function majInfos() {
+  var nom = ($('nom').value || '').trim() || 'nom_de_ta_partition';
+  var fin = P.notes.length ? P.notes[P.notes.length - 1].t : 0;
+  $('infos').textContent = P.notes.length + ' note' + (P.notes.length > 1 ? 's' : '') + ' · dernière à ' + horloge(fin) +
+    (P.vitesses.length ? ' · ' + P.vitesses.length + ' changement' + (P.vitesses.length > 1 ? 's' : '') + ' de vitesse' : '') +
+    (audio.buffer ? ' · musique ' + horloge(audio.buffer.duration) : '');
+  $('commande').textContent = 'theatrhythm : ' + (Number($('ennemi').value) || 1) + ' : ' + P.vitesse + ' : ' + nom;
+}
+function remplirChamps() {
+  $('musique').value = P.musique ? P.musique.name : '';
+  $('bpm').value = P.bpm; $('decalage').value = P.decalage; $('vitesse').value = P.vitesse; $('aimant').value = String(P.aimant);
+  majInfos(); sale = true;
+}
+function lireChamps() {
+  P.bpm = Math.min(400, Math.max(20, Number($('bpm').value) || 120));
+  P.decalage = Number($('decalage').value) || 0;
+  P.vitesse = Math.min(20, Math.max(1, Math.round(Number($('vitesse').value) || 6)));
+  P.aimant = Number($('aimant').value);
+  majInfos(); sale = true; brouillon();
+}
+['bpm', 'decalage', 'vitesse', 'aimant', 'ennemi'].forEach(function (id) { $(id).addEventListener('change', lireChamps); });
+$('nom').addEventListener('input', function () { majInfos(); brouillon(); });
+$('musique').addEventListener('change', function () {
+  var n = $('musique').value; P.musique = n ? { name: n, volume: 90, pitch: 100, pan: 0 } : null; chargerMusique(n); brouillon();
+});
+$('btnLecture').onclick = basculer;
+$('btnDebut').onclick = function () { arreter(); curseur = 0; vue.debut = -0.5; sale = true; };
+$('btnTaper').onclick = taper;
+$('btnPremier').onclick = function () { P.decalage = Math.round(maintenant() * 1000) / 1000; $('decalage').value = P.decalage; sale = true; brouillon(); };
+$('btnEnreg').onclick = function () { enregistrement = !enregistrement; $('btnEnreg').classList.toggle('actif', enregistrement); if (enregistrement && !lecture) jouer(); };
+$('btnCopier').onclick = function () { navigator.clipboard.writeText($('commande').textContent).then(function () { toast('Commande copiée.'); }); };
+$('choix').addEventListener('change', function () {
+  var n = $('choix').value;
+  if (!n) { arreter(); P = nouvelle(); historique = []; selection = null; $('nom').value = ''; remplirChamps(); chargerMusique(null); return; }
+  api('/api/rythme?nom=' + encodeURIComponent(n)).then(function (p) {
+    arreter(); P = Object.assign(nouvelle(), p); historique = []; selection = null; $('nom').value = n; nomCourant = n;
+    remplirChamps(); chargerMusique(P.musique && P.musique.name); brouillon();
+  }).catch(function (e) { toast(e.message, true); });
+});
+$('btnEnregistrer').onclick = function () {
+  var nom = ($('nom').value || '').trim();
+  if (!nom) { toast('Donne un nom à la partition (lettres, chiffres, _ et -).', true); $('nom').focus(); return; }
+  lireChamps();
+  $('btnEnregistrer').disabled = true;
+  api('/api/rythme', { nom: nom, partition: P }).then(function (r) {
+    nomCourant = r.nom; toast('✅ ' + r.notes + ' notes écrites dans ' + r.fichier + '.');
+    return listePartitions(r.nom);
+  }).catch(function (e) { toast(e.message, true); }).then(function () { $('btnEnregistrer').disabled = false; });
+};
+function listePartitions(choisie) {
+  return api('/api/rythmes').then(function (r) {
+    heros = r.heros || [];
+    var s = $('choix'); s.innerHTML = '<option value="">— nouvelle partition —</option>';
+    r.partitions.forEach(function (n) { var o = document.createElement('option'); o.value = n; o.textContent = n; s.appendChild(o); });
+    if (choisie) s.value = choisie;
+    var m = $('musique');
+    if (!m.options.length) {
+      m.innerHTML = '<option value="">— aucune (la musique de combat) —</option>';
+      r.musiques.forEach(function (n) { var o = document.createElement('option'); o.value = n; o.textContent = n; m.appendChild(o); });
+    }
+    return r;
+  });
+}
+
+// ── l'essai dans le vrai jeu ────────────────────────────────────────────────
+function attendreQue(f, ms) {
+  return new Promise(function (ok, ko) {
+    var t0 = Date.now();
+    (function v() { var r = false; try { r = f(); } catch (e) {} if (r) return ok(); if (Date.now() - t0 > ms) return ko(new Error('Le jeu ne répond pas.')); setTimeout(v, 200); })();
+  });
+}
+function essayer() {
+  lireChamps(); arreter();
+  $('modale').className = 'ouverte';
+  var f = $('jeu'), W, ennemi = Math.max(1, Number($('ennemi').value) || 1);
+  var copie = JSON.stringify(P), nom = ($('nom').value || '').trim() || 'essai';
+  $('etatEssai').textContent = 'Le jeu démarre…';
+  f.src = '/jeu/index.html?rythme=' + Date.now();
+  attendreQue(function () {
+    W = f.contentWindow;
+    var s = W && W.SceneManager && W.SceneManager._scene;
+    return s && s.constructor === W.Scene_Title && W.$dataSystem && s._commandWindow && s._commandWindow.openness === 255;
+  }, 90000).then(function () {
+    if (!W.LesPartitions || !W.Scene_Theatrhythm) throw new Error('LesPartitions n\'est pas allumé dans le gestionnaire de plugins.');
+    W.DataManager.setupNewGame();
+    W.$gameSystem._debutAFaire = false; W.$gameSystem._debutFait = true;
+    [1, 2, 3, 4].forEach(function (id) { if (W.$gameParty._actors.indexOf(id) < 0) W.$gameParty.addActor(id); });
+    W.$gamePlayer.reserveTransfer(W.$dataSystem.startMapId, W.$dataSystem.startX, W.$dataSystem.startY, 2, 0);
+    W.SceneManager.goto(W.Scene_Map);
+    return attendreQue(function () { var s = W.SceneManager._scene; return s && s.constructor === W.Scene_Map && s.isActive() && !W.SceneManager.isSceneChanging(); }, 30000);
+  }).then(function () {
+    W.LesPartitions._attente = W.LesPartitions.preparer(W.JSON.parse(copie), nom);
+    W.$gameSystem._theatrhythm_data = [Math.min(ennemi, W.$dataEnemies.length - 1), P.vitesse];
+    W.$gameSystem._theatrhythm_start = true;
+    $('etatEssai').textContent = 'Clique dans le jeu, puis une touche pour commencer. A, S, Z, X et les flèches.';
+    f.focus();
+  }).catch(function (e) { $('etatEssai').textContent = e.message; });
+}
+$('btnEssayer').onclick = essayer;
+$('btnRejouer').onclick = essayer;
+$('btnFermer').onclick = function () { $('modale').className = ''; $('jeu').src = 'about:blank'; };
+
+// ── démarrage ───────────────────────────────────────────────────────────────
+// un bouton cliqué rend la main : Espace ne le relance pas une seconde fois
+document.addEventListener('click', function (e) { if (e.target.tagName === 'BUTTON') e.target.blur(); });
+api('/api/projet').then(function (p) { $('titreJeu').textContent = p.titre; }).catch(function () {});
+listePartitions().then(function () {
+  var b = null;
+  try { b = JSON.parse(localStorage.getItem('studio.rythme') || 'null'); } catch (e) {}
+  if (b && b.partition && (b.partition.notes || []).length) {
+    P = Object.assign(nouvelle(), b.partition); $('nom').value = b.nom || '';
+    if (b.nom && Array.prototype.some.call($('choix').options, function (o) { return o.value === b.nom; })) $('choix').value = b.nom;
+    toast('Brouillon repris (' + P.notes.length + ' notes). « — nouvelle partition — » pour repartir de zéro.');
+  }
+  remplirChamps(); chargerMusique(P.musique && P.musique.name);
+}).catch(function (e) { toast(e.message, true); });
+dessinerPalette();
+redimensionner();
+requestAnimationFrame(boucle);
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 //  Lancement : double-clic sur STUDIO.bat (à la racine du projet)
 //
 //  Il LIT tout le projet (data/, img/, audio/) et Documents\RPG Maker, et
-//  n'ÉCRIT qu'à quatre endroits :
+//  n'ÉCRIT qu'à cinq endroits :
 //    · data/CommonEvents.json — les événements communs 600 à 699 (les scènes)
 //    · studio/scenes/          — la source de chaque scène, pour la rouvrir
 //    · img/ et audio/          — un fichier copié depuis Documents\RPG Maker,
@@ -12,6 +12,10 @@
 //    · img/faces/              — une planche d'expressions (576×288), quand tu
 //                                cliques « Enregistrer » (jamais par-dessus un
 //                                fichier qui existe)
+//    · data/rythmes/           — tes partitions du Theatrhythm (LesPartitions.js) ;
+//                                RPG Maker ne lit pas ce dossier, il peut rester
+//                                ouvert. Avant de réécrire une partition, sa
+//                                version d'avant part dans Sauvegardes du Studio\rythmes
 //  Avant chaque écriture : une copie de CommonEvents.json dans
 //  Documents\RPG Maker\Sauvegardes du Studio. Et rien ne s'écrit tant que
 //  RPG Maker est ouvert : en enregistrant, l'éditeur écraserait la scène.
@@ -360,6 +364,57 @@ function ecrirePlanche(demande) {
     return { fichier: 'img/faces/' + fichier, nom: nom, octets: png.length };
 }
 
+// ── les rythmes : les partitions du Theatrhythm (LesPartitions.js) ──────────
+var RYTHMES = path.join(DATA, 'rythmes');
+function nomDePartition(brut) {
+    var nom = String(brut || '').trim();
+    if (!nom) throw erreurAvecCode('Donne un nom à la partition.', 400);
+    if (!/^[A-Za-z0-9_-]{1,60}$/.test(nom))
+        throw erreurAvecCode('Le nom d\'une partition : lettres sans accent, chiffres, _ et - (pas d\'espace). Il va dans la commande « theatrhythm : ennemi : vitesse : nom ».', 400);
+    return nom;
+}
+function partitions() {
+    if (!fs.existsSync(RYTHMES)) return [];
+    return fs.readdirSync(RYTHMES).filter(function (f) { return /\.json$/i.test(f); })
+        .map(function (f) { return f.slice(0, -5); }).sort(function (a, b) { return a.localeCompare(b, 'fr'); });
+}
+function lirePartition(brut) {
+    var f = path.join(RYTHMES, nomDePartition(brut) + '.json');
+    if (!fs.existsSync(f)) throw erreurAvecCode('Partition introuvable.', 404);
+    return lireJSON(f);
+}
+function ecrirePartition(demande) {
+    var nom = nomDePartition(demande && demande.nom);
+    var p = demande.partition;
+    if (!p || !Array.isArray(p.notes)) throw erreurAvecCode('Partition illisible.', 400);
+    function nombre(x, d) { x = Number(x); return isFinite(x) ? x : d; }
+    function arrondi(x) { return Math.round(x * 1000) / 1000; }
+    var propre = {
+        version: 1,
+        musique: p.musique && p.musique.name ? { name: String(p.musique.name), volume: nombre(p.musique.volume, 90), pitch: nombre(p.musique.pitch, 100), pan: nombre(p.musique.pan, 0) } : null,
+        bpm: nombre(p.bpm, 120),
+        decalage: arrondi(nombre(p.decalage, 0)),
+        vitesse: Math.min(20, Math.max(1, nombre(p.vitesse, 6))),
+        aimant: nombre(p.aimant, 4),
+        notes: p.notes.filter(function (n) { return n && isFinite(n.t) && n.t >= 0; }).map(function (n) {
+            return { t: arrondi(Number(n.t)), c: Math.min(3, Math.max(0, Math.floor(n.c) || 0)), b: Math.min(7, Math.max(0, Math.floor(n.b) || 0)) };
+        }).sort(function (a, b) { return a.t - b.t || a.c - b.c; }),
+        vitesses: (p.vitesses || []).filter(function (v) { return v && isFinite(v.t) && v.t >= 0 && Number(v.v) > 0; }).map(function (v) {
+            return { t: arrondi(Number(v.t)), v: Math.min(20, Math.max(1, Number(v.v))) };
+        }).sort(function (a, b) { return a.t - b.t; })
+    };
+    fs.mkdirSync(RYTHMES, { recursive: true });
+    var f = path.join(RYTHMES, nom + '.json');
+    if (fs.existsSync(f)) {
+        var copies = path.join(SAUVEGARDES, 'rythmes');
+        fs.mkdirSync(copies, { recursive: true });
+        var horo = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 19);
+        fs.copyFileSync(f, path.join(copies, nom + '_' + horo + '.json'));
+    }
+    fs.writeFileSync(f, JSON.stringify(propre, null, 1) + '\n');
+    return { nom: nom, notes: propre.notes.length, fichier: 'data/rythmes/' + nom + '.json' };
+}
+
 // ── le serveur ──────────────────────────────────────────────────────────────
 function envoyerJSON(res, code, objet) {
     var corps = Buffer.from(JSON.stringify(objet));
@@ -392,6 +447,7 @@ var serveur = http.createServer(function (req, res) {
         if (chemin === '/cinematiques') return servirFichier(res, PAGES, 'cinematiques.html');
         if (chemin === '/ressources') return servirFichier(res, PAGES, 'ressources.html');
         if (chemin === '/planche') return servirFichier(res, PAGES, 'planche.html');
+        if (chemin === '/rythmes') return servirFichier(res, PAGES, 'rythmes.html');
         if (chemin.indexOf('/pages/') === 0) return servirFichier(res, PAGES, chemin.slice(7));
         if (chemin.indexOf('/jeu/') === 0) return servirFichier(res, RACINE, chemin.slice(5));
         if (chemin.indexOf('/bibliotheque/') === 0) return servirFichier(res, BIBLIO, chemin.slice(14));
@@ -416,6 +472,21 @@ var serveur = http.createServer(function (req, res) {
             });
         }
 
+        if (chemin === '/api/rythmes') {
+            var heros = lireJSON(path.join(DATA, 'Actors.json')).filter(function (a) { return a && a.name; }).slice(0, 4).map(function (a) { return a.name; });
+            return envoyerJSON(res, 200, { partitions: partitions(), musiques: nomsDe('audio/bgm', ['.ogg', '.m4a']), heros: heros });
+        }
+        if (chemin === '/api/rythme' && req.method === 'POST') {
+            return lireCorps(req, function (err, demande) {
+                if (err) return envoyerJSON(res, 400, { erreur: 'Demande illisible.' });
+                try { envoyerJSON(res, 200, ecrirePartition(demande)); }
+                catch (e) { envoyerJSON(res, typeof e.code === 'number' ? e.code : 500, { erreur: e.message }); }
+            });
+        }
+        if (chemin === '/api/rythme') {
+            try { return envoyerJSON(res, 200, lirePartition(url.searchParams.get('nom'))); }
+            catch (e) { return envoyerJSON(res, typeof e.code === 'number' ? e.code : 500, { erreur: e.message }); }
+        }
         if (chemin === '/api/projet') return envoyerJSON(res, 200, projet());
         if (chemin === '/api/carte') {
             var c = carte(Number(url.searchParams.get('id')));
@@ -456,4 +527,4 @@ serveur.listen(PORT, '127.0.0.1', function () {
 });
 }
 
-module.exports = { enregistrer: enregistrer, ecrireCE: ecrireCE, projet: projet, carte: carte, ressources: ressources, copier: copier, categorieProposee: categorieProposee, ecrirePlanche: ecrirePlanche };
+module.exports = { enregistrer: enregistrer, ecrireCE: ecrireCE, projet: projet, carte: carte, ressources: ressources, copier: copier, categorieProposee: categorieProposee, ecrirePlanche: ecrirePlanche, ecrirePartition: ecrirePartition, partitions: partitions };
