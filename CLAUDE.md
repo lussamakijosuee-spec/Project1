@@ -716,42 +716,6 @@ exprès, les **formules de base** (Feu, Étincelle, Rayon Stellaire, Trait Spect
 et les pièces d'autres systèmes (copie d'Âme, Pacte d'Âme, la Mue, Marquer la Cible, « Assez. » au hasard).
 Banc : `navigateur/les_verbes.js`.
 
-**Le Theatrhythm** (2026-11-02). Une première passe a **tout refait** (un jeu façon FNF, la boîte à toutes les musiques, et le
-Theatrhythm de MOG réécrit avec des images dessinées en code) sur une erreur de lecture : j'ai cru `img/theatrhythm/` vide (ma
-commande était coupée par `head`), alors que les 13 images de MOG y sont. JOKO : *« il était très bien la version qui était de base
-[…] je voulais juste que tu l'améliores et fasses plus un snap pour que je puisse l'éditer […] pas que tu refasses tout »*. Leçon :
-**on ne « répare » pas un système qui marche, et on lit une sortie de commande en entier avant de conclure.** Ses choix ensuite :
-*« Éditeur avec grille »*, *« Notes spéciales, Attaque des héros, Ennemi qui varie »*, *« Tout éteindre »* (le reste), et pour les
-variables *« met en a dautrre »*. **`MOG_Theatrhythm.js` est remis à l'identique de l'original** (le banc le vérifie). **`TheatrhythmPlus.js`**
-(après MOG, sans toucher à son fichier) : sans partition, c'est le jeu de MOG (ses images, ses six notes au hasard, un pas par image) avec
-des **notes spéciales** au hasard (dorée = critique 10 %, verte = soin 15 % des PV 6 %, rouge = piège 6 % : la taper est un raté, la
-laisser passer ne coûte rien) ; **l'attaque du héros** toutes les 10 notes d'affilée (une de ses compétences qui frappent, ou celles de
-`<Theatrhythm: 12, 15>` dans la Note de l'acteur ; son animation, son nom annoncé, ×3) ; **l'ennemi qui s'énerve** (notes ×1,25 sous 50 %,
-×1,5 sous 25 % et sa force ×1,2). **L'éditeur à grille** (`theatrhythm_editeur <musique>`) : le tempo trouvé pour la grille (B, O pour
-corriger), les 8 touches de MOG avec ses icônes, le héros de chaque note (R), son type (T), G pour la grille, en lecture les touches
-enregistrent ; enregistré dans `theatrhythm/<musique>.json`. Quand le Theatrhythm se joue sur une musique qui a sa partition, chaque note
-arrive **à son temps** (la place vient du temps de la musique, le jugement reste celui de MOG, jusqu'à 16 notes à l'écran, la boucle
-de la musique rejoue la partition). `theatrhythm_musique <nom>` choisit la musique de la prochaine partie (sinon : la musique de combat).
-Entrée dans l'éditeur essaie dans le vrai Theatrhythm (ennemi 99, vitesse 5 — réglages) et rend ensuite les points et le résultat d'avant.
-Ses points allaient dans la **variable 5 « BONUS »** (la Roulette de ludwing) et son résultat dans l'**interrupteur 10 « PHASE 2 »** :
-mis à **900 « Theatrhythm : points »** et **1000 « Theatrhythm : victoire »** (libres ; 17 et 26 rendus). **`LeRythme.js`** (le jeu façon
-FNF, son éditeur, la partition auto par analyse du tempo) et **`LaBoiteAMusique.js`** (la Music Box à 435 musiques) sont **éteints** dans
-le gestionnaire, fichiers gardés ; la Music Box est celle de MOG. Bancs : `navigateur/le_theatrhythm.js`, et `navigateur/le_rythme.js`
-pour les deux éteints (il les charge lui-même).
-**Les semaines** (2026-11-02 ; JOKO : *« Fait moi des exemples de combat comme whitty, dabi et mat pour song »*) : trois
-adversaires des mods de FNF, trois chansons chacun, sur des musiques **du jeu** (aucune ajoutée) — `bancs/outils/semaines.json` dit
-lesquelles : Whitty (Croûte Brûlante 482 ; Lo-Fight, Overhead, Ballistic), Matt (Poing de Montagne 653 ; Light It Up, Ruckus, Target
-Practice), Dabi (Dernier Feu 487 ; Flamme Bleue, Brasier, Cendres — titres à moi, ceux de son mod je ne les connais pas sûrement).
-`ecrire_les_semaines.js` mesure chaque musique (`mesurer_les_musiques.js` : tempo, premier temps, attaques par double-croche) et pose
-les notes sur ses vraies attaques, au style du personnage : Whitty des flèches et des rafales qui roulent, ses bombes (rouges) dès la
-2e chanson ; Matt les poings A S Z X en 1-2 et crochets, les esquives ← →, l'uppercut doré X à chaque phrase, les scies (rouges) de
-Target Practice ; Dabi à contretemps sur tout le clavier, des flammes (rouges) de plus en plus nombreuses et des murs de feu. Chaque
-semaine monte (notes par seconde, rouges, vitesse 4 à 8). Les partitions portent `pvSelonChanson` (TheatrhythmPlus) : l'ennemi a les
-PV pour tenir la chanson (80 % des notes réussies, l'attaque du héros comptée), sinon des héros niveau 89 l'abattent en trois coups.
-`poser_les_semaines.js` pose les événements communs **1806-1817** (« 🎵 Whitty 1 · Lo-Fight »… et « 🎵 Semaine Whitty » qui enchaîne
-les trois, et s'arrête si l'interrupteur de résultat est éteint) ; aucun événement de carte. Ligne « ◆ SEMAINE » : l'outil ne réécrit
-que les siens. Retoucher une chanson : `theatrhythm_editeur <musique>`.
-
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
