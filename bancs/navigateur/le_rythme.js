@@ -1,5 +1,5 @@
 /*
- * LE RYTHME — le jeu de rythme façon FNF, la boîte à musique, le Theatrhythm
+ * LE RYTHME — le jeu de rythme façon FNF et la boîte à musique (éteints)
  * ---------------------------------------------------------------------------
  * JOKO, 2026-11-02 : « le rendre encore plus intéressant […] comme sur FNF »,
  * « personnaliser mes attaques » (types de notes, effets de chanson), et la
@@ -18,9 +18,11 @@
  *   ⑥ l'éditeur : poser, enlever, allonger, le type, un effet, annuler,
  *     enregistrer, l'essai et le retour à l'éditeur ;
  *   ⑦ la boîte : un disque dessiné sans pochette, Tab, Maj lance la partie,
- *     et au retour la musique de la carte est toujours la bonne ;
- *   ⑧ le Theatrhythm de MOG s'ouvre (ses images sont dessinées), ses notes
- *     suivent la musique de combat, la bonne touche touche, la mauvaise rate.
+ *     et au retour la musique de la carte est toujours la bonne.
+ *
+ *   LeRythme et LaBoiteAMusique sont ÉTEINTS dans le jeu (JOKO, 2026-11-02 :
+ *   « Tout éteindre ») : le banc les charge lui-même, pour qu'ils restent justes
+ *   le jour où JOKO les rallume. Le Theatrhythm a son banc : le_theatrhythm.js.
  *
  *   node bancs/navigateur/le_rythme.js
  *   (le banc lance son propre petit serveur ; aucun fichier du jeu n'est écrit)
@@ -416,76 +418,6 @@ var serveur = http.createServer(function (req, res) {
     await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && SceneManager.isCurrentSceneStarted(); }, null, { timeout: 20000 });
     var r7d = await page.evaluate(function () { return AudioManager._currentBgm && AudioManager._currentBgm.name; });
     V('en quittant la boîte, la musique de la carte revient (Field1)', r7d === 'Field1', String(r7d));
-
-    // ⑧ le Theatrhythm de MOG
-    console.log('\n⑧ Le Theatrhythm de MOG');
-    await page.evaluate(function () {
-        $gameSystem.setBattleBgm({ name: 'Battle1', volume: 0, pitch: 100, pan: 0 });
-        var i = new Game_Interpreter(); i.setup([{ code: 356, indent: 0, parameters: ['theatrhythm : 99 : 5'] }, { code: 0, indent: 0, parameters: [] }]); i.update();
-    });
-    await page.waitForFunction(function () { var s = SceneManager._scene; return s && s.constructor.name === 'Scene_Theatrhythm'; }, null, { timeout: 20000 });
-    // « Prêt ? » : MOG attend qu'on appuie sur Entrée
-    for (var e8 = 0; e8 < 240; e8++) {
-        var ph = await page.evaluate(function () { return SceneManager._scene && SceneManager._scene.constructor.name === 'Scene_Theatrhythm' ? $gameSystem._theatrhythm_phase : -1; });
-        if (ph === 1) break;
-        if (ph === 0) await page.keyboard.press('Enter');
-        await page.waitForTimeout(500);
-    }
-    var pret8 = await page.evaluate(async function () {
-        try {
-            await attendre(function () { var s = SceneManager._scene; return $gameSystem._theatrhythm_phase === 1 && s._sprite_buttons && s._sprite_buttons._sync && s._sprite_buttons._sync.pret && s._sprite_buttons._sync.t !== undefined; }, 240000);
-            return null;
-        } catch (e) {
-            var s = SceneManager._scene, k = s._sprite_buttons, b = AudioManager._bgmBuffer;
-            return { scene: s.constructor.name, phase: $gameSystem._theatrhythm_phase, sync: k ? (k._sync === null ? 'null' : JSON.stringify({ pret: k._sync.pret, t: k._sync.t })) : 'pas de touches',
-                bgm: AudioManager._currentBgm && AudioManager._currentBgm.name, tampon: b ? b.constructor.name + ' pret ' + (b.isReady && b.isReady()) + ' joue ' + (b.isPlaying && b.isPlaying()) + ' start ' + b._startTime : 'aucun' };
-        }
-    });
-    if (pret8) { V('le Theatrhythm se prépare', false, JSON.stringify(pret8)); throw new Error('Theatrhythm pas prêt'); }
-    var r8 = await page.evaluate(async function () {
-        var s = SceneManager._scene, k = s._sprite_buttons, out = {};
-        out.images = s._buttons_img.width === 48 * 8 && s._phase_img.height === 320;
-        // la prochaine note après le départ
-        var n = await attendre(function () { return (k._sync.prochainesNotes || []).filter(function (x) { return x.etat === 0 && x.t > k._sync.depart && x.t > k._sync.t + 3000; })[0]; }, 60000);
-        out.surLeTemps = k._sync.base.length > 10;
-        // le banc se place à 10 ms de la note (sans attendre : la machine peut être lente)
-        var chaine = $gameSystem._theatrhythm_chain_data[0];
-        k._sync.t = n.t + 10;
-        k.keyisValid(Sprite_TKeys.TOUCHE_DU_COULOIR[n.c]);
-        out.touche = [$gameSystem._theatrhythm_key_data[1], n.etat];
-        s.refresh_effect();
-        out.chaine = $gameSystem._theatrhythm_chain_data[0] - chaine;
-        // contre-épreuve : la mauvaise touche sur la note suivante
-        var m = k._sync.prochainesNotes.filter(function (x) { return x.etat === 0 && x.t > n.t + 200; })[0];
-        k._sync.t = m.t + 10;
-        var faux = [0, 1, 2, 3].map(function (c) { return Sprite_TKeys.TOUCHE_DU_COULOIR[c]; }).filter(function (t) { return t !== Sprite_TKeys.TOUCHE_DU_COULOIR[m.c]; })[0];
-        k.keyisValid(faux);
-        out.faux = [$gameSystem._theatrhythm_key_data[1], m.etat];
-        s.refresh_effect();
-        out.chaineApres = $gameSystem._theatrhythm_chain_data[0];
-        return out;
-    });
-    V('la scène s\'ouvre : ses images sont dessinées', r8.images);
-    V('les notes viennent de la partition de la musique de combat', r8.surLeTemps);
-    V('la bonne flèche au bon moment touche (critique à ±50 ms)', r8.touche[0] === 2 && r8.touche[1] === 1, JSON.stringify(r8.touche));
-    V('… et la chaîne monte', r8.chaine === 1);
-    V('contre-épreuve : la mauvaise flèche rate, la chaîne retombe', r8.faux[0] === 0 && r8.chaineApres === 0, JSON.stringify(r8.faux));
-    // le mode de MOG, sans la synchro
-    await page.evaluate(function () { SceneManager.goto(Scene_Map); });
-    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && SceneManager.isCurrentSceneStarted(); }, null, { timeout: 20000 });
-    await page.evaluate(function () { Moghunter.theatrhythm_synchro = false; var i = new Game_Interpreter(); i.setup([{ code: 356, indent: 0, parameters: ['theatrhythm : 99 : 5'] }, { code: 0, indent: 0, parameters: [] }]); i.update(); });
-    await page.waitForFunction(function () { return SceneManager._scene && SceneManager._scene.constructor.name === 'Scene_Theatrhythm'; }, null, { timeout: 60000 });
-    // « Prêt ? » : MOG attend qu'on appuie sur Entrée
-    for (var e8 = 0; e8 < 240; e8++) {
-        var ph = await page.evaluate(function () { return SceneManager._scene && SceneManager._scene.constructor.name === 'Scene_Theatrhythm' ? $gameSystem._theatrhythm_phase : -1; });
-        if (ph === 1) break;
-        if (ph === 0) await page.keyboard.press('Enter');
-        await page.waitForTimeout(500);
-    }
-    await page.waitForFunction(function () { return $gameSystem._theatrhythm_phase === 1; }, null, { timeout: 60000 });
-    await page.waitForTimeout(1500);
-    var r8b = await page.evaluate(function () { var k = SceneManager._scene._sprite_buttons; return { sync: k._sync, vus: k._keys.filter(function (x) { return x.visible && x.opacity > 0; }).length }; });
-    V('Synchro Musique à false : les notes de MOG, au hasard, comme avant', r8b.sync === null && r8b.vus > 0, r8b.vus + ' notes à l\'écran');
 
     console.log('   (fichiers absents demandés : ' + (absents.length ? absents.join(', ') : 'aucun') + ')');
     V('aucune erreur dans la page', erreurs.length === 0, erreurs.slice(0, 3).join(' | '));
