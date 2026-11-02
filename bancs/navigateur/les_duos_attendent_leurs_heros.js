@@ -12,7 +12,8 @@
  *   ④ Aube Ardente (<Combo: 4,1>), que Korrah apprend : il lui faut Aël ET Vesper ;
  *   ⑤ les notes disent vrai : chaque duo nomme les héros de sa <Combo:>, et
  *     chaque <Mana:> dit un des courants (une valeur fausse, plantée exprès, est
- *     attrapée).
+ *     attrapée) ;
+ *   ⑥ Yin et Yang du Mana dit sa charge (<Charge:>, la Confiance d’Aël).
  *
  *   node bancs/navigateur/les_duos_attendent_leurs_heros.js
  *   (le banc lance son propre petit serveur)
@@ -100,6 +101,28 @@ var erreurs = [];
     V('avec Aël et Vesper : utilisable', r.aubeTous === true);
     V('sans Aël : grisée, Aël manque', r.aubeSansAel === false && r.aubeManque === 'Aël', r.aubeManque);
     V('hors combat, l\'équipe suffit', r.horsCombat === 0);
+
+    // ⑥ Yin et Yang du Mana dit sa charge (la Confiance d'Aël, variable 14)
+    console.log('\n⑥ Yin et Yang du Mana dit sa charge');
+    var r6 = await page.evaluate(function () {
+        var ael = $gameActors.actor(4), yin = $dataSkills[40], out = {};
+        var aide = new Window_Help(2), liste = new Window_SkillList(0, 0, 400, 200);
+        liste.setHelpWindow(aide); liste.setActor(ael);
+        function lire(s) { liste._data = [s]; liste.select(0); liste.updateHelp(); return String(aide._text || ''); }
+        $gameVariables.setValue(14, 0); out.zero = lire(yin);
+        $gameVariables.setValue(14, 3); out.trois = lire(yin);
+        $gameVariables.setValue(14, 10); out.dix = lire(yin);
+        // contre-épreuve : une capacité sans <Charge:> garde sa description
+        var autre = $dataSkills[73];
+        out.autre = lire(autre); out.autreDesc = autre.description.split('\n')[0];
+        $gameVariables.setValue(14, 0);
+        return out;
+    });
+    V('Confiance 0 : « pas encore chargée »', /Confiance : 0\/10 → ×0 \(pas encore chargée\)/.test(r6.zero), r6.zero.split('\n')[1]);
+    V('Confiance 3 : ×0,6', /Confiance : 3\/10 → ×0,6$/.test(r6.trois), r6.trois.split('\n')[1]);
+    V('Confiance 10 : ×2', /Confiance : 10\/10 → ×2$/.test(r6.dix), r6.dix.split('\n')[1]);
+    V('… et la première ligne de sa description reste', r6.trois.split('\n')[0].indexOf('Yin et Yang du Mana') >= 0);
+    V('contre-épreuve : une capacité sans <Charge:> n\'a pas de ligne de charge', r6.autre.indexOf('✦ Confiance') < 0 && r6.autre.indexOf(r6.autreDesc) >= 0);
 
     // ⑤ les notes disent vrai (les fichiers)
     console.log('\n⑤ Les notes disent vrai');

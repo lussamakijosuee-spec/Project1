@@ -235,7 +235,7 @@ DoubleX) n'est pas touchée. Les descriptions de 413 et 414 nomment leurs vrais 
 de la liste d'actions (YEP les ajoute, `getPatternSkills`) ; `<Perce-Armure>` (les formules du Vide ne comptent déjà qu'une part de la
 DÉF) ; `<FrappeAme>` (déjà un drain) ; `<AvatarGarde>` (l'état 208 est posé) ; `<NomOrigine>` et `<Nerf …>`, des mémos. **Laissés**,
 à JOKO : les balises des héros tombés (401-425, `<DementTombe>`…) et `<TraitBoss:>`, lues par des plugins de `_ancien_projet`.
-Banc : `navigateur/les_duos_attendent_leurs_heros.js` (16 contrôles).
+**Une capacité qui se charge le dit** (JOKO, *« Oui, affiche-le »*) : `<Charge: 14, 10, 5, Confiance>` (la variable, son maximum, le diviseur de la formule, le mot) — Yin et Yang du Mana (40) frappe ×(Confiance d'Aël ÷ 5) ; ses soins (21, 73, 104, 105) la montent, l'événement commun 14 la tient entre 1 et 10 quand l'interrupteur 1 est allumé ; l'aide dit « ✦ Confiance : 3/10 → ×0,6 ». Deuxième passe, rien de cassé : les 364 formules vues en jeu calculées par le vrai moteur (aucune ne plante), aucune capacité apprise invisible (les types manquants sont ouverts par un état ou une arme), aucune doctrine ni `<Instinct:>` / `<Voie:>` faux. Banc : `navigateur/les_duos_attendent_leurs_heros.js` (21 contrôles).
 
 **Le froid confié** (`LeFroidConfie.js`, 2026-10-19, le rework de Korrah) : JOKO a choisi *« Piste 1,
 le froid confié : Korrah joue deux corps avec seiryu, ses sorts d'Hiver chargent seiryu, et « change »

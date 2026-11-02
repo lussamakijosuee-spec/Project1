@@ -422,6 +422,24 @@ var LesTroisArts = LesTroisArts || {};
         this._helpWindow.setText(texte);
     };
 
+    // Une capacité qui se charge le dit (JOKO, 2026-11-02 : « Oui, affiche-le ») : <Charge: 14, 10, 5, Confiance>
+    // — la variable, son maximum, le diviseur de la formule, le mot. Yin et Yang du Mana frappe ×(Confiance ÷ 5) :
+    // l'aide dit « ✦ Confiance : 3/10 → ×0,6 » à la place de la 2e ligne de la description.
+    function chargeDe(s) {
+        var v = s && s.meta && typeof s.meta.Charge === 'string' ? s.meta.Charge.split(',') : null;
+        if (!v || v.length < 3 || !$gameVariables) { return ''; }
+        var id = Number(v[0]), max = Number(v[1]), div = Number(v[2]) || 1, mot = (v[3] || 'Charge').trim();
+        var n = $gameVariables.value(id) || 0, fois = String(Math.round(n / div * 10) / 10).replace('.', ',');
+        return '✦ ' + mot + ' : ' + n + '/' + max + ' → ×' + fois + (n <= 0 ? ' (pas encore chargée)' : '');
+    }
+    LesTroisArts.charge = chargeDe;
+    var _aideCharge = Window_SkillList.prototype.updateHelp;
+    Window_SkillList.prototype.updateHelp = function () {
+        _aideCharge.call(this);
+        var ligne = this._helpWindow ? chargeDe(this.item()) : '';
+        if (ligne) { this._helpWindow.setText(String(this._helpWindow._text || '').split('\n')[0] + '\n' + ligne); }
+    };
+
     //=========================================================================
     // LES ATTAQUES À PLUSIEURS ATTENDENT LEURS HÉROS (JOKO, 2026-11-02, « Les trois »)
     //=========================================================================

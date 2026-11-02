@@ -73,7 +73,7 @@ Chaque banc sort `✅ TOUT PASSE` ou la liste de ce qui cloche, et renvoie le co
 | `audit/7_nouveau_lot.js` | les compétences, les apprentissages, le butin |
 | `audit/8_tableau_de_chasse.js` | le Tableau de Chasse et les primes |
 | `audit/9_equilibre.js` | **l'équilibre mesuré** : TTK / TTD à chaque palier, contre le vrai bestiaire |
-| `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source — 16 contrôles |
+| `7_trois_sources.js` | **les trois sources** : le repli des éléments 5 et 6, et le prix de chaque source ; ⑥ Yin et Yang du Mana dit sa charge (`<Charge:>`, la Confiance d’Aël) : 0 « pas encore chargée », 3 « ×0,6 », 10 « ×2 », la 1re ligne de sa description reste, et une capacité sans balise n’a pas de ligne de charge — 21 contrôles |
 | `9_doctrines.js` | **la dangerosité et les doctrines de combat** des 547 ennemis — 24 contrôles |
 | `10_troupes.js` | **les phases deux et les renforts** des 270 troupes de famille — 18 contrôles |
 | `11_degats_et_voies.js` | **la forme des formules** et **les neuf Voies** — 17 contrôles |
