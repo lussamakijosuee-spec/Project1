@@ -225,6 +225,18 @@ portée) × 1,15 ; coût = ce que coûtent ces deux coups, chacun le sien. Deux 
 (`<Multiple Elements>`, règle du jeu « Multiplier ») : −2 points de bouclier sur une double
 faiblesse. Nuit d'Hiver et Crépuscule portent 2 tours de recharge (la règle de `18_recharges`).
 
+**Les anciens duos attendent leurs héros** (`LesTroisArts` v1.4, 2026-11-02 ; JOKO : *« réglé les problèmes des note dans les
+capacités ou les ennemis »*, puis sur la liste mesurée : *« Les trois »*). Fureur Spectrale, Verdict Stellaire, Aube Ardente, Trinité
+d'Âmes, Communion des Quatre (413-418) portent `<Combo: 1,3>` ; ce qui les grisait sans leurs héros (`ComboLiens`, qui demande
+`LiensSocial`) n'est pas dans le jeu : Vesper lançait un duo seule. Maintenant grisée tant que tous les héros listés ne sont pas au
+combat et debout (hors combat : dans l'équipe), l'aide dit « ⚔ Il manque : ludwing » ; une `<Combo:>` sans numéros (les six duos de
+DoubleX) n'est pas touchée. Les descriptions de 413 et 414 nomment leurs vrais héros (Vesper & ludwing, Korrah & Aël) ; trois
+`<Mana:>` (36, ennemis 453 et 797) disent `negatif`. **Écartés après vérification** : les doctrines qui citent une compétence absente
+de la liste d'actions (YEP les ajoute, `getPatternSkills`) ; `<Perce-Armure>` (les formules du Vide ne comptent déjà qu'une part de la
+DÉF) ; `<FrappeAme>` (déjà un drain) ; `<AvatarGarde>` (l'état 208 est posé) ; `<NomOrigine>` et `<Nerf …>`, des mémos. **Laissés**,
+à JOKO : les balises des héros tombés (401-425, `<DementTombe>`…) et `<TraitBoss:>`, lues par des plugins de `_ancien_projet`.
+Banc : `navigateur/les_duos_attendent_leurs_heros.js` (16 contrôles).
+
 **Le froid confié** (`LeFroidConfie.js`, 2026-10-19, le rework de Korrah) : JOKO a choisi *« Piste 1,
 le froid confié : Korrah joue deux corps avec seiryu, ses sorts d'Hiver chargent seiryu, et « change »
 devient l'échange de place »*, puis *« Oui, écris tout comme listé »*. Chaque compétence d'Hiver confie

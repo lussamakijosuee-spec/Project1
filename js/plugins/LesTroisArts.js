@@ -1,10 +1,10 @@
 //=============================================================================
-// LesTroisArts.js — v1.3
+// LesTroisArts.js — v1.4
 // Les trois arts du Premier : chaque compétence de héros en est un, et c'est
 // son art qui donne son mana. Le triangle joue à chaque coup.
 //=============================================================================
 /*:
- * @plugindesc v1.3 ■ Les trois arts : chaque compétence de héros est une PAROLE
+ * @plugindesc v1.4 ■ Les trois arts : chaque compétence de héros est une PAROLE
  * (positif), un MOUVEMENT (négatif) ou un ÉCRIT (spirituel) — et c'est l'art qui
  * donne son mana : le triangle joue à chaque coup. Un art hors de ses affinités
  * coûte plus et rend moins.
@@ -208,6 +208,11 @@
  *  reste dans sa branche d'origine ; « ᛟ Activer » va avec les Runes. Hors
  *  combat, rien ne change. LesTroisArts._sansMenusParArt = true coupe (bancs).
  *
+ *  LES ATTAQUES À PLUSIEURS (v1.4, 2026-11-02) — une compétence <Combo: 1,3>
+ *  est grisée tant que tous ses héros ne sont pas au combat et debout ; son
+ *  aide le dit (« ⚔ Il manque : ludwing »). Une <Combo:> sans numéros (les
+ *  six duos de DoubleX) suit la règle de DoubleX. LesTroisArts.manquants(s).
+ *
  *  LaParole, LeMouvement, MaitriseVoies et L'Écrit demandent tous l'art ici :
  *  une seule règle. Les ennemis ne changent pas. Aucune fiche n'est modifiée.
  *
@@ -408,7 +413,40 @@ var LesTroisArts = LesTroisArts || {};
         // une rune dit son signe (LEcrit, <Rune: …>) : 【RUNE · SCEAU】
         if (a === 'ecrit' && s.meta && typeof s.meta.Rune === 'string' && s.meta.Rune.trim()) { nom = ' · ' + String(s.meta.Rune).trim().toUpperCase(); }
         var hors = horsAffinite(this._actor, s) ? ' · hors affinité' : '';
-        this._helpWindow.setText('【' + NOMS[a] + nom + hors + '】  ' + (s.description || ''));
+        var texte = '【' + NOMS[a] + nom + hors + '】  ' + (s.description || '');
+        // une attaque à plusieurs grisée dit qui manque (à la place de la 2e ligne de sa description)
+        var qui = manquants(s);
+        if (qui.length) {
+            texte = texte.split('\n')[0] + '\n⚔ Il manque : ' + qui.map(function (id) { var x = $gameActors.actor(id); return x ? x.name() : '?'; }).join(', ');
+        }
+        this._helpWindow.setText(texte);
+    };
+
+    //=========================================================================
+    // LES ATTAQUES À PLUSIEURS ATTENDENT LEURS HÉROS (JOKO, 2026-11-02, « Les trois »)
+    //=========================================================================
+    // <Combo: 1,3> dit quels héros font l'attaque. Le plugin qui la grisait sans eux (ComboLiens) n'est pas
+    // dans le jeu — il lui fallait les Liens (LiensSocial), absents aussi : Vesper lançait « Fureur
+    // Spectrale (Duo) » seule, avec l'attaque de ludwing même hors de l'équipe. Ici : tous les héros listés
+    // au combat (hors combat : dans l'équipe) et vivants, sinon grisée. Une <Combo:> sans numéros (les six
+    // duos de DoubleX : « JOKO 2026-10-18 — … ») suit la règle de DoubleX et n'est pas touchée.
+    function herosDuCombo(item) {
+        var v = item && item.meta ? item.meta.Combo : null;
+        if (typeof v !== 'string' || !/^\s*\d+(\s*,\s*\d+)*\s*$/.test(v)) { return null; }
+        return v.split(',').map(function (x) { return Number(x); });
+    }
+    /** Les héros d'une attaque à plusieurs qui ne sont pas là (ou plus debout). */
+    function manquants(item) {
+        var ids = item && DataManager.isSkill(item) ? herosDuCombo(item) : null;
+        if (!ids || !$gameParty) { return []; }
+        var membres = enCombat() ? $gameParty.battleMembers() : $gameParty.members();
+        return ids.filter(function (id) { var x = $gameActors.actor(id); return !x || membres.indexOf(x) < 0 || !x.isAlive(); });
+    }
+    LesTroisArts.manquants = manquants;
+    var _utilisable = Game_BattlerBase.prototype.meetsUsableItemConditions;
+    Game_BattlerBase.prototype.meetsUsableItemConditions = function (item) {
+        if (this.isActor() && manquants(item).length) { return false; }
+        return _utilisable.call(this, item);
     };
 
     //=========================================================================
