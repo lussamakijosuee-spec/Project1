@@ -716,6 +716,31 @@ exprès, les **formules de base** (Feu, Étincelle, Rayon Stellaire, Trait Spect
 et les pièces d'autres systèmes (copie d'Âme, Pacte d'Âme, la Mue, Marquer la Cible, « Assez. » au hasard).
 Banc : `navigateur/les_verbes.js`.
 
+**Le jeu de rythme et la boîte à musique** (2026-11-02 ; JOKO : *« le rendre encore plus intéressant […] comme sur FNF »*,
+*« la music box […] avoir presque toutes les musiques du jeu »*, *« personnaliser mes attaques »* ; ses choix : un nouveau plugin
+**et** le MOG corrigé, *« Auto + éditeur »*, *« Types de notes, Effets de chanson »*, *« Débloquées à l'écoute »*). **`LeRythme.js`**
+(nouveau) : le jeu façon FNF — deux rangées de quatre flèches (adversaire à gauche, toi à droite), notes sur le temps réel de la
+musique (lecteur WebAudio à lui, touches lues à l'instant de l'appui), Sick ±45 / Bien ±90 / Bof ±166 ms, la barre de vie qui
+penche, le décompte, la pause, le rang (S+ … D, Perdu), le record par musique et difficulté (`$gameSystem._rythmeRecords`). Les
+chanteurs sont les battlers de côté (le chef contre le deuxième de l'équipe, ou `contre:2`, `contre:e12`). **N'importe quelle
+musique** : l'analyse trouve le tempo (autocorrélation des attaques, 70-190) et le premier temps, puis une partition en trois
+difficultés (duel : quatre mesures chacun, réglage `duel`) ; une partition de JOKO (`rythme/partitions/<musique>.json`, écrite
+par l'éditeur) passe avant, une difficulté laissée vide reste en auto. **Les notes** : normale, longue, piège (−12 de vie si on la
+tape), soin (+15), critique (score double) ; l'auto en pose (`notesSpecialesAuto`). **Les effets** : vitesse, tremble, cache, zoom,
+secousse, flash. **L'éditeur** (`rythme_editeur <musique>`, ou « ✎ Éditer » avant une partie, réglage `editeur`) : frise, forme du
+son, grille, D F J K / Maj, clic, L, T, E/R/V/N, Tab, B/O, A A, Ctrl+Z/Y/S, Entrée pour essayer et revenir. Commandes : `rythme
+<musique> [facile|normal|difficile] [contre:…]`. **`LaBoiteAMusique.js`** (nouveau, après MOG_Music_Book) : la liste est celle
+de `audio/bgm` (435 musiques ; dans un navigateur, `rythme/musiques.json`, refait par `bancs/outils/lister_les_musiques.js`),
+les titres que MOG avait écrits restent (Theme3 et One_Wing, absents du jeu, ne sont plus listés), une sauvegarde d'avant garde ce
+qu'elle avait entendu ; Maj lance la partie, ← → par dix, Tab les seules entendues, un disque dessiné sans pochette. **`MOG_Theatrhythm.js`**,
+copie corrigée (bloc `[JOKO]` à la fin) : `img/theatrhythm/` était vide, la scène plantait — ses 13 images sont dessinées en code
+(`Images Dessinees` auto : un fichier posé par JOKO passe avant) ; ses notes suivent la partition de la musique de combat (`Synchro
+Musique`), la vitesse de la commande donne la difficulté (≤ 3 facile, ≤ 7 normal) ; une note de soin rend 15 % au groupe. Ses points
+allaient dans la **variable 5 « BONUS »** (la Roulette de ludwing) et son résultat dans l'**interrupteur 10 « PHASE 2 »** : réglages du
+gestionnaire, mis à **17 « Rythme : points »** et **26 « Rythme : victoire »** (JOKO, *« C'est fermé, vas-y »* ; libres, aucun
+événement ne les touchait). Aucun asset ajouté : flèches, disques et images de MOG
+sont dessinés. Banc : `navigateur/le_rythme.js`.
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
