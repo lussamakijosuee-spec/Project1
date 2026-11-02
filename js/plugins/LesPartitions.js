@@ -207,12 +207,18 @@ var LesPartitions = LesPartitions || {};
         var p = this._partition;
         if (!p || $gameSystem._theatrhythm_phase !== 1 || !this._sprite_buttons) return;
         if (this.tempsPartition() < p.fin + (this._tourPartition || 0)) return;
-        if (FIN === 'boucle') {
+        if (this.partitionEnBoucle()) {
             this._tourPartition = (this._tourPartition || 0) + p.fin;
             this._sprite_buttons.reprendrePartition();
             this.lancerPartition();
             return;
         }
+        this.finDePartition();
+    };
+
+    // (LeChant les reprend : un chant de combat s'arrête au bout de sa partition)
+    Scene_Theatrhythm.prototype.partitionEnBoucle = function () { return FIN === 'boucle'; };
+    Scene_Theatrhythm.prototype.finDePartition = function () {
         this._enemySprite._enemy.performCollapse();
         this.battle_end(10);
     };
