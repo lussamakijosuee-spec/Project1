@@ -93,6 +93,38 @@ var INTER = 955, VAR = 900;
     V('le joueur sans _char_text : la carte continue', r2.passe === true, r2.err || r2.repare);
     V('contre-épreuve : l\'original de MOG plante dans ce cas', r2.original && r2.originalPlante === true);
 
+    // ②b arriver avec les PNJ du haut hors de l'écran (Allegement les endort : pas d'image)
+    var errAvant = erreurs.length;
+    await page.evaluate(function () { $gamePlayer.reserveTransfer(1, 7, 25, 2, 0); });
+    await page.waitForFunction(function () { var s = SceneManager._scene; return s && s.constructor.name === 'Scene_Map' && SceneManager.isCurrentSceneStarted() && $gamePlayer.y === 25; }, null, { timeout: 120000 });
+    await page.waitForTimeout(1500);
+    var r2b = await page.evaluate(async function () {
+        var l = SceneManager._scene._spriteset._sprite_char_text, t = l.filter(function (x) { return x.character()._eventId === 5; })[0], out = {};
+        out.dort = !!(t && t.sprite_char._enVeille); out.sansImage = !!(t && !t.sprite_char.bitmap); out.cache = !!(t && !t.visible);
+        var src = await (await fetch('/jeu a utiliser/MOG_Master_MV/js/plugins/MOG_EventText.js')).text();
+        var m = /Sprite_CharText\.prototype\.update = (function\(\) \{[\s\S]*?\n\};)/.exec(src);
+        if (m && t) {
+            var orig = eval('(' + m[1].replace(/;\s*$/, '') + ')'), garde = t.character()._char_text.slice();
+            t.character()._char_text[0] = true;
+            try { orig.call(t); out.originalPlante = false; } catch (e) { out.originalPlante = /height/.test(e.message); }
+            t.character()._char_text = garde;
+        }
+        $gamePlayer.locate(7, 7);
+        return out;
+    });
+    await page.waitForFunction(function () {
+        var t = SceneManager._scene._spriteset._sprite_char_text.filter(function (x) { return x.character()._eventId === 5; })[0];
+        return t && t._char_text && t.visible;
+    }, null, { timeout: 30000 }).catch(function () {});
+    var r2c = await page.evaluate(function () {
+        var t = SceneManager._scene._spriteset._sprite_char_text.filter(function (x) { return x.character()._eventId === 5; })[0];
+        return !!(t && t._char_text && t.visible && !t.sprite_char._enVeille);
+    });
+    console.log('\n②b Les PNJ hors de l\'écran (Allegement les endort)');
+    V('arriver loin d\'eux : PNJ 5 endormi, sans image, son texte attend — pas de plantage', r2b.dort && r2b.sansImage && r2b.cache && erreurs.length === errAvant, JSON.stringify(r2b) + (erreurs.length > errAvant ? ' · ' + erreurs[erreurs.length - 1] : ''));
+    V('contre-épreuve : l\'original de MOG plante sur ce PNJ (« height » de rien)', r2b.originalPlante === true);
+    V('remonter vers lui : il se réveille, « Theatrhythm » s\'écrit au-dessus', r2c);
+
     // ③ le résultat et les points
     await page.evaluate(function () {
         $gameSwitches.setValue(10, true);

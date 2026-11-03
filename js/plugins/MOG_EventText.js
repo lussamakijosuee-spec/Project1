@@ -47,6 +47,11 @@
 // correction est marquée [JOKO] dans le code :
 //  1. Une partie sauvegardée avant ce plugin se charge sans planter (le joueur,
 //     ses suiveurs et les véhicules n'avaient pas _char_text).
+//  2. (2026-11-03) Un personnage hors de l'écran ne plante plus le jeu :
+//     Allegement l'endort (sa mise à jour est sautée), son image n'est donc
+//     pas encore chargée, et patternHeight lisait la hauteur de rien
+//     (« Cannot read property 'height' of undefined »). Le texte attend son
+//     image, et dort avec lui. Les démos de MOG en ont 71 sur 15 cartes.
 //=============================================================================
 
 //=============================================================================
@@ -173,6 +178,10 @@ Sprite_CharText.prototype.update = function() {
 	Sprite.prototype.update.call(this);
 	// [JOKO] 1. une partie sauvegardée avant ce plugin : pas de _char_text
 	if (!this.character()._char_text) {this.character()._char_text = [false,""]};
+	// [JOKO] 2. un personnage endormi hors de l'écran n'a pas encore son image : le texte attend
+	var pret = !!this.sprite_char.bitmap || this.sprite_char._tileId > 0;
+	this.visible = pret && !this.sprite_char._enVeille;
+	if (!pret) {return};
 	if (this.character()._char_text[0]) {this.refresh_char_text()};
 	if (!this._char_text) {return};
 	this._char_text.x = this.textX_axis();
