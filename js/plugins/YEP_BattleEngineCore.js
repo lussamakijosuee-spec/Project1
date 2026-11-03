@@ -4770,7 +4770,8 @@ Window_Help.prototype.setBattler = function(battler) {
 
 Window_Help.prototype.specialSelectionText = function(action) {
     BattleManager.resetSelection();
-    if (!action) return false;
+    // [JOKO] 2026-11-03 : une action vidée sous le curseur ne plante plus (« scope of null »)
+    if (!action || !action.item()) return false;
     return !action.needsSelection();
 };
 

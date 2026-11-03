@@ -14,9 +14,18 @@
  *     Paroles, Runes, branches, Ultimes, Combo, Garde, Objets…),
  *       chaque ligne de la liste (compétence ou objet) : le curseur dessus
  *       (l'aide se dessine), puis OK si elle est permise,
+ *         une rune de zone : « Garder », puis « Piège », puis Annuler ce choix ;
  *         chaque cible proposée (ennemi ou allié) : le curseur dessus, puis
- *         Annuler — et retour à la liste ;
- *   puis, pour finir, chacun attaque et le tour se joue.
+ *         Annuler comme JOKO, d'un clic droit, la souris sur un autre combattant
+ *         — et retour à la liste ;
+ *   et à chaque pas, jamais deux fenêtres de saisie actives à la fois (une
+ *   fenêtre active cachée derrière une autre répond encore aux touches) ;
+ *   puis, pour finir, chacun lance une compétence qui frappe et le tour se joue.
+ *
+ * Le 2026-11-03 (« Système de runes avec les pièges, c'est ça qui marche pas ») :
+ * après « Garder / Piège », LEcrit laissait la liste des compétences active,
+ * cachée derrière la fenêtre des cibles ; un clic droit sur un héros l'annulait,
+ * vidait l'action, et la fenêtre des alliés relisait l'action vide.
  *
  * Chaque erreur est notée avec son chemin : « Aël › Paroles › #1196 … ›
  * allié 2 », et la première ligne utile de la pile.
@@ -67,12 +76,32 @@ var horsPas = [];
             function essai(chemin, f) {
                 try { f(); return true; } catch (e) { out.erreurs.push(chemin + '  →  ' + e.message + '  [' + pile(e) + ']'); return false; }
             }
+            // les fenêtres de saisie actives (ouvertes) : jamais plus d'une
+            out.doubles = [];
+            function actives() {
+                return S._windowLayer.children.filter(function (w) { return w instanceof Window_Selectable && w.active && w.isOpen(); })
+                    .map(function (w) { return w.constructor.name; });
+            }
+            function seul(chemin) { var a = actives(); if (a.length > 1) out.doubles.push(chemin + '  →  ' + a.join(' + ')); }
+            // une image où l'on clique à droite (Annuler), la souris sur un autre combattant que la cible
+            function clicDroit(fen) {
+                var autres = fen === S._actorWindow ? $gameParty.battleMembers() : $gameTroop.aliveMembers();
+                var autre = autres.filter(function (b, i) { return i !== fen.index() && b.isSpriteVisible() && b.isAppeared(); })[0];
+                var mx = TouchInput._mouseOverX, my = TouchInput._mouseOverY;
+                if (autre) { TouchInput._mouseOverX = autre.spritePosX(); TouchInput._mouseOverY = autre.spritePosY() - autre.spriteHeight() / 2; }
+                TouchInput._cancelled = true;
+                try { S._windowLayer.children.slice().forEach(function (w) { if (w instanceof Window_Selectable) w.update(); }); }
+                finally { TouchInput._cancelled = false; TouchInput._mouseOverX = mx; TouchInput._mouseOverY = my; }
+            }
             function nomLigne(w, k) { var it = w._data && w._data[k]; return it ? '#' + it.id + ' ' + it.name : 'ligne ' + k; }
             function cibles(chemin) {
                 var fen = S._enemyWindow && S._enemyWindow.active ? S._enemyWindow : (S._actorWindow && S._actorWindow.active ? S._actorWindow : null);
                 if (!fen) return;
                 for (var c = 0; c < fen.maxItems(); c++) { out.vus.cibles++; essai(chemin + ' › ' + (fen === S._enemyWindow ? 'ennemi ' : 'allié ') + (c + 1), function () { fen.select(c); fen.updateHelp && fen.updateHelp(); }); }
-                essai(chemin + ' › annuler la cible', function () { fen.processCancel(); });
+                seul(chemin + ' › la cible');
+                essai(chemin + ' › annuler la cible (clic droit sur un autre)', function () { clicDroit(fen); });
+                if (fen.active) essai(chemin + ' › annuler la cible', function () { fen.processCancel(); });
+                seul(chemin + ' › la cible annulée');
             }
             // comme la vraie touche OK / Annuler (processOk / processCancel : la fenêtre
             // se désactive) ; et pendant le balayage, le héros garde la main : une
@@ -101,7 +130,24 @@ var horsPas = [];
                             if (!essai(cl + ' › le curseur dessus', function () { liste.select(k); liste.updateHelp(); })) continue;
                             if (!liste.isCurrentItemEnabled()) continue;
                             if (!essai(cl + ' › OK', function () { liste.processOk(); })) { essai(cl + ' › revenir', function () { liste.activate(); }); continue; }
-                            cibles(cl);
+                            var fr = S._fenetreRune;
+                            if (fr && fr.active) {
+                                if (!out.premiereRune) out.premiereRune = { heros: $gameParty.members().indexOf(a), cmd: i, ligne: k, nom: cl };
+                                // une rune de zone : Garder, puis Piège (chacun jusqu'aux cibles), puis Annuler le choix
+                                ['garder', 'piege', 'annuler'].forEach(function (mode, m) {
+                                    if (m > 0 && !fr.active) essai(cl + ' › rouvrir le choix', function () { if (!liste.active) liste.activate(); liste.select(k); liste.processOk(); });
+                                    if (!fr.active) return;
+                                    seul(cl + ' › Garder / Piège');
+                                    if (mode === 'annuler') { essai(cl + ' › annuler le choix', function () { fr.processCancel(); }); seul(cl + ' › choix annulé'); return; }
+                                    essai(cl + ' › ' + mode, function () { fr.select(m); fr.processOk(); });
+                                    seul(cl + ' › ' + mode);
+                                    cibles(cl + ' › ' + mode);
+                                });
+                            } else {
+                                if (!out.premierAllie && S._actorWindow.active && !S._actorWindow._inputLock) out.premierAllie = { heros: $gameParty.members().indexOf(a), cmd: i, ligne: k, nom: cl };
+                                seul(cl + ' › OK');
+                                cibles(cl);
+                            }
                             // revenu sur la liste ? (une compétence sans cible a fini la saisie : on la reprend)
                             if (!liste.active) essai(cl + ' › reprendre', function () {
                                 BattleManager._actorIndex = $gameParty.members().indexOf(a); a.makeActions(); a.setActionState('inputting');
@@ -126,6 +172,57 @@ var horsPas = [];
         // Traque, Bête, seiryu, états…) — TOURS=1 par défaut, TOURS=3 pour aller plus loin (lent :
         // bridé, une action de boss prend une à deux minutes)
         var TOURS = Number(process.env.TOURS || 1);
+
+        // Dans les deux sens : ce que le balayage contrôle doit attraper l'ancien défaut.
+        async function contreEpreuves(r) {
+            var ce = await page.evaluate(function (p) {
+                var S = SceneManager._scene, res = {};
+                var suivant = BattleManager.selectNextCommand; BattleManager.selectNextCommand = function () {};
+                function actives() { return S._windowLayer.children.filter(function (w) { return w instanceof Window_Selectable && w.active && w.isOpen(); }).map(function (w) { return w.constructor.name; }); }
+                function aller(l) {
+                    var a = $gameParty.members()[l.heros];
+                    BattleManager._actorIndex = l.heros; a.makeActions(); a.setActionState('inputting'); S.startActorCommandSelection();
+                    var cw = S._actorCommandWindow; cw.activate(); cw.select(l.cmd); cw.processOk();
+                    var liste = S._skillWindow.active ? S._skillWindow : S._itemWindow;
+                    liste.select(l.ligne); liste.processOk();
+                }
+                function revenir() {
+                    [S._partyCommandWindow, S._actorCommandWindow, S._skillWindow, S._itemWindow, S._actorWindow, S._enemyWindow, S._fenetreRune].forEach(function (w) { if (w) { w.deactivate(); if (w !== S._actorCommandWindow) w.hide(); } });
+                    TouchInput.clear();
+                }
+                try {
+                    // ① la rune de zone : « Piège », puis combien de fenêtres répondent
+                    if (p.rune) {
+                        var choisir = Scene_Battle.prototype.choisirRune;
+                        Scene_Battle.prototype.choisirRune = function (m) { this._skillWindow.activate(); return choisir.call(this, m); };   // LEcrit d'avant
+                        try { aller(p.rune); S._fenetreRune.select(1); S._fenetreRune.processOk(); res.avant = actives(); } finally { Scene_Battle.prototype.choisirRune = choisir; revenir(); }
+                        aller(p.rune); S._fenetreRune.select(1); S._fenetreRune.processOk(); res.apres = actives(); revenir();
+                    }
+                    // ② la fenêtre des alliés ouverte, l'action vidée sous elle, le curseur bouge
+                    if (p.allie) {
+                        var texte = Window_Help.prototype.specialSelectionText;
+                        function bouger() {
+                            aller(p.allie);
+                            BattleManager.inputtingAction().clear();
+                            try { S._actorWindow.select((S._actorWindow.index() + 1) % S._actorWindow.maxItems()); return 'rien'; } catch (e) { return e.message; } finally { revenir(); }
+                        }
+                        Window_Help.prototype.specialSelectionText = function (action) { BattleManager.resetSelection(); if (!action) return false; return !action.needsSelection(); };   // YEP d'origine
+                        try { res.sansGarde = bouger(); } finally { Window_Help.prototype.specialSelectionText = texte; }
+                        res.avecGarde = bouger();
+                    }
+                } finally { BattleManager.selectNextCommand = suivant; }
+                return res;
+            }, { rune: r.premiereRune, allie: r.premierAllie });
+            console.log('\n── Contre-épreuves');
+            if (r.premiereRune) {
+                V("LEcrit d'avant (la liste réactivée) : deux fenêtres actives après « Piège », attrapé", ce.avant && ce.avant.length > 1, r.premiereRune.nom + ' : ' + (ce.avant || []).join(' + '));
+                V('maintenant : une seule fenêtre active après « Piège »', ce.apres && ce.apres.length === 1, (ce.apres || []).join(' + '));
+            } else V('une rune de zone (Garder / Piège) a été trouvée pour la contre-épreuve', false);
+            if (r.premierAllie) {
+                V("YEP d'origine : l'action vidée sous la fenêtre des alliés plante (« scope of null »)", /scope/.test(ce.sansGarde), r.premierAllie.nom + ' : ' + ce.sansGarde);
+                V('maintenant : la même chose ne plante plus', ce.avecGarde === 'rien', ce.avecGarde);
+            } else V('une cible alliée a été trouvée pour la contre-épreuve', false);
+        }
         for (var tour = 1; tour <= TOURS; tour++) {
             var r = await page.evaluate(function () { return window.__balayer(); });
             console.log('\n── Tour ' + tour + ' · ' + r.heros.join(' · '));
@@ -134,6 +231,9 @@ var horsPas = [];
             r.erreurs.forEach(function (e) { var cle = e.split('  →  ')[1]; (groupes[cle] = groupes[cle] || []).push(e.split('  →  ')[0]); });
             Object.keys(groupes).forEach(function (k) { console.log('   ✗ ' + k + '\n       ' + groupes[k].length + ' fois, dont : ' + groupes[k].slice(0, 4).join(' · ')); });
             V('tour ' + tour + ' : aucun plantage dans les menus (troupe ' + TROUPE + ')', r.erreurs.length === 0, r.erreurs.length + ' plantage(s), ' + Object.keys(groupes).length + ' différent(s)');
+            r.doubles.slice(0, 6).forEach(function (d) { console.log('       ' + d); });
+            V('tour ' + tour + ' : jamais deux fenêtres de saisie actives à la fois', r.doubles.length === 0, r.doubles.length + ' fois');
+            if (tour === 1) await contreEpreuves(r);
 
             // un vrai tour : chacun lance une compétence qui frappe (une autre à chaque tour), sinon il attaque
             var avant = horsPas.length;

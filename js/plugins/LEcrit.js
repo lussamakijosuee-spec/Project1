@@ -694,7 +694,9 @@ var LEcrit = LEcrit || {};
         var w = this._fenetreRune, act = BattleManager.inputtingAction();
         w.deactivate(); w.hide();
         if (act) { act._modeRune = mode; }
-        this._skillWindow.activate();
+        // la liste reste inactive, comme après un OK. Activée ici (avant le 2026-11-03), elle répondait encore
+        // aux touches, cachée derrière la fenêtre des cibles : un clic droit l'annulait et vidait l'action, et
+        // la fenêtre des alliés relisait l'action vide (« Cannot read property 'scope' of null », JOKO)
         _okCapacite.call(this);
         if (act) { act._modeRune = mode; }       // setSkill ne l'efface pas, mais on le repose après le chemin de YEP
     };
