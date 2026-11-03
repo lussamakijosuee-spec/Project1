@@ -1,0 +1,88 @@
+# Le jeu en ligne — JOKO, 2026-11-03 : « Met le jeu possible d'accéder par URL directement et qui se
+# met à jour grâce à github », puis « Un 2e dépôt, juste le jeu ».
+#
+# À chaque push sur main qui touche le jeu, GitHub construit la version web (tools/version_web.js :
+# seulement ce que le jeu cite, ~750 Mo au lieu de 4 Go) et la publie dans le dépôt public
+# lussamakijosuee-spec/Project1-jeu, que GitHub Pages sert à :
+#     https://lussamakijosuee-spec.github.io/Project1-jeu/
+# Project1 reste privé. Il faut le secret JETON_JEU (un jeton qui peut écrire dans Project1-jeu) :
+# sans lui, rien n'est publié (un avertissement, pas une erreur).
+name: Le jeu en ligne
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'js/**'
+      - 'img/**'
+      - 'audio/**'
+      - 'fonts/**'
+      - 'icon/**'
+      - 'movies/**'
+      - 'index.html'
+      - 'tools/version_web.js'
+      - '.github/workflows/jeu-en-ligne.yml'
+  workflow_dispatch:
+
+# deux pushes rapprochés : seul le dernier se publie
+concurrency:
+  group: jeu-en-ligne
+  cancel-in-progress: true
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      JETON: ${{ secrets.JETON_JEU }}
+      DEPOT: lussamakijosuee-spec/Project1-jeu
+    steps:
+      - name: Le jeton est là ?
+        id: jeton
+        run: |
+          if [ -z "$JETON" ]; then
+            echo "::warning::Le secret JETON_JEU manque : le jeu n'est pas publié."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # sans l'historique (5 Go) ni les dossiers de travail (docs, bancs, studio, les mp3 d'origine)
+      - name: Le jeu
+        if: steps.jeton.outputs.ok == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            data
+            js
+            img
+            audio/bgm
+            audio/bgs
+            audio/me
+            audio/se
+            fonts
+            icon
+            movies
+            tools
+
+      - name: ffmpeg (les .m4a de Safari et de l'iPhone)
+        if: steps.jeton.outputs.ok == 'true'
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+
+      - name: La version web
+        if: steps.jeton.outputs.ok == 'true'
+        run: node tools/version_web.js dist/web
+
+      # une seule version dans Project1-jeu (pas d'historique : le dépôt reste petit)
+      - name: Publier dans Project1-jeu
+        if: steps.jeton.outputs.ok == 'true'
+        run: |
+          cd dist/web
+          git init -q -b main
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Le jeu, version ${GITHUB_SHA::7} de Project1"
+          git -c http.postBuffer=1048576000 push -q --force "https://x-access-token:${JETON}@github.com/${DEPOT}.git" main
+          echo "Publié : https://lussamakijosuee-spec.github.io/Project1-jeu/ (GitHub Pages le met en ligne en 1 à 3 minutes)"

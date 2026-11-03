@@ -843,3 +843,21 @@ dans la troupe 33 : le banc attend encore Dono — à JOKO de dire où vit le du
 branche que la session désigne, puis je pousse aussi sur `main` en avance rapide
 (`git push origin HEAD:main`) — jamais en force : si `main` a bougé, je récupère d'abord ses
 commits. Pas de pull request sans demande explicite.
+
+**Le jeu en ligne** (2026-11-03 ; JOKO : *« Met le jeu possible d'accéder par URL directement et qui se
+met à jour grâce à github »*, puis *« Un 2e dépôt, juste le jeu »*). Project1 reste **privé** ; à chaque
+push sur `main` qui touche le jeu (data, js, img, audio, fonts, icon, index.html),
+`.github/workflows/jeu-en-ligne.yml` construit la version web (`tools/version_web.js`) et la publie,
+en une seule version sans historique, dans le dépôt **public** `lussamakijosuee-spec/Project1-jeu`, que
+GitHub Pages sert à https://lussamakijosuee-spec.github.io/Project1-jeu/. Il lui faut le secret
+`JETON_JEU` (un jeton à JOKO qui peut écrire dans Project1-jeu ; sans lui : un avertissement, rien de
+publié). Le jeu pèse plus de 4 Go, Pages en prend 1 : la version web ne garde que ce que le jeu cite
+(~750 Mo — les ~5 500 sons d'internet jamais cités et `audio/_originaux_mp3` restent) ; un nom cité avec
+d'autres majuscules que son fichier (« Inn » / INN.ogg) y est copié sous le nom cité (en ligne, la casse
+compte) ; un nom qu'un plugin fabrique (« flame_0 » pour Flame_0.png, MOG_EventIndicators, carte 16) est
+corrigé dans le navigateur par `js/casse_web.js` (`tools/casse_web.js` + la liste des fichiers, chargé en
+premier, sur `src` et `XMLHttpRequest` : YEP_X_CoreUpdatesOpt remplace les chargeurs de MV) ; un son sans
+.m4a (Safari, iPhone) y est converti par ffmpeg. Rien de privé n'y part (ni docs,
+ni bancs, ni studio, ni CLAUDE.md). En ligne, les sauvegardes restent dans le navigateur de chaque
+joueur. Banc : `la_version_web.js` ; et la chasse aux bugs se joue contre la version web
+(`ETT_URL`, un serveur qui respecte la casse).
