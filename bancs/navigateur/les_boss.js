@@ -11,8 +11,8 @@
  *     sans planter et DIT quelque chose dans la barre ;
  *   · une quinzaine d'entre elles mesurées : le coefficient attendu, et la
  *     contre-épreuve (celui qui n'est pas visé ne prend pas le bonus) ;
- *   · Mahoraga ne s'immunise plus contre ses propres postures, et son
- *     animation d'adaptation part sans planter ;
+ *   · Mahoraga (Kevératus, v3) garde ses propres postures, s'adapte à une
+ *     gêne que le groupe lui pose deux fois, et la barre dit sa Roue ;
  *   · les météores de Radahn tombent ;
  *   · l'Esprit de Dono laisse une vraie fenêtre, et l'œil éteint le reste.
  *
@@ -92,7 +92,7 @@ var CAPT = path.join(__dirname, 'captures');
     var MB = window.MecaBoss, t = MB.table, ids = Object.keys(t).map(Number);
     return {
       defs: Object.keys(MB.defs).length, table: ids.length,
-      tousBoss: ids.every(function (i) { return $dataEnemies[i] && $dataEnemies[i].meta.Boss; }),
+      tousBoss: ids.every(function (i) { return $dataEnemies[i] && ($dataEnemies[i].meta.Boss || $dataEnemies[i].meta.Mahoraga); }),
       sansDef: ids.filter(function (i) { return !MB.defs[t[i]]; }),
       barre: !!SceneManager._scene._barreBoss, bandeau: !!SceneManager._scene._bandeauBoss,
       titre: MB._bannieres.length ? MB._bannieres[0].titre : (SceneManager._scene._bandeauBoss._duree ? 'déjà affiché' : '')
@@ -100,9 +100,10 @@ var CAPT = path.join(__dirname, 'captures');
   });
   console.log('\n— Chargement');
   // la Veuve (797) et l'Errant (796) sont devenus les deux mains du Percepteur (JOKO, 2026-10-29) : leurs
-  // mécaniques restent écrites, mais plus aucun ennemi ne les porte
-  v('27 mécaniques déclarées, 25 boss reliés', base.defs === 27 && base.table === 25, base.defs + ' / ' + base.table);
-  v('chaque boss de la table est un <Boss> et a sa mécanique', base.tousBoss && base.sansDef.length === 0, base.sansDef.join(','));
+  // mécaniques restent écrites, mais plus aucun ennemi ne les porte. Et la Roue de Kevératus (<Mahoraga>,
+  // MahoragaBoss v3, 2026-11-03) est une mécanique de plus : 28 / 26
+  v('28 mécaniques déclarées, 26 boss reliés', base.defs === 28 && base.table === 26, base.defs + ' / ' + base.table);
+  v('chaque boss de la table est un <Boss> (ou <Mahoraga>) et a sa mécanique', base.tousBoss && base.sansDef.length === 0, base.sansDef.join(','));
   v('la barre du boss et le bandeau existent dans la scène', base.barre && base.bandeau);
   v('la carte-titre annonce le boss', /GARGAL|déjà/.test(base.titre), base.titre);
 
@@ -284,12 +285,12 @@ var CAPT = path.join(__dirname, 'captures');
     b.removeState(buff);
     // un état posé par le groupe : subi une fois, refusé la seconde
     BattleManager._subject = h; b.addState(6); b.removeState(6); b.clearResult(); b.addState(6); BattleManager._subject = null;
-    R.adapte = !b.isStateAffected(6) && b._mStates.indexOf(6) >= 0;
-    // l'adaptation joue son animation sans planter
+    R.adapte = !b.isStateAffected(6) && (b._roueEtats || []).indexOf(6) >= 0;
+    // le frapper (la Roue compte) ne plante pas
     try { var a = new Game_Action(h); a.setAttack(); BattleManager._subject = h; a.makeDamageValue(b, false); a.makeDamageValue(b, false); BattleManager._subject = null; R.anim = true; }
     catch (e) { R.anim = e.message; }
-    // un objet et une compétence de même numéro ne se confondent plus
-    R.cles = Object.keys(b._mSkills).join(',');
+    // la barre du boss dit sa Roue (v3 : les trois arts)
+    R.cles = window.LaRoue ? LaRoue.ligne(b) : '';
     // Radahn : sous 30 %, la pluie s'annonce puis tombe (s'il la connaît encore)
     R.meteores = b.enemy().actions.some(function (a) { return a.skillId === 436; });
     b.setHp(Math.floor(b.mhp * 0.25));
@@ -324,9 +325,9 @@ var CAPT = path.join(__dirname, 'captures');
   });
   v('Mahoraga est reconnu', r5.mahoraga);
   v('Mahoraga garde ses propres postures (la Roue ne s\'y adapte plus)', r5.propre);
-  v('Mahoraga s\'adapte à un état que le groupe lui inflige deux fois', r5.adapte);
-  v('l\'animation d\'adaptation part sans planter (requestAnimation n\'existait pas)', r5.anim === true, String(r5.anim));
-  v('la Roue range les techniques par clé', r5.cles.length > 0, r5.cles);
+  v('Mahoraga s\'adapte à une gêne que le groupe lui pose deux fois', r5.adapte);
+  v('le frapper ne plante pas (la Roue compte)', r5.anim === true, String(r5.anim));
+  v('la barre dit sa Roue des trois arts', /☸ Voies .* · Paroles .* · Runes /.test(r5.cles), r5.cles);
   if (r5.meteores) {
     v('Radahn : sous 30 %, la pluie de météores s\'annonce', r5.annonce);
     v('Radahn : au tour suivant elle TOMBE, puis revient tous les 3 tours', r5.pluie === 436 && r5.pasEncore !== 436 && r5.encore === 436, [r5.pluie, r5.pasEncore, r5.encore].join(' → '));
