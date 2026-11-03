@@ -604,7 +604,12 @@ en est), « Parole : Debout ! » sans élément, « Parole du Feu » la formule 
 « : » trompe le lecteur de doctrines des ennemis : aucune doctrine n'en cite (vérifié). **4, les runes** (`LEcrit.js` v2.0) — le stylo
 d'âme trace un cercle : **dans l'air** sur la cible d'une rune à une cible (état 257 « ᛟ Cercle », il la suit, il attend « ᛟ Activer ») ;
 **au sol** pour une rune qui en vise plusieurs (état 260 « ✒ Cercle au sol », icône 289, sur tout ce côté) — elle part **toute seule**
-après l'action d'un ennemi (côté héros : seulement s'il a visé un héros), ou quand on ferme le cercle. Chaque écrit est une rune « Rune de
+après l'action d'un ennemi (côté héros : seulement s'il a visé un héros), ou quand on ferme le cercle. **Deux runes au choix** (v2.1,
+JOKO, 2026-10-27 : *« tu mets un truc, et c'est toi qui l'actives au bon moment. C'était supra méta »*, garder le cercle et rajouter
+l'ancien, puis *« Deux runes au choix »*) : en lançant une rune de zone, une fenêtre demande **ᛟ Garder** (elle attend au sol qu'on
+ferme le cercle, comme l'Écrit d'avant) ou **✒ Piège** (elle part quand l'ennemi agit) ; une rune à une cible ne demande rien ; sans
+choix (combat auto, bancs), `solParDefaut` « piege ». Réglages `solAuChoix`, `solParDefaut`, `nomGarder`, `nomPiege` ; l'aide dit « au
+sol » ou « piège ». Banc : `les_runes` ⑦. Chaque écrit est une rune « Rune de
 Sceau : … », de son **signe** `<Rune: frappe | prise | sceau | lien | rempart>` (sans balise : ce qu'elle fait). **L'accord** : deux runes du
 même signe qui partent ensemble ×1,25 chacune (`bonusAccord` — ×1,5 était trop fort : trois runes préparées ~7,3 coups d'un coup contre
 ~4,9 avant ; ~6,1 à ×1,25), le Sceau accordé est sûr ; **la transmutation entière** : trois du même signe, la vie payée pour elles revient
