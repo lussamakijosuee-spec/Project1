@@ -7,8 +7,10 @@
  * il va alterner entre les deux », puis : « Sous 70 % de ses PV », « Tous les
  * 3 tours (réglable) », « Je le crée moi-même » (une balise sur son ennemi).
  *
- * Aucune fiche n'est touchée : le banc pose <Chant:> en mémoire sur l'Ogre (7),
- * seul dans la troupe 1, et sert ses partitions par le réseau.
+ * Aucune fiche n'est touchée : le banc pose <Chant:> et <Boss> en mémoire sur
+ * l'Ogre (7), seul dans la troupe 1, et sert ses partitions par le réseau. En
+ * boss, ScenesDeBoss lui remet son titre à chaque Scene_Battle.start : le retour
+ * du chant ne doit pas le montrer (le troll de JOKO, ennemi 831, est un boss).
  *
  *   ① à 100 % : il ne chante pas ; contre-épreuve, un ennemi sans <Chant:> non plus ;
  *   ② sous 70 % : au début du tour, l'annonce, l'écran se fissure, part en
@@ -73,6 +75,7 @@ var CHANT = { version: 1, musique: null, bpm: 120, decalage: 0, vitesse: 5, note
             BattleManager.startInput();
             var sans = BattleManager._phase;
             o.enemy().meta.Chant = ' _chant_banc, _chant_banc_2';     // en mémoire seulement
+            o.enemy().meta.Boss = true;                               // comme le troll de JOKO
             o.setHp(o.mhp);
             BattleManager.startInput();
             return { sans: sans, plein: BattleManager._phase, enCours: !!LeChant._enCours, membres: $gameParty.battleMembers().length };
@@ -89,6 +92,9 @@ var CHANT = { version: 1, musique: null, bpm: 120, decalage: 0, vitesse: 5, note
             var sp = SceneManager._scene._spriteset;
             window.__avant = { fond: sp._back1Sprite.bitmap && sp._back1Sprite.bitmap._url, tour: $gameTroop.turnCount(), mapBgm: BattleManager._mapBgm, titres: window.MecaBoss && MecaBoss._bannieres ? MecaBoss._bannieres.length : 0, membres: $gameParty.battleMembers().length, seiryuTp: s.tp, recoverAll: Game_BattlerBase.prototype.recoverAll };
             o.setHp(Math.floor(o.mhp * 0.69));
+            // chaque titre de boss montré à partir d'ici (le bandeau de ScenesDeBoss)
+            var montrer = MecaBoss.Sprite_Bandeau.prototype.montrer; window.__titres = 0;
+            MecaBoss.Sprite_Bandeau.prototype.montrer = function (b) { if (b && b.type === 'titre') window.__titres++; return montrer.call(this, b); };
             BattleManager.startInput();
             return { phase: BattleManager._phase, nom: LeChant._enCours && LeChant._enCours.nom, effet: !!(LeChant._enCours && LeChant._enCours.eclats && LeChant._enCours.eclats.parent === SceneManager._scene) };
         });
@@ -134,7 +140,7 @@ var CHANT = { version: 1, musique: null, bpm: 120, decalage: 0, vitesse: 5, note
                 pvOgre: o.hp, attendu: Math.floor(o.mhp * 0.4), vesper: v.hp, vesperAttendu: Math.max(1, Math.round(Math.floor(v.mhp / 2) / 2)),
                 buff: v._buffs[2], etat: v.isStateAffected(13), tp: v.tp, seiryuTp: s.tp === a.seiryuTp,
                 tour: $gameTroop.turnCount() === a.tour, enCombat: $gameParty.inBattle(), mapBgm: BattleManager._mapBgm === a.mapBgm,
-                titres: window.MecaBoss && MecaBoss._bannieres ? MecaBoss._bannieres.length : 0, titresAvant: a.titres,
+                titres: window.__titres + MecaBoss._bannieres.filter(function (b) { return b.type === 'titre'; }).length,
                 membres: $gameParty.battleMembers().length, membresAvant: a.membres, enCours: LeChant._enCours,
                 recoverAll: Game_BattlerBase.prototype.recoverAll === a.recoverAll, finTour: o._chant.finTour
             };
@@ -144,7 +150,7 @@ var CHANT = { version: 1, musique: null, bpm: 120, decalage: 0, vitesse: 5, note
         V('ses PV : ceux de la fin du chant (40 %)', r4.pvOgre === r4.attendu, r4.pvOgre + ' / attendu ' + r4.attendu);
         V('l\'équipe garde sa part : Vesper, à moitié, en perd la moitié', Math.abs(r4.vesper - r4.vesperAttendu) <= 1, r4.vesper + ' / attendu ' + r4.vesperAttendu);
         V('le combat continue : buff, état, PT de Vesper et PT de seiryu gardés', r4.buff === 1 && r4.etat && r4.tp === 42 && r4.seiryuTp, JSON.stringify({ buff: r4.buff, etat: r4.etat, tp: r4.tp }));
-        V('il n\'a pas « recommencé » : pas de titre de boss, la musique de la carte retenue', r4.titres === r4.titresAvant && r4.mapBgm);
+        V('il n\'a pas « recommencé » : pas de titre de boss, la musique de la carte retenue', r4.titres === 0 && r4.mapBgm, r4.titres + ' titre(s) de boss');
         V('l\'équipe de combat est de nouveau entière ; MOG retrouve son soin', r4.membres === r4.membresAvant && r4.recoverAll);
 
         // ⑤ il alterne : tous les 3 tours
