@@ -193,9 +193,9 @@ var horsPas = [];
                 try {
                     // ① la rune de zone : « Piège », puis combien de fenêtres répondent
                     if (p.rune) {
-                        var choisir = Scene_Battle.prototype.choisirRune;
-                        Scene_Battle.prototype.choisirRune = function (m) { this._skillWindow.activate(); return choisir.call(this, m); };   // LEcrit d'avant
-                        try { aller(p.rune); S._fenetreRune.select(1); S._fenetreRune.processOk(); res.avant = actives(); } finally { Scene_Battle.prototype.choisirRune = choisir; revenir(); }
+                        // LEcrit d'avant : choisirRune réactivait la liste (la fenêtre du choix garde son
+                        // gestionnaire lié à sa création : on rejoue la ligne retirée, pas le prototype)
+                        try { aller(p.rune); S._fenetreRune.select(1); S._skillWindow.activate(); S._fenetreRune.processOk(); res.avant = actives(); } finally { revenir(); }
                         aller(p.rune); S._fenetreRune.select(1); S._fenetreRune.processOk(); res.apres = actives(); revenir();
                     }
                     // ② la fenêtre des alliés ouverte, l'action vidée sous elle, le curseur bouge
