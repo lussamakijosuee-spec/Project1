@@ -20,6 +20,12 @@
 //  2016-03-23 - Version 1.2 - changed code to use | to split x|y coords
 //  2016-03-23 - Version 1.1 - added "delay" setting and follower targeting
 //  2016-03-23 - Version 1.0 - release
+//  [JOKO] 2026-11-03 - correction : une bulle <c:0> lancée sans événement
+//                      (événement commun en processus parallèle, ou appelé
+//                      sans événement) ou sur un événement absent de la carte
+//                      plantait le jeu (« Cannot read property 'screenX' of
+//                      undefined ») : sur le joueur pour 0, pas affichée sinon.
+//                      L'original (v2.0) est dans l'historique git.
 //-----------------------------------------------------------------------------
 // Terms can be found at:
 // galvs-scripts.com
@@ -347,6 +353,10 @@ Window_GalvCaption.prototype.setMapTarget = function(target,yoffset,targetActor)
 			this.target = $gamePlayer._followers.follower(f);
 			if (f > $gameParty.battleMembers().length) this._disable = true;
 		};
+		// [JOKO] pas d'événement en cours : sur le joueur ; un événement absent : pas de bulle
+		if (!this.target) {
+			if (target === 0) this.target = $gamePlayer; else this._disable = true;
+		};
 		Galv.Mpup.thisEvent = null;
 		this.follow = true; // follow the object in update
 	} else {
@@ -463,7 +473,7 @@ Window_GalvCaption.prototype.update = function() {
 	};
 	this._time -= 1;
 	
-	if (this.follow) {
+	if (this.follow && this.target) { // [JOKO] une cible absente ne plante plus
 		var centX = this.target.screenX() - this.width / 2;
 		this.x = centX;
 		this.y = this.target.screenY() + this._offsetY;

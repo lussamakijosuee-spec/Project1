@@ -169,6 +169,11 @@ var LeChant = LeChant || {};
     // l'écran brisé et la partition prête : on part chanter
     var _majCombat = Scene_Battle.prototype.update;
     Scene_Battle.prototype.update = function () {
+        if (this._chantSansTitre) {
+            this._chantSansTitre = false;
+            var MB = window.MecaBoss;
+            if (MB && MB._bannieres && MB._bannieres[0] && MB._bannieres[0].type === 'titre') MB._bannieres.shift();
+        }
         _majCombat.call(this);
         var etat = LeChant._enCours;
         if (etat && etat.brise && etat.charge && !etat.sortie && !SceneManager.isSceneChanging()) LeChant.partir(etat);
@@ -298,15 +303,15 @@ var LeChant = LeChant || {};
         var etat = LeChant._enCours;
         if (!etat || !etat.retour) return _demarrer.call(this);
         var debut = BattleManager.startBattle, musique = BattleManager.playBattleBgm;
-        var MB = window.MecaBoss, n = MB && MB._bannieres ? MB._bannieres.length : 0;
         BattleManager.startBattle = function () {};
         BattleManager.playBattleBgm = function () {};
         try { _demarrer.call(this); } finally {
             BattleManager.startBattle = debut;
             BattleManager.playBattleBgm = musique;
         }
-        // ScenesDeBoss remet le titre du boss à chaque Scene_Battle.start
-        if (MB && MB._bannieres && MB._bannieres.length > n && MB._bannieres[0].type === 'titre') MB._bannieres.shift();
+        // ScenesDeBoss remet le titre du boss à chaque Scene_Battle.start — chargé après
+        // LeChant, il l'ajoute après nous : on le retire à la première image (Scene_Battle.update)
+        this._chantSansTitre = true;
         LeChant._enCours = null;
         $gameParty.requestMotionRefresh();
         if (!BattleManager.checkBattleEnd()) BattleManager.startInput();
