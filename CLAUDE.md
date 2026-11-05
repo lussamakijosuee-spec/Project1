@@ -858,6 +858,13 @@ compte) ; un nom qu'un plugin fabrique (« flame_0 » pour Flame_0.png, MOG_Even
 corrigé dans le navigateur par `js/casse_web.js` (`tools/casse_web.js` + la liste des fichiers, chargé en
 premier, sur `src` et `XMLHttpRequest` : YEP_X_CoreUpdatesOpt remplace les chargeurs de MV) ; un son sans
 .m4a (Safari, iPhone) y est converti par ffmpeg. Rien de privé n'y part (ni docs,
-ni bancs, ni studio, ni CLAUDE.md). En ligne, les sauvegardes restent dans le navigateur de chaque
+ni bancs, ni studio, ni CLAUDE.md). Le jeton et le secret sont à JOKO : je ne crée ni ne colle de jeton.
+**Sans le jeton** (JOKO, 2026-11-05 : *« Oui, fais-le »*) : `PUBLIER_EN_LIGNE.bat` (`tools/publier_en_ligne.js`)
+fait la même chose depuis son PC, par son accès git — la version web des fichiers du PC tels qu'ils sont
+(RPG Maker ouvert : enregistrer d'abord), envoyée dans Project1-jeu (une version, sans historique ;
+`dist/web.git` garde ce qui est en ligne, seule la différence repart : 321 octets quand seul `version.txt`
+change), puis l'attente de GitHub Pages. L'auteur d'une version publiée est l'adresse noreply de GitHub
+(`293176437+lussamakijosuee-spec@users.noreply.github.com`), jamais l'e-mail de JOKO : le dépôt est public.
+En ligne depuis le 2026-11-05 (écran titre, nouvelle partie et combat essayés sur la vraie adresse). En ligne, les sauvegardes restent dans le navigateur de chaque
 joueur. Banc : `la_version_web.js` ; et la chasse aux bugs se joue contre la version web
 (`ETT_URL`, un serveur qui respecte la casse).
