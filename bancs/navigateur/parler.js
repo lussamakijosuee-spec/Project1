@@ -128,7 +128,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         function remettre(x) { x.appear(); x.revive(); x.clearStates(); x.recoverAll(); delete x._parler; delete x._parlerParti; delete x._parlerSeSait; delete x._parlerGrosCoup; delete x._parlerCadeau; x._ctAnnonces = []; }
         function annonces(b) { return (b._ctAnnonces || []).map(function (x) { return x.texte; }); }
         function parle(cle, cible) { var a = new Game_Action(ves); a.setSkill(Parler.skillDe(cle)); a.setTarget(cible.index()); a.apply(cible); }
-        function enemyById(id) { var e = new Game_Enemy(id, 0, 0); return e; }
+        // la lecture par le nom : une fiche sans <Peuple:> (depuis l'étape 2, les fiches portent leur peuple)
+        function enemyById(id) { var e = new Game_Enemy(id, 0, 0); var d = JSON.parse(JSON.stringify(e.enemy())); delete d.meta.Peuple; delete d.meta.Monde; e.enemy = function () { return d; }; return e; }
 
         // les six approches sont des compétences en mémoire, lues par le moteur
         out.skills = Parler.APPROCHES.map(function (a) { var s = $dataSkills[Parler.skillDe(a.cle)]; return s && s.meta.Parler && s.meta.Parler.trim() === a.cle ? s.name : null; });

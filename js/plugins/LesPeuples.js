@@ -2,7 +2,7 @@
 // LesPeuples.js — le royaume des monstres : chaque peuple du Chapitre 1 se bat comme il vit
 //=============================================================================
 /*:
- * @plugindesc v1.0 Les peuples du Chapitre 1 : un trait par peuple (la Bible), les états d'âme, un nom propre à chacun
+ * @plugindesc v1.1 Les peuples du Chapitre 1 : un trait par peuple (la Bible), les états d'âme, un nom propre à chacun
  * @author Claude, pour JOKO
  *
  * @param nomsPropres
@@ -16,6 +16,17 @@
  * @desc Un nom porté par une créature tuée redevient libre après ce nombre de combats.
  * @type number
  * @default 20
+ *
+ * @param braiseObjet
+ * @text Objet « Braise d'âme »
+ * @desc Ce que laisse un habitant du Chapitre 1 tué pour de bon (0 : rien).
+ * @type item
+ * @default 113
+ *
+ * @param chanceBraise
+ * @text Chance de la braise (%)
+ * @type number
+ * @default 100
  *
  * @param etatEffroi
  * @text État Effroi
@@ -117,6 +128,21 @@
  *  Braises      Elles vacillent : un tour sur trois, presque rien ne les
  *               touche.
  *
+ * Les braises : un habitant du Chapitre 1 (<Monde: chapitre1>) tué pour de bon laisse une « Braise d'âme »
+ * (braiseObjet) ; une pleureuse la recueille avec le reste.
+ *
+ * Les boss de la Bible (balises de leur fiche ; la parole est dans Parler) :
+ *  <Volonte: 3>      Corvina : elle se relève tant que sa volonté tient ; chaque chute et chaque Brisure en ôtent un ;
+ *                    brisée, elle s'en va (« impossible de la tuer pour de bon »).
+ *  <Tenue>           Aymeric : tant qu'il tient sa position, les siens encaissent ×0,7 ; un coup de 15 % la rompt.
+ *  <Duel>            Brennus : le premier héros qui le frappe est son duelliste ; un autre frappe à moitié et le
+ *                    met en colère (+20 % par affront).
+ *  <Chants>          Hurle-Doux : tous les 3 tours, sa joie soigne les siens, sa colère soulève la pierre, son chagrin
+ *                    accable ; <Loyal> : tombé après avoir dit sa colère, il s'incline (vaincu loyalement).
+ *  <CentFois>        Vaëlle : elle n'esquive jamais ; tombée, elle reviendra au combat suivant, un peu plus forte.
+ *  <Pardon>          Ruedan : chaque bonne réponse (Écouter) lui ôte une rancune.
+ *  <GardeLesBraises> Dame Sanglot : +10 % par braise que l'équipe porte (×2 au plus).
+ *
  * Les états d'âme (la Bible) : Effroi (défense ×1,5, ne peut pas attaquer),
  * Jalousie (prend les renforts d'un allié), Superbe (refuse les soins des
  * autres), Doute (précision −30 %) ; Emporté, Euphorie, Accablement sont des
@@ -133,6 +159,7 @@
     var num = function (k, d) { var v = Number(P[k]); return isNaN(v) || P[k] === '' || P[k] === undefined ? d : v; };
     var NOMS_PROPRES = String(P.nomsPropres || 'true') === 'true';
     var TEMPS_DU_NOM = num('tempsDuNom', 20);
+    var BRAISE = num('braiseObjet', 113), CHANCE_BRAISE = num('chanceBraise', 100) / 100;
     var ET = {
         effroi: num('etatEffroi', 279), jalousie: num('etatJalousie', 280), superbe: num('etatSuperbe', 281), doute: num('etatDoute', 282),
         euphorie: num('etatEuphorie', 167), accablement: num('etatAccablement', 168), emporte: num('etatEmporte', 169), sommeil: num('etatSommeil', 19)
@@ -155,7 +182,10 @@
         ostetusReleves: 2, ostetusPV: 0.5,
         souvenirTours: 2,
         errantMouvement: 0.5, errantEcrit: 1.5,
-        braiseVacille: 0.2
+        braiseVacille: 0.2,
+        // les boss de la Bible
+        volonteReleve: 0.6, centFoisParRetour: 0.05, chantsTous: 3, chantJoie: 0.1, chantColere: 0.08,
+        tenue: 0.7, tenueRompue: 0.15, duelAutre: 0.5, duelColere: 0.2, parBraise: 0.1, braisesMax: 2
     };
 
     var HUMEURS = {
@@ -301,6 +331,7 @@
     };
     function debutDeCombat() {
         compterLeTempsDuNom();
+        bossAuDebut();
         $gameTroop.members().forEach(function (e) {
             donnerNom(e);
             if (de(e, 'gelees')) { humeur(e, auHasard(Object.keys(HUMEURS)), false); }
@@ -327,6 +358,7 @@
     };
     function debutDeTour() {
         var t = tour();
+        chants();
         // les gelées : l'humeur venue du dernier coup, puis les fusions
         vivants('gelees').forEach(function (e) {
             if (e._humeurVenue) { humeur(e, e._humeurVenue, true); e._humeurVenue = null; }
@@ -622,7 +654,14 @@
                 annonce(e, '😠 Il se relève — rancune ' + e._rancune, '#ff9a7a');
                 return;
             }
-            if (p === 'ostetus' && e._releves > 0 && !e._dernierFeu) { e._releves--; e._seRelever = true; e._mortVue = false; annonce(e, '🦴 Un tas d\'os… qui bouge encore', '#e0e0c0'); }
+            if (p === 'ostetus' && e._releves > 0 && !e._dernierFeu) { e._releves--; e._seRelever = true; e._mortVue = false; annonce(e, '🦴 Un tas d\'os… qui bouge encore', '#e0e0c0'); return; }
+            // les boss de la Bible : Corvina revient tant que sa volonté tient, Hurle-Doux s'incline, Vaëlle reviendra
+            if (bossQuiTombe(e)) { return; }
+            // « Un habitant du Chapitre 1 qui meurt pour de bon retombe en cendre d'âme, et ne laisse que sa braise »
+            if (monde(e) === 'chapitre1' && !e._parlerParti && BRAISE && $dataItems[BRAISE] && hasard(CHANCE_BRAISE)) {
+                e._braise = true;
+                annonce(e, '🕯 Il ne reste que sa braise', '#ffb070');
+            }
             if (p === 'murmures') {
                 var autre = auHasard($gameTroop.aliveMembers().filter(function (x) { return x !== e; }));
                 if (autre) {
@@ -647,8 +686,146 @@
     Game_Enemy.prototype.makeDropItems = function () {
         if (this._recueilli) { return []; }
         var l = _butinEnnemi.call(this);
+        if (this._braise && BRAISE && $dataItems[BRAISE]) { l = l.concat([$dataItems[BRAISE]]); }
         return this._recueil ? l.concat(this._recueil) : l;
     };
+
+    // =========================================================================
+    // Les boss de la Bible (« Le Chapitre 1 dans le jeu », « comment l'arrêter sans le tuer »)
+    // Parler s'occupe de la parole (<Parler approches / besoin / objet / texte / fin / interrupteur>) ;
+    // ici, ce qui se passe au combat.
+    // =========================================================================
+    function meta(e, k) { var m = e && e.enemy && e.enemy() && e.enemy().meta; var v = m ? m[k] : undefined; return typeof v === 'string' ? v.trim() : v; }
+    function monde(e) { var v = meta(e, 'Monde'); return typeof v === 'string' ? v.toLowerCase() : ''; }
+    function alluméSiDit(e) { var sw = Number(meta(e, 'Parler interrupteur')) || 0; if (sw > 0) { $gameSwitches.setValue(sw, true); } }
+    function partCalme(e, texte) {
+        e._parlerParti = 'calme';
+        alluméSiDit(e);
+        annonce(e, texte, '#a8e6ff');
+        e.escape();
+    }
+
+    // Au début du combat : la volonté de Corvina, la Tenue d'Aymeric, les retours de Vaëlle
+    function bossAuDebut() {
+        $gameTroop.members().forEach(function (e) {
+            var v = Number(meta(e, 'Volonte'));
+            if (v > 0) { e._volonte = v; annonce(e, '🪶 Elle reviendra : volonté ' + v, '#c0b0ff'); }
+            if (meta(e, 'Tenue')) { annonce(e, '🛡 La Tenue : le terrain reste calme autour de lui', '#c8e6ff'); }
+            if (meta(e, 'CentFois')) {
+                var c = ($gameSystem._centFois = $gameSystem._centFois || {}), n = c[e.enemyId()] || 0;
+                if (n > 0) {
+                    var k = R.centFoisParRetour * n;
+                    e.addParam(0, Math.round(e.mhp * k)); e.addParam(2, Math.round(e.atk * k)); e.recoverAll();
+                    annonce(e, '😊 Elle revient. Encore. (' + n + (n > 1 ? ' fois' : ' fois') + ')', '#ffd9a0');
+                }
+            }
+        });
+    }
+    // Quand l'un d'eux tombe
+    function bossQuiTombe(e) {
+        // Corvina : « Impossible de la tuer pour de bon : il faut briser sa volonté »
+        if (e._volonte !== undefined) {
+            if (e._volonte > 0) {
+                e._volonte--; e._mortVue = false; e.revive(); e.setHp(Math.max(1, Math.floor(e.mhp * R.volonteReleve)));
+                annonce(e, '🪶 Elle revient — volonté ' + e._volonte, '#c0b0ff');
+            } else {
+                e.revive(); e.setHp(1);
+                partCalme(e, '🪶 Sa volonté est brisée. Elle s\'en va.');
+            }
+            return true;
+        }
+        // Hurle-Doux : « le laisser dire sa colère jusqu'au bout, puis le vaincre loyalement »
+        if (meta(e, 'Loyal') && e._colereDite && !e._colereInterrompue) {
+            e.revive(); e.setHp(1);
+            if (window.Parler && Parler.reputation) { Parler.reputation(peuple(e) || 'orques', 1); }
+            partCalme(e, '🙇 Vaincu loyalement, il s\'incline');
+            return true;
+        }
+        // Vaëlle la Cent-Fois : elle revient après chaque défaite
+        if (meta(e, 'CentFois')) {
+            var c = ($gameSystem._centFois = $gameSystem._centFois || {});
+            c[e.enemyId()] = (c[e.enemyId()] || 0) + 1;
+            annonce(e, '😊 « À la prochaine. »', '#ffd9a0');
+            return true;
+        }
+        return false;
+    }
+
+    // Les chants de Hurle-Doux : « sa colère soulève la pierre, son chagrin noie un champ de bataille, sa joie fait pousser l'herbe »
+    function chants() {
+        var t = tour();
+        if (t <= 0 || t % R.chantsTous !== 0) { return; }
+        $gameTroop.aliveMembers().forEach(function (e) {
+            if (!meta(e, 'Chants')) { return; }
+            var r = e.hpRate();
+            if (r > 2 / 3) {
+                $gameTroop.aliveMembers().forEach(function (x) { if (x.hp < x.mhp) { soigner(x, x.mhp * R.chantJoie); } });
+                annonce(e, '🎶 Sa joie fait pousser l\'herbe : les siens se refont', '#b0ffb0');
+            } else if (r > 1 / 3) {
+                $gameParty.aliveMembers().forEach(function (h) { var n = blesser(h, h.mhp * R.chantColere); if (n > 0) { annonce(h, '🪨 −' + n, '#ffb070'); } });
+                annonce(e, '🎶 Sa colère soulève la pierre', '#ff9a7a');
+            } else {
+                $gameParty.aliveMembers().forEach(function (h) { poser(h, ET.accablement); });
+                annonce(e, '🎶 Son chagrin noie le champ de bataille', '#a0b8ff');
+            }
+        });
+    }
+
+    // La Tenue, le duel, les braises de Dame Sanglot : sur les dégâts
+    var _valeurBoss = Game_Action.prototype.makeDamageValue;
+    Game_Action.prototype.makeDamageValue = function (cible, critique) {
+        var v = _valeurBoss.call(this, cible, critique);
+        if (!enCombat() || !v || v < 0) { return v; }
+        var s = this.subject(), k = 1;
+        // Aymeric tient sa position : les autres sont à l'abri
+        if (ennemi(cible) && !meta(cible, 'Tenue') && $gameTroop.aliveMembers().some(function (x) { return meta(x, 'Tenue') && !(x._tenueRompue >= tour()); })) { k *= R.tenue; }
+        // Brennus : un duel. Un autre qui s'en mêle frappe à moitié, et le met en colère
+        if (ennemi(cible) && meta(cible, 'Duel') && heros(s) && cible._dueliste && cible._dueliste !== s) { k *= R.duelAutre; }
+        if (ennemi(s) && meta(s, 'Duel') && s._deshonneur) { k *= 1 + R.duelColere * s._deshonneur; }
+        // Dame Sanglot déteste qui porte les braises de ses morts
+        if (ennemi(s) && meta(s, 'GardeLesBraises') && BRAISE && $dataItems[BRAISE]) { k *= Math.min(R.braisesMax, 1 + R.parBraise * $gameParty.numItems($dataItems[BRAISE])); }
+        return k === 1 ? v : Math.round(v * k);
+    };
+    var _applyBoss = Game_Action.prototype.apply;
+    Game_Action.prototype.apply = function (cible) {
+        _applyBoss.call(this, cible);
+        if (!enCombat() || !ennemi(cible)) { return; }
+        var s = this.subject(), r = cible.result();
+        if (!heros(s) || !r.isHit() || !(r.hpDamage > 0)) { return; }
+        if (meta(cible, 'Tenue') && r.hpDamage >= cible.mhp * R.tenueRompue && !(cible._tenueRompue >= tour())) {
+            cible._tenueRompue = tour() + 1;
+            annonce(cible, '🛡 La Tenue cède', '#ffb070');
+        }
+        if (meta(cible, 'Duel')) {
+            if (!cible._dueliste) { cible._dueliste = s; annonce(cible, '⚔ Un duel : ' + s.name(), '#ffd080'); }
+            else if (cible._dueliste !== s) { cible._deshonneur = (cible._deshonneur || 0) + 1; annonce(cible, '😤 Ce n\'est pas un duel !', '#ff7a7a'); }
+        }
+    };
+    // la Brisure fissure la volonté de Corvina
+    var _etatBoss = Game_Battler.prototype.addState;
+    Game_Battler.prototype.addState = function (id) {
+        var avant = this.isStateAffected(id);
+        _etatBoss.call(this, id);
+        if (enCombat() && ennemi(this) && this._volonte > 0 && id === 1005 && !avant && this.isStateAffected(id)) {
+            this._volonte--;
+            annonce(this, '🪶 Sa volonté se fissure (' + this._volonte + ')', '#c0b0ff');
+        }
+    };
+    // Vaëlle n'esquive jamais
+    var _xparamBoss = Game_Enemy.prototype.xparam;
+    Game_Enemy.prototype.xparam = function (id) {
+        if (id === 1 && meta(this, 'CentFois')) { return 0; }
+        return _xparamBoss.call(this, id);
+    };
+    // Ruedan : chaque bonne réponse (Écouter) lui ôte un peu de rancune — « un troll qui pardonne meurt en paix »
+    if (window.Parler && Parler.quandEcoute) {
+        Parler.quandEcoute.push(function (e, bon, n) {
+            if (meta(e, 'Pardon') && e._rancune > 0) {
+                e._rancune--;
+                annonce(e, '😮‍💨 Sa rancune baisse (' + e._rancune + ')', '#c0e0ff');
+            }
+        });
+    }
     // la fusion : l'expérience de celle qui s'est fondue revient à qui tombe
     var _exp = Game_Troop.prototype.expTotal;
     Game_Troop.prototype.expTotal = function () {

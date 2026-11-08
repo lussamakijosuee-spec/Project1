@@ -35,6 +35,35 @@ s'enfuit sans rien. Le frapper garde baissée se sait, une fois : réputation �
 son nom. Banc : `navigateur/parler.js` (34 contrôles : le vrai combat saisi par les fenêtres, puis les règles et leurs
 contre-épreuves).
 
+**Le rework des ennemis du Chapitre 1 et du dehors** (2026-11-08 ; JOKO : *« Fait pour le Chapitre 1 et le monde extérieur les
+ennemis un rework de tout sauf dono, kevératus et reine écarlate »*, puis *« Fait tout les ennemis même créer des troupes aussi »*,
+*« Oui, noms de la Bible »*, *« Sortis de la faille »*, le troll exclu aussi, et sur le plan en 5 étapes : *« Oui plus développer et
+originale »*). **Étape 1** — `LesPeuples.js` : un trait par peuple de la page Notion « Le royaume des monstres » (l'humeur et la fusion
+des Gelées, la couronne et le piège des Gobelins, la colère dite des Orques, la blague des Farfadets, la rancune des Trolls, le cri et la
+Veille des Pleureuses, la peur des Loups-Frisson, le doute des Murmures, le « Non ! » des Petits Refus, la jalousie des Envies, les
+spores des Rêveurs, les Rancœurs, les Statues, les Arbres, les Vouivres, les morts qui refusent), un nom propre à chacun (« Nacre
+(Gelée) », jamais porté deux fois, libre après le Temps du Nom), les états d'âme neufs **279-282** (Effroi, Jalousie, Superbe, Doute ;
+Emporté 169, Euphorie 167, Accablement 168 du jeu) ; Parler v1.1 : **Épargner** un humain, partout (il se rend, rend ce qu'il a volé,
+l'éthique monte). **v1.1 / Parler v1.2** : les **braises** (« un habitant du Chapitre 1 qui meurt pour de bon […] ne laisse que sa
+braise » : objet **113**) et les **boss de la Bible** à leur façon (« comment l'arrêter sans le tuer »), par balises : `<Parler
+approches / besoin / objet / texte / fin / interrupteur>`, `<Volonte: n>` (Corvina : elle revient, la Brisure fissure sa volonté,
+brisée elle s'en va), `<Tenue>` (Aymeric), `<Duel>` (Brennus), `<Chants>` + `<Loyal>` (Hurle-Doux), `<CentFois>` (Vaëlle, d'un combat
+à l'autre), `<Pardon>` (Ruedan), `<GardeLesBraises>` (Dame Sanglot) ; objets de quête 114 « La braise de sa mère », 115 « Le nom du
+village », 116 « Un nom pour lui ». **Étape 2** — les 546 fiches (sauf Dono, son Esprit, Donovano le Second, Kevératus, la Reine et son
+avatar, le troll) portent `<Monde: chapitre1 | exterieur | chapitre2 | chapitre3 | inconnu>`, et `<Peuple:>` (et `<SansParler>` pour les
+héros tombés) : 102 Chapitre 1, 102 dehors, 89 Chapitre 2, 72 Chapitre 3, **181 inconnu** (aucune phrase de la Bible pour les ranger :
+dieux, anges, démons, gargouilles, Minotaure, Poulet Bizarre… — à JOKO) ; rangées par des agents (une règle tirée de la Bible, un
+relecteur adverse par lot), puis relues : le **bestiaire du .docx** met au dehors les bêtes ordinaires (« loups, sangliers, serpents
+venimeux », « araignées géantes, chauves-souris géantes, rats des galeries », « grands loups noirs, ours géants ») — les Insectes y sont ;
+une famille, un monde. **23 noms de la Bible** : Slime → Gelée, Orc → Orque, Chauve-souris → Murmure, Mimic → Envie, Wyverne → Vouivre,
+Zombie → Revenant, Squelette Guerrier → Os-Têtu Guerrier, Goule Affamée → Affamé, Harpie Stridente → Pleureuse Stridente, Golem de
+Pierre → Statue de Pierre, Élémentaires → Rancœurs, Spectre / Âme Errante → Errant, Dragons → Orgueils, Fées → Farfadets… ; jamais un
+nom propre, un boss, un humain, un nom en minuscules de JOKO. ⚠ La Chauve-souris est un Murmure (Notion) alors que le .docx met des
+« chauves-souris géantes » au dehors : à JOKO. Bancs : `navigateur/les_peuples.js` (44), `navigateur/les_boss_de_la_bible.js` (24),
+`parler` (34), `les_instincts` (27). Les bancs Node `10_troupes`, `18_recharges`, `24_ultimes_et_rendements`, `7_trois_sources`,
+`8_visages_ennemis`, `9_doctrines` ont les mêmes échecs avant et après (pas de ce chantier). **Reste** : étape 3 (fiches neuves des peuples
+sans fiche et des 9 boss de Notion), étape 4 (troupes par région), étape 5 (équilibre).
+
 **Depuis le 2026-10-24, le monde, c'est la Bible de JOKO** : `docs/Les-Trois-Sources-la-Bible.docx`
 (« Version de référence », *« en cas de contradiction, c'est lui qui fait foi »*). Il a choisi *« Ton socle, mes
 systèmes dedans »* : son monde reste, et ce qui est dans le jeu y est entré. Son monde, c'est un seul Livre,

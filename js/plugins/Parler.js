@@ -2,7 +2,7 @@
 // Parler.js — au Chapitre 1, un adversaire est quelqu'un : on peut lui parler
 //=============================================================================
 /*:
- * @plugindesc v1.1 Parler : au Chapitre 1, un ennemi qui baisse sa garde s'écoute (six approches, la bonne selon son peuple)
+ * @plugindesc v1.2 Parler : au Chapitre 1, un ennemi qui baisse sa garde s'écoute (six approches, la bonne selon son peuple ; les boss de la Bible à leur façon)
  * @author Claude, pour JOKO
  *
  * @param baliseCarte
@@ -211,12 +211,27 @@
         }
         return null;
     }
+    // Ce qu'une fiche peut dire d'elle-même (les boss de la Bible, « comment l'arrêter sans le tuer ») :
+    //   <Parler approches: ecouter, offrir>  les approches qui marchent sur lui (sinon celles de son peuple)
+    //   <Parler besoin: 4>                    combien de bonnes réponses (sinon selon son rang)
+    //   <Parler objet: 114>                   chaque bonne réponse demande cet objet, et le prend (rendre une braise…)
+    //   <Parler texte: Une voix se tait>      ce qui s'affiche à chaque bonne réponse
+    //   <Parler fin: Il pardonne.>            ce qui s'affiche quand c'est fini
+    //   <Parler interrupteur: 320>            l'interrupteur qui s'allume quand c'est fini (pour les quêtes de JOKO)
+    function meta(e, k) { var m = e && e.enemy && e.enemy() && e.enemy().meta; var v = m ? m[k] : undefined; return typeof v === 'string' ? v.trim() : v; }
+    function approchesDe(e) {
+        var v = meta(e, 'Parler approches');
+        if (typeof v === 'string' && v) { return v.split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(function (s) { return PAR_CLE[s]; }); }
+        var p = peuple(e);
+        return p ? p.approches : [];
+    }
+    function aSaFacon(e) { return typeof meta(e, 'Parler approches') === 'string'; }
     // un humain s'épargne partout ; les peuples du Chapitre 1 ne s'écoutent que chez eux
     function parlable(e) {
         if (!e || !e.isAlive() || estBoss(e)) { return false; }
         var p = peuple(e);
-        if (!p || !p.approches.length) { return false; }
-        return p.cle === 'humains' || surChapitre1();
+        if (!p || !approchesDe(e).length) { return false; }
+        return p.cle === 'humains' || surChapitre1() || aSaFacon(e);
     }
     function brise(e) { return !!(e.etatDeBrise && e.isStateAffected(e.etatDeBrise())); }
     function gardeBaissee(e) { return parlable(e) && (brise(e) || e.hpRate() <= SEUIL_GARDE); }
@@ -225,7 +240,12 @@
         if (!r) { var m = /<\s*Rang\s*:\s*([^>]*)>/i.exec(note(e)); r = m ? m[1].trim().toUpperCase() : null; }
         return r || 'AUCUN';
     }
-    function besoin(e) { var p = peuple(e); if (p && p.cle === 'humains') { return 1; } return REPONSES[rang(e)] || REPONSES.AUCUN || 1; }
+    function besoin(e) {
+        var n = Number(meta(e, 'Parler besoin'));
+        if (n > 0) { return n; }
+        var p = peuple(e); if (p && p.cle === 'humains') { return 1; }
+        return REPONSES[rang(e)] || REPONSES.AUCUN || 1;
+    }
     function tour() { return $gameTroop.turnCount(); }
     function annonce(b, t, c) { if (window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, t, c); } }
 
@@ -385,13 +405,15 @@
     function parler(heros, e, cle) {
         var p = peuple(e), s = etat(e);
         if (!p || !gardeBaissee(e)) { annonce(e, '🛡 Il ne t\'écoute plus', '#c0c0c0'); return; }
-        if (cle === 'offrir') {
+        var objetId = Number(meta(e, 'Parler objet')) || 0, objet = objetId ? $dataItems[objetId] : null;
+        // offrir son or — sauf à qui on doit rendre quelque chose (une braise, un objet) : ça, c'est l'objet qu'on rend
+        if (cle === 'offrir' && !objet) {
             var prix = Math.max(PRIX_MIN, e.gold());
             if ($gameParty.gold() < prix) { annonce(heros, 'Pas assez d\'or (' + prix + ')', '#c0c0c0'); return; }
             $gameParty.loseGold(prix);
             annonce(heros, '🎁 −' + prix + ' ' + TextManager.currencyUnit, '#ffe08a');
         }
-        var juste = p.approches.indexOf(cle) >= 0;
+        var juste = approchesDe(e).indexOf(cle) >= 0;
         if (juste && cle === 'impressionner' && !(e._parlerGrosCoup !== undefined && tour() - e._parlerGrosCoup <= 1)) {
             annonce(e, '⚔ Ça ne l\'impressionne pas', '#ff9a7a');
             juste = false;
@@ -400,12 +422,22 @@
         }
         if (!juste) {
             s.colere++;
-            if (p.indice) { annonce(e, p.nom + ' : ' + p.indice, '#d8c8ff'); }
+            if (p.indice && !aSaFacon(e)) { annonce(e, p.nom + ' : ' + p.indice, '#d8c8ff'); }
             return;
+        }
+        // la bonne approche, mais il manque ce qu'il faut lui rendre : pas de colère, rien ne se passe
+        if (objet) {
+            if (!$gameParty.hasItem(objet)) { annonce(e, '… Il te manque : ' + objet.name, '#d8c8ff'); return; }
+            $gameParty.loseItem(objet, 1);
+            annonce(heros, '🕯 Rendu : ' + objet.name, '#ffe08a');
         }
         s.bon++;
         var n = besoin(e);
-        if (s.bon < n) { annonce(e, '💬 Il t\'écoute · ' + s.bon + '/' + n, '#a8ffb0'); return; }
+        Parler.quandEcoute.forEach(function (f) { try { f(e, s.bon, n, cle); } catch (x) { console.error(x); } });
+        if (s.bon < n) { annonce(e, '💬 ' + (meta(e, 'Parler texte') || 'Il t\'écoute') + ' · ' + s.bon + '/' + n, '#a8ffb0'); return; }
+        if (meta(e, 'Parler fin')) { annonce(e, '🕊 ' + meta(e, 'Parler fin'), '#a8e6ff'); }
+        var sw = Number(meta(e, 'Parler interrupteur')) || 0;
+        if (sw > 0) { $gameSwitches.setValue(sw, true); }
         apaiser(e, p);
     }
 
@@ -506,8 +538,10 @@
 
     window.Parler = {
         APPROCHES: APPROCHES, PEUPLES: PEUPLES,
-        peuple: peuple, parlable: parlable, gardeBaissee: gardeBaissee, besoin: besoin,
+        peuple: peuple, parlable: parlable, gardeBaissee: gardeBaissee, besoin: besoin, approchesDe: approchesDe,
         reputation: reputation, ethique: ethique, surChapitre1: surChapitre1,
-        skillDe: function (cle) { return SKILL[cle]; }
+        skillDe: function (cle) { return SKILL[cle]; },
+        // (e, bonnes réponses, besoin, approche) : à chaque bonne réponse — LesPeuples s'en sert (le pardon de Ruedan)
+        quandEcoute: []
     };
 })();
