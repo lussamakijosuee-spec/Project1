@@ -15,6 +15,25 @@ don et couverture on enlève »*. Le lore se réduit à **l'explication du mana*
 — les trois sources, le Premier — et `docs/SYSTEME_DE_MANA.md`). Les **Dons Spirituels** et la
 **couverture** sont retirés. Le reste des documents de lore est une archive, plus une contrainte
 (`docs/INDEX.md`, « Le statut du lore »).
+**Sauf le Chapitre 1** (2026-11-08) : à « c'est sombre et compliqué », JOKO a répondu que c'est voulu, on garde.
+Le Chapitre 1 de sa page Notion (https://app.notion.com/p/411d7120ef1e813db6ceee8f96cc5ea6), c'est **le premier
+jeu** : *« je compte faire 3 jeux »*, un par Chapitre. Son « Underground » (*« je voulais faire un Undertale »*) :
+des monstres conscients, seulement là. Ce qui est tranché avec le jeu est à la fin de « Le Chapitre 1 dans le jeu ».
+
+**Parler** (`Parler.js` v1.0, 2026-11-08 ; JOKO : *« Oui, propose Parler »*, puis *« Par carte (A) »*). Seulement sur une
+carte dont la note porte `<Chapitre 1>` — **aucune n'a la balise** : les cartes sont à JOKO, c'est lui qui la pose ; aucune
+fiche d'ennemi n'est touchée. Le peuple se lit dans le **nom** de l'ennemi (un mot entier : « Orc », pas « Sorcier » ; réglage
+`peuples`, tiré de la ligne « Pour leur parler » de chaque peuple) ou dans `<Peuple: clé>` ; jamais un boss, ni `<SansParler>` ;
+les peuples que la Bible règle par une quête (morts, Rêveurs, Rancœurs, Statues, Arbres) n'ont pas Parler. « 💬 Parler » se met
+sous l'Attaque, grisée tant qu'aucun ne **baisse sa garde** (brisé, ou sous `seuilGarde` 30 %, « 🕊 Il baisse sa garde ») ; six
+approches (Plaisanter, Écouter, Offrir — son or —, Avouer, Impressionner — après un coup de 15 % ce tour ou le précédent —, Le
+contraire), des **compétences créées en mémoire** au chargement (rien dans Skills.json). La bonne : « 💬 Il t'écoute · 1/2 »
+(D 1, C 2, B 3, A 4, S 5) ; la mauvaise : « 😠 Il refuse », +10 % à ses coups, et l'indice de son peuple. Apaisé : il s'en va
+(réputation de son peuple +1, son expérience, jamais son or, un cadeau de son butin une fois sur quatre) ; sous 10 %, il
+s'enfuit sans rien. Le frapper garde baissée se sait, une fois : réputation −1, éthique −1 (`Parler.reputation`,
+`Parler.ethique`, dans `$gameSystem` ; `variableEthique` pour une variable). Pas encore : se rallier (le Serment), Appeler par
+son nom. Banc : `navigateur/parler.js` (34 contrôles : le vrai combat saisi par les fenêtres, puis les règles et leurs
+contre-épreuves).
 
 **Depuis le 2026-10-24, le monde, c'est la Bible de JOKO** : `docs/Les-Trois-Sources-la-Bible.docx`
 (« Version de référence », *« en cas de contradiction, c'est lui qui fait foi »*). Il a choisi *« Ton socle, mes
