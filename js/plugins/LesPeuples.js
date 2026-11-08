@@ -241,6 +241,8 @@
         if (!ennemi(e) || !e.enemy()) { return ''; }
         var m = e.enemy().meta || {};
         if (m.Peuple) { return String(m.Peuple).trim().toLowerCase(); }
+        // une fiche rangée (<Monde:>) sans <Peuple:> n'en a pas : son nom ne suffit plus (« Grand Loup Noir » n'est pas un Loup-Frisson)
+        if (m.Monde) { return ''; }
         var p = window.Parler && Parler.peuple ? Parler.peuple(e) : null;
         return p ? p.cle : '';
     }
@@ -272,6 +274,10 @@
         var cle = peuple(e), pool = NOMS[cle];
         e._nomPropre = null;
         if (!pool || estBoss(e)) { return; }
+        // un personnage a déjà son nom (Dame Sanglot, Orgueil-sans-Nom…) ; une créature au nom à elle aussi (« Grelot », « Cendreux ») :
+        // seul celui dont la fiche porte le nom de son peuple (« Gelée », « Gobelin Rieur ») en reçoit un
+        if ((e.enemy().meta || {}).Personnage) { return; }
+        if (String(e.enemy().name || '').toLowerCase().indexOf(String(NOM_PEUPLE[cle] || '~').toLowerCase()) < 0) { return; }
         var r = registre();
         var libres = pool.filter(function (n) { return !r.pris[n]; });
         if (!libres.length) { return; }

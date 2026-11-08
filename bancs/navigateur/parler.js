@@ -209,7 +209,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         o2.setHp(Math.floor(o2.mhp * 0.25));
         parle('impressionner', o2);
         out.impressionner.avec = o2._parlerParti || null;
-        delete o2.enemy().meta.Peuple;
+        o2.enemy().meta.Peuple = 'orques';   // (depuis l'étape 2, la fiche a un <Monde:> : sans <Peuple:>, plus de peuple)
 
         // Offrir (une Envie) : paie son or ; sans or, rien
         remettre(o2); o2.enemy().meta.Peuple = 'envies'; o2.setHp(Math.floor(o2.mhp * 0.25));
@@ -219,7 +219,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         $gameParty.gainGold(1000); var orP = $gameParty.gold();
         parle('offrir', o2);
         out.offrir = { paye: orP - $gameParty.gold(), prix: Math.max(10, o2.gold()), parti: o2._parlerParti || null };
-        delete o2.enemy().meta.Peuple;
+        o2.enemy().meta.Peuple = 'orques';
 
         // le cadeau : une fois sur quatre (le hasard du banc le force)
         remettre(o2); o2.setHp(Math.floor(o2.mhp * 0.25)); hasard = 0.01;

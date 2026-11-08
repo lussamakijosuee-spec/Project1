@@ -205,6 +205,7 @@
         var d = e.enemy(), m = d.meta || {};
         if (m.SansParler) { return null; }
         if (m.Peuple) { return PEUPLES[String(m.Peuple).trim().toLowerCase()] || null; }
+        if (m.Monde) { return null; }   // une fiche rangée sans <Peuple:> n'en a pas
         var nom = String(d.name || '').toLowerCase();
         for (var k in PEUPLES) {
             if (PEUPLES[k].mots.some(function (mot) { return contientMot(nom, mot); })) { return PEUPLES[k]; }

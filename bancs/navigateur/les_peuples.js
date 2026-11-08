@@ -60,7 +60,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         var P = LesPeuples;
 
         // les noms propres
-        reset(); peuple(e1, 'gelees'); peuple(e2, 'gelees');
+        reset(); peuple(e1, 'gelees'); peuple(e2, 'gelees'); e1.enemy().name = 'Gelée'; e2.enemy().name = 'Gelée';   // un nom propre va à qui porte le nom de son peuple
         $gameSystem._nomsDuChapitre = null;
         T.forEach(function (x) { delete x._nomPropre; });
         LesPeuples.debutDeCombat();

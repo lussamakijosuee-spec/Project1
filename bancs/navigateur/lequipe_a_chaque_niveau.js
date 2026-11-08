@@ -631,6 +631,30 @@ function troupesDuJeu() {
         l.forEach(function (s) { console.log(String(s.estime).padStart(7) + '  #' + s.id + ' ' + s.nom + '  (type ' + s.stype + ', ' + s.pm + ' PM)  ' + s.formule); });
         await nav.close(); return;
     }
+    // Mode liste : LISTE=833-871 (ou 833,840) → chaque troupe, au niveau de son rang (son ennemi le plus fort :
+    // D 6, C 20, B 36, A 52, S 70 ; NIVEAU_LISTE=n pour tous au même), PAR_TROUPE combats chacune (2026-11-08, le rework
+    // des ennemis du Chapitre 1 : mesurer les troupes neuves).
+    if (process.env.LISTE) {
+        var ids = [];
+        process.env.LISTE.split(',').forEach(function (p) { var m = p.split('-').map(Number); for (var x = m[0]; x <= (m[1] || m[0]); x++) { ids.push(x); } });
+        var NIV = { D: 6, C: 20, B: 36, A: 52, S: 70, BOSS: 70 };
+        for (var li = 0; li < ids.length; li++) {
+            var info = await page.evaluate(function (t) {
+                var tr = $dataTroops[t]; if (!tr || !tr.name) { return null; }
+                var ordre = ['D', 'C', 'B', 'A', 'S', 'BOSS'], r = 'D';
+                tr.members.forEach(function (m) { var x = window.EquilibreDesCombats ? EquilibreDesCombats.rangDe($dataEnemies[m.enemyId]) : null; if (x && ordre.indexOf(x) > ordre.indexOf(r)) { r = x; } });
+                return { nom: tr.name, rang: r };
+            }, ids[li]);
+            if (!info) { continue; }
+            var niv = parseInt(process.env.NIVEAU_LISTE || '0', 10) || NIV[info.rang] || 20;
+            var res = [];
+            for (var kk = 0; kk < PAR_TROUPE; kk++) { res.push(await page.evaluate(function (a) { return window.__simuler(a[0], a[1], a[2]); }, [ids[li], niv, niv >= 45 ? 3 : niv >= 20 ? 2 : 1])); }
+            var vv = res.filter(function (c) { return c.victoire; }).length, tt = res.reduce(function (s, c) { return s + c.tours; }, 0) / res.length;
+            console.log(String(ids[li]).padStart(4) + '  ' + info.rang.padEnd(4) + ' niv ' + String(niv).padStart(2) + '  ' + vv + '/' + res.length + ' victoires, ' + tt.toFixed(1) + ' tours   ' + info.nom);
+        }
+        console.log('(erreurs moteur : ' + erreurs.length + ')' + (erreurs.length ? ' ' + erreurs.slice(0, 5).join(' | ') : ''));
+        await nav.close(); return;
+    }
     var NIVEAUX = process.env.NIVEAUX ? process.env.NIVEAUX.split(',').map(Number) : [1, 6, 12, 20, 28, 36, 45, 52, 60, 70, 80, 89, 99];
     function rangPour(n) { return n >= 60 ? 'S' : n >= 45 ? 'A' : n >= 28 ? 'B' : n >= 12 ? 'C' : 'D'; }
     function lienPour(n) { return n >= 45 ? 3 : n >= 20 ? 2 : 1; }

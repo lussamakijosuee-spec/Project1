@@ -61,8 +61,25 @@ Pierre → Statue de Pierre, Élémentaires → Rancœurs, Spectre / Âme Errant
 nom propre, un boss, un humain, un nom en minuscules de JOKO. ⚠ La Chauve-souris est un Murmure (Notion) alors que le .docx met des
 « chauves-souris géantes » au dehors : à JOKO. Bancs : `navigateur/les_peuples.js` (44), `navigateur/les_boss_de_la_bible.js` (24),
 `parler` (34), `les_instincts` (27). Les bancs Node `10_troupes`, `18_recharges`, `24_ultimes_et_rendements`, `7_trois_sources`,
-`8_visages_ennemis`, `9_doctrines` ont les mêmes échecs avant et après (pas de ce chantier). **Reste** : étape 3 (fiches neuves des peuples
-sans fiche et des 9 boss de Notion), étape 4 (troupes par région), étape 5 (équilibre).
+`8_visages_ennemis`, `9_doctrines` ont les mêmes échecs avant et après (pas de ce chantier). **Étape 3** — 39 fiches neuves
+(**834-872**) : les peuples qui manquaient (Gobelins Rieur / Piégeur / Neuf-Fois-Chef, Orque des Clans, Chanteur de Guerre, Troll
+Rancunier, Pleureuses, Loups-Frisson, Murmure Messager, Rêveurs, Rancœur, Arbre-Mémoire, Vouivre Vantarde, Os-Têtus, Revenant Sauvage,
+Affamé de Souvenirs, Braises), les humains du Chapitre 1 (Aile Noire, Soldat de la Lisière, Braisier), le dehors d'après le bestiaire
+(Égaré, Araignée Géante, Serpent Venimeux, Grand Loup Noir, Ours Géant) et les **9 boss de la Bible** (864-872 : Dame Sanglot, Maître
+Ruedan, Aymeric Lent-Feu, Vaëlle la Cent-Fois, La Gelée-Reine, Hurle-Doux, Brennus, Corvina, Orgueil-sans-Nom ; `<Personnage>` : ils gardent
+leur nom ; pas de `<Boss>`, pour que leur peuple et Parler jouent) — images d'`img/sv_enemies` (à JOKO), compétences d'ennemis du jeu,
+statistiques médianes de leur rang, `<Scale Sprite:>` pour les grandes images. Un **nom propre** ne va qu'à une créature dont la fiche porte
+le nom de son peuple (« Gelée », « Gobelin Rieur ») ; une fiche rangée (`<Monde:>`) sans `<Peuple:>` n'en a plus par son nom. **Étape 4** —
+39 troupes (**833-871**) : « Ch1 · Les Larmiers / La Lisière / La Forêt des Rires / Les Rougeterres / Le Val des Envies / Les Cimes Hautaines /
+Le Champ de la Reine / Le Lieu-Tu · … », les 9 « Ch1 · BOSS · … », et « Aurevel · Égarés / Bois / Fond du bois / Sortis de la faille ». **Aucune
+n'est posée sur une carte** : à JOKO. **Étape 5** — `lequipe_a_chaque_niveau` a un mode `LISTE=833-871` (chaque troupe au niveau de son rang :
+D 6, C 20, B 36, A 52, S 70 ; `NIVEAU_LISTE=n`) : l'équipe complète gagne tout ; les troupes ordinaires en 1 à 3 tours (comme les D et C du jeu,
+que JOKO garde bas : le jeu commence avec un seul héros), les Ailes Noires 3, les morts du Lieu-Tu 4 ; les boss, PV réglés : Dame Sanglot 5
+tours, la Gelée-Reine 5, Aymeric 6, Vaëlle 4, Hurle-Doux 7, Brennus 8 (2 victoires sur 3), Ruedan 2 et Corvina 3 — mais le simulateur
+n'appelle pas la fin d'action : la rancune de Ruedan (4 relèves) et la volonté de Corvina (3) n'y jouent pas, en jeu ils durent bien plus ;
+**Orgueil-sans-Nom**, « le boss optionnel le plus dur » : 0 sur 4 au niveau 70, 2 sur 4 au niveau 89 (11 tours). Bancs :
+`navigateur/les_troupes_du_chapitre1.js` (7 : les fiches, les images, chaque troupe ouverte et un tour joué, les personnages gardent leur nom,
+la contre-épreuve), `les_peuples` (44), `les_boss_de_la_bible` (24), `parler` (34).
 
 **Depuis le 2026-10-24, le monde, c'est la Bible de JOKO** : `docs/Les-Trois-Sources-la-Bible.docx`
 (« Version de référence », *« en cas de contradiction, c'est lui qui fait foi »*). Il a choisi *« Ton socle, mes
