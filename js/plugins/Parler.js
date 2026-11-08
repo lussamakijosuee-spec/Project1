@@ -2,7 +2,7 @@
 // Parler.js — au Chapitre 1, un adversaire est quelqu'un : on peut lui parler
 //=============================================================================
 /*:
- * @plugindesc v1.0 Parler : au Chapitre 1, un ennemi qui baisse sa garde s'écoute (six approches, la bonne selon son peuple)
+ * @plugindesc v1.1 Parler : au Chapitre 1, un ennemi qui baisse sa garde s'écoute (six approches, la bonne selon son peuple)
  * @author Claude, pour JOKO
  *
  * @param baliseCarte
@@ -75,7 +75,7 @@
  * @text Les peuples
  * @type note
  * @desc Une ligne par peuple : clé | nom | les noms d'ennemis qui en sont | les approches qui marchent | l'indice (de la Bible)
- * @default "gelees | Gelées | slime, gelée | avouer | Leur offrir une émotion sincère.\ngobelins | Gobelins | gobelin, goblin | plaisanter | Une meilleure blague que la leur.\norques | Orques | orc, orque | ecouter | Écouter leur colère jusqu'au bout.\nfarfadets | Farfadets | farfadet, lutin | plaisanter | Les faire rire.\ntrolls | Trolls Rancuniers | troll | ecouter | Comprendre leur rancœur.\npleureuses | Pleureuses | harpie, pleureuse | offrir, ecouter | Rendre un objet, ou écouter un chant entier.\nloups | Loups-Frisson | loup | plaisanter | Un loup-frisson qui entend rire recule.\nmurmures | Murmures | chauve-souris, murmure | avouer | Échanger un secret.\npetitsrefus | Petits Refus | diablotin, petit refus | contraire | Leur demander le contraire de ce qu'on veut.\nenvies | Envies | mimic, mimique, envie | offrir, avouer | Payer, ou avouer ce qu'on désire vraiment.\nmirages | Mirages | mirage | avouer | Leur dire ce qu'on désire vraiment.\nvouivres | Vouivres et Orgueils | wyverne, vouivre, dragon | impressionner | Les flatter ne marche jamais : il faut les impressionner."
+ * @default "gelees | Gelées | slime, gelée | avouer | Leur offrir une émotion sincère.\ngobelins | Gobelins | gobelin, goblin | plaisanter | Une meilleure blague que la leur.\norques | Orques | orc, orque | ecouter | Écouter leur colère jusqu'au bout.\nfarfadets | Farfadets | farfadet, lutin | plaisanter | Les faire rire.\ntrolls | Trolls Rancuniers | troll | ecouter | Comprendre leur rancœur.\npleureuses | Pleureuses | harpie, pleureuse | offrir, ecouter | Rendre un objet, ou écouter un chant entier.\nloups | Loups-Frisson | loup | plaisanter | Un loup-frisson qui entend rire recule.\nmurmures | Murmures | chauve-souris, murmure | avouer | Échanger un secret.\npetitsrefus | Petits Refus | diablotin, petit refus | contraire | Leur demander le contraire de ce qu'on veut.\nenvies | Envies | mimic, mimique, envie | offrir, avouer | Payer, ou avouer ce qu'on désire vraiment.\nmirages | Mirages | mirage | avouer | Leur dire ce qu'on désire vraiment.\nvouivres | Vouivres et Orgueils | wyverne, vouivre, dragon | impressionner | Les flatter ne marche jamais : il faut les impressionner.\norgueils | Orgueils | orgueil | impressionner | Les flatter ne marche jamais : il faut les impressionner.\nreveurs | Rêveurs | rêveur, champignon, mushroom, shroom | | Accepter de dormir.\nrancoeurs | Rancœurs | rancœur, élémentaire | | Réparer ce qui les a fait naître.\nstatues | Statues de serment | statue, golem | | Retrouver celui qui a juré.\narbres | Arbres-Mémoire | arbre-mémoire, arbre | | De la patience, et une main sur l'écorce.\nostetus | Os-Têtus | os-têtu, squelette, skeleton | | Ils continuent leur vie d'avant.\nrevenants | Revenants sauvages | revenant, zombie | | On peut les aider à se souvenir.\naffames | Affamés de souvenirs | affamé, goule, ghoul | | Ils mangent les souvenirs des vivants.\nerrants | Errants | errant, errante, spectre, fantôme | | Des âmes revenues sans corps, qui dérivent.\nbraises | Braises errantes | braise, feu follet | | Elles hésitent entre s'éteindre et revenir.\nhumains | Humains | | epargner | Un humain qui baisse sa garde peut se rendre."
  *
  * @help
  * ============================================================================
@@ -136,7 +136,8 @@
         { cle: 'offrir', nom: '🎁 Offrir', icone: 313, aide: 'Lui donner de l\'or : ce qu\'il porte lui-même.' },
         { cle: 'avouer', nom: '💬 Avouer', icone: 4, aide: 'Dire quelque chose de vrai : un désir, un secret, ce qu\'on ressent.' },
         { cle: 'impressionner', nom: '⚔ Impressionner', icone: 77, aide: 'Lui montrer de quoi on est capable. Il faut l\'avoir frappé fort juste avant.' },
-        { cle: 'contraire', nom: '🔄 Le contraire', icone: 5, aide: 'Lui demander exactement le contraire de ce qu\'on veut.' }
+        { cle: 'contraire', nom: '🔄 Le contraire', icone: 5, aide: 'Lui demander exactement le contraire de ce qu\'on veut.' },
+        { cle: 'epargner', nom: '🕊 Épargner', icone: 87, aide: 'Lui laisser une chance de se rendre. Un humain l\'entend, partout.' }
     ];
     var PAR_CLE = {};
     APPROCHES.forEach(function (a) { PAR_CLE[a.cle] = a; });
@@ -155,7 +156,18 @@
         'petitsrefus | Petits Refus | diablotin, petit refus | contraire | Leur demander le contraire de ce qu\'on veut.',
         'envies | Envies | mimic, mimique, envie | offrir, avouer | Payer, ou avouer ce qu\'on désire vraiment.',
         'mirages | Mirages | mirage | avouer | Leur dire ce qu\'on désire vraiment.',
-        'vouivres | Vouivres et Orgueils | wyverne, vouivre, dragon | impressionner | Les flatter ne marche jamais : il faut les impressionner.'
+        'vouivres | Vouivres et Orgueils | wyverne, vouivre, dragon | impressionner | Les flatter ne marche jamais : il faut les impressionner.',
+        'orgueils | Orgueils | orgueil | impressionner | Les flatter ne marche jamais : il faut les impressionner.',
+        'reveurs | Rêveurs | rêveur, champignon, mushroom, shroom | | Accepter de dormir.',
+        'rancoeurs | Rancœurs | rancœur, élémentaire | | Réparer ce qui les a fait naître.',
+        'statues | Statues de serment | statue, golem | | Retrouver celui qui a juré.',
+        'arbres | Arbres-Mémoire | arbre-mémoire, arbre | | De la patience, et une main sur l\'écorce.',
+        'ostetus | Os-Têtus | os-têtu, squelette, skeleton | | Ils continuent leur vie d\'avant.',
+        'revenants | Revenants sauvages | revenant, zombie | | On peut les aider à se souvenir.',
+        'affames | Affamés de souvenirs | affamé, goule, ghoul | | Ils mangent les souvenirs des vivants.',
+        'errants | Errants | errant, errante, spectre, fantôme | | Des âmes revenues sans corps, qui dérivent.',
+        'braises | Braises errantes | braise, feu follet | | Elles hésitent entre s\'éteindre et revenir.',
+        'humains | Humains | | epargner | Un humain qui baisse sa garde peut se rendre.'
     ].join('\n');
     (function () {
         var txt = String(P.peuples || PEUPLES_DEFAUT);
@@ -165,7 +177,7 @@
             if (c.length < 4 || !c[0]) { return; }
             PEUPLES[c[0]] = {
                 cle: c[0], nom: c[1],
-                mots: c[2].split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean),
+                mots: (c[2] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean),
                 approches: c[3].split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(function (s) { return PAR_CLE[s]; }),
                 indice: c[4] || ''
             };
@@ -199,10 +211,12 @@
         }
         return null;
     }
+    // un humain s'épargne partout ; les peuples du Chapitre 1 ne s'écoutent que chez eux
     function parlable(e) {
-        if (!surChapitre1() || !e || !e.isAlive() || estBoss(e)) { return false; }
+        if (!e || !e.isAlive() || estBoss(e)) { return false; }
         var p = peuple(e);
-        return !!(p && p.approches.length);
+        if (!p || !p.approches.length) { return false; }
+        return p.cle === 'humains' || surChapitre1();
     }
     function brise(e) { return !!(e.etatDeBrise && e.isStateAffected(e.etatDeBrise())); }
     function gardeBaissee(e) { return parlable(e) && (brise(e) || e.hpRate() <= SEUIL_GARDE); }
@@ -211,7 +225,7 @@
         if (!r) { var m = /<\s*Rang\s*:\s*([^>]*)>/i.exec(note(e)); r = m ? m[1].trim().toUpperCase() : null; }
         return r || 'AUCUN';
     }
-    function besoin(e) { return REPONSES[rang(e)] || REPONSES.AUCUN || 1; }
+    function besoin(e) { var p = peuple(e); if (p && p.cle === 'humains') { return 1; } return REPONSES[rang(e)] || REPONSES.AUCUN || 1; }
     function tour() { return $gameTroop.turnCount(); }
     function annonce(b, t, c) { if (window.CombatTactique && CombatTactique.annoncer) { CombatTactique.annoncer(b, t, c); } }
 
@@ -285,7 +299,7 @@
     };
     Window_Parler.prototype.windowWidth = function () { return this._largeur || 480; };
     Window_Parler.prototype.maxCols = function () { return 2; };
-    Window_Parler.prototype.numVisibleRows = function () { return 3; };
+    Window_Parler.prototype.numVisibleRows = function () { return 4; };
     Window_Parler.prototype.makeCommandList = function () {
         var or = $gameParty.gold();
         APPROCHES.forEach(function (a) {
@@ -396,6 +410,15 @@
     }
 
     function apaiser(e, p) {
+        // un humain se rend : il rend ce qu'il a volé, et l'évaluation éthique récompense la retenue (la Bible)
+        if (p.cle === 'humains') {
+            reputation(p.cle, 1); ethique(1);
+            e._parlerParti = 'calme';
+            if (e._vole) { $gameParty.gainGold(e._vole); annonce(e, '💰 Il rend ' + e._vole + ' ' + TextManager.currencyUnit, '#ffe08a'); e._vole = 0; }
+            annonce(e, '🕊 Il se rend', '#a8e6ff');
+            e.escape();
+            return;
+        }
         if (e.hpRate() <= SEUIL_FUITE) {
             annonce(e, '🏃 Il s\'enfuit', '#c0c0c0');
             e._parlerParti = 'fuite';
