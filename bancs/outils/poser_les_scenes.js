@@ -24,7 +24,11 @@
  *   node bancs/outils/poser_les_scenes.js --ecrire   → écrit les cartes
  *
  * Un événement « 🏘 » que JOKO a retouché (il n'a plus la marque
- * « ◆ SCÈNES ») n'est jamais réécrit.
+ * « ◆ SCÈNES ») n'est jamais réécrit, ni celui qu'il a voulu tel quel
+ * (bancs/outils/voulu.js, 2026-11-09 : la Ville Forestière).
+ *
+ *   node bancs/outils/poser_les_scenes.js --ecrire --sortie <dossier>
+ *     → écrit dans ce dossier, pas dans data/ (pour les bancs)
  */
 'use strict';
 var fs = require('fs');
@@ -33,6 +37,8 @@ var D = require('./recettes/dsl.js');
 var A = D.A, C = D.C, si = D.si, cat = D.cat;
 var RACINE = path.join(__dirname, '..', '..');
 var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
+var iSo = process.argv.indexOf('--sortie'), SORTIE = iSo >= 0 ? path.resolve(process.argv[iSo + 1]) : null;
+var VOULU = require('./voulu.js');
 var VAR_TIRAGE = 886;
 var DOS = path.join(__dirname, 'scenes');
 var LOTS = fs.readdirSync(DOS).filter(function (x) { return /\.js$/.test(x); }).sort().map(function (x) { return require(path.join(DOS, x)); });
@@ -199,6 +205,7 @@ LOTS.forEach(function (lot) {
     controle(lot.nom, l, m);
     var e = m.events.filter(function (x) { return x && /^🏘/.test(x.name || ''); })[0];
     if (e && !e.pages[0].list.some(function (c) { return c.code === 108 && /^◆ SCÈNES/.test(c.parameters[0]); })) { console.log('   ⚑ ' + lot.nom + ' : retouché par JOKO, pas réécrit'); return; }
+    if (e && VOULU.est(lot.carte, e.id)) { console.log('   ⚑ ' + lot.nom + ' : voulu tel quel par JOKO (' + VOULU.quand + '), pas réécrit'); return; }
     if (!e) {
         e = { id: m.events.length, name: '🏘 La vie — ' + lot.nom, note: '', x: lot.x || 0, y: lot.y || 0, pages: [] };
         m.events.push(e);
@@ -214,11 +221,13 @@ console.log('   ' + poses.length + ' cartes :\n     ' + poses.join('\n     '));
 if (defauts.length) { console.log('   ✗ ' + defauts.length + ' défaut(s) :\n     ' + defauts.join('\n     ')); process.exit(1); }
 console.log('   ✓ blocs refermés, conditions valides, sons présents, chaque PNJ nommé existe sur sa carte');
 if (!ECRIRE) process.exit(0);
-Object.keys(ecrites).forEach(function (n) { fs.writeFileSync(fichier(n), formatCarte(ecrites[n])); });
+var DEST = SORTIE || path.join(RACINE, 'data');
+if (SORTIE && !fs.existsSync(SORTIE)) fs.mkdirSync(SORTIE, { recursive: true });
+Object.keys(ecrites).forEach(function (n) { fs.writeFileSync(path.join(DEST, path.basename(fichier(n))), formatCarte(ecrites[n])); });
 var FS = path.join(RACINE, 'data', 'System.json'), brut = fs.readFileSync(FS, 'utf8'), SYS = JSON.parse(brut);
 [[VAR_TIRAGE, '◆ Scènes · tirage'], [VAR_TIRAGE + 1, '◆ Scènes · variante']].forEach(function (v) {
     if (SYS.variables[v[0]] && !/^◆ /.test(SYS.variables[v[0]])) { console.log('   ✗ la variable ' + v[0] + ' porte déjà le nom « ' + SYS.variables[v[0]] + ' »'); process.exit(1); }
     SYS.variables[v[0]] = v[1];
 });
-fs.writeFileSync(FS, JSON.stringify(SYS) + (brut.endsWith('\n') ? '\n' : ''));
-console.log('   écrit : cartes ' + Object.keys(ecrites).join(', ') + ' ; variables ' + VAR_TIRAGE + '–' + (VAR_TIRAGE + 1));
+fs.writeFileSync(path.join(DEST, 'System.json'), JSON.stringify(SYS) + (brut.endsWith('\n') ? '\n' : ''));
+console.log('   écrit' + (SORTIE ? ' dans ' + SORTIE : '') + ' : cartes ' + Object.keys(ecrites).join(', ') + ' ; variables ' + VAR_TIRAGE + '–' + (VAR_TIRAGE + 1));
