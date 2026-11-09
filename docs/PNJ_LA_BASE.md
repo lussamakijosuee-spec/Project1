@@ -452,6 +452,8 @@ Des mécaniques que JOKO n'a pas écrites : je les **propose**, il décide.
 
 ## 10. Questions pour JOKO
 
+> **Ses réponses, le 2026-11-09** : *« 1. Oui 2 oui , 3 tout ou le meilleur, 4 oui la village puis le marché puis la pêche »* — la demi-journée de chariot, un seul village, les mécaniques M1-M7 (le fil, la question, les étapes, la tristesse, les ragots, la bulle, la conversation qui compte), les 9 de la Ville développés aussi, et l'ordre Ville → Marché → Pêche. Non tranchés, réglés sur la Bible (elle fait foi) : le « lord » aligné sur l'Aurevel de Lothaire ; au début du jeu, la faille est déclarée et la garde pas encore là (étape 0). Un réfugié d'Ostrevent : Mathurin, le crieur. La refonte de la Ville : `bancs/outils/habitants/refonte/ville.js`.
+
 1. **La distance** jusqu'à Haute-Taville : une demi-journée de chariot, ça te va ?
 2. **La Ville Forestière, le Marché et le Village de Pêche** : est-ce que ce sont trois quartiers du même village
    (« le village du donjon des eaux »), ou trois endroits voisins ?

@@ -79,4 +79,10 @@ function fiches() {
     });
     return r;
 }
-module.exports = { norme: norme, quiEst: quiEst, cestLui: cestLui, etat: etat, fiches: fiches, carte: carte, VOULU: VOULU };
+// la refonte (habitants/refonte/*.js) : ce qui se pose par-dessus une fiche, par « carte:événement »
+function refonte() {
+    var D = path.join(__dirname, 'habitants', 'refonte'), r = {};
+    if (fs.existsSync(D)) fs.readdirSync(D).filter(function (x) { return /\.js$/.test(x); }).forEach(function (x) { Object.assign(r, require(path.join(D, x))); });
+    return r;
+}
+module.exports = { norme: norme, quiEst: quiEst, cestLui: cestLui, etat: etat, fiches: fiches, refonte: refonte, carte: carte, VOULU: VOULU };

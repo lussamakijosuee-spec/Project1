@@ -120,7 +120,10 @@ function aSaSituation(k, lire) {
     var l = [].concat(SIT[k].nouvelles || []);
     return !l.length || t.indexOf(l[0].replace(/^~[^|]*\|/, '').split('|')[0].slice(0, 24)) >= 0;
 }
-var sitLa = Object.keys(SIT).filter(estLa), sansSituation = sitLa.filter(function (k) { return !aSaSituation(k, carte); });
+var REF = Q.refonte();
+// les habitants refaits (2026-11-09) disent la situation dans leurs propres mots (leurs « nouvelles », leurs étapes) : banc les_gens_du_village
+var sitLa = Object.keys(SIT).filter(function (k) { return estLa(k) && !(REF[k] && REF[k].nouvelles); }), sansSituation = sitLa.filter(function (k) { return !aSaSituation(k, carte); });
+var sitRefaits = Object.keys(SIT).filter(function (k) { return estLa(k) && REF[k] && REF[k].nouvelles; }).length;
 // contre-épreuve : les lignes de Hilde vidées (en mémoire) — attrapée
 var c29b = JSON.parse(JSON.stringify(carte(29)));
 c29b.events[28].pages.forEach(function (p) { p.list.forEach(function (c) { if (c.code === 401) c.parameters[0] = '…'; }); });
@@ -129,8 +132,8 @@ var situationAttrapee = !!SIT['29:28'] && !aSaSituation('29:28', function (n) { 
     carte(n).events.forEach(function (e) { if (e) e.pages.forEach(function (p) { var t = textes(p.list); if (NIE.test(t)) contredit.push(n + ':' + e.id + ' ' + e.name); }); });
 });
 var planteAttrape = NIE.test('Bon. Il n\'y a pas de faille ici. Mais il pourrait y en avoir une.');
-V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et personne ne dit plus qu\'il n\'y en a pas', sitLa.length >= 30 && !sansSituation.length && situationAttrapee && !contredit.length && planteAttrape,
-    sitLa.length + ' habitants là en parlent' + (sansSituation.length ? ' — sans elle : ' + sansSituation.join(', ') : '') + ' (' + (Object.keys(SIT).length - sitLa.length) + ' ne sont plus là) · ' +
+V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et personne ne dit plus qu\'il n\'y en a pas', sitLa.length >= 25 && !sansSituation.length && situationAttrapee && !contredit.length && planteAttrape,
+    sitLa.length + ' habitants là en parlent' + (sansSituation.length ? ' — sans elle : ' + sansSituation.join(', ') : '') + ' (' + sitRefaits + ' refaits la disent à leur façon, ' + (Object.keys(SIT).length - sitLa.length - sitRefaits) + ' ne sont plus là) · ' +
     (contredit.length ? 'le nient encore : ' + contredit.join(', ') : 'aucun ne le nie') + ' · des lignes vidées exprès, et une phrase qui la nie, sont attrapées');
 
 /* ── ⑭ ce que JOKO a voulu tel quel le reste : les deux outils relancés (dans un dossier à part, rien dans data/)
@@ -151,11 +154,15 @@ function changes(dossier) {   // les « carte:événement » que l'outil écrira
 }
 var outils = changes(lancer('poser_les_habitants.js', path.join(TMP, 'h'))).concat(changes(lancer('poser_les_scenes.js', path.join(TMP, 's'))));
 var vouluTouche = outils.filter(function (k) { var m = k.split(':'); return VOULU.est(+m[0], +m[1]); });
-var sansListe = changes(lancer('poser_les_habitants.js', path.join(TMP, 'h2'), { VOULU_SAUF: '29:33' })).concat(changes(lancer('poser_les_scenes.js', path.join(TMP, 's2'), { VOULU_SAUF: '29:54' })));
-var protege = sansListe.indexOf('29:33') >= 0 && sansListe.indexOf('29:54') >= 0;
+// la contre-épreuve : sans la liste, un événement voulu serait réécrit (un habitant s'il en reste un de voulu, et les scènes)
+var vouluHab = Object.keys(VOULU.evenements).filter(function (k) { return FICHES[k]; })[0];
+var vouluScn = Object.keys(VOULU.evenements).filter(function (k) { var m = k.split(':'), e = carte(+m[0]).events[+m[1]]; return e && /^🏘/.test(e.name || ''); })[0];
+var sansListe = (vouluHab ? changes(lancer('poser_les_habitants.js', path.join(TMP, 'h2'), { VOULU_SAUF: vouluHab })) : [])
+    .concat(vouluScn ? changes(lancer('poser_les_scenes.js', path.join(TMP, 's2'), { VOULU_SAUF: vouluScn })) : []);
+var protege = (!vouluHab || sansListe.indexOf(vouluHab) >= 0) && (!vouluScn || sansListe.indexOf(vouluScn) >= 0) && !!(vouluHab || vouluScn);
 fs.rmSync(TMP, { recursive: true, force: true });
 V('⑭ ce que tu as voulu tel quel le reste : relancés, les outils n\'y touchent pas (et sans la liste, ils y toucheraient)', !vouluTouche.length && protege,
-    Object.keys(VOULU.evenements).length + ' événements voulus' + (vouluTouche.length ? ' — touchés : ' + vouluTouche.join(', ') : ', aucun touché') + ' · sans la liste : ' + (protege ? 'Mathis et les scènes de la ville seraient réécrits' : '✗ rien ne changerait — la contre-épreuve ne prouve rien'));
+    Object.keys(VOULU.evenements).length + ' événements voulus' + (vouluTouche.length ? ' — touchés : ' + vouluTouche.join(', ') : ', aucun touché') + ' · sans la liste : ' + (protege ? [vouluHab, vouluScn].filter(Boolean).map(function (k) { return VOULU.evenements[k]; }).join(' et ') + ' seraient réécrits' : '✗ rien ne changerait — la contre-épreuve ne prouve rien'));
 var autres = outils.filter(function (k) { return vouluTouche.indexOf(k) < 0; });
 if (autres.length) console.log('     ⚑ relancés, les outils réécriraient aussi : ' + autres.map(function (k) { var m = k.split(':'), e = carte(+m[0]).events[+m[1]]; return k + ' ' + (e ? String(e.name).trim() : '(nouveau)'); }).join(', ') + ' — à JOKO (ce qu\'ils y changeraient : node bancs/outils/poser_les_habitants.js --ecarts, node bancs/outils/poser_les_scenes.js)');
 
@@ -311,7 +318,8 @@ if (autres.length) console.log('     ⚑ relancés, les outils réécriraient au
      *    sans les anniversaires », voulu), le jour se sait quand même (Habitants.anniversaire), et son crieur à lui
      *    parle jusqu'au bout, le 12 comme le 13 */
     var crieurs = Object.keys(FICHES).filter(function (k) { return FICHES[k].annonceAnniversaires; });
-    var crieursLa = crieurs.filter(estLa);
+    function annonce(k) { return REF[k] && REF[k].annonceAnniversaires !== undefined ? !!REF[k].annonceAnniversaires : !!FICHES[k].annonceAnniversaires; }
+    var crieursLa = crieurs.filter(function (k) { return estLa(k) && annonce(k); });
     var annonces = [];
     for (var kc of crieursLa) {
         var mc = kc.split(':');
@@ -338,12 +346,12 @@ if (autres.length) console.log('     ⚑ relancés, les outils réécriraient au
             [12, 13].forEach(function (j) { $gameSystem.set_month(4); $gameSystem.set_day(j); var t = parler(m, m.page(), { choisir: viser('Au revoir') }); r.crieurs.push({ id: id, fini: t.fini, annonce: /anniversaire de Hilde/.test(t.texte) }); });
         });
         return r;
-    }, crieurs.filter(function (k) { return !estLa(k) && +k.split(':')[0] === 29; }).map(function (k) { return +k.split(':')[1]; }));
+    }, crieurs.filter(function (k) { return !annonce(k) && +k.split(':')[0] === 29; }).map(function (k) { return +k.split(':')[1]; }));
     V('⑦ le jour d\'un anniversaire se sait : le 12 avril pour Hilde, et pas le 13', r7b.jour[0] === true && r7b.jour[1] === false, '12/4 : ' + r7b.jour[0] + ' · 13/4 : ' + r7b.jour[1]);
     if (!crieursLa.length) {
-        var crieursJOKO = crieurs.filter(function (k) { return !estLa(k); });
+        var crieursJOKO = crieurs.filter(function (k) { return !annonce(k); });
         V('⑦ ton crieur, tel que tu l\'as laissé (sans les anniversaires), parle jusqu\'au bout le 12 comme le 13', r7b.crieurs.length > 0 && r7b.crieurs.every(function (c) { return c.fini; }),
-            crieursJOKO.map(function (k) { return NOMS[k] + ' (' + etat(k).pourquoi + ')'; }).join(', ') + ' · ' + r7b.crieurs.filter(function (c) { return c.annonce; }).length + ' annonce(s), comme tu l\'as voulu');
+            crieursJOKO.map(function (k) { return NOMS[k] + ' (' + (etat(k).pourquoi || 'refait, sans les anniversaires') + ')'; }).join(', ') + ' · ' + r7b.crieurs.filter(function (c) { return c.annonce; }).length + ' annonce(s), comme tu l\'as voulu');
     }
 
     /* ⑩ le jeu de Petit-Louis suit le triangle · ⑪ Zéphyrin, la nuit de la Veillée seulement.

@@ -21,9 +21,10 @@
 'use strict';
 var D = require('../recettes/dsl.js');
 var A = D.A, C = D.C, si = D.si, cat = D.cat, boucle = D.boucle;
-var V = { visites: 880, jours: 881, tirage: 882, moment: 883, saison: 884, affinite: 885 };
+var V = { visites: 880, jours: 881, tirage: 882, moment: 883, saison: 884, affinite: 885, etape: 889 };
 var NOMS_VAR = { 880: '◆ Habitants · visites (ce PNJ)', 881: '◆ Habitants · jours depuis', 882: '◆ Habitants · tirage',
-    883: '◆ Habitants · moment (1 matin…4 nuit)', 884: '◆ Habitants · saison (1…4)', 885: '◆ Habitants · affinité (ce PNJ)' };
+    883: '◆ Habitants · moment (1 matin…4 nuit)', 884: '◆ Habitants · saison (1…4)', 885: '◆ Habitants · affinité (ce PNJ)',
+    889: '◆ Village · étape (0 faille déclarée…4)' };
 var LARGEUR = 46;
 
 /* ── le texte ─────────────────────────────────────────────────────────── */
@@ -102,7 +103,7 @@ var MOIS = ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet'
 /* ── P1 · la fiche du personnage, comme un OC : en tête de sa page ─────── */
 function ficheOC(p) {
     var o = p.oc; if (!o) return [];
-    var champs = [['Âge', o.age], ['Allure', o.allure], ['Caractère', o.caractere], ['Aime', o.aime], ['Déteste', o.deteste],
+    var champs = [['Âge', o.age], ['Son histoire', o.vecu], ['Ce qu\'il sait', o.savoir], ['Allure', o.allure], ['Caractère', o.caractere], ['Aime', o.aime], ['Déteste', o.deteste],
         ['Son rêve', o.reve], ['Son secret', o.secret], ['Sa peur', o.peur], ['Ses manies', o.manie], ['Sa phrase', o.phrase && '« ' + o.phrase + ' »']];
     if (o.liens) champs.push(['Ses liens', Object.keys(o.liens).map(function (k) { return k + ' : ' + o.liens[k]; }).join(' · ')]);
     if (p.anniversaire) { var x = p.anniversaire.split('/').map(Number); champs.push(['Anniversaire', x[1] + ' ' + MOIS[x[0]]]); }
@@ -137,6 +138,7 @@ function jouer(nom, gestes) {
         if (v === 'ami') return affinite(g[1]);
         if (v === 'js') return A.js(g[1]);
         if (v === 'choix') return D.choix(g[1], g[2].map(function (b) { return jouer(nom, b); }), { annuler: -1 });
+        if (v === 'retiens') return A.js('Habitants.repondre(this, ' + q(g[1]) + ', ' + q(g[2]) + ');');   // v1.5 : il se souvient de ta réponse
         throw new Error(nom + ' : geste inconnu « ' + v + ' »');
     }));
 }
@@ -207,12 +209,64 @@ function offrir(p) {
                         si(C.js(liste('aime') + '.indexOf(' + v + ') >= 0'), reagir('aime'), reagir('neutre')))))));
 }
 
+/* ── v1.5 · la refonte (docs/PNJ_LA_BASE.md) ─────────────────────────────
+ * fil      : [« texte » | { t: « texte », ami: n } | { gestes: [...], ami: n }] — « Discuter »
+ *            donne le suivant, un par jour, quand l'amitié y est ; puis ses phrases de tous les jours
+ * souvenirs: [{ cle, val, lignes }] — ce qu'il dit, en te revoyant, de ta réponse (geste « retiens »)
+ * ragots   : [{ de: '29:29', cle, val, lignes } | { de: '29:29', cadeau: true, lignes }] — une fois
+ * etapes   : { 0: [...], 1: [...], … } — l'étape du village (variable 889) : dite une fois quand
+ *            elle change, et dans « Quoi de neuf ? »
+ * triste   : [...] — un jour de tristesse (Habitants.triste), à la place de sa remarque du jour */
+function itemFil(nom, x) {
+    if (typeof x === 'string' || Array.isArray(x)) return element(nom, x);
+    if (x.gestes) return jouer(nom, x.gestes);
+    return element(nom, x.t);
+}
+function palierFil(x) { return typeof x === 'object' && !Array.isArray(x) && x.ami ? x.ami : 0; }
+function fil(p, sinonCmds) {
+    var l = p.fil || []; if (!l.length) return sinonCmds;
+    var paliers = '[' + l.map(palierFil).join(', ') + ']';
+    function chaine(i) {
+        if (i >= l.length) return sinonCmds;
+        return si(C.js('Habitants.fil(this, ' + paliers + ') === ' + i), cat(D.note('— fil ' + (i + 1) + '/' + l.length), itemFil(p.nom, l[i]), A.js('Habitants.filVu(this);')), chaine(i + 1));
+    }
+    return chaine(0);
+}
+function souvenirs(p, sinonCmds) {
+    var l = p.souvenirs || [];
+    function chaine(i) {
+        if (i >= l.length) return sinonCmds;
+        var s = l[i];
+        return si(C.js('Habitants.reponse(this, ' + q(s.cle) + ') === ' + q(s.val) + ' && Habitants.reponseHier(this, ' + q(s.cle) + ') && Math.random() < 0.4'), unParmi(p.nom, [].concat(s.lignes)), chaine(i + 1));
+    }
+    return chaine(0);
+}
+function ragots(p) {
+    return cat.apply(null, (p.ragots || []).map(function (r, i) {
+        var cond = r.cadeau ? 'Habitants.aRecu(' + q(r.de) + ')' : 'Habitants.reponseDe(' + q(r.de) + ', ' + q(r.cle) + ') === ' + q(r.val);
+        return si(C.js(cond + ' && Habitants.ragot(this, ' + i + ')'), cat(unParmi(p.nom, [].concat(r.lignes)), A.js('Habitants.ragotDit(this, ' + i + ');')));
+    }));
+}
+function etapesDites(p) {
+    var e = p.etapes || {};
+    return cat.apply(null, Object.keys(e).map(Number).sort().map(function (k) {
+        return si(C.js('Habitants.etapeNeuve(this) === ' + k), cat(unParmi(p.nom, [].concat(e[k])), A.js('Habitants.etapeDite(this);')));
+    }));
+}
+function balisesNeuf(p) {
+    var l = [];
+    if ((p.fil || []).length) l.push([108, 0, ['<Fil: ' + p.fil.map(palierFil).join(',') + '>']]);
+    if (p.etapes && Object.keys(p.etapes).length) l.push([108, 0, ['<Etapes: ' + Object.keys(p.etapes).map(Number).sort().join(',') + '>']]);
+    return l;
+}
+
 /* ── la fiche → la liste ──────────────────────────────────────────────── */
 function compiler(p) {
     var nom = p.nom, l = [];
     l = l.concat(D.note('◆ HABITANT · ' + p.nom + (p.role ? ' — ' + p.role : '')));
     if (p.voix) l = l.concat(D.note('Sa voix : ' + p.voix));
     l = l.concat(D.note('Généré par bancs/outils/poser_les_habitants.js depuis bancs/outils/habitants/. Modifiable ici comme n\'importe quel événement ; relancer l\'outil réécrit cette page.'));
+    l = l.concat(balisesNeuf(p));
     l = l.concat(ficheOC(p));
     l = l.concat(A.js('Habitants.prep(this);'));
     if (p.avant) l = l.concat(p.avant);
@@ -221,16 +275,19 @@ function compiler(p) {
 
     // l'accueil : la première fois > son anniversaire > quelqu'un à côté > le retour > bonjour (selon l'amitié, puis le moment)
     var bonjour = selonAmitie(p, 'bonjour', selon(V.moment, p.bonjour || {}, nom, p.bonjourTous));
+    bonjour = souvenirs(p, bonjour);                 // v1.5 : ta réponse de l'autre jour
     var accueil = aCote(p, bonjour);
     if (p.retour) accueil = si(C.vr(V.jours, '>=', 7), unParmi(nom, p.retour), accueil);
     if (p.anniversaire && p.anniv) accueil = si(C.js("Habitants.anniversaire('" + p.anniversaire + "')"), unParmi(nom, [].concat(p.anniv)), accueil);
     if (p.premiere) accueil = si(C.vr(V.visites, '=', 1), element(nom, p.premiere), accueil);
     l = l.concat(accueil);
     if (p.blesse) l = l.concat(si(C.js('$gameParty.leader() && $gameParty.leader().hpRate() < 0.4'), unParmi(nom, [].concat(p.blesse))));
+    l = l.concat(ragots(p), etapesDites(p));         // v1.5 : ce qu'on lui a raconté de toi ; ce qui a changé au village
     // la remarque du jour : par mauvais temps, le temps qu'il fait (MeteoVivante) ;
     // sinon, à partir de la 2e visite, la saison
     var remSaison = p.saisons ? si(C.vr(V.visites, '>', 1), selon(V.saison, p.saisons, nom)) : [];
     remSaison = selonLieu(p, remSaison);              // P2 : là où il est passe avant la saison
+    if (p.triste) remSaison = si(C.js('Habitants.triste(this) && Habitants.tristeDit(this)'), unParmi(nom, p.triste), remSaison);   // v1.5 : un jour de tristesse
     if (p.meteo) {
         var types = ['orage', 'tempete', 'pluie', 'neige', 'brouillard'].filter(function (t) { return p.meteo[t] && p.meteo[t].length; });
         var chaine = function (i) {
@@ -250,9 +307,13 @@ function compiler(p) {
         // P3 : une fois sur trois, il parle de quelqu'un d'autre
         var avis = Object.keys(p.avis || {}).reduce(function (a, k) { return a.concat(p.avis[k]); }, []);
         if (avis.length) parler = si(C.js('Math.random() < 0.35'), unParmi(nom, avis), parler);
-        options.push({ titre: p.titreDiscuter || 'Discuter', cmds: parler });
+        options.push({ titre: p.titreDiscuter || 'Discuter', cmds: fil(p, parler) });     // v1.5 : la suite de la dernière fois d'abord
+    } else if ((p.fil || []).length) options.push({ titre: p.titreDiscuter || 'Discuter', cmds: fil(p, unParmi(nom, ['…'])) });
+    if (p.nouvelles || p.etapes) {
+        var nv = p.nouvelles ? (p.nouvellesSaison ? si(C.js('Math.random() < 0.5'), selon(V.saison, p.nouvellesSaison, nom, p.nouvelles), unParmi(nom, p.nouvelles)) : unParmi(nom, p.nouvelles)) : [];
+        if (p.etapes) nv = p.nouvelles ? si(C.js('Math.random() < 0.5'), selon(V.etape, p.etapes, nom, p.nouvelles), nv) : selon(V.etape, p.etapes, nom, ['Rien de neuf.']);
+        options.push({ titre: p.titreNouvelles || 'Quoi de neuf ?', cmds: nv });
     }
-    if (p.nouvelles) options.push({ titre: p.titreNouvelles || 'Quoi de neuf ?', cmds: p.nouvellesSaison ? si(C.js('Math.random() < 0.5'), selon(V.saison, p.nouvellesSaison, nom, p.nouvelles), unParmi(nom, p.nouvelles)) : unParmi(nom, p.nouvelles) });
     // ses confidences s'ouvrent avec l'AFFINITÉ (Habitants v1.3 : +1 chaque jour où l'on se parle), plus seulement les visites
     if (p.perso) options.push({ titre: p.perso.titre, cmds: paliers(p.perso.sur === 'visites' ? V.visites : V.affinite, p.perso.paliers, nom) });
     (p.options || []).forEach(function (o) { options.push(o); });

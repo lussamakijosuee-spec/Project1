@@ -92,6 +92,21 @@ function situationDe(f) {
     var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
     return est ? SITUATION[est[1]] || [] : [];
 }
+// la refonte (2026-11-09 ; JOKO : « beaucoup plus humains et beaucoup plus sentimentaux », docs/PNJ_LA_BASE.md) :
+// habitants/refonte/*.js, une entrée « carte:événement » qui se pose PAR-DESSUS la fiche (lot + oc + situation) :
+// ses clés remplacent celles de la fiche (« oc » champ par champ ; « options » s'ajoutent à celles qui gardent
+// une boutique ou une quête de JOKO) ; une page <Est: 29:28> reçoit celle de 29:28
+var DOS_REF = path.join(__dirname, 'habitants', 'refonte'), REFONTE = {};
+if (fs.existsSync(DOS_REF)) fs.readdirSync(DOS_REF).filter(function (x) { return /\.js$/.test(x); }).sort().forEach(function (x) {
+    var t = require(path.join(DOS_REF, x));
+    Object.keys(t).forEach(function (k) { if (REFONTE[k]) throw new Error('refonte/' + x + ' : ' + k + ' est déjà refait'); REFONTE[k] = t[k]; });
+});
+function refonteDe(f) {
+    var k = f.carte + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '');
+    if (REFONTE[k]) return REFONTE[k];
+    var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
+    return est ? REFONTE[est[1]] || null : null;
+}
 var NOMS_DE = {};
 LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { NOMS_DE[(f.carte || lot.carte) + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '')] = f.nom; }); });
 // le crieur annonce les anniversaires (P6) : ceux de toutes les fiches OC
@@ -239,12 +254,18 @@ LOTS.forEach(function (lot) {
                 else { var o = fiche[j] = Object.assign({}, fiche[j] || {}); Object.keys(s[j]).forEach(function (l) { o[l] = [].concat(o[l] || [], s[j][l]); }); }
             });
         });
-        if (f.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
+        var R = refonteDe(f);
+        if (R) Object.keys(R).forEach(function (j) {
+            if (j === 'oc') fiche.oc = Object.assign({}, fiche.oc || {}, R.oc);
+            else if (j === 'options') fiche.options = (fiche.options || []).filter(function (o) { return o.garder; }).concat(R.options);
+            else fiche[j] = R[j];
+        });
+        if (fiche.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
             return si(C.js("Habitants.anniversaire('" + a.md + "')"), H.unParmi(f.nom, [].concat(f.annonceAnniversaires === true ? ['Oyez ! Aujourd\'hui, c\'est l\'anniversaire de %1 ! Un sourire, un mot gentil, ça ne coûte rien !'] : f.annonceAnniversaires).map(function (t) { return t.replace('%1', a.nom); })));
         })));
         // le temps qu'il fait : sa propre voix, sinon celle de son milieu
         if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
-        fiche.options = (f.options || []).map(function (o) {
+        fiche.options = (fiche.options || []).map(function (o) {
             if (!o.garder) return o;
             var cmds = extraire(f.carte, f.ev, o.page || page, o.garder);
             if (o.saisonnieres) cmds = si(C.js('Math.random() < 0.5'), H.selon(H.V.saison, f.nouvellesSaison, f.nom), cmds);
