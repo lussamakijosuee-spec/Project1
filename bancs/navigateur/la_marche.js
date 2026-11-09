@@ -16,6 +16,10 @@
  *   ⑤ contre-épreuve : un PNJ qu'on fait piétiner exprès est bien attrapé ;
  *   ⑥ ils marchent à la vitesse que JOKO a mise dans l'éditeur (3 : 32 images par
  *     case), pas au pas du joueur (16) — la contre-épreuve : un PNJ mis à 2 marche à 2.
+ *   ⑦ un objet (une image « ! » : le tableau d'affichage devant la ville) ne vit pas : à midi
+ *     il est à sa case, tourné comme dans l'éditeur, et ne se tourne pas quand on lui parle —
+ *     les contre-épreuves : un habitant qui prend l'image du tableau ne vit plus ; le tableau
+ *     qui prend l'image d'une personne vit.
  *
  *   node bancs/navigateur/la_marche.js
  */
@@ -155,6 +159,64 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await page.waitForFunction(function () { var t = window.__trace && window.__trace[53]; return t && t.pos.length >= 6; }, null, { timeout: 90000, polling: 250 }).catch(function () {});
     var pie = await page.evaluate(function () { clearInterval(window.__pietine); var r = window.mesurer(); window.__trace = null; return r.parQui[53] || { pas: 0, ar: 0 }; });
     V('⑤ contre-épreuve : un PNJ qu\'on fait piétiner exprès est attrapé', pie.pas > 2 && pie.ar > 0, 'Mathurin forcé : ' + pie.pas + ' pas, ' + pie.ar + ' allers-retours comptés');
+
+    // ⑦ un objet ne vit pas (VieDuVillage v2.4) : le tableau d'affichage que JOKO a sorti devant la ville (29:10, une image
+    //   « ! » et « ◆ HABITANT ») marchait jusqu'à la place, rentrait le soir, et montrait sa face vide quand on lui parlait.
+    //   Chaque objet qui parle de la carte : à midi (tout le monde va sur la place), toujours à sa case et dans la direction
+    //   de l'éditeur ; lancé (on lui parle), il ne se tourne pas vers le joueur. Contre-épreuves, posées en mémoire au
+    //   chargement de la carte : un habitant à qui l'on donne l'image du tableau ne vit plus ; le tableau à qui l'on donne
+    //   l'image d'une personne vit (le contrôle voit bien un tableau qui vivrait).
+    await page.evaluate(function () {
+        var _s = Game_Map.prototype.setup;
+        Game_Map.prototype.setup = function (id) { if (window.__plante && id === 29) window.__plante($dataMap); _s.call(this, id); };
+        window.objetsQuiParlent = function (d) {
+            return d.events.filter(function (e) { return e && e.pages[0] && /^!/.test(e.pages[0].image.characterName) &&
+                e.pages[0].list.some(function (c) { return c.code === 108 && /^◆ HABITANT|<NPC:|<Vie:/.test(c.parameters[0]); }); }).map(function (e) { return e.id; });
+        };
+    });
+    async function midiEn29(plante) {
+        await page.evaluate(function (plante) {
+            window.__plante = !plante ? null : function (d) {
+                window.__objets = window.objetsQuiParlent(d);
+                var h = d.events.filter(function (e) { return e && window.__objets.indexOf(e.id) < 0 && e.pages[0] && e.pages[0].image.characterName && !/^[!✎]/.test(e.pages[0].image.characterName + e.name) && e.pages[0].moveType !== 3 &&
+                    e.pages[0].list.some(function (c) { return c.code === 108 && /^◆ HABITANT/.test(c.parameters[0]); }); })[0];
+                window.__devenuObjet = h ? h.id : null;
+                if (h) h.pages[0].image.characterName = '!$Bulletin01b_PixelScaled';
+                window.__objets.forEach(function (id) { d.events[id].pages[0].image.characterName = 'People1'; d.events[id].pages[0].image.characterIndex = 0; });
+            };
+            $gameSystem.set_hour(11); $gameSystem.set_minute(58); $gamePlayer.setThrough(true); $gamePlayer.setOpacity(0);
+            $gamePlayer.requestMapReload(); $gamePlayer.reserveTransfer(29, 20, 24, 2, 0);
+        }, plante);
+        await page.waitForFunction(function () { return $gameMap.mapId() === 29 && !$gamePlayer.isTransferring() && $gameMap._vieRecensee; }, null, { timeout: 30000 });
+        // midi : on attend que quelqu'un parte pour la place
+        await page.waitForFunction(function () { return $gameMap.events().some(function (e) { return e._vie && e._vie.but === 'place'; }); }, null, { timeout: 120000, polling: 250 }).catch(function () {});
+    }
+    await midiEn29(false);
+    var objets = await page.evaluate(function () {
+        return window.objetsQuiParlent($dataMap).map(function (id) {
+            var e = $gameMap.event(id), d = $dataMap.events[id], av = e.direction();
+            e.lock(); var parle = e.direction(); e.unlock();
+            return { nom: d.name + ' (29:' + id + ')', vit: !!e._vie, ici: e.x === d.x && e.y === d.y, dir: av === d.pages[0].image.direction, parle: parle === av,
+                ou: e.x + ',' + e.y + ' d' + av + ' (éditeur ' + d.x + ',' + d.y + ' d' + d.pages[0].image.direction + ')' };
+        });
+    });
+    var placeVue = await page.evaluate(function () { return $gameMap.events().filter(function (e) { return e._vie && e._vie.but === 'place'; }).length; });
+    if (!objets.length) console.log('   … ⑦ aucun objet qui parle sur la carte 29 (JOKO a pu retirer le tableau) : seules les contre-épreuves jouent');
+    else V('⑦ un objet ne vit pas : à midi, ' + objets.map(function (o) { return o.nom; }).join(', ') + ' reste à sa case, tourné comme dans l\'éditeur, et ne se tourne pas quand on lui parle',
+        placeVue > 0 && objets.every(function (o) { return !o.vit && o.ici && o.dir && o.parle; }),
+        objets.map(function (o) { return o.nom + ' : ' + o.ou + (o.vit ? ', VIT' : '') + (o.parle ? '' : ', se tourne quand on lui parle'); }).join(' · ') + ' · ' + placeVue + ' en route pour la place');
+    await midiEn29(true);
+    var contre = await page.evaluate(function () {
+        var h = window.__devenuObjet !== null ? $gameMap.event(window.__devenuObjet) : null, r = { objet: null, personnes: [] };
+        if (h) { var av = h.direction(); h.lock(); var parle = h.direction(); h.unlock(); r.objet = { nom: h.event().name, vit: !!h._vie, parle: parle === av }; }
+        r.personnes = (window.__objets || []).map(function (id) { var e = $gameMap.event(id); return { nom: e.event().name, vit: !!e._vie }; });
+        return r;
+    });
+    V('⑦ contre-épreuve : un habitant à qui l\'on donne l\'image du tableau ne vit plus, ne se tourne plus', !!contre.objet && !contre.objet.vit && contre.objet.parle,
+        contre.objet ? contre.objet.nom + (contre.objet.vit ? ' vit encore' : ' ne vit plus') + (contre.objet.parle ? '' : ', se tourne encore') : 'aucun habitant à qui la donner');
+    if (contre.personnes.length) V('⑦ contre-épreuve : le tableau, avec l\'image d\'une personne, vit (le contrôle voit un tableau qui vivrait)', contre.personnes.every(function (p) { return p.vit; }),
+        contre.personnes.map(function (p) { return p.nom + (p.vit ? ' vit' : ' ne vit pas'); }).join(', '));
+    await page.evaluate(function () { window.__plante = null; });
 
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 2).join(' | ') || 'rien');
     console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(66));
