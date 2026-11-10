@@ -208,14 +208,17 @@ window.Favoris = Favoris;
         }
         if (FAVORIS) this.addCommand(NOM, 'skill', true, TYPE_FAVORIS);
     };
-    // LesStylesDeVesper retire des ordres toute branche « vide pour ce Style » : nos deux lignes ne sont pas des
-    // branches de la base, elles y passaient. On les remet à leur place, juste après.
+    // Nos deux lignes ne sont pas des branches de la base : pendant que les branches s'ajoutent, elles sortent de la
+    // liste, puis y reviennent à leur place. (LesStylesDeVesper retire toute branche « vide pour ce Style » — elles y
+    // passaient chez Vesper —, et LesTroisArts range « ce qui vient d'être ajouté » en comptant les lignes : une
+    // ligne retirée au milieu décalait son compte, et « capacité » passait devant les Voies.)
     var _branches = Window_ActorCommand.prototype.addSkillCommands;
     Window_ActorCommand.prototype.addSkillCommands = function () {
         var moi = this, gardees = [];
         this._list.forEach(function (c, i) { if (c.symbol === 'skill' && (c.ext === TYPE_FAVORIS || c.ext === TYPE_REFAIRE)) gardees.push({ c: c, i: i }); });
+        this._list = this._list.filter(function (c) { return !(c.symbol === 'skill' && (c.ext === TYPE_FAVORIS || c.ext === TYPE_REFAIRE)); });
         _branches.call(this);
-        gardees.forEach(function (g) { if (moi._list.indexOf(g.c) < 0) moi._list.splice(Math.min(g.i, moi._list.length), 0, g.c); });
+        gardees.forEach(function (g) { moi._list.splice(Math.min(g.i, moi._list.length), 0, g.c); });
     };
 
     // « Refaire » : la liste n'a qu'une ligne — OK dessus tout de suite, par le vrai chemin

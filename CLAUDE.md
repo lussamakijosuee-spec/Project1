@@ -842,7 +842,9 @@ favori que le héros ne voit plus dans aucun menu (désappris, un autre Style) n
 la dernière technique choisie (`lastBattleSkill` de MV ; jamais l'Attaque, la Garde, ᛟ Activer — `pasRefaire`) : OK la relance **par le vrai
 chemin** (`onSkillOk` : une rune de zone redemande Garder / Piège), le curseur déjà sur la même cible si elle est debout ; grisée si on ne peut pas
 la payer. Ce sont des branches qui n'existent que dans le menu (904, 905 ; 901-903 sont les arts) : aucune fiche ni liste n'est touchée. Piège :
-LesStylesDeVesper retire des ordres toute branche « vide pour ce Style » — nos deux lignes y passaient chez Vesper, elles sont remises à leur place.
+pendant que les branches s'ajoutent aux ordres, nos deux lignes sortent de la liste puis y reviennent (LesStylesDeVesper retire toute branche
+« vide pour ce Style », et LesTroisArts range ce qui vient d'être ajouté en comptant les lignes : une ligne retirée au milieu mettait « capacité »
+devant les Voies chez Vesper — attrapé par `un_menu_par_art`).
 Pas fait (proposé, à montrer d'abord) : replier les degrés d'une même technique. Banc : `navigateur/les_favoris.js` (20 contrôles ; ⚠ choisir une
 technique charge une image — CombatFluide — : un banc qui n'avance que « si les images sont prêtes » se fige dans un `evaluate`).
 
