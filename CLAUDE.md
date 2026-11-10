@@ -811,6 +811,29 @@ exprès, les **formules de base** (Feu, Étincelle, Rayon Stellaire, Trait Spect
 et les pièces d'autres systèmes (copie d'Âme, Pacte d'Âme, la Mue, Marquer la Cible, « Assez. » au hasard).
 Banc : `navigateur/les_verbes.js`.
 
+**Le combat fluide et son rapport** (`CombatFluide.js` v1.0, `RapportDeCombat.js` v1.0, 2026-11-10 ; JOKO : *« Améliore le jeu la fluidité des
+combats et un rapport des combats que le joueur va faire »*, et pour le rapport : *« Dans le jeu, après le combat »*). **Mesuré d'abord** (le vrai
+combat avancé image par image, sans horloge : l'équipe contre Kevératus, trois tours) : une action dure 221 images (3,7 s) — 45 % l'animation,
+31 % des pauses où rien ne bouge, 9 % les pas. **① Les temps morts** : en vue de côté le journal n'affiche pas ses lignes (SimpleMsgSideView),
+mais chacune faisait attendre 16 images (Korrah : 107 images par action sans rien à l'écran) — une ligne invisible n'attend plus (`attenteMuette`
+0), la pause du journal 16 → 8 (`attenteJournal`), le geste du héros 20 → 12 (`attenteGeste`) ; un « wait: n » écrit dans une séquence d'action
+n'est pas touché. **② Les images chargées d'avance** (`precharger`) : MV charge l'image d'une animation quand elle part (un arrêt la première
+fois, bien plus long en ligne) — maintenant quand la technique est choisie, au début du tour pour tout ce qui est prévu, au début du combat pour
+ce que les ennemis savent faire (l'arme pour l'Attaque, les « animation n » des séquences). **③ Les animations** : 3 images par dessin en combat
+au lieu de 4 (`cadence` ; la carte ne change pas). **④ L'avance rapide** : Maj tenue, ou un appui long (souris, doigt), les actions défilent ×3
+(`avanceRapide`, `touches`, `doigt`) — jamais pendant la saisie, un message, un chant, les effets de l'avatar d'Ardélia, la victoire ; pas « ok »
+(tenue, elle validerait le menu suivant). **⑤ L'option « Vitesse des combats »** (Normale ×1 par défaut, Vive ×1,25, Rapide ×1,5, Très rapide ×2).
+Mesure : les mêmes actions, 156 → 112 images (2,6 s → 1,9 s), −28 % ; les pas ne changent pas. `CombatFluide._eteint = true` rend tout comme
+avant. CombatFluide est le **dernier** plugin de la liste (il rejoue `Scene_Battle.update` : un plugin chargé après lui ne serait pas accéléré).
+**Le rapport** : une étape de l'écran de victoire (YEP_VictoryAftermath, entre l'expérience et le butin) — tours, durée, ennemis vaincus ; pour
+chaque héros au combat (seiryu compris) ses dégâts infligés (une barre : sa part de l'équipe), reçus, ses soins (les PV vraiment rendus), combien
+de fois il est tombé, son meilleur coup ; le plus gros coup du combat (« ★ Record battu » : le record de la partie, dans `$gameSystem`), les
+réactions élémentaires, les boucliers brisés, qui est tombé. Compté : le chiffre qui s'affiche (après le rang, la brisure, l'instinct) ; pas le
+poison ni une mort d'état (l'Ogre a « mort 20 % » sur son attaque). Réglages `toursMin` (1 = toujours), `records` ; commande `RAPPORT off / on`.
+Les lignes du Pacte, de la Colère, du livre, de la phrase et de seiryu s'écrivaient sur l'écran de victoire : elles s'effacent dès qu'il s'ouvre.
+Banc : `navigateur/le_combat_fluide.js` (38 contrôles ; ⚠ `Graphics.frameCount` ne monte qu'au dessin : un banc sans dessin le monte lui-même,
+sinon la jauge d'expérience de la victoire ne finit jamais).
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
