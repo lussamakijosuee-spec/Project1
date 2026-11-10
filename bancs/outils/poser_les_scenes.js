@@ -27,6 +27,7 @@
  * « ◆ SCÈNES ») n'est jamais réécrit, ni celui qu'il a voulu tel quel
  * (bancs/outils/voulu.js, 2026-11-09 : la Ville Forestière).
  *
+ *   node bancs/outils/poser_les_scenes.js --ecrire --cartes 33   → seulement ces cartes
  *   node bancs/outils/poser_les_scenes.js --ecrire --sortie <dossier>
  *     → écrit dans ce dossier, pas dans data/ (pour les bancs)
  */
@@ -42,6 +43,9 @@ var VOULU = require('./voulu.js');
 var VAR_TIRAGE = 886;
 var DOS = path.join(__dirname, 'scenes');
 var LOTS = fs.readdirSync(DOS).filter(function (x) { return /\.js$/.test(x); }).sort().map(function (x) { return require(path.join(DOS, x)); });
+// --cartes 33 : ne pose que ces cartes (2026-11-09 : la plage, sans toucher au Marché que JOKO a fait)
+var iCa = process.argv.indexOf('--cartes'), CARTES_SEULES = iCa >= 0 ? String(process.argv[iCa + 1]).split(',').map(Number) : null;
+if (CARTES_SEULES) LOTS = LOTS.filter(function (l) { return CARTES_SEULES.indexOf(l.carte) >= 0; });
 
 function fichier(n) { return path.join(RACINE, 'data', 'Map' + String(n).padStart(3, '0') + '.json'); }
 function estVisiteur(q) { return typeof q === 'string' && /^\d+:\d+$/.test(q); }

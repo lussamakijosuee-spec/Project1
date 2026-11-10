@@ -19719,5 +19719,234 @@
   ],
   "x": 21,
   "y": 23
+ },
+ "33:31": {
+  "id": 31,
+  "name": "Le Pêcheur",
+  "note": "",
+  "pages": [
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 1,
+     "switch1Valid": false,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "tileId": 0,
+     "characterName": "jj",
+     "direction": 6,
+     "pattern": 1,
+     "characterIndex": 0
+    },
+    "list": [
+     {
+      "code": 101,
+      "indent": 0,
+      "parameters": [
+       "jkj",
+       0,
+       0,
+       2
+      ]
+     },
+     {
+      "code": 401,
+      "indent": 0,
+      "parameters": [
+       "Tu veux taquiner ce qui vit sous l'eau ?"
+      ]
+     },
+     {
+      "code": 102,
+      "indent": 0,
+      "parameters": [
+       [
+        "Pêcher",
+        "Voir mes prises",
+        "Non"
+       ],
+       2,
+       0,
+       2,
+       0
+      ]
+     },
+     {
+      "code": 402,
+      "indent": 0,
+      "parameters": [
+       0,
+       "Pêcher"
+      ]
+     },
+     {
+      "code": 355,
+      "indent": 1,
+      "parameters": [
+       "if (!$gameParty.hasItem($dataItems[110])) { $gameParty.gainItem($dataItems[110], 1); }"
+      ]
+     },
+     {
+      "code": 655,
+      "indent": 1,
+      "parameters": [
+       "if (!$gameParty.hasItem($dataItems[111])) { $gameParty.gainItem($dataItems[111], 1); }"
+      ]
+     },
+     {
+      "code": 655,
+      "indent": 1,
+      "parameters": [
+       "$gamePlayer._rodEquipped = 110; $gamePlayer._baitEquipped = 111;"
+      ]
+     },
+     {
+      "code": 655,
+      "indent": 1,
+      "parameters": [
+       "Galv.FISH.clearPond(); Galv.FISH.randFish(1, 3, 6); Galv.FISH.randFish(2, 1, 3); Galv.FISH.addFish(3);"
+      ]
+     },
+     {
+      "code": 655,
+      "indent": 1,
+      "parameters": [
+       "Galv.FISH.run();"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 402,
+      "indent": 0,
+      "parameters": [
+       1,
+       "Voir mes prises"
+      ]
+     },
+     {
+      "code": 355,
+      "indent": 1,
+      "parameters": [
+       "Galv.FISH.viewStats();"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 402,
+      "indent": 0,
+      "parameters": [
+       2,
+       "Non"
+      ]
+     },
+     {
+      "code": 0,
+      "indent": 1,
+      "parameters": []
+     },
+     {
+      "code": 404,
+      "indent": 0,
+      "parameters": []
+     },
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 1,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   },
+   {
+    "conditions": {
+     "actorId": 1,
+     "actorValid": false,
+     "itemId": 1,
+     "itemValid": false,
+     "selfSwitchCh": "A",
+     "selfSwitchValid": false,
+     "switch1Id": 105,
+     "switch1Valid": true,
+     "switch2Id": 1,
+     "switch2Valid": false,
+     "variableId": 1,
+     "variableValid": false,
+     "variableValue": 0
+    },
+    "directionFix": false,
+    "image": {
+     "characterIndex": 0,
+     "characterName": "",
+     "direction": 2,
+     "pattern": 0,
+     "tileId": 0
+    },
+    "list": [
+     {
+      "code": 0,
+      "indent": 0,
+      "parameters": []
+     }
+    ],
+    "moveFrequency": 3,
+    "moveRoute": {
+     "list": [
+      {
+       "code": 0,
+       "parameters": []
+      }
+     ],
+     "repeat": true,
+     "skippable": false,
+     "wait": false
+    },
+    "moveSpeed": 3,
+    "moveType": 0,
+    "priorityType": 0,
+    "stepAnime": false,
+    "through": false,
+    "trigger": 0,
+    "walkAnime": true
+   }
+  ],
+  "x": 36,
+  "y": 23
  }
 }

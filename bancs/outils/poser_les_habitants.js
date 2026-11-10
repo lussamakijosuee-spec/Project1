@@ -241,7 +241,10 @@ LOTS.forEach(function (lot) {
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
         // une fiche « muet: true » vise une page qui n'avait encore rien à dire : elle peut la remplir la première fois
         var muette = f.muet && e.pages[page - 1].list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
-        if (!muette && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
+        // ⚠ 2026-11-09 : « accord » — JOKO a dit de faire de SON événement un habitant (le Pêcheur, 33:31, « tout »).
+        //   Seulement la première fois, et seulement s'il porte toujours son nom : ensuite, la page a sa marque « ◆ HABITANT ».
+        var accord = f.accord && String(e.name || '').trim() === f.accord.nom;
+        if (!muette && !accord && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
         var fiche = Object.assign({}, f);
         var oc = ocDe(f);
         if (oc) Object.keys(oc).forEach(function (k) {
@@ -276,6 +279,13 @@ LOTS.forEach(function (lot) {
         var gardes = orig.pages[page - 1] ? commentairesGardes(orig.pages[page - 1].list, f.murmure) : [];
         try { liste = gardes.concat(tags, versListe(H.compiler(fiche))); }
         catch (err) { defauts.push(f.nom + ' : ' + err.message); return; }
+        // son visage (le Pêcheur de JOKO parlait avec « jkj ») : sur chaque boîte où c'est lui qui parle
+        if (fiche.visage) liste.forEach(function (c, k) {
+            var n = liste[k + 1];
+            if (c.code === 101 && c.parameters[0] === '' && c.parameters[2] === 0 && n && n.code === 401 && String(n.parameters[0]).indexOf('\\n<' + fiche.nom + '>') === 0) {
+                c.parameters[0] = fiche.visage[0]; c.parameters[1] = fiche.visage[1] || 0;
+            }
+        });
         // ce que JOKO a écrit dans la page posée : son en-tête, ses commentaires ajoutés
         var avant = enTete(e.pages[page - 1].list), neuf = enTete(liste);
         var ajouts = avant.avant.filter(function (c) {

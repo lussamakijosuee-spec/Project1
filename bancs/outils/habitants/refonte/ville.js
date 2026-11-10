@@ -835,3 +835,23 @@ var PLUS = {
         brouillard: ["OYEZ ! Brouillard sur la grand-rue ! Suivez ma voix ! … C'est pour ça qu'il faut un crieur."] } }
 };
 Object.keys(PLUS).forEach(function (k) { Object.assign(module.exports[k], PLUS[k]); });
+
+/* ── Élise et les bouteilles (JOKO, 2026-11-09, la plage : « tout ») ─────────────────────────────────
+ * Élise jette des bouteilles dans la rivière ; elles arrivent sur la plage du Village de Pêche (LaPlage :
+ * « ce que la mer ramène »), et Sora (33:19, refonte/peche.js) y répond. On porte la réponse ici. */
+(function () {
+    var D = require('../../recettes/dsl.js'), H = require('../moteur.js');
+    var A = D.A, C = D.C, si = D.si, cat = D.cat;
+    function P(t) { return H.parle('Élise', t); }
+    module.exports['29:25'].options = [
+        { titre: 'Une lettre de Sora', si: C.js('$gameParty.hasItem($dataItems[131])'), cmds: cat(
+            A.js('Plage.lettre();'),
+            P("UNE LETTRE ! De la mer ! Donne ! Non, lis pas, c'est à moi ! … Bon, reste. Tu peux écouter. Mais tu regardes ailleurs."),
+            si(C.vr(898, '=', 0), P("~Elle lit à toute vitesse, en bougeant les lèvres.|« J'existe. » ELLE EXISTE ! TOMAS ! TOMAS, ELLE EXISTE ! … Il va être insupportable. Bon. Je lui réponds quand même. Ce soir, la bouteille repart.")),
+            si(C.vr(898, '=', 1), P("« Si tu en vois un dans ta grotte, envoie-le par la rivière. Il saura nager. » … Envoyer un dragon par la rivière. C'est la meilleure idée que quelqu'un a jamais eue. Je l'aime bien, Sora.")),
+            si(C.vr(898, '=', 2), P("« Dans ma famille tout le monde fait semblant, mais c'est gentil. » … Je vais le dire à papa. Non. Je vais le dire à personne. C'est à moi, cette phrase.")),
+            si(C.vr(898, '=', 3), P("~Elle lit une fois vite, puis une fois lentement.|Elle m'a dit son secret. Un coquillage qui s'appelle Papa. … Je vais trouver un truc aussi beau à lui dire. Ça va être dur. Je suis forte, mais ça va être dur.")),
+            si(C.vr(898, '>=', 4), P("~Elle lit trois fois, puis serre la lettre contre elle.|« Ta copine aussi. » … Quand ils auront fini avec la grotte, je demanderai à maman. La mer, c'est à une journée de marche. Tomas a calculé. Il calcule tout.")),
+            A.js('Plage.lettreRendue();'), H.affinite(1)) }
+    ];
+})();

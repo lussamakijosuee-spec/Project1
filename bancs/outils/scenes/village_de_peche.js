@@ -1,4 +1,5 @@
-/* LE VILLAGE DE PÊCHE (33) — Emma et Edwin, Annick et son fils, Sora et ses coquillages, Roul au ponton. */
+/* LE VILLAGE DE PÊCHE (33) — Emma et Edwin, Annick et son fils, Sora et ses coquillages, Roul au ponton ;
+ * et depuis 2026-11-09, la plage : Erwan, le père, le concours, la veille du départ, Orin sous la pluie. */
 'use strict';
 module.exports = { carte: 33, nom: 'Village de Pêche', x: 0, y: 0, scenes: [
     { cle: 'emma-edwin', nom: 'Emma et Edwin', qui: [18, 22], dist: 4, attente: 60, gestes: [
@@ -28,9 +29,28 @@ module.exports = { carte: 33, nom: 'Village de Pêche', x: 0, y: 0, scenes: [
     { cle: 'solange-edwin', nom: 'Solange veut une imprégnation', qui: [45, 22], dist: 5, attente: 150, gestes: [
         ['face', 45, 22], ['dit', 45, 'Regarde-moi avec tes lunettes ! C\'est la faille, avoue !'], ['dit', 22, 'Votre mana est… parfaitement normal.'], ['bulle', 45, 5], ['dit', 45, 'C\'EST LA FAILLE QUI TE FAIT DIRE ÇA.']] },
     { cle: 'solange', nom: 'Solange et son humeur', qui: [45], attente: 100, gestes: [
-        ['si', 'Habitants.jour() % 3 === 0', [['dit', 45, 'Quelle belle journée ! Même les mouettes sont belles !']], [['si', 'Habitants.jour() % 3 === 1', [['dit', 45, 'Le lac est une page blanche…']], [['dit', 45, 'Tout m\'énerve. C\'est la faille.']]]]]] },
+        ['si', 'Habitants.jour() % 3 === 0', [['dit', 45, 'Quelle belle journée ! Même les mouettes sont belles !']], [['si', 'Habitants.jour() % 3 === 1', [['dit', 45, 'La mer est une page blanche…']], [['dit', 45, 'Tout m\'énerve. C\'est la faille.']]]]]] },
     { cle: 'ninon-peche', nom: 'Ninon cherche la maison bleue', qui: ['30:30'], heures: [12, 14], attente: 60, gestes: [
         ['dit', '30:30', 'Une lettre pour la maison bleue ! … Elles sont TOUTES bleues !']] },
+    // la plage (2026-11-09 ; JOKO : « Mer plutôt », « tout et développe au maximum ») — docs/LA_PLAGE.md
+    { cle: 'erwan-sora', nom: 'Sora montre son coquillage à papa', qui: [31, 19], dist: 4, heures: [17, 20], attente: 240, gestes: [
+        ['face', 19, 31], ['dit', 19, 'Papa ! Regarde celui-là !'], ['bulle', 31, 1], ['dit', 31, '… Celui-là, je l\'avais jamais vu.'],
+        ['dit', 19, 'Tu dis ça à chaque fois !'], ['dit', 31, 'C\'est vrai à chaque fois.']] },
+    { cle: 'erwan-jonas', nom: 'Erwan regarde son fils, de loin', qui: [31, 16], dist: 14, heures: [7, 9], attente: 600, gestes: [
+        ['tourne', 31, 16], ['bulle', 31, 8], ['attend', 40], ['dit', 31, '… Il tient droit.', 150, 100]] },
+    { cle: 'concours', nom: 'Régis annonce le concours', qui: [23], si: 'Plage.concours()', attente: 90, gestes: [
+        ['bulle', 23, 1], ['dit', 23, 'CONCOURS DE PÊCHE ! Pesée chez le capitaine jusqu\'à dix-sept heures ! Le plus lourd gagne !']] },
+    { cle: 'concours-roul', nom: 'Roul, le jour du concours', qui: ['46:26'], si: 'Plage.concours()', heures: [8, 13], attente: 60, gestes: [
+        ['son', 'Water1', 45], ['dit', '46:26', 'Cette fois, c\'est la bonne. Tobin peut rentrer chez lui. Tobin peut rentrer chez sa MÈRE.']] },
+    { cle: 'veille-depart', nom: 'La veille du départ, Edwin et sa mère', qui: [22, 24], dist: 4, si: '$gameVariables.value(889) === 2', heures: [18, 21], attente: 300, gestes: [
+        ['face', 24, 22], ['dit', 24, 'Demain, ou après-demain ?'], ['dit', 22, 'Le règlement dit… Je ne sais pas, maman. C\'est la première fois que je ne sais pas.'],
+        ['bulle', 24, 8], ['dit', 24, 'Tu as mangé ?'], ['dit', 22, 'Oui.'], ['dit', 24, 'Menteur.'], ['bulle', 22, 4]] },
+    { cle: 'annick-attend', nom: 'Annick attend, le soir', qui: [24], si: '$gameVariables.value(889) === 3', heures: [18, 21], attente: 180, gestes: [
+        ['bulle', 24, 8], ['dit', 24, 'Ils sont encore dedans. Bon. Je compte les vagues. Comme Jonas.']] },
+    { cle: 'retour', nom: 'Edwin raconte, sa mère écoute', qui: [22, 24], dist: 4, si: '$gameVariables.value(889) === 4', attente: 200, gestes: [
+        ['face', 22, 24], ['dit', 22, '… et donc, là-dedans, maman, le mana ne se comporte pas du tout comme dans les rapports, il…'], ['bulle', 24, 4], ['dit', 24, 'Encore. Raconte encore.']] },
+    { cle: 'orin-pluie', nom: 'Orin sous la pluie', qui: [17], si: "$gameScreen.weatherType() === 'rain' || $gameScreen.weatherType() === 'storm'", attente: 120, gestes: [
+        ['bulle', 17, 8], ['dit', 17, 'La pluie tend le fil. Les autres sont rentrés. Moi, je reste. Un nœud.']] },
     // la situation (2026-10-30)
     { cle: 'edwin-vent', nom: 'Edwin regarde le vent de la grotte', qui: [22], attente: 200, gestes: [
         ['bulle', 22, 1], ['dit', 22, 'Le vent vient de la grotte… Ce mana-là n\'est pas d\'ici. Je le note.']] }

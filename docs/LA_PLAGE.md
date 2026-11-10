@@ -4,8 +4,11 @@ JOKO, 2026-11-09 : *« maintenant à la plage. Parce qu'il y a peut-être un peu
 de choses […] c'est un côté que j'ai pas du tout fait […] aucune idée, donc une grosse analyse, ce serait bien quand
 même savoir ce qu'on pourrait mettre dedans »*, puis *« même pour les PNJ »*.
 
-Rien n'est posé : ce document mesure, cite et propose. Ce qui touche la carte, ses événements ou le lore se décide
-avec toi (partie 7, les questions).
+**Fait le 2026-11-09**, sur ta réponse : *« Mer plutôt, oui , le ponton c'est juste un theaseur de dono et de lore il
+connaît des choses qu'il devrait pas connaît tu le vois que le soir-lui, bible, tout et développe ou détail au maximum »*.
+Ce qui a été posé est dans CLAUDE.md (« La plage ») ; ce document reste l'analyse d'avant. Les questions sans réponse ont pris
+la recommandation, réglable : Erwan (le Pêcheur) père de Jonas et de Sora, les quêtes des ✎ à Sora et à Orin, le Fil du Fond
+une partie sur dix, les poissons sur tes trois images, Edwin fils d'Annick (ton commentaire), 18 ans (ton en-tête).
 
 ---
 

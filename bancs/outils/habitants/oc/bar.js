@@ -44,7 +44,7 @@ module.exports = {
               ['choix', ['Garder l\'équilibre', 'Tout poser vite'], [['~Rien ne tombe. Une table entière applaudit.', ['son', 'Applause1', 40], 'Pas mal, mon grand. Quinze ans, et j\'ai jamais eu d\'applaudissements, moi.', ['ami', 1]],
                   ['~Tu poses les chopes en catastrophe. Une se renverse sur Garrec, qui ne dit rien parce que c\'est toi.', 'Bon. Un verre renversé, c\'est deux pièces. Je te les fais pas. Cette fois.', ['ami', 1]]]]] },
         { palier: 6, titre: 'la fenêtre', rdv: 'Reste après la fermeture, un soir. Vers minuit. Je te montrerai le meilleur moment de la journée.', rappel: 'Après la fermeture. La table près de la fenêtre.', quand: { carte: 46, de: 23, a: 3 },
-          gestes: ['~La salle est vide. Les chaises sont sur les tables. Elle s\'assied à la table près de la fenêtre, avec deux verres.', 'Voilà. C\'est ça, le meilleur moment. Personne qui appelle. Le lac, là-bas, qui fait rien.', ['bulle', 8],
+          gestes: ['~La salle est vide. Les chaises sont sur les tables. Elle s\'assied à la table près de la fenêtre, avec deux verres.', 'Voilà. C\'est ça, le meilleur moment. Personne qui appelle. La mer, là-bas, qui fait rien.', ['bulle', 8],
               ['choix', ['Trinquer en silence', 'Pourquoi tu restes ici ?'], [['~Vous trinquez. Elle ne dit rien pendant une longue minute. C\'est un cadeau.', ['ami', 1]], ['Pourquoi… Parce qu\'ici, tout le monde rentre chez soi un peu moins seul. Même moi. Allez, bois.', ['ami', 1]]]]] },
         { palier: 10, titre: 'la chope', gestes: ['~Elle sort de sous le comptoir une chope en étain, gravée à ton nom, de travers.', 'C\'est Ulric qui l\'a gravée. Elle reste ici. Elle est à toi. Personne d\'autre ne boit dedans.', 'Même pas le vieux. Et lui, il a le droit à tout.', ['ami', 1]] }
     ],
@@ -136,7 +136,7 @@ module.exports = {
     scenes: [
         { palier: 3, titre: 'la meilleure', rdv: 'Passe demain après-midi. J\'en ai une si bonne que je dois te la raconter en personne, sans témoins.', rappel: 'Demain après-midi ! La meilleure ! Sans témoins !', quand: { carte: 46, de: 13, a: 18 },
           gestes: ['~Elle vérifie à gauche, à droite, sous la table.', 'Tu sais pas la meilleure ? Le barde… a écrit une chanson. Pour quelqu\'un. Il l\'a cachée dans son luth.', ['bulle', 1], 'Je ne sais pas pour qui. Mais j\'ai une idée. J\'ai TOUJOURS une idée.',
-              ['choix', ['Pour qui ?', 'Ce n\'est pas tes affaires'], [['~Elle se penche, ravie.|Pour la petite Pia, du moulin ! … Ou pour Margot. Ou pour le lac. Il est bizarre, ce garçon.', ['ami', 1]],
+              ['choix', ['Pour qui ?', 'Ce n\'est pas tes affaires'], [['~Elle se penche, ravie.|Pour la petite Pia, du moulin ! … Ou pour Margot. Ou pour la mer. Il est bizarre, ce garçon.', ['ami', 1]],
                   ['~Elle te regarde, offensée, puis éclate de rire.', ['son', 'Laugh', 40], 'Pas mes affaires ! Tout est mes affaires ! … Mais tu as raison. Je ne le dirai qu\'à trois personnes.', ['ami', 1]]]]] },
         { palier: 6, titre: 'les mémoires', rdv: 'Un soir, viens. Vers dix-neuf heures. Je vais te lire le début de mes Mémoires. Je n\'ai rien écrit. Je vais te les dire.', rappel: 'Ce soir, mes Mémoires ! Tu seras le premier lecteur. Enfin, auditeur.', quand: { carte: 46, de: 18, a: 22 },
           gestes: ['~Elle se redresse, croise les mains, très solennelle.', '« Les Mémoires de Mireille. Chapitre un. Ce jour-là, le boulanger avait mis de la sciure dans son pain. Je ne l\'avais pas vu. Mais j\'en étais sûre. »', ['bulle', 3],
@@ -148,14 +148,14 @@ module.exports = {
             neutre: ['Merci ! C\'est… original. J\'en ferai une histoire.'], deteste: ['De la bière ? Moi ? Je bois de l\'eau, mon petit, et ça me suffit pour parler.'], deja: ['Encore ? On va jaser ! … Enfin, je vais jaser.'], anniv: ['Pour mon anniversaire ! Tu m\'as crue ! Tu es le seul !'] } }
 },
 
-/* ── Colin (46:12, page 2) — le barde qui cherche le chant du lac ───────── */
+/* ── Colin (46:12, page 2) — le barde qui cherche le chant de la mer ───────── */
 '46:12/2': {
     oc: {
         age: '26 ans', allure: 'luth rapiécé, chapeau à plume trop longue, une chemise jaune qui se voit de la forêt',
         caractere: 'rêveur, dramatique, rit de lui-même ; chante faux avec conviction',
-        aime: 'les derniers clients de la nuit, une note juste, le lac à l\'aube, qu\'on lui demande une chanson (même s\'il ne la joue pas)',
+        aime: 'les derniers clients de la nuit, une note juste, la mer à l\'aube, qu\'on lui demande une chanson (même s\'il ne la joue pas)',
         deteste: 'les chopes lancées (il en a fait une chanson), qu\'on lui dise de chanter « quelque chose de connu »',
-        reve: 'retrouver la note du lac et en faire la chanson que tout le monde fredonne sans savoir d\'où elle vient',
+        reve: 'retrouver la note de la mer et en faire la chanson que tout le monde fredonne sans savoir d\'où elle vient',
         secret: 'il sait que Pia le regarde ; il fait semblant de regarder le mur, parce qu\'il a peur de chanter faux pour elle',
         peur: 'qu\'on l\'écoute vraiment',
         manie: 'il accorde son luth au milieu d\'une phrase',
@@ -184,8 +184,8 @@ module.exports = {
           gestes: ['Alors ! Que veux-tu entendre ?', ['choix', ['Une chanson gaie', 'Une chanson triste'], [
                   ['~Il joue une chanson à boire. Mado tape sur la table, les jumeaux Vannier chantent chacun leur version.', ['son', 'Applause1', 50], 'Tu vois ? Faux, mais ensemble. C\'est ça, une chanson gaie.', ['ami', 1]],
                   ['~Il joue lentement. Une chanson de barque qui revient. Le bar se tait. Même Garrec.', ['son', 'Saint5', 40], 'Tu vois ? Une chanson triste, c\'est une chanson qui finit bien, mais trop tard.', ['ami', 1]]]]] },
-        { palier: 6, titre: 'le lac', rdv: 'Une nuit, viens avec moi écouter le lac. Je pars du bar vers minuit. Si tu es là, je t\'emmène.', rappel: 'Minuit. Le lac. Apporte tes oreilles.', quand: { carte: 46, de: 0, a: 4 },
-          gestes: ['~Il range son luth, très doucement, comme un enfant qu\'on couche.', 'Ce soir, je n\'irai pas au lac. Je vais te raconter, plutôt. C\'est moins froid.', 'Une note, une seule, très basse. Elle m\'a traversé comme du froid. Et puis plus rien.', ['bulle', 8],
+        { palier: 6, titre: 'la mer', rdv: 'Une nuit, viens avec moi écouter la mer. Je pars du bar vers minuit. Si tu es là, je t\'emmène.', rappel: 'Minuit. La mer. Apporte tes oreilles.', quand: { carte: 46, de: 0, a: 4 },
+          gestes: ['~Il range son luth, très doucement, comme un enfant qu\'on couche.', 'Ce soir, je n\'irai pas à la mer. Je vais te raconter, plutôt. C\'est moins froid.', 'Une note, une seule, très basse. Elle m\'a traversé comme du froid. Et puis plus rien.', ['bulle', 8],
               ['choix', ['Joue-la-moi', 'Tu la retrouveras'], [['~Il pince une corde grave. Ce n\'est pas la bonne. Il le sait. Il sourit quand même.', '… Presque. Avec toi pour écouter, c\'est presque.', ['ami', 1]], ['Tu crois ? … Tu es le premier à ne pas me prendre pour un fou. Je te mettrai dans la chanson.', ['ami', 1]]]]] },
         { palier: 10, titre: 'ton thème', gestes: ['~Il joue trois notes, puis cinq, puis une petite mélodie qui grimpe et qui revient.', ['son', 'Saint5', 50], 'C\'est toi. Enfin, ta chanson. Elle part, elle revient. Comme toi.', 'Elle est juste. C\'est la première que j\'écris juste. Il fallait quelqu\'un qui revienne.', ['ami', 1]] }
     ],
@@ -245,9 +245,9 @@ module.exports = {
     oc: {
         age: '39 ans', allure: 'bottes de pêcheur jusqu\'aux cuisses, un chapeau de toile, une odeur de poisson qu\'il appelle « l\'odeur du succès »',
         caractere: 'grincheux, jaloux, exagère ses prises ; au fond, il garde une place dans sa barque pour Tobin',
-        aime: 'les brochets, l\'aube sur le lac, gagner contre Tobin, raconter la même prise de plus en plus grosse',
+        aime: 'les bars, l\'aube sur la mer, gagner contre Tobin, raconter la même prise de plus en plus grosse',
         deteste: 'Tobin (il dit), les mouettes, qu\'on mesure ses poissons',
-        reve: 'prendre le poisson du lac, celui dont on parle, et le relâcher devant Tobin',
+        reve: 'prendre le Patriarche, celui dont on parle, et le relâcher devant Tobin',
         secret: 'il a gardé la deuxième rame de la barque de leur enfance ; elle est chez lui, au-dessus de la porte',
         peur: 'que Tobin pêche mieux que lui (c\'est le cas, un peu)',
         manie: 'chaque fois qu\'il raconte sa prise, ses mains s\'écartent un peu plus',
@@ -256,19 +256,19 @@ module.exports = {
     },
     anniversaire: '5/19', anniv: ['C\'est mon anniversaire. J\'ai pris un poisson pour l\'occasion. Grand comme ça. Non. Comme ÇA.'],
     lieux: {
-        bar: ['~Il écarte les mains.|Grand comme ça. … Non. Comme ça.', 'Au bar, on écoute mes histoires. Au lac, les poissons les écoutent pas. C\'est pour ça que je viens ici le soir.'],
-        ailleurs: ['~Il lance sa ligne, l\'œil sur le bouchon.|Chut. Il mord. Non. Il mord pas. Il réfléchit.', 'Le matin, le lac est à moi. Tobin dort. Les poissons aussi. Moi, je suis là.']
+        bar: ['~Il écarte les mains.|Grand comme ça. … Non. Comme ça.', 'Au bar, on écoute mes histoires. En mer, les poissons les écoutent pas. C\'est pour ça que je viens ici le soir.'],
+        ailleurs: ['~Il lance sa ligne, l\'œil sur le bouchon.|Chut. Il mord. Non. Il mord pas. Il réfléchit.', 'Le matin, la mer est à moi. Tobin dort. Les poissons aussi. Moi, je suis là.']
     },
     avis: {
         Solange: ['Solange, aux voiles, m\'écoute raconter mes poissons. Les jours bleus, elle dit qu\'ils sont beaux. Les jours gris, qu\'ils sont petits. Je viens les jours bleus.'],
         Tobin: ['Tobin ? Le deuxième meilleur pêcheur. Et encore. … Il a retrouvé son couteau, il paraît. Tant mieux. Il pleurait pour rien.'],
-        Annick: ['Annick m\'achète ma pêche. Elle dit que mes brochets sont des perches. C\'est une perche qui se prenait pour un brochet. C\'est pareil.'],
+        Annick: ['Annick m\'achète ma pêche. Elle dit que mes bars sont des maquereaux. C\'est un maquereau qui se prenait pour un bar. C\'est pareil.'],
         Margot: ['Margot me sert sans écouter la taille de mon poisson. C\'est la seule. C\'est reposant.']
     },
     aCote: { Tobin: ['~Il se détourne exprès.|Je le vois pas. Il est pas là. Il existe pas.'] },
     amitie: [
         [3, { bonjour: ['Toi. T\'as vu ma prise d\'hier ? Non ? Elle était grande. Crois-moi.'] }],
-        [6, { bonjour: ['\\P[1] ! Viens pêcher, un matin. Tu tiendras la ligne. Tu la tiendras mal. Mais tu la tiendras.'], aurevoir: ['Et dis bonjour au lac.'] }],
+        [6, { bonjour: ['\\P[1] ! Viens pêcher, un matin. Tu tiendras la ligne. Tu la tiendras mal. Mais tu la tiendras.'], aurevoir: ['Et dis bonjour à la mer.'] }],
         [10, { bonjour: ['~Il te fait de la place sur son banc, sans un mot.|Assieds-toi. Ça mord, aujourd\'hui.'] }]
     ],
     scenes: [
@@ -282,7 +282,7 @@ module.exports = {
         { palier: 10, titre: 'la vraie taille', gestes: ['~Il écarte les mains, puis les rapproche. Beaucoup.', 'Le poisson d\'hier. Il faisait ça. Vraiment ça.', 'C\'est la première fois que je dis la vraie taille à quelqu\'un. Garde-le pour toi. J\'ai une réputation.', ['ami', 1]] }
     ],
     cadeaux: { adore: [45, 47], aime: [10, 46, 44], deteste: [36, 102],
-        dits: { adore: ['~Il regarde l\'objet, regarde le lac, te regarde.|… Ça, c\'est un cadeau de pêcheur. Merci. Vraiment.'], aime: ['Merci. Ça ira avec mes histoires.'],
-            neutre: ['Hm. Merci. Ça mord pas, mais merci.'], deteste: ['Non. Ça fait fuir les poissons. Garde-le.'], deja: ['T\'as déjà donné. Le lac aussi, il donne une fois par jour. Pas plus.'], anniv: ['Pour mon anniversaire ? … Bon. Tobin m\'a rien offert. Toi, si. Note-le.'] } }
+        dits: { adore: ['~Il regarde l\'objet, regarde la mer, te regarde.|… Ça, c\'est un cadeau de pêcheur. Merci. Vraiment.'], aime: ['Merci. Ça ira avec mes histoires.'],
+            neutre: ['Hm. Merci. Ça mord pas, mais merci.'], deteste: ['Non. Ça fait fuir les poissons. Garde-le.'], deja: ['T\'as déjà donné. La mer aussi, elle donne une fois par jour. Pas plus.'], anniv: ['Pour mon anniversaire ? … Bon. Tobin m\'a rien offert. Toi, si. Note-le.'] } }
 }
 };

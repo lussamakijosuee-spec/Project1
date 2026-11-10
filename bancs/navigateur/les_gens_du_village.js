@@ -83,7 +83,7 @@ function partagees(cartesLues) {
     });
     return Object.keys(qui).filter(function (t) { return Object.keys(qui[t]).length > 1; }).map(function (t) { return '« ' + t.slice(0, 50) + '… » (' + Object.keys(qui[t]).map(nom).join(', ') + ')'; });
 }
-var CARTES = { 29: Q.carte(29), 43: Q.carte(43) };
+var CARTES = { 29: Q.carte(29), 43: Q.carte(43), 33: Q.carte(33) };       // 2026-11-09 : la plage aussi
 var doublons = partagees(CARTES);
 // contre-épreuve : la première conversation de Fernand copiée chez Tomas (en mémoire)
 var copie = JSON.parse(JSON.stringify(CARTES)), lf = copie[29].events[29].pages[0].list;

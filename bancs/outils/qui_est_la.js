@@ -64,7 +64,8 @@ function etat(f, m) {
     var p = e.pages[page - 1];
     if (!p) return { la: false, pourquoi: 'pas de page ' + page };
     var muette = f.muet && p.list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
-    if (!muette && !p.list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) return { la: false, pourquoi: 'repris par JOKO' };
+    var accord = f.accord && String(e.name || '').trim() === f.accord.nom;   // JOKO a dit d'en faire un habitant (2026-11-09)
+    if (!muette && !accord && !p.list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) return { la: false, pourquoi: 'repris par JOKO' };
     return { la: true };
 }
 // toutes les fiches des lots (bancs/outils/habitants/*.js), par « carte:événement » (« /2 » pour une page 2)
