@@ -48,7 +48,7 @@ var erreurs = [];
         await page.evaluate(function (t) {
             var B = window.__b = {};
             SceneManager.requestUpdate = function () {};            // le banc fait avancer le jeu, image par image
-            B.image = function () { if (!ImageManager.isReady()) return false; Graphics.frameCount++; SceneManager.updateInputData(); SceneManager.changeScene(); SceneManager.updateScene(); return true; };
+            B.image = function () { Graphics.frameCount++; SceneManager.updateInputData(); SceneManager.changeScene(); SceneManager.updateScene(); return true; };
             B.avancer = function (n, jusqua) { for (var i = 0; i < n; i++) { if (jusqua && jusqua()) return true; if (!B.image()) return false; } return !!(jusqua && jusqua()); };
             // les fenêtres de saisie actives et ouvertes
             B.actives = function () {
@@ -62,9 +62,14 @@ var erreurs = [];
                 var w = SceneManager._scene._actorCommandWindow, i = -1;
                 w._list.forEach(function (c, k) { if (c.symbol === 'skill' && c.ext === ext) i = k; });
                 if (i < 0) return false;
-                w.select(i); w.processOk(); return true;
+                w.select(i); B.valider(w); B.souffler(); return true;
             };
+            B.pret = function () { return ImageManager.isReady(); };
             B.touche = function (nom) { Input._currentState[nom] = true; B.image(); Input._currentState[nom] = false; B.image(); };
+            // quelques images, le temps qu'une fenêtre finisse de s'ouvrir
+            B.souffler = function () { for (var i = 0; i < 20; i++) B.image(); };
+            B.annuler = function (w) { w.processCancel(); B.souffler(); };
+            B.valider = function (w) { w.processOk(); B.souffler(); };
             BattleManager.setup(t, false, false); SceneManager.push(Scene_Battle);
         }, TROUPE);
         async function jusqua(cond, max) {
@@ -90,12 +95,12 @@ var erreurs = [];
             [901, 902, 903].forEach(function (t) { var f = Object.create(Window_SkillList.prototype); f._actor = a; f._stypeId = t; o.lignesAvant += a.skills().filter(function (s) { return Window_SkillList.prototype.includes.call(f, s); }).length; });
             B.commande(Favoris.TYPE_FAVORIS);
             o.actives = B.actives(); o.lignes = S._skillWindow.maxItems(); o.aide = S._helpWindow._text;
-            S._skillWindow.processCancel(); o.retour = B.actives();
+            B.annuler(S._skillWindow); o.retour = B.actives();
             return o;
         });
         var iAtt = r1.cmd.findIndex(function (c) { return c.s === 'attack'; }), iFav = r1.cmd.findIndex(function (c) { return c.ext === 904; });
         V('« ★ Favoris » est juste sous l\'Attaque, et pas de « Refaire » avant d\'avoir rien lancé', iFav === iAtt + 1 && !r1.cmd.some(function (c) { return c.ext === 905; }), r1.qui + ' : ' + r1.cmd.map(function (c) { return c.nom; }).join(' · '));
-        V('vide, la liste s\'ouvre et dit comment épingler ; Annuler revient aux ordres', r1.lignes === 0 && /Maj/.test(r1.aide) && r1.actives.join() === '_skillWindow' && r1.retour.join() === '_actorCommandWindow', String(r1.aide).replace(/\n/g, ' / '));
+        V('vide, la liste s\'ouvre et dit comment épingler ; Annuler revient aux ordres', r1.lignes === 0 && /Maj/.test(r1.aide) && r1.actives.join() === '_skillWindow' && r1.retour.join() === '_actorCommandWindow', String(r1.aide).replace(/\n/g, ' / ') + ' :: ' + r1.lignes + ' · ' + r1.actives.join() + ' → ' + r1.retour.join());
 
         console.log('\n② Épingler');
         var r2 = await page.evaluate(function () {
@@ -120,11 +125,11 @@ var erreurs = [];
             autres.forEach(function (id) { Favoris.basculer(a, id); });
             o.plein = Favoris.de(a).length; w.select(idx); B.touche('shift'); o.refuse = Favoris.de(a).indexOf(o.tech) < 0; o.aidePlein = S._helpWindow._text;
             a._favoris = []; B.touche('shift'); o.fin = Favoris.de(a);
-            w.processCancel();
+            B.annuler(w);
             return o;
         });
         V('Maj sur une technique l\'épingle : l\'étoile, le curseur ne bouge pas', r2.epingle.join() === String(r2.tech) && r2.etoile && r2.indexGarde, r2.nom);
-        V('Maj encore l\'enlève', r2.enleve.length === 0);
+        V('Maj encore l\'enlève', r2.enleve.length === 0, JSON.stringify(r2.enleve) + ' type ' + r2.type);
         V('huit au plus : la neuvième est refusée, et l\'aide dit pourquoi', r2.plein === 8 && r2.refuse && /8 favoris/.test(r2.aidePlein), String(r2.aidePlein).replace(/\n/g, ' / '));
 
         console.log('\n③ Lancer un favori');
@@ -132,11 +137,11 @@ var erreurs = [];
             var B = window.__b, S = SceneManager._scene, a = BattleManager.actor(), o = {};
             o.favoris = Favoris.de(a);
             B.commande(Favoris.TYPE_FAVORIS);
-            var w = S._skillWindow; o.liste = w._data.map(function (s) { return s.id; }); w.select(0); w.processOk();
+            var w = S._skillWindow; o.liste = w._data.map(function (s) { return s.id; }); w.select(0); B.valider(w);
             o.actives = B.actives();
             var ew = S._enemyWindow; o.nbEnnemis = ew._enemies.length;
             var k = Math.min(1, ew._enemies.length - 1); ew.select(k); B.cible = ew._enemies[k].index(); B.acteur = a.actorId();
-            ew.processOk();
+            B.valider(ew);
             var act = a.action(0);
             o.action = act && act.item() ? act.item().id : 0; o.cible = act ? act._targetIndex : -9; o.voulue = B.cible;
             o.apres = B.actives(); o.suivant = BattleManager.actor() ? BattleManager.actor().name() : null;
@@ -150,7 +155,7 @@ var erreurs = [];
         var r4 = await page.evaluate(function () {
             var B = window.__b, S = SceneManager._scene, o = {};
             // revenir au héros d'avant, comme avec Annuler
-            S._actorCommandWindow.processCancel();
+            B.annuler(S._actorCommandWindow);
             var a = BattleManager.actor(); o.qui = a.actorId() === B.acteur;
             o.cmd = B.commandes();
             var c = o.cmd.filter(function (x) { return x.ext === Favoris.TYPE_REFAIRE; })[0];
@@ -160,13 +165,13 @@ var erreurs = [];
             o.actives = B.actives();
             var ew = S._enemyWindow; o.curseur = ew.enemy() ? ew.enemy().index() : -1; o.voulue = B.cible;
             // Annuler : la liste d'une ligne, puis les ordres — rien ne se fige
-            ew.processCancel(); o.annule1 = B.actives(); o.uneLigne = S._skillWindow.maxItems();
-            S._skillWindow.processCancel(); o.annule2 = B.actives();
+            B.annuler(ew); o.annule1 = B.actives(); o.uneLigne = S._skillWindow.maxItems();
+            B.annuler(S._skillWindow); o.annule2 = B.actives();
             // de nouveau, jusqu'au bout
-            B.commande(Favoris.TYPE_REFAIRE); S._enemyWindow.processOk();
+            B.commande(Favoris.TYPE_REFAIRE); B.valider(S._enemyWindow);
             var act = a.action(0); o.action = act && act.item() ? act.item().id : 0; o.cible = act ? act._targetIndex : -9;
             // sans mana ni PT ni PV à payer : grisée
-            S._actorCommandWindow.processCancel(); a = BattleManager.actor();
+            B.annuler(S._actorCommandWindow); a = BattleManager.actor();
             var mp = a.mp, tp = a.tp, hp = a.hp; a._mp = 0; a._tp = 0; a._hp = 1;
             S._actorCommandWindow.refresh(); var g = B.commandes().filter(function (x) { return x.ext === 905; })[0]; o.grisee = g ? g.ok : null; o.peut = a.canUse($dataSkills[B.tech]);
             a._mp = mp; a._tp = tp; a._hp = hp; S._actorCommandWindow.refresh();
@@ -177,7 +182,7 @@ var erreurs = [];
             // la cible tombée : le curseur ne plante pas, il reste sur un vivant
             var cible = $gameTroop.members()[B.cible]; cible.addState(1);
             B.commande(Favoris.TYPE_REFAIRE); o.surVivant = S._enemyWindow.enemy() ? S._enemyWindow.enemy().isAlive() : (B.actives().join() !== '_enemyWindow');
-            if (B.actives().join() === '_enemyWindow') { S._enemyWindow.processCancel(); S._skillWindow.processCancel(); }
+            if (B.actives().join() === '_enemyWindow') { B.annuler(S._enemyWindow); B.annuler(S._skillWindow); }
             cible.removeState(1); cible.setHp(cible.mhp);
             o.fin = B.actives();
             return o;

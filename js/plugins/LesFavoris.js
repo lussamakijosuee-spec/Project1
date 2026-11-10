@@ -208,6 +208,15 @@ window.Favoris = Favoris;
         }
         if (FAVORIS) this.addCommand(NOM, 'skill', true, TYPE_FAVORIS);
     };
+    // LesStylesDeVesper retire des ordres toute branche « vide pour ce Style » : nos deux lignes ne sont pas des
+    // branches de la base, elles y passaient. On les remet à leur place, juste après.
+    var _branches = Window_ActorCommand.prototype.addSkillCommands;
+    Window_ActorCommand.prototype.addSkillCommands = function () {
+        var moi = this, gardees = [];
+        this._list.forEach(function (c, i) { if (c.symbol === 'skill' && (c.ext === TYPE_FAVORIS || c.ext === TYPE_REFAIRE)) gardees.push({ c: c, i: i }); });
+        _branches.call(this);
+        gardees.forEach(function (g) { if (moi._list.indexOf(g.c) < 0) moi._list.splice(Math.min(g.i, moi._list.length), 0, g.c); });
+    };
 
     // « Refaire » : la liste n'a qu'une ligne — OK dessus tout de suite, par le vrai chemin
     var _commande = Scene_Battle.prototype.commandSkill;

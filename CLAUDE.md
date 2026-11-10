@@ -834,6 +834,18 @@ Les lignes du Pacte, de la Colère, du livre, de la phrase et de seiryu s'écriv
 Banc : `navigateur/le_combat_fluide.js` (38 contrôles ; ⚠ `Graphics.frameCount` ne monte qu'au dessin : un banc sans dessin le monte lui-même,
 sinon la jauge d'expérience de la victoire ne finit jamais).
 
+**Les favoris et « Refaire »** (`LesFavoris.js` v1.0, 2026-11-10 ; JOKO : *« Si je devais améliorer un truc ? »* — les menus de capacités : Korrah 92
+lignes, Aël 93, ludwing 72, neuf à l'écran — puis, aux Favoris et à « Refaire » : *« Pourquoi pas »*). **★ Favoris** : dans une liste de techniques
+(en combat ou au menu), Maj — ou un appui long — épingle la technique sous le curseur (une étoile sur son icône), la même touche l'enlève ; 8 par
+héros (`favorisMax`), dans la sauvegarde (`actor._favoris`) ; « ★ Favoris » sous l'Attaque les ouvre (vide, la liste dit comment épingler) ; un
+favori que le héros ne voit plus dans aucun menu (désappris, un autre Style) n'est pas montré et revient. **↻ Refaire** : « ↻ Nom » sous l'Attaque,
+la dernière technique choisie (`lastBattleSkill` de MV ; jamais l'Attaque, la Garde, ᛟ Activer — `pasRefaire`) : OK la relance **par le vrai
+chemin** (`onSkillOk` : une rune de zone redemande Garder / Piège), le curseur déjà sur la même cible si elle est debout ; grisée si on ne peut pas
+la payer. Ce sont des branches qui n'existent que dans le menu (904, 905 ; 901-903 sont les arts) : aucune fiche ni liste n'est touchée. Piège :
+LesStylesDeVesper retire des ordres toute branche « vide pour ce Style » — nos deux lignes y passaient chez Vesper, elles sont remises à leur place.
+Pas fait (proposé, à montrer d'abord) : replier les degrés d'une même technique. Banc : `navigateur/les_favoris.js` (20 contrôles ; ⚠ choisir une
+technique charge une image — CombatFluide — : un banc qui n'avance que « si les images sont prêtes » se fige dans un `evaluate`).
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
