@@ -848,6 +848,23 @@ devant les Voies chez Vesper — attrapé par `un_menu_par_art`).
 Pas fait (proposé, à montrer d'abord) : replier les degrés d'une même technique. Banc : `navigateur/les_favoris.js` (20 contrôles ; ⚠ choisir une
 technique charge une image — CombatFluide — : un banc qui n'avance que « si les images sont prêtes » se fige dans un `evaluate`).
 
+**Le menu des capacités et le tableau des éléments** (`OrbeDesCapacites.js` v1.1, `LeTableauDesElements.js` v1.0, 2026-11-11 ; JOKO : *« j'aimerais que
+tu retravailles le menu de compétence hors combats et le tableau des éléments »*). **L'Orbe** (il reste l'Orbe : le héros, ses branches, ses nœuds) :
+la liste écrit le **nom court** (« Premier art de l'épée : Fil du Vent » → « Fil du Vent » ; les noms entiers étaient écrasés), le **coût dans sa
+monnaie** et sa couleur (PM, PT, PV — le vrai, affinité comprise ; la barre de défilement mangeait « PM »), l'étoile d'un favori ; le bandeau du bas
+(184 px) : le nom entier, ses **étiquettes** (VOIE / PAROLE / RUNE, l'élément, la cible, la recharge, « en combat », « ◇ hors affinité », le coût),
+la description **entière** sur trois lignes (elle finissait par « … » sur deux), les touches ; le titre dit la branche et « 8 / 18 apprises ».
+**Tab** épingle la technique dans les favoris du combat (Maj reste la montée de niveau de l'Orbe ; `LesFavoris` prend « shift, tab »). Pour un
+banc : `OrbeDesCapacites.nomCourt / couts / etiquettes`. **Le tableau** : l'ancien (VisualMaxEX, gardé — `TableauDesElements.ancienne`) listait les
+noms avec un tiret en face et disait encore « recul PV — la forme projetée » ; le nouveau prend sa place (`Scene_MvxElements`, la commande
+« Éléments » du menu), trois pages, ← → : **① Les trois arts** (le triangle dessiné, la phrase de la Genèse, source / art / mana / monnaie / temps,
+ce que le triangle vaut dans le jeu — la médiane des fiches d'ennemis par courant : ▲ ×1,8, ▼ ×0,55-0,6 —, les affinités de l'équipe et la règle
+hors affinité) ; **② Les réactions** (la grille 8 × 8, le curseur s'y promène, le bas dit l'effet avec les chiffres des réglages de FusionElements
+et qui dans l'équipe peut la faire, seul ou à deux) ; **③ L'équipe** (par héros, ses techniques apprises qui blessent par élément, et les réactions
+qu'il fait seul). Tout est **lu** dans le jeu (System.json, les fiches, les réglages) : rien n'est recopié. Banc :
+`navigateur/le_menu_et_le_tableau.js` (21 contrôles ; ⚠ une fenêtre à défilement ne dessine que ses lignes visibles : un banc qui lit ce qui
+s'écrit appelle `drawItem` pour chaque ligne).
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
