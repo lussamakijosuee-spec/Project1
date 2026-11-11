@@ -141,6 +141,33 @@ var erreurs = [];
         await photo('orbe_v11.png');
         V('Tab épingle la technique sous le curseur dans les favoris du combat, l\'étoile se dessine', r3.apres.join() === String(cible.id) && r3.etoile, '#' + r3.apres.join());
         V('contre-épreuve : une technique pas encore apprise ne s\'épingle pas', r3.refuse);
+        console.log('\n③ bis Ctrl range la liste');
+        var rt = await page.evaluate(function () {
+            var S = SceneManager._scene, a = S.actor(), w = S._itemWindow, o = { modes: [] };
+            // la branche la plus longue
+            var ib = 0; S._branches.forEach(function (b, i) { if (b.noeuds.length > S._branches[ib].noeuds.length) ib = i; });
+            S._iBranche = ib; var b = S._branches[ib]; w._branche = null; w.poser(a, b);
+            OrbeDesCapacites.poserTri(0); w.refresh(); w.select(Math.min(5, w.maxItems() - 1));
+            var base = w._donnees.map(function (n) { return n.skill.id; }), garde = w.item().id;
+            o.n = base.length; o.memeQuAvant = base.join() === b.noeuds.map(function (n) { return n.skill.id; }).join();
+            var prix = function (s) { return OrbeDesCapacites.couts(a, s).reduce(function (m, c) { return m + parseInt(c.texte, 10); }, 0); };
+            for (var k = 0; k < 4; k++) {
+                S.changerTri();
+                var l = w._donnees.map(function (n) { return n.skill; }), cle = OrbeDesCapacites.tri(), bon = true;
+                if (cle === 'apprises') bon = l.every(function (s) { return a.isLearnedSkill(s.id); }) && l.length === base.filter(function (id) { return a.isLearnedSkill(id); }).length;
+                else { bon = l.length === base.length && l.map(function (s) { return s.id; }).sort().join() === base.slice().sort().join(); }
+                if (cle === 'cout') for (var i = 1; i < l.length; i++) if (prix(l[i - 1]) > prix(l[i])) bon = false;
+                if (cle === 'element') for (var j = 1; j < l.length; j++) { var e1 = l[j - 1].damage.elementId > 1 ? l[j - 1].damage.elementId : 999, e2 = l[j].damage.elementId > 1 ? l[j].damage.elementId : 999; if (e1 > e2) bon = false; }
+                o.modes.push({ cle: cle, n: l.length, bon: bon, curseur: w.item() ? w.item().id === garde || (cle === 'apprises' && !a.isLearnedSkill(garde)) : l.length === 0 });
+            }
+            o.retour = w._donnees.map(function (n) { return n.skill.id; }).join() === base.join();
+            var ecrit = [], iw = S._infoWindow, _dt = iw.drawText; iw.drawText = function (t) { ecrit.push(String(t)); _dt.apply(this, arguments); }; iw._noeud = null; iw.poser(a, b, w.noeud()); iw.drawText = _dt;
+            o.pied = ecrit.filter(function (t) { return /Ctrl tri/.test(t); })[0] || '';
+            return o;
+        });
+        V('par défaut, la liste est celle d\'avant (par niveau)', rt.memeQuAvant, rt.n + ' techniques');
+        V('Ctrl : apprises seulement (rien d\'autre), par coût (croissant), par élément — rien n\'est perdu ni doublé', rt.modes.length === 4 && rt.modes.every(function (m) { return m.bon; }), rt.modes.map(function (m) { return m.cle + ' ' + m.n; }).join(' → '));
+        V('le curseur reste sur sa technique, et au quatrième appui on retrouve l\'ordre du début', rt.modes.every(function (m) { return m.curseur; }) && rt.retour && /par niveau/.test(rt.pied), rt.pied.trim().slice(-40));
         await page.evaluate(function () { SceneManager._scene.actor()._favoris = []; SceneManager.goto(Scene_Map); });
         await page.waitForFunction(surLaCarte, null, { timeout: 60000 });
 
@@ -244,6 +271,55 @@ var erreurs = [];
         await page.keyboard.press('Escape');
         var sorti = await page.waitForFunction(surLaCarte, null, { timeout: 30000 }).then(function () { return true; }, function () { return false; });
         V('Échap revient d\'où l\'on vient', sorti);
+        console.log('\n⑨ En combat, Ctrl ouvre les réactions');
+        await page.evaluate(function () { BattleManager.setup(7, false, false); SceneManager.push(Scene_Battle); });
+        await page.waitForFunction(function () { var S = SceneManager._scene; return S instanceof Scene_Battle && BattleManager._phase === 'input' && !!BattleManager.actor() && S._actorCommandWindow.active && S._actorCommandWindow.isOpen(); }, null, { timeout: 120000 });
+        var actives = function () { var S = SceneManager._scene, o = []; ['_partyCommandWindow', '_actorCommandWindow', '_skillWindow', '_itemWindow', '_actorWindow', '_enemyWindow'].forEach(function (k) { var w = S[k]; if (w && w.active && w.isOpen()) o.push(k); }); return o.join(); };
+        // dans une liste de techniques, le curseur sur la 3e ligne ; un ennemi porte du Feu
+        var c0 = await page.evaluate(function () {
+            var S = SceneManager._scene, w = S._actorCommandWindow, i = -1;
+            w._list.forEach(function (c, k) { if (i < 0 && c.symbol === 'skill' && c.ext < 904) i = k; });
+            w.select(i); w.processOk();
+            S._skillWindow.select(Math.min(2, S._skillWindow.maxItems() - 1));
+            var e = $gameTroop.members()[0]; e.addState(Fusion.etats.aura[8]);
+            return { index: S._skillWindow.index(), porte: Fusion.aura(e), nom: e.name() };
+        });
+        await page.waitForFunction(function () { var S = SceneManager._scene; return S._skillWindow.active && S._skillWindow.isOpen(); }, null, { timeout: 30000 });
+        var av = await page.evaluate(actives);
+        await page.keyboard.press('Control');
+        await page.waitForFunction(function () { return TableauDesElements.ouvert(); }, null, { timeout: 15000 }).catch(function () {});
+        var c1 = await page.evaluate(function () {
+            var S = SceneManager._scene, t = S._tableauCombat, o = { ouvert: TableauDesElements.ouvert() };
+            if (!t) return o;
+            o.page = t._page; o.ligne = t._cy; o.colonne = t._cx; o.reagit = !!TableauDesElements.reactions()[8 + '+' + (8 + t._cx)]; o.auras = TableauDesElements.auras();
+            var ecrit = [], _dt = t.drawText; t.drawText = function (x) { ecrit.push(String(x)); _dt.apply(this, arguments); }; t.refresh(); t.drawText = _dt;
+            o.terrain = ecrit.indexOf('Sur le terrain') >= 0 && ecrit.indexOf(o.auras[0] ? o.auras[0].nom : '?') >= 0;
+            return o;
+        });
+        var pendant = await page.evaluate(actives);
+        await photo('tableau_en_combat.png');
+        await page.keyboard.press('ArrowRight');
+        await page.waitForFunction(function (x) { return SceneManager._scene._tableauCombat._cx === x + 1; }, c1.colonne, { timeout: 15000 }).catch(function () {});
+        var c2 = await page.evaluate(function () { var S = SceneManager._scene; return { cx: S._tableauCombat._cx, liste: S._skillWindow.index() }; });
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(function () { return !TableauDesElements.ouvert(); }, null, { timeout: 15000 }).catch(function () {});
+        await page.waitForTimeout(300);
+        var apres = await page.evaluate(actives);
+        var c3 = await page.evaluate(function () { var S = SceneManager._scene; return { index: S._skillWindow.index(), visible: S._skillWindow.visible, ouvert: TableauDesElements.ouvert() }; });
+        V('dans la liste des techniques, Ctrl ouvre les réactions par-dessus le combat', av === '_skillWindow' && c1.ouvert && c1.page === 1, 'avant : ' + av);
+        V('tant qu\'il est ouvert, aucune fenêtre de saisie n\'est active (jamais deux à la fois)', pendant === '', '« ' + pendant + ' »');
+        V('le curseur est sur l\'élément que l\'ennemi porte, sur une case qui réagit, et la légende dit qui le porte', c1.ligne === 0 && c1.reagit && c1.auras.length === 1 && c1.auras[0].element === 8 && c1.terrain, c0.nom + ' : ◈ Feu');
+        V('les flèches promènent le curseur du tableau, pas celui de la liste d\'en dessous', c2.cx === c1.colonne + 1 && c2.liste === c0.index, 'liste ' + c2.liste);
+        V('Échap le referme : la même liste est active, au même endroit, et n\'a pas été annulée', apres === '_skillWindow' && c3.index === c0.index && c3.visible && !c3.ouvert, apres + ' ligne ' + c3.index);
+        // contre-épreuve : pendant que les actions se jouent, il ne s'ouvre pas
+        var c4 = await page.evaluate(function () {
+            var S = SceneManager._scene, o = {};
+            var ph = BattleManager._phase; BattleManager._phase = 'turn'; o.refuse = S.ouvrirTableau() === false && !TableauDesElements.ouvert(); BattleManager._phase = ph;
+            $gameTroop.members()[0].removeState(Fusion.etats.aura[8]);
+            BattleManager._phase = 'aborting'; SceneManager.pop();
+            return o;
+        });
+        V('contre-épreuve : pendant que les actions se jouent, Ctrl n\'ouvre rien', c4.refuse);
         V('aucune erreur dans la page', erreurs.length === 0, erreurs.slice(0, 3).join(' | '));
     } catch (e) {
         ko++; console.log('   ✗ le banc a planté : ' + (e && e.stack || e)); if (erreurs.length) console.log('     erreurs : ' + erreurs.slice(0, 3).join(' | '));

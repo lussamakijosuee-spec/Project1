@@ -862,7 +862,14 @@ ce que le triangle vaut dans le jeu — la médiane des fiches d'ennemis par cou
 hors affinité) ; **② Les réactions** (la grille 8 × 8, le curseur s'y promène, le bas dit l'effet avec les chiffres des réglages de FusionElements
 et qui dans l'équipe peut la faire, seul ou à deux) ; **③ L'équipe** (par héros, ses techniques apprises qui blessent par élément, et les réactions
 qu'il fait seul). Tout est **lu** dans le jeu (System.json, les fiches, les réglages) : rien n'est recopié. Banc :
-`navigateur/le_menu_et_le_tableau.js` (21 contrôles ; ⚠ une fenêtre à défilement ne dessine que ses lignes visibles : un banc qui lit ce qui
+`navigateur/le_menu_et_le_tableau.js` (30 contrôles). **Proposer d'abord** (JOKO, 2026-11-11 : *« Propose des idées et dit ton avis avant de faire
+quoique se soit »*) : six idées proposées avec un avis, il a dit *« Oui »* — lu : les deux recommandées. **Ctrl range la liste de l'Orbe** (v1.2 : par
+niveau → apprises seulement → par coût → par élément ; rien n'est retiré, le curseur reste sur sa technique, le pied dit le tri). **Ctrl ouvre les
+réactions en combat** (`LeTableauDesElements` v1.1) : pendant la saisie (les ordres ou la liste), la page des réactions par-dessus le combat, fond
+plein, le curseur sur l'élément qu'un ennemi porte et sur une case qui réagit, « Sur le terrain » dit qui porte quoi ; Ctrl ou Échap la referme et
+la même liste reprend au même endroit. Ce n'est pas une autre scène (revenir dans Scene_Battle relancerait le début du combat) ; ⚠ MV rouvre la
+fenêtre des ordres dès qu'aucune fenêtre de saisie n'est active (`changeInputWindow`) : tant qu'il est ouvert, `isAnyInputWindowActive` répond oui.
+Pas faites : replier les degrés (à montrer d'abord), fusionner la page « équipe », marquer les techniques nouvelles. (⚠ une fenêtre à défilement ne dessine que ses lignes visibles : un banc qui lit ce qui
 s'écrit appelle `drawItem` pour chaque ligne).
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
