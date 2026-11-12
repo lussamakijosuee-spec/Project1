@@ -901,7 +901,7 @@ lore inventé ; le « cored » (68) reste muet. **Le tableau des pièces sans so
 63 armures sur 69, 39 objets sur 104 ne sont ni en butin, ni en boutique, ni donnés par un événement — chacune avec son **rang** de la Bible (*« une relique
 a un rang selon ses performances »*, D à S selon sa puissance parmi celles de son genre) ; rien n'est posé sur les cartes. Le fichier garde la forme de
 RPG Maker (une entrée par ligne). **Proposé, pas fait** : l'identité par l'équipement (quels types d'armes pour qui) — la Bible ne le dit pas, à JOKO.
-Banc : `26_le_systeme.js` (14 contrôles, dont 6 contre-épreuves : une icône retirée, un état sans fin posé par un héros, un double, un prix à 0, une
+**`LesMenus` v1.1** : sur l'écran d'équipement, la description se replie sur les deux lignes de sa case (corps 18 → 13) — TSR_EquipSlots l'écrivait d'une traite : 182 descriptions sortaient du cadre, les 54 neuves et celles de JOKO (« Relique du Fond… », la forge, les armes d'ombre) ; `tous_les_menus` l'a attrapé, son texte n'est pas touché. Banc : `26_le_systeme.js` (14 contrôles, dont 6 contre-épreuves : une icône retirée, un état sans fin posé par un héros, un double, un prix à 0, une
 description qui ment sur l'élément ou une statistique).
 
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
