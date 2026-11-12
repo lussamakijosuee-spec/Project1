@@ -886,6 +886,24 @@ qu'elle tienne ; ManaVisuals la coupait à 20). **④ Le Bestiaire** (`bestiaire
 niveau, états, PV / PM / PT en barres et en chiffres —, et sous les commandes une fenêtre : le lieu, le jour et l'heure (MOG_TimeSystem), « ✦ Âmes »
 (c'était « ✦ 0 » sans un mot, PorteurDAmes) et l'or ; les fenêtres d'avant sont cachées, pas retirées. Banc : `navigateur/les_menus.js` (18 contrôles).
 
+**Le système : états, objets, armes, armures** (`bancs/outils/le_systeme.js`, 2026-11-12 ; JOKO : *« Maintenant pour le système surtout état, objets,
+arme et armure […] tu peux changer ce qui est déjà là pour l'améliorer […] mais toujours tu proposes, on réfléchit ensemble »*, puis, sur six idées :
+*« Oui tout mais reste cohérent au lore aussi »*). **États** : une icône aux 15 qui agissent et n'en avaient pas (les Résistances — Eau à Positif prennent
+l'icône que le jeu donne à leur élément, comme Résistance — Feu et les auras ◈ ; les 9 marqueurs des plugins, sans effet, restent invisibles exprès :
+un héros n'affiche que deux icônes) ; sur les 50 états « sans fin », 48 sont voulus (passifs `<Custom Passive Condition>`, marqueurs, armes de ludwing
+tenues par un plugin) — **Domaine Déployé (16)**, posé par une compétence de héros, restait sur lui après le combat : il finit avec le combat ; noms
+distincts : Normal · Korrah / Vesper / ludwing (62-64, les jauges 12, 14, 13), Provocation · garde baissée (69, la DÉF à 0 ; 152 reste « Provocation »),
+Euphorie · vitesse (186 ; 167 reste « Euphorie »). **Prix** : 112 armes et 9 armures à 0 reçoivent celui de la règle (puissance = ATQ + DÉF + ATQ M. + DÉF M. +
+AGI + CHA + PV/10 + PM/5, × la médiane des prix posés : 35,7 G par point pour une arme, 34,5 pour une armure) — jamais les mains nues, jamais les pièces
+de l'Âme, **jamais un prix déjà posé** (51 s'écartent de plus du double de la règle, surtout les Légendaires et Runiques : listés, à JOKO). **Descriptions**
+(54 armes, 4 armures, la clé de l'auberge) : ce que la pièce FAIT, lu dans ses traits (« Hache : AGI −5. », « Épée : PM max +5 · ATQ M. +36 ») — aucun
+lore inventé ; le « cored » (68) reste muet. **Le tableau des pièces sans source** (`docs/EQUIPEMENT_SANS_SOURCE.md`, une mesure) : 171 armes sur 226,
+63 armures sur 69, 39 objets sur 104 ne sont ni en butin, ni en boutique, ni donnés par un événement — chacune avec son **rang** de la Bible (*« une relique
+a un rang selon ses performances »*, D à S selon sa puissance parmi celles de son genre) ; rien n'est posé sur les cartes. Le fichier garde la forme de
+RPG Maker (une entrée par ligne). **Proposé, pas fait** : l'identité par l'équipement (quels types d'armes pour qui) — la Bible ne le dit pas, à JOKO.
+Banc : `26_le_systeme.js` (14 contrôles, dont 6 contre-épreuves : une icône retirée, un état sans fin posé par un héros, un double, un prix à 0, une
+description qui ment sur l'élément ou une statistique).
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
