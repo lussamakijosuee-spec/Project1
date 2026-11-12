@@ -872,6 +872,20 @@ fenêtre des ordres dès qu'aucune fenêtre de saisie n'est active (`changeInput
 Pas faites : replier les degrés (à montrer d'abord), fusionner la page « équipe », marquer les techniques nouvelles. (⚠ une fenêtre à défilement ne dessine que ses lignes visibles : un banc qui lit ce qui
 s'écrit appelle `drawItem` pour chaque ligne).
 
+**Les menus** (`LesMenus.js` v1.0, 2026-11-12 ; JOKO : *« Continue dans les menus pour les améliorer ou refaire »*, puis, sur six idées proposées avec un
+avis : *« Oui tout »*). **① En français** — les mots sont changés là où ils sont : `System.json` (HP / MP / TP → **PV / PM / PT**, « PV max », « PM max »),
+les réglages de YEP_ItemCore (« Soin %1 », « + État », « − Bonus »…), YEP_EquipCore (« <Vide> »), YEP_SaveCore (« Temps de jeu : », Oui / Non),
+TSR_EquipSlots (PV max, ATQ, DÉF, AGI, CHA…), ItemBook (Prix, Équipement, Type) ; dans le plugin, seulement ce qui est en dur : « remove / optimize /
+cancel / change / equip » de l'écran d'équipement (les symboles ne bougent pas). **② Les Carnets** : Bestiaire, Encyclopédie, Musiques, Éléments et
+Statistiques sous une ligne « Carnets » après les Quêtes (`carnets`, `nomCarnets`, `apresQuoi` ; vide : rien ne bouge) — une petite liste, chaque
+commande rappelle le gestionnaire que le menu lui avait donné. **③ Le Statut** : la description entière (le corps se resserre de 20 à 13 jusqu'à ce
+qu'elle tienne ; ManaVisuals la coupait à 20). **④ Le Bestiaire** (`bestiaireRange`) : les rencontrés d'abord, une ligne « ?????? × n », le bas dit
+« 12 / 593 créatures rencontrées » ; les deux fenêtres d'EnemyBook sont privées : on les rejoint par la scène, une fois. **⑤ Les Options**
+(`optionsRangees`) : Jeu, Combat, Affichage, Son (`LesMenus.groupeDe`, par le symbole puis le nom ; inconnue → Jeu), le curseur saute les titres.
+**⑥ Le menu principal** (`menuRefait`) : dix commandes sans défiler, **les cinq combattants** (seiryu était sous la flèche) — visage, nom, classe,
+niveau, états, PV / PM / PT en barres et en chiffres —, et sous les commandes une fenêtre : le lieu, le jour et l'heure (MOG_TimeSystem), « ✦ Âmes »
+(c'était « ✦ 0 » sans un mot, PorteurDAmes) et l'or ; les fenêtres d'avant sont cachées, pas retirées. Banc : `navigateur/les_menus.js` (18 contrôles).
+
 **Sur le PC de JOKO** : Node 24 et Playwright (dans `node_modules/`, ignoré) sont installés depuis
 le 2026-10-17. Les bancs navigateur y tournent lentement (Chromium sans carte graphique) :
 `les_outils_de_scene` y fait 7 échecs de minutage, et `seiryu_et_lhiver` son contrôle « à l'écran, il
