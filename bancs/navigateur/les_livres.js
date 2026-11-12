@@ -92,6 +92,15 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
             for (var i = 0; i < w.maxItems(); i++) {
                 if (w.commandName(i) === nom) { w.select(i); w.processOk(); return true; }
             }
+            // depuis le 2026-11-12, les livres sont sous « Carnets » (LesMenus) : un cran plus loin
+            var c = w.findSymbol('carnets');
+            if (c >= 0) {
+                w.select(c); w.processOk();
+                var l = SceneManager._scene._carnetsWindow;
+                for (var k = 0; l && k < l.maxItems(); k++) {
+                    if (l.commandName(k) === nom) { l.select(k); l.processOk(); return true; }
+                }
+            }
             return false;
         }, libelle);
         verifie('la commande « ' + libelle + ' » est dans le menu', trouve);
