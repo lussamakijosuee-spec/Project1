@@ -45,7 +45,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await page.goto(BASE + '/index.html', { waitUntil: 'load' });
     await page.waitForFunction(function () { var s = SceneManager._scene; return s && s._commandWindow && s._commandWindow.active && s._commandWindow.isOpen(); }, null, { timeout: 180000 });
     await page.evaluate(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
-    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
+    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging() && SceneManager.isCurrentSceneStarted() && SceneManager._scene.isActive(); }, null, { timeout: 60000 });
     await page.waitForTimeout(1500);
     await page.evaluate(function () {
         $gameParty.members().forEach(function (a) { a.recoverAll(); });
@@ -213,6 +213,13 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         try { Scene_Battle.prototype.choisirRune.call(faussesFenetres, 'garder'); } catch (x) { out.choixErreur = String(x).slice(0, 120); }
         BattleManager.inputtingAction = biAvant;
         out.choix.mode = enCours._modeRune;
+        // tant qu'elle est ouverte, c'est la fenêtre de saisie : sinon MV rouvre les ordres derrière elle
+        var actives = ['_partyCommandWindow', '_actorCommandWindow', '_skillWindow', '_itemWindow', '_actorWindow', '_enemyWindow'].map(function (k) { return sc[k]; }).filter(function (x) { return x && x.active; });
+        actives.forEach(function (x) { x.active = false; });
+        var avantR = w.active;
+        w.active = true; out.choix.saisie = sc.isAnyInputWindowActive();
+        w.active = false; out.choix.saisieSans = sc.isAnyInputWindowActive();
+        w.active = avantR; actives.forEach(function (x) { x.active = true; });
         nettoyer();
         return out;
     });
@@ -254,7 +261,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('\n6) Trois au plus, et l\'aide');
     v('dans l\'air et au sol ensemble : à 2, on inscrit encore ; à 3, non ; fermer le cercle, oui', r.max.deux && !r.max.trois && r.max.activer, JSON.stringify(r.max));
-    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol » gardée, « piège » sinon ; en court « (sol) », « (piège) »)', /ᛟ Dans le cercle : /.test(r.aide) && /au sol|\(sol\)|piège/.test(r.aide), r.aide.replace(/\n/g, ' / '));
+    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol » gardée, « piège » sinon ; en court « (sol) », « (piège) »)', /ᛟ (Dans le cercle|Cercle) : /.test(r.aide) && /au sol|\(sol\)|piège/.test(r.aide), r.aide.replace(/\n/g, ' / '));
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n7) Deux runes au choix');
@@ -266,6 +273,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('la fenêtre du choix : « Garder », puis « Piège »', r.choix.fenetre, r.choix.noms.join(' / '));
     v('choisir « Garder » dans le menu le pose sur l\'action', r.choix.mode === 'garder', String(r.choix.mode) + (r.choixErreur ? ' · ' + r.choixErreur : ''));
 
+    v('la fenêtre du choix ouverte est la fenêtre de saisie (sinon les ordres se rouvrent derrière et OK valide les deux) ; fermée, non', r.choix.saisie === true && r.choix.saisieSans === false, r.choix.saisie + ' / ' + r.choix.saisieSans);
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();
     process.exit(ko === 0 ? 0 : 1);

@@ -994,6 +994,9 @@ dans la troupe 33 : le banc attend encore Dono — à JOKO de dire où vit le du
 - une fenêtre **cachée** (`hide()`) mais active répond encore aux touches et à la souris
   (`isOpenAndActive` regarde l'ouverture, pas la visibilité) : jamais deux fenêtres de saisie actives
   à la fois — après un choix glissé entre la liste et la cible, ne pas réactiver la liste.
+- une fenêtre de saisie **ajoutée** à Scene_Battle doit se déclarer dans `isAnyInputWindowActive` : sinon, dès que
+  la liste d'en dessous est désactivée, MV rouvre les ordres derrière elle (`changeInputWindow`) et OK valide les
+  deux — le choix « Garder / Piège » de `LEcrit` ne lançait plus la rune (JOKO, 2026-11-13 ; `les_runes` ⑦) ;
 - « Traitement du combat » (301) **dans un combat ne fait rien** : une phase 2 se fait par « Transformer
   l'ennemi » (336), dans le même combat ; et une page « ennemi à 0 % » ne se joue que s'il ne tombe pas
   (Immortel, état 3) — sinon le combat finit avant ;
