@@ -685,7 +685,12 @@ même signe qui partent ensemble ×1,25 chacune (`bonusAccord` — ×1,5 était 
 ~4,9 avant ; ~6,1 à ×1,25), le Sceau accordé est sûr ; **la transmutation entière** : trois du même signe, la vie payée pour elles revient
 (`transmutation` %). Échange équivalent : la rune se paie en PV, retenu quand elle s'inscrit. Restent : la résonance, la volonté, les verbes,
 le piège et la chance de ludwing, les dons « déjà écrits » (les runes de l'âme de ludwing partent tout de suite). L'aide dit
-`【RUNE · SCEAU】` et « ᛟ Dans le cercle : … → Slime · … au sol ». **5, un menu par art** (`LesTroisArts.js`) — en combat, capacité et
+`【RUNE · SCEAU】` et « ᛟ Dans le cercle : … → Slime · … au sol ». **Effacer, et un pas en arrière** (v2.2, JOKO, 2026-11-13 : *« Améliore le et la possibilité de annulé »*, puis, sur quatre idées : les deux
+recommandées) : **« ᛟ Effacer… »** sous « ᛟ Activer » dès qu'il a une rune en attente — la liste de ses runes (« Moisson des Âmes → au sol  +439 PV »),
+OK la retire sans la faire partir, la moitié de la vie payée revient (`rembourseEfface` 50), ça ne coûte pas le tour (`nomEffacer` vide : pas
+d'ordre ; `LEcrit.effacer(a, i)`) ; **annuler depuis la cible revient au choix Garder / Piège**, pas à la liste ; le choix dit ce que fait chaque
+option dans l'aide (`aideGarder`, `aidePiege`) et le curseur revient sur le dernier choix. Pas faites (proposées) : changer Garder ↔ Piège, choisir
+quelles runes partent. Banc : `les_runes` ⑧ (33 contrôles). **5, un menu par art** (`LesTroisArts.js`) — en combat, capacité et
 Spéciale se rangent en **Voies, Paroles, Runes** (Activer avec les Runes), puis les branches du héros, **Ultimes** (« ult »), Combo ;
 **aucune fiche ne change de type** (le Flow, le kit des Styles, les Copies lisent toujours les types) ; l'Orbe des capacités montre les
 mêmes branches. **6** — les descriptions disent les trois manas (« Mana Pur » → le mana de son art, « Mana Sombre » → négatif, « Lou » →
