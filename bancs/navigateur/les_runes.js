@@ -45,7 +45,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await page.goto(BASE + '/index.html', { waitUntil: 'load' });
     await page.waitForFunction(function () { var s = SceneManager._scene; return s && s._commandWindow && s._commandWindow.active && s._commandWindow.isOpen(); }, null, { timeout: 180000 });
     await page.evaluate(function () { DataManager.setupNewGame(); SceneManager.goto(Scene_Map); });
-    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging(); }, null, { timeout: 60000 });
+    await page.waitForFunction(function () { return SceneManager._scene instanceof Scene_Map && !SceneManager.isSceneChanging() && SceneManager.isCurrentSceneStarted() && SceneManager._scene.isActive(); }, null, { timeout: 60000 });
     await page.waitForTimeout(1500);
     await page.evaluate(function () {
         $gameParty.members().forEach(function (a) { a.recoverAll(); });
@@ -213,6 +213,29 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
         try { Scene_Battle.prototype.choisirRune.call(faussesFenetres, 'garder'); } catch (x) { out.choixErreur = String(x).slice(0, 120); }
         BattleManager.inputtingAction = biAvant;
         out.choix.mode = enCours._modeRune;
+        // 8 · effacer une rune : elle disparaît sans partir, la moitié de la vie payée revient
+        nettoyer();
+        lancer(lud, 158, e); lancer(lud, 1170, e);
+        var ru = L.ecrits(lud); ru[0].pv = 400; ru[1].pv = 0; lud._ecrits = ru;
+        lud.setHp(Math.floor(lud.mhp / 2)); hp0 = e.hp; var pvL = lud.hp;
+        out.efface = { rate: L.effacer(lud, 7), resteRate: L.ecrits(lud).length };
+        out.efface.rendu = L.effacer(lud, 0);
+        out.efface.hp = lud.hp - pvL; out.efface.reste = L.ecrits(lud).length; out.efface.air = e.isStateAffected(257); out.efface.sol = e.isStateAffected(260);
+        out.efface.rendu2 = L.effacer(lud, 0);
+        out.efface.reste2 = L.ecrits(lud).length; out.efface.sol2 = e.isStateAffected(260); out.efface.perdu = hp0 - e.hp;
+        out.efface.activer = lud.canUse($dataSkills[ACT]);
+        var fe = sc._fenetreEffacer, avantE = fe && fe.active;
+        if (fe) { [sc._partyCommandWindow, sc._actorCommandWindow, sc._skillWindow, sc._itemWindow, sc._actorWindow, sc._enemyWindow].forEach(function (x) { if (x) { x._av = x.active; x.active = false; } });
+            fe.active = true; out.efface.saisie = sc.isAnyInputWindowActive(); fe.active = false; out.efface.saisieSans = sc.isAnyInputWindowActive(); fe.active = avantE;
+            [sc._partyCommandWindow, sc._actorCommandWindow, sc._skillWindow, sc._itemWindow, sc._actorWindow, sc._enemyWindow].forEach(function (x) { if (x) { x.active = x._av; } }); }
+        nettoyer();
+        // tant qu'elle est ouverte, c'est la fenêtre de saisie : sinon MV rouvre les ordres derrière elle
+        var actives = ['_partyCommandWindow', '_actorCommandWindow', '_skillWindow', '_itemWindow', '_actorWindow', '_enemyWindow'].map(function (k) { return sc[k]; }).filter(function (x) { return x && x.active; });
+        actives.forEach(function (x) { x.active = false; });
+        var avantR = w.active;
+        w.active = true; out.choix.saisie = sc.isAnyInputWindowActive();
+        w.active = false; out.choix.saisieSans = sc.isAnyInputWindowActive();
+        w.active = avantR; actives.forEach(function (x) { x.active = true; });
         nettoyer();
         return out;
     });
@@ -254,7 +277,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('\n6) Trois au plus, et l\'aide');
     v('dans l\'air et au sol ensemble : à 2, on inscrit encore ; à 3, non ; fermer le cercle, oui', r.max.deux && !r.max.trois && r.max.activer, JSON.stringify(r.max));
-    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol » gardée, « piège » sinon ; en court « (sol) », « (piège) »)', /ᛟ Dans le cercle : /.test(r.aide) && /au sol|\(sol\)|piège/.test(r.aide), r.aide.replace(/\n/g, ' / '));
+    v('Activer, dans l\'aide : « ᛟ Dans le cercle : … », la rune au sol le dit (« au sol » gardée, « piège » sinon ; en court « (sol) », « (piège) »)', /ᛟ (Dans le cercle|Cercle) : /.test(r.aide) && /au sol|\(sol\)|piège/.test(r.aide), r.aide.replace(/\n/g, ' / '));
 
     v('aucune erreur dans la page', err.length === 0, err.slice(0, 3).join(' · '));
     console.log('\n7) Deux runes au choix');
@@ -266,6 +289,13 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     v('la fenêtre du choix : « Garder », puis « Piège »', r.choix.fenetre, r.choix.noms.join(' / '));
     v('choisir « Garder » dans le menu le pose sur l\'action', r.choix.mode === 'garder', String(r.choix.mode) + (r.choixErreur ? ' · ' + r.choixErreur : ''));
 
+    v('la fenêtre du choix ouverte est la fenêtre de saisie (sinon les ordres se rouvrent derrière et OK valide les deux) ; fermée, non', r.choix.saisie === true && r.choix.saisieSans === false, r.choix.saisie + ' / ' + r.choix.saisieSans);
+    console.log('\n8) Effacer une rune');
+    var ef = r.efface;
+    v('effacer la rune dans l\'air : elle disparaît de sa cible, la moitié de la vie payée revient (400 → +200), l\'autre reste', ef.rendu === 200 && ef.hp === 200 && ef.reste === 1 && !ef.air && ef.sol, JSON.stringify(ef));
+    v('effacer la rune au sol : le cercle au sol s\'efface, rien ne revient d\'une rune qui n\'a rien coûté, et rien n\'est parti', ef.rendu2 === 0 && ef.reste2 === 0 && !ef.sol2 && ef.perdu === 0 && !ef.activer, JSON.stringify(ef));
+    v('contre-épreuve : effacer une rune qui n\'existe pas ne change rien', ef.rate === -1 && ef.resteRate === 2);
+    v('la fenêtre « Effacer » ouverte est la fenêtre de saisie ; fermée, non', ef.saisie === true && ef.saisieSans === false, ef.saisie + ' / ' + ef.saisieSans);
     console.log('\n' + (ko === 0 ? '✅ TOUT PASSE' : '❌ ' + ko + ' ÉCHEC(S)') + ' — ' + ok + ' contrôles passés');
     await nav.close();
     process.exit(ko === 0 ? 0 : 1);

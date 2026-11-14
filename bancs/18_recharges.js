@@ -249,8 +249,10 @@ var SABOTAGES = [
         base[68].note = String(base[68].note).replace(/<\s*Cooldown\s*:\s*\d+\s*>/i, '');   // 2026-10-22 : Le Creux Entre Deux se paie en PT, Annihilation des Ténèbres a pris le relais
     }, /qu'aucune ressource ne freine porte une recharge/],
     ['une recharge posée sur le coup de désespoir à 1 lancer', function (base) {
-        // Le cas réel évité de justesse : « Dragon de la Nuit Sanglante ».
-        base[59].note = (base[59].note || '') + '\n<Cooldown: 4>';
+        // Le cas réel évité de justesse : « Dragon de la Nuit Sanglante ». Depuis qu'il est un ultime
+        // (<Ulti> : sa recharge fait son rang, le contrôle le laisse), la contre-épreuve lui retire <Ulti>
+        // pour rejouer le cas d'origine : un coup de désespoir ordinaire qu'on briderait deux fois.
+        base[59].note = String(base[59].note || '').replace(/<\s*Ulti\s*>/ig, '') + '\n<Cooldown: 4>';
     }, /son propre coût limite déjà/],
     ['la ligne d\'explication écrite entre chevrons', function (base) {
         base[68].note = String(base[68].note)

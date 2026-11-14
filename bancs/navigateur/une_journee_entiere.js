@@ -20,18 +20,85 @@
  *   H6 · une quête finie se raconte (une fois par habitant) ; l'affinité monte d'un par jour
  *   H7 · l'Admission remplit la ville de recrues ; la Veillée garde dehors ; le dimanche, repos
  *   ⑧ ça ne rame pas : le temps passé dans la mise à jour de la carte reste petit
+ *   ⑨ une scène dont la personne n'est plus là (retirée par JOKO, ou son numéro
+ *     devenu une marque sans image) ne se joue jamais — et la marque à qui l'on
+ *     rend une image, elle, la jouerait (VieDuVillage v2.3)
+ *
+ * LES CARTES SONT À JOKO (2026-11-09, « Réadapte-le. Développe-le, améliore-le ») :
+ * chaque contrôle qui nomme quelqu'un regarde d'abord s'il est encore sur sa
+ * carte (la règle de l'outil des habitants, bancs/outils/qui_est_la.js ; ce
+ * qu'il a voulu tel quel compte comme là : ces gens vivent toujours). Absent,
+ * le contrôle est sauté et le dit. Les recrues de l'Admission retirées, la
+ * balise <Admission> est essayée en mémoire sur Fernand. Rien n'est écrit dans data/.
  *
  *   node bancs/navigateur/une_journee_entiere.js
  */
 'use strict';
+var fs = require('fs'), path = require('path');
 var { chromium } = require('playwright');
 var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
+var RACINE = path.join(__dirname, '..', '..');
+var Q = require(path.join(RACINE, 'bancs', 'outils', 'qui_est_la.js')), FICHES = Q.fiches();
+// est-il encore sur sa carte ? (voulu tel quel : oui, il vit toujours — seule sa page est à JOKO)
+function ici(k) {
+    var m = k.split(':'), c = Q.carte(+m[0]);
+    if (!c || !c.events[+m[1]]) return false;
+    if (!FICHES[k]) return true;
+    var e = Q.etat(FICHES[k]);
+    return e.la || !!e.voulu;
+}
+function pourquoi(k) { var m = k.split(':'), c = Q.carte(+m[0]); if (!c || !c.events[+m[1]]) return 'retiré'; return FICHES[k] ? Q.etat(FICHES[k]).pourquoi : 'là'; }
+function nom(k) { return FICHES[k] ? FICHES[k].nom : k; }
+
+/* ⑨ les scènes dont quelqu'un n'est plus là : un numéro retiré, ou devenu une marque sans image */
+function cibles(c) {
+    var out = [], t, r;
+    if (c.code === 205 || c.code === 213) { if (c.parameters[0] > 0) out.push(c.parameters[0]); return out; }
+    if (c.code === 111 && c.parameters[0] === 12) t = c.parameters[1];
+    else if (c.code === 355 || c.code === 655 || c.code === 356 || c.code === 401) t = c.parameters[0];
+    if (!t) return out;
+    var re = /VieDuVillage\.(la|libre|prochePourVoir|ensemble)\(([^)]*)\)/g;
+    while ((r = re.exec(t))) {
+        var a = r[2].split(',').map(function (x) { return x.trim(); });
+        if (r[1] === 'ensemble') a = a.slice(0, -1); if (r[1] === 'prochePourVoir') a = a.slice(0, 1);
+        a.forEach(function (x) { if (/^\d+$/.test(x)) out.push(+x); });
+    }
+    var re2 = /<c:(\d+),/g; while ((r = re2.exec(t))) if (+r[1] > 0) out.push(+r[1]);
+    var v = /^VIE (arreter|reprendre|tourner|bulle|dire)\s+(\S+)(?:\s+(\S+))?/.exec(t);
+    if (v) { if (/^\d+$/.test(v[2])) out.push(+v[2]); if (v[1] === 'tourner' && /^\d+$/.test(v[3] || '')) out.push(+v[3]); }
+    return out;
+}
+var ORPHELINES = [];
+[29, 30, 31, 33, 41, 42, 43, 44, 46].forEach(function (n) {
+    var c = Q.carte(n); if (!c) return;
+    c.events.forEach(function (e) {
+        if (!e || !/^🏘/.test(e.name || '')) return;
+        var l = e.pages[0].list;
+        l.forEach(function (x, i) {
+            if (x.code !== 108 || !/^— /.test(x.parameters[0]) || !l[i + 1] || l[i + 1].code !== 111) return;
+            var fin = l.slice(i + 1).findIndex(function (y, j) { return j > 0 && y.code === 108 && /^— /.test(y.parameters[0]); });
+            var corps = fin < 0 ? l.slice(i + 1) : l.slice(i + 1, i + 1 + fin), qui = {};
+            corps.forEach(function (y) { cibles(y).forEach(function (id) { qui[id] = 1; }); });
+            Object.keys(qui).forEach(function (id) {
+                var ev = c.events[id], marque = ev && ev.pages.every(function (p) { return !p.image.characterName && !p.image.tileId; });
+                if (!ev || marque) {
+                    var h = /\$gameSystem\.hour\(\) >= (\d+)/.exec(l[i + 1].parameters[1]);
+                    ORPHELINES.push({ carte: n, scene: x.parameters[0].replace(/^— /, ''), cond: l[i + 1].parameters[1], id: +id, marque: !!marque, nom: ev ? String(ev.name).trim() : null, h: h ? +h[1] : 12 });
+                }
+            });
+        });
+    });
+});
 
 (async function () {
     var nav = await chromium.launch({ args: ['--no-sandbox', '--mute-audio'] });
     var page = await nav.newPage({ viewport: { width: 816, height: 624 } });
-    var ok = 0, ko = 0, erreurs = [];
+    var ok = 0, ko = 0, erreurs = [], sautes = [];
     function V(t, c, d) { if (c) { ok++; console.log('   ✓ ' + t + (d ? '  —  ' + d : '')); } else { ko++; console.log('   ✗ ' + t + (d ? '  —  ' + d : '')); } }
+    // un contrôle qui nomme des gens : s'ils ne sont plus sur leur carte, il est sauté (et le dit)
+    function absents(l) { return l.filter(function (k) { return !ici(k); }); }
+    function SAUTE(t, l) { sautes.push(t); console.log('   · ' + t + '  —  ' + absents(l).map(function (k) { return nom(k) + ' (' + k + ') : ' + pourquoi(k); }).join(' · ')); }
+    function VI(l, t, c, d) { if (absents(l).length) SAUTE(t, l); else V(t, c(), d && d()); }
     page.on('pageerror', function (e) { erreurs.push(e.message.slice(0, 200)); });
     var ev = function (f, a) { return page.evaluate(f, a); };
     // ⚠ Sans carte graphique, Chromium dessine le jeu à ~10 images par seconde : on n'attend
@@ -83,8 +150,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var bar = await a(46, 19, 5, 22, 20, 36);
     await quand(function () { return window.__pops.length > 0; }, null, 60);
     bar.pops = await ev(function () { return window.__pops.slice(); });
-    V('① le soir, Mado est au bar (sa copie, arrivée par la porte)', copie(bar, '29:41').length === 1, copie(bar, '29:41').map(function (c) { return '@' + c.x + ',' + c.y; }).join(''));
-    V('④ après la porte, les gardes du jour boivent au bar', copie(bar, '29:11').length + copie(bar, '29:34').length === 2, 'Brunehaut ' + copie(bar, '29:11').length + ' · Rolf ' + copie(bar, '29:34').length);
+    VI(['29:41'], '① le soir, Mado est au bar (sa copie, arrivée par la porte)', function () { return copie(bar, '29:41').length === 1; }, function () { return copie(bar, '29:41').map(function (c) { return '@' + c.x + ',' + c.y; }).join(''); });
+    VI(['29:11', '29:34'], '④ après la porte, les gardes du jour boivent au bar', function () { return copie(bar, '29:11').length + copie(bar, '29:34').length === 2; }, function () { return 'Brunehaut ' + copie(bar, '29:11').length + ' · Rolf ' + copie(bar, '29:34').length; });
     var installes = bar.copies.filter(function (c) { return c.etat === 'la'; });
     var loin = installes.filter(function (c) { return Math.abs(c.x - c.place.x) + Math.abs(c.y - c.place.y) > 2; });   // il flâne d'une case autour de sa place
     V('⑦ chaque copie installée au bar est à sa place (personne de coincé)', installes.length > 0 && loin.length === 0, installes.length + ' installé(s)' + (loin.length ? ' · loin : ' + loin.map(function (c) { return c.nom + '@' + c.x + ',' + c.y + '→' + c.place.x + ',' + c.place.y; }).join(' ') : ''));
@@ -93,18 +160,18 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('H4 · au bar, les scènes se jouent (des phrases flottent)', bar.pops.length > 0, bar.pops.slice(0, 3).map(function (p) { return '« ' + p.texte.slice(0, 40) + ' »'; }).join(' · '));
 
     var quai = await a(33, 7, 0, 18, 7, 2);
-    V('② le matin, Roul pêche au ponton', copie(quai, '46:26').filter(function (c) { return c.x === 7 && c.y === 38; }).length === 1, copie(quai, '46:26').map(function (c) { return c.etat + '@' + c.x + ',' + c.y; }).join(''));
+    VI(['46:26'], '② le matin, Roul pêche au ponton', function () { return copie(quai, '46:26').filter(function (c) { return c.x === 7 && c.y === 38; }).length === 1; }, function () { return copie(quai, '46:26').map(function (c) { return c.etat + '@' + c.x + ',' + c.y; }).join(''); });
 
     // ils quittent le Village de Pêche à 18 h ; ils traversent le Marché de 18 h 10 à 18 h 20
     var marche = await a(30, 18, 10, 1, 20, 12);
     await quand(function () { return AlleesEtVenues.copies().some(function (c) { return (c.cle === '46:22' || c.cle === '46:23') && c.page >= 0; }); }, null, 40);
     marche = await ev(function () { return { copies: AlleesEtVenues.copies().filter(function (c) { return c.page >= 0; }) }; });
     var vannier = copie(marche, '46:22').concat(copie(marche, '46:23'));
-    V('③ à 18 h, les jumeaux Vannier traversent le Marché vers le bar', vannier.length >= 1, vannier.map(function (c) { return c.nom + ' ' + c.etat + '@' + c.x + ',' + c.y + '→' + c.place.x + ',' + c.place.y; }).join(' · '));
+    VI(['46:22', '46:23'], '③ à 18 h, les jumeaux Vannier traversent le Marché vers le bar', function () { return vannier.length >= 1; }, function () { return vannier.map(function (c) { return c.nom + ' ' + c.etat + '@' + c.x + ',' + c.y + '→' + c.place.x + ',' + c.place.y; }).join(' · '); });
 
     var auberge = await a(44, 20, 0, 22, 10, 17);
     var soeurs = ['42:6', '42:7', '42:8', '43:4', '43:6', '43:7'].filter(function (k) { return copie(auberge, k).length === 1; });
-    V('⑤ le soir, les six sœurs Brémont sont à l\'auberge avec Bérénice', soeurs.length === 6, soeurs.length + '/6');
+    VI(['42:6', '42:7', '42:8', '43:4', '43:6', '43:7'], '⑤ le soir, les six sœurs Brémont sont à l\'auberge avec Bérénice', function () { return soeurs.length === 6; }, function () { return soeurs.length + '/6'; });
 
     var epicerie9 = await a(43, 9, 0, 3, 6, 13);
     var p9 = await ev(function () { return $gameMap.event(3)._pageIndex; });
@@ -123,6 +190,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
 
     console.log('── H3 · ils te voient ──');
     var ville = await a(29, 10, 0, 6, 20, 24);
+    if (absents(['29:53']).length) { SAUTE('H3 · il se tourne vers toi, il s\'écarte (Mathurin, à son réverbère)', ['29:53']); }
+    else {
     var tourne = await ev(function () {
         var e = $gameMap.event(53);                       // Mathurin, à son réverbère
         $gamePlayer.locate(e.x, e.y + 2); $gamePlayer.setDirection(8);
@@ -145,6 +214,7 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     await quand(function (p) { var e = $gameMap.event(53); return e.x !== p.x || e.y !== p.y; }, pousse, 40);
     var apres = await ev(function () { window.__pousse = false; var e = $gameMap.event(53); return { x: e.x, y: e.y }; });
     V('H3 · tu lui fonces dessus : il s\'écarte', apres.x !== pousse.x || apres.y !== pousse.y, '(' + pousse.x + ',' + pousse.y + ') → (' + apres.x + ',' + apres.y + ')');
+    }
     var aub = await a(44, 10, 0, 1, 11, 13);
     var bulle = await ev(function () { var e = $gameMap.event(5); $gamePlayer.locate(e.x, e.y + 3); window.__b = 0; var _r = e.requestBalloon; e.requestBalloon = function (id) { if (id === 1) window.__b++; return _r.apply(this, arguments); }; return $gameSystem.questStatus('biere'); });
     await quand(function () { return window.__b > 0; }, null, 40);
@@ -192,15 +262,31 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('H6 · l\'affinité monte d\'un par jour où l\'on se parle (pas à chaque visite)', aff[1] === aff[0] && aff[2] === aff[0] + 1, aff.join(' → '));
 
     console.log('── H7 · le calendrier de la Bible ──');
-    var adm = await a(29, 10, 0, 12, 20, 24);
-    var recrues = await ev(function () { return [55, 56, 57, 58].filter(function (i) { return $gameMap.event(i)._pageIndex >= 0; }).length; });
+    var adm = await a(29, 10, 0, 1, 20, 24);
+    // les recrues (<Admission> dans leur Note) ; JOKO les a retirées (2026-11-09, voulu) : la balise est essayée en mémoire sur Fernand
+    var R = await ev(function () {
+        var ids = $gameMap.events().filter(function (e) { return /<Admission>/i.test(e.event().note || ''); }).map(function (e) { return e.eventId(); });
+        if (ids.length) return { ids: ids, plantee: false };
+        var f = $gameMap.event(29); if (!f) return { ids: [], plantee: true };
+        var d = f.event(); window.__noteFernand = d.note;
+        d.note = (d.note ? d.note + '\n' : '') + '<Admission>'; f._habHoraire = undefined; $gameMap.requestRefresh();
+        return { ids: [29], plantee: true, nom: String(d.name).trim() };
+    });
+    await page.waitForTimeout(11000);
+    var recrues = await ev(function (ids) { return ids.filter(function (i) { return $gameMap.event(i)._pageIndex >= 0; }).length; }, R.ids);
     var estAdm = await ev(function () { return Habitants.admission(); });
-    V('H7 · la semaine d\'Admission, les recrues sont en ville', estAdm && recrues === 4, 'Admission : ' + estAdm + ' · ' + recrues + '/4 recrues');
+    var quiAdm = R.plantee ? '<Admission> posée en mémoire sur ' + (R.nom || '?') + ' (les 4 recrues : retirées par JOKO)' : R.ids.length + ' recrue(s)';
+    V('H7 · la semaine d\'Admission, les recrues sont en ville', estAdm && R.ids.length > 0 && recrues === R.ids.length, 'Admission : ' + estAdm + ' · ' + recrues + '/' + R.ids.length + ' · ' + quiAdm);
     await ev(function () { $gameVariables._data[$gameSystem._day_variableId] = 15; $gameMap.requestRefresh(); });
-    // elles rentrent à l'auberge à pied : on attend qu'elles aient passé la porte
-    await quand(function () { return [55, 56, 57, 58].every(function (i) { return $gameMap.event(i)._pageIndex < 0; }); }, null, 120);
-    var parties = await ev(function () { return { adm: Habitants.admission(), la: [55, 56, 57, 58].filter(function (i) { return $gameMap.event(i)._pageIndex >= 0; }).length }; });
-    V('H7 · l\'Admission finie, elles repartent', !parties.adm && parties.la === 0, 'jour 15 : ' + parties.la + '/4 encore là');
+    // elles rentrent à pied : on attend qu'elles aient passé la porte
+    await quand(function (ids) { return ids.every(function (i) { return $gameMap.event(i)._pageIndex < 0; }); }, R.ids, 120);
+    var parties = await ev(function (ids) { return { adm: Habitants.admission(), la: ids.filter(function (i) { return $gameMap.event(i)._pageIndex >= 0; }).length }; }, R.ids);
+    V('H7 · l\'Admission finie, elles repartent (à pied, par la porte)', !parties.adm && R.ids.length > 0 && parties.la === 0, 'jour 15 : ' + parties.la + '/' + R.ids.length + ' encore là');
+    if (R.plantee) {
+        // contre-épreuve : la balise retirée, le même jour 15, il est de nouveau là (c'est bien elle qui le faisait partir)
+        var sans = await ev(function () { var f = $gameMap.event(29); if (!f) return null; f.event().note = window.__noteFernand; f._habHoraire = undefined; $gameMap.requestRefresh(); return Habitants.present(f); });
+        V('H7 · contre-épreuve : sans la balise <Admission>, ' + (R.nom || 'il') + ' reste en ville le jour 15', sans === true, 'présent : ' + sans);
+    }
     var veil = await ev(function () {
         var s = $gameSystem; $gameVariables._data[s._month_variableId] = 8; $gameVariables._data[s._day_variableId] = 30; $gameVariables._data[s._hour_variableId] = 22;
         return Habitants.veillee();
@@ -211,6 +297,38 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var repos = await ev(function () { $gameVariables._data[$gameSystem._day_week_variableId] = 0; return VieDuVillage.repos(); });
     V('H7 · le dimanche est bien le jour de repos (le v1 ne le voyait jamais)', repos === true, 'day_week ' + 1);
 
+    console.log('── ⑨ les scènes de ceux qui ne sont plus là ──');
+    // chaque scène qui nomme un absent (ou une marque sans image) : sa condition, à son heure, le joueur à côté, le hasard à 0 — jamais vraie
+    var parCarteO = {}; ORPHELINES.forEach(function (o) { (parCarteO[o.carte] = parCarteO[o.carte] || []).push(o); });
+    var jouees = [], essayees = 0, contre = null;
+    for (var co of Object.keys(parCarteO)) {
+        await a(+co, parCarteO[co][0].h, 30, 1, 20, 20);
+        var rr = await ev(function (l) {
+            var hasard = Math.random, res = { jouees: [], n: 0, contre: null };
+            Math.random = function () { return 0; };
+            l.forEach(function (o) {
+                $gameVariables._data[$gameSystem._hour_variableId] = o.h;
+                var e = $gameMap.event(o.id);
+                if (e) $gamePlayer.locate(e.x, e.y + 1);
+                res.n++;
+                var v = false; try { v = !!eval(o.cond); } catch (err) { v = 'erreur : ' + err.message; }
+                if (v) res.jouees.push(o.scene + ' → ' + v);
+                // contre-épreuve : la marque à qui l'on rend une image (en mémoire, le temps d'un calcul) — la scène serait jouée
+                if (o.marque && e && !res.contre) {
+                    e.setImage('People1', 0);
+                    try { res.contre = { scene: o.scene, jouee: !!eval(o.cond) }; } catch (err) { res.contre = { scene: o.scene, jouee: 'erreur : ' + err.message }; }
+                    e.setImage('', 0);
+                }
+            });
+            Math.random = hasard;
+            return res;
+        }, parCarteO[co]);
+        jouees = jouees.concat(rr.jouees); essayees += rr.n; if (rr.contre) contre = rr.contre;
+    }
+    V('⑨ une scène dont la personne n\'est plus là ne se joue jamais (retirée, ou son numéro devenu une marque sans image)', !jouees.length && (!ORPHELINES.some(function (o) { return o.marque; }) || (contre && contre.jouee === true)),
+        essayees + ' scène(s) : ' + ORPHELINES.map(function (o) { return '« ' + o.scene + ' » (' + o.carte + ':' + o.id + (o.marque ? ', la marque « ' + o.nom + ' »' : ', retiré') + ')'; }).join(', ') +
+        (jouees.length ? ' — ✗ jouée : ' + jouees.join(' | ') : ' — aucune ne se joue') + (contre ? ' · la marque avec une image la jouerait : ' + contre.jouee : ''));
+
     console.log('── sauvegarder, recharger ──');
     // en ville, à 10 h : Casimir (du bar) fait sa ronde, Béran aussi ; on sauvegarde, on recharge
     await a(29, 10, 0, 4, 20, 24);
@@ -219,14 +337,14 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     V('une sauvegarde ne garde aucune copie de passage (elles se refont au chargement)', sauve.copies > 0 && sauve.dedans === 0, sauve.copies + ' copie(s) sur la carte · ' + sauve.dedans + ' dans la sauvegarde');
     await ev(function () { DataManager.loadGame(1); SceneManager.goto(Scene_Map); });
     await quand(function () { return SceneManager._scene instanceof Scene_Map && SceneManager._scene._spriteset && $gameMap._vieRecensee && AlleesEtVenues.copies().some(function (c) { return c.page >= 0; }); }, null, 60);
-    var pos0 = await ev(function () { var e = $gameMap.event(36); return { vrai: $gameMap._viePNJ.indexOf(e) >= 0, x: e.x, y: e.y, copies: AlleesEtVenues.copies().filter(function (c) { return c.page >= 0; }).length }; });
-    var vivant = await quand(function (p) { var e = $gameMap.event(36); return e.x !== p.x || e.y !== p.y; }, pos0, 150);
-    V('après un chargement, VieDuVillage pilote les vrais événements, et Béran reprend sa ronde', pos0.vrai && vivant >= 0 && pos0.copies > 0, (pos0.vrai ? 'le vrai Béran' : 'une copie figée') + ' · ' + (vivant >= 0 ? 'il a bougé après ' + vivant + ' s' : 'il n\'a pas bougé') + ' · ' + pos0.copies + ' copie(s) refaites (' + sauve.copies + ' avant)');
+    var pos0 = await ev(function () { var e = $gameMap.event(36), copies = AlleesEtVenues.copies().filter(function (c) { return c.page >= 0; }).length; if (!e) return { absent: true, copies: copies }; return { vrai: $gameMap._viePNJ.indexOf(e) >= 0, x: e.x, y: e.y, copies: copies }; });
+    var vivant = pos0.absent ? -1 : await quand(function (p) { var e = $gameMap.event(36); return e.x !== p.x || e.y !== p.y; }, pos0, 150);
+    VI(['29:36'], 'après un chargement, VieDuVillage pilote les vrais événements, et Béran reprend sa ronde', function () { return pos0.vrai && vivant >= 0 && pos0.copies > 0; }, function () { return (pos0.vrai ? 'le vrai Béran' : 'une copie figée') + ' · ' + (vivant >= 0 ? 'il a bougé après ' + vivant + ' s' : 'il n\'a pas bougé') + ' · ' + pos0.copies + ' copie(s) refaites (' + sauve.copies + ' avant)'; });
     V('… et autant de copies qu\'avant (aucune ne ressort par la porte en arrivant)', pos0.copies <= sauve.copies + 1, pos0.copies + ' après · ' + sauve.copies + ' avant');
 
     var vraies = erreurs.filter(function (e) { return !/process is not defined/.test(e); });
     V('aucune erreur JavaScript de toute la journée', vraies.length === 0, vraies.slice(0, 3).join(' | ') || 'rien');
-    console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(66));
+    console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)' + (sautes.length ? ' · ' + sautes.length + ' sauté(s) : la personne n\'est plus sur sa carte' : '') + '\n' + '='.repeat(66));
     await nav.close();
     process.exit(ko ? 1 : 0);
 })().catch(function (e) { console.error(e); process.exit(2); });

@@ -24,6 +24,12 @@
  *   … --fiches 29:28,43:3                                  → ne pose que ces fiches
  *   … --ecarts                                             → montre, sans rien
  *     écrire, ce qui a été retouché à la main dans chaque page
+ *   … --ecrire --sortie <dossier>                          → écrit les cartes
+ *     dans ce dossier, pas dans data/ (les bancs regardent ce que l'outil
+ *     ferait, sans rien toucher)
+ *
+ * CE QUE JOKO A VOULU (2026-11-09, bancs/outils/voulu.js) : les événements
+ * qu'il veut tels qu'il les a laissés ne sont jamais réécrits.
  *
  * CE QUI EST À JOKO DANS UNE PAGE DÉJÀ POSÉE (2026-10-30). Il réécrit les
  * rôles et les voix dans l'en-tête (« ◆ HABITANT · Hilde — mère de 2
@@ -47,6 +53,8 @@ var ECRIRE = process.argv.indexOf('--ecrire') >= 0;
 var iSeul = process.argv.indexOf('--seulement'), SEULEMENT = iSeul >= 0 ? process.argv[iSeul + 1] : null;
 var iFi = process.argv.indexOf('--fiches'), FICHES = iFi >= 0 ? String(process.argv[iFi + 1]).split(',') : null;
 var ECARTS = process.argv.indexOf('--ecarts') >= 0;
+var iSo = process.argv.indexOf('--sortie'), SORTIE = iSo >= 0 ? path.resolve(process.argv[iSo + 1]) : null;
+var VOULU = require('./voulu.js');
 var D = require('./recettes/dsl.js');
 var H = require('./habitants/moteur.js');
 var COMMUNS = require('./habitants/_communs.js');
@@ -83,6 +91,21 @@ function situationDe(f) {
     if (SITUATION[k]) return SITUATION[k];
     var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
     return est ? SITUATION[est[1]] || [] : [];
+}
+// la refonte (2026-11-09 ; JOKO : « beaucoup plus humains et beaucoup plus sentimentaux », docs/PNJ_LA_BASE.md) :
+// habitants/refonte/*.js, une entrée « carte:événement » qui se pose PAR-DESSUS la fiche (lot + oc + situation) :
+// ses clés remplacent celles de la fiche (« oc » champ par champ ; « options » s'ajoutent à celles qui gardent
+// une boutique ou une quête de JOKO) ; une page <Est: 29:28> reçoit celle de 29:28
+var DOS_REF = path.join(__dirname, 'habitants', 'refonte'), REFONTE = {};
+if (fs.existsSync(DOS_REF)) fs.readdirSync(DOS_REF).filter(function (x) { return /\.js$/.test(x); }).sort().forEach(function (x) {
+    var t = require(path.join(DOS_REF, x));
+    Object.keys(t).forEach(function (k) { if (REFONTE[k]) throw new Error('refonte/' + x + ' : ' + k + ' est déjà refait'); REFONTE[k] = t[k]; });
+});
+function refonteDe(f) {
+    var k = f.carte + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '');
+    if (REFONTE[k]) return REFONTE[k];
+    var est = (f.tags || []).map(function (t) { return /<Est:\s*(\d+:\d+)\s*>/i.exec(t); }).filter(Boolean)[0];
+    return est ? REFONTE[est[1]] || null : null;
 }
 var NOMS_DE = {};
 LOTS.forEach(function (lot) { lot.fiches.forEach(function (f) { NOMS_DE[(f.carte || lot.carte) + ':' + f.ev + ((f.page || 1) > 1 ? '/' + f.page : '')] = f.nom; }); });
@@ -170,23 +193,11 @@ function enTete(liste) {                  // les commentaires de tête, coupés 
 }
 function memeTexte(a, b) { return a.code === b.code && String(a.parameters[0]) === String(b.parameters[0]); }
 
-/* ── qui est dans cet événement ? (sa page : la ligne « ◆ FICHE », sinon « ◆ HABITANT », sinon son nom) ── */
-function norme(t) { return String(t || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
-function quiEst(e, page) {
-    var p = e.pages[page - 1]; if (!p) return null;
-    var tete = p.list.filter(function (c) { return c.code === 108; }).map(function (c) { return String(c.parameters[0]); });
-    var fi = tete.filter(function (t) { return /^◆ FICHE · /.test(t); })[0], ha = tete.filter(function (t) { return /^◆ HABITANT · /.test(t); })[0];
-    if (fi) return { nom: fi.replace(/^◆ FICHE · /, '').split(' — ')[0].trim(), ligne: fi, sur: 'fiche' };
-    if (ha) return { nom: ha.replace(/^◆ HABITANT · /, '').split(' — ')[0].trim(), ligne: ha, sur: 'en-tête' };
-    var vide = p.list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
-    return vide ? { nom: String(e.name || '').trim(), ligne: e.name, sur: 'nom', vide: true, id: e.id } : null;
-}
-function cestLui(q, f) {
-    var n = norme(f.nom);
-    if (q.sur !== 'nom') return norme(q.ligne).indexOf(n) >= 0;                  // « ◆ HABITANT · Yvon — Edwin Bramble… » : c'est bien Edwin
-    var orig = snap[f.carte + ':' + f.ev];
-    return norme(q.nom) === n || /^ev\d+$/i.test(q.nom) || (orig && norme(orig.name) === norme(q.nom));
-}
+/* ── qui est dans cet événement ? (sa page : la ligne « ◆ FICHE », sinon « ◆ HABITANT », sinon son nom)
+ *    La règle est dans qui_est_la.js : les bancs du village la lisent aussi. ── */
+var Q = require('./qui_est_la.js');
+var norme = Q.norme, quiEst = Q.quiEst;
+function cestLui(q, f) { var orig = snap[f.carte + ':' + f.ev]; return Q.cestLui(q, f.nom, orig ? orig.name : undefined); }  // « ◆ HABITANT · Yvon — Edwin Bramble… » : c'est bien Edwin
 
 /* ── poser ────────────────────────────────────────────────────────────── */
 var defauts = [], poses = 0, lignes = 0;
@@ -220,6 +231,8 @@ LOTS.forEach(function (lot) {
         //   événement retiré, ou une page qui ne porte plus la marque
         //   « ◆ HABITANT », est à JOKO : on ne la réécrit jamais, on le dit.
         if (!e) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (' + f.nom + ') : retiré par JOKO'); return; }
+        // ⚠ 2026-11-09 : ce qu'il a voulu tel quel (voulu.js) — même si c'est toujours cette personne
+        if (VOULU.est(f.carte, f.ev)) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' (' + f.nom + ') : voulu tel quel par JOKO (' + VOULU.quand + '), pas réécrit'); return; }
         // ⚠ 2026-11-01 (« FGFG ») : JOKO réutilise des numéros — 30:16 est devenu sa Fanchon, 30:26 une marque « kaze »,
         //   46:49 une marque « colette ». On n'écrit que dans un événement qui est toujours CETTE personne.
         var qui = quiEst(e, f.page || 1);
@@ -228,7 +241,10 @@ LOTS.forEach(function (lot) {
         if (!e.pages[page - 1]) { defauts.push(f.nom + ' : pas de page ' + page); return; }
         // une fiche « muet: true » vise une page qui n'avait encore rien à dire : elle peut la remplir la première fois
         var muette = f.muet && e.pages[page - 1].list.every(function (c) { return c.code === 0 || c.code === 108 || c.code === 408; });
-        if (!muette && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
+        // ⚠ 2026-11-09 : « accord » — JOKO a dit de faire de SON événement un habitant (le Pêcheur, 33:31, « tout »).
+        //   Seulement la première fois, et seulement s'il porte toujours son nom : ensuite, la page a sa marque « ◆ HABITANT ».
+        var accord = f.accord && String(e.name || '').trim() === f.accord.nom;
+        if (!muette && !accord && !e.pages[page - 1].list.some(function (c) { return c.code === 108 && /^◆ HABITANT ·/.test(c.parameters[0]); })) { repris.push('carte ' + f.carte + ' év. ' + f.ev + ' « ' + e.name + ' » (fiche ' + f.nom + ') : repris par JOKO, pas réécrit'); return; }
         var fiche = Object.assign({}, f);
         var oc = ocDe(f);
         if (oc) Object.keys(oc).forEach(function (k) {
@@ -241,12 +257,18 @@ LOTS.forEach(function (lot) {
                 else { var o = fiche[j] = Object.assign({}, fiche[j] || {}); Object.keys(s[j]).forEach(function (l) { o[l] = [].concat(o[l] || [], s[j][l]); }); }
             });
         });
-        if (f.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
+        var R = refonteDe(f);
+        if (R) Object.keys(R).forEach(function (j) {
+            if (j === 'oc') fiche.oc = Object.assign({}, fiche.oc || {}, R.oc);
+            else if (j === 'options') fiche.options = (fiche.options || []).filter(function (o) { return o.garder; }).concat(R.options);
+            else fiche[j] = R[j];
+        });
+        if (fiche.annonceAnniversaires && ANNIVERSAIRES.length) fiche.apresAccueil = cat(f.apresAccueil || [], cat.apply(null, ANNIVERSAIRES.map(function (a) {
             return si(C.js("Habitants.anniversaire('" + a.md + "')"), H.unParmi(f.nom, [].concat(f.annonceAnniversaires === true ? ['Oyez ! Aujourd\'hui, c\'est l\'anniversaire de %1 ! Un sourire, un mot gentil, ça ne coûte rien !'] : f.annonceAnniversaires).map(function (t) { return t.replace('%1', a.nom); })));
         })));
         // le temps qu'il fait : sa propre voix, sinon celle de son milieu
         if (!fiche.meteo && COMMUNS.LIEU_DE_CARTE[f.carte]) fiche.meteo = COMMUNS.METEO[COMMUNS.LIEU_DE_CARTE[f.carte]];
-        fiche.options = (f.options || []).map(function (o) {
+        fiche.options = (fiche.options || []).map(function (o) {
             if (!o.garder) return o;
             var cmds = extraire(f.carte, f.ev, o.page || page, o.garder);
             if (o.saisonnieres) cmds = si(C.js('Math.random() < 0.5'), H.selon(H.V.saison, f.nouvellesSaison, f.nom), cmds);
@@ -257,6 +279,13 @@ LOTS.forEach(function (lot) {
         var gardes = orig.pages[page - 1] ? commentairesGardes(orig.pages[page - 1].list, f.murmure) : [];
         try { liste = gardes.concat(tags, versListe(H.compiler(fiche))); }
         catch (err) { defauts.push(f.nom + ' : ' + err.message); return; }
+        // son visage (le Pêcheur de JOKO parlait avec « jkj ») : sur chaque boîte où c'est lui qui parle
+        if (fiche.visage) liste.forEach(function (c, k) {
+            var n = liste[k + 1];
+            if (c.code === 101 && c.parameters[0] === '' && c.parameters[2] === 0 && n && n.code === 401 && String(n.parameters[0]).indexOf('\\n<' + fiche.nom + '>') === 0) {
+                c.parameters[0] = fiche.visage[0]; c.parameters[1] = fiche.visage[1] || 0;
+            }
+        });
         // ce que JOKO a écrit dans la page posée : son en-tête, ses commentaires ajoutés
         var avant = enTete(e.pages[page - 1].list), neuf = enTete(liste);
         var ajouts = avant.avant.filter(function (c) {
@@ -323,7 +352,9 @@ function formatCarte(m) {
     var props = Object.keys(m).filter(function (k) { return k !== 'data' && k !== 'events'; }).map(function (k) { return JSON.stringify(k) + ':' + JSON.stringify(m[k]); }).join(',');
     return '{\n' + props + ',\n"data":' + JSON.stringify(m.data) + ',\n"events":[\n' + m.events.map(function (e) { return JSON.stringify(e); }).join(',\n') + '\n]\n}';
 }
-Object.keys(cartes).forEach(function (n) { fs.writeFileSync(fichierCarte(n), formatCarte(cartes[n])); });
+var DEST = SORTIE || DATA;
+if (SORTIE && !fs.existsSync(SORTIE)) fs.mkdirSync(SORTIE, { recursive: true });
+Object.keys(cartes).forEach(function (n) { fs.writeFileSync(path.join(DEST, path.basename(fichierCarte(n))), formatCarte(cartes[n])); });
 var FS = path.join(DATA, 'System.json');
 var brut = fs.readFileSync(FS, 'utf8'), SYS = JSON.parse(brut);
 function nommer(tab, noms) {
@@ -334,5 +365,5 @@ function nommer(tab, noms) {
 }
 nommer(SYS.variables, H.NOMS_VAR);
 LOTS.forEach(function (lot) { if (lot.NOMS_SW) nommer(SYS.switches, lot.NOMS_SW); });
-fs.writeFileSync(FS, JSON.stringify(SYS) + (brut.endsWith('\n') ? '\n' : ''));
-console.log('   écrit : cartes ' + Object.keys(cartes).join(', ') + ' ; variables 880–885 et interrupteurs ◆ nommés');
+fs.writeFileSync(path.join(DEST, 'System.json'), JSON.stringify(SYS) + (brut.endsWith('\n') ? '\n' : ''));
+console.log('   écrit' + (SORTIE ? ' dans ' + SORTIE : '') + ' : cartes ' + Object.keys(cartes).join(', ') + ' ; variables 880–885 et interrupteurs ◆ nommés');

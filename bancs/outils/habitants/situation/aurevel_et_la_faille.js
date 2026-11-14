@@ -67,7 +67,7 @@ module.exports = {
 '46:36': { nouvelles: ['DERNIÈRE NOUVELLE ! Un monstre est sorti de la grotte ! … Non. Mais il POURRAIT. Une pièce, et je te dis lequel.'] },  // Théo
 '46:30': { nouvelles: ['Le règlement, en cas de Chute : évacuer les habitants, tenir les routes, attendre l\'équipe qui ira détruire le Nœud. Je l\'ai appris par cœur. J\'espère ne jamais m\'en servir.'] },  // Casimir
 '46:29': { nouvelles: ['La nuit, les chiens aboient vers la forêt. Vers la grotte. Ils sentent quelque chose. Moi aussi : la fatigue.'] },  // Merle
-'46:26': { nouvelles: ['Les jours où le vent vient de la grotte, le lac est plat. Plat. Pas un poisson. Tobin dit que c\'est l\'imprégnation. Tobin dit n\'importe quoi. … C\'est l\'imprégnation.'] },  // Roul
+'46:26': { nouvelles: ['Les jours où le vent vient de la grotte, la mer est plate. Plate. Pas un poisson. Tobin dit que c\'est l\'imprégnation. Tobin dit n\'importe quoi. … C\'est l\'imprégnation.'] },  // Roul
 /* ── le Marché ────────────────────────────────────────────────────────── */
 '30:26': { nouvelles: ['La Veilleuse prend les missions de sauvetage que les autres refusent. Avec une faille au bout du marécage, il en faut, des gens qui retournent chercher les autres. C\'est écrit sur la lanterne.'] },  // Fanchon
 '30:6': { nouvelles: ['Aurevel nourrit la moitié du continent ! Et cette moitié mange MES carottes ! Faille ou pas faille, les radis poussent !'] },  // Bertrand
@@ -91,7 +91,7 @@ module.exports = {
 '33:45': { nouvelles: ['La faille est dans la grotte, de l\'autre côté du marécage et de la forêt. Edwin dit que c\'est bien trop loin pour l\'imprégnation. Moi je dis que le vent tourne.'] },  // Solange
 /* ── l'auberge et la route ────────────────────────────────────────────── */
 '44:10': { nouvelles: ['Avec la faille à côté, les aventuriers m\'achètent de la laine pour les nuits dans le marécage. Un bon marécage, c\'est bon pour les affaires.'] },  // Gaspard
-'44:13': { nouvelles: ['Sur les routes royales, on dit qu\'Aurevel exploite tout ce qu\'il peut. Ici, vous avez une faille, des champs et un lac. Vous exploitez les trois. Et vous êtes les mieux nourris du pays.'] },  // Léonie
+'44:13': { nouvelles: ['Sur les routes royales, on dit qu\'Aurevel exploite tout ce qu\'il peut. Ici, vous avez une faille, des champs et la mer. Vous exploitez les trois. Et vous êtes les mieux nourris du pays.'] },  // Léonie
 '44:15': { nouvelles: ['À l\'académie, on n\'a que la Faille Captive, et on la connaît par cœur. Celle de la grotte n\'est pas captive. C\'est très différent. Je dirais que c\'est mieux. Mes professeurs diraient le contraire.'] },  // Ysaline
 '31:15': { nouvelles: ['Au bout du sentier, le marécage. Au bout du marécage, la grotte. Dans la grotte, la faille. Qui s\'arrête au sentier rentre pour dîner. Qui va plus loin rentre avec un permis, ou ne rentre pas.'] },  // Anselme (garde de la route)
 '31:16': { nouvelles: ['Anselme dit que la faille de la grotte est une porte. Moi je dis que la porte est loin. Anselme dit : « pas assez ». Il a toujours le dernier mot. C\'est l\'âge.'] }  // Bastien

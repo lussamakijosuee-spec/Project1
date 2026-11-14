@@ -145,13 +145,17 @@ function lancerStudio(port) {
         var r3b = await page.evaluate(function () {
             var s = SceneManager._scene, avant = [s._party_hp[0], s._enemy_hp[0]];
             s.check_key(3);
-            return { equipe: avant[0] - s._party_hp[0], chaine: $gameSystem._theatrhythm_chain_data[0], ennemi: avant[1] - s._enemy_hp[0] };
+            return { equipe: avant[0] - s._party_hp[0], chaine: $gameSystem._theatrhythm_chain_data[0], ennemi: avant[1] - s._enemy_hp[0],
+                silence: String(PluginManager.parameters('LesPartitions').silenceSansNote || 'rien') };
         });
-        V('X entre deux notes : rien ne se passe (ni raté, ni chaîne perdue)', r3b.equipe === 0 && r3b.chaine === 1 && r3b.ennemi === 0, JSON.stringify(r3b));
+        // le réglage de JOKO décide (« HIUBI », 2026-11-05 : silenceSansNote « rate », la règle de MOG)
+        var silenceRate = r3b.silence === 'rate';
+        if (silenceRate) V('X entre deux notes, réglage « rate » (celui de JOKO) : MOG compte un raté (l\'ennemi frappe, la chaîne retombe)', r3b.equipe > 0 && r3b.chaine === 0 && r3b.ennemi === 0, JSON.stringify(r3b));
+        else V('X entre deux notes, réglage « rien » : rien ne se passe (ni raté, ni chaîne perdue)', r3b.equipe === 0 && r3b.chaine === 1 && r3b.ennemi === 0, JSON.stringify(r3b));
         await a(2.8);
         await page.waitForTimeout(500);
         var r3c = await page.evaluate(function () { return { rates: window.__rates, chaine: $gameSystem._theatrhythm_chain_data[0], phase: $gameSystem._theatrhythm_phase }; });
-        V('la note de 2 s ratée : MOG compte le raté (l\'ennemi riposte), la chaîne retombe', r3c.rates === 1 && r3c.chaine === 0 && r3c.phase === 1, JSON.stringify(r3c));
+        V('la note de 2 s ratée : MOG compte le raté (l\'ennemi riposte), la chaîne retombe', r3c.rates === (silenceRate ? 2 : 1) && r3c.chaine === 0 && r3c.phase === 1, JSON.stringify(r3c) + (silenceRate ? ' (le X d\'avant compte aussi)' : ''));
 
         // ④ un couloir de trop, et « ça accélère »
         console.log('\n④ Un couloir de trop, et « ça accélère »');

@@ -28,7 +28,20 @@
  *   ⑫ chaque rendez-vous d'amitié peut être tenu : à l'heure dite, sur la
  *     carte dite, la personne est là et visible (pas rentrée chez elle) ;
  *   ⑬ la situation (Aurevel, la faille de la grotte) est dans les pages, et
- *     personne ne dit plus qu'il n'y a pas de faille ici.
+ *     personne ne dit plus qu'il n'y a pas de faille ici ;
+ *   ⑭ ce que JOKO a voulu tel quel (bancs/outils/voulu.js) le reste : relancés,
+ *     les deux outils n'y touchent pas — et sans la liste, ils y toucheraient ;
+ *   ⑮ ses pages à lui (les 9 de la ville, sans leurs conversations) se parlent
+ *     jusqu'au bout, sans une erreur.
+ *
+ * LES CARTES SONT À JOKO (2026-11-09, « Réadapte-le. Développe-le, améliore-le ») :
+ * il retire des PNJ, reprend des numéros, garde des pages telles quelles. Le
+ * banc ne demande donc qu'aux personnes ENCORE LÀ ce que l'outil y a écrit — la
+ * règle de l'outil des habitants (bancs/outils/qui_est_la.js) —, et dit qui n'y
+ * est plus. Ce qu'un absent portait (le jeu de Petit-Louis, la Veillée de
+ * Zéphyrin, les anniversaires du crieur) se vérifie autrement : sa fiche jouée
+ * telle que l'outil l'écrirait, ou la balise posée en mémoire sur quelqu'un
+ * d'autre. Rien n'est écrit dans data/.
  *
  *   node bancs/navigateur/les_personnages.js
  */
@@ -44,19 +57,37 @@ function V(t, c, d) { if (c) { ok++; console.log('   ✓ ' + t + (d ? '  —  ' 
 var DOS = path.join(RACINE, 'bancs', 'outils', 'habitants');
 var OC = {};
 fs.readdirSync(path.join(DOS, 'oc')).filter(function (f) { return /\.js$/.test(f); }).forEach(function (f) { Object.assign(OC, require(path.join(DOS, 'oc', f))); });
-var NOMS = {};
-fs.readdirSync(DOS).filter(function (f) { return /\.js$/.test(f) && !/^(moteur|_)/.test(f); }).forEach(function (f) {
-    var l = require(path.join(DOS, f));
-    l.fiches.forEach(function (x) { NOMS[(x.carte || l.carte) + ':' + x.ev + ((x.page || 1) > 1 ? '/' + x.page : '')] = x.nom; });
-});
-var cartes = {};
-function carte(n) { return cartes[n] || (cartes[n] = JSON.parse(fs.readFileSync(path.join(RACINE, 'data', 'Map' + String(n).padStart(3, '0') + '.json'), 'utf8'))); }
+var Q = require(path.join(RACINE, 'bancs', 'outils', 'qui_est_la.js')), VOULU = Q.VOULU;
+var FICHES = Q.fiches(), NOMS = {};
+Object.keys(FICHES).forEach(function (k) { NOMS[k] = FICHES[k].nom; });
+function carte(n) { return Q.carte(n); }
+// qui est encore là, d'après la règle de l'outil (retiré, voulu tel quel, devenu quelqu'un d'autre, repris : pas là)
+var ETATS = {};
+function etat(k) { return ETATS[k] || (ETATS[k] = FICHES[k] ? Q.etat(FICHES[k]) : { la: false, pourquoi: 'aucune fiche' }); }
+function estLa(k) { return etat(k).la; }
+var sautes = [];
+function SAUTE(t, d) { sautes.push(t); console.log('   · ' + t + '  —  ' + d); }
 console.log('LES PERSONNAGES');
-var sansFiche = Object.keys(OC).filter(function (k) {
-    var m = /^(\d+):(\d+)(?:\/(\d+))?$/.exec(k), e = carte(+m[1]).events[+m[2]], p = e && e.pages[(+m[3] || 1) - 1];
-    return !p || !p.list.some(function (c) { return c.code === 108 && /^◆ FICHE · /.test(c.parameters[0]); });
-});
-V('① chaque fiche OC est écrite en tête de la page de son habitant', Object.keys(OC).length >= 20 && !sansFiche.length, Object.keys(OC).length + ' personnages' + (sansFiche.length ? ' — sans fiche : ' + sansFiche.join(', ') : ''));
+var parRaison = {};
+Object.keys(OC).forEach(function (k) { if (!estLa(k)) (parRaison[etat(k).pourquoi] = parRaison[etat(k).pourquoi] || []).push(NOMS[k] + ' ' + k); });
+console.log('   sur tes cartes : ' + Object.keys(OC).filter(estLa).length + ' personnages sur ' + Object.keys(OC).length + ' sont là');
+Object.keys(parRaison).forEach(function (r) { console.log('     ⚑ ' + r + ' : ' + parRaison[r].join(', ')); });
+
+/* ── ① sans navigateur : chaque personnage encore là a sa fiche ── */
+function sansFicheDans(cles, lire) {
+    return cles.filter(function (k) {
+        var m = /^(\d+):(\d+)(?:\/(\d+))?$/.exec(k), e = lire(+m[1]).events[+m[2]], p = e && e.pages[(+m[3] || 1) - 1];
+        return !p || !p.list.some(function (c) { return c.code === 108 && /^◆ FICHE · /.test(c.parameters[0]); });
+    });
+}
+var laOC = Object.keys(OC).filter(estLa);
+var sansFiche = sansFicheDans(laOC, carte);
+// contre-épreuve : la ligne « ◆ FICHE » de Hilde ôtée (en mémoire) — elle est toujours Hilde, et sans fiche : attrapée
+var c29 = JSON.parse(JSON.stringify(carte(29)));
+c29.events[28].pages[0].list = c29.events[28].pages[0].list.filter(function (c) { return !(c.code === 108 && /^◆ FICHE · /.test(c.parameters[0])); });
+var ficheAttrapee = Q.etat(FICHES['29:28'], c29).la && sansFicheDans(['29:28'], function (n) { return n === 29 ? c29 : carte(n); }).length === 1;
+V('① chaque personnage encore là a sa fiche en tête de sa page', laOC.length >= 20 && !sansFiche.length && ficheAttrapee,
+    laOC.length + ' personnages là' + (sansFiche.length ? ' — sans fiche : ' + sansFiche.join(', ') : ', tous avec leur fiche') + ' · une fiche ôtée exprès est attrapée');
 // un prénom peut servir deux fois (deux Anselme, deux Gustave) : on cherche d'abord sur la même carte
 function quiEst(nom, depuis) {
     var l = Object.keys(OC).filter(function (k) { return NOMS[k] === nom; });
@@ -80,21 +111,60 @@ V('① les liens se répondent (et un lien coupé exprès est attrapé)', !seuls
  *    et plus personne ne dit qu'il n'y a pas de faille ici ─────────────────────────────────────────────────── */
 var SIT = {}; fs.readdirSync(path.join(DOS, 'situation')).forEach(function (f) { Object.assign(SIT, require(path.join(DOS, 'situation', f))); });
 function textes(liste) { return liste.filter(function (c) { return c.code === 401; }).map(function (c) { return c.parameters[0]; }).join(' '); }
-var avecSituation = 0, contredit = [];
+var contredit = [];
 var NIE = /(n'y a pas de faille (ici|près)|pas de faille près d'ici)/i;
-Object.keys(SIT).forEach(function (k) {
-    var m = /^(\d+):(\d+)$/.exec(k), e = carte(+m[1]).events[+m[2]];
-    if (!e) return;
+function aSaSituation(k, lire) {
+    var m = /^(\d+):(\d+)$/.exec(k), e = lire(+m[1]).events[+m[2]];
+    if (!e) return false;
     var t = e.pages.map(function (p) { return textes(p.list); }).join(' ');
     var l = [].concat(SIT[k].nouvelles || []);
-    if (l.length && t.indexOf(l[0].replace(/^~[^|]*\|/, '').split('|')[0].slice(0, 24)) >= 0) avecSituation++;
-});
+    return !l.length || t.indexOf(l[0].replace(/^~[^|]*\|/, '').split('|')[0].slice(0, 24)) >= 0;
+}
+var REF = Q.refonte();
+// les habitants refaits (2026-11-09) disent la situation dans leurs propres mots (leurs « nouvelles », leurs étapes) : banc les_gens_du_village
+var sitLa = Object.keys(SIT).filter(function (k) { return estLa(k) && !(REF[k] && REF[k].nouvelles); }), sansSituation = sitLa.filter(function (k) { return !aSaSituation(k, carte); });
+var sitRefaits = Object.keys(SIT).filter(function (k) { return estLa(k) && REF[k] && REF[k].nouvelles; }).length;
+// contre-épreuve : les lignes de Hilde vidées (en mémoire) — attrapée
+var c29b = JSON.parse(JSON.stringify(carte(29)));
+c29b.events[28].pages.forEach(function (p) { p.list.forEach(function (c) { if (c.code === 401) c.parameters[0] = '…'; }); });
+var situationAttrapee = !!SIT['29:28'] && !aSaSituation('29:28', function (n) { return n === 29 ? c29b : carte(n); });
 [29, 30, 31, 33, 41, 42, 43, 44, 46, 47].forEach(function (n) {
     carte(n).events.forEach(function (e) { if (e) e.pages.forEach(function (p) { var t = textes(p.list); if (NIE.test(t)) contredit.push(n + ':' + e.id + ' ' + e.name); }); });
 });
 var planteAttrape = NIE.test('Bon. Il n\'y a pas de faille ici. Mais il pourrait y en avoir une.');
-V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et personne ne dit plus qu\'il n\'y en a pas', avecSituation >= 50 && !contredit.length && planteAttrape,
-    avecSituation + ' habitants en parlent · ' + (contredit.length ? 'le nient encore : ' + contredit.join(', ') : 'aucun ne le nie') + ' · une phrase qui le nie, plantée exprès, est attrapée');
+V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et personne ne dit plus qu\'il n\'y en a pas', sitLa.length >= 25 && !sansSituation.length && situationAttrapee && !contredit.length && planteAttrape,
+    sitLa.length + ' habitants là en parlent' + (sansSituation.length ? ' — sans elle : ' + sansSituation.join(', ') : '') + ' (' + sitRefaits + ' refaits la disent à leur façon, ' + (Object.keys(SIT).length - sitLa.length - sitRefaits) + ' ne sont plus là) · ' +
+    (contredit.length ? 'le nient encore : ' + contredit.join(', ') : 'aucun ne le nie') + ' · des lignes vidées exprès, et une phrase qui la nie, sont attrapées');
+
+/* ── ⑭ ce que JOKO a voulu tel quel le reste : les deux outils relancés (dans un dossier à part, rien dans data/)
+ *    n'y touchent pas — et sans la liste (VOULU_SAUF), ils y toucheraient : la liste protège pour de vrai ── */
+var cp = require('child_process'), os = require('os');
+var TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'voulu-'));
+function lancer(outil, dossier, env) {
+    cp.execFileSync(process.execPath, [path.join(RACINE, 'bancs', 'outils', outil), '--ecrire', '--sortie', dossier], { env: Object.assign({}, process.env, env || {}), stdio: 'pipe', cwd: RACINE });
+    return dossier;
+}
+function changes(dossier) {   // les « carte:événement » que l'outil écrirait autrement qu'ils ne sont
+    var l = [];
+    fs.readdirSync(dossier).filter(function (f) { return /^Map\d+\.json$/.test(f); }).forEach(function (f) {
+        var n = +f.slice(3, 6), a = carte(n), b = JSON.parse(fs.readFileSync(path.join(dossier, f), 'utf8'));
+        for (var i = 0; i < Math.max(a.events.length, b.events.length); i++) if (JSON.stringify(a.events[i]) !== JSON.stringify(b.events[i])) l.push(n + ':' + i);
+    });
+    return l;
+}
+var outils = changes(lancer('poser_les_habitants.js', path.join(TMP, 'h'))).concat(changes(lancer('poser_les_scenes.js', path.join(TMP, 's'))));
+var vouluTouche = outils.filter(function (k) { var m = k.split(':'); return VOULU.est(+m[0], +m[1]); });
+// la contre-épreuve : sans la liste, un événement voulu serait réécrit (un habitant s'il en reste un de voulu, et les scènes)
+var vouluHab = Object.keys(VOULU.evenements).filter(function (k) { return FICHES[k]; })[0];
+var vouluScn = Object.keys(VOULU.evenements).filter(function (k) { var m = k.split(':'), e = carte(+m[0]).events[+m[1]]; return e && /^🏘/.test(e.name || ''); })[0];
+var sansListe = (vouluHab ? changes(lancer('poser_les_habitants.js', path.join(TMP, 'h2'), { VOULU_SAUF: vouluHab })) : [])
+    .concat(vouluScn ? changes(lancer('poser_les_scenes.js', path.join(TMP, 's2'), { VOULU_SAUF: vouluScn })) : []);
+var protege = (!vouluHab || sansListe.indexOf(vouluHab) >= 0) && (!vouluScn || sansListe.indexOf(vouluScn) >= 0) && !!(vouluHab || vouluScn);
+fs.rmSync(TMP, { recursive: true, force: true });
+V('⑭ ce que tu as voulu tel quel le reste : relancés, les outils n\'y touchent pas (et sans la liste, ils y toucheraient)', !vouluTouche.length && protege,
+    Object.keys(VOULU.evenements).length + ' événements voulus' + (vouluTouche.length ? ' — touchés : ' + vouluTouche.join(', ') : ', aucun touché') + ' · sans la liste : ' + (protege ? [vouluHab, vouluScn].filter(Boolean).map(function (k) { return VOULU.evenements[k]; }).join(' et ') + ' seraient réécrits' : '✗ rien ne changerait — la contre-épreuve ne prouve rien'));
+var autres = outils.filter(function (k) { return vouluTouche.indexOf(k) < 0; });
+if (autres.length) console.log('     ⚑ relancés, les outils réécriraient aussi : ' + autres.map(function (k) { var m = k.split(':'), e = carte(+m[0]).events[+m[1]]; return k + ' ' + (e ? String(e.name).trim() : '(nouveau)'); }).join(', ') + ' — à JOKO (ce qu\'ils y changeraient : node bancs/outils/poser_les_habitants.js --ecarts, node bancs/outils/poser_les_scenes.js)');
 
 (async function () {
     var nav = await chromium.launch({ args: ['--no-sandbox', '--mute-audio'] });
@@ -148,6 +218,8 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
     }
 
     /* ② ③ le rendez-vous de Hilde, puis sa scène à l'épicerie */
+    if (!estLa('29:28')) SAUTE('② ③ ④ Hilde : le rendez-vous, la même Hilde, les cadeaux', 'Hilde (29:28) : ' + etat('29:28').pourquoi);
+    else {
     await aller(29, 15, 20, 24);
     var r2 = await page.evaluate(function () {
         $gameSystem._habitants = {};
@@ -211,9 +283,12 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
     V('④ un deuxième cadeau le même jour est refusé', r4.gainDeja === 0 && r4.bocaux2 === 1 && /déjà gâtée/.test(r4.deja), '+' + r4.gainDeja + ', l\'objet reste');
     V('④ un objet détesté est rendu, rien ne bouge', r4.gainDeteste === 0 && r4.plats === 1 && /Garde-le/.test(r4.deteste), '+' + r4.gainDeteste + ' · plat douteux rendu');
     V('④ le jour de son anniversaire, un cadeau compte double', r4.gainAnniv === 4 && /anniversaire/.test(r4.anniv), '12 avril : +' + r4.gainAnniv);
+    }
 
     /* ⑤ à côté · ⑥ où il est */
+    if (!estLa('29:25') || !estLa('29:26')) await aller(29, 15, 20, 24);
     var r5 = await page.evaluate(function () {
+        if (!$gameMap.event(25) || !$gameMap.event(26)) return { absents: true, villeBar: Habitants.ici((function () { var i = new Game_Interpreter(); i.setup([], 10); return i; })(), 'bar') };
         // Élise et Tomas : l'après-midi, ils sont toujours dehors (Kaze, lui, entre à l'épicerie à 13 h)
         var h = $gameMap.event(25), k = $gameMap.event(26), it = new Game_Interpreter(); it.setup([], 25);
         var r = {};
@@ -222,37 +297,79 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
         r.villeBar = Habitants.ici(it, 'bar');
         return r;
     });
-    V('⑤ « à côté » : Tomas près d\'Élise est vu, loin d\'elle non', r5.pres === true && r5.loin === false, 'à une case : ' + r5.pres + ' · à 24 cases : ' + r5.loin);
+    if (!estLa('29:25') || !estLa('29:26')) SAUTE('⑤ « à côté » : Tomas près d\'Élise', 'Élise : ' + (etat('29:25').pourquoi || 'là') + ' · Tomas : ' + (etat('29:26').pourquoi || 'là'));
+    else V('⑤ « à côté » : Tomas près d\'Élise est vu, loin d\'elle non', r5.pres === true && r5.loin === false, 'à une case : ' + r5.pres + ' · à 24 cases : ' + r5.loin);
     await aller(46, 20, 20, 30);
     var r6 = await page.evaluate(function () { var it = new Game_Interpreter(); it.setup([], 27); return { bar: Habitants.ici(it, 'bar'), travail: Habitants.ici(it, 'travail') }; });
     V('⑥ au bar, on est « au bar » (et pas « au travail ») ; en ville, non', r6.bar === true && r6.travail === false && r5.villeBar === false, 'bar : ' + r6.bar + ' · en ville : ' + r5.villeBar);
 
     /* ⑧ trop de choix : « Autre chose… » */
+    if (!estLa('46:27')) SAUTE('⑧ Margot : « Autre chose… »', 'Margot (46:27) : ' + etat('46:27').pourquoi);
+    else {
     var r8 = await page.evaluate(function () {
         var m = $gameMap.event(27), l = [];
         parler(m, pageHabitant(m), { choisir: function (c, n) { if (n === 0) l = c; return c.indexOf('Au revoir'); } });
         return l;
     });
     V('⑧ Margot : au-delà de six choix, les derniers passent dans « Autre chose… »', r8.length <= 6 && r8.indexOf('Autre chose…') >= 0, r8.join(' · '));
+    }
 
-    /* ⑦ le crieur */
-    await aller(29, 10, 20, 24);
-    var r7 = await page.evaluate(function () {
-        var m = $gameMap.events().filter(function (e) { return e.event().name === 'Mathurin' || e.eventId() === 53; })[0], r = {};
-        $gameSystem.set_month(4); $gameSystem.set_day(12);
-        r.le12 = parler(m, m.page() || pageHabitant(m), { choisir: viser('Au revoir') }).texte;
-        $gameSystem.set_day(13);
-        r.le13 = parler(m, m.page() || pageHabitant(m), { choisir: viser('Au revoir') }).texte;
-        return r;
+    /* ⑦ les anniversaires : le crieur que l'outil a posé les annonce ; s'il n'y en a plus (JOKO, 2026-11-09 : « le crieur
+     *    sans les anniversaires », voulu), le jour se sait quand même (Habitants.anniversaire), et son crieur à lui
+     *    parle jusqu'au bout, le 12 comme le 13 */
+    var crieurs = Object.keys(FICHES).filter(function (k) { return FICHES[k].annonceAnniversaires; });
+    function annonce(k) { return REF[k] && REF[k].annonceAnniversaires !== undefined ? !!REF[k].annonceAnniversaires : !!FICHES[k].annonceAnniversaires; }
+    var crieursLa = crieurs.filter(function (k) { return estLa(k) && annonce(k); });
+    var annonces = [];
+    for (var kc of crieursLa) {
+        var mc = kc.split(':');
+        await aller(+mc[0], 10, 20, 24);
+        annonces.push(await page.evaluate(function (id) {
+            var m = $gameMap.event(id), r = {};
+            $gameSystem.set_month(4); $gameSystem.set_day(12);
+            r.le12 = parler(m, m.page() || pageHabitant(m), { choisir: viser('Au revoir') }).texte;
+            $gameSystem.set_day(13);
+            r.le13 = parler(m, m.page() || pageHabitant(m), { choisir: viser('Au revoir') }).texte;
+            return r;
+        }, +mc[1]));
+    }
+    annonces.forEach(function (r7, i) {
+        V('⑦ ' + NOMS[crieursLa[i]] + ' annonce l\'anniversaire de Hilde le 12 avril, et pas le 13', /Hilde/.test(r7.le12) && !/anniversaire de Hilde|Hilde a un an/.test(r7.le13), (r7.le12.match(/[^|]*Hilde[^|]*/) || ['?'])[0].trim().slice(0, 70));
     });
-    V('⑦ le crieur annonce l\'anniversaire de Hilde le 12 avril, et pas le 13', /Hilde/.test(r7.le12) && !/anniversaire de Hilde|Hilde a un an/.test(r7.le13), (r7.le12.match(/[^|]*Hilde[^|]*/) || ['?'])[0].trim().slice(0, 70));
+    await aller(29, 10, 20, 24);
+    var r7b = await page.evaluate(function (ids) {
+        var r = { jour: [], crieurs: [] };
+        [[4, 12], [4, 13]].forEach(function (d) { $gameSystem.set_month(d[0]); $gameSystem.set_day(d[1]); r.jour.push(Habitants.anniversaire('4/12')); });
+        // les crieurs qui ne sont plus ceux de l'outil (le sien, tel qu'il l'a laissé) : ils parlent jusqu'au bout, les deux jours
+        ids.forEach(function (id) {
+            var m = $gameMap.event(id); if (!m || !m.page()) return;
+            [12, 13].forEach(function (j) { $gameSystem.set_month(4); $gameSystem.set_day(j); var t = parler(m, m.page(), { choisir: viser('Au revoir') }); r.crieurs.push({ id: id, fini: t.fini, annonce: /anniversaire de Hilde/.test(t.texte) }); });
+        });
+        return r;
+    }, crieurs.filter(function (k) { return !annonce(k) && +k.split(':')[0] === 29; }).map(function (k) { return +k.split(':')[1]; }));
+    V('⑦ le jour d\'un anniversaire se sait : le 12 avril pour Hilde, et pas le 13', r7b.jour[0] === true && r7b.jour[1] === false, '12/4 : ' + r7b.jour[0] + ' · 13/4 : ' + r7b.jour[1]);
+    if (!crieursLa.length) {
+        var crieursJOKO = crieurs.filter(function (k) { return !annonce(k); });
+        V('⑦ ton crieur, tel que tu l\'as laissé (sans les anniversaires), parle jusqu\'au bout le 12 comme le 13', r7b.crieurs.length > 0 && r7b.crieurs.every(function (c) { return c.fini; }),
+            crieursJOKO.map(function (k) { return NOMS[k] + ' (' + (etat(k).pourquoi || 'refait, sans les anniversaires') + ')'; }).join(', ') + ' · ' + r7b.crieurs.filter(function (c) { return c.annonce; }).length + ' annonce(s), comme tu l\'as voulu');
+    }
 
-    /* ⑩ le jeu de Petit-Louis suit le triangle · ⑪ Zéphyrin, la nuit de la Veillée seulement */
+    /* ⑩ le jeu de Petit-Louis suit le triangle · ⑪ Zéphyrin, la nuit de la Veillée seulement.
+     *    Retirés de la carte (JOKO) : le jeu se joue tel que l'outil l'écrirait (sa fiche), sur quelqu'un d'autre ;
+     *    la balise <Veillee> se pose en mémoire sur le tableau d'affichage (et se retire après). */
     await aller(29, 12, 20, 24);
-    var r10 = await page.evaluate(function () {
-        var e = $gameMap.event(59), regle = { 'le Corps': 'l\'Âme', 'l\'Âme': 'l\'Esprit', 'l\'Esprit': 'le Corps' }, vus = {}, faux = [];
+    var pl = Object.keys(FICHES).filter(function (k) { return FICHES[k].nom === 'Petit-Louis'; })[0];
+    var jeuPL = null;
+    if (!estLa(pl)) {
+        var opt = (FICHES[pl].options || []).filter(function (o) { return /Corps, Âme, Esprit/.test(o.titre) && o.cmds; })[0];
+        jeuPL = opt ? opt.cmds.map(function (c) { return { code: c[0], indent: c[1], parameters: c[2] }; }).concat([{ code: 0, indent: 0, parameters: [] }]) : [];
+    }
+    var zk = Object.keys(FICHES).filter(function (k) { return FICHES[k].nom === 'Zéphyrin'; })[0];
+    var r10 = await page.evaluate(function (p) {
+        var regle = { 'le Corps': 'l\'Âme', 'l\'Âme': 'l\'Esprit', 'l\'Esprit': 'le Corps' }, vus = {}, faux = [];
+        var e = p.jeu ? $gameMap.event(25) : $gameMap.event(p.pl), pg = p.jeu ? { list: JSON.parse(JSON.stringify(p.jeu)) } : pageHabitant(e);
         for (var i = 0; i < 60; i++) {
-            var main = i % 3, t = parler(e, pageHabitant(e), { choisir: function (l, n) { if (n === 0) return l.indexOf('Jouer à « Corps, Âme, Esprit »'); if (l.length === 3 && /Corps/.test(l[0])) return main; return l.indexOf('Au revoir'); } }).texte;
+            var main = i % 3, t = parler(e, pg, { choisir: function (l, n) { if (l.length === 3 && /Corps/.test(l[0])) return main; if (n === 0 && !p.jeu) return l.indexOf('Jouer à « Corps, Âme, Esprit »'); return l.indexOf('Au revoir'); } }).texte;
             var m = /(Le Corps|L'Âme|L'Esprit) bat (le Corps|l'Âme|l'Esprit)/.exec(t);
             if (/Égalité/.test(t)) vus.egalite = 1;
             if (m) { var a = m[1].charAt(0).toLowerCase() + m[1].slice(1); if (regle[a] !== m[2]) faux.push(m[0]); vus[/T'as gagné/.test(t) ? 'gagne' : 'perd'] = 1; }
@@ -260,18 +377,30 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
         // contre-épreuve : une phrase à l'envers (« l'Âme bat le Corps ») doit être attrapée par le même contrôle
         var mm = /(Le Corps|L'Âme|L'Esprit) bat (le Corps|l'Âme|l'Esprit)/.exec('HA ! L\'Âme bat le Corps !');
         var envers = !!mm && regle[mm[1].charAt(0).toLowerCase() + mm[1].slice(1)] !== mm[2];
-        var z = $gameMap.event(62), r = {};
-        $gameSystem.set_month(9); $gameSystem.set_day(30); $gameSystem.set_hour(20); r.veillee = Habitants.present(z);
-        $gameSystem.set_day(29); r.veille = Habitants.present(z);
+        var r = {};
+        if (p.zLa) {
+            var z = $gameMap.event(p.z);
+            $gameSystem.set_month(9); $gameSystem.set_day(30); $gameSystem.set_hour(20); r.veillee = Habitants.present(z);
+            $gameSystem.set_day(29); r.veille = Habitants.present(z); r.sans = false;
+        } else {
+            // la balise <Veillee> posée en mémoire sur le tableau d'affichage (là à toute heure), puis retirée
+            var t = $gameMap.event(10), d = t.event(), avant = d.note;
+            d.note = (avant ? avant + '\n' : '') + '<Veillee>'; t._habHoraire = undefined;
+            $gameSystem.set_month(9); $gameSystem.set_day(30); $gameSystem.set_hour(20); r.veillee = Habitants.present(t);
+            $gameSystem.set_day(29); r.veille = Habitants.present(t);
+            d.note = avant; t._habHoraire = undefined;
+            r.sans = Habitants.present(t);                           // contre-épreuve : sans la balise, il est là le 29 aussi
+        }
         return { vus: vus, faux: faux, envers: envers, z: r };
-    });
-    V('⑩ Petit-Louis : « Corps, Âme, Esprit » suit le triangle (le Corps bat l\'Âme, l\'Âme l\'Esprit, l\'Esprit le Corps)', r10.vus.gagne && r10.vus.perd && r10.vus.egalite && !r10.faux.length && r10.envers, '60 parties : gagnées, perdues, égalités ; ' + (r10.faux.length ? 'à l\'envers : ' + r10.faux.slice(0, 2).join(', ') : 'aucune à l\'envers, et une phrase à l\'envers exprès est attrapée'));
-    V('⑪ Zéphyrin, le marchand de la Veillée : là le 30 septembre au soir, pas la veille', r10.z.veillee === true && r10.z.veille === false, 'le 30/9 à 20 h : ' + r10.z.veillee + ' · le 29/9 : ' + r10.z.veille);
+    }, { pl: pl ? +pl.split(':')[1] : 0, jeu: jeuPL, z: zk ? +zk.split(':')[1] : 0, zLa: !!zk && estLa(zk) });
+    V('⑩ Petit-Louis : « Corps, Âme, Esprit » suit le triangle (le Corps bat l\'Âme, l\'Âme l\'Esprit, l\'Esprit le Corps)' + (jeuPL ? ' — retiré de la carte : son jeu tel que l\'outil l\'écrirait' : ''), (!jeuPL || jeuPL.length > 1) && r10.vus.gagne && r10.vus.perd && r10.vus.egalite && !r10.faux.length && r10.envers, '60 parties : gagnées, perdues, égalités ; ' + (r10.faux.length ? 'à l\'envers : ' + r10.faux.slice(0, 2).join(', ') : 'aucune à l\'envers, et une phrase à l\'envers exprès est attrapée'));
+    if (zk && estLa(zk)) V('⑪ Zéphyrin, le marchand de la Veillée : là le 30 septembre au soir, pas la veille', r10.z.veillee === true && r10.z.veille === false, 'le 30/9 à 20 h : ' + r10.z.veillee + ' · le 29/9 : ' + r10.z.veille);
+    else V('⑪ <Veillee> : là le 30 septembre au soir, pas la veille — Zéphyrin retiré, la balise essayée sur le tableau d\'affichage', r10.z.veillee === true && r10.z.veille === false && r10.z.sans === true, 'le 30/9 à 20 h : ' + r10.z.veillee + ' · le 29/9 : ' + r10.z.veille + ' · sans la balise, le 29 : ' + r10.z.sans);
 
     /* ⑨ toutes les pages des personnages, au hasard */
     var tous = { fini: 0, total: 0, erreurs: [] };
     var parCarte = {};
-    Object.keys(OC).forEach(function (k) { var m = /^(\d+):(\d+)(?:\/(\d+))?$/.exec(k); (parCarte[m[1]] = parCarte[m[1]] || []).push([+m[2], +m[3] || 1]); });
+    laOC.forEach(function (k) { var m = /^(\d+):(\d+)(?:\/(\d+))?$/.exec(k); (parCarte[m[1]] = parCarte[m[1]] || []).push([+m[2], +m[3] || 1]); });
     for (var c of Object.keys(parCarte)) {
         await aller(+c, 12, 10, 10);
         var r9 = await page.evaluate(function (liste) {
@@ -298,10 +427,40 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
     }
     V('⑨ toutes les pages des personnages se parlent jusqu\'au bout (4 amitiés × 4 heures)', tous.total > 0 && tous.fini === tous.total && !tous.erreurs.length, tous.fini + '/' + tous.total + (tous.erreurs.length ? ' — ' + tous.erreurs.slice(0, 3).join(' | ') : ''));
 
+    /* ⑮ ses pages à lui : ce qu'il a voulu tel quel (les 9 de la ville) se parle aussi jusqu'au bout, à toute heure, choix au hasard */
+    var siens = Object.keys(VOULU.evenements).filter(function (k) { var m = k.split(':'), e = carte(+m[0]).events[+m[1]]; return e && !/^🏘/.test(e.name || ''); });
+    var sienParCarte = {}; siens.forEach(function (k) { var m = k.split(':'); (sienParCarte[m[0]] = sienParCarte[m[0]] || []).push(+m[1]); });
+    var r15 = { fini: 0, total: 0, erreurs: [] };
+    for (var cs of Object.keys(sienParCarte)) {
+        await aller(+cs, 12, 10, 10);
+        var r15c = await page.evaluate(function (ids) {
+            var res = { fini: 0, total: 0, erreurs: [] };
+            [9, 15, 21, 1].forEach(function (h) {
+                $gameSystem.set_hour(h);
+                ids.forEach(function (id) {
+                    var e = $gameMap.event(id); if (!e) return;
+                    e.event().pages.forEach(function (pg) {
+                        if (!pg.list.some(function (c) { return c.code === 101; })) return;
+                        for (var n = 0; n < 3; n++) {
+                            res.total++;
+                            try { var t = parler(e, pg, {}); if (t.fini) res.fini++; else res.erreurs.push(e.event().name + ' : ne finit pas'); }
+                            catch (err) { res.erreurs.push(e.event().name + ' : ' + err.message); }
+                        }
+                    });
+                });
+            });
+            return res;
+        }, sienParCarte[cs]);
+        r15.fini += r15c.fini; r15.total += r15c.total; r15.erreurs = r15.erreurs.concat(r15c.erreurs);
+    }
+    V('⑮ tes pages telles que tu les as laissées se parlent jusqu\'au bout (' + siens.map(function (k) { return VOULU.evenements[k]; }).join(', ') + ')', siens.length === 0 || (r15.total > 0 && r15.fini === r15.total && !r15.erreurs.length),
+        siens.length ? r15.fini + '/' + r15.total + ' conversations (4 heures, choix au hasard)' + (r15.erreurs.length ? ' — ' + r15.erreurs.slice(0, 3).join(' | ') : '') : 'rien de voulu tel quel');
+
     /* ⑫ chaque rendez-vous peut être tenu : à l'heure dite, sur la carte dite, la personne est là, visible */
-    var rdv = [];
+    var rdv = [], horsCarte = 0;
     Object.keys(OC).forEach(function (k) {
         if (/\/\d+$/.test(k)) return;                 // une page 2 (Colin) : elle n'est là que quand JOKO l'allume
+        if (!estLa(k)) { horsCarte += (OC[k].scenes || []).filter(function (sc) { return sc.quand; }).length; return; }
         (OC[k].scenes || []).forEach(function (sc, i) {
             if (!sc.quand) return;
             var h = (sc.quand.a - sc.quand.de === 1 ? sc.quand.de : sc.quand.de + 1) % 24;
@@ -323,10 +482,10 @@ V('⑬ la situation est dans les pages (Aurevel, la faille de la grotte), et per
         }, groupes[g]);
         groupes[g].forEach(function (r, i) { if (!vus[i]) manques.push(r.nom + ' scène ' + (r.i + 1) + ' (carte ' + r.carte + ', ' + r.h + ' h)'); });
     }
-    V('⑫ chaque rendez-vous d\'amitié peut être tenu (la personne est là, à l\'heure dite)', rdv.length > 40 && !manques.length, rdv.length + ' rendez-vous' + (manques.length ? ' — impossibles : ' + manques.join(', ') : ', tous tenables'));
+    V('⑫ chaque rendez-vous d\'amitié peut être tenu (la personne est là, à l\'heure dite)', rdv.length >= 20 && rdv.length + horsCarte > 40 && !manques.length, rdv.length + ' rendez-vous' + (manques.length ? ' — impossibles : ' + manques.join(', ') : ', tous tenables') + (horsCarte ? ' (' + horsCarte + ' de gens qui ne sont plus sur tes cartes, pas comptés)' : ''));
 
     V('aucune erreur JavaScript', erreurs.length === 0, erreurs.slice(0, 2).join(' | ') || 'rien');
-    console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)\n' + '='.repeat(66));
+    console.log('\n' + '='.repeat(66) + '\n  ' + ok + ' contrôles passés · ' + ko + ' échec(s)' + (sautes.length ? ' · ' + sautes.length + ' sauté(s) : la personne n\'est plus sur tes cartes' : '') + '\n' + '='.repeat(66));
     await nav.close();
     process.exit(ko ? 1 : 0);
 })().catch(function (e) { console.error(e); process.exit(2); });

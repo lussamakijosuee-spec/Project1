@@ -124,6 +124,26 @@ var CHANT = { version: 1, musique: null, bpm: 120, decalage: 0, vitesse: 5, note
         V('4 couloirs au plus (l\'équipe en combat : ' + r3.membresEnCombat + ')', r3.couloirs === Math.min(4, r3.membresEnCombat), r3.couloirs + ' couloirs');
         V('le décor du combat en cours (carte 10 : Grassland)', !!r3.fond && r3.fond === r3.fondCombat && /Grassland/.test(r3.fond), r3.fond + ' = ' + r3.fondCombat);
 
+        // ses coups à chaque raté (v1.1, JOKO 2026-11-09 : « Nerf les dégâts de la reine phase 2 en musique ») :
+        // un raté de MOG coûte ATQ + MAG − défense de l'équipe ; <Chant dégâts: n> n'en garde que n %.
+        // L'ennemi frappe ici pour 1000 tout rond (son ATQ posé), puis l'Ogre reçoit la balise en mémoire.
+        var r3b = await page.evaluate(function () {
+            var s = SceneManager._scene, o = $gameTroop.members()[0], avant = s._party_hp[0], phase = $gameSystem._theatrhythm_phase, atk = s._enemy_atk;
+            var depart = s._chant.force;                       // posée à l'ouverture du chant, d'après LUI
+            $gameSystem._theatrhythm_phase = 1;
+            s._enemy_atk = s._party_def + 1000;
+            s.execute_damage(1); var plein = avant - s._party_hp[0]; s._party_hp[0] = avant;
+            var meta = $dataEnemies[o.enemyId()].meta; meta['Chant dégâts'] = ' 30'; s._chant.force = LeChant.forceDe(o);
+            s.execute_damage(1); var nerf = avant - s._party_hp[0]; s._party_hp[0] = avant;
+            var garde = s._enemy_atk;
+            delete meta['Chant dégâts']; s._chant.force = LeChant.forceDe(o);
+            s._enemy_atk = atk; $gameSystem._theatrhythm_phase = phase;
+            return { depart: depart, plein: plein, nerf: nerf, garde: garde === s._party_def + 1000, retour: s._chant.force, avatar: LeChant.forceDe(new Game_Enemy(824, 0, 0)), troll: LeChant.forceDe(new Game_Enemy(831, 0, 0)) };
+        });
+        V('sans <Chant dégâts:>, un raté coûte ce que MOG compte (ATQ + MAG − défense de l\'équipe)', r3b.depart === 1 && r3b.plein === 1000 && r3b.retour === 1, r3b.plein + ' sur 1000 · force posée à l\'ouverture : ' + r3b.depart);
+        V('<Chant dégâts: 30> : un raté ne coûte plus que 30 %, et son ATQ n\'est pas touchée', r3b.nerf === 300 && r3b.garde, r3b.nerf + ' sur 1000');
+        V('l\'avatar d\'Ardélia (824) porte <Chant dégâts: 30> ; le troll de JOKO (831) garde ses coups', r3b.avatar === 0.3 && r3b.troll === 1, 'avatar ×' + r3b.avatar + ' · troll ×' + r3b.troll);
+
         // on chante : l'horloge du banc ; il finit à 40 %, l'équipe à la moitié de ce qu'elle avait
         await page.evaluate(function () {
             var s = SceneManager._scene;

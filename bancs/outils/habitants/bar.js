@@ -92,7 +92,7 @@ F(31, {
         'Vous voyez Nell, là-bas ? Ne l\'écoutez pas. Elle est jalouse de mon succès.'
     ],
     nouvelles: [
-        'Il paraît que le lac chante, certaines nuits. J\'ai une fiole qui protège de ça. Non ? Tant pis.',
+        'Il paraît que la mer chante, certaines nuits. J\'ai une fiole qui protège de ça. Non ? Tant pis.',
         'Des nobles au manoir du lord. Les nobles, ça achète. Il faudrait que je m\'y présente.',
         'On dit que des loups de rang B+ rôdent au nord. J\'ai de l\'onguent anti-loup. Très efficace. Jamais testé sur un loup.'
     ],
@@ -152,7 +152,7 @@ F(11, {
 
 /* ── Colin, le barde (ev 12, page 2 — sa quête des rumeurs est gardée) ─ */
 F(12, {
-    page: 2, nom: 'Colin', role: 'barde, cherche le chant du lac', voix: 'rêveur, dramatique, rit de lui-même.',
+    page: 2, nom: 'Colin', role: 'barde, cherche le chant de la mer', voix: 'rêveur, dramatique, rit de lui-même.',
     premiere: 'Une chanson, voyageur ? Les neuves sont fausses, les vieilles sont tristes.',
     bonjour: {
         1: ['~Il accorde son luth en fredonnant, les yeux mi-clos.|Le matin, les cordes sont froides. Comme le public.'],
@@ -167,7 +167,7 @@ F(12, {
         4: ['L\'hiver, je joue près du feu. Mes doigts refusent le reste du bar.']
     },
     discuter: [
-        'Une nuit, au bord du lac, j\'ai entendu une note. Une seule. Très basse. Depuis, j\'essaie de la retrouver sur mon luth.',
+        'Une nuit, au bord de la mer, j\'ai entendu une note. Une seule. Très basse. Depuis, j\'essaie de la retrouver sur mon luth.',
         'On m\'a jeté une chope, une fois. J\'en ai fait une chanson. Elle marche bien.',
         'Margot dit que je chante faux. Margot a raison. Mais avec conviction.',
         'Le vieux au comptoir connaît de vieilles chansons de soldats. Il refuse de les chanter. Il les murmure quand il croit que personne n\'écoute.',
@@ -175,10 +175,10 @@ F(12, {
         'Une fille me regarde, le soir. Enfin, je crois qu\'elle regarde le mur derrière moi.'
     ],
     perso: {
-        titre: 'Le chant du lac ?', paliers: [
+        titre: 'Le chant de la mer ?', paliers: [
             [1, 'Tu me prendrais pour un fou.'],
             [3, 'Une note. Pas humaine. Pas un animal non plus. Elle m\'a traversé comme du froid.'],
-            [6, 'Je retourne au lac, certaines nuits. Je n\'ai plus rien entendu. Parfois, je me demande si je veux vraiment l\'entendre encore.']
+            [6, 'Je retourne à la mer, certaines nuits. Je n\'ai plus rien entendu. Parfois, je me demande si je veux vraiment l\'entendre encore.']
         ]
     },
     options: [
@@ -380,14 +380,14 @@ F(21, {
     bonjourTous: ['Oh. Bonjour.'],
     discuter: ['Le moulin tourne du matin au soir. Moi aussi.', 'J\'aime bien les chansons tristes. Elles disent ce qu\'on n\'ose pas.', 'Papa veut me marier au fils du boulanger. Il sent la farine. Moi aussi, remarque.'],
     nouvelles: ['Mireille raconte que je… que je regarde quelqu\'un. C\'est faux ! … C\'est vrai.'],
-    perso: { titre: 'Colin ?', paliers: [[1, 'Qui ? Le barde ? Je… je le connais à peine. Enfin. Il s\'appelle Colin. Il a vingt-trois ans. Il aime les pommes. Je… sais rien.'], [3, 'Il cherche un chant, au bord du lac. Il y va la nuit. J\'ai peur pour lui, parfois.'], [5, 'J\'ai écrit un mot. Je le lui donnerai jamais. Tu… tu pourrais ? Non. Si. Non…']] },
+    perso: { titre: 'Colin ?', paliers: [[1, 'Qui ? Le barde ? Je… je le connais à peine. Enfin. Il s\'appelle Colin. Il a vingt-trois ans. Il aime les pommes. Je… sais rien.'], [3, 'Il cherche un chant, au bord de la mer. Il y va la nuit. J\'ai peur pour lui, parfois.'], [5, 'J\'ai écrit un mot. Je le lui donnerai jamais. Tu… tu pourrais ? Non. Si. Non…']] },
     options: [{
         titre: 'Porter son mot à Colin', si: C.vr(V.visites, '>=', 5), cmds: si(C.sw(SW_PIA_MOT, false), cat(P('Pia', 'Tu… tu ferais ça ? Tiens. Ne le lis pas. Ne le lis PAS.'), A.sw(SW_PIA_MOT, true), A.se('Book2'), H.affinite(2)),
             si(C.sw(SW_COLIN_LU), cat(P('Pia', 'Il a dit QUOI ? Une chanson… pour moi ?|~Elle cache son visage dans ses mains.'), H.affinite(1)), P('Pia', 'Tu lui as donné ? … Pas encore ? Oh, je vais mourir.')))
     }],
     aurevoir: ['Bonne soirée…', 'Tu diras rien, hein ?']
 });
-fiches[fiches.length - 1].saisons = { 1: ['Les cerisiers sont en fleurs, au bord du lac. Il y va, parfois. Enfin, je crois.'], 2: ['L\'été, il joue dehors. Tout le monde danse. Moi je regarde.'], 3: ['L\'automne, le moulin tourne jour et nuit. Je viens moins. Ça me manque. Enfin… la musique.'], 4: ['Il a les doigts rouges de froid quand il joue. Je lui tricoterais bien des mitaines. Enfin… quelqu\'un devrait.'] };
+fiches[fiches.length - 1].saisons = { 1: ['Les cerisiers sont en fleurs, au-dessus de la plage. Il y va, parfois. Enfin, je crois.'], 2: ['L\'été, il joue dehors. Tout le monde danse. Moi je regarde.'], 3: ['L\'automne, le moulin tourne jour et nuit. Je viens moins. Ça me manque. Enfin… la musique.'], 4: ['Il a les doigts rouges de froid quand il joue. Je lui tricoterais bien des mitaines. Enfin… quelqu\'un devrait.'] };
 
 /* ── les frères Vannier, bûcherons jumeaux (ev 22 et 23) ────────────────── */
 F(22, {
@@ -440,10 +440,10 @@ F(26, {
     nom: 'Roul', tags: ['<Va: 5-13 33 7,38 bas peche>', '<Logis: 38 22-5>'], role: 'pêcheur, rival de Tobin', voix: 'grincheux, jaloux, exagère ses prises.', horaire: '14-22',
     premiere: 'Roul. Pêcheur. Le meilleur. Si on te parle de Tobin, c\'est le deuxième meilleur. Et encore.',
     bonjourTous: ['Salut.', 'Ça sent le poisson ? C\'est moi. C\'est l\'odeur du succès.'],
-    saisons: { 1: ['Le printemps, les truites remontent. Je les attends. Tobin dort encore.'], 2: ['L\'été, le lac est chaud, les poissons descendent. Faut aller les chercher.'], 3: ['Automne. Les brochets. Gros comme ma jambe. Enfin, comme mon bras.'], 4: ['L\'hiver, on perce la glace. Tobin y va pas. Il a peur de passer au travers.'] },
-    discuter: ['Hier, j\'ai pris un poisson de cette taille. Non, plus grand. Il s\'est échappé. Mais il était là.', 'Tobin a perdu son couteau. Il a pleuré. Pour un couteau !', 'Le lac, la nuit… Il y a des choses qu\'on n\'entend pas deux fois. Je pêche plus la nuit.'],
-    nouvelles: ['Au Village de Pêche, ils disent que le lac est plus profond qu\'avant. Un lac, ça se creuse pas tout seul.'],
-    perso: { titre: 'Tobin et vous ?', paliers: [[1, 'On se parle pas.'], [3, 'On était amis, gamins. Son père nous emmenait sur la barque. Puis son père est mort au lac. Tobin a gardé le couteau. Moi j\'ai gardé… rien.'], [6, 'Je le déteste pas. C\'est juste que… quand je le vois, je revois la barque. Et ça fait mal.']] },
+    saisons: { 1: ['Le printemps, les truites remontent. Je les attends. Tobin dort encore.'], 2: ['L\'été, la mer est chaude, les poissons descendent. Faut aller les chercher.'], 3: ['Automne. Les bars. Gros comme ma jambe. Enfin, comme mon bras.'], 4: ['L\'hiver, on perce la glace. Tobin y va pas. Il a peur de passer au travers.'] },
+    discuter: ['Hier, j\'ai pris un poisson de cette taille. Non, plus grand. Il s\'est échappé. Mais il était là.', 'Tobin a perdu son couteau. Il a pleuré. Pour un couteau !', 'La mer, la nuit… Il y a des choses qu\'on n\'entend pas deux fois. Je pêche plus la nuit.'],
+    nouvelles: ['Au Village de Pêche, ils disent que la mer monte plus haut qu\'avant. La mer, ça monte pas sans raison.'],
+    perso: { titre: 'Tobin et vous ?', paliers: [[1, 'On se parle pas.'], [3, 'On était amis, gamins. Son père nous emmenait sur la barque. Puis son père est mort en mer. Tobin a gardé le couteau. Moi j\'ai gardé… rien.'], [6, 'Je le déteste pas. C\'est juste que… quand je le vois, je revois la barque. Et ça fait mal.']] },
     options: [{ titre: 'Parier sur la prochaine prise', cmds: P('Roul', 'Sur moi ou sur Tobin ? … Sur moi. Évidemment. Garde ton or, je parie pas contre moi-même.') }],
     aurevoir: ['Et dis à Tobin que je le salue pas.', 'Hm.']
 });
@@ -578,7 +578,7 @@ var TABLEAU = {
     special: 'tableau',
     lignes: {
         1: ['~Une affiche : « PERDU : chien jaune, répond au nom de Têtu. Non, ce n\'est pas le bœuf. S\'adresser à Baptiste. »', '~« Mariage de Rosalie et du fils du tanneur, fin du printemps. Le charpentier est prié de ne pas venir armé. »', '~« Cours de lecture, les soirs de pluie, chez Jehan. Gratuit pour les enfants. Théo, ça veut dire toi. »'],
-        2: ['~« Concours de pêche au lac. Roul et Tobin sont inscrits. La garde sera présente. »', '~« Recherche bras pour la moisson. Payé en grain et en bière. »', '~« Nuit de danse sur la place. Colin chantera. Margot demande qu\'on ne lui jette rien. »'],
+        2: ['~« Concours de pêche sur la plage. Roul et Tobin sont inscrits. La garde sera présente. »', '~« Recherche bras pour la moisson. Payé en grain et en bière. »', '~« Nuit de danse sur la place. Colin chantera. Margot demande qu\'on ne lui jette rien. »'],
         3: ['~« Fête des récoltes : tarte aux pommes géante. Berthe cuisine, Théo est prié de ne pas toucher. »', '~« AVIS DE LA GARDE : loups au nord. Aucun civil au-delà du vieux pont. Article quinze. — Casimir »', '~« Vends hache, peu servie. — Aimé Vannier » Dessous, d\'une autre main : « C\'est la mienne. — Basile »'],
         4: ['~« Le puits de la place est gelé. Prendre l\'eau à la fontaine du marché. »', '~« Collecte de couvertures pour les sans-logis. Déposer chez Berthe. »', '~« Anselme, rends l\'argent. — Tout le monde »']
     },

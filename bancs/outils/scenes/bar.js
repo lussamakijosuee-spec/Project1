@@ -3,7 +3,7 @@
 'use strict';
 module.exports = { carte: 46, nom: 'BAR', x: 0, y: 0, scenes: [
     { cle: 'colin', nom: 'Colin chante (♪)', qui: [12], vue: 16, attente: 25, gestes: [
-        ['bulle', 12, 3], ['hasard', [[['dit', 12, '♪ Le lac chante la nuit, et personne ne l\'entend… ♪']], [['dit', 12, '♪ Une barque, une lanterne, et le fond qui m\'appelle… ♪']], [['dit', 12, '♪ … et c\'est là que le refrain m\'échappe. Encore. ♪']]]],
+        ['bulle', 12, 3], ['hasard', [[['dit', 12, '♪ La mer chante la nuit, et personne ne l\'entend… ♪']], [['dit', 12, '♪ Une barque, une lanterne, et le fond qui m\'appelle… ♪']], [['dit', 12, '♪ … et c\'est là que le refrain m\'échappe. Encore. ♪']]]],
         ['si', 'VieDuVillage.la(21)', [['bulle', 21, 4]]], ['son', 'Applause1', 35]] },
     { cle: 'margot', nom: 'Margot sert', qui: [27], vue: 14, attente: 40, gestes: [
         ['hasard', [[['dit', 27, 'Une bière pour la quatre ! Pousse-toi, mon grand.']], [['dit', 27, 'Qui a commandé la soupe ? Personne ? Berthe, ils l\'ont commandée !']], [['dit', 27, 'Quinze ans que je porte ces plateaux. Ils pèsent pareil.']]]]] },

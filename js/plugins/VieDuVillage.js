@@ -1,5 +1,5 @@
 //=============================================================================
-// VieDuVillage.js — v2.2  ·  Les PNJ ont une journée
+// VieDuVillage.js — v2.5  ·  Les PNJ ont une journée
 // RPG Maker MV   ·   by JOKO
 //   À charger APRÈS MOG_TimeSystem (il lui demande l'heure).
 //   AlleesEtVenues (le voyage d'une carte à l'autre) se charge après lui.
@@ -61,6 +61,14 @@
  * @type boolean
  * @default true
  *
+ * @param repas
+ * @text Le repas de midi, ailleurs que sur la place
+ * @type string
+ * @default 33: 29,30
+ * @desc v2.5 : par carte, « carte: x,y » (séparées par « ; »). À midi, les
+ * villageois mangent là, chacun sa case, au lieu de la place. Village de Pêche :
+ * sur le sable (JOKO, 2026-11-09 : la plage). Vide = la place, comme avant.
+ *
  * @param jourDeRepos
  * @text Jour de repos (0 = dimanche, 6 = samedi, -1 = aucun)
  * @type number
@@ -97,8 +105,9 @@
  *
  *  Qui vit ? Tout événement qui porte <NPC:> ou <Vie:>, et (v2.0) tout
  *  habitant de l'outil (« ◆ HABITANT »). Les événements « ✎ » de l'atelier, les
- *  portes, et ceux à qui JOKO a tracé un déplacement (« Personnalisé ») ne sont
- *  jamais pilotés.
+ *  portes, ceux à qui JOKO a tracé un déplacement (« Personnalisé ») et les
+ *  objets (une image « ! » : un tableau, une affiche — v2.4) ne sont jamais
+ *  pilotés.
  *
  *  ─────────────────────────────────────────────────────────────────────────
  *  LES FAÇONS DE VIVRE
@@ -160,6 +169,19 @@
  *      VieDuVillage.pret('cle', 30)         pas joué depuis 30 min de jeu
  *   Un numéro « carte:événement » désigne quelqu'un où qu'il soit (sa copie de
  *   passage, AlleesEtVenues).
+ *   v2.3 (2026-11-09) : un événement SANS IMAGE n'est jamais « là » pour une
+ *   scène. JOKO réutilise des numéros pour ses marques (« kaze », « place »,
+ *   page vide) : la scène de Fanchon (Marché, év. 26) faisait parler la marque
+ *   « kaze », une phrase au-dessus d'une case vide.
+ *   v2.4 (2026-11-09) : un OBJET ne vit pas. Une image « ! » (la convention de
+ *   MV : un tableau, une affiche, un coffre) ne marche pas, ne rentre pas le
+ *   soir, ne tourne pas la tête, et ne se tourne pas vers toi quand tu lui
+ *   parles : il garde la direction de l'éditeur (la rangée de son image). Le
+ *   tableau d'affichage devant la ville (29:10) marchait jusqu'à la place.
+ *   v2.5 (2026-11-09) : la plage. À midi, le Village de Pêche mange sur le
+ *   sable (réglage « repas » : une case par carte) au lieu de se serrer sur le
+ *   pré de l'étal (7 personnes sur 12 dans 7 × 5 cases, mesuré) ; <Pluie: reste>
+ *   sur une page : il ne rentre pas sous la pluie (Orin, sous l'auvent).
  *
  *  SCRIPT :  VieDuVillage.etat()      → ce que chacun fait, là, maintenant
  * ═══════════════════════════════════════════════════════════════════════════
@@ -177,6 +199,11 @@
     var PAS = Math.max(1, parseInt(P['pasParImage'] || 6));
     var PORTEE = Math.max(8, parseInt(P['portee'] || 30));
     var FLANERIE = Math.max(0, parseInt(P['flanerie'] || 2));
+    // v2.5 : le repas de midi, ailleurs que sur la place (« 33: 29,30 ; … »)
+    var REPAS = {};
+    String(P['repas'] === undefined ? '33: 29,30' : P['repas']).split(';').forEach(function (t) {
+        var m = /(\d+)\s*:\s*(\d+)\s*,\s*(\d+)/.exec(t); if (m) REPAS[+m[1]] = { x: +m[2], y: +m[3] };
+    });
     var REPOS = parseInt(P['jourDeRepos'] !== undefined ? P['jourDeRepos'] : 0);
     var TOURNER = String(P['seTourner'] || 'true') === 'true';
     var ECARTER = String(P['sEcarter'] || 'true') === 'true';
@@ -250,7 +277,7 @@
             return { lieu: 'poste', dedans: false };
         }
 
-        if (pluie && PLUIE) { return { lieu: 'logis', dedans: true }; }
+        if (pluie && PLUIE && !vie.restePluie) { return { lieu: 'logis', dedans: true }; }
 
         // la Veillée du Retour : on reste dehors, sur la place, jusqu'à 2 h
         if (veillee() && (h >= 18 || h < 2)) { return { lieu: 'place', dedans: false }; }
@@ -290,9 +317,11 @@
         var page = evenement.page && evenement.page();
         if (!page || !page.list) { return out; }
         out.boutique = page.list.some(function (c) { return c.code === 302; });
+        out.restePluie = false;
         commentairesDe(evenement).forEach(function (t, i, l) {
             var a = t.match(/<NPC:\s*([^>]+)>/i);
             if (a) { out.cle = a[1].trim(); }
+            if (/<Pluie:\s*reste\s*>/i.test(t)) { out.restePluie = true; }   // v2.5 : il ne rentre pas sous la pluie (Orin, sous l'auvent)
             var b = t.match(/<Vie:\s*([^>]+)>/i);
             if (b) { out.vie = b[1].trim().toLowerCase(); }
             var hab = t.match(/^◆ HABITANT · ([^—]*)(?:—\s*(.*))?$/);
@@ -332,6 +361,14 @@
         if (/^✎/.test(nom)) return true;
         var pg = e.page && e.page();
         return !!(pg && pg.moveType === 3);
+    }
+    // v2.4 : une image « ! » (la convention de MV pour les objets : un tableau, une affiche, un coffre)
+    //   n'est pas une personne. JOKO a sorti le tableau d'affichage du bar (« ◆ HABITANT », sans image)
+    //   devant la ville avec l'image d'un panneau (29:10) : il marchait jusqu'à la place, rentrait le soir,
+    //   tournait la tête — vers le haut, une rangée vide de l'image : il disparaissait.
+    function estObjet(e) {
+        var pg = e && e.page && e.page();
+        return !!(pg && pg.image && /^!/.test(String(pg.image.characterName || '')));
     }
 
     function casePraticable(c) {
@@ -376,9 +413,9 @@
             if (!e || e._erased) { return; }
             if (estPorte(e)) { portes.push({ x: e.x, y: e.y }); return; }
             if (aLui(e)) { return; }
-            // un tableau, une affiche : un habitant sans visage ne marche pas
+            // un tableau, une affiche : un habitant sans visage ne marche pas — ni un objet (une image « ! », v2.4)
             var pg = e.page && e.page();
-            if (pg && !pg.image.characterName && !e._visite) { return; }
+            if (pg && (!pg.image.characterName || estObjet(e)) && !e._visite) { return; }
             var m = marques(e);
             if (!e._visite && !m.cle && !m.vie && !m.habitant) { return; }   // seuls les PNJ marqués vivent
             if (e._visite && !m.cle && !m.vie && !m.habitant) { m.habitant = true; }
@@ -397,6 +434,9 @@
         // chacun sa case sur la place, en couronne autour du milieu, espacées
         var cases = dedans ? [] : casesAutour(place, pnj.length + 4);
         var rang = 0;
+        // v2.5 : le repas de midi ailleurs (la plage du Village de Pêche)
+        var repas = !dedans && REPAS[$gameMap.mapId()] ? casePraticable(REPAS[$gameMap.mapId()]) : null;
+        var casesRepas = repas ? casesAutour(repas, pnj.length + 4) : [], rangRepas = 0;
 
         pnj.forEach(function (p) {
             var e = p.ev, m = p.m;
@@ -415,7 +455,8 @@
             var sa = metier === 'garde' || e._visite || !cases.length ? place : cases[rang++ % cases.length];
             e._vie = {
                 cle: m.cle, metier: metier, poste: poste, logis: logis, place: sa, milieu: place, cases: cases,
-                agenda: m.agenda || [], portes: portes, ronde: m.ronde, iRonde: 0,
+                agenda: m.agenda || [], portes: portes, ronde: m.ronde, iRonde: 0, restePluie: !!m.restePluie,
+                repas: repas && metier !== 'garde' && !e._visite && casesRepas.length ? casesRepas[rangRepas++ % casesRepas.length] : null, milieuRepas: repas,
                 dedans: false, but: null, dirPoste: e.event().pages[0] ? (e.page() || e.event().pages[0]).image.direction || e.direction() : e.direction(),
                 marche: {}, vers: null, premier: true
             };
@@ -517,6 +558,8 @@
 
         var but = ouAller(v, heure(), jourDeRepos(), pluie);
         var cible = v[but.lieu] || v.poste;
+        var aTable = but.lieu === 'place' && heure() === 12 && !!v.repas;      // v2.5 : midi, sur le sable
+        if (aTable) cible = v.repas;
         v.but = but.lieu;
         if (but.lieu === 'ronde' && v.ronde) {
             cible = v.ronde[v.iRonde % v.ronde.length];
@@ -574,7 +617,7 @@
 
         // ── arrivé : il se tient là, tourné du bon côté (v2.1 : il ne piétine plus) ──
         if (estArrive(ev, v, cible)) {
-            var dir = but.lieu === 'place' ? (versLe(ev, v.milieu || cible) || v.dirPoste) : v.dirPoste;
+            var dir = but.lieu === 'place' ? (versLe(ev, (aTable ? v.milieuRepas : v.milieu) || cible) || v.dirPoste) : v.dirPoste;
             if (but.lieu === 'place' && v.metier === 'garde') dir = ev.direction();       // la ronde de nuit : il regarde où il va
             seTenir(ev, v, dir);
             // le soir, sur la place, il change parfois de place (quelques cases, jamais au hasard)
@@ -659,6 +702,21 @@
         v.course = lieux[Math.randomInt(lieux.length)]; v.tCourse = 0; v.resteLa = null;
         ($gameMap._vieLieux = $gameMap._vieLieux || {})[v.course.x + ',' + v.course.y] = ev.eventId();
     }
+
+    /* ── un objet qui parle ne se tourne pas vers toi ───────────────────── */
+    // MV tourne vers le joueur l'événement qu'on lance (lock), sauf « Direction fixe ». Pour un objet
+    // de l'outil (une image « ! » qui porte « ◆ HABITANT », <NPC:> ou <Vie:>), sa direction est la rangée
+    // de son image que JOKO a choisie : le tableau 29:10 montrait sa face vide pendant qu'on lisait.
+    function objetQuiParle(e) {
+        if (!estObjet(e)) return false;
+        var m = marques(e);
+        return !!(m.habitant || m.cle || m.vie);
+    }
+    var _lock = Game_Event.prototype.lock;
+    Game_Event.prototype.lock = function () {
+        if (!this._locked && objetQuiParle(this)) { this._prelockDirection = this.direction(); this._locked = true; return; }
+        _lock.call(this);
+    };
 
     /* ── ils te voient ─────────────────────────────────────────────────── */
     function sOccupe(ev) {
@@ -802,7 +860,9 @@
         var nom = s.toLowerCase();
         return $gameMap.events().filter(function (e) { return String(e.event().name || '').trim().toLowerCase() === nom; })[0] || null;
     }
-    function la(e) { return !!(e && !e._erased && e._pageIndex >= 0 && e.opacity() > 0 && !(e._vie && e._vie.dedans) && !enPassage(e)); }
+    // v2.3 : sans image (une marque de JOKO, une page vide), personne n'est là pour une scène
+    function visible(e) { return !!(e.characterName() || e.tileId() > 0); }
+    function la(e) { return !!(e && !e._erased && e._pageIndex >= 0 && visible(e) && e.opacity() > 0 && !(e._vie && e._vie.dedans) && !enPassage(e)); }
     function libre(e) { return la(e) && !e.isMoveRouteForcing() && !(e._vieScene > 0) && !(e._vie && e._vie.course) && !(e._pauseConversation > 0); }
     function scene(e, n) { if (e) { e._vieScene = n; } }
     var dernieres = {};

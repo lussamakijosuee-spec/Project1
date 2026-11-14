@@ -17,7 +17,7 @@ module.exports = {
 },
 '33:17': { // Orin
     oc: { age: '64 ans', allure: 'mains noueuses, un filet sur les genoux, une pipe éteinte', caractere: 'patient, taiseux ; parle en nouant ses filets, un nœud par phrase',
-        aime: 'un filet sans trou, le bruit des vagues, les barques de Barnabé (solides)', deteste: 'les filets déchirés par les brochets de Roul (« gros comme sa jambe »)', reve: 'tisser un filet si fin qu\'il attraperait la lumière',
+        aime: 'un filet sans trou, le bruit des vagues, les barques de Barnabé (solides)', deteste: 'les filets déchirés par les congres de Roul (« gros comme sa jambe »)', reve: 'tisser un filet si fin qu\'il attraperait la lumière',
         secret: 'il cache un petit nœud en forme d\'étoile dans chaque filet qu\'il répare ; les pêcheurs croient que ça porte chance', manie: 'il fait un nœud à chaque fin de phrase', phrase: 'Un nœud. Puis un autre.',
         liens: { 'Barnabé': 'le charpentier de barques ; l\'un fait les barques, l\'autre les filets' } },
     lieux: { travail: ['~Il noue un filet, sans lever les yeux.|Trois trous ce matin. Les poissons apprennent. Moi aussi.'] },

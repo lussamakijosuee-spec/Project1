@@ -92,7 +92,16 @@ var SHOTS = path.join(__dirname, 'captures', 'menus');
     await stable();
     var commandes = await ev(function () {
         var w = SceneManager._scene._commandWindow;
-        return w._list.map(function (c, i) { return { i: i, nom: c.name.replace(/\\[A-Z]+\[\d+\]/gi, '').trim(), symbole: c.symbol, actif: c.enabled }; });
+        var out = [];
+        w._list.forEach(function (c, i) {
+            // « Carnets » (LesMenus, 2026-11-12) range cinq écrans sous une ligne : on essaie chacun, un cran plus loin
+            if (c.symbol === 'carnets' && w._carnets && w._carnets.length) {
+                w._carnets.forEach(function (d, k) { out.push({ i: i, sous: k, nom: d.name.trim(), symbole: d.symbol, actif: d.enabled }); });
+                return;
+            }
+            out.push({ i: i, nom: c.name.replace(/\\[A-Z]+\[\d+\]/gi, '').trim(), symbole: c.symbol, actif: c.enabled });
+        });
+        return out;
     });
     console.log('\n── le menu principal : ' + commandes.length + ' commandes ──');
     console.log('   ' + commandes.map(function (c) { return c.nom + (c.actif ? '' : ' (grisée)'); }).join(' · '));
@@ -108,9 +117,14 @@ var SHOTS = path.join(__dirname, 'captures', 'menus');
         avantErr = erreurs.length;
         var nAbs = absents.length;
         // on choisit la commande comme le joueur : curseur + OK
-        await ev(function (i) { var w = SceneManager._scene._commandWindow; w.select(i); w.activate(); }, c.i);
+        await ev(function (i) { var S = SceneManager._scene, w = S._commandWindow; if (S._carnetsWindow && S._carnetsWindow.active) { S._carnetsWindow.processCancel(); } w.select(i); w.activate(); }, c.i);
         await touche('Enter');
         await page.waitForTimeout(400);
+        if (c.sous !== undefined) {
+            await ev(function (k) { var w = SceneManager._scene._carnetsWindow; if (w) { w.select(k); } }, c.sous);
+            await touche('Enter');
+            await page.waitForTimeout(400);
+        }
         // une commande « personnelle » demande un héros : on prend le premier
         var demandeHeros = await ev(function () { var s = SceneManager._scene; return s instanceof Scene_Menu && s._statusWindow && s._statusWindow.active; });
         if (demandeHeros) { await touche('Enter'); }

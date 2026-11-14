@@ -24,7 +24,7 @@ F({ ev: 16, nom: 'Jonas', role: 'recrue de la garde, fils de pêcheur', voix: 't
     nouvelles: [K.LORD[5], K.LORD[4]],
     perso: { titre: 'Et ton père ?', paliers: [[1, 'Il pêche.'], [4, 'Il m\'a dit que je trahissais le lac. Je lui ai dit que le lac avait pris mon grand-père et mon oncle. Il n\'a rien répondu. Il est sorti pêcher.']] },
     aurevoir: ['Salut.', 'Si tu vois mon père… non, rien.'] });
-F({ ev: 17, nom: 'Orin', role: 'ravaudeur de filets', voix: 'patient, taiseux, parle en nouant ses filets.',
+F({ ev: 17, nom: 'Orin', role: 'ravaudeur de filets', voix: 'patient, taiseux, parle en nouant ses filets.', tags: ['<Pluie: reste>'],   // 2026-11-09 : sous la pluie, il reste sous l'auvent (la plage, P9)
     premiere: '~Il ne lève pas les yeux de son filet.|Orin. Je répare ce que le lac déchire.',
     bonjourTous: ['Hm.', '~Ses doigts nouent le fil sans s\'arrêter.|Bonjour.'],
     saisons: LAC,
@@ -97,5 +97,11 @@ F({ ev: 24, nom: 'Annick', role: 'femme de pêcheur, langue bien pendue, mère d
     F(K.garde(g[0], g[1], { role: g[2] + ' (garde du port)', voix: 'garde du port : sent le sel et la fatigue.', premiere: 'Garde du port. ' + g[1] + '. Ici, on surveille les barques et les ivrognes. Surtout les ivrognes.',
         saisons: LAC, discuter: ['Le port la nuit, c\'est des bruits d\'eau et des bruits de pas. Faut savoir lesquels sont normaux.'], perso: perso }));
 });
+
+// ── Erwan (31) — le Pêcheur de JOKO, devenu le père de Jonas et de Sora (JOKO, 2026-11-09 : « tout »).
+//    Sa page de pêche (GALV_Fishing) passe dans ses options « Pêcher » et « Voir mes prises » (refonte/peche.js).
+//    Sédentaire : sur la plage de 7 h à 20 h — sa page 2 vide, faite pour le cacher au crépuscule, n'avait pas sa condition cochée.
+F({ ev: 31, nom: 'Erwan', accord: { quand: '2026-11-09', nom: 'Le Pêcheur' }, visage: ['jkj', 0], tags: ['<Vie: sedentaire>'],
+    role: 'pêcheur, le père de Jonas et de Sora', voix: 'peu de mots, tous utiles.', aurevoir: ['Ça mord, ou ça mord pas.'] });
 
 module.exports = { carte: 33, fiches: fiches };

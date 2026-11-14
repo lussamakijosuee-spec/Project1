@@ -104,7 +104,8 @@ var BASE = process.env.ETT_URL || 'http://127.0.0.1:8899';
     var H = r.heros;
     console.log('1) L\'ordre des menus');
     Object.keys(H).forEach(function (n) {
-        var noms = H[n].noms, i = function (x) { return noms.indexOf(x); };
+        // (« ★ Favoris » et « ↻ … » de LesFavoris sont sous l'Attaque, avant les branches : on ne les compte pas ici)
+        var noms = H[n].noms.filter(function (x) { return !/^[★↻]/.test(x); }), i = function (x) { return noms.indexOf(x); };
         var bon = i('Voies') === 0 && i('Paroles') === 1 && i('Runes') === 2 && i('Ultimes') === noms.length - 2 && noms[noms.length - 1] === 'Combo';
         v(n + ' : Voies, Paroles, Runes, ses branches, Ultimes, Combo', bon, noms.join(' · '));
     });

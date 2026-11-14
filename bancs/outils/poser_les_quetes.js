@@ -164,6 +164,13 @@ function poser(mapId, nom, ax, ay, pages, exact) {
 // Un PNJ qui donne une quête, attend, puis paie. `d` :
 //   id, type, titre, desc, de, lieu, img, intro[], accepte[] (lignes), refuse[] ,
 //   commandes[] (QUEST … après add), attente[], condition (fn bloc→bloc.si…), reussite[], paie(bloc), apres[]
+// une quête donnée maintenant par un habitant (l'outil des habitants l'écrit dans sa page) : le ✎ ne se pose plus
+function retirerPose(mapId, nom) {
+    var C = carte(mapId), map = C.data, avant = map.events.filter(Boolean).length;
+    map.events = map.events.map(function (e) { return e && e.name === MARQUE + nom ? null : e; });
+    if (map.events.filter(Boolean).length !== avant) { C.modifiee = true; note('② carte ' + mapId + ' : « ' + nom + ' » retiré'); }
+}
+function rendue(mapId, nom, aQui) { retirerPose(mapId, nom); note('② carte ' + mapId + ' : la quête de « ' + nom + ' » est à ' + aQui); }
 function pnjQuete(mapId, nom, ax, ay, d) {
     var p0 = new Bloc();
     p0.texte(d.intro, d.visage);
@@ -362,7 +369,8 @@ pnjQuete(43, 'Apothicaire', 6, 7, {
     paie: function (b) { b.retirer(3, 3); b.objet(26, 2); b.or(100); },
     apres: ['Apothicaire — Reviens quand tu tousses.']
 });
-pnjQuete(33, 'Fille du pêcheur', 34, 23, {
+// JOKO, 2026-11-09 (« tout ») : sa quête est à Sora, la fille du pêcheur (habitants/refonte/peche.js) ; le ✎ ne se pose plus
+rendue(33, 'Fille du pêcheur', 'Sora', {
     id: 'lucioles', type: 'side', titre: 'Des lucioles pour le pêcheur', img: ['People1', 3],
     desc: 'Le pêcheur ne sort plus la nuit sans lanterne. Sa fille cherche deux Bocaux à Lucioles.',
     de: 'La fille du pêcheur', lieu: 'Village de Pêche',
@@ -377,7 +385,8 @@ pnjQuete(33, 'Fille du pêcheur', 34, 23, {
 });
 
 // ── ENQUÊTES : le chant du lac, la tombe sans nom ────────────────────────
-pnjQuete(33, 'Vieux pêcheur', 30, 29, {
+// JOKO, 2026-11-09 : « Mer plutôt » ; la quête est à Orin, « Le chant de la mer » (habitants/refonte/peche.js)
+rendue(33, 'Vieux pêcheur', 'Orin', {
     id: 'lac', type: 'side', titre: 'Le chant du lac', img: ['People1', 4],
     desc: 'Le barde du bar jure que certains soirs, le lac chante une note très basse. Un vieux pêcheur dit où l\'écouter : au bord, la nuit.',
     de: 'Le vieux pêcheur', lieu: 'Village de Pêche',
@@ -396,11 +405,12 @@ pnjQuete(33, 'Vieux pêcheur', 30, 29, {
     b.siScript(statut('lac') + " === 'active' && !" + objDone('lac', 1), function (b) {
         b.si([0, 205, 0], function (b) {
             b.son('Darkness4');
-            b.texte(['Une note. Une seule, très basse, venue', 'de sous l\'eau. Elle tient plus longtemps', 'qu\'un souffle. Puis plus rien.']);
+            b.texte(['Une note. Une seule, très basse, venue', 'de sous la mer. Elle tient plus longtemps', 'qu\'un souffle. Puis plus rien.']);
             b.quest('step lac 1');
-        }, function (b) { b.texte(['L\'eau est noire et ne dit rien.', 'Le jour, il se tait.']); });
-    }, function (b) { b.texte(['L\'eau est noire ici.']); });
-    poser(33, 'Rive du lac', 8, 37, [page(b, { priorite: 0 })]);
+        }, function (b) { b.texte(['La mer est noire et ne dit rien.', 'Le jour, il se tait.']); });
+    }, function (b) { b.texte(['La mer est noire, ici.']); });
+    retirerPose(33, 'Rive du lac');                       // 2026-11-09 : la mer, plus le lac
+    poser(33, 'Rive', 8, 37, [page(b, { priorite: 0 })]);
 })();
 (function () {
     // La tombe sans nom du cimetière : la rumeur de Marn. Lire la stèle ouvre la quête ; de l'Encens Sacré la referme.
